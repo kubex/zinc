@@ -2561,6 +2561,545 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/channel-tile/channel-tile.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnChannelTile",
+          "cssProperties": [
+            {
+              "description": "Resolved accent color (set from the `color` property).",
+              "name": "--channel-tile-color"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The progress indicator (incoming countdown overlay or active progress bar).",
+              "name": "progress"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Replaces the leading icon in the active state.",
+              "name": "leading"
+            },
+            {
+              "description": "Action content for the available state (e.g. a form). Falls back to a default accept button.",
+              "name": "action"
+            },
+            {
+              "description": "Trailing content (e.g. status badges) in the active state.",
+              "name": "footer"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "available",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Renders the empty/available face instead of the active face.",
+              "attribute": "available",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "incoming",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "(Available only) the tile is reserving an incoming item awaiting acceptance.",
+              "attribute": "incoming",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Free-form grouping/theming key (reflected so consumers can query/style by it).",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "header",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Top-bar text (e.g. brand).",
+              "attribute": "header"
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Leading icon (active state).",
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "ChannelTileColor"
+              },
+              "default": "'default'",
+              "description": "Accent color driving the leading icon and `--channel-tile-color`.",
+              "attribute": "color",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "title",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Primary line. Defaults to \"Available\" in the available state when unset.",
+              "attribute": "title"
+            },
+            {
+              "kind": "field",
+              "name": "subtitle",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Secondary line.",
+              "attribute": "subtitle"
+            },
+            {
+              "kind": "field",
+              "name": "progress",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "(Active only) progress bar fill, 0–100.",
+              "attribute": "progress"
+            },
+            {
+              "kind": "field",
+              "name": "progressColor",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "(Active only) CSS color for the progress bar fill.",
+              "attribute": "progress-color"
+            },
+            {
+              "kind": "field",
+              "name": "fid",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Identifier carried in `zn-accept` / `zn-reject` event details.",
+              "attribute": "fid"
+            },
+            {
+              "kind": "field",
+              "name": "acceptUri",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "(Available only) when set, accepting fetches this URI unless `zn-accept` is canceled.",
+              "attribute": "accept-uri"
+            },
+            {
+              "kind": "field",
+              "name": "reservedUntil",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "(Available/incoming) epoch (seconds or millis) at which the reservation window ends.",
+              "attribute": "reserved-until"
+            },
+            {
+              "kind": "field",
+              "name": "autoAcceptDelay",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "(Available/incoming) auto-accept window length in milliseconds.",
+              "attribute": "auto-accept-delay"
+            },
+            {
+              "kind": "field",
+              "name": "rejectable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "(Available/incoming) whether a reject control is offered.",
+              "attribute": "rejectable",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "acceptIcon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'plus@lu'",
+              "description": "Icon for the built-in accept button.",
+              "attribute": "accept-icon"
+            },
+            {
+              "kind": "field",
+              "name": "acceptGaid",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Optional analytics id forwarded to the built-in accept button.",
+              "attribute": "accept-gaid"
+            },
+            {
+              "kind": "field",
+              "name": "rejectIcon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'call_end'",
+              "description": "Icon for the reject control.",
+              "attribute": "reject-icon"
+            },
+            {
+              "kind": "field",
+              "name": "rejectLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Reject'",
+              "description": "Accessible label for the reject control.",
+              "attribute": "reject-label"
+            },
+            {
+              "kind": "field",
+              "name": "_tickInterval",
+              "type": {
+                "text": "number | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_autoAcceptFired",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "method",
+              "name": "_isCountingDown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_startTicker",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_stopTicker",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_maybeAutoAccept",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_accept",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_reservedUntilMs",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_countdownPercent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_handleReject",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handleClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_renderLeading",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_renderAvailableAction",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when an available tile is accepted (click or auto-accept). Cancelable — call `preventDefault()` to suppress the built-in `accept-uri` fetch.",
+              "name": "zn-accept"
+            },
+            {
+              "description": "Emitted when the reject control is pressed.",
+              "name": "zn-reject"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "available",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Renders the empty/available face instead of the active face.",
+              "fieldName": "available"
+            },
+            {
+              "name": "incoming",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "(Available only) the tile is reserving an incoming item awaiting acceptance.",
+              "fieldName": "incoming"
+            },
+            {
+              "name": "variant",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Free-form grouping/theming key (reflected so consumers can query/style by it).",
+              "fieldName": "variant"
+            },
+            {
+              "name": "header",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Top-bar text (e.g. brand).",
+              "fieldName": "header"
+            },
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Leading icon (active state).",
+              "fieldName": "icon"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "ChannelTileColor"
+              },
+              "default": "'default'",
+              "description": "Accent color driving the leading icon and `--channel-tile-color`.",
+              "fieldName": "color"
+            },
+            {
+              "name": "title",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Primary line. Defaults to \"Available\" in the available state when unset.",
+              "fieldName": "title"
+            },
+            {
+              "name": "subtitle",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Secondary line.",
+              "fieldName": "subtitle"
+            },
+            {
+              "name": "progress",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "(Active only) progress bar fill, 0–100.",
+              "fieldName": "progress"
+            },
+            {
+              "name": "progress-color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "(Active only) CSS color for the progress bar fill.",
+              "fieldName": "progressColor"
+            },
+            {
+              "name": "fid",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Identifier carried in `zn-accept` / `zn-reject` event details.",
+              "fieldName": "fid"
+            },
+            {
+              "name": "accept-uri",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "(Available only) when set, accepting fetches this URI unless `zn-accept` is canceled.",
+              "fieldName": "acceptUri"
+            },
+            {
+              "name": "reserved-until",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "(Available/incoming) epoch (seconds or millis) at which the reservation window ends.",
+              "fieldName": "reservedUntil"
+            },
+            {
+              "name": "auto-accept-delay",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "(Available/incoming) auto-accept window length in milliseconds.",
+              "fieldName": "autoAcceptDelay"
+            },
+            {
+              "name": "rejectable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "(Available/incoming) whether a reject control is offered.",
+              "fieldName": "rejectable"
+            },
+            {
+              "name": "accept-icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'plus@lu'",
+              "description": "Icon for the built-in accept button.",
+              "fieldName": "acceptIcon"
+            },
+            {
+              "name": "accept-gaid",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Optional analytics id forwarded to the built-in accept button.",
+              "fieldName": "acceptGaid"
+            },
+            {
+              "name": "reject-icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'call_end'",
+              "description": "Icon for the reject control.",
+              "fieldName": "rejectIcon"
+            },
+            {
+              "name": "reject-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Reject'",
+              "description": "Accessible label for the reject control.",
+              "fieldName": "rejectLabel"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A channel/queue slot tile with two faces: an active (occupied) state\nshowing an in-progress item, and an available (empty) state advertising\ncapacity — optionally reserving an incoming item with an auto-accept countdown.",
+          "tagNameWithoutPrefix": "channel-tile",
+          "tagName": "zn-channel-tile",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A channel/queue slot tile with two faces: an active (occupied) state\n * showing an in-progress item, and an available (empty) state advertising\n * capacity — optionally reserving an incoming item with an auto-accept countdown.\n * @documentation https://zinc.style/components/channel-tile\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-icon\n *\n * @event zn-accept - Emitted when an available tile is accepted (click or auto-accept).\n *  Cancelable — call `preventDefault()` to suppress the built-in `accept-uri` fetch.\n * @event zn-reject - Emitted when the reject control is pressed.\n *\n * @slot leading - Replaces the leading icon in the active state.\n * @slot action - Action content for the available state (e.g. a form). Falls back to a default accept button.\n * @slot footer - Trailing content (e.g. status badges) in the active state.\n *\n * @csspart base - The component's base wrapper.\n * @csspart progress - The progress indicator (incoming countdown overlay or active progress bar).\n *\n * @cssproperty --channel-tile-color - Resolved accent color (set from the `color` property).\n */",
+          "documentation": "https://zinc.style/components/channel-tile",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-button",
+            "zn-icon"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnChannelTile",
+            "module": "components/channel-tile/channel-tile.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/chart/chart.js",
       "declarations": [
         {
@@ -36368,7 +36907,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.12",
+    "version": "1.1.13",
     "author": "",
     "license": "MIT"
   }

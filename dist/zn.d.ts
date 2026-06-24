@@ -3609,6 +3609,103 @@ declare module "components/tile-property/index" {
         }
     }
 }
+declare module "components/channel-tile/channel-tile.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    export type ChannelTileColor = 'default' | 'primary' | 'info' | 'success' | 'warning' | 'error' | 'disabled';
+    /**
+     * @summary A channel/queue slot tile with two faces: an active (occupied) state
+     * showing an in-progress item, and an available (empty) state advertising
+     * capacity — optionally reserving an incoming item with an auto-accept countdown.
+     * @documentation https://zinc.style/components/channel-tile
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-button
+     * @dependency zn-icon
+     *
+     * @event zn-accept - Emitted when an available tile is accepted (click or auto-accept).
+     *  Cancelable — call `preventDefault()` to suppress the built-in `accept-uri` fetch.
+     * @event zn-reject - Emitted when the reject control is pressed.
+     *
+     * @slot leading - Replaces the leading icon in the active state.
+     * @slot action - Action content for the available state (e.g. a form). Falls back to a default accept button.
+     * @slot footer - Trailing content (e.g. status badges) in the active state.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart progress - The progress indicator (incoming countdown overlay or active progress bar).
+     *
+     * @cssproperty --channel-tile-color - Resolved accent color (set from the `color` property).
+     */
+    export default class ZnChannelTile extends ZincElement {
+        static styles: CSSResultGroup;
+        /** Renders the empty/available face instead of the active face. */
+        available: boolean;
+        /** (Available only) the tile is reserving an incoming item awaiting acceptance. */
+        incoming: boolean;
+        /** Free-form grouping/theming key (reflected so consumers can query/style by it). */
+        variant: string;
+        /** Top-bar text (e.g. brand). */
+        header: string;
+        /** Leading icon (active state). */
+        icon: string;
+        /** Accent color driving the leading icon and `--channel-tile-color`. */
+        color: ChannelTileColor;
+        /** Primary line. Defaults to "Available" in the available state when unset. */
+        title: string;
+        /** Secondary line. */
+        subtitle: string;
+        /** (Active only) progress bar fill, 0–100. */
+        progress: number;
+        /** (Active only) CSS color for the progress bar fill. */
+        progressColor: string;
+        /** Identifier carried in `zn-accept` / `zn-reject` event details. */
+        fid: string;
+        /** (Available only) when set, accepting fetches this URI unless `zn-accept` is canceled. */
+        acceptUri: string;
+        /** (Available/incoming) epoch (seconds or millis) at which the reservation window ends. */
+        reservedUntil: number;
+        /** (Available/incoming) auto-accept window length in milliseconds. */
+        autoAcceptDelay: number;
+        /** (Available/incoming) whether a reject control is offered. */
+        rejectable: boolean;
+        /** Icon for the built-in accept button. */
+        acceptIcon: string;
+        /** Optional analytics id forwarded to the built-in accept button. */
+        acceptGaid: string;
+        /** Icon for the reject control. */
+        rejectIcon: string;
+        /** Accessible label for the reject control. */
+        rejectLabel: string;
+        private _tickInterval;
+        private _autoAcceptFired;
+        protected firstUpdated(changed: PropertyValues): void;
+        disconnectedCallback(): void;
+        protected updated(changed: PropertyValues): void;
+        private _isCountingDown;
+        private _startTicker;
+        private _stopTicker;
+        private _maybeAutoAccept;
+        private _accept;
+        private _reservedUntilMs;
+        private _countdownPercent;
+        private _handleReject;
+        private _handleClick;
+        protected render(): unknown;
+        private _renderLeading;
+        private _renderAvailableAction;
+    }
+}
+declare module "components/channel-tile/index" {
+    import ZnChannelTile from "components/channel-tile/channel-tile.component";
+    export * from "components/channel-tile/channel-tile.component";
+    export default ZnChannelTile;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-channel-tile': ZnChannelTile;
+        }
+    }
+}
 declare module "components/chart/builders" {
     import type { EChartsOption } from 'echarts';
     export type ChartType = 'area' | 'bar' | 'line' | 'sankey';
@@ -8346,6 +8443,28 @@ declare module "events/zn-reorder" {
         }
     }
 }
+declare module "events/zn-accept" {
+    export type ZnAcceptEvent = CustomEvent<{
+        fid: string;
+        acceptUri: string;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-accept': ZnAcceptEvent;
+        }
+    }
+}
+declare module "events/zn-reject" {
+    export type ZnRejectEvent = CustomEvent<{
+        fid: string;
+        variant: string;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-reject': ZnRejectEvent;
+        }
+    }
+}
 declare module "events/events" {
     export type { ZnAfterHideEvent } from "events/zn-after-hide";
     export type { ZnAfterShowEvent } from "events/zn-after-show";
@@ -8359,6 +8478,8 @@ declare module "events/events" {
     export type { ZnSearchChangeEvent } from "events/zn-search-change";
     export type { ZnLanguageChangeEvent } from "events/zn-language-change";
     export type { ZnReorderEvent } from "events/zn-reorder";
+    export type { ZnAcceptEvent } from "events/zn-accept";
+    export type { ZnRejectEvent } from "events/zn-reject";
 }
 declare module "zinc" {
     export { default as Button } from "components/button/index";
@@ -8386,6 +8507,7 @@ declare module "zinc" {
     export { default as Tile } from "components/tile/index";
     export { default as TileGroup } from "components/tile-group/index";
     export { default as TileProperty } from "components/tile-property/index";
+    export { default as ChannelTile } from "components/channel-tile/index";
     export { default as Chart } from "components/chart/index";
     export { default as SimpleChart } from "components/simple-chart/index";
     export { default as Header } from "components/header/index";

@@ -325,6 +325,109 @@
       ]
     },
     {
+      "name": "zn-channel-tile",
+      "description": "A channel/queue slot tile with two faces: an active (occupied) state\nshowing an in-progress item, and an available (empty) state advertising\ncapacity — optionally reserving an incoming item with an auto-accept countdown.\n---\n\n\n### **Events:**\n - **zn-accept** - Emitted when an available tile is accepted (click or auto-accept). Cancelable — call `preventDefault()` to suppress the built-in `accept-uri` fetch.\n- **zn-reject** - Emitted when the reject control is pressed.\n\n### **Slots:**\n - **leading** - Replaces the leading icon in the active state.\n- **action** - Action content for the available state (e.g. a form). Falls back to a default accept button.\n- **footer** - Trailing content (e.g. status badges) in the active state.\n\n### **CSS Properties:**\n - **--channel-tile-color** - Resolved accent color (set from the `color` property). _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **progress** - The progress indicator (incoming countdown overlay or active progress bar).",
+      "attributes": [
+        {
+          "name": "available",
+          "description": "Renders the empty/available face instead of the active face.",
+          "values": []
+        },
+        {
+          "name": "incoming",
+          "description": "(Available only) the tile is reserving an incoming item awaiting acceptance.",
+          "values": []
+        },
+        {
+          "name": "variant",
+          "description": "Free-form grouping/theming key (reflected so consumers can query/style by it).",
+          "values": []
+        },
+        {
+          "name": "header",
+          "description": "Top-bar text (e.g. brand).",
+          "values": []
+        },
+        {
+          "name": "icon",
+          "description": "Leading icon (active state).",
+          "values": []
+        },
+        {
+          "name": "color",
+          "description": "Accent color driving the leading icon and `--channel-tile-color`.",
+          "values": [{ "name": "ChannelTileColor" }]
+        },
+        {
+          "name": "title",
+          "description": "Primary line. Defaults to \"Available\" in the available state when unset.",
+          "values": []
+        },
+        { "name": "subtitle", "description": "Secondary line.", "values": [] },
+        {
+          "name": "progress",
+          "description": "(Active only) progress bar fill, 0–100.",
+          "values": []
+        },
+        {
+          "name": "progress-color",
+          "description": "(Active only) CSS color for the progress bar fill.",
+          "values": []
+        },
+        {
+          "name": "fid",
+          "description": "Identifier carried in `zn-accept` / `zn-reject` event details.",
+          "values": []
+        },
+        {
+          "name": "accept-uri",
+          "description": "(Available only) when set, accepting fetches this URI unless `zn-accept` is canceled.",
+          "values": []
+        },
+        {
+          "name": "reserved-until",
+          "description": "(Available/incoming) epoch (seconds or millis) at which the reservation window ends.",
+          "values": []
+        },
+        {
+          "name": "auto-accept-delay",
+          "description": "(Available/incoming) auto-accept window length in milliseconds.",
+          "values": []
+        },
+        {
+          "name": "rejectable",
+          "description": "(Available/incoming) whether a reject control is offered.",
+          "values": []
+        },
+        {
+          "name": "accept-icon",
+          "description": "Icon for the built-in accept button.",
+          "values": []
+        },
+        {
+          "name": "accept-gaid",
+          "description": "Optional analytics id forwarded to the built-in accept button.",
+          "values": []
+        },
+        {
+          "name": "reject-icon",
+          "description": "Icon for the reject control.",
+          "values": []
+        },
+        {
+          "name": "reject-label",
+          "description": "Accessible label for the reject control.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/channel-tile"
+        }
+      ]
+    },
+    {
       "name": "zn-chart",
       "description": "Chart component powered by Apache ECharts.\n---\n\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [

@@ -1,0 +1,197 @@
+:host {
+  --channel-tile-color: var(--zn-color-border);
+
+  flex: 1 1 280px;
+  width: 280px;
+  min-width: 180px;
+  max-width: 320px;
+  display: block;
+}
+
+.channel-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  cursor: pointer;
+  border-right: 1px solid rgb(var(--zn-border-color));
+  background-color: rgb(var(--zn-body));
+  transition: background-color 0.15s ease;
+  user-select: none;
+
+  &:focus-visible {
+    outline: 2px solid rgb(var(--zn-primary));
+    outline-offset: -2px;
+  }
+}
+
+:host(.active) .channel-tile {
+  background-color: rgb(var(--zn-panel));
+  cursor: default;
+}
+
+:host(:not(.active)) .channel-tile--active:hover {
+  background-color: rgb(var(--zn-panel));
+}
+
+.channel-tile--incoming {
+  background-color: rgba(var(--zn-color-success), 0.15);
+
+  &:hover {
+    background-color: rgba(var(--zn-color-success), 0.22);
+  }
+}
+
+.channel-tile--disabled .channel-tile__body {
+  opacity: 0.6;
+}
+
+.channel-tile__header {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: 24px;
+  padding: 0 var(--zn-spacing-small);
+  background-color: rgb(var(--zn-color-tab));
+
+  h3 {
+    margin: 0;
+    font-size: var(--zn-text-h3-font-size);
+    line-height: var(--zn-text-h3-line-height);
+    font-weight: var(--zn-text-h3-font-weight);
+    color: rgb(var(--zn-text-heading));
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+
+.channel-tile__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  background-color: rgba(var(--zn-color-success), 0.55);
+  transition: width 0.2s linear;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.channel-tile__body {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-small);
+  padding: var(--zn-spacing-x-small) var(--zn-spacing-small);
+  width: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.channel-tile__content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 4px;
+  overflow: hidden;
+
+  @container (max-width: 200px) {
+    display: none;
+  }
+}
+
+.channel-tile__title {
+  margin: 0;
+  font-size: var(--zn-text-heading-section-font-size);
+  line-height: var(--zn-text-heading-section-line-height);
+  font-weight: var(--zn-text-heading-section-font-weight);
+  color: var(--zn-text-heading-section-color);
+  text-transform: var(--zn-text-heading-section-transform);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.channel-tile__subtitle {
+  margin: 0;
+  font-size: var(--zn-text-subheading-small-font-size);
+  line-height: var(--zn-text-subheading-small-line-height);
+  font-weight: var(--zn-text-subheading-small-font-weight);
+  color: var(--zn-text-subheading-small-color);
+  text-transform: var(--zn-text-subheading-small-transform);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.channel-tile__footer {
+  display: flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: var(--zn-spacing-small);
+}
+
+.channel-tile__reject {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  margin: 0;
+  background-color: rgb(var(--zn-panel));
+  color: rgb(var(--zn-color-error));
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+
+  &:hover {
+    background-color: rgba(var(--zn-color-error), 0.1);
+  }
+}
+
+.channel-tile__bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: rgba(var(--zn-shadow), 0.2);
+  overflow: hidden;
+  z-index: 1;
+
+  &-fill {
+    height: 100%;
+    width: 0;
+    transition: width 0.5s linear, background-color 0.5s ease;
+  }
+}
+
+.channel-tile--primary {
+  --channel-tile-color: var(--zn-color-primary);
+}
+
+.channel-tile--info {
+  --channel-tile-color: var(--zn-color-info);
+}
+
+.channel-tile--success {
+  --channel-tile-color: var(--zn-color-success);
+}
+
+.channel-tile--warning {
+  --channel-tile-color: var(--zn-color-warning);
+}
+
+.channel-tile--error {
+  --channel-tile-color: var(--zn-color-error);
+}
+
+.channel-tile--disabled {
+  --channel-tile-color: var(--zn-color-disabled, 204, 204, 204);
+}

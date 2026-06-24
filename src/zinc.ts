@@ -24,6 +24,7 @@ export { default as Note } from './components/note';
 export { default as Tile } from './components/tile';
 export { default as TileGroup } from './components/tile-group';
 export { default as TileProperty } from './components/tile-property';
+export { default as ChannelTile } from './components/channel-tile';
 export { default as Chart } from './components/chart';
 export { default as SimpleChart } from './components/simple-chart';
 export { default as Header } from './components/header';

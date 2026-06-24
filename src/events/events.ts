@@ -10,3 +10,5 @@ export type {ZnRedirectEvent} from './zn-redirect';
 export type {ZnSearchChangeEvent} from './zn-search-change';
 export type {ZnLanguageChangeEvent} from './zn-language-change';
 export type {ZnReorderEvent} from './zn-reorder';
+export type {ZnAcceptEvent} from './zn-accept';
+export type {ZnRejectEvent} from './zn-reject';

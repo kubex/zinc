@@ -2,6 +2,7 @@
 
 :host {
   display: block;
+  padding-inline: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
 }
 
 .message {
@@ -38,18 +39,6 @@
     @include wc.text-style(subheading-small);
   }
 
-  &__badge {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    padding: 2px 6px;
-    border-radius: var(--zn-border-radius);
-    border: 1px solid rgba(var(--zn-color-info), 0.4);
-    color: rgb(var(--zn-color-info));
-    background: rgba(var(--zn-color-info), 0.08);
-    text-transform: uppercase;
-  }
-
   &__bubble {
     box-sizing: border-box;
     display: flex;
@@ -67,12 +56,41 @@
     }
   }
 
+  &__main {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--zn-spacing-small);
+  }
+
+  &__attachments {
+    // Always rendered so projection is reliable regardless of when children are
+    // parsed/added, but kept out of flow (no phantom gap below the bubble) until
+    // an attachment actually exists — toggled on via :host(:has(...)) below.
+    display: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--zn-spacing-small);
+
+    ::slotted(zn-chat-message-attachment) {
+      min-width: 0;
+    }
+  }
+
   &__content {
     @include wc.text-style(chat);
 
     flex: 1 1 auto;
     min-width: 0;
     overflow-wrap: anywhere;
+
+    // Bodies passed through the default slot (e.g. alongside attachments) must
+    // match the chat type scale, not inherit the host's default size.
+    ::slotted(*) {
+      @include wc.text-style(chat);
+    }
 
     p {
       margin: 0;
@@ -148,6 +166,13 @@
     display: flex;
     align-items: center;
   }
+}
+
+// Reveal the attachments row only when an attachment is actually present. Using
+// :has on the host keeps this live and parse-order independent — no reliance on
+// conditional rendering that could miss a child added during parsing.
+:host(:has([slot="attachments"])) .message__attachments {
+  display: flex;
 }
 
 // Bubble tints by message origin / type.

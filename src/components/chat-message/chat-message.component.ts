@@ -23,6 +23,8 @@ export type ChatMessageActionType = '' | 'connected.agent' | 'attachment.added' 
  *
  * @slot - The message content. Ignored when the `message` attribute is set.
  * @slot badge - Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).
+ * @slot attachments - Attachments displayed beneath the message content. Use `zn-chat-message-attachment`,
+ * which auto-assigns itself to this slot.
  * @slot edit-dialog-trigger - Action rendered at the end of the bubble (e.g. a remove icon button).
  * @slot edit-dialog - Pass-through for an associated dialog element.
  *
@@ -32,9 +34,10 @@ export type ChatMessageActionType = '' | 'connected.agent' | 'attachment.added' 
  * @csspart header - The sender/time/badge row.
  * @csspart bubble - The message bubble.
  * @csspart content - The message content within the bubble.
+ * @csspart attachments - The attachments row beneath the message content.
  * @csspart system-card - The card rendered for system action types.
  *
- * @cssproperty --message-background - The bubble's background colour.
+ * @cssproperty --message-background - The bubble's background color.
  */
 export default class ZnChatMessage extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -117,8 +120,12 @@ export default class ZnChatMessage extends ZincElement {
         <div part="body" class="message__body">
           ${sending ? null : this.renderHeader()}
           <div part="bubble" class="message__bubble ${sending ? 'message__bubble--sending' : ''}">
-            <div part="content" class="message__content">${this.renderContent()}</div>
-            ${sending ? html`<div class="message__meta">Sending...</div>` : html`
+            <div class="message__main">
+              <div part="content" class="message__content">${this.renderContent()}</div>
+              <slot name="attachments" part="attachments" class="message__attachments"></slot>
+            </div>
+            ${sending ? html`
+              <div class="message__meta">Sending...</div>` : html`
               <div class="message__actions">
                 <slot name="edit-dialog-trigger"></slot>
               </div>`}
@@ -172,14 +179,16 @@ export default class ZnChatMessage extends ZincElement {
       <div part="header" class="message__header">
         <span class="message__sender">${this.sender || (this.customerInitiated ? 'Customer' : 'You')}</span>
         ${this.time ? html`<span class="message__time">${this.getSentTime()}</span>` : nothing}
-        ${this.actionType === 'internal' ? html`<span class="message__badge">INTERNAL</span>` : nothing}
+        ${this.actionType === 'internal' ? html`
+          <zn-chip type="info">Internal</zn-chip>` : nothing}
         <slot name="badge"></slot>
       </div>`;
   }
 
   private renderContent() {
     if (!this.message) {
-      return html`<slot></slot>`;
+      return html`
+        <slot></slot>`;
     }
 
     let content = cleanHTML(this.message);

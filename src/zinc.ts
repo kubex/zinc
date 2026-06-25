@@ -8,6 +8,7 @@ export { default as Collapsible } from './components/collapsible';
 export { default as Alert } from './components/alert';
 export { default as ButtonGroup } from './components/button-group';
 export { default as ChatMessage } from './components/chat-message';
+export { default as ChatMessageAttachment } from './components/chat-message-attachment';
 export { default as Chip } from './components/chip';
 export { default as Well } from './components/well';
 export { default as CopyButton } from './components/copy-button';

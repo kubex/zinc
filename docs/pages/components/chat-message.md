@@ -50,7 +50,24 @@ Use the `edit-dialog-trigger` slot to add an action to the end of the bubble, su
 </zn-chat-message>
 ```
 
-### Custom Bubble Colour
+### Attachments
+
+Use [`zn-chat-message-attachment`](/components/chat-message-attachment) to display files or links
+beneath the message content. They are automatically placed in the `attachments` slot and wrap onto
+multiple lines when they overflow.
+
+```html:preview
+<zn-chat-message sender="Agent Name" time="1718193420">
+  The customer disconnected before I could answer his questions.
+  <zn-button slot="edit-dialog-trigger" icon="close" icon-button plain no-hover
+             color="error" tooltip="Remove Note"></zn-button>
+  <zn-chat-message-attachment href="#" name="this_is_an_attachment.pdf"></zn-chat-message-attachment>
+  <zn-chat-message-attachment href="#" name="quarterly_report.xlsx"></zn-chat-message-attachment>
+  <zn-chat-message-attachment href="#" name="screenshot.png"></zn-chat-message-attachment>
+</zn-chat-message>
+```
+
+### Custom Bubble Color
 
 The bubble background can be themed with the `--message-background` custom property.
 

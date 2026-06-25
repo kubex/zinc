@@ -7385,7 +7385,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ 'zn-button': ZnButton, 'zn-empty-state': ZnEmptyState, 'zn-chip': ZnChip, 'zn-hover-container': ZnHoverContainer, 'zn-dropdown': ZnDropdown, 'zn-menu': ZnMenu, 'zn-menu-item': ZnMenuItem, 'zn-button-group': ZnButtonGroup, 'zn-confirm': ZnConfirm, 'zn-skeleton': ZnSkeleton, 'zn-style': ZnStyle, 'zn-data-table-search': ZnDataTableSearch, }"
+              "default": "{ 'zn-button': ZnButton, 'zn-empty-state': ZnEmptyState, 'zn-chip': ZnChip, 'zn-hover-container': ZnHoverContainer, 'zn-dropdown': ZnDropdown, 'zn-menu': ZnMenu, 'zn-menu-item': ZnMenuItem, 'zn-button-group': ZnButtonGroup, 'zn-confirm': ZnConfirm, 'zn-panel': ZnPanel, 'zn-skeleton': ZnSkeleton, 'zn-style': ZnStyle, 'zn-data-table-columns': ZnDataTableColumns, 'zn-data-table-search': ZnDataTableSearch, }"
             },
             {
               "kind": "field",
@@ -7520,12 +7520,12 @@
             },
             {
               "kind": "field",
-              "name": "standalone",
+              "name": "flush",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
-              "attribute": "standalone"
+              "attribute": "flush"
             },
             {
               "kind": "field",
@@ -7586,6 +7586,14 @@
               },
               "default": "false",
               "attribute": "no-initial-load"
+            },
+            {
+              "kind": "field",
+              "name": "storageKey",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "storage-key"
             },
             {
               "kind": "field",
@@ -7721,29 +7729,12 @@
             },
             {
               "kind": "field",
-              "name": "_expandedRows",
+              "name": "_visibleColumns",
               "type": {
-                "text": "Set<string>"
+                "text": "string[]"
               },
               "privacy": "private",
-              "default": "new Set()"
-            },
-            {
-              "kind": "field",
-              "name": "_hiddenCells",
-              "type": {
-                "text": "Map<string, Cell[]>"
-              },
-              "privacy": "private",
-              "default": "new Map()"
-            },
-            {
-              "kind": "field",
-              "name": "_secondaryHeaders",
-              "type": {
-                "text": "HeaderConfig[]"
-              },
-              "privacy": "private"
+              "default": "[]"
             },
             {
               "kind": "field",
@@ -7760,6 +7751,10 @@
             {
               "kind": "field",
               "name": "filterChangeListener"
+            },
+            {
+              "kind": "field",
+              "name": "columnsChangeListener"
             },
             {
               "kind": "field",
@@ -7803,6 +7798,13 @@
                   "name": "data",
                   "type": {
                     "text": "any"
+                  }
+                },
+                {
+                  "name": "grouped",
+                  "default": "false",
+                  "type": {
+                    "text": "boolean"
                   }
                 }
               ]
@@ -8001,64 +8003,48 @@
             },
             {
               "kind": "method",
-              "name": "hasHiddenColumns",
+              "name": "columnStorageKey",
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "boolean"
+                  "text": "string | null"
                 }
               }
             },
             {
               "kind": "method",
-              "name": "renderExpanderCell",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "row",
-                  "type": {
-                    "text": "Row"
-                  }
-                }
-              ]
+              "name": "persistColumnState",
+              "privacy": "private"
             },
             {
               "kind": "method",
-              "name": "renderDetailsRow",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "row",
-                  "type": {
-                    "text": "Row"
-                  }
-                },
-                {
-                  "name": "colSpan",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
+              "name": "loadColumnState",
+              "privacy": "private"
             },
             {
               "kind": "method",
-              "name": "toggleRowExpansion",
+              "name": "renderColumnControl",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "defaultColumnKeys",
               "privacy": "private",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "Event"
-                  }
-                },
-                {
-                  "name": "row",
-                  "type": {
-                    "text": "Row"
-                  }
+              "return": {
+                "type": {
+                  "text": "string[]"
                 }
-              ]
+              }
+            },
+            {
+              "kind": "method",
+              "name": "visibleHeaders",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HeaderConfig[]"
+                }
+              }
             },
             {
               "kind": "method",
@@ -8317,12 +8303,12 @@
               "fieldName": "hidePagination"
             },
             {
-              "name": "standalone",
+              "name": "flush",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
-              "fieldName": "standalone"
+              "fieldName": "flush"
             },
             {
               "name": "caption",
@@ -8378,6 +8364,13 @@
               "fieldName": "noInitialLoad"
             },
             {
+              "name": "storage-key",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "storageKey"
+            },
+            {
               "name": "group-by",
               "type": {
                 "text": "string"
@@ -8402,7 +8395,7 @@
           "tagNameWithoutPrefix": "data-table",
           "tagName": "zn-data-table",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/data-table\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-empty-state\n * @dependency zn-chip\n * @dependency zn-hover-container\n * @dependency zn-dropdown\n * @dependency zn-menu\n * @dependency zn-menu-item\n * @dependency zn-button-group\n * @dependency zn-confirm\n * @dependency zn-skeleton\n * @dependency zn-data-table-search\n *\n * @slot - The default slot.\n * @slot search - Slot for search component.\n * @slot sort - Slot for sort component.\n * @slot filter - Slot for filter component.\n * @slot filter-top - Slot for top-level filter component.\n * @slot delete-action - Slot for delete action button.\n * @slot modify-action - Slot for modify action button.\n * @slot create-action - Slot for create action button.\n * @slot inputs - Slot for additional input controls.\n * @slot empty-state - Slot for custom empty state.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/data-table\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-empty-state\n * @dependency zn-chip\n * @dependency zn-hover-container\n * @dependency zn-dropdown\n * @dependency zn-menu\n * @dependency zn-menu-item\n * @dependency zn-button-group\n * @dependency zn-confirm\n * @dependency zn-panel\n * @dependency zn-skeleton\n * @dependency zn-data-table-columns\n * @dependency zn-data-table-search\n *\n * @slot - The default slot.\n * @slot search - Slot for search component.\n * @slot sort - Slot for sort component.\n * @slot filter - Slot for filter component.\n * @slot filter-top - Slot for top-level filter component.\n * @slot delete-action - Slot for delete action button.\n * @slot modify-action - Slot for modify action button.\n * @slot create-action - Slot for create action button.\n * @slot inputs - Slot for additional input controls.\n * @slot empty-state - Slot for custom empty state.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
           "documentation": "https://zinc.style/components/data-table",
           "status": "experimental",
           "since": "1.0",
@@ -8416,7 +8409,9 @@
             "zn-menu-item",
             "zn-button-group",
             "zn-confirm",
+            "zn-panel",
             "zn-skeleton",
+            "zn-data-table-columns",
             "zn-data-table-search"
           ]
         }
@@ -8428,6 +8423,241 @@
           "declaration": {
             "name": "ZnDataTable",
             "module": "components/data-table/data-table.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/data-table-columns/data-table-columns.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnDataTableColumns",
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-button': ZnButton, 'zn-checkbox': ZnCheckbox, 'zn-icon': ZnIcon, 'zn-slideout': ZnSlideout, }"
+            },
+            {
+              "kind": "field",
+              "name": "slideout",
+              "type": {
+                "text": "ZnSlideout"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "columns",
+              "type": {
+                "text": "ColumnOption[]"
+              },
+              "default": "[]",
+              "attribute": "columns"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string[]"
+              },
+              "default": "[]",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Columns'",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "_order",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_draggedKey",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "open",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_reconcileOrder",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "toggleColumn",
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "checked",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "handleCheckbox",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_handleDragStart",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "DragEvent"
+                  }
+                },
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleDragOver",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "DragEvent"
+                  }
+                },
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleDrop",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "DragEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleDragEnd",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_emitChange",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted with the ordered list of visible column keys when the user changes columns.",
+              "name": "zn-columns-change"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "columns",
+              "type": {
+                "text": "ColumnOption[]"
+              },
+              "default": "[]",
+              "fieldName": "columns"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string[]"
+              },
+              "default": "[]",
+              "fieldName": "value"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Columns'",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Column visibility and ordering control for data tables.",
+          "tagNameWithoutPrefix": "data-table-columns",
+          "tagName": "zn-data-table-columns",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Column visibility and ordering control for data tables.\n * @documentation https://zinc.style/components/data-table-columns\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-checkbox\n * @dependency zn-icon\n * @dependency zn-slideout\n *\n * @event zn-columns-change - Emitted with the ordered list of visible column keys when the user changes columns.\n *\n * @csspart base - The component's base wrapper.\n */",
+          "documentation": "https://zinc.style/components/data-table-columns",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-button",
+            "zn-checkbox",
+            "zn-icon",
+            "zn-slideout"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnDataTableColumns",
+            "module": "components/data-table-columns/data-table-columns.js"
           }
         }
       ]

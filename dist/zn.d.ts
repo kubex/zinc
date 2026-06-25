@@ -1757,6 +1757,16 @@ declare module "components/copy-button/index" {
         }
     }
 }
+declare module "events/zn-columns-change" {
+    export type ZnColumnsChangeEvent = CustomEvent<{
+        columns: string[];
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-columns-change': ZnColumnsChangeEvent;
+        }
+    }
+}
 declare module "events/zn-filter-change" {
     export type ZnFilterChangeEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -1774,6 +1784,338 @@ declare module "events/zn-search-change" {
     global {
         interface GlobalEventHandlersEventMap {
             'zn-search-change': ZnSearchChangeEvent;
+        }
+    }
+}
+declare module "components/checkbox/checkbox.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    import type { ZincFormControl } from "internal/zinc-element";
+    type ColorOption = 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent';
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/checkbox
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     *
+     * @slot - The checkbox's label.
+     * @slot description - A description of the checkbox's label. Serves as help text for a checkbox item. Alternatively, you can use the `description` attribute.
+     * @slot selected-content - Use to nest rich content (like an input) inside a selected checkbox item. Use only with the contained style.
+     *
+     * @event zn-blur - Emitted when the checkbox loses focus.
+     * @event zn-change - Emitted when the checked state changes.
+     * @event zn-focus - Emitted when the checkbox gains focus.
+     * @event zn-input - Emitted when the checkbox receives input.
+     * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart control - The square container that wraps the checkbox's checked state.
+     * @csspart control--checked - Matches the control part when the checkbox is checked.
+     * @csspart control--indeterminate - Matches the control part when the checkbox is indeterminate.
+     * @csspart checked-icon - The checked icon, an `<zn-icon>` element.
+     * @csspart unchecked-icon - The unchecked icon, an `<zn-icon>` element.
+     * @csspart indeterminate-icon - The indeterminate icon, an `<zn-icon>` element.
+     * @csspart label - The container that wraps the checkbox's label.
+     * @csspart description - The container that wraps the checkbox's description.
+     * @csspart selected-content - The container that wraps optional content that appears when a checkbox is checked.
+     */
+    export default class ZnCheckbox extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+        };
+        private readonly formControlController;
+        private readonly hasSlotController;
+        input: HTMLInputElement;
+        private hasFocus;
+        title: string;
+        /** The name of the checkbox, submitted as a name/value pair with form data. */
+        name: string;
+        /** The current value of the checkbox, submitted as a name/value pair with form data. */
+        value: string;
+        /** The unchecked value of the checkbox, submitted as a name/value pair with form data. */
+        uncheckedValue: string;
+        /** The checkbox's size. */
+        size: 'small' | 'medium' | 'large';
+        /** Disables the checkbox. */
+        disabled: boolean;
+        /** Draws the checkbox in a checked state. */
+        checked: boolean;
+        /**
+         * Draws the checkbox in an indeterminate state. This is usually applied to checkboxes that represents a "select
+         * all/none" behavior when associated checkboxes have a mix of checked and unchecked states.
+         */
+        indeterminate: boolean;
+        /** Draws a container around the checkbox. */
+        contained: boolean;
+        /** Removes a container around the checkbox. */
+        borderless: boolean;
+        /** Applies styles relevant to checkboxes in a horizontal layout. */
+        horizontal: boolean;
+        /** The default value of the form control. Primarily used for resetting the form control. */
+        defaultChecked: boolean;
+        /**
+         * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
+         * to place the form control outside of a form and associate it with the form that has this `id`. The form must be in
+         * the same document or shadow root for this to work.
+         */
+        form: string;
+        /** Makes the checkbox a required field. */
+        required: boolean;
+        /** Submits the form when checkbox is clicked. */
+        submitOnClick: boolean;
+        /** The checkbox's help text. If you need to display HTML, use the `description` slot instead. */
+        description: string;
+        label: string;
+        labelTooltip: string;
+        /** The icon to show when the checkbox is checked. */
+        checkedIcon: string;
+        /** The icon to show when the checkbox is unchecked. */
+        uncheckedIcon: string;
+        /** The color of the checkbox. */
+        color: ColorOption;
+        /** The color of the checkbox when checked. Overrides `color`. */
+        checkedColor: ColorOption;
+        /** The color of the checkbox when unchecked. Overrides `color`. */
+        uncheckedColor: ColorOption;
+        /** Gets the validity state object */
+        get validity(): ValidityState;
+        get isChecked(): boolean;
+        /** Gets the validation message */
+        get validationMessage(): string;
+        firstUpdated(): void;
+        private handleClick;
+        private handleBlur;
+        private handleInput;
+        private handleInvalid;
+        private handleFocus;
+        private handleSelectedContentClick;
+        handleDisabledChange(): void;
+        handleStateChange(): void;
+        /** Simulates a click on the checkbox. */
+        click(): void;
+        /** Sets focus on the checkbox. */
+        focus(options?: FocusOptions): void;
+        /** Removes focus from the checkbox. */
+        blur(): void;
+        /** Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
+        checkValidity(): boolean;
+        /** Gets the associated form, if one exists. */
+        getForm(): HTMLFormElement | null;
+        /** Checks for validity and shows the browser's validation message if the control is invalid. */
+        reportValidity(): boolean;
+        /**
+         * Sets a custom validation message. The value provided will be shown to the user when the form is submitted. To clear
+         * the custom validation message, call this method with an empty string.
+         */
+        setCustomValidity(message: string): void;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/checkbox/index" {
+    import ZnCheckbox from "components/checkbox/checkbox.component";
+    export * from "components/checkbox/checkbox.component";
+    export default ZnCheckbox;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-checkbox': ZnCheckbox;
+        }
+    }
+}
+declare module "internal/animate" {
+    /**
+     * Animates an element using keyframes. Returns a promise that resolves after the animation completes or gets canceled.
+     */
+    export function animateTo(el: HTMLElement, keyframes: Keyframe[], options?: KeyframeAnimationOptions): Promise<unknown>;
+    /** Parses a CSS duration and returns the number of milliseconds. */
+    export function parseDuration(delay: number | string): number;
+    /** Tells if the user has enabled the "reduced motion" setting in their browser or OS. */
+    export function prefersReducedMotion(): boolean;
+    /**
+     * Stops all active animations on the target element. Returns a promise that resolves after all animations are canceled.
+     */
+    export function stopAnimations(el: HTMLElement): Promise<unknown[]>;
+    /**
+     * We can't animate `height: auto`, but we can calculate the height and shim keyframes by replacing it with the
+     * element's scrollHeight before the animation.
+     */
+    export function shimKeyframesHeightAuto(keyframes: Keyframe[], calculatedHeight: number): {
+        height: string | number | null | undefined;
+        composite?: CompositeOperationOrAuto;
+        easing?: string;
+        offset?: number | null;
+    }[];
+}
+declare module "utilities/animation-registry" {
+    export interface ElementAnimation {
+        keyframes: Keyframe[];
+        rtlKeyframes?: Keyframe[];
+        options?: KeyframeAnimationOptions;
+    }
+    export interface ElementAnimationMap {
+        [animationName: string]: ElementAnimation;
+    }
+    export interface GetAnimationOptions {
+        /**
+         * The component's directionality. When set to "rtl", `rtlKeyframes` will be preferred over `keyframes` where
+         * available using getAnimation().
+         */
+        dir: string;
+    }
+    /**
+     * Sets a default animation. Components should use the `name.animation` for primary animations and `name.part.animation`
+     * for secondary animations, e.g. `dialog.show` and `dialog.overlay.show`. For modifiers, use `drawer.showTop`.
+     */
+    export function setDefaultAnimation(animationName: string, animation: ElementAnimation | null): void;
+    /** Sets a custom animation for the specified element. */
+    export function setAnimation(el: Element, animationName: string, animation: ElementAnimation | null): void;
+    /** Gets an element's animation. Falls back to the default if no animation is found. */
+    export function getAnimation(el: Element, animationName: string, options: GetAnimationOptions): ElementAnimation;
+}
+declare module "components/slideout/slideout.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/slideout
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-button
+     *
+     * @event zn-show - Emitted when the slideout is opens.
+     * @event zn-close - Emitted when the slideout is closed.
+     * @event {{ source: 'close-button' | 'keyboard' | 'overlay' }} zn-request-close - Emitted when the user attempts to
+     * close the slideout by clicking the close button, clicking the overlay, or pressing escape. Calling
+     * `event.preventDefault()` will keep the slideout open. Avoid using this unless closing the slideout will result in
+     * destructive behavior such as data loss.
+     *
+     * @slot - The default slot.
+     * @slot label - The slideout's label. Alternatively you can use the `label` attribute.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart header - The slideout's header. This element wraps the title and header actions.
+     * @csspart close-button - The slideout's close button.
+     * @csspart close-button__base - The close buttons exported `base` part.
+     * @csspart body - The slideout's body.
+     *
+     * @cssproperty --width - The preferred width of the slideout. Note the slideout will shrink to accommodate smaller screens.
+     * @cssproperty --header-spacing - The amount of padding to use for the header.
+     * @cssproperty --body-spacing - The amount of padding to use for the body.
+     */
+    export default class ZnSlideout extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-button': typeof ZnButton;
+        };
+        private readonly localize;
+        private closeWatcher;
+        slideout: HTMLDialogElement;
+        panel: HTMLElement;
+        overlay: HTMLElement;
+        /**
+         * Indicated whether of not the slideout is open. You can toggle this attribute to show and hide the slideout, or you can
+         * use the `show()` and `hide()` methods and this attribute will reflect the slideout's state.
+         */
+        open: boolean;
+        /**
+         * The slideout's label as displayed in the header. You should always include a relevant label even when using
+         * `no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.
+         */
+        label: string;
+        /**
+         * The slideout's trigger element. This is used to open the slideout when clicked. If you do not provide a trigger, you
+         * will need to manually open the slideout using the `show()` method.
+         */
+        trigger: string;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        private requestClose;
+        private addOpenListeners;
+        private removeOpenListeners;
+        /** Shows the slideout. */
+        show(): Promise<void>;
+        /** Hides the slideout. */
+        hide(): Promise<void>;
+        private closeClickHandler;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/slideout/index" {
+    import ZnSlideout from "components/slideout/slideout.component";
+    export * from "components/slideout/slideout.component";
+    export default ZnSlideout;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-slideout': ZnSlideout;
+        }
+    }
+}
+declare module "components/data-table-columns/data-table-columns.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    import ZnCheckbox from "components/checkbox/index";
+    import ZnIcon from "components/icon/index";
+    import ZnSlideout from "components/slideout/index";
+    export interface ColumnOption {
+        key: string;
+        label: string;
+    }
+    /**
+     * @summary Column visibility and ordering control for data tables.
+     * @documentation https://zinc.style/components/data-table-columns
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-button
+     * @dependency zn-checkbox
+     * @dependency zn-icon
+     * @dependency zn-slideout
+     *
+     * @event zn-columns-change - Emitted with the ordered list of visible column keys when the user changes columns.
+     *
+     * @csspart base - The component's base wrapper.
+     */
+    export default class ZnDataTableColumns extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-button': typeof ZnButton;
+            'zn-checkbox': typeof ZnCheckbox;
+            'zn-icon': typeof ZnIcon;
+            'zn-slideout': typeof ZnSlideout;
+        };
+        private slideout;
+        columns: ColumnOption[];
+        value: string[];
+        label: string;
+        private _order;
+        private _draggedKey;
+        private open;
+        protected willUpdate(changedProperties: PropertyValues): void;
+        private _reconcileOrder;
+        toggleColumn(key: string, checked: boolean): void;
+        private handleCheckbox;
+        private _handleDragStart;
+        private _handleDragOver;
+        private _handleDrop;
+        private _handleDragEnd;
+        private _emitChange;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/data-table-columns/index" {
+    import ZnDataTableColumns from "components/data-table-columns/data-table-columns.component";
+    export * from "components/data-table-columns/data-table-columns.component";
+    export default ZnDataTableColumns;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-data-table-columns': ZnDataTableColumns;
         }
     }
 }
@@ -2161,30 +2503,6 @@ declare module "components/option/index" {
         }
     }
 }
-declare module "internal/animate" {
-    /**
-     * Animates an element using keyframes. Returns a promise that resolves after the animation completes or gets canceled.
-     */
-    export function animateTo(el: HTMLElement, keyframes: Keyframe[], options?: KeyframeAnimationOptions): Promise<unknown>;
-    /** Parses a CSS duration and returns the number of milliseconds. */
-    export function parseDuration(delay: number | string): number;
-    /** Tells if the user has enabled the "reduced motion" setting in their browser or OS. */
-    export function prefersReducedMotion(): boolean;
-    /**
-     * Stops all active animations on the target element. Returns a promise that resolves after all animations are canceled.
-     */
-    export function stopAnimations(el: HTMLElement): Promise<unknown[]>;
-    /**
-     * We can't animate `height: auto`, but we can calculate the height and shim keyframes by replacing it with the
-     * element's scrollHeight before the animation.
-     */
-    export function shimKeyframesHeightAuto(keyframes: Keyframe[], calculatedHeight: number): {
-        height: string | number | null | undefined;
-        composite?: CompositeOperationOrAuto;
-        easing?: string;
-        offset?: number | null;
-    }[];
-}
 declare module "internal/conditional" {
     import type { ReactiveController, ReactiveControllerHost } from 'lit';
     export interface ConditionalHost {
@@ -2206,32 +2524,6 @@ declare module "internal/conditional" {
         check(): void;
         private checkConditionals;
     }
-}
-declare module "utilities/animation-registry" {
-    export interface ElementAnimation {
-        keyframes: Keyframe[];
-        rtlKeyframes?: Keyframe[];
-        options?: KeyframeAnimationOptions;
-    }
-    export interface ElementAnimationMap {
-        [animationName: string]: ElementAnimation;
-    }
-    export interface GetAnimationOptions {
-        /**
-         * The component's directionality. When set to "rtl", `rtlKeyframes` will be preferred over `keyframes` where
-         * available using getAnimation().
-         */
-        dir: string;
-    }
-    /**
-     * Sets a default animation. Components should use the `name.animation` for primary animations and `name.part.animation`
-     * for secondary animations, e.g. `dialog.show` and `dialog.overlay.show`. For modifiers, use `drawer.showTop`.
-     */
-    export function setDefaultAnimation(animationName: string, animation: ElementAnimation | null): void;
-    /** Sets a custom animation for the specified element. */
-    export function setAnimation(el: Element, animationName: string, animation: ElementAnimation | null): void;
-    /** Gets an element's animation. Falls back to the default if no animation is found. */
-    export function getAnimation(el: Element, animationName: string, options: GetAnimationOptions): ElementAnimation;
 }
 declare module "components/opt-group/opt-group.component" {
     import { type CSSResultGroup } from 'lit';
@@ -3081,6 +3373,53 @@ declare module "components/hover-container/index" {
         }
     }
 }
+declare module "components/panel/panel.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Panels are versatile containers that provide structure for organizing content with optional headers and footers.
+     * @documentation https://zinc.style/components/panel
+     * @status experimental
+     * @since 1.0
+     *
+     * @slot - The panel's main content.
+     * @slot actions - Actions displayed in the panel header (buttons, chips, etc).
+     * @slot footer - Content displayed in the panel footer.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.
+     */
+    export default class ZnPanel extends ZincElement {
+        static styles: CSSResultGroup;
+        private readonly hasSlotController;
+        basis: number;
+        caption: string;
+        icon: string;
+        tabbed: boolean;
+        headerBorderless: boolean;
+        cosmic: boolean;
+        flush: boolean;
+        flushX: boolean;
+        flushY: boolean;
+        flushFooter: boolean;
+        transparent: boolean;
+        shadow: boolean;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        connectedCallback(): void;
+        protected render(): unknown;
+    }
+}
+declare module "components/panel/index" {
+    import ZnPanel from "components/panel/panel.component";
+    export * from "components/panel/panel.component";
+    export default ZnPanel;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-panel': ZnPanel;
+        }
+    }
+}
 declare module "components/skeleton/skeleton.component" {
     import ZincElement from "internal/zinc-element";
     import type { CSSResultGroup } from "lit";
@@ -3152,7 +3491,8 @@ declare module "components/style/index" {
     }
 }
 declare module "components/data-table/data-table.component" {
-    import { type CSSResultGroup, type TemplateResult } from 'lit';
+    import { type CSSResultGroup, type PropertyValues, type TemplateResult } from 'lit';
+    import { type ZnColumnsChangeEvent } from "events/zn-columns-change";
     import { type ZnFilterChangeEvent } from "events/zn-filter-change";
     import { type ZnSearchChangeEvent } from "events/zn-search-change";
     import ZincElement from "internal/zinc-element";
@@ -3160,12 +3500,14 @@ declare module "components/data-table/data-table.component" {
     import ZnButtonGroup from "components/button-group/index";
     import ZnChip from "components/chip/index";
     import ZnConfirm from "components/confirm/index";
+    import ZnDataTableColumns from "components/data-table-columns/index";
     import ZnDataTableSearch from "components/data-table-search/index";
     import ZnDropdown from "components/dropdown/index";
     import ZnEmptyState from "components/empty-state/index";
     import ZnHoverContainer from "components/hover-container/index";
     import ZnMenu from "components/menu/index";
     import ZnMenuItem from "components/menu-item/index";
+    import ZnPanel from "components/panel/index";
     import ZnSkeleton from "components/skeleton/index";
     import ZnStyle from "components/style/index";
     interface Cell {
@@ -3223,13 +3565,9 @@ declare module "components/data-table/data-table.component" {
     interface HeaderConfig {
         key: string;
         label: string;
-        required?: boolean;
-        default?: boolean;
         sortable?: boolean;
         filterable?: boolean;
         hideHeader?: boolean;
-        hideColumn?: boolean;
-        secondary?: boolean;
     }
     /**
      * @summary Short summary of the component's intended use.
@@ -3246,7 +3584,9 @@ declare module "components/data-table/data-table.component" {
      * @dependency zn-menu-item
      * @dependency zn-button-group
      * @dependency zn-confirm
+     * @dependency zn-panel
      * @dependency zn-skeleton
+     * @dependency zn-data-table-columns
      * @dependency zn-data-table-search
      *
      * @slot - The default slot.
@@ -3276,8 +3616,10 @@ declare module "components/data-table/data-table.component" {
             'zn-menu-item': typeof ZnMenuItem;
             'zn-button-group': typeof ZnButtonGroup;
             'zn-confirm': typeof ZnConfirm;
+            'zn-panel': typeof ZnPanel;
             'zn-skeleton': typeof ZnSkeleton;
             'zn-style': typeof ZnStyle;
+            'zn-data-table-columns': typeof ZnDataTableColumns;
             'zn-data-table-search': typeof ZnDataTableSearch;
         };
         dataUri: string;
@@ -3295,7 +3637,7 @@ declare module "components/data-table/data-table.component" {
         unsortableHeaders: string;
         unsortable: boolean;
         hidePagination: boolean;
-        standalone: boolean;
+        flush: boolean;
         caption: string;
         emptyStateCaption: string;
         emptyStateIcon: string;
@@ -3303,6 +3645,7 @@ declare module "components/data-table/data-table.component" {
         filters: [];
         method: 'GET' | 'POST';
         noInitialLoad: boolean;
+        storageKey: string;
         groupBy: string;
         groups: string;
         selectAllButton: ZnButton;
@@ -3319,20 +3662,20 @@ declare module "components/data-table/data-table.component" {
         private hasSlotController;
         private _dataTask;
         private rowHasActions;
-        private _expandedRows;
-        private _hiddenCells;
-        private _secondaryHeaders;
+        private _visibleColumns;
         requestParams: Record<string, any>;
         refresh(): void;
         render(): TemplateResult<1>;
         connectedCallback(): void;
+        protected willUpdate(changed: PropertyValues): void;
         disconnectedCallback(): void;
         filterChangeListener: (e: ZnFilterChangeEvent) => void;
+        columnsChangeListener: (e: ZnColumnsChangeEvent) => void;
         searchChangeListener: (e: ZnSearchChangeEvent) => void;
         emptyState(): TemplateResult<1>;
         renderTable(data: Response): TemplateResult<1>;
         humanize(str: string): string;
-        renderTableData(data: any): TemplateResult<1>;
+        renderTableData(data: any, grouped?: boolean): TemplateResult<1>;
         getTableHeader(): TemplateResult<1>;
         getTableFooter(): TemplateResult<1>;
         getRowsSelected(): TemplateResult<1> | null;
@@ -3355,10 +3698,12 @@ declare module "components/data-table/data-table.component" {
         private getTableSortIcon;
         private renderCellHeader;
         private renderCellBody;
-        private hasHiddenColumns;
-        private renderExpanderCell;
-        private renderDetailsRow;
-        private toggleRowExpansion;
+        private columnStorageKey;
+        private persistColumnState;
+        private loadColumnState;
+        private renderColumnControl;
+        private defaultColumnKeys;
+        private visibleHeaders;
         private isRowSelected;
         private getRows;
         private getSelectedKeys;
@@ -4666,53 +5011,6 @@ declare module "components/timer/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-timer': ZnTimer;
-        }
-    }
-}
-declare module "components/panel/panel.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    /**
-     * @summary Panels are versatile containers that provide structure for organizing content with optional headers and footers.
-     * @documentation https://zinc.style/components/panel
-     * @status experimental
-     * @since 1.0
-     *
-     * @slot - The panel's main content.
-     * @slot actions - Actions displayed in the panel header (buttons, chips, etc).
-     * @slot footer - Content displayed in the panel footer.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.
-     */
-    export default class ZnPanel extends ZincElement {
-        static styles: CSSResultGroup;
-        private readonly hasSlotController;
-        basis: number;
-        caption: string;
-        icon: string;
-        tabbed: boolean;
-        headerBorderless: boolean;
-        cosmic: boolean;
-        flush: boolean;
-        flushX: boolean;
-        flushY: boolean;
-        flushFooter: boolean;
-        transparent: boolean;
-        shadow: boolean;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        connectedCallback(): void;
-        protected render(): unknown;
-    }
-}
-declare module "components/panel/index" {
-    import ZnPanel from "components/panel/panel.component";
-    export * from "components/panel/panel.component";
-    export default ZnPanel;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-panel': ZnPanel;
         }
     }
 }
@@ -6079,144 +6377,6 @@ declare module "components/editor/index" {
         }
     }
 }
-declare module "components/checkbox/checkbox.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    import ZnIcon from "components/icon/index";
-    import type { ZincFormControl } from "internal/zinc-element";
-    type ColorOption = 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent';
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/checkbox
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-icon
-     *
-     * @slot - The checkbox's label.
-     * @slot description - A description of the checkbox's label. Serves as help text for a checkbox item. Alternatively, you can use the `description` attribute.
-     * @slot selected-content - Use to nest rich content (like an input) inside a selected checkbox item. Use only with the contained style.
-     *
-     * @event zn-blur - Emitted when the checkbox loses focus.
-     * @event zn-change - Emitted when the checked state changes.
-     * @event zn-focus - Emitted when the checkbox gains focus.
-     * @event zn-input - Emitted when the checkbox receives input.
-     * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
-     *
-     * @csspart base - The component's base wrapper.
-     * @csspart control - The square container that wraps the checkbox's checked state.
-     * @csspart control--checked - Matches the control part when the checkbox is checked.
-     * @csspart control--indeterminate - Matches the control part when the checkbox is indeterminate.
-     * @csspart checked-icon - The checked icon, an `<zn-icon>` element.
-     * @csspart unchecked-icon - The unchecked icon, an `<zn-icon>` element.
-     * @csspart indeterminate-icon - The indeterminate icon, an `<zn-icon>` element.
-     * @csspart label - The container that wraps the checkbox's label.
-     * @csspart description - The container that wraps the checkbox's description.
-     * @csspart selected-content - The container that wraps optional content that appears when a checkbox is checked.
-     */
-    export default class ZnCheckbox extends ZincElement implements ZincFormControl {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-icon': typeof ZnIcon;
-        };
-        private readonly formControlController;
-        private readonly hasSlotController;
-        input: HTMLInputElement;
-        private hasFocus;
-        title: string;
-        /** The name of the checkbox, submitted as a name/value pair with form data. */
-        name: string;
-        /** The current value of the checkbox, submitted as a name/value pair with form data. */
-        value: string;
-        /** The unchecked value of the checkbox, submitted as a name/value pair with form data. */
-        uncheckedValue: string;
-        /** The checkbox's size. */
-        size: 'small' | 'medium' | 'large';
-        /** Disables the checkbox. */
-        disabled: boolean;
-        /** Draws the checkbox in a checked state. */
-        checked: boolean;
-        /**
-         * Draws the checkbox in an indeterminate state. This is usually applied to checkboxes that represents a "select
-         * all/none" behavior when associated checkboxes have a mix of checked and unchecked states.
-         */
-        indeterminate: boolean;
-        /** Draws a container around the checkbox. */
-        contained: boolean;
-        /** Removes a container around the checkbox. */
-        borderless: boolean;
-        /** Applies styles relevant to checkboxes in a horizontal layout. */
-        horizontal: boolean;
-        /** The default value of the form control. Primarily used for resetting the form control. */
-        defaultChecked: boolean;
-        /**
-         * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
-         * to place the form control outside of a form and associate it with the form that has this `id`. The form must be in
-         * the same document or shadow root for this to work.
-         */
-        form: string;
-        /** Makes the checkbox a required field. */
-        required: boolean;
-        /** Submits the form when checkbox is clicked. */
-        submitOnClick: boolean;
-        /** The checkbox's help text. If you need to display HTML, use the `description` slot instead. */
-        description: string;
-        label: string;
-        labelTooltip: string;
-        /** The icon to show when the checkbox is checked. */
-        checkedIcon: string;
-        /** The icon to show when the checkbox is unchecked. */
-        uncheckedIcon: string;
-        /** The color of the checkbox. */
-        color: ColorOption;
-        /** The color of the checkbox when checked. Overrides `color`. */
-        checkedColor: ColorOption;
-        /** The color of the checkbox when unchecked. Overrides `color`. */
-        uncheckedColor: ColorOption;
-        /** Gets the validity state object */
-        get validity(): ValidityState;
-        get isChecked(): boolean;
-        /** Gets the validation message */
-        get validationMessage(): string;
-        firstUpdated(): void;
-        private handleClick;
-        private handleBlur;
-        private handleInput;
-        private handleInvalid;
-        private handleFocus;
-        private handleSelectedContentClick;
-        handleDisabledChange(): void;
-        handleStateChange(): void;
-        /** Simulates a click on the checkbox. */
-        click(): void;
-        /** Sets focus on the checkbox. */
-        focus(options?: FocusOptions): void;
-        /** Removes focus from the checkbox. */
-        blur(): void;
-        /** Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
-        checkValidity(): boolean;
-        /** Gets the associated form, if one exists. */
-        getForm(): HTMLFormElement | null;
-        /** Checks for validity and shows the browser's validation message if the control is invalid. */
-        reportValidity(): boolean;
-        /**
-         * Sets a custom validation message. The value provided will be shown to the user when the form is submitted. To clear
-         * the custom validation message, call this method with an empty string.
-         */
-        setCustomValidity(message: string): void;
-        render(): import("lit-html").TemplateResult<1>;
-    }
-}
-declare module "components/checkbox/index" {
-    import ZnCheckbox from "components/checkbox/checkbox.component";
-    export * from "components/checkbox/checkbox.component";
-    export default ZnCheckbox;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-checkbox': ZnCheckbox;
-        }
-    }
-}
 declare module "components/datepicker/datepicker.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -7274,87 +7434,6 @@ declare module "components/button-menu/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-button-menu': ZnButtonMenu;
-        }
-    }
-}
-declare module "components/slideout/slideout.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    import ZnButton from "components/button/index";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/slideout
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-button
-     *
-     * @event zn-show - Emitted when the slideout is opens.
-     * @event zn-close - Emitted when the slideout is closed.
-     * @event {{ source: 'close-button' | 'keyboard' | 'overlay' }} zn-request-close - Emitted when the user attempts to
-     * close the slideout by clicking the close button, clicking the overlay, or pressing escape. Calling
-     * `event.preventDefault()` will keep the slideout open. Avoid using this unless closing the slideout will result in
-     * destructive behavior such as data loss.
-     *
-     * @slot - The default slot.
-     * @slot label - The slideout's label. Alternatively you can use the `label` attribute.
-     *
-     * @csspart base - The component's base wrapper.
-     * @csspart header - The slideout's header. This element wraps the title and header actions.
-     * @csspart close-button - The slideout's close button.
-     * @csspart close-button__base - The close buttons exported `base` part.
-     * @csspart body - The slideout's body.
-     *
-     * @cssproperty --width - The preferred width of the slideout. Note the slideout will shrink to accommodate smaller screens.
-     * @cssproperty --header-spacing - The amount of padding to use for the header.
-     * @cssproperty --body-spacing - The amount of padding to use for the body.
-     */
-    export default class ZnSlideout extends ZincElement {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-button': typeof ZnButton;
-        };
-        private readonly localize;
-        private closeWatcher;
-        slideout: HTMLDialogElement;
-        panel: HTMLElement;
-        overlay: HTMLElement;
-        /**
-         * Indicated whether of not the slideout is open. You can toggle this attribute to show and hide the slideout, or you can
-         * use the `show()` and `hide()` methods and this attribute will reflect the slideout's state.
-         */
-        open: boolean;
-        /**
-         * The slideout's label as displayed in the header. You should always include a relevant label even when using
-         * `no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.
-         */
-        label: string;
-        /**
-         * The slideout's trigger element. This is used to open the slideout when clicked. If you do not provide a trigger, you
-         * will need to manually open the slideout using the `show()` method.
-         */
-        trigger: string;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        connectedCallback(): void;
-        disconnectedCallback(): void;
-        private requestClose;
-        private addOpenListeners;
-        private removeOpenListeners;
-        /** Shows the slideout. */
-        show(): Promise<void>;
-        /** Hides the slideout. */
-        hide(): Promise<void>;
-        private closeClickHandler;
-        render(): import("lit-html").TemplateResult<1>;
-    }
-}
-declare module "components/slideout/index" {
-    import ZnSlideout from "components/slideout/slideout.component";
-    export * from "components/slideout/slideout.component";
-    export default ZnSlideout;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-slideout': ZnSlideout;
         }
     }
 }
@@ -8532,6 +8611,7 @@ declare module "events/events" {
     export type { ZnPurchaseEvent } from "events/zn-purchase";
     export type { ZnRedirectEvent } from "events/zn-redirect";
     export type { ZnSearchChangeEvent } from "events/zn-search-change";
+    export type { ZnColumnsChangeEvent } from "events/zn-columns-change";
     export type { ZnLanguageChangeEvent } from "events/zn-language-change";
     export type { ZnReorderEvent } from "events/zn-reorder";
     export type { ZnAcceptEvent } from "events/zn-accept";
@@ -8618,6 +8698,7 @@ declare module "zinc" {
     export { default as DataTableFilter } from "components/data-table-filter/index";
     export { default as DataTableSort } from "components/data-table-sort/index";
     export { default as DataTableSearch } from "components/data-table-search/index";
+    export { default as DataTableColumns } from "components/data-table-columns/index";
     export { default as ActionBar } from "components/action-bar/index";
     export { default as ExpandingAction } from "components/expanding-action/index";
     export { default as PageNav } from "components/page-nav/index";

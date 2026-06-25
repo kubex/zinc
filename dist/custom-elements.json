@@ -49,79 +49,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -292,6 +219,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -31815,181 +31815,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/stepper/stepper.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnStepper",
-          "cssParts": [
-            {
-              "description": "The container holding the progress line and steps.",
-              "name": "step-container"
-            },
-            {
-              "description": "The background line showing the full step track.",
-              "name": "step-line"
-            },
-            {
-              "description": "The filled progress indicator showing completion.",
-              "name": "step-progress"
-            },
-            {
-              "description": "The container for individual step markers.",
-              "name": "steps"
-            },
-            {
-              "description": "An individual step marker circle.",
-              "name": "step"
-            },
-            {
-              "description": "The header container with caption and progress text.",
-              "name": "header"
-            },
-            {
-              "description": "The caption text element.",
-              "name": "caption"
-            },
-            {
-              "description": "The progress count text (e.g., \"2 / 5 steps\").",
-              "name": "progress"
-            },
-            {
-              "description": "The label text container.",
-              "name": "label"
-            },
-            {
-              "description": "The label text element.",
-              "name": "info"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "description": "A descriptive label displayed above the stepper to indicate the current step or phase.",
-              "attribute": "caption",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "An optional label displayed above the caption, typically used for the wizard or workflow name.",
-              "attribute": "label",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "steps",
-              "type": {
-                "text": "number"
-              },
-              "description": "The total number of steps in the process.",
-              "attribute": "steps",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "number"
-              },
-              "description": "The current step position (0 to steps). Progress is calculated as value/steps.",
-              "attribute": "value",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "showProgress",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "show-progress",
-              "reflects": true
-            },
-            {
-              "type": {
-                "text": "boolean"
-              },
-              "description": "When true, displays the step count (e.g., \"2 / 5 steps\") next to the caption.",
-              "name": "show-progress",
-              "kind": "field"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "description": "A descriptive label displayed above the stepper to indicate the current step or phase.",
-              "fieldName": "caption"
-            },
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "An optional label displayed above the caption, typically used for the wizard or workflow name.",
-              "fieldName": "label"
-            },
-            {
-              "name": "steps",
-              "type": {
-                "text": "number"
-              },
-              "description": "The total number of steps in the process.",
-              "fieldName": "steps"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "number"
-              },
-              "description": "The current step position (0 to steps). Progress is calculated as value/steps.",
-              "fieldName": "value"
-            },
-            {
-              "name": "show-progress",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "showProgress"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Steppers provide visual feedback about progress through a multi-step process or workflow.",
-          "tagNameWithoutPrefix": "stepper",
-          "tagName": "zn-stepper",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Steppers provide visual feedback about progress through a multi-step process or workflow.\n * @documentation https://zinc.style/components/stepper\n * @status experimental\n * @since 1.0\n *\n * @property {string} caption - A descriptive label displayed above the stepper to indicate the current step or phase.\n * @property {string} label - An optional label displayed above the caption, typically used for the wizard or workflow name.\n * @property {number} steps - The total number of steps in the process.\n * @property {number} value - The current step position (0 to steps). Progress is calculated as value/steps.\n * @property {boolean} show-progress - When true, displays the step count (e.g., \"2 / 5 steps\") next to the caption.\n *\n * @csspart step-container - The container holding the progress line and steps.\n * @csspart step-line - The background line showing the full step track.\n * @csspart step-progress - The filled progress indicator showing completion.\n * @csspart steps - The container for individual step markers.\n * @csspart step - An individual step marker circle.\n * @csspart header - The header container with caption and progress text.\n * @csspart caption - The caption text element.\n * @csspart progress - The progress count text (e.g., \"2 / 5 steps\").\n * @csspart label - The label text container.\n * @csspart info - The label text element.\n */",
-          "documentation": "https://zinc.style/components/stepper",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnStepper",
-            "module": "components/stepper/stepper.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/style/style.js",
       "declarations": [
         {
@@ -32420,6 +32245,181 @@
           "declaration": {
             "name": "ZnTab",
             "module": "components/tab/tab.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/stepper/stepper.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnStepper",
+          "cssParts": [
+            {
+              "description": "The container holding the progress line and steps.",
+              "name": "step-container"
+            },
+            {
+              "description": "The background line showing the full step track.",
+              "name": "step-line"
+            },
+            {
+              "description": "The filled progress indicator showing completion.",
+              "name": "step-progress"
+            },
+            {
+              "description": "The container for individual step markers.",
+              "name": "steps"
+            },
+            {
+              "description": "An individual step marker circle.",
+              "name": "step"
+            },
+            {
+              "description": "The header container with caption and progress text.",
+              "name": "header"
+            },
+            {
+              "description": "The caption text element.",
+              "name": "caption"
+            },
+            {
+              "description": "The progress count text (e.g., \"2 / 5 steps\").",
+              "name": "progress"
+            },
+            {
+              "description": "The label text container.",
+              "name": "label"
+            },
+            {
+              "description": "The label text element.",
+              "name": "info"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "description": "A descriptive label displayed above the stepper to indicate the current step or phase.",
+              "attribute": "caption",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "An optional label displayed above the caption, typically used for the wizard or workflow name.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "steps",
+              "type": {
+                "text": "number"
+              },
+              "description": "The total number of steps in the process.",
+              "attribute": "steps",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "description": "The current step position (0 to steps). Progress is calculated as value/steps.",
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "showProgress",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "show-progress",
+              "reflects": true
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "When true, displays the step count (e.g., \"2 / 5 steps\") next to the caption.",
+              "name": "show-progress",
+              "kind": "field"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "description": "A descriptive label displayed above the stepper to indicate the current step or phase.",
+              "fieldName": "caption"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "An optional label displayed above the caption, typically used for the wizard or workflow name.",
+              "fieldName": "label"
+            },
+            {
+              "name": "steps",
+              "type": {
+                "text": "number"
+              },
+              "description": "The total number of steps in the process.",
+              "fieldName": "steps"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "description": "The current step position (0 to steps). Progress is calculated as value/steps.",
+              "fieldName": "value"
+            },
+            {
+              "name": "show-progress",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "showProgress"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Steppers provide visual feedback about progress through a multi-step process or workflow.",
+          "tagNameWithoutPrefix": "stepper",
+          "tagName": "zn-stepper",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Steppers provide visual feedback about progress through a multi-step process or workflow.\n * @documentation https://zinc.style/components/stepper\n * @status experimental\n * @since 1.0\n *\n * @property {string} caption - A descriptive label displayed above the stepper to indicate the current step or phase.\n * @property {string} label - An optional label displayed above the caption, typically used for the wizard or workflow name.\n * @property {number} steps - The total number of steps in the process.\n * @property {number} value - The current step position (0 to steps). Progress is calculated as value/steps.\n * @property {boolean} show-progress - When true, displays the step count (e.g., \"2 / 5 steps\") next to the caption.\n *\n * @csspart step-container - The container holding the progress line and steps.\n * @csspart step-line - The background line showing the full step track.\n * @csspart step-progress - The filled progress indicator showing completion.\n * @csspart steps - The container for individual step markers.\n * @csspart step - An individual step marker circle.\n * @csspart header - The header container with caption and progress text.\n * @csspart caption - The caption text element.\n * @csspart progress - The progress count text (e.g., \"2 / 5 steps\").\n * @csspart label - The label text container.\n * @csspart info - The label text element.\n */",
+          "documentation": "https://zinc.style/components/stepper",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnStepper",
+            "module": "components/stepper/stepper.js"
           }
         }
       ]

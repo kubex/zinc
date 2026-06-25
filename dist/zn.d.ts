@@ -3283,6 +3283,8 @@ declare module "components/data-table/data-table.component" {
         getTableHeader(): TemplateResult<1>;
         getTableFooter(): TemplateResult<1>;
         getRowsSelected(): TemplateResult<1> | null;
+        getRowsPerPage(): TemplateResult<1> | null;
+        private getPageRange;
         getPagination(): TemplateResult<1> | null;
         getActions(): TemplateResult<1>[];
         goToPage(page: number): void;

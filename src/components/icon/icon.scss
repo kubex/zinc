@@ -141,7 +141,8 @@ $icon-colors: (
   }
 
   @each $name, $token in $icon-colors {
-    &--fill-#{$name} {
+    $display-name: "" + $name;
+    &--fill-#{$display-name} {
       --icon-fill: rgb(var(#{$token}));
     }
   }

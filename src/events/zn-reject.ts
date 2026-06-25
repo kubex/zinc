@@ -1,4 +1,4 @@
-export type ZnRejectEvent = CustomEvent<{ fid: string; variant: string }>;
+export type ZnRejectEvent = CustomEvent<{ itemId: string; variant: string }>;
 
 declare global {
   interface GlobalEventHandlersEventMap {

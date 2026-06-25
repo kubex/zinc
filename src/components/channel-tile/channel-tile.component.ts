@@ -66,7 +66,7 @@ export default class ZnChannelTile extends ZincElement {
   @property({attribute: 'progress-color'}) progressColor: string = '';
 
   /** Identifier carried in `zn-accept` / `zn-reject` event details. */
-  @property() fid: string = '';
+  @property({attribute: 'item-id'}) itemId: string = '';
 
   /** (Available only) when set, accepting fetches this URI unless `zn-accept` is canceled. */
   @property({attribute: 'accept-uri'}) acceptUri: string = '';
@@ -107,7 +107,7 @@ export default class ZnChannelTile extends ZincElement {
 
   protected updated(changed: PropertyValues) {
     super.updated(changed);
-    if (changed.has('fid') && this.fid !== this._autoAcceptFired) {
+    if (changed.has('itemId') && this.itemId !== this._autoAcceptFired) {
       this._autoAcceptFired = '';
     }
   }
@@ -138,19 +138,19 @@ export default class ZnChannelTile extends ZincElement {
     if (!this._isCountingDown()) return;
     if (!this.acceptUri) return;
     if (!this.autoAcceptDelay || !this.reservedUntil) return;
-    if (this._autoAcceptFired === this.fid) return;
+    if (this._autoAcceptFired === this.itemId) return;
 
     const until = this._reservedUntilMs();
     if (!until || Date.now() < until) return;
 
-    this._autoAcceptFired = this.fid;
+    this._autoAcceptFired = this.itemId;
     this._accept();
   }
 
   private _accept(): void {
     const event = this.emit('zn-accept', {
       cancelable: true,
-      detail: {fid: this.fid, acceptUri: this.acceptUri},
+      detail: {itemId: this.itemId, acceptUri: this.acceptUri},
     });
     if (event.defaultPrevented || !this.acceptUri) return;
     fetch(this.acceptUri, {credentials: 'same-origin'}).catch((err) => {
@@ -177,7 +177,7 @@ export default class ZnChannelTile extends ZincElement {
   private _handleReject = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    this.emit('zn-reject', {detail: {fid: this.fid, variant: this.variant}});
+    this.emit('zn-reject', {detail: {itemId: this.itemId, variant: this.variant}});
   };
 
   private _handleClick = (e: MouseEvent) => {

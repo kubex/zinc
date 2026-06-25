@@ -65,7 +65,7 @@ Provide `accept-uri` and the built-in accept button becomes a link to it. When a
 <div style="display: flex;">
   <zn-channel-tile
     available
-    fid="chat-4821"
+    item-id="chat-4821"
     accept-uri="/queue/accept/chat-4821"
     subtitle="Click to accept">
   </zn-channel-tile>
@@ -82,7 +82,7 @@ An `available` tile with `incoming` reserves an arriving item. Provide `reserved
     available
     incoming
     rejectable
-    fid="chat-5500"
+    item-id="chat-5500"
     title="Incoming chat"
     subtitle="Auto-accepting…"
     accept-uri="/queue/accept/chat-5500"
@@ -107,7 +107,7 @@ Add `rejectable` to an incoming tile to offer a reject control. Pressing it emit
     available
     incoming
     rejectable
-    fid="call-7700"
+    item-id="call-7700"
     title="Incoming call"
     subtitle="Reject to pass"
     reject-icon="call_end"

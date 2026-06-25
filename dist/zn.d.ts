@@ -3660,7 +3660,7 @@ declare module "components/channel-tile/channel-tile.component" {
         /** (Active only) CSS color for the progress bar fill. */
         progressColor: string;
         /** Identifier carried in `zn-accept` / `zn-reject` event details. */
-        fid: string;
+        itemId: string;
         /** (Available only) when set, accepting fetches this URI unless `zn-accept` is canceled. */
         acceptUri: string;
         /** (Available/incoming) epoch (seconds or millis) at which the reservation window ends. */
@@ -8445,7 +8445,7 @@ declare module "events/zn-reorder" {
 }
 declare module "events/zn-accept" {
     export type ZnAcceptEvent = CustomEvent<{
-        fid: string;
+        itemId: string;
         acceptUri: string;
     }>;
     global {
@@ -8456,7 +8456,7 @@ declare module "events/zn-accept" {
 }
 declare module "events/zn-reject" {
     export type ZnRejectEvent = CustomEvent<{
-        fid: string;
+        itemId: string;
         variant: string;
     }>;
     global {

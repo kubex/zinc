@@ -778,7 +778,7 @@
               <div style="display: flex">
                 <zn-channel-tile
                   available=""
-                  fid="chat-4821"
+                  item-id="chat-4821"
                   accept-uri="/queue/accept/chat-4821"
                   subtitle="Click to accept"
                 >
@@ -795,7 +795,7 @@
                 <pre><code class="language-html" id="code-block-151"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-channel-tile</span>
     <span class="token attr-name">available</span>
-    <span class="token attr-name">fid</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>chat-4821<span class="token punctuation">"</span></span>
+    <span class="token attr-name">item-id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>chat-4821<span class="token punctuation">"</span></span>
     <span class="token attr-name">accept-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/queue/accept/chat-4821<span class="token punctuation">"</span></span>
     <span class="token attr-name">subtitle</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Click to accept<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-channel-tile</span><span class="token punctuation">&gt;</span></span>
@@ -844,7 +844,7 @@
                   available=""
                   incoming=""
                   rejectable=""
-                  fid="chat-5500"
+                  item-id="chat-5500"
                   title="Incoming chat"
                   subtitle="Auto-accepting…"
                   accept-uri="/queue/accept/chat-5500"
@@ -873,7 +873,7 @@
     <span class="token attr-name">available</span>
     <span class="token attr-name">incoming</span>
     <span class="token attr-name">rejectable</span>
-    <span class="token attr-name">fid</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>chat-5500<span class="token punctuation">"</span></span>
+    <span class="token attr-name">item-id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>chat-5500<span class="token punctuation">"</span></span>
     <span class="token attr-name">title</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Incoming chat<span class="token punctuation">"</span></span>
     <span class="token attr-name">subtitle</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Auto-accepting…<span class="token punctuation">"</span></span>
     <span class="token attr-name">accept-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/queue/accept/chat-5500<span class="token punctuation">"</span></span>
@@ -925,7 +925,7 @@
                   available=""
                   incoming=""
                   rejectable=""
-                  fid="call-7700"
+                  item-id="call-7700"
                   title="Incoming call"
                   subtitle="Reject to pass"
                   reject-icon="call_end"
@@ -946,7 +946,7 @@
     <span class="token attr-name">available</span>
     <span class="token attr-name">incoming</span>
     <span class="token attr-name">rejectable</span>
-    <span class="token attr-name">fid</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>call-7700<span class="token punctuation">"</span></span>
+    <span class="token attr-name">item-id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>call-7700<span class="token punctuation">"</span></span>
     <span class="token attr-name">title</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Incoming call<span class="token punctuation">"</span></span>
     <span class="token attr-name">subtitle</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Reject to pass<span class="token punctuation">"</span></span>
     <span class="token attr-name">reject-icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>call_end<span class="token punctuation">"</span></span>
@@ -1470,7 +1470,14 @@
 
                 <tr>
                   <td>
-                    <code class="nowrap">fid</code>
+                    <code class="nowrap">itemId</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> item-id </code>
+                      </small>
+                    </zn-tooltip>
                   </td>
                   <td>Identifier carried in <code>zn-accept</code> / <code>zn-reject</code> event details.</td>
                   <td style="text-align: center"></td>

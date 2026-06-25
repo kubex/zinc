@@ -20,8 +20,6 @@ fullWidth: true
     {"key":"date","label":"Date Joined", "sortable":true}
   ]'>
 
-  <zn-data-table-search slot="search" placeholder="Search records..."></zn-data-table-search>
-
 </zn-data-table>
 ```
 

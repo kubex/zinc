@@ -10,16 +10,16 @@ fullWidth: true
 <zn-data-table
   data-uri="/data/data-table.json"
   method="GET"
+  caption="Users"
   empty-state-caption="No records found"
   empty-state-icon="data_alert"
   headers='[
-    {"key":"id","label":"ID", "required":true, "default": true},
-    {"key":"name","label":"Name", "required":true, "default": true, "sortable":true},
-    {"key":"email","label":"Email", "sortable":true},
-    {"key":"status","label":"Status", "sortable":true},
-    {"key":"date","label":"Date Joined", "sortable":true}
+    {"key":"id","label":"ID"},
+    {"key":"name","label":"Name","sortable":true},
+    {"key":"email","label":"Email","sortable":true},
+    {"key":"status","label":"Status","sortable":true},
+    {"key":"date","label":"Date Joined","sortable":true}
   ]'>
-
 </zn-data-table>
 ```
 
@@ -223,7 +223,7 @@ Add action buttons to the table header for performing operations on selected row
 
 ### Secondary Columns
 
-Mark columns as secondary to hide them by default. Users can expand rows to view secondary data.
+Additional columns can be included and managed via the column visibility control.
 
 ```html:preview
 <zn-data-table
@@ -233,9 +233,9 @@ Mark columns as secondary to hide them by default. Users can expand rows to view
     {"key":"id","label":"ID"},
     {"key":"name","label":"Name"},
     {"key":"email","label":"Email"},
-    {"key":"phone","label":"Phone", "secondary":true},
-    {"key":"address","label":"Address", "secondary":true},
-    {"key":"notes","label":"Notes", "secondary":true}
+    {"key":"phone","label":"Phone"},
+    {"key":"address","label":"Address"},
+    {"key":"notes","label":"Notes"}
   ]'>
 </zn-data-table>
 ```
@@ -589,20 +589,43 @@ Prevent automatic data loading on mount with `no-initial-load`. Call the `refres
 </script>
 ```
 
-### Standalone Mode
+### Column Visibility & Order
 
-Use `standalone` to render the table without a container wrapper, useful for embedding in other components.
+Every table renders inside a panel with a column control in the header. Click it to open a drawer where you can show/hide columns and drag to reorder them. Selections persist per table.
+
+Set `storage-key` to control the persistence key (defaults to `data-uri`):
 
 ```html:preview
 <zn-data-table
   data-uri="/data/data-table.json"
   method="GET"
-  standalone
+  caption="Users"
+  storage-key="users-table"
   headers='[
-    {"key":"name","label":"Name"},
-    {"key":"email","label":"Email"}
+    {"key":"id","label":"ID"},
+    {"key":"name","label":"Name","sortable":true},
+    {"key":"email","label":"Email","sortable":true},
+    {"key":"status","label":"Status","sortable":true}
   ]'>
 </zn-data-table>
+```
+
+### Embedding Without a Panel
+
+By default the table provides its own `zn-panel`. When embedding inside an existing panel or pane, add `flush` to render the bare table:
+
+```html:preview
+<zn-panel caption="Members" flush>
+  <zn-data-table
+    data-uri="/data/data-table.json"
+    method="GET"
+    flush
+    headers='[
+      {"key":"id","label":"ID"},
+      {"key":"name","label":"Name"}
+    ]'>
+  </zn-data-table>
+</zn-panel>
 ```
 
 ### Request Method

@@ -149,12 +149,13 @@
       color: rgb(var(--zn-primary));
     }
 
-    &::slotted(a)::after {
-      content: '>';
-      margin-left: var(--zn-spacing-2x-small);
+    &::slotted([data-breadcrumb-separator]) {
       color: rgb(var(--zn-text-muted));
-      font-weight: var(--zn-font-weight-normal);
     }
+  }
+
+  .breadcrumb__separator {
+    color: rgb(var(--zn-text-muted));
   }
 
   slot {

@@ -103,6 +103,35 @@ export default class ZnPage extends ZnTabs {
     this.classList.toggle('alt-pressed', false);
   };
 
+  // Inject a real chevron icon between breadcrumb links (idempotent: only mutates when needed)
+  private handleBreadcrumbSlotChange = (e: Event) => {
+    const slot = e.target as HTMLSlotElement;
+    const assigned = slot.assignedElements();
+    const anchors = assigned.filter(el => el.tagName === 'A');
+
+    // Remove separators that are no longer between two links
+    assigned.forEach(el => {
+      if (!el.hasAttribute('data-breadcrumb-separator')) return;
+      const prev = el.previousElementSibling;
+      const valid = prev?.tagName === 'A' && anchors.indexOf(prev) < anchors.length - 1;
+      if (!valid) el.remove();
+    });
+
+    // Ensure each link except the last is followed by a separator icon
+    anchors.forEach((anchor, index) => {
+      if (index === anchors.length - 1) return;
+      const next = anchor.nextElementSibling;
+      if (next?.hasAttribute('data-breadcrumb-separator')) return;
+
+      const icon = document.createElement('zn-icon');
+      icon.setAttribute('src', 'arrow-right@lu');
+      icon.setAttribute('size', '16');
+      icon.setAttribute('slot', 'breadcrumb');
+      icon.setAttribute('data-breadcrumb-separator', '');
+      anchor.after(icon);
+    });
+  };
+
   _registerTabs = () => {
     this.registerPageNavigationTabs();
   };
@@ -393,7 +422,9 @@ export default class ZnPage extends ZnTabs {
                 <div class="header__left">
                   <span class="header__caption">
                     ${hasBreadcrumb ? html`
-                      <slot name="breadcrumb" class="breadcrumb"></slot>` : null}
+                      <slot name="breadcrumb" class="breadcrumb"
+                            @slotchange="${this.handleBreadcrumbSlotChange}"></slot>
+                      <zn-icon class="breadcrumb__separator" src="arrow-right@lu" size="16"></zn-icon>` : null}
                     <slot name="caption">${this.caption}</slot>
                   </span>
                   <span class="header__description"><slot name="description">${this.summary}</slot></span>

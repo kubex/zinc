@@ -4247,6 +4247,7 @@ declare module "components/page/page.component" {
         disconnectedCallback(): void;
         private handleAltPress;
         private handleAltUp;
+        private handleBreadcrumbSlotChange;
         _registerTabs: () => void;
         firstUpdated(changedProperties: PropertyValues): void;
         private getOwnExpandingActions;

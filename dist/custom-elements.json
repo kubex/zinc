@@ -3489,7 +3489,7 @@
           "name": "ZnChatMessage",
           "cssProperties": [
             {
-              "description": "The bubble's background colour.",
+              "description": "The bubble's background color.",
               "name": "--message-background"
             }
           ],
@@ -3519,6 +3519,10 @@
               "name": "content"
             },
             {
+              "description": "The attachments row beneath the message content.",
+              "name": "attachments"
+            },
+            {
               "description": "The card rendered for system action types.",
               "name": "system-card"
             }
@@ -3531,6 +3535,10 @@
             {
               "description": "Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).",
               "name": "badge"
+            },
+            {
+              "description": "Attachments displayed beneath the message content. Use `zn-chat-message-attachment`, which auto-assigns itself to this slot.",
+              "name": "attachments"
             },
             {
               "description": "Action rendered at the end of the bubble (e.g. a remove icon button).",
@@ -3756,7 +3764,7 @@
           "tagNameWithoutPrefix": "chat-message",
           "tagName": "zn-chat-message",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A single message in a chat-style conversation: avatar, sender,\n * time, optional badge, and a message bubble with optional actions. Also renders\n * system events (connections, transfers, etc.) as a centred card.\n * @documentation https://zinc.style/components/chat-message\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - The message content. Ignored when the `message` attribute is set.\n * @slot badge - Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).\n * @slot edit-dialog-trigger - Action rendered at the end of the bubble (e.g. a remove icon button).\n * @slot edit-dialog - Pass-through for an associated dialog element.\n *\n * @csspart base - The component's base wrapper.\n * @csspart avatar - The avatar column.\n * @csspart body - The header and bubble column.\n * @csspart header - The sender/time/badge row.\n * @csspart bubble - The message bubble.\n * @csspart content - The message content within the bubble.\n * @csspart system-card - The card rendered for system action types.\n *\n * @cssproperty --message-background - The bubble's background colour.\n */",
+          "jsDoc": "/**\n * @summary A single message in a chat-style conversation: avatar, sender,\n * time, optional badge, and a message bubble with optional actions. Also renders\n * system events (connections, transfers, etc.) as a centred card.\n * @documentation https://zinc.style/components/chat-message\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - The message content. Ignored when the `message` attribute is set.\n * @slot badge - Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).\n * @slot attachments - Attachments displayed beneath the message content. Use `zn-chat-message-attachment`,\n * which auto-assigns itself to this slot.\n * @slot edit-dialog-trigger - Action rendered at the end of the bubble (e.g. a remove icon button).\n * @slot edit-dialog - Pass-through for an associated dialog element.\n *\n * @csspart base - The component's base wrapper.\n * @csspart avatar - The avatar column.\n * @csspart body - The header and bubble column.\n * @csspart header - The sender/time/badge row.\n * @csspart bubble - The message bubble.\n * @csspart content - The message content within the bubble.\n * @csspart attachments - The attachments row beneath the message content.\n * @csspart system-card - The card rendered for system action types.\n *\n * @cssproperty --message-background - The bubble's background color.\n */",
           "documentation": "https://zinc.style/components/chat-message",
           "status": "experimental",
           "since": "1.0",
@@ -3772,6 +3780,170 @@
           "declaration": {
             "name": "ZnChatMessage",
             "module": "components/chat-message/chat-message.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/chat-message-attachment/chat-message-attachment.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnChatMessageAttachment",
+          "cssParts": [
+            {
+              "description": "The attachment link.",
+              "name": "base"
+            },
+            {
+              "description": "The leading icon.",
+              "name": "icon"
+            },
+            {
+              "description": "The attachment label.",
+              "name": "label"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The attachment label. Falls back to the `name` attribute when empty.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-icon': ZnIcon }"
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The URL the attachment links to.",
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The attachment label (e.g. the file name). Used when the default slot is empty.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'attach_file'",
+              "description": "The leading icon name.",
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "default": "'_blank'",
+              "description": "Where to open the link. Defaults to a new tab.",
+              "attribute": "target"
+            },
+            {
+              "kind": "field",
+              "name": "download",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Prompt a download rather than navigating to the link.",
+              "attribute": "download"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The URL the attachment links to.",
+              "fieldName": "href"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The attachment label (e.g. the file name). Used when the default slot is empty.",
+              "fieldName": "name"
+            },
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'attach_file'",
+              "description": "The leading icon name.",
+              "fieldName": "icon"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "default": "'_blank'",
+              "description": "Where to open the link. Defaults to a new tab.",
+              "fieldName": "target"
+            },
+            {
+              "name": "download",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Prompt a download rather than navigating to the link.",
+              "fieldName": "download"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A single file or link attachment for a `zn-chat-message`. Renders an\nicon and a label as a link, styled to match the message's attachments row. It is\nintended to be used only inside a `zn-chat-message` and is automatically placed in\nthat component's `attachments` slot.",
+          "tagNameWithoutPrefix": "chat-message-attachment",
+          "tagName": "zn-chat-message-attachment",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A single file or link attachment for a `zn-chat-message`. Renders an\n * icon and a label as a link, styled to match the message's attachments row. It is\n * intended to be used only inside a `zn-chat-message` and is automatically placed in\n * that component's `attachments` slot.\n * @documentation https://zinc.style/components/chat-message-attachment\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - The attachment label. Falls back to the `name` attribute when empty.\n *\n * @csspart base - The attachment link.\n * @csspart icon - The leading icon.\n * @csspart label - The attachment label.\n */",
+          "documentation": "https://zinc.style/components/chat-message-attachment",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-icon"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnChatMessageAttachment",
+            "module": "components/chat-message-attachment/chat-message-attachment.js"
           }
         }
       ]
@@ -31815,6 +31987,181 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/stepper/stepper.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnStepper",
+          "cssParts": [
+            {
+              "description": "The container holding the progress line and steps.",
+              "name": "step-container"
+            },
+            {
+              "description": "The background line showing the full step track.",
+              "name": "step-line"
+            },
+            {
+              "description": "The filled progress indicator showing completion.",
+              "name": "step-progress"
+            },
+            {
+              "description": "The container for individual step markers.",
+              "name": "steps"
+            },
+            {
+              "description": "An individual step marker circle.",
+              "name": "step"
+            },
+            {
+              "description": "The header container with caption and progress text.",
+              "name": "header"
+            },
+            {
+              "description": "The caption text element.",
+              "name": "caption"
+            },
+            {
+              "description": "The progress count text (e.g., \"2 / 5 steps\").",
+              "name": "progress"
+            },
+            {
+              "description": "The label text container.",
+              "name": "label"
+            },
+            {
+              "description": "The label text element.",
+              "name": "info"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "description": "A descriptive label displayed above the stepper to indicate the current step or phase.",
+              "attribute": "caption",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "An optional label displayed above the caption, typically used for the wizard or workflow name.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "steps",
+              "type": {
+                "text": "number"
+              },
+              "description": "The total number of steps in the process.",
+              "attribute": "steps",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "description": "The current step position (0 to steps). Progress is calculated as value/steps.",
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "showProgress",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "show-progress",
+              "reflects": true
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "When true, displays the step count (e.g., \"2 / 5 steps\") next to the caption.",
+              "name": "show-progress",
+              "kind": "field"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "description": "A descriptive label displayed above the stepper to indicate the current step or phase.",
+              "fieldName": "caption"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "An optional label displayed above the caption, typically used for the wizard or workflow name.",
+              "fieldName": "label"
+            },
+            {
+              "name": "steps",
+              "type": {
+                "text": "number"
+              },
+              "description": "The total number of steps in the process.",
+              "fieldName": "steps"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "description": "The current step position (0 to steps). Progress is calculated as value/steps.",
+              "fieldName": "value"
+            },
+            {
+              "name": "show-progress",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "showProgress"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Steppers provide visual feedback about progress through a multi-step process or workflow.",
+          "tagNameWithoutPrefix": "stepper",
+          "tagName": "zn-stepper",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Steppers provide visual feedback about progress through a multi-step process or workflow.\n * @documentation https://zinc.style/components/stepper\n * @status experimental\n * @since 1.0\n *\n * @property {string} caption - A descriptive label displayed above the stepper to indicate the current step or phase.\n * @property {string} label - An optional label displayed above the caption, typically used for the wizard or workflow name.\n * @property {number} steps - The total number of steps in the process.\n * @property {number} value - The current step position (0 to steps). Progress is calculated as value/steps.\n * @property {boolean} show-progress - When true, displays the step count (e.g., \"2 / 5 steps\") next to the caption.\n *\n * @csspart step-container - The container holding the progress line and steps.\n * @csspart step-line - The background line showing the full step track.\n * @csspart step-progress - The filled progress indicator showing completion.\n * @csspart steps - The container for individual step markers.\n * @csspart step - An individual step marker circle.\n * @csspart header - The header container with caption and progress text.\n * @csspart caption - The caption text element.\n * @csspart progress - The progress count text (e.g., \"2 / 5 steps\").\n * @csspart label - The label text container.\n * @csspart info - The label text element.\n */",
+          "documentation": "https://zinc.style/components/stepper",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnStepper",
+            "module": "components/stepper/stepper.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/style/style.js",
       "declarations": [
         {
@@ -32245,181 +32592,6 @@
           "declaration": {
             "name": "ZnTab",
             "module": "components/tab/tab.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/stepper/stepper.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnStepper",
-          "cssParts": [
-            {
-              "description": "The container holding the progress line and steps.",
-              "name": "step-container"
-            },
-            {
-              "description": "The background line showing the full step track.",
-              "name": "step-line"
-            },
-            {
-              "description": "The filled progress indicator showing completion.",
-              "name": "step-progress"
-            },
-            {
-              "description": "The container for individual step markers.",
-              "name": "steps"
-            },
-            {
-              "description": "An individual step marker circle.",
-              "name": "step"
-            },
-            {
-              "description": "The header container with caption and progress text.",
-              "name": "header"
-            },
-            {
-              "description": "The caption text element.",
-              "name": "caption"
-            },
-            {
-              "description": "The progress count text (e.g., \"2 / 5 steps\").",
-              "name": "progress"
-            },
-            {
-              "description": "The label text container.",
-              "name": "label"
-            },
-            {
-              "description": "The label text element.",
-              "name": "info"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "description": "A descriptive label displayed above the stepper to indicate the current step or phase.",
-              "attribute": "caption",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "An optional label displayed above the caption, typically used for the wizard or workflow name.",
-              "attribute": "label",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "steps",
-              "type": {
-                "text": "number"
-              },
-              "description": "The total number of steps in the process.",
-              "attribute": "steps",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "number"
-              },
-              "description": "The current step position (0 to steps). Progress is calculated as value/steps.",
-              "attribute": "value",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "showProgress",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "show-progress",
-              "reflects": true
-            },
-            {
-              "type": {
-                "text": "boolean"
-              },
-              "description": "When true, displays the step count (e.g., \"2 / 5 steps\") next to the caption.",
-              "name": "show-progress",
-              "kind": "field"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "description": "A descriptive label displayed above the stepper to indicate the current step or phase.",
-              "fieldName": "caption"
-            },
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "An optional label displayed above the caption, typically used for the wizard or workflow name.",
-              "fieldName": "label"
-            },
-            {
-              "name": "steps",
-              "type": {
-                "text": "number"
-              },
-              "description": "The total number of steps in the process.",
-              "fieldName": "steps"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "number"
-              },
-              "description": "The current step position (0 to steps). Progress is calculated as value/steps.",
-              "fieldName": "value"
-            },
-            {
-              "name": "show-progress",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "showProgress"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Steppers provide visual feedback about progress through a multi-step process or workflow.",
-          "tagNameWithoutPrefix": "stepper",
-          "tagName": "zn-stepper",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Steppers provide visual feedback about progress through a multi-step process or workflow.\n * @documentation https://zinc.style/components/stepper\n * @status experimental\n * @since 1.0\n *\n * @property {string} caption - A descriptive label displayed above the stepper to indicate the current step or phase.\n * @property {string} label - An optional label displayed above the caption, typically used for the wizard or workflow name.\n * @property {number} steps - The total number of steps in the process.\n * @property {number} value - The current step position (0 to steps). Progress is calculated as value/steps.\n * @property {boolean} show-progress - When true, displays the step count (e.g., \"2 / 5 steps\") next to the caption.\n *\n * @csspart step-container - The container holding the progress line and steps.\n * @csspart step-line - The background line showing the full step track.\n * @csspart step-progress - The filled progress indicator showing completion.\n * @csspart steps - The container for individual step markers.\n * @csspart step - An individual step marker circle.\n * @csspart header - The header container with caption and progress text.\n * @csspart caption - The caption text element.\n * @csspart progress - The progress count text (e.g., \"2 / 5 steps\").\n * @csspart label - The label text container.\n * @csspart info - The label text element.\n */",
-          "documentation": "https://zinc.style/components/stepper",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnStepper",
-            "module": "components/stepper/stepper.js"
           }
         }
       ]
@@ -36926,7 +37098,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.13",
+    "version": "1.1.14",
     "author": "",
     "license": "MIT"
   }

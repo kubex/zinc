@@ -464,7 +464,7 @@
     },
     {
       "name": "zn-chat-message",
-      "description": "A single message in a chat-style conversation: avatar, sender,\ntime, optional badge, and a message bubble with optional actions. Also renders\nsystem events (connections, transfers, etc.) as a centred card.\n---\n\n\n### **Slots:**\n - _default_ - The message content. Ignored when the `message` attribute is set.\n- **badge** - Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).\n- **edit-dialog-trigger** - Action rendered at the end of the bubble (e.g. a remove icon button).\n- **edit-dialog** - Pass-through for an associated dialog element.\n\n### **CSS Properties:**\n - **--message-background** - The bubble's background colour. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **avatar** - The avatar column.\n- **body** - The header and bubble column.\n- **header** - The sender/time/badge row.\n- **bubble** - The message bubble.\n- **content** - The message content within the bubble.\n- **system-card** - The card rendered for system action types.",
+      "description": "A single message in a chat-style conversation: avatar, sender,\ntime, optional badge, and a message bubble with optional actions. Also renders\nsystem events (connections, transfers, etc.) as a centred card.\n---\n\n\n### **Slots:**\n - _default_ - The message content. Ignored when the `message` attribute is set.\n- **badge** - Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).\n- **attachments** - Attachments displayed beneath the message content. Use `zn-chat-message-attachment`, which auto-assigns itself to this slot.\n- **edit-dialog-trigger** - Action rendered at the end of the bubble (e.g. a remove icon button).\n- **edit-dialog** - Pass-through for an associated dialog element.\n\n### **CSS Properties:**\n - **--message-background** - The bubble's background color. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **avatar** - The avatar column.\n- **body** - The header and bubble column.\n- **header** - The sender/time/badge row.\n- **bubble** - The message bubble.\n- **content** - The message content within the bubble.\n- **attachments** - The attachments row beneath the message content.\n- **system-card** - The card rendered for system action types.",
       "attributes": [
         {
           "name": "sender",
@@ -506,6 +506,43 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/chat-message"
+        }
+      ]
+    },
+    {
+      "name": "zn-chat-message-attachment",
+      "description": "A single file or link attachment for a `zn-chat-message`. Renders an\nicon and a label as a link, styled to match the message's attachments row. It is\nintended to be used only inside a `zn-chat-message` and is automatically placed in\nthat component's `attachments` slot.\n---\n\n\n### **Slots:**\n - _default_ - The attachment label. Falls back to the `name` attribute when empty.\n\n### **CSS Parts:**\n - **base** - The attachment link.\n- **icon** - The leading icon.\n- **label** - The attachment label.",
+      "attributes": [
+        {
+          "name": "href",
+          "description": "The URL the attachment links to.",
+          "values": []
+        },
+        {
+          "name": "name",
+          "description": "The attachment label (e.g. the file name). Used when the default slot is empty.",
+          "values": []
+        },
+        {
+          "name": "icon",
+          "description": "The leading icon name.",
+          "values": []
+        },
+        {
+          "name": "target",
+          "description": "Where to open the link. Defaults to a new tab.",
+          "values": []
+        },
+        {
+          "name": "download",
+          "description": "Prompt a download rather than navigating to the link.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/chat-message-attachment"
         }
       ]
     },
@@ -3458,6 +3495,39 @@
       ]
     },
     {
+      "name": "zn-stepper",
+      "description": "Steppers provide visual feedback about progress through a multi-step process or workflow.\n---\n\n\n### **CSS Parts:**\n - **step-container** - The container holding the progress line and steps.\n- **step-line** - The background line showing the full step track.\n- **step-progress** - The filled progress indicator showing completion.\n- **steps** - The container for individual step markers.\n- **step** - An individual step marker circle.\n- **header** - The header container with caption and progress text.\n- **caption** - The caption text element.\n- **progress** - The progress count text (e.g., \"2 / 5 steps\").\n- **label** - The label text container.\n- **info** - The label text element.",
+      "attributes": [
+        {
+          "name": "caption",
+          "description": "A descriptive label displayed above the stepper to indicate the current step or phase.",
+          "values": []
+        },
+        {
+          "name": "label",
+          "description": "An optional label displayed above the caption, typically used for the wizard or workflow name.",
+          "values": []
+        },
+        {
+          "name": "steps",
+          "description": "The total number of steps in the process.",
+          "values": []
+        },
+        {
+          "name": "value",
+          "description": "The current step position (0 to steps). Progress is calculated as value/steps.",
+          "values": []
+        },
+        { "name": "show-progress", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/stepper"
+        }
+      ]
+    },
+    {
       "name": "zn-style",
       "description": "\n---\n",
       "attributes": [
@@ -3501,39 +3571,6 @@
       ],
       "references": [
         { "name": "Documentation", "url": "https://zinc.style/components/tab" }
-      ]
-    },
-    {
-      "name": "zn-stepper",
-      "description": "Steppers provide visual feedback about progress through a multi-step process or workflow.\n---\n\n\n### **CSS Parts:**\n - **step-container** - The container holding the progress line and steps.\n- **step-line** - The background line showing the full step track.\n- **step-progress** - The filled progress indicator showing completion.\n- **steps** - The container for individual step markers.\n- **step** - An individual step marker circle.\n- **header** - The header container with caption and progress text.\n- **caption** - The caption text element.\n- **progress** - The progress count text (e.g., \"2 / 5 steps\").\n- **label** - The label text container.\n- **info** - The label text element.",
-      "attributes": [
-        {
-          "name": "caption",
-          "description": "A descriptive label displayed above the stepper to indicate the current step or phase.",
-          "values": []
-        },
-        {
-          "name": "label",
-          "description": "An optional label displayed above the caption, typically used for the wizard or workflow name.",
-          "values": []
-        },
-        {
-          "name": "steps",
-          "description": "The total number of steps in the process.",
-          "values": []
-        },
-        {
-          "name": "value",
-          "description": "The current step position (0 to steps). Progress is calculated as value/steps.",
-          "values": []
-        },
-        { "name": "show-progress", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/stepper"
-        }
       ]
     },
     {

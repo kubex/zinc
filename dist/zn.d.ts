@@ -1516,6 +1516,8 @@ declare module "components/chat-message/chat-message.component" {
      *
      * @slot - The message content. Ignored when the `message` attribute is set.
      * @slot badge - Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).
+     * @slot attachments - Attachments displayed beneath the message content. Use `zn-chat-message-attachment`,
+     * which auto-assigns itself to this slot.
      * @slot edit-dialog-trigger - Action rendered at the end of the bubble (e.g. a remove icon button).
      * @slot edit-dialog - Pass-through for an associated dialog element.
      *
@@ -1525,9 +1527,10 @@ declare module "components/chat-message/chat-message.component" {
      * @csspart header - The sender/time/badge row.
      * @csspart bubble - The message bubble.
      * @csspart content - The message content within the bubble.
+     * @csspart attachments - The attachments row beneath the message content.
      * @csspart system-card - The card rendered for system action types.
      *
-     * @cssproperty --message-background - The bubble's background colour.
+     * @cssproperty --message-background - The bubble's background color.
      */
     export default class ZnChatMessage extends ZincElement {
         static styles: CSSResultGroup;
@@ -1574,6 +1577,56 @@ declare module "components/chat-message/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-chat-message': ZnChatMessage;
+        }
+    }
+}
+declare module "components/chat-message-attachment/chat-message-attachment.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    /**
+     * @summary A single file or link attachment for a `zn-chat-message`. Renders an
+     * icon and a label as a link, styled to match the message's attachments row. It is
+     * intended to be used only inside a `zn-chat-message` and is automatically placed in
+     * that component's `attachments` slot.
+     * @documentation https://zinc.style/components/chat-message-attachment
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     *
+     * @slot - The attachment label. Falls back to the `name` attribute when empty.
+     *
+     * @csspart base - The attachment link.
+     * @csspart icon - The leading icon.
+     * @csspart label - The attachment label.
+     */
+    export default class ZnChatMessageAttachment extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+        };
+        /** The URL the attachment links to. */
+        href: string;
+        /** The attachment label (e.g. the file name). Used when the default slot is empty. */
+        name: string;
+        /** The leading icon name. */
+        icon: string;
+        /** Where to open the link. Defaults to a new tab. */
+        target: string;
+        /** Prompt a download rather than navigating to the link. */
+        download: boolean;
+        connectedCallback(): void;
+        protected render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/chat-message-attachment/index" {
+    import ZnChatMessageAttachment from "components/chat-message-attachment/chat-message-attachment.component";
+    export * from "components/chat-message-attachment/chat-message-attachment.component";
+    export default ZnChatMessageAttachment;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-chat-message-attachment': ZnChatMessageAttachment;
         }
     }
 }
@@ -8494,6 +8547,7 @@ declare module "zinc" {
     export { default as Alert } from "components/alert/index";
     export { default as ButtonGroup } from "components/button-group/index";
     export { default as ChatMessage } from "components/chat-message/index";
+    export { default as ChatMessageAttachment } from "components/chat-message-attachment/index";
     export { default as Chip } from "components/chip/index";
     export { default as Well } from "components/well/index";
     export { default as CopyButton } from "components/copy-button/index";

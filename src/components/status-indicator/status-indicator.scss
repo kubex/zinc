@@ -1,7 +1,13 @@
 @use "../../wc";
 
 :host {
-  --indicator-color: var(--zn-color-info);
+  --zn-indicator-info: 100, 117, 242;
+  --zn-indicator-warning: 255, 136, 0;
+  --zn-indicator-error: 237, 84, 109;
+  --zn-indicator-success: 43, 192, 145;
+  --zn-indicator-disabled: 220, 220, 220;
+
+  --indicator-color: var(--zn-indicator-disabled);
   white-space: nowrap;
   display: inline-block;
 }
@@ -15,18 +21,18 @@
   border-radius: 50%;
 
   &--info {
-    --indicator-color: var(--zn-color-info);
+    --indicator-color: var(--zn-indicator-info);
   }
 
   &--error {
-    --indicator-color: var(--zn-color-error);
+    --indicator-color: var(--zn-indicator-error);
   }
 
   &--warning {
-    --indicator-color: var(--zn-color-warning);
+    --indicator-color: var(--zn-indicator-warning);
   }
 
   &--success {
-    --indicator-color: var(--zn-color-success);
+    --indicator-color: var(--zn-indicator-success);
   }
 }

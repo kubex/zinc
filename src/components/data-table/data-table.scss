@@ -25,12 +25,15 @@ table {
     overflow: hidden;
   }
 
-  // Grouped tables sit inside a zn-panel, which already provides the top
-  // edge - drop the header's top border to avoid a doubled line.
-  &.table--grouped {
-    // Fixed layout so every group's columns are sized from the shared header
-    // definitions (not each group's own content), keeping them aligned.
-    table-layout: fixed;
+  tbody tr.table__row--details td {
+    background-color: rgb(var(--zn-shadow));
+  }
+
+  &.table--standalone {
+    background-color: rgb(var(--zn-panel));
+    border-radius: var(--zn-border-radius);
+    border: 1px solid rgb(var(--zn-border-color));
+    overflow: hidden;
 
     thead tr th {
       border-top: 0;
@@ -44,13 +47,17 @@ table {
 
   thead tr th {
     background-color: rgb(var(--zn-table-header-background-color));
-    border-top: 0 !important;
     border-bottom: 1px solid rgb(var(--zn-border-color)) !important;
   }
 
   &.with-hover tbody tr.table__row--data:not(.table__row--selected):hover td {
     background-color: rgba(var(--zn-primary), 0.05) !important;
     cursor: pointer;
+  }
+
+  &.with-hover tbody tr.table__row--details:hover {
+    background-color: inherit;
+    cursor: default;
   }
 
   tbody tr td {
@@ -73,6 +80,7 @@ table {
 
   th {
     @include wc.text-style(button-label);
+    border-top: 1px solid rgb(var(--zn-border-color));
     border-bottom: 1px solid rgb(var(--zn-border-color));
   }
 }
@@ -114,18 +122,6 @@ table {
     }
   }
 
-  // Truncate overflowing cell content with an ellipsis (data cells only)
-  tr td > div {
-    overflow: hidden;
-
-    > *:not(code) {
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-  }
-
   &__head {
     text-transform: capitalize;
 
@@ -160,6 +156,12 @@ table {
       > div {
         visibility: hidden;
       }
+    }
+
+    &--expander {
+      width: 28px;
+      min-width: 28px;
+      padding-right: 0;
     }
   }
 
@@ -222,6 +224,10 @@ table {
       }
     }
 
+    &--expander {
+      width: 28px;
+      min-width: 28px;
+    }
   }
 
   &__header {
@@ -253,7 +259,7 @@ table {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: var(--zn-spacing-medium);
+    padding: var(--zn-spacing-medium) 0;
 
     &__right, &__left {
       display: flex;
@@ -306,6 +312,27 @@ table {
     }
   }
 
+  &__details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--zn-spacing-x-large) !important;
+
+    &__item {
+      display: flex;
+      flex-direction: column;
+      gap: var(--zn-spacing-2x-small, 4px);
+    }
+
+    &__label {
+      font-size: 12px;
+      color: rgb(var(--zn-text-subtle, var(--zn-text)));
+      opacity: 0.8;
+    }
+
+    &__value {
+      font-size: var(--zn-text-table-content-font-size);
+    }
+  }
 }
 
 .reduced-opacity .table tbody {
@@ -393,5 +420,17 @@ table tbody tr.table__row--selected {
 
 table:has(tbody tr:first-of-type.table__row--selected) thead tr th {
   border-bottom-color: var(--zn-color-purple-600) !important;
+}
+
+.table-group__title {
+  font-weight: var(--zn-font-weight-semibold);
+  font-size: var(--zn-font-size-large);
+  color: rgba(var(--zn-text-panel-title), 100%);
+  line-height: var(--zn-line-height-looser);
+  padding-left: var(--zn-spacing-medium);
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 

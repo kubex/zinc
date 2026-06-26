@@ -7,11 +7,7 @@ export default {
   files: 'src/**/*.test.ts',
   concurrentBrowsers: 3,
   plugins: [
-    vitePlugin({
-      optimizeDeps: {
-        exclude: ['@open-wc/testing'],
-      },
-    })
+    vitePlugin()
   ],
   filterBrowserLogs: removeViteLogging,
   browsers: [

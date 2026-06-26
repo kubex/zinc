@@ -1,13 +1,12 @@
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, nothing, type PropertyValues, type TemplateResult, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, nothing, type TemplateResult, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property, query} from 'lit/decorators.js';
-import {ref} from "lit/directives/ref.js";
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
+import {ref} from "lit/directives/ref.js";
 import {Task} from "@lit/task";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
-import {type ZnColumnsChangeEvent} from "../../events/zn-columns-change";
 import {type ZnFilterChangeEvent} from "../../events/zn-filter-change";
 import {type ZnSearchChangeEvent} from "../../events/zn-search-change";
 import ZincElement from '../../internal/zinc-element';
@@ -15,7 +14,6 @@ import ZnButton from "../button";
 import ZnButtonGroup from "../button-group";
 import ZnChip from "../chip";
 import ZnConfirm from "../confirm";
-import ZnDataTableColumns from "../data-table-columns";
 import ZnDataTableFilter from "../data-table-filter";
 import ZnDataTableSearch from "../data-table-search";
 import ZnDropdown from "../dropdown";
@@ -23,7 +21,6 @@ import ZnEmptyState from "../empty-state";
 import ZnHoverContainer from "../hover-container";
 import ZnMenu from "../menu";
 import ZnMenuItem from "../menu-item";
-import ZnPanel from "../panel";
 import ZnSkeleton from "../skeleton";
 import ZnStyle from "../style";
 import type ZnDataSelect from "../data-select";
@@ -96,9 +93,13 @@ interface ActionConfig {
 interface HeaderConfig {
   key: string;
   label: string;
+  required?: boolean;
+  default?: boolean;
   sortable?: boolean;
   filterable?: boolean;
   hideHeader?: boolean;
+  hideColumn?: boolean;
+  secondary?: boolean;
 }
 
 interface DataRequest {
@@ -134,9 +135,7 @@ type AllowedInputElement =
  * @dependency zn-menu-item
  * @dependency zn-button-group
  * @dependency zn-confirm
- * @dependency zn-panel
  * @dependency zn-skeleton
- * @dependency zn-data-table-columns
  * @dependency zn-data-table-search
  *
  * @slot - The default slot.
@@ -166,10 +165,8 @@ export default class ZnDataTable extends ZincElement {
     'zn-menu-item': ZnMenuItem,
     'zn-button-group': ZnButtonGroup,
     'zn-confirm': ZnConfirm,
-    'zn-panel': ZnPanel,
     'zn-skeleton': ZnSkeleton,
     'zn-style': ZnStyle,
-    'zn-data-table-columns': ZnDataTableColumns,
     'zn-data-table-search': ZnDataTableSearch,
   };
 
@@ -199,8 +196,7 @@ export default class ZnDataTable extends ZincElement {
   // Hide pagination
   @property({attribute: 'hide-pagination', type: Boolean}) hidePagination: boolean;
 
-  // Render without the default zn-panel wrapper (for embedding in an existing panel/pane)
-  @property({type: Boolean}) flush: boolean = false;
+  @property({type: Boolean}) standalone: boolean = false;
 
   @property() caption: string;
 
@@ -216,8 +212,6 @@ export default class ZnDataTable extends ZincElement {
   @property() method: 'GET' | 'POST' = 'POST';
 
   @property({attribute: "no-initial-load", type: Boolean}) noInitialLoad: boolean = false;
-
-  @property({attribute: 'storage-key'}) storageKey: string;
 
   @property({attribute: 'group-by'}) groupBy = '';
 
@@ -323,7 +317,9 @@ export default class ZnDataTable extends ZincElement {
 
   private rowHasActions: boolean = false;
 
-  private _visibleColumns: string[] = [];
+  private _expandedRows: Set<string> = new Set();
+  private _hiddenCells: Map<string, Cell[]> = new Map();
+  private _secondaryHeaders: HeaderConfig[];
 
   requestParams: Record<string, any> = {};
 
@@ -384,7 +380,7 @@ export default class ZnDataTable extends ZincElement {
     const hasInputs = this.hasSlotController.test(ActionSlots.inputs.valueOf());
 
     // Headers do not need to be re-rendered with new data
-    const content = html`
+    return html`
       <div class="table-container" ${ref((el) => (this.tableContainer = el))}>
         ${hasInputs ? html`
           <slot name="${ActionSlots.inputs.valueOf()}" style="display: none"></slot>` : null}
@@ -392,37 +388,16 @@ export default class ZnDataTable extends ZincElement {
         ${tableBody}
       </div>
     `;
-
-    if (this.flush || this.groupBy) {
-      return content;
-    }
-
-    return html`
-      <zn-panel caption=${ifDefined(this.caption)} flush>
-        ${this.renderColumnControl()}
-        ${content}
-      </zn-panel>
-    `;
   }
 
   connectedCallback() {
     super.connectedCallback();
-    this.loadColumnState();
-    this.addEventListener('zn-columns-change', this.columnsChangeListener);
     this.addEventListener('zn-filter-change', this.filterChangeListener);
     this.addEventListener('zn-search-change', this.searchChangeListener);
   }
 
-  protected willUpdate(changed: PropertyValues) {
-    if ((changed.has('headers') || changed.has('storageKey') || changed.has('dataUri'))
-        && this._visibleColumns.length === 0) {
-      this.loadColumnState();
-    }
-  }
-
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener('zn-columns-change', this.columnsChangeListener);
     this.removeEventListener('zn-filter-change', this.filterChangeListener);
     this.removeEventListener('zn-search-change', this.searchChangeListener);
   }
@@ -432,14 +407,6 @@ export default class ZnDataTable extends ZincElement {
       this.filter = (e.target as ZnDataTableFilter).value as string;
       this._dataTask.run().then(r => r);
     }
-  }
-
-  columnsChangeListener = (e: ZnColumnsChangeEvent) => {
-    const detail = e.detail;
-    if (!detail || !Array.isArray(detail.columns) || detail.columns.length === 0) return;
-    this._visibleColumns = [...detail.columns];
-    this.persistColumnState();
-    this.requestUpdate();
   }
 
   searchChangeListener = (e: ZnSearchChangeEvent) => {
@@ -557,32 +524,14 @@ export default class ZnDataTable extends ZincElement {
         }
       });
 
-      // Fixed group order so sorting rows never reorders the tables:
-      // explicit groups keep their declared order, then the wildcard, then any
-      // dynamically discovered groups alphabetically ("Ungrouped" always last).
-      const orderedKeys: string[] = [];
-      explicitGroups.forEach((group) => {
-        if (groupedRows[group]) orderedKeys.push(group);
-      });
-      if (hasWildcard && groupedRows['*']) orderedKeys.push('*');
-      Object.keys(groupedRows)
-        .filter((key) => !orderedKeys.includes(key))
-        .sort((a, b) => {
-          if (a === 'Ungrouped') return 1;
-          if (b === 'Ungrouped') return -1;
-          return a.localeCompare(b);
-        })
-        .forEach((key) => orderedKeys.push(key));
-
-      // render a table for each group, each wrapped in its own panel whose
-      // caption is the group value.
+      // render a table for each group
       return html`
         <zn-sp flush>
-          ${orderedKeys.map((groupKey, index) => html`
-            <zn-panel caption="${(groupKey === "Ungrouped" || groupKey === "*") ? "" : groupKey}" flush>
-              ${index === 0 ? this.renderColumnControl() : nothing}
-              ${this.renderTableData(groupedRows[groupKey], true)}
-            </zn-panel>`
+          ${Object.keys(groupedRows).map((groupKey) => html`
+            <div class="table-group">
+              <h3 class="table-group__title">${(groupKey === "Ungrouped" || groupKey === "*") ? "" : groupKey}</h3>
+              ${this.renderTableData(groupedRows[groupKey])}
+            </div>`
           )}
         </zn-sp>
       `;
@@ -596,32 +545,68 @@ export default class ZnDataTable extends ZincElement {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  public renderTableData(data: any, grouped: boolean = false) {
-    const filteredHeaders = this.visibleHeaders();
+  public renderTableData(data: any) {
+    // Primary (visible) headers exclude those explicitly hidden and those marked as secondary
+    const filteredHeaders = Object.values(this.headers).filter((header: HeaderConfig) => {
+      if (header.hideHeader || header.hideColumn) return false;
+
+      if (Object.values(this.hiddenColumns).includes(header.key)) return false;
+
+      return !header.secondary;
+    });
+
+    // Secondary headers (shown in expandable details)
+    this._secondaryHeaders = Object.values(this.headers).filter((header: HeaderConfig) => {
+      if (header.hideColumn) return false;
+
+      if (Object.values(this.hiddenColumns).includes(header.key)) return false;
+
+      return header.secondary === true;
+    });
 
     this.rowHasActions = this._rows.some((row: Row) => row.actions && row.actions.length > 0);
 
+    // Compute and store hidden cells per row (secondary items only), and reorder visible cells to match header order
+    const secondaryKeys = new Set(this._secondaryHeaders.map(h => h.key));
+    this._hiddenCells.clear();
     const visibleRowCells: Map<string, Cell[]> = new Map();
+
     this._rows.forEach((row: Row) => {
       const originalCells = Array.isArray(row.cells) ? row.cells : [];
-      const orderedCells: Cell[] = filteredHeaders.map((header: HeaderConfig) => {
+      const orderedCells: Cell[] = [];
+
+      const hiddenCells = originalCells.filter((c: Cell) => secondaryKeys.has(c.column));
+      this._hiddenCells.set(row.id, hiddenCells);
+
+      filteredHeaders.forEach((header: HeaderConfig) => {
         const cell = originalCells.find((c: Cell) => c.column === header.key);
-        return cell ?? {text: '', column: header.key};
+        if (cell) {
+          orderedCells.push(cell);
+        } else {
+          orderedCells.push({text: '', column: header.key});
+        }
       });
+
       visibleRowCells.set(row.id, orderedCells);
     });
+
+    const anyHidden = this.hasHiddenColumns();
+    const colCount = filteredHeaders.length + (this.rowHasActions ? 1 : 0) + (anyHidden ? 1 : 0);
 
     return html`
       <div style="overflow-x: auto">
         <table class="${classMap({
           'table': true,
-          'table--grouped': grouped,
+          'table--standalone': this.standalone,
           'with-hover': !this.unsortable && !this.hideCheckboxes,
         })}">
           <thead>
           <tr>
+            ${anyHidden ? html`
+              <th class="table__head table__head--expander"></th>` : nothing}
             ${filteredHeaders.map((header: HeaderConfig) => this.renderCellHeader(header))}
-            ${this.rowHasActions ? html`<th></th>` : html``}
+            ${this.rowHasActions ? html`
+              <th></th>` : html``}
           </tr>
           </thead>
           <tbody>
@@ -630,9 +615,11 @@ export default class ZnDataTable extends ZincElement {
               'table__row--selected': this.isRowSelected(row),
               'table__row--data': true,
             })}" data-row-id="${row.id}">
+              ${anyHidden ? this.renderExpanderCell(row) : nothing}
               ${(visibleRowCells.get(row.id) || row.cells).map((value: Cell, index: number) => this.renderCellBody(index, value))}
               ${this.rowHasActions ? this.renderActions(row) : nothing}
             </tr>
+            ${this._expandedRows.has(row.id) ? this.renderDetailsRow(row, colCount) : nothing}
           `)}
           </tbody>
         </table>
@@ -689,9 +676,8 @@ export default class ZnDataTable extends ZincElement {
   getRowsPerPage() {
     if (this.hidePagination || (this.totalPages <= 1 && this._rows.length <= this.itemsPerPage)) return null;
 
-    // Always include the current page size so it stays selectable/displayed,
-    // even when the server returns a non-standard perPage value.
-    const optionsRowsPerPage = [...new Set([10, 20, 30, 40, 50, this.itemsPerPage])].sort((a, b) => a - b);
+    const optionsRowsPerPage = [10, 20, 30, 40, 50];
+    optionsRowsPerPage.filter((option) => option <= this._rows.length);
 
     return html`
       <div class="table__footer__rows-per-page">
@@ -934,8 +920,7 @@ export default class ZnDataTable extends ZincElement {
 
   renderCell(data: Cell) {
     if (data && typeof data === 'object') {
-      // Wrap text in a span so it's an element the cell can truncate with an ellipsis
-      let content: TemplateResult | ZincElement = html`<span>${data.text}</span>`;
+      let content: TemplateResult | ZincElement = html`${data.text}`;
 
       if (data.style || data.color) {
         const styleStr = typeof data.style === 'string' ? data.style : '';
@@ -1059,7 +1044,16 @@ export default class ZnDataTable extends ZincElement {
   private renderCellHeader(header: HeaderConfig) {
     const sortable = !Object.values(this.unsortableHeaders).includes(header.key) && !Object.values(this.hiddenHeaders).includes(header.key) && !this.unsortable && header.sortable !== false;
 
-    const lastVisibleHeaderKey = this.visibleHeaders().slice(-1)[0]?.key;
+    // Determine the last visible header considering secondary flags and hidden columns
+    const lastVisibleHeaderKey = Object.values(this.headers)
+      .filter((h: HeaderConfig) => {
+        if (h.hideHeader || h.hideColumn) return false;
+
+        if (Object.values(this.hiddenColumns).includes(h.key)) return false;
+
+        return !h.secondary;
+      })
+      .slice(-1)[0]?.key;
 
     return html`
       <th
@@ -1079,7 +1073,13 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private renderCellBody(index: number, value: Cell) {
-    const filteredHeaders = this.visibleHeaders();
+    const filteredHeaders = Object.values(this.headers).filter((header: HeaderConfig) => {
+      if (header.hideHeader || header.hideColumn) return false;
+
+      if (Object.values(this.hiddenColumns).includes(header.key)) return false;
+
+      return !header.secondary;
+    });
     const headerKey: string = filteredHeaders[index]?.key;
 
     return html`
@@ -1094,73 +1094,62 @@ export default class ZnDataTable extends ZincElement {
       </td>`;
   }
 
-  private columnStorageKey(): string | null {
-    const id = this.storageKey || this.dataUri;
-    return id ? `zn-data-table-columns:${id}` : null;
+  private hasHiddenColumns(): boolean {
+    return this._secondaryHeaders.length > 0;
   }
 
-  private persistColumnState() {
-    const key = this.columnStorageKey();
-    if (!key) return;
-    try {
-      const payload = {visible: this._visibleColumns, known: this.defaultColumnKeys()};
-      window.localStorage.setItem(key, JSON.stringify(payload));
-    } catch {
-      // storage unavailable — keep in-memory state
-    }
-  }
+  private renderExpanderCell(row: Row) {
+    const hasHidden = (this._hiddenCells.get(row.id) || []).length > 0;
+    if (!hasHidden) return html`
+      <td class="table__cell table__cell--expander"></td>`;
 
-  private loadColumnState() {
-    const all = this.defaultColumnKeys();
-    const key = this.columnStorageKey();
-    const applyDefault = () => { if (this._visibleColumns.length === 0) this._visibleColumns = all; };
-    if (!key) { applyDefault(); return; }
-    try {
-      const raw = window.localStorage.getItem(key);
-      if (!raw) { applyDefault(); return; }
-      const parsed = JSON.parse(raw) as string[] | {visible?: string[]; known?: string[]};
-      let storedVisible: string[];
-      let storedKnown: string[];
-      if (Array.isArray(parsed)) {
-        // legacy visible-only format: treat all current headers as known so none are force-appended
-        storedVisible = parsed;
-        storedKnown = all;
-      } else {
-        storedVisible = Array.isArray(parsed.visible) ? parsed.visible : [];
-        storedKnown = Array.isArray(parsed.known) ? parsed.known : [];
-      }
-      const visible = storedVisible.filter((k) => all.includes(k));
-      // Truly-new columns: in current headers, never seen at save time, not already visible. Declared order preserved.
-      const newKeys = all.filter((k) => !storedKnown.includes(k) && !visible.includes(k));
-      const next = [...visible, ...newKeys];
-      this._visibleColumns = next.length > 0 ? next : all;
-    } catch {
-      applyDefault();
-    }
-  }
+    const expanded = this._expandedRows.has(row.id);
+    const icon = expanded ? 'chevron_down@lu' : 'chevron_right';
 
-  private renderColumnControl() {
     return html`
-      <zn-data-table-columns
-        slot="actions"
-        .columns=${Object.values(this.headers).map((h: HeaderConfig) => ({key: h.key, label: h.label}))}
-        .value=${this._visibleColumns}>
-      </zn-data-table-columns>`;
+      <td class="table__cell table__cell--expander">
+        <zn-button
+          color="transparent"
+          icon="${icon}"
+          icon-size="18"
+          aria-label="${expanded ? 'Collapse row' : 'Expand row'}"
+          @click="${(e: Event) => this.toggleRowExpansion(e, row)}">
+        </zn-button>
+      </td>`;
   }
 
-  private defaultColumnKeys(): string[] {
-    const hidden = Object.values(this.hiddenColumns);
-    return Object.values(this.headers)
-      .map((h: HeaderConfig) => h.key)
-      .filter((k) => !hidden.includes(k));
+  private renderDetailsRow(row: Row, colSpan: number) {
+    const hiddenCells = this._hiddenCells.get(row.id) || [];
+    if (hiddenCells.length === 0) return html``;
+
+    return html`
+      <tr class="table__row--details" data-details="true">
+        <td colspan="${colSpan}">
+          <div class="table__details">
+            ${hiddenCells.map((cell: Cell) => {
+              const header = Object.values(this.headers).find((h: HeaderConfig) => h.key === cell.column);
+              const label = header?.label || this.humanize(cell.column);
+              return html`
+                <div class="table__details__item">
+                  <div class="table__details__label">${label}</div>
+                  <div class="table__details__value">${this.renderCell(cell)}</div>
+                </div>`;
+            })}
+          </div>
+        </td>
+      </tr>`;
   }
 
-  private visibleHeaders(): HeaderConfig[] {
-    const hidden = Object.values(this.hiddenColumns);
-    const byKey = new Map(Object.values(this.headers).map((h: HeaderConfig) => [h.key, h]));
-    return this._visibleColumns
-      .map((k) => byKey.get(k))
-      .filter((h): h is HeaderConfig => !!h && !hidden.includes(h.key));
+  private toggleRowExpansion(e: Event, row: Row) {
+    e.stopPropagation();
+
+    if (this._expandedRows.has(row.id)) {
+      this._expandedRows.delete(row.id);
+    } else {
+      this._expandedRows.add(row.id);
+    }
+
+    this.requestUpdate();
   }
 
   private isRowSelected(row: Row): boolean {
@@ -1269,6 +1258,7 @@ export default class ZnDataTable extends ZincElement {
       <div class="table-container">
         <table class="${classMap({
           'table': true,
+          'table--standalone': this.standalone,
         })}">
           <thead>
           <tr>

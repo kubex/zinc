@@ -16,6 +16,9 @@ export default class ZnStatusIndicator extends ZincElement {
 
   @property() type: 'success' | 'error' | 'warning' | 'info' = 'info';
 
+  /** Animates a throbbing glow effect around the indicator. */
+  @property({type: Boolean, reflect: true}) glow = false;
+
   render() {
     return html`
       <div class=${classMap({
@@ -24,6 +27,7 @@ export default class ZnStatusIndicator extends ZincElement {
         'indicator--error': this.type === 'error',
         'indicator--success': this.type === 'success',
         'indicator--info': this.type === 'info',
+        'indicator--glow': this.glow,
       })}>
       </div>
     `;

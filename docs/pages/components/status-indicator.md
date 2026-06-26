@@ -33,6 +33,17 @@ Use the `type` attribute to set the semantic meaning and color of the status ind
 <zn-status-indicator type="error"></zn-status-indicator>
 ```
 
+### Glow
+
+Add the `glow` attribute to animate a throbbing glow effect around the indicator, useful for drawing attention to a live or active status.
+
+```html:preview
+<zn-status-indicator type="info" glow></zn-status-indicator>
+<zn-status-indicator type="success" glow></zn-status-indicator>
+<zn-status-indicator type="warning" glow></zn-status-indicator>
+<zn-status-indicator type="error" glow></zn-status-indicator>
+```
+
 ### With Labels
 
 Status indicators are commonly used alongside text labels to provide context.

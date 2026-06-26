@@ -35,4 +35,28 @@
   &--success {
     --indicator-color: var(--zn-indicator-success);
   }
+
+  &--glow {
+    animation: indicator-glow 2s ease-in-out infinite;
+  }
+}
+
+@keyframes indicator-glow {
+  0%,
+  100% {
+    background-color: rgba(var(--indicator-color), 0.5);
+    box-shadow: 0 0 1px 0 rgba(var(--indicator-color), 0.1);
+  }
+
+  50% {
+    background-color: rgba(var(--indicator-color), 0.8);
+    box-shadow: 0 0 3px 1px rgba(var(--indicator-color), 0.5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .indicator--glow {
+    animation: none;
+    box-shadow: 0 0 4px 1px rgba(var(--indicator-color), 0.6);
+  }
 }

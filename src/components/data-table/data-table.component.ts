@@ -1339,9 +1339,9 @@ export default class ZnDataTable extends ZincElement {
       <td class="table__cell table__cell--actions">
         <zn-dropdown placement="bottom-end">
           <zn-button slot="trigger"
-                     icon-button
-                     plain
+                     icon-button="small"
                      icon="ellipsis@lu"
+                     plain
                      aria-label="Row actions">
           </zn-button>
           <zn-menu>

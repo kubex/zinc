@@ -60,7 +60,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @queryAll('.loading-countdown') countdownContainer: HTMLElement[];
 
   @property({}) color: 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |
-    'transparent' | 'star' | (string & Record<never, never>) = 'default';
+    'transparent' | 'star' | 'white' | (string & Record<never, never>) = 'default';
   @property({attribute: 'hover-color'}) hoverColor: string;
   @property({type: Boolean}) text = false;
   @property({type: Boolean}) outline = false;
@@ -388,6 +388,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--warning': this.color === 'warning',
           'button--transparent': this.color === 'transparent',
           'button--star': this.color === 'star',
+          'button--white': this.color === 'white',
           'button--outline': this.outline,
           'button--text': (this.text && !this.outline),
           'button--icon-button': !!this.iconButton,

@@ -722,11 +722,13 @@ export default class ZnDataTable extends ZincElement {
 
     return html`
       <div class="table__footer__pagination-buttons">
-        <zn-button @click="${this.page !== 1 ? this.goToFirstPage : undefined}"
+        <zn-button color="white"
+                   @click="${this.page !== 1 ? this.goToFirstPage : undefined}"
                    ?disabled="${this.page === 1}"
                    icon="arrow_left@lu">First
         </zn-button>
-        <zn-button @click="${this.page !== 1 ? this.goToPreviousPage : undefined}"
+        <zn-button color="white"
+                   @click="${this.page !== 1 ? this.goToPreviousPage : undefined}"
                    ?disabled="${this.page === 1}">Back
         </zn-button>
         ${this.getPageRange().map((p) => p === 'ellipsis'
@@ -737,10 +739,12 @@ export default class ZnDataTable extends ZincElement {
                        class="${p === this.page ? 'table__footer__pagination-page--active' : ''}">${p}
             </zn-button>`
         )}
-        <zn-button @click="${this.page !== this.totalPages ? this.goToNextPage : undefined}"
+        <zn-button color="white"
+                   @click="${this.page !== this.totalPages ? this.goToNextPage : undefined}"
                    ?disabled="${this.page === this.totalPages}">Next
         </zn-button>
-        <zn-button @click="${this.page !== this.totalPages ? this.goToLastPage : undefined}"
+        <zn-button color="white"
+                   @click="${this.page !== this.totalPages ? this.goToLastPage : undefined}"
                    ?disabled="${this.page === this.totalPages}"
                    icon="arrow_right@lu"
                    icon-position="right">Last

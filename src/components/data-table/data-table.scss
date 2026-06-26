@@ -284,23 +284,12 @@ table {
       flex-direction: row;
       align-items: center;
       gap: var(--zn-spacing-x-small);
-
-      button {
-        border: 1px solid rgb(var(--zn-border-color));
-        border-radius: 5px;
-        padding: var(--zn-spacing-x-small);
-
-        &[disabled] {
-          cursor: not-allowed;
-          opacity: 0.5;
-        }
-      }
     }
 
     &__pagination-page--active::part(base) {
-      background-color: rgb(var(--zn-primary));
-      border-color: rgb(var(--zn-primary));
-      color: rgb(var(--zn-text-on-primary, 255 255 255));
+      background-color: var(--zn-color-neutral-300);
+      border-color: var(--zn-color-neutral-300);
+      color: rgb(var(--zn-text));
     }
 
     &__pagination-ellipsis {

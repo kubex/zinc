@@ -2307,7 +2307,7 @@
             },
             { "name": "hide-pagination", "value": { "type": "boolean" } },
             {
-              "name": "flush",
+              "name": "standalone",
               "value": { "type": "boolean", "default": "false" }
             },
             { "name": "caption", "value": { "type": "string" } },
@@ -2326,7 +2326,6 @@
               "name": "no-initial-load",
               "value": { "type": "boolean", "default": "false" }
             },
-            { "name": "storage-key", "value": { "type": "string" } },
             {
               "name": "group-by",
               "value": { "type": "string", "default": "''" }
@@ -2381,7 +2380,7 @@
               { "name": "unsortableHeaders", "type": "string" },
               { "name": "unsortable", "type": "boolean" },
               { "name": "hidePagination", "type": "boolean" },
-              { "name": "flush", "type": "boolean" },
+              { "name": "standalone", "type": "boolean" },
               { "name": "caption", "type": "string" },
               { "name": "emptyStateCaption", "type": "string" },
               { "name": "emptyStateIcon", "type": "string" },
@@ -2389,54 +2388,14 @@
               { "name": "filters", "type": "[]" },
               { "name": "method", "type": "'GET' | 'POST'" },
               { "name": "noInitialLoad", "type": "boolean" },
-              { "name": "storageKey", "type": "string" },
               { "name": "groupBy", "type": "string" },
               { "name": "groups", "type": "string" },
               { "name": "selectAllButton", "type": "ZnButton" },
               { "name": "requestParams", "type": "Record<string, any>" },
               { "name": "filterChangeListener" },
-              { "name": "columnsChangeListener" },
               { "name": "searchChangeListener" }
             ],
             "events": []
-          }
-        },
-        {
-          "name": "zn-data-table-columns",
-          "description": "Column visibility and ordering control for data tables.\n---\n\n\n### **Events:**\n - **zn-columns-change** - Emitted with the ordered list of visible column keys when the user changes columns.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "columns",
-              "value": { "type": "ColumnOption[]", "default": "[]" }
-            },
-            {
-              "name": "value",
-              "value": { "type": "string[]", "default": "[]" }
-            },
-            {
-              "name": "label",
-              "value": { "type": "string", "default": "'Columns'" }
-            }
-          ],
-          "events": [
-            {
-              "name": "zn-columns-change",
-              "description": "Emitted with the ordered list of visible column keys when the user changes columns."
-            }
-          ],
-          "js": {
-            "properties": [
-              { "name": "columns", "type": "ColumnOption[]" },
-              { "name": "value", "type": "string[]" },
-              { "name": "label", "type": "string" }
-            ],
-            "events": [
-              {
-                "name": "zn-columns-change",
-                "description": "Emitted with the ordered list of visible column keys when the user changes columns."
-              }
-            ]
           }
         },
         {

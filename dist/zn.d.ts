@@ -1166,7 +1166,7 @@ declare module "components/button/button.component" {
         private _loadingState;
         button: HTMLButtonElement;
         countdownContainer: HTMLElement[];
-        color: 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent' | 'star' | (string & Record<never, never>);
+        color: 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent' | 'star' | 'white' | (string & Record<never, never>);
         hoverColor: string;
         text: boolean;
         outline: boolean;

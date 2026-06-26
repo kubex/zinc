@@ -7500,6 +7500,8 @@ declare module "components/status-indicator/status-indicator.component" {
     export default class ZnStatusIndicator extends ZincElement {
         static styles: CSSResultGroup;
         type: 'success' | 'error' | 'warning' | 'info';
+        /** Animates a throbbing glow effect around the indicator. */
+        glow: boolean;
         render(): import("lit-html").TemplateResult<1>;
     }
 }

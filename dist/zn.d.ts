@@ -1557,8 +1557,13 @@ declare module "components/chat-message/chat-message.component" {
         customerInitiated: boolean;
         /** Marks the message as initiated by an agent (affects styling and grouping). */
         agentInitiated: boolean;
+        /** Whether any element is assigned to the `attachments` slot — drives the attachments row visibility. */
+        private hasAttachments;
         connectedCallback(): void;
         protected render(): import("lit-html").TemplateResult<1> | typeof nothing;
+        protected firstUpdated(): void;
+        private handleAttachmentsSlotChange;
+        private syncHasAttachments;
         private isSystemMessage;
         private renderSystemCard;
         private systemLabel;
@@ -5578,6 +5583,8 @@ declare module "components/editor/modules/attachment/attachment" {
         private _insertAttachment;
         private _updateAttachment;
         private _createAttachment;
+        /** Clear every staged attachment preview and reset the backing form input. */
+        reset(): void;
         private _removeAttachment;
         private _uploadAttachment;
     }

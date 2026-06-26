@@ -8,6 +8,7 @@
   --zn-indicator-disabled: 220, 220, 220;
 
   --indicator-color: var(--zn-indicator-disabled);
+  --indicator-alt-color: var(--zn-indicator-disabled);
   white-space: nowrap;
   display: inline-block;
 }
@@ -36,8 +37,45 @@
     --indicator-color: var(--zn-indicator-success);
   }
 
+  &--disabled {
+    --indicator-color: var(--zn-indicator-disabled);
+  }
+
+  // Alternate (secondary) colour, used by the alternating animation.
+  &--alt-info {
+    --indicator-alt-color: var(--zn-indicator-info);
+  }
+
+  &--alt-error {
+    --indicator-alt-color: var(--zn-indicator-error);
+  }
+
+  &--alt-warning {
+    --indicator-alt-color: var(--zn-indicator-warning);
+  }
+
+  &--alt-success {
+    --indicator-alt-color: var(--zn-indicator-success);
+  }
+
+  &--alt-disabled {
+    --indicator-alt-color: var(--zn-indicator-disabled);
+  }
+
   &--glow {
     animation: indicator-glow 2s ease-in-out infinite;
+  }
+
+  // Animates between the primary colour and the alternate colour to
+  // represent a status transitioning between two states.
+  &--alternate {
+    animation: indicator-alternate 2s ease-in-out infinite;
+  }
+
+  // When both glow and alternate are set, a single animation switches
+  // colour while pulsing the glow.
+  &--alternate#{&}--glow {
+    animation: indicator-alternate-glow 2s ease-in-out infinite;
   }
 }
 
@@ -54,9 +92,47 @@
   }
 }
 
+@keyframes indicator-alternate {
+  0%,
+  100% {
+    background-color: rgba(var(--indicator-color), 0.7);
+    border-color: rgb(var(--indicator-color));
+  }
+
+  50% {
+    background-color: rgba(var(--indicator-alt-color), 0.7);
+    border-color: rgb(var(--indicator-alt-color));
+  }
+}
+
+@keyframes indicator-alternate-glow {
+  0%,
+  100% {
+    background-color: rgba(var(--indicator-color), 0.5);
+    border-color: rgb(var(--indicator-color));
+    box-shadow: 0 0 1px 0 rgba(var(--indicator-color), 0.1);
+  }
+
+  50% {
+    background-color: rgba(var(--indicator-alt-color), 0.8);
+    border-color: rgb(var(--indicator-alt-color));
+    box-shadow: 0 0 3px 1px rgba(var(--indicator-alt-color), 0.5);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .indicator--glow {
     animation: none;
     box-shadow: 0 0 4px 1px rgba(var(--indicator-color), 0.6);
+  }
+
+  // Without motion, fall back to a static split between the two colours.
+  .indicator--alternate {
+    animation: none;
+    background: linear-gradient(
+      90deg,
+      rgb(var(--indicator-color)) 0 50%,
+      rgb(var(--indicator-alt-color)) 50% 100%
+    );
   }
 }

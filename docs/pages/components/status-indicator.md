@@ -24,13 +24,14 @@ A basic status indicator displays as a small circular dot with the default info 
 
 ### Types
 
-Use the `type` attribute to set the semantic meaning and color of the status indicator. Available types are: `info` (default), `success`, `warning`, and `error`.
+Use the `type` attribute to set the semantic meaning and color of the status indicator. Available types are: `info` (default), `success`, `warning`, `error`, and `disabled`.
 
 ```html:preview
 <zn-status-indicator type="info"></zn-status-indicator>
 <zn-status-indicator type="success"></zn-status-indicator>
 <zn-status-indicator type="warning"></zn-status-indicator>
 <zn-status-indicator type="error"></zn-status-indicator>
+<zn-status-indicator type="disabled"></zn-status-indicator>
 ```
 
 ### Glow
@@ -42,6 +43,22 @@ Add the `glow` attribute to animate a throbbing glow effect around the indicator
 <zn-status-indicator type="success" glow></zn-status-indicator>
 <zn-status-indicator type="warning" glow></zn-status-indicator>
 <zn-status-indicator type="error" glow></zn-status-indicator>
+```
+
+### Alternating Status
+
+Use the `alt-type` attribute to animate the indicator between two statuses. This is useful for representing a status that is transitioning or flapping between two states, e.g. a service moving between `warning` and offline (`disabled`).
+
+```html:preview
+<zn-status-indicator type="warning" alt-type="disabled"></zn-status-indicator>
+<zn-status-indicator type="success" alt-type="warning"></zn-status-indicator>
+<zn-status-indicator type="error" alt-type="info"></zn-status-indicator>
+```
+
+The `alt-type` attribute accepts the same values as `type`: `info`, `success`, `warning`, `error`, and `disabled`. Combine it with `glow` for a pulsing, colour-switching effect.
+
+```html:preview
+<zn-status-indicator type="warning" alt-type="disabled" glow></zn-status-indicator>
 ```
 
 ### With Labels

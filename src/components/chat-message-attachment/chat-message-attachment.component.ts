@@ -35,7 +35,7 @@ export default class ZnChatMessageAttachment extends ZincElement {
   @property() name: string = '';
 
   /** The leading icon name. */
-  @property() icon: string = 'attach_file';
+  @property() icon: string = 'paperclip@lu';
 
   /** Where to open the link. Defaults to a new tab. */
   @property() target: string = '_blank';

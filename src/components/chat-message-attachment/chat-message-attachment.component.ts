@@ -46,13 +46,11 @@ export default class ZnChatMessageAttachment extends ZincElement {
   connectedCallback() {
     super.connectedCallback();
 
-    // This component is only meaningful inside the attachments row of a chat message —
-    // slot it there automatically so consumers don't have to.
-    if (!this.slot) {
-      this.slot = 'attachments';
-    }
-
-    if (!this.closest('zn-chat-message')) {
+    if (this.closest('zn-chat-message')) {
+      if (!this.slot) {
+        this.slot = 'attachments';
+      }
+    } else {
       console.warn('<zn-chat-message-attachment> can only be used inside a <zn-chat-message>.', this);
     }
   }

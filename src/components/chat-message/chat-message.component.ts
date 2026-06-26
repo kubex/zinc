@@ -1,6 +1,6 @@
 import {cleanHTML} from "./clean-message";
 import {type CSSResultGroup, html, nothing, unsafeCSS} from 'lit';
-import {property} from "lit/decorators.js";
+import {property, state} from "lit/decorators.js";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import ZincElement from '../../internal/zinc-element';
 import ZnIcon from "../icon";
@@ -80,6 +80,9 @@ export default class ZnChatMessage extends ZincElement {
   /** Marks the message as initiated by an agent (affects styling and grouping). */
   @property({type: Boolean, reflect: true, attribute: 'agent-initiated'}) agentInitiated = false;
 
+  /** Whether any element is assigned to the `attachments` slot — drives the attachments row visibility. */
+  @state() private hasAttachments = false;
+
   connectedCallback() {
     const isContent = !this.actionType || this.actionType === 'internal';
     const agentInitiated = isContent && this.agentInitiated;
@@ -122,7 +125,12 @@ export default class ZnChatMessage extends ZincElement {
           <div part="bubble" class="message__bubble ${sending ? 'message__bubble--sending' : ''}">
             <div class="message__main">
               <div part="content" class="message__content">${this.renderContent()}</div>
-              <slot name="attachments" part="attachments" class="message__attachments"></slot>
+              <slot
+                name="attachments"
+                part="attachments"
+                class="message__attachments ${this.hasAttachments ? 'message__attachments--visible' : ''}"
+                @slotchange=${this.handleAttachmentsSlotChange}
+              ></slot>
             </div>
             ${sending ? html`
               <div class="message__meta">Sending...</div>` : html`
@@ -134,6 +142,20 @@ export default class ZnChatMessage extends ZincElement {
       </div>
       <slot name="edit-dialog"></slot>
     `;
+  }
+
+  protected firstUpdated() {
+    this.syncHasAttachments();
+    Promise.resolve().then(() => this.syncHasAttachments());
+  }
+
+  private handleAttachmentsSlotChange() {
+    this.syncHasAttachments();
+  }
+
+  private syncHasAttachments() {
+    const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="attachments"]');
+    this.hasAttachments = !!slot && slot.assignedElements().length > 0;
   }
 
   private isSystemMessage() {

@@ -57,7 +57,7 @@ export default class Attachment {
   public addAttachment(file: File, dataUrl?: string) {
     const attachmentId = generateId();
     const insertWithDataUrl = (base64: string) => {
-      this._insertAttachment({ dataUrl: base64, file, id: attachmentId });
+      this._insertAttachment({dataUrl: base64, file, id: attachmentId});
     };
 
     if (dataUrl) {
@@ -72,8 +72,8 @@ export default class Attachment {
     }
 
     if (typeof this._options.upload === 'function') {
-      this._options.upload(file).then(({ path, url }: { path: string; url: string }) => {
-        this._uploadAttachment(file, url);
+      this._options.upload(file).then(async ({path, url}: { path: string; url: string }) => {
+        await this._uploadAttachment(file, url);
         this._updateAttachment(attachmentId, url, path);
       }).catch((err: { message: string }) => {
         console.warn(err.message);
@@ -163,6 +163,15 @@ export default class Attachment {
     return attachment;
   }
 
+  /** Clear every staged attachment preview and reset the backing form input. */
+  public reset() {
+    this._attachmentContainer.replaceChildren();
+    const attachments = this._options.attachmentInput;
+    if (attachments) {
+      attachments.value = '';
+    }
+  }
+
   private _removeAttachment(id: string) {
     const attachment = this._quill.container.querySelector(`#${id}`);
     if (attachment) {
@@ -184,24 +193,26 @@ export default class Attachment {
     }
   }
 
-  private _uploadAttachment(file: File, url: string) {
-    const xhr = new XMLHttpRequest();
+  private _uploadAttachment(file: File, url: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
 
-    xhr.open('PUT', url, true);
-    xhr.setRequestHeader('Content-Type', file.type);
+      xhr.open('PUT', url, true);
+      xhr.setRequestHeader('Content-Type', file.type);
 
-    xhr.onload = () => {
-      if (xhr.status >= 200 && xhr.status < 300) {
-        console.log(`[Quill Attachment Module] File uploaded successfully to ${url}`);
-      } else {
-        console.error(`[Quill Attachment Module] Failed to upload file. Status: ${xhr.status}`);
-      }
-    };
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve();
+        } else {
+          reject(new Error(`[Quill Attachment Module] Failed to upload file. Status: ${xhr.status}`));
+        }
+      };
 
-    xhr.onerror = () => {
-      console.error(`[Quill Attachment Module] Error occurred while uploading file.`);
-    };
+      xhr.onerror = () => {
+        reject(new Error(`[Quill Attachment Module] Error occurred while uploading file.`));
+      };
 
-    xhr.send(file);
+      xhr.send(file);
+    });
   }
 }

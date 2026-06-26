@@ -65,14 +65,15 @@
   }
 
   &__attachments {
-    // Always rendered so projection is reliable regardless of when children are
-    // parsed/added, but kept out of flow (no phantom gap below the bubble) until
-    // an attachment actually exists — toggled on via :host(:has(...)) below.
     display: none;
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--zn-spacing-small);
+
+    &--visible {
+      display: flex;
+    }
 
     ::slotted(zn-chat-message-attachment) {
       min-width: 0;
@@ -166,13 +167,6 @@
     display: flex;
     align-items: center;
   }
-}
-
-// Reveal the attachments row only when an attachment is actually present. Using
-// :has on the host keeps this live and parse-order independent — no reliance on
-// conditional rendering that could miss a child added during parsing.
-:host(:has([slot="attachments"])) .message__attachments {
-  display: flex;
 }
 
 // Bubble tints by message origin / type.

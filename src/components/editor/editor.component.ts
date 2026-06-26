@@ -261,6 +261,13 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     this.quillElement = quill;
 
+    this.getForm()?.addEventListener('submit', () => {
+      setTimeout(() => {
+        const attachmentModule = this.quillElement.getModule('attachment') as Attachment;
+        attachmentModule?.reset();
+      }, 0);
+    });
+
     // @ts-expect-error getSelection is available it lies.
     const hasShadowRootSelection = !!(document.createElement('div').attachShadow({mode: 'open'}).getSelection);
     // Each browser engine has a different implementation for retrieving the Range
@@ -400,7 +407,10 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
           if (this.interactionType === 'chat') {
             const form = this.closest('form');
-            if (form && this.value && this.value.trim().length > 0 && !empty(this.value)) {
+            const hasText = !!this.value && this.value.trim().length > 0 && !empty(this.value);
+            const attachmentInput = form?.querySelector('input[name="attachments"]') as HTMLInputElement | null;
+            const hasAttachments = !!attachmentInput?.value && attachmentInput.value !== '[]';
+            if (form && (hasText || hasAttachments)) {
               this.emit('zn-submit', {detail: {value: this.value, element: this}});
               form.requestSubmit();
               this.quillElement.setText('');

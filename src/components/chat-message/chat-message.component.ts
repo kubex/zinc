@@ -202,7 +202,7 @@ export default class ZnChatMessage extends ZincElement {
         <span class="message__sender">${this.sender || (this.customerInitiated ? 'Customer' : 'You')}</span>
         ${this.time ? html`<span class="message__time">${this.getSentTime()}</span>` : nothing}
         ${this.actionType === 'internal' ? html`
-          <zn-chip type="info">Internal</zn-chip>` : nothing}
+          <zn-chip type="info">Internal Note</zn-chip>` : nothing}
         <slot name="badge"></slot>
       </div>`;
   }

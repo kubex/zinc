@@ -516,7 +516,7 @@ declare module "utilities/sha256" {
     export function sha256(input: string): string;
 }
 declare module "components/icon/icon.component" {
-    import { type CSSResultGroup } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     export type IconLibrary = "src" | "material" | "material-outlined" | "material-round" | "material-sharp" | "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line" | "lucide";
     export type IconColor = "default" | "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" | "disabled" | "red" | "blue" | "green" | "orange" | "yellow" | "indigo" | "violet" | "pink" | "grey" | (string & Record<never, never>);
@@ -555,9 +555,12 @@ declare module "components/icon/icon.component" {
         private isPresetColor;
         gravatarOptions: string;
         defaultLibrary: IconLibrary;
+        private libraryAutoSet;
         convertToLibrary(input: string): IconLibrary;
         private convertIndicatorToLibrary;
         connectedCallback(): void;
+        protected willUpdate(changedProperties: PropertyValues<this>): void;
+        private parseSrc;
         private applyHashFragment;
         private normalizeRavatarEmail;
         render(): import("lit-html").TemplateResult<1>;

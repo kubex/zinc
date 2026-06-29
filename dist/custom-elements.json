@@ -49,6 +49,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -219,79 +292,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -6694,649 +6694,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/data-select/data-select.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnDataSelect",
-          "cssParts": [
-            {
-              "description": "The container that wraps the prefix, combobox, clear icon, and expand button (forwarded from zn-select).",
-              "name": "combobox"
-            },
-            {
-              "description": "The container that wraps the expand icon (forwarded from zn-select).",
-              "name": "expand-icon"
-            },
-            {
-              "description": "The help text's wrapper (forwarded from zn-select).",
-              "name": "form-control-help-text"
-            },
-            {
-              "description": "The select's wrapper (forwarded from zn-select).",
-              "name": "form-control-input"
-            },
-            {
-              "description": "The element that displays the selected option's label (forwarded from zn-select).",
-              "name": "display-input"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The select's label. Alternatively, you can use the `label` attribute.",
-              "name": "label"
-            },
-            {
-              "description": "Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.",
-              "name": "label-tooltip"
-            },
-            {
-              "description": "Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.",
-              "name": "context-note"
-            },
-            {
-              "description": "Text that describes how to use the select. Alternatively, you can use the `help-text` attribute.",
-              "name": "help-text"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ 'zn-select': ZnSelect, 'zn-option': ZnOption, }"
-            },
-            {
-              "kind": "field",
-              "name": "select",
-              "type": {
-                "text": "ZnSelect"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "description": "The name of the select. Used for form submission.",
-              "attribute": "name"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string | string[]"
-              },
-              "default": "''",
-              "description": "The value of the select. Used for form submission. When `multiple` is enabled, this is an array of strings.",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "provider",
-              "type": {
-                "text": "'color' | 'currency' | 'country' | 'phone' | 'us-state'"
-              },
-              "description": "The provider of the select.",
-              "attribute": "provider"
-            },
-            {
-              "kind": "field",
-              "name": "iconPosition",
-              "type": {
-                "text": "'start' | 'end' | 'none'"
-              },
-              "default": "'none'",
-              "description": "The position of the icon.",
-              "attribute": "icon-position"
-            },
-            {
-              "kind": "field",
-              "name": "filter",
-              "type": {
-                "text": "string[]"
-              },
-              "description": "An array of keys to use for filtering the options in the selected provider.",
-              "attribute": "filter"
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "default": "'medium'",
-              "description": "The selects size.",
-              "attribute": "size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "clearable",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Should we show the clear button",
-              "attribute": "clearable"
-            },
-            {
-              "kind": "field",
-              "name": "allowAll",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Include an \"All\" option at the top.",
-              "attribute": "allow-all"
-            },
-            {
-              "kind": "field",
-              "name": "allowCommon",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Include a \"Common\" option that selects multiple common currencies.",
-              "attribute": "allow-common"
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The selects label. If you need to display HTML, use the `label` slot instead.",
-              "attribute": "label"
-            },
-            {
-              "kind": "field",
-              "name": "labelTooltip",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
-              "attribute": "label-tooltip"
-            },
-            {
-              "kind": "field",
-              "name": "contextNote",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Text that appears above the input, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead.",
-              "attribute": "context-note"
-            },
-            {
-              "kind": "field",
-              "name": "placement",
-              "type": {
-                "text": "'top' | 'bottom'"
-              },
-              "default": "'bottom'",
-              "description": "The preferred placement of the selects menu. Note that the actual placement may vary as needed to keep the listbox\ninside the viewport.",
-              "attribute": "placement",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "helpText",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The selects help text. If you need to display HTML, use the `help-text` slot instead.",
-              "attribute": "help-text"
-            },
-            {
-              "kind": "field",
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "The selects required attribute.",
-              "attribute": "required",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Disables the select.",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "iconOnly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "icon-only",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "multiple",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "multiple"
-            },
-            {
-              "kind": "field",
-              "name": "selectFirst",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "select-first"
-            },
-            {
-              "kind": "field",
-              "name": "distinct",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "attribute": "distinct"
-            },
-            {
-              "kind": "field",
-              "name": "conditional",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "attribute": "conditional"
-            },
-            {
-              "kind": "field",
-              "name": "formControlController",
-              "privacy": "protected",
-              "readonly": true,
-              "default": "new FormControlController(this)"
-            },
-            {
-              "kind": "field",
-              "name": "selectObserver",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new MutationController(this, { target: null, config: {attributes: true, attributeFilter: ['disabled']}, callback: () => this._syncDisabledState(), })"
-            },
-            {
-              "kind": "field",
-              "name": "validationMessage",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "validity",
-              "type": {
-                "text": "ValidityState"
-              },
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "checkValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getForm",
-              "return": {
-                "type": {
-                  "text": "HTMLFormElement | null"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "reportValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "setCustomValidity",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "message",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "closeOnTab"
-            },
-            {
-              "kind": "method",
-              "name": "handleValueChange"
-            },
-            {
-              "kind": "field",
-              "name": "handleInput"
-            },
-            {
-              "kind": "field",
-              "name": "handleClear"
-            },
-            {
-              "kind": "method",
-              "name": "getLocalProvider",
-              "return": {
-                "type": {
-                  "text": "LocalDataProvider<DataProviderOption>"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "name",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "blur"
-            },
-            {
-              "kind": "method",
-              "name": "_updatePrefix",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_updateIconEmptyState",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "getPlaceholder",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "localProvider",
-                  "type": {
-                    "text": "LocalDataProvider<any>"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_observeSelectDisabled",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_syncDisabledState",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_normalizeValue",
-              "privacy": "private"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted when the select's value changes.",
-              "name": "zn-input"
-            },
-            {
-              "description": "Emitted when the clear button is activated.",
-              "name": "zn-clear"
-            },
-            {
-              "description": "Emitted when the select loses focus.",
-              "name": "blur"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "description": "The name of the select. Used for form submission.",
-              "fieldName": "name"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "string | string[]"
-              },
-              "default": "''",
-              "description": "The value of the select. Used for form submission. When `multiple` is enabled, this is an array of strings.",
-              "fieldName": "value"
-            },
-            {
-              "name": "provider",
-              "type": {
-                "text": "'color' | 'currency' | 'country' | 'phone' | 'us-state'"
-              },
-              "description": "The provider of the select.",
-              "fieldName": "provider"
-            },
-            {
-              "name": "icon-position",
-              "type": {
-                "text": "'start' | 'end' | 'none'"
-              },
-              "default": "'none'",
-              "description": "The position of the icon.",
-              "fieldName": "iconPosition"
-            },
-            {
-              "name": "filter",
-              "type": {
-                "text": "string[]"
-              },
-              "description": "An array of keys to use for filtering the options in the selected provider.",
-              "fieldName": "filter"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "default": "'medium'",
-              "description": "The selects size.",
-              "fieldName": "size"
-            },
-            {
-              "name": "clearable",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Should we show the clear button",
-              "fieldName": "clearable"
-            },
-            {
-              "name": "allow-all",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Include an \"All\" option at the top.",
-              "fieldName": "allowAll"
-            },
-            {
-              "name": "allow-common",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Include a \"Common\" option that selects multiple common currencies.",
-              "fieldName": "allowCommon"
-            },
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The selects label. If you need to display HTML, use the `label` slot instead.",
-              "fieldName": "label"
-            },
-            {
-              "name": "label-tooltip",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
-              "fieldName": "labelTooltip"
-            },
-            {
-              "name": "context-note",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Text that appears above the input, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead.",
-              "fieldName": "contextNote"
-            },
-            {
-              "name": "placement",
-              "type": {
-                "text": "'top' | 'bottom'"
-              },
-              "default": "'bottom'",
-              "description": "The preferred placement of the selects menu. Note that the actual placement may vary as needed to keep the listbox\ninside the viewport.",
-              "fieldName": "placement"
-            },
-            {
-              "name": "help-text",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The selects help text. If you need to display HTML, use the `help-text` slot instead.",
-              "fieldName": "helpText"
-            },
-            {
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "The selects required attribute.",
-              "fieldName": "required"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Disables the select.",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "icon-only",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "iconOnly"
-            },
-            {
-              "name": "multiple",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "multiple"
-            },
-            {
-              "name": "select-first",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "selectFirst"
-            },
-            {
-              "name": "distinct",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "fieldName": "distinct"
-            },
-            {
-              "name": "conditional",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "fieldName": "conditional"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "A select component with built-in data providers for common options like colors, currencies, and countries.",
-          "tagNameWithoutPrefix": "data-select",
-          "tagName": "zn-data-select",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary A select component with built-in data providers for common options like colors, currencies, and countries.\n * @documentation https://zinc.style/components/data-select\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-select\n * @dependency zn-option\n *\n * @event zn-input - Emitted when the select's value changes.\n * @event zn-clear - Emitted when the clear button is activated.\n * @event blur - Emitted when the select loses focus.\n *\n * @slot label - The select's label. Alternatively, you can use the `label` attribute.\n * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n * @slot context-note - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.\n * @slot help-text - Text that describes how to use the select. Alternatively, you can use the `help-text` attribute.\n *\n * @csspart combobox - The container that wraps the prefix, combobox, clear icon, and expand button (forwarded from zn-select).\n * @csspart expand-icon - The container that wraps the expand icon (forwarded from zn-select).\n * @csspart form-control-help-text - The help text's wrapper (forwarded from zn-select).\n * @csspart form-control-input - The select's wrapper (forwarded from zn-select).\n * @csspart display-input - The element that displays the selected option's label (forwarded from zn-select).\n */",
-          "documentation": "https://zinc.style/components/data-select",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-select",
-            "zn-option"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnDataSelect",
-            "module": "components/data-select/data-select.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/data-table/data-table.js",
       "declarations": [
         {
@@ -8642,6 +7999,649 @@
           "declaration": {
             "name": "ZnDataTableFilter",
             "module": "components/data-table-filter/data-table-filter.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/data-select/data-select.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnDataSelect",
+          "cssParts": [
+            {
+              "description": "The container that wraps the prefix, combobox, clear icon, and expand button (forwarded from zn-select).",
+              "name": "combobox"
+            },
+            {
+              "description": "The container that wraps the expand icon (forwarded from zn-select).",
+              "name": "expand-icon"
+            },
+            {
+              "description": "The help text's wrapper (forwarded from zn-select).",
+              "name": "form-control-help-text"
+            },
+            {
+              "description": "The select's wrapper (forwarded from zn-select).",
+              "name": "form-control-input"
+            },
+            {
+              "description": "The element that displays the selected option's label (forwarded from zn-select).",
+              "name": "display-input"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The select's label. Alternatively, you can use the `label` attribute.",
+              "name": "label"
+            },
+            {
+              "description": "Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.",
+              "name": "label-tooltip"
+            },
+            {
+              "description": "Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.",
+              "name": "context-note"
+            },
+            {
+              "description": "Text that describes how to use the select. Alternatively, you can use the `help-text` attribute.",
+              "name": "help-text"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-select': ZnSelect, 'zn-option': ZnOption, }"
+            },
+            {
+              "kind": "field",
+              "name": "select",
+              "type": {
+                "text": "ZnSelect"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "The name of the select. Used for form submission.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | string[]"
+              },
+              "default": "''",
+              "description": "The value of the select. Used for form submission. When `multiple` is enabled, this is an array of strings.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "provider",
+              "type": {
+                "text": "'color' | 'currency' | 'country' | 'phone' | 'us-state'"
+              },
+              "description": "The provider of the select.",
+              "attribute": "provider"
+            },
+            {
+              "kind": "field",
+              "name": "iconPosition",
+              "type": {
+                "text": "'start' | 'end' | 'none'"
+              },
+              "default": "'none'",
+              "description": "The position of the icon.",
+              "attribute": "icon-position"
+            },
+            {
+              "kind": "field",
+              "name": "filter",
+              "type": {
+                "text": "string[]"
+              },
+              "description": "An array of keys to use for filtering the options in the selected provider.",
+              "attribute": "filter"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "description": "The selects size.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "clearable",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Should we show the clear button",
+              "attribute": "clearable"
+            },
+            {
+              "kind": "field",
+              "name": "allowAll",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Include an \"All\" option at the top.",
+              "attribute": "allow-all"
+            },
+            {
+              "kind": "field",
+              "name": "allowCommon",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Include a \"Common\" option that selects multiple common currencies.",
+              "attribute": "allow-common"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The selects label. If you need to display HTML, use the `label` slot instead.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "labelTooltip",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
+              "attribute": "label-tooltip"
+            },
+            {
+              "kind": "field",
+              "name": "contextNote",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Text that appears above the input, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead.",
+              "attribute": "context-note"
+            },
+            {
+              "kind": "field",
+              "name": "placement",
+              "type": {
+                "text": "'top' | 'bottom'"
+              },
+              "default": "'bottom'",
+              "description": "The preferred placement of the selects menu. Note that the actual placement may vary as needed to keep the listbox\ninside the viewport.",
+              "attribute": "placement",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The selects help text. If you need to display HTML, use the `help-text` slot instead.",
+              "attribute": "help-text"
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The selects required attribute.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the select.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "iconOnly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "icon-only",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "multiple"
+            },
+            {
+              "kind": "field",
+              "name": "selectFirst",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "select-first"
+            },
+            {
+              "kind": "field",
+              "name": "distinct",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "attribute": "distinct"
+            },
+            {
+              "kind": "field",
+              "name": "conditional",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "attribute": "conditional"
+            },
+            {
+              "kind": "field",
+              "name": "formControlController",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new FormControlController(this)"
+            },
+            {
+              "kind": "field",
+              "name": "selectObserver",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new MutationController(this, { target: null, config: {attributes: true, attributeFilter: ['disabled']}, callback: () => this._syncDisabledState(), })"
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "closeOnTab"
+            },
+            {
+              "kind": "method",
+              "name": "handleValueChange"
+            },
+            {
+              "kind": "field",
+              "name": "handleInput"
+            },
+            {
+              "kind": "field",
+              "name": "handleClear"
+            },
+            {
+              "kind": "method",
+              "name": "getLocalProvider",
+              "return": {
+                "type": {
+                  "text": "LocalDataProvider<DataProviderOption>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "blur"
+            },
+            {
+              "kind": "method",
+              "name": "_updatePrefix",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_updateIconEmptyState",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "getPlaceholder",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "localProvider",
+                  "type": {
+                    "text": "LocalDataProvider<any>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_observeSelectDisabled",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_syncDisabledState",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_normalizeValue",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the select's value changes.",
+              "name": "zn-input"
+            },
+            {
+              "description": "Emitted when the clear button is activated.",
+              "name": "zn-clear"
+            },
+            {
+              "description": "Emitted when the select loses focus.",
+              "name": "blur"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "The name of the select. Used for form submission.",
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string | string[]"
+              },
+              "default": "''",
+              "description": "The value of the select. Used for form submission. When `multiple` is enabled, this is an array of strings.",
+              "fieldName": "value"
+            },
+            {
+              "name": "provider",
+              "type": {
+                "text": "'color' | 'currency' | 'country' | 'phone' | 'us-state'"
+              },
+              "description": "The provider of the select.",
+              "fieldName": "provider"
+            },
+            {
+              "name": "icon-position",
+              "type": {
+                "text": "'start' | 'end' | 'none'"
+              },
+              "default": "'none'",
+              "description": "The position of the icon.",
+              "fieldName": "iconPosition"
+            },
+            {
+              "name": "filter",
+              "type": {
+                "text": "string[]"
+              },
+              "description": "An array of keys to use for filtering the options in the selected provider.",
+              "fieldName": "filter"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "description": "The selects size.",
+              "fieldName": "size"
+            },
+            {
+              "name": "clearable",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Should we show the clear button",
+              "fieldName": "clearable"
+            },
+            {
+              "name": "allow-all",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Include an \"All\" option at the top.",
+              "fieldName": "allowAll"
+            },
+            {
+              "name": "allow-common",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Include a \"Common\" option that selects multiple common currencies.",
+              "fieldName": "allowCommon"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The selects label. If you need to display HTML, use the `label` slot instead.",
+              "fieldName": "label"
+            },
+            {
+              "name": "label-tooltip",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
+              "fieldName": "labelTooltip"
+            },
+            {
+              "name": "context-note",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Text that appears above the input, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead.",
+              "fieldName": "contextNote"
+            },
+            {
+              "name": "placement",
+              "type": {
+                "text": "'top' | 'bottom'"
+              },
+              "default": "'bottom'",
+              "description": "The preferred placement of the selects menu. Note that the actual placement may vary as needed to keep the listbox\ninside the viewport.",
+              "fieldName": "placement"
+            },
+            {
+              "name": "help-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The selects help text. If you need to display HTML, use the `help-text` slot instead.",
+              "fieldName": "helpText"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The selects required attribute.",
+              "fieldName": "required"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the select.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "icon-only",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "iconOnly"
+            },
+            {
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "multiple"
+            },
+            {
+              "name": "select-first",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "selectFirst"
+            },
+            {
+              "name": "distinct",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "fieldName": "distinct"
+            },
+            {
+              "name": "conditional",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "fieldName": "conditional"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A select component with built-in data providers for common options like colors, currencies, and countries.",
+          "tagNameWithoutPrefix": "data-select",
+          "tagName": "zn-data-select",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A select component with built-in data providers for common options like colors, currencies, and countries.\n * @documentation https://zinc.style/components/data-select\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-select\n * @dependency zn-option\n *\n * @event zn-input - Emitted when the select's value changes.\n * @event zn-clear - Emitted when the clear button is activated.\n * @event blur - Emitted when the select loses focus.\n *\n * @slot label - The select's label. Alternatively, you can use the `label` attribute.\n * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n * @slot context-note - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.\n * @slot help-text - Text that describes how to use the select. Alternatively, you can use the `help-text` attribute.\n *\n * @csspart combobox - The container that wraps the prefix, combobox, clear icon, and expand button (forwarded from zn-select).\n * @csspart expand-icon - The container that wraps the expand icon (forwarded from zn-select).\n * @csspart form-control-help-text - The help text's wrapper (forwarded from zn-select).\n * @csspart form-control-input - The select's wrapper (forwarded from zn-select).\n * @csspart display-input - The element that displays the selected option's label (forwarded from zn-select).\n */",
+          "documentation": "https://zinc.style/components/data-select",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-select",
+            "zn-option"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnDataSelect",
+            "module": "components/data-select/data-select.js"
           }
         }
       ]

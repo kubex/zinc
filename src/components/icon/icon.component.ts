@@ -1,6 +1,6 @@
 import {choose} from 'lit/directives/choose.js';
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, render, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, type PropertyValues, render, unsafeCSS} from 'lit';
 import {icons} from 'lucide';
 import {property} from 'lit/decorators.js';
 import {sha256} from '../../utilities/sha256';
@@ -90,6 +90,8 @@ export default class ZnIcon extends ZincElement {
   gravatarOptions = "";
   defaultLibrary: IconLibrary = "material-symbols-outlined";
 
+  private libraryAutoSet = false;
+
   convertToLibrary(input: string): IconLibrary {
     return this.convertIndicatorToLibrary(input) ?? this.defaultLibrary
   }
@@ -140,6 +142,33 @@ export default class ZnIcon extends ZincElement {
   connectedCallback() {
     super.connectedCallback();
 
+    // load the material icons font if the library is set to material
+    render(html`
+      <link
+        href="https://cdn.jsdelivr.net/gh/kubex/icons@0.0.8/dist/kubex-icons.css"
+        rel="stylesheet">
+      <link
+        href="https://cdn.lineicons.com/5.0/lineicons.css"
+        rel="stylesheet">
+      <link
+        href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined|Material+Icons|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone|Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet">`, document.head);
+  }
+
+  protected override willUpdate(changedProperties: PropertyValues<this>) {
+    super.willUpdate(changedProperties);
+
+    if (changedProperties.has('src')) {
+      this.parseSrc();
+    }
+  }
+
+  private parseSrc() {
+    if (this.libraryAutoSet) {
+      this.library = undefined as unknown as IconLibrary;
+      this.libraryAutoSet = false;
+    }
+
     let hashFragment = '';
 
     if (this.src && this.src.includes('#')) {
@@ -157,8 +186,8 @@ export default class ZnIcon extends ZincElement {
       if (libraryOrDomain.includes('.')) {
         this.library = this.library ?? "gravatar";
       } else if ((this.library === undefined) && indicatedLibrary !== undefined) {
-        // if split[1] is a valid library name, set it
         this.library = indicatedLibrary;
+        this.libraryAutoSet = true;
         this.src = this.src.slice(0, atIndex);
       } else if (this.library !== undefined && indicatedLibrary === this.library) {
         this.src = this.src.slice(0, atIndex);
@@ -173,21 +202,10 @@ export default class ZnIcon extends ZincElement {
     } else if (!this.library && this.src && !this.src.includes('/')) {
       this.applyHashFragment(hashFragment);
       this.library = this.defaultLibrary;
+      this.libraryAutoSet = true;
     } else {
       this.applyHashFragment(hashFragment);
     }
-
-    // load the material icons font if the library is set to material
-    render(html`
-      <link
-        href="https://cdn.jsdelivr.net/gh/kubex/icons@0.0.8/dist/kubex-icons.css"
-        rel="stylesheet">
-      <link
-        href="https://cdn.lineicons.com/5.0/lineicons.css"
-        rel="stylesheet">
-      <link
-        href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined|Material+Icons|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone|Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-        rel="stylesheet">`, document.head);
   }
 
   private applyHashFragment(hashFragment: string) {

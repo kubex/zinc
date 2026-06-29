@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.1.19",
+  "version": "1.1.20",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -2000,189 +2000,6 @@
           }
         },
         {
-          "name": "zn-data-table",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **search** - Slot for search component.\n- **sort** - Slot for sort component.\n- **filter** - Slot for filter component.\n- **filter-top** - Slot for top-level filter component.\n- **delete-action** - Slot for delete action button.\n- **modify-action** - Slot for modify action button.\n- **create-action** - Slot for create action button.\n- **inputs** - Slot for additional input controls.\n- **empty-state** - Slot for custom empty state.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "data-uri", "value": { "type": "string" } },
-            { "name": "data", "value": { "type": "any" } },
-            { "name": "sort-column", "value": { "type": "string" } },
-            {
-              "name": "sort-direction",
-              "value": { "type": "string", "default": "\"asc\"" }
-            },
-            {
-              "name": "local-sort",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "filter",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "search",
-              "value": { "type": "string", "default": "''" }
-            },
-            { "name": "wide-column", "value": { "type": "string" } },
-            { "name": "key", "value": { "type": "string", "default": "'id'" } },
-            {
-              "name": "headers",
-              "value": {
-                "type": "Record<string, HeaderConfig>",
-                "default": "{}"
-              }
-            },
-            {
-              "name": "hide-headers",
-              "value": { "type": "string", "default": "'{}'" }
-            },
-            {
-              "name": "hide-columns",
-              "value": { "type": "string", "default": "'{}'" }
-            },
-            {
-              "name": "unsortable-headers",
-              "value": { "type": "string", "default": "'{}'" }
-            },
-            {
-              "name": "unsortable",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "hide-pagination", "value": { "type": "boolean" } },
-            {
-              "name": "standalone",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "caption", "value": { "type": "string" } },
-            { "name": "empty-state-caption", "value": { "type": "string" } },
-            {
-              "name": "empty-state-icon",
-              "value": { "type": "string", "default": "\"data_alert\"" }
-            },
-            { "name": "hide-checkboxes", "value": { "type": "boolean" } },
-            { "name": "filters", "value": { "type": "[]", "default": "[]" } },
-            {
-              "name": "method",
-              "value": { "type": "'GET' | 'POST'", "default": "'POST'" }
-            },
-            {
-              "name": "no-initial-load",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "group-by",
-              "value": { "type": "string", "default": "''" }
-            },
-            { "name": "groups", "value": { "type": "string", "default": "''" } }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "search", "description": "Slot for search component." },
-            { "name": "sort", "description": "Slot for sort component." },
-            { "name": "filter", "description": "Slot for filter component." },
-            {
-              "name": "filter-top",
-              "description": "Slot for top-level filter component."
-            },
-            {
-              "name": "delete-action",
-              "description": "Slot for delete action button."
-            },
-            {
-              "name": "modify-action",
-              "description": "Slot for modify action button."
-            },
-            {
-              "name": "create-action",
-              "description": "Slot for create action button."
-            },
-            {
-              "name": "inputs",
-              "description": "Slot for additional input controls."
-            },
-            {
-              "name": "empty-state",
-              "description": "Slot for custom empty state."
-            }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              { "name": "dataUri", "type": "string" },
-              { "name": "data", "type": "any" },
-              { "name": "sortColumn", "type": "string" },
-              { "name": "sortDirection", "type": "string" },
-              { "name": "localSort", "type": "boolean" },
-              { "name": "filter", "type": "string" },
-              { "name": "search", "type": "string" },
-              { "name": "wideColumn", "type": "string" },
-              { "name": "key", "type": "string" },
-              { "name": "headers", "type": "Record<string, HeaderConfig>" },
-              { "name": "hiddenHeaders", "type": "string" },
-              { "name": "hiddenColumns", "type": "string" },
-              { "name": "unsortableHeaders", "type": "string" },
-              { "name": "unsortable", "type": "boolean" },
-              { "name": "hidePagination", "type": "boolean" },
-              { "name": "standalone", "type": "boolean" },
-              { "name": "caption", "type": "string" },
-              { "name": "emptyStateCaption", "type": "string" },
-              { "name": "emptyStateIcon", "type": "string" },
-              { "name": "hideCheckboxes", "type": "boolean" },
-              { "name": "filters", "type": "[]" },
-              { "name": "method", "type": "'GET' | 'POST'" },
-              { "name": "noInitialLoad", "type": "boolean" },
-              { "name": "groupBy", "type": "string" },
-              { "name": "groups", "type": "string" },
-              { "name": "selectAllButton", "type": "ZnButton" },
-              { "name": "requestParams", "type": "Record<string, any>" },
-              { "name": "filterChangeListener" },
-              { "name": "searchChangeListener" }
-            ],
-            "events": []
-          }
-        },
-        {
-          "name": "zn-data-table-filter",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "filters",
-              "value": { "type": "string", "default": "\"\"" }
-            },
-            {
-              "name": "name",
-              "value": { "type": "string", "default": "\"data-table-filter\"" }
-            },
-            { "name": "value", "value": { "type": "string" } }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "filters", "type": "string" },
-              { "name": "name", "type": "string" },
-              { "name": "value", "type": "string" },
-              { "name": "validationMessage", "type": "string" },
-              { "name": "validity", "type": "ValidityState" },
-              { "name": "handleQBClear" },
-              { "name": "handleQBReset" },
-              { "name": "handleQBUpdate" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-data-select",
           "description": "A select component with built-in data providers for common options like colors, currencies, and countries.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted when the select's value changes.\n- **zn-clear** - Emitted when the clear button is activated.\n- **blur** - Emitted when the select loses focus.\n\n### **Slots:**\n - **label** - The select's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.\n- **help-text** - Text that describes how to use the select. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Parts:**\n - **combobox** - The container that wraps the prefix, combobox, clear icon, and expand button (forwarded from zn-select).\n- **expand-icon** - The container that wraps the expand icon (forwarded from zn-select).\n- **form-control-help-text** - The help text's wrapper (forwarded from zn-select).\n- **form-control-input** - The select's wrapper (forwarded from zn-select).\n- **display-input** - The element that displays the selected option's label (forwarded from zn-select).",
           "doc-url": "",
@@ -2435,6 +2252,189 @@
               {
                 "name": "blur",
                 "description": "Emitted when the select loses focus."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-data-table",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **search** - Slot for search component.\n- **sort** - Slot for sort component.\n- **filter** - Slot for filter component.\n- **filter-top** - Slot for top-level filter component.\n- **delete-action** - Slot for delete action button.\n- **modify-action** - Slot for modify action button.\n- **create-action** - Slot for create action button.\n- **inputs** - Slot for additional input controls.\n- **empty-state** - Slot for custom empty state.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "data-uri", "value": { "type": "string" } },
+            { "name": "data", "value": { "type": "any" } },
+            { "name": "sort-column", "value": { "type": "string" } },
+            {
+              "name": "sort-direction",
+              "value": { "type": "string", "default": "\"asc\"" }
+            },
+            {
+              "name": "local-sort",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "filter",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "search",
+              "value": { "type": "string", "default": "''" }
+            },
+            { "name": "wide-column", "value": { "type": "string" } },
+            { "name": "key", "value": { "type": "string", "default": "'id'" } },
+            {
+              "name": "headers",
+              "value": {
+                "type": "Record<string, HeaderConfig>",
+                "default": "{}"
+              }
+            },
+            {
+              "name": "hide-headers",
+              "value": { "type": "string", "default": "'{}'" }
+            },
+            {
+              "name": "hide-columns",
+              "value": { "type": "string", "default": "'{}'" }
+            },
+            {
+              "name": "unsortable-headers",
+              "value": { "type": "string", "default": "'{}'" }
+            },
+            {
+              "name": "unsortable",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "hide-pagination", "value": { "type": "boolean" } },
+            {
+              "name": "standalone",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "caption", "value": { "type": "string" } },
+            { "name": "empty-state-caption", "value": { "type": "string" } },
+            {
+              "name": "empty-state-icon",
+              "value": { "type": "string", "default": "\"data_alert\"" }
+            },
+            { "name": "hide-checkboxes", "value": { "type": "boolean" } },
+            { "name": "filters", "value": { "type": "[]", "default": "[]" } },
+            {
+              "name": "method",
+              "value": { "type": "'GET' | 'POST'", "default": "'POST'" }
+            },
+            {
+              "name": "no-initial-load",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "group-by",
+              "value": { "type": "string", "default": "''" }
+            },
+            { "name": "groups", "value": { "type": "string", "default": "''" } }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "search", "description": "Slot for search component." },
+            { "name": "sort", "description": "Slot for sort component." },
+            { "name": "filter", "description": "Slot for filter component." },
+            {
+              "name": "filter-top",
+              "description": "Slot for top-level filter component."
+            },
+            {
+              "name": "delete-action",
+              "description": "Slot for delete action button."
+            },
+            {
+              "name": "modify-action",
+              "description": "Slot for modify action button."
+            },
+            {
+              "name": "create-action",
+              "description": "Slot for create action button."
+            },
+            {
+              "name": "inputs",
+              "description": "Slot for additional input controls."
+            },
+            {
+              "name": "empty-state",
+              "description": "Slot for custom empty state."
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "dataUri", "type": "string" },
+              { "name": "data", "type": "any" },
+              { "name": "sortColumn", "type": "string" },
+              { "name": "sortDirection", "type": "string" },
+              { "name": "localSort", "type": "boolean" },
+              { "name": "filter", "type": "string" },
+              { "name": "search", "type": "string" },
+              { "name": "wideColumn", "type": "string" },
+              { "name": "key", "type": "string" },
+              { "name": "headers", "type": "Record<string, HeaderConfig>" },
+              { "name": "hiddenHeaders", "type": "string" },
+              { "name": "hiddenColumns", "type": "string" },
+              { "name": "unsortableHeaders", "type": "string" },
+              { "name": "unsortable", "type": "boolean" },
+              { "name": "hidePagination", "type": "boolean" },
+              { "name": "standalone", "type": "boolean" },
+              { "name": "caption", "type": "string" },
+              { "name": "emptyStateCaption", "type": "string" },
+              { "name": "emptyStateIcon", "type": "string" },
+              { "name": "hideCheckboxes", "type": "boolean" },
+              { "name": "filters", "type": "[]" },
+              { "name": "method", "type": "'GET' | 'POST'" },
+              { "name": "noInitialLoad", "type": "boolean" },
+              { "name": "groupBy", "type": "string" },
+              { "name": "groups", "type": "string" },
+              { "name": "selectAllButton", "type": "ZnButton" },
+              { "name": "requestParams", "type": "Record<string, any>" },
+              { "name": "filterChangeListener" },
+              { "name": "searchChangeListener" }
+            ],
+            "events": []
+          }
+        },
+        {
+          "name": "zn-data-table-filter",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "filters",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            {
+              "name": "name",
+              "value": { "type": "string", "default": "\"data-table-filter\"" }
+            },
+            { "name": "value", "value": { "type": "string" } }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "filters", "type": "string" },
+              { "name": "name", "type": "string" },
+              { "name": "value", "type": "string" },
+              { "name": "validationMessage", "type": "string" },
+              { "name": "validity", "type": "ValidityState" },
+              { "name": "handleQBClear" },
+              { "name": "handleQBReset" },
+              { "name": "handleQBUpdate" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
               }
             ]
           }

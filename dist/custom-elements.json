@@ -2585,6 +2585,14 @@
           ],
           "slots": [
             {
+              "description": "Replaces the primary line. Falls back to the `title` attribute (or \"Available\" when unset in the available state).",
+              "name": "title"
+            },
+            {
+              "description": "Replaces the secondary line. Falls back to the `subtitle` attribute.",
+              "name": "subtitle"
+            },
+            {
               "description": "Replaces the leading icon in the active state.",
               "name": "leading"
             },
@@ -3077,7 +3085,7 @@
           "tagNameWithoutPrefix": "channel-tile",
           "tagName": "zn-channel-tile",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A channel/queue slot tile with two faces: an active (occupied) state\n * showing an in-progress item, and an available (empty) state advertising\n * capacity — optionally reserving an incoming item with an auto-accept countdown.\n * @documentation https://zinc.style/components/channel-tile\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-icon\n *\n * @event zn-accept - Emitted when an available tile is accepted (click or auto-accept).\n *  Cancelable — call `preventDefault()` to suppress the built-in `accept-uri` fetch.\n * @event zn-reject - Emitted when the reject control is pressed.\n *\n * @slot leading - Replaces the leading icon in the active state.\n * @slot action - Action content for the available state (e.g. a form). Falls back to a default accept button.\n * @slot footer - Trailing content (e.g. status badges) in the active state.\n *\n * @csspart base - The component's base wrapper.\n * @csspart progress - The progress indicator (incoming countdown overlay or active progress bar).\n *\n * @cssproperty --channel-tile-color - Resolved accent color (set from the `color` property).\n */",
+          "jsDoc": "/**\n * @summary A channel/queue slot tile with two faces: an active (occupied) state\n * showing an in-progress item, and an available (empty) state advertising\n * capacity — optionally reserving an incoming item with an auto-accept countdown.\n * @documentation https://zinc.style/components/channel-tile\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-icon\n *\n * @event zn-accept - Emitted when an available tile is accepted (click or auto-accept).\n *  Cancelable — call `preventDefault()` to suppress the built-in `accept-uri` fetch.\n * @event zn-reject - Emitted when the reject control is pressed.\n *\n * @slot title - Replaces the primary line. Falls back to the `title` attribute (or \"Available\" when unset in the available state).\n * @slot subtitle - Replaces the secondary line. Falls back to the `subtitle` attribute.\n * @slot leading - Replaces the leading icon in the active state.\n * @slot action - Action content for the available state (e.g. a form). Falls back to a default accept button.\n * @slot footer - Trailing content (e.g. status badges) in the active state.\n *\n * @csspart base - The component's base wrapper.\n * @csspart progress - The progress indicator (incoming countdown overlay or active progress bar).\n *\n * @cssproperty --channel-tile-color - Resolved accent color (set from the `color` property).\n */",
           "documentation": "https://zinc.style/components/channel-tile",
           "status": "experimental",
           "since": "1.0",
@@ -4676,203 +4684,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/chip/chip.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnChip",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "icon"
-            },
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "caption"
-            },
-            {
-              "kind": "field",
-              "name": "iconSize",
-              "type": {
-                "text": "number"
-              },
-              "default": "18",
-              "attribute": "icon-size"
-            },
-            {
-              "kind": "field",
-              "name": "type",
-              "type": {
-                "text": "'info' | 'success' | 'warning' | 'error' | 'primary' |\n    'transparent' | 'custom' | 'neutral'"
-              },
-              "default": "'neutral'",
-              "attribute": "type"
-            },
-            {
-              "kind": "field",
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "flush",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "flushX",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "flush-x",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "flushY",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "flush-y",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, '[default]', 'action')"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "icon"
-            },
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "caption"
-            },
-            {
-              "name": "icon-size",
-              "type": {
-                "text": "number"
-              },
-              "default": "18",
-              "fieldName": "iconSize"
-            },
-            {
-              "name": "type",
-              "type": {
-                "text": "'info' | 'success' | 'warning' | 'error' | 'primary' |\n    'transparent' | 'custom' | 'neutral'"
-              },
-              "default": "'neutral'",
-              "fieldName": "type"
-            },
-            {
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "flush"
-            },
-            {
-              "name": "flush-x",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "flushX"
-            },
-            {
-              "name": "flush-y",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "flushY"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "chip",
-          "tagName": "zn-chip",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/chip\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/chip",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnChip",
-            "module": "components/chip/chip.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/checkbox-group/checkbox-group.js",
       "declarations": [
         {
@@ -5316,6 +5127,203 @@
           "declaration": {
             "name": "ZnCheckboxGroup",
             "module": "components/checkbox-group/checkbox-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/chip/chip.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnChip",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "iconSize",
+              "type": {
+                "text": "number"
+              },
+              "default": "18",
+              "attribute": "icon-size"
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "'info' | 'success' | 'warning' | 'error' | 'primary' |\n    'transparent' | 'custom' | 'neutral'"
+              },
+              "default": "'neutral'",
+              "attribute": "type"
+            },
+            {
+              "kind": "field",
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "flush",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "flushX",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "flush-x",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "flushY",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "flush-y",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, '[default]', 'action')"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "icon"
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "caption"
+            },
+            {
+              "name": "icon-size",
+              "type": {
+                "text": "number"
+              },
+              "default": "18",
+              "fieldName": "iconSize"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "'info' | 'success' | 'warning' | 'error' | 'primary' |\n    'transparent' | 'custom' | 'neutral'"
+              },
+              "default": "'neutral'",
+              "fieldName": "type"
+            },
+            {
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "flush"
+            },
+            {
+              "name": "flush-x",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "flushX"
+            },
+            {
+              "name": "flush-y",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "flushY"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "chip",
+          "tagName": "zn-chip",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/chip\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/chip",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnChip",
+            "module": "components/chip/chip.js"
           }
         }
       ]
@@ -37169,7 +37177,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.21",
+    "version": "1.1.22",
     "author": "",
     "license": "MIT"
   }

@@ -327,7 +327,7 @@
     },
     {
       "name": "zn-channel-tile",
-      "description": "A channel/queue slot tile with two faces: an active (occupied) state\nshowing an in-progress item, and an available (empty) state advertising\ncapacity — optionally reserving an incoming item with an auto-accept countdown.\n---\n\n\n### **Events:**\n - **zn-accept** - Emitted when an available tile is accepted (click or auto-accept). Cancelable — call `preventDefault()` to suppress the built-in `accept-uri` fetch.\n- **zn-reject** - Emitted when the reject control is pressed.\n\n### **Slots:**\n - **leading** - Replaces the leading icon in the active state.\n- **action** - Action content for the available state (e.g. a form). Falls back to a default accept button.\n- **footer** - Trailing content (e.g. status badges) in the active state.\n\n### **CSS Properties:**\n - **--channel-tile-color** - Resolved accent color (set from the `color` property). _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **progress** - The progress indicator (incoming countdown overlay or active progress bar).",
+      "description": "A channel/queue slot tile with two faces: an active (occupied) state\nshowing an in-progress item, and an available (empty) state advertising\ncapacity — optionally reserving an incoming item with an auto-accept countdown.\n---\n\n\n### **Events:**\n - **zn-accept** - Emitted when an available tile is accepted (click or auto-accept). Cancelable — call `preventDefault()` to suppress the built-in `accept-uri` fetch.\n- **zn-reject** - Emitted when the reject control is pressed.\n\n### **Slots:**\n - **title** - Replaces the primary line. Falls back to the `title` attribute (or \"Available\" when unset in the available state).\n- **subtitle** - Replaces the secondary line. Falls back to the `subtitle` attribute.\n- **leading** - Replaces the leading icon in the active state.\n- **action** - Action content for the available state (e.g. a form). Falls back to a default accept button.\n- **footer** - Trailing content (e.g. status badges) in the active state.\n\n### **CSS Properties:**\n - **--channel-tile-color** - Resolved accent color (set from the `color` property). _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **progress** - The progress indicator (incoming countdown overlay or active progress bar).",
       "attributes": [
         {
           "name": "available",
@@ -662,34 +662,6 @@
       ]
     },
     {
-      "name": "zn-chip",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "icon", "values": [] },
-        { "name": "caption", "values": [] },
-        { "name": "icon-size", "values": [] },
-        {
-          "name": "type",
-          "values": [
-            { "name": "info" },
-            { "name": "success" },
-            { "name": "warning" },
-            { "name": "error" },
-            { "name": "primary" },
-            { "name": "transparent" },
-            { "name": "custom" },
-            { "name": "neutral" }
-          ]
-        },
-        { "name": "flush", "values": [] },
-        { "name": "flush-x", "values": [] },
-        { "name": "flush-y", "values": [] }
-      ],
-      "references": [
-        { "name": "Documentation", "url": "https://zinc.style/components/chip" }
-      ]
-    },
-    {
       "name": "zn-checkbox-group",
       "description": "Shotrt summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the checkbox group's selected value changes.\n- **zn-input** - Emitted when the checkbox group receives user input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Methods:**\n - **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot where `<zn-checkbox>` elements are placed.\n- **label** - The checkbox group's label. Required for proper accessibility. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **help-text** - Text that describes how to use the checkbox group. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input's wrapper.\n- **form-control-help-text** - The help text's wrapper.",
       "attributes": [
@@ -753,6 +725,34 @@
           "name": "Documentation",
           "url": "https://zinc.style/components/checkbox-group"
         }
+      ]
+    },
+    {
+      "name": "zn-chip",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "icon", "values": [] },
+        { "name": "caption", "values": [] },
+        { "name": "icon-size", "values": [] },
+        {
+          "name": "type",
+          "values": [
+            { "name": "info" },
+            { "name": "success" },
+            { "name": "warning" },
+            { "name": "error" },
+            { "name": "primary" },
+            { "name": "transparent" },
+            { "name": "custom" },
+            { "name": "neutral" }
+          ]
+        },
+        { "name": "flush", "values": [] },
+        { "name": "flush-x", "values": [] },
+        { "name": "flush-y", "values": [] }
+      ],
+      "references": [
+        { "name": "Documentation", "url": "https://zinc.style/components/chip" }
       ]
     },
     {

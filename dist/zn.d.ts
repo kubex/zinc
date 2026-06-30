@@ -3691,6 +3691,8 @@ declare module "components/channel-tile/channel-tile.component" {
      *  Cancelable — call `preventDefault()` to suppress the built-in `accept-uri` fetch.
      * @event zn-reject - Emitted when the reject control is pressed.
      *
+     * @slot title - Replaces the primary line. Falls back to the `title` attribute (or "Available" when unset in the available state).
+     * @slot subtitle - Replaces the secondary line. Falls back to the `subtitle` attribute.
      * @slot leading - Replaces the leading icon in the active state.
      * @slot action - Action content for the available state (e.g. a form). Falls back to a default accept button.
      * @slot footer - Trailing content (e.g. status badges) in the active state.

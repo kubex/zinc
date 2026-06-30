@@ -7,8 +7,10 @@ layout: component
 
 The channel tile represents a single slot in a queue or channel rail. It has two faces:
 
-- **Active** — the slot is occupied by an in-progress item (header, leading icon, title/subtitle, and a progress/SLA bar).
-- **Available** — the slot is empty and advertising capacity. When `incoming` is set it reserves an arriving item with a countdown that can auto-accept.
+- **Active** — the slot is occupied by an in-progress item (header, leading icon, title/subtitle, and a progress/SLA
+  bar).
+- **Available** — the slot is empty and advertising capacity. When `incoming` is set it reserves an arriving item with a
+  countdown that can auto-accept.
 
 Tiles are designed to sit side by side in a horizontal rail; each is a fixed-width block with a right divider.
 
@@ -31,7 +33,8 @@ Tiles are designed to sit side by side in a horizontal rail; each is a fixed-wid
 
 ### Active Tile
 
-The default (occupied) face. Set `header` for the top bar, `icon` + `color` for the leading badge, and `title`/`subtitle` for the item. The `progress` value (0–100) fills the SLA bar along the bottom edge.
+The default (occupied) face. Set `header` for the top bar, `icon` + `color` for the leading badge, and `title`/
+`subtitle` for the item. The `progress` value (0–100) fills the SLA bar along the bottom edge.
 
 ```html:preview
 <div style="display: flex;">
@@ -49,7 +52,8 @@ The default (occupied) face. Set `header` for the top bar, `icon` + `color` for 
 
 ### Available Tile
 
-Set `available` to render the empty face. When `title` is omitted it defaults to "Available". The leading slot shows a built-in accept button.
+Set `available` to render the empty face. When `title` is omitted it defaults to "Available". The leading slot shows a
+built-in accept button.
 
 ```html:preview
 <div style="display: flex;">
@@ -59,7 +63,8 @@ Set `available` to render the empty face. When `title` is omitted it defaults to
 
 ### Accepting an Item
 
-Provide `accept-uri` and the built-in accept button becomes a link to it. When a tile is accepted, a cancelable `zn-accept` event fires before the fetch — call `preventDefault()` on it to take over the accept yourself.
+Provide `accept-uri` and the built-in accept button becomes a link to it. When a tile is accepted, a cancelable
+`zn-accept` event fires before the fetch — call `preventDefault()` on it to take over the accept yourself.
 
 ```html:preview
 <div style="display: flex;">
@@ -74,7 +79,9 @@ Provide `accept-uri` and the built-in accept button becomes a link to it. When a
 
 ### Incoming with Auto-Accept
 
-An `available` tile with `incoming` reserves an arriving item. Provide `reserved-until` (an epoch in seconds or milliseconds marking the end of the window) and `auto-accept-delay` (the window length in milliseconds) to drive the countdown overlay. When the window elapses the tile auto-accepts via `accept-uri`.
+An `available` tile with `incoming` reserves an arriving item. Provide `reserved-until` (an epoch in seconds or
+milliseconds marking the end of the window) and `auto-accept-delay` (the window length in milliseconds) to drive the
+countdown overlay. When the window elapses the tile auto-accepts via `accept-uri`.
 
 ```html:preview
 <div style="display: flex;">
@@ -118,7 +125,8 @@ Add `rejectable` to an incoming tile to offer a reject control. Pressing it emit
 
 ### Colors
 
-The `color` attribute sets the accent (the leading icon badge and the `--channel-tile-color` custom property). Available colors are: `default`, `primary`, `info`, `success`, `warning`, `error`, and `disabled`.
+The `color` attribute sets the accent (the leading icon badge and the `--channel-tile-color` custom property). Available
+colors are: `default`, `primary`, `info`, `success`, `warning`, `error`, and `disabled`.
 
 ```html:preview
 <div style="display: flex; flex-wrap: wrap;">
@@ -128,6 +136,21 @@ The `color` attribute sets the accent (the leading icon badge and the `--channel
   <zn-channel-tile icon="chat" color="warning" title="Warning" subtitle="Accent example"></zn-channel-tile>
   <zn-channel-tile icon="chat" color="error" title="Error" subtitle="Accent example"></zn-channel-tile>
   <zn-channel-tile icon="chat" color="disabled" title="Disabled" subtitle="Accent example"></zn-channel-tile>
+</div>
+```
+
+### Custom Title and Subtitle
+
+The `title` and `subtitle` attributes cover plain text. For richer content, use the `title` and `subtitle` slots — they
+override the matching attribute (which is used as the fallback when the slot is empty).
+
+```html:preview
+<div style="display: flex;">
+  <zn-channel-tile header="Acme Support" icon="chat" color="info" progress="60"
+                   progress-color="rgb(var(--zn-color-info))">
+    <span slot="title">Jane <strong>Cooper</strong></span>
+    <span slot="subtitle">Billing question · <a href="#">#4821</a></span>
+  </zn-channel-tile>
 </div>
 ```
 

@@ -23,6 +23,8 @@ export type ChannelTileColor =
  *  Cancelable — call `preventDefault()` to suppress the built-in `accept-uri` fetch.
  * @event zn-reject - Emitted when the reject control is pressed.
  *
+ * @slot title - Replaces the primary line. Falls back to the `title` attribute (or "Available" when unset in the available state).
+ * @slot subtitle - Replaces the secondary line. Falls back to the `subtitle` attribute.
  * @slot leading - Replaces the leading icon in the active state.
  * @slot action - Action content for the available state (e.g. a form). Falls back to a default accept button.
  * @slot footer - Trailing content (e.g. status badges) in the active state.
@@ -213,8 +215,8 @@ export default class ZnChannelTile extends ZincElement {
         <div class="channel-tile__body">
           ${this._renderLeading()}
           <div class="channel-tile__content">
-            <h3 class="channel-tile__title">${title}</h3>
-            <p class="channel-tile__subtitle">${this.subtitle}</p>
+            <h3 class="channel-tile__title"><slot name="title">${title}</slot></h3>
+            <p class="channel-tile__subtitle"><slot name="subtitle">${this.subtitle}</slot></p>
           </div>
           <slot name="footer" class="channel-tile__footer"></slot>
         </div>

@@ -206,6 +206,11 @@ module.exports = function (eleventyConfig)
         }).window.document;
         const content = doc.querySelector('#content');
 
+        // Pages without the docs chrome (e.g. full-page demos) aren't indexed.
+        if (!content) {
+          return;
+        }
+
         // Get title and headings
         const title = (doc.querySelector('title')?.textContent || path.basename(result.outputPath)).trim();
         const headings = [...content.querySelectorAll('h1, h2, h3, h4')]

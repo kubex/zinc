@@ -8774,6 +8774,9 @@ declare module "components/flow-builder/modules/flow-canvas/flow-canvas.componen
         private _linkPos;
         /** The valid node under the cursor while linking — the preview snaps to its input. */
         private _linkTarget;
+        /** Last pointer position (client coords) while linking, for edge auto-pan. */
+        private _linkClient;
+        private _linkScrollRaf;
         private _dragMoved;
         /** Centre the flow when it first arrives; any earlier user interaction opts out. */
         private _viewInitialised;
@@ -8808,6 +8811,13 @@ declare module "components/flow-builder/modules/flow-canvas/flow-canvas.componen
         private _onPortClick;
         private _startLink;
         private _onLinkPointerMove;
+        private _updateLinkFromClient;
+        /**
+         * While a branch rides the cursor, holding the pointer near (or past) a
+         * canvas edge auto-pans in that direction, so the target can be off-screen.
+         * Runs per frame until the link attaches or cancels.
+         */
+        private _linkEdgeScroll;
         private _onLinkKeyDown;
         private _cancelLink;
         private _onPointerMove;

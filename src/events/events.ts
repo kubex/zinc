@@ -12,3 +12,6 @@ export type {ZnLanguageChangeEvent} from './zn-language-change';
 export type {ZnReorderEvent} from './zn-reorder';
 export type {ZnAcceptEvent} from './zn-accept';
 export type {ZnRejectEvent} from './zn-reject';
+export type {ZnFlowChangeEvent} from './zn-flow-change';
+export type {ZnFlowSelectionChangeEvent} from './zn-flow-selection-change';
+export type {ZnFlowConnectEvent} from './zn-flow-connect';

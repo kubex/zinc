@@ -100,6 +100,10 @@ export { default as TranslationGroup } from './components/translation-group';
 export { default as OptGroup } from './components/opt-group';
 export { default as PriorityList } from './components/priority-list';
 export { default as MarkdownEditor } from './components/markdown-editor';
+export { default as FlowBuilder } from './components/flow-builder';
+export { default as FlowSteps } from './components/flow-builder/modules/flow-steps';
+export { default as FlowStepGroup } from './components/flow-builder/modules/flow-step-group';
+export { default as FlowStep } from './components/flow-builder/modules/flow-step';
 /* plop:component */
 
 // Base Component

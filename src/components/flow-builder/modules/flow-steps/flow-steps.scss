@@ -1,0 +1,24 @@
+@use "../../../../wc";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  // Make the slotted zn-navbar's active tab panel-coloured (white) to match the
+  // steps-panel surface, rather than the navbar's default body colour.
+  --zn-active-nav-background: var(--zn-panel);
+}
+
+.search {
+  // Inline padding matches the standard --zn-base-gap (24px) used by the panels.
+  padding: 12px var(--zn-base-gap) 8px;
+}
+
+// Holds the slotted <zn-tabs>, which fills the remaining height and scrolls.
+.body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}

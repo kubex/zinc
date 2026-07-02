@@ -120,6 +120,9 @@ export default class ZnFlowCanvas extends ZincElement {
   @state() private _linkPos: { x: number; y: number } | null = null;
   /** The valid node under the cursor while linking — the preview snaps to its input. */
   @state() private _linkTarget: string | null = null;
+  /** Last pointer position (client coords) while linking, for edge auto-pan. */
+  private _linkClient: { x: number; y: number } | null = null;
+  private _linkScrollRaf: number | null = null;
 
   private _dragMoved = false;
   /** Centre the flow when it first arrives; any earlier user interaction opts out. */
@@ -307,13 +310,20 @@ export default class ZnFlowCanvas extends ZincElement {
   private _startLink(nodeId: string, port: string) {
     this._linking = {nodeId, port};
     this._linkPos = null;
+    this._linkClient = null;
     window.addEventListener('pointermove', this._onLinkPointerMove);
     window.addEventListener('keydown', this._onLinkKeyDown);
     window.addEventListener('blur', this._cancelLink);
+    this._linkScrollRaf = requestAnimationFrame(this._linkEdgeScroll);
   }
 
   private _onLinkPointerMove = (e: PointerEvent) => {
-    const p = this.screenToCanvas(e.clientX, e.clientY);
+    this._linkClient = {x: e.clientX, y: e.clientY};
+    this._updateLinkFromClient(e.clientX, e.clientY);
+  };
+
+  private _updateLinkFromClient(clientX: number, clientY: number) {
+    const p = this.screenToCanvas(clientX, clientY);
     this._linkPos = p;
     const linking = this._linking;
     if (!linking) return;
@@ -327,6 +337,37 @@ export default class ZnFlowCanvas extends ZincElement {
       && nodeInputs(n, this._typeFor(n)).length > 0
     );
     this._linkTarget = target?.id ?? null;
+  }
+
+  /**
+   * While a branch rides the cursor, holding the pointer near (or past) a
+   * canvas edge auto-pans in that direction, so the target can be off-screen.
+   * Runs per frame until the link attaches or cancels.
+   */
+  private _linkEdgeScroll = () => {
+    this._linkScrollRaf = null;
+    if (!this._linking) return;
+    if (this._linkClient) {
+      const rect = this.getBoundingClientRect();
+      const ZONE = 48;
+      const MAX = 14;
+      const speed = (depth: number) => Math.min(MAX, Math.ceil(((ZONE - depth) / ZONE) * MAX));
+      const {x, y} = this._linkClient;
+      let dx = 0;
+      let dy = 0;
+      if (x < rect.left + ZONE) dx = speed(x - rect.left);
+      else if (x > rect.right - ZONE) dx = -speed(rect.right - x);
+      if (y < rect.top + ZONE) dy = speed(y - rect.top);
+      else if (y > rect.bottom - ZONE) dy = -speed(rect.bottom - y);
+      if (dx || dy) {
+        this.panX += dx;
+        this.panY += dy;
+        // The canvas moved under the stationary cursor — keep the preview and
+        // the snap target tracking it.
+        this._updateLinkFromClient(x, y);
+      }
+    }
+    this._linkScrollRaf = requestAnimationFrame(this._linkEdgeScroll);
   };
 
   private _onLinkKeyDown = (e: KeyboardEvent) => {
@@ -338,6 +379,11 @@ export default class ZnFlowCanvas extends ZincElement {
     this._linking = null;
     this._linkPos = null;
     this._linkTarget = null;
+    this._linkClient = null;
+    if (this._linkScrollRaf !== null) {
+      cancelAnimationFrame(this._linkScrollRaf);
+      this._linkScrollRaf = null;
+    }
     window.removeEventListener('pointermove', this._onLinkPointerMove);
     window.removeEventListener('keydown', this._onLinkKeyDown);
     window.removeEventListener('blur', this._cancelLink);

@@ -49,79 +49,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -292,6 +219,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -1283,7 +1283,7 @@
               "kind": "field",
               "name": "color",
               "type": {
-                "text": "'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |\n    'transparent' | 'star' | 'white' | (string & Record<never, never>)"
+                "text": "'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |\n    'transparent' | 'star' | (string & Record<never, never>)"
               },
               "default": "'default'",
               "attribute": "color"
@@ -1764,7 +1764,7 @@
             {
               "name": "color",
               "type": {
-                "text": "'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |\n    'transparent' | 'star' | 'white' | (string & Record<never, never>)"
+                "text": "'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |\n    'transparent' | 'star' | (string & Record<never, never>)"
               },
               "default": "'default'",
               "fieldName": "color"
@@ -5336,6 +5336,16 @@
           "kind": "class",
           "description": "",
           "name": "ZnCollapsible",
+          "cssParts": [
+            {
+              "description": "The header row (toggle).",
+              "name": "header"
+            },
+            {
+              "description": "The caption text.",
+              "name": "caption"
+            }
+          ],
           "slots": [
             {
               "description": "Clicking will toggle the show state of the data",
@@ -5469,7 +5479,7 @@
               "name": "hasSlotController",
               "privacy": "private",
               "readonly": true,
-              "default": "new HasSlotController(this, '[default]', 'header', 'caption', 'label')"
+              "default": "new HasSlotController(this, '[default]', 'header', 'caption', 'label', 'description')"
             },
             {
               "kind": "field",
@@ -5597,7 +5607,7 @@
           "tagNameWithoutPrefix": "collapsible",
           "tagName": "zn-collapsible",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Toggles between showing and hiding content when clicked\n * @documentation https://zinc.style/components/collapsible\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon - The icon element\n *\n * @slot header - Clicking will toggle the show state of the data\n *\n */",
+          "jsDoc": "/**\n * @summary Toggles between showing and hiding content when clicked\n * @documentation https://zinc.style/components/collapsible\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon - The icon element\n *\n * @slot header - Clicking will toggle the show state of the data\n *\n * @csspart header - The header row (toggle).\n * @csspart caption - The caption text.\n */",
           "documentation": "https://zinc.style/components/collapsible",
           "status": "experimental",
           "since": "1.0",
@@ -37177,7 +37187,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.22",
+    "version": "1.1.23",
     "author": "",
     "license": "MIT"
   }

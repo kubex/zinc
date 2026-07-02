@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.24">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A drag-and-drop visual automation builder with a steps panel, a pan/zoom canvas, and a configuration inspector. Extend it with your own node types via a JS registry."
+    />
+    <title>Flow Builder</title>
+
+    <meta name="turbo-cache-control" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:creator" content="kubex" />
+    <meta name="twitter:image" content="https://zinc.style/assets" />
+
+    <meta property="og:url" content="https://zinc.style/components/flow-builder" />
+    <meta property="og:title" content="Flow Builder" />
+    <meta
+      property="og:description"
+      content="A drag-and-drop visual automation builder with a steps panel, a pan/zoom canvas, and a configuration inspector. Extend it with your own node types via a JS registry."
+    />
+    <meta property="og:image" content="https://zinc.style/assets" />
+
+    <link rel="stylesheet" href="/assets/styles/docs.css" />
+    <link rel="stylesheet" href="/assets/styles/code-previews.css" />
+    <link rel="stylesheet" href="/assets/styles/search.css" />
+
+    <script type="module" src="/dist/zn.min.js"></script>
+    <link rel="stylesheet" href="/dist/zn.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700&amp;display=swap" />
+
+    <script src="/assets/scripts/turbo.js" type="module"></script>
+    <script src="/assets/scripts/docs.js" defer=""></script>
+    <script src="/assets/scripts/code-previews.js" defer=""></script>
+    <script src="/assets/scripts/lunr.js" defer=""></script>
+    <script src="/assets/scripts/search.js" defer=""></script>
+  </head>
+  <body>
+    <a id="skip-to-main" class="visually-hidden" href="#main-content" data-smooth-link="false">
+      Skip to main content
+    </a>
+
+    <button id="menu-toggle" type="button" aria-label="Menu">
+      <svg width="148" height="148" viewBox="0 0 148 148" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="currentColor" stroke-width="18" fill="none" fill-rule="evenodd" stroke-linecap="round">
+          <path d="M9.5 125.5h129M9.5 74.5h129M9.5 23.5h129"></path>
+        </g>
+      </svg>
+    </button>
+
+    <div id="icon-toolbar">
+      <a
+        href="https://github.com/kubex/zinc"
+        title="View zinc on GitHub"
+        class="external-link"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <zn-icon src="code"></zn-icon>
+      </a>
+
+      <zn-dropdown id="theme-selector" placement="bottom-end" distance="3">
+        <zn-button slot="trigger" color="transparent" title="Press \ to toggle">
+          <zn-icon class="only-light" src="light_mode"></zn-icon>
+          <zn-icon class="only-dark" src="dark_mode"></zn-icon>
+        </zn-button>
+        <zn-menu>
+          <zn-menu-item type="checkbox" value="light">Light</zn-menu-item>
+          <zn-menu-item type="checkbox" value="dark">Dark</zn-menu-item>
+          <zn-menu-item type="checkbox" value="auto">System</zn-menu-item>
+        </zn-menu>
+      </zn-dropdown>
+    </div>
+
+    <aside id="sidebar" data-preserve-scroll="">
+      <header>
+        <a href="/">
+          <img src="/assets/images/watermark.svg" alt="zinc" />
+        </a>
+        <div class="sidebar-version">1.1.24</div>
+      </header>
+
+      <div class="sidebar-buttons">
+        <zn-button
+          class="repo-button repo-button--github"
+          href="https://github.com/kubex/zinc"
+          target="_blank"
+          icon="folder_open"
+          color="secondary"
+        >
+          Code
+        </zn-button>
+        <zn-button
+          class="repo-button repo-button--star"
+          color="secondary"
+          href="https://github.com/kubex/zinc/stargazers"
+          target="_blank"
+          icon="star"
+        >
+          Star
+        </zn-button>
+      </div>
+
+      <zn-button
+        icon="search"
+        class="search-box"
+        color="transparent"
+        type="button"
+        title="Press / to search"
+        aria-label="Search"
+        data-plugin="search"
+      >
+        <span>Search</span>
+      </zn-button>
+
+      <nav>
+        <ul>
+          <li>
+            <h2>Tutorials</h2>
+            <ul>
+              <li><a href="/getting-started/form-controls">Form Controls</a></li>
+              <li><a href="/getting-started/form-examples">Form Examples</a></li>
+              <li><a href="/getting-started/table-examples">Table Examples</a></li>
+              <li><a href="/getting-started/example-layout">Example Layout</a></li>
+              <li><a href="/getting-started/example-page">Example Page</a></li>
+              <li><a href="/getting-started/shimmer-text">Shimmer Text</a></li>
+            </ul>
+          </li>
+          <li>
+            <h2>Components</h2>
+            <ul>
+              <li>
+                <a href="/components/content-block"> Content Block </a>
+              </li>
+
+              <li>
+                <a href="/components/absolute-container"> Absolute Container </a>
+              </li>
+
+              <li>
+                <a href="/components/action-bar"> Action Bar </a>
+              </li>
+
+              <li>
+                <a href="/components/alert"> Alert </a>
+              </li>
+
+              <li>
+                <a href="/components/animated-button"> Animated Button </a>
+              </li>
+
+              <li>
+                <a href="/components/audio-select"> Audio Select </a>
+              </li>
+
+              <li>
+                <a href="/components/bulk-actions"> Bulk Actions </a>
+              </li>
+
+              <li>
+                <a href="/components/button"> Button </a>
+              </li>
+
+              <li>
+                <a href="/components/button-group"> Button Group </a>
+              </li>
+
+              <li>
+                <a href="/components/button-menu"> Button Menu </a>
+              </li>
+
+              <li>
+                <a href="/components/channel-tile"> Channel Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/chart"> Chart </a>
+              </li>
+
+              <li>
+                <a href="/components/chat-message"> Chat Message </a>
+              </li>
+
+              <li>
+                <a href="/components/chat-message-attachment"> Chat Message Attachment </a>
+              </li>
+
+              <li>
+                <a href="/components/checkbox"> Checkbox </a>
+              </li>
+
+              <li>
+                <a href="/components/checkbox-group"> Checkbox Group </a>
+              </li>
+
+              <li>
+                <a href="/components/chip"> Chip </a>
+              </li>
+
+              <li>
+                <a href="/components/collapsible"> Collapsible </a>
+              </li>
+
+              <li>
+                <a href="/components/cols"> Cols </a>
+              </li>
+
+              <li>
+                <a href="/components/confirm"> Confirm </a>
+              </li>
+
+              <li>
+                <a href="/components/copy-button"> Copy Button </a>
+              </li>
+
+              <li>
+                <a href="/components/data-select"> Data Select </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table"> Data Table </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table-filter"> Data Table Filter </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table-search"> Data Table Search </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table-sort"> Data Table Sort </a>
+              </li>
+
+              <li>
+                <a href="/components/datepicker"> Datepicker </a>
+              </li>
+
+              <li>
+                <a href="/components/defined-label"> Defined Label </a>
+              </li>
+
+              <li>
+                <a href="/components/dialog"> Dialog </a>
+              </li>
+
+              <li>
+                <a href="/components/dropdown"> Dropdown </a>
+              </li>
+
+              <li>
+                <a href="/components/editor"> Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/empty-state"> Empty State </a>
+              </li>
+
+              <li>
+                <a href="/components/expanding-action"> Expanding Action </a>
+              </li>
+
+              <li>
+                <a href="/components/file"> File </a>
+              </li>
+
+              <li>
+                <a href="/components/filter-container"> Filter Container </a>
+              </li>
+
+              <li>
+                <a href="/components/filter-wrapper"> Filter Wrapper </a>
+              </li>
+
+              <li>
+                <a href="/components/flow-builder" class="active-link"> Flow Builder </a>
+              </li>
+
+              <li>
+                <a href="/components/form-group"> Form Group </a>
+              </li>
+
+              <li>
+                <a href="/components/header"> Header </a>
+              </li>
+
+              <li>
+                <a href="/components/hover-container"> Hover Container </a>
+              </li>
+
+              <li>
+                <a href="/components/icon"> Icon </a>
+              </li>
+
+              <li>
+                <a href="/components/icon-picker"> Icon Picker </a>
+              </li>
+
+              <li>
+                <a href="/components/inline-edit"> Inline Edit </a>
+              </li>
+
+              <li>
+                <a href="/components/input"> Input </a>
+              </li>
+
+              <li>
+                <a href="/components/input-group"> Input Group </a>
+              </li>
+
+              <li>
+                <a href="/components/item"> Item </a>
+              </li>
+
+              <li>
+                <a href="/components/key"> Key </a>
+              </li>
+
+              <li>
+                <a href="/components/key-container"> Key Container </a>
+              </li>
+
+              <li>
+                <a href="/components/linked-select"> Linked Select </a>
+              </li>
+
+              <li>
+                <a href="/components/markdown-editor"> Markdown Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/menu"> Menu </a>
+              </li>
+
+              <li>
+                <a href="/components/menu-item"> Menu Item </a>
+              </li>
+
+              <li>
+                <a href="/components/navbar"> Navbar </a>
+              </li>
+
+              <li>
+                <a href="/components/note"> Note </a>
+              </li>
+
+              <li>
+                <a href="/components/opt-group"> Opt Group </a>
+              </li>
+
+              <li>
+                <a href="/components/option"> Option </a>
+              </li>
+
+              <li>
+                <a href="/components/order-table"> Order Table </a>
+              </li>
+
+              <li>
+                <a href="/components/page"> Page </a>
+              </li>
+
+              <li>
+                <a href="/components/page-nav"> Page Nav </a>
+              </li>
+
+              <li>
+                <a href="/components/pagination"> Pagination </a>
+              </li>
+
+              <li>
+                <a href="/components/pane"> Pane </a>
+              </li>
+
+              <li>
+                <a href="/components/panel"> Panel </a>
+              </li>
+
+              <li>
+                <a href="/components/popup"> Popup </a>
+              </li>
+
+              <li>
+                <a href="/components/priority-list"> Priority List </a>
+              </li>
+
+              <li>
+                <a href="/components/progress-bar"> Progress Bar </a>
+              </li>
+
+              <li>
+                <a href="/components/progress-tile"> Progress Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/query-builder"> Query Builder </a>
+              </li>
+
+              <li>
+                <a href="/components/radio"> Radio </a>
+              </li>
+
+              <li>
+                <a href="/components/radio-group"> Radio Group </a>
+              </li>
+
+              <li>
+                <a href="/components/rating"> Rating </a>
+              </li>
+
+              <li>
+                <a href="/components/reveal"> Reveal </a>
+              </li>
+
+              <li>
+                <a href="/components/scroll-container"> Scroll Container </a>
+              </li>
+
+              <li>
+                <a href="/components/select"> Select </a>
+              </li>
+
+              <li>
+                <a href="/components/settings-container"> Settings Container </a>
+              </li>
+
+              <li>
+                <a href="/components/sidebar"> Sidebar </a>
+              </li>
+
+              <li>
+                <a href="/components/simple-chart"> Simple Chart </a>
+              </li>
+
+              <li>
+                <a href="/components/skeleton"> Skeleton </a>
+              </li>
+
+              <li>
+                <a href="/components/slideout"> Slideout </a>
+              </li>
+
+              <li>
+                <a href="/components/sp"> Sp </a>
+              </li>
+
+              <li>
+                <a href="/components/split-button"> Split Button </a>
+              </li>
+
+              <li>
+                <a href="/components/split-pane"> Split Pane </a>
+              </li>
+
+              <li>
+                <a href="/components/stat"> Stats Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/status-indicator"> Status Indicator </a>
+              </li>
+
+              <li>
+                <a href="/components/stepper"> Stepper </a>
+              </li>
+
+              <li>
+                <a href="/components/style"> Style </a>
+              </li>
+
+              <li>
+                <a href="/components/tab"> Tab </a>
+              </li>
+
+              <li>
+                <a href="/components/table"> Table </a>
+              </li>
+
+              <li>
+                <a href="/components/tabs"> Tabs </a>
+              </li>
+
+              <li>
+                <a href="/components/textarea"> Textarea </a>
+              </li>
+
+              <li>
+                <a href="/components/tile"> Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/tile-group"> Tile Group </a>
+              </li>
+
+              <li>
+                <a href="/components/tile-property"> Tile Property </a>
+              </li>
+
+              <li>
+                <a href="/components/timer"> Timer </a>
+              </li>
+
+              <li>
+                <a href="/components/toggle"> Toggle </a>
+              </li>
+
+              <li>
+                <a href="/components/tooltip"> Tooltip </a>
+              </li>
+
+              <li>
+                <a href="/components/translation-group"> Translation Group </a>
+              </li>
+
+              <li>
+                <a href="/components/translations"> Translations </a>
+              </li>
+
+              <li>
+                <a href="/components/vertical-stepper"> Vertical Stepper </a>
+              </li>
+
+              <li>
+                <a href="/components/well"> Well </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main>
+      <a id="main-content"></a>
+      <article id="content" class="content content--with-toc content--full-width">
+        <div class="content__toc">
+          <ul>
+            <li class="top"><a href="#">Flow Builder</a></li>
+            <li data-level="2"><a href="#examples">Examples</a></li>
+            <li data-level="3"><a href="#empty-builder">Empty builder</a></li>
+            <li data-level="3"><a href="#declaring-the-steps-panel">Declaring the steps panel</a></li>
+            <li data-level="3"><a href="#registering-custom-node-types">Registering custom node types</a></li>
+            <li data-level="3"><a href="#reacting-to-changes">Reacting to changes</a></li>
+            <li data-level="2"><a href="#importing">Importing</a></li>
+            <li data-level="2"><a href="#slots">Slots</a></li>
+            <li data-level="2"><a href="#properties">Properties</a></li>
+            <li data-level="2"><a href="#events">Events</a></li>
+            <li data-level="2"><a href="#parts">Parts</a></li>
+            <li data-level="2"><a href="#dependencies">Dependencies</a></li>
+          </ul>
+        </div>
+
+        <div class="content__body">
+          <header class="component-header">
+            <h1>Flow Builder</h1>
+
+            <div class="component-header__tag">
+              <code>&lt;zn-flow-builder&gt; | ZnFlowBuilder</code>
+            </div>
+
+            <div class="component-header__info">
+              <zn-chip type="info"> Since 1.0 </zn-chip>
+              <zn-chip type="warning" style="text-transform: capitalize"> experimental </zn-chip>
+            </div>
+          </header>
+
+          <p class="component-summary">
+            A drag-and-drop visual flow builder: steps panel, pan/zoom canvas, and a config inspector.
+          </p>
+
+          <p>The Flow Builder is a three-panel editor for visual automations, with an optional header action bar:</p>
+          <ul>
+            <li>
+              <strong>Header</strong> (optional) — a full-width action bar rendered only when
+              <code>slot="header-left"</code> / <code>slot="header-right"</code> content is provided (e.g. Close / Undo
+              All Changes on the left, Apply Changes on the right).
+            </li>
+            <li><strong>Left panel</strong> — the steps panel (searchable, tabbed by step group).</li>
+            <li>
+              <strong>Canvas</strong> (center) — a pannable, zoomable surface. Connections are
+              <strong>append-only</strong>: click any <strong>output port</strong> on a node to start a
+              <strong>stray branch</strong> — the wire follows your cursor until you click a node (or its output port)
+              to attach it. Fan-in is allowed, and so are <strong>loops</strong> — a branch may point back to an earlier
+              step (e.g. an answer that restarts the questioning); only wiring a node directly to itself is refused.
+              Cancel by clicking empty canvas, pressing Esc, or leaving the window. A connected output port spawns a
+              brand-new branch on click, so extra arrows never require config forms. Open outputs draw nothing while
+              idle — their <strong><code>+</code></strong> targets appear only while dragging a step in or moving one.
+              Every existing wire has a <strong><code>+</code></strong> at its midpoint to insert a step between two
+              nodes. New steps are created by dragging them from the panel onto the canvas or a <code>+</code>.
+              Reposition nodes by dragging, and add resizable sticky notes. Scroll to pan (side-scroll or Shift+scroll
+              pans horizontally); Ctrl/Cmd+scroll or trackpad pinch zooms toward the cursor. Toolbar: undo, redo,
+              add-note, <strong>untangle</strong> (auto-arranges a messy flow into evenly spaced layers that follow the
+              connections — undoable), zoom-in, reset, zoom-out.
+            </li>
+            <li>
+              <strong>Right panel</strong> — the sidebar by default: a slot (<code>slot="sidebar"</code>) for status /
+              version history, with a built-in Configuration Errors summary derived from <code>errorNodes</code>.
+              Selecting a node slides that step’s configuration in from the right (driven by the node type’s
+              <code>renderConfig</code>); clicking a <strong>branch pill</strong> on a wire slides in the branch editor
+              instead — rename the branch and configure the filters/conditions for taking that path (the node type’s
+              <code>renderBranchConfig</code>, persisted on the output port’s <code>data</code>).
+            </li>
+          </ul>
+          <p>
+            A node’s <strong><code>…</code></strong> menu offers Delete, Duplicate, and <strong>Move</strong> — Move
+            detaches the step (with its subtree) so you can re-attach it to a different <code>+</code> slot.
+          </p>
+          <p>
+            Every node except an entrypoint (a node with <code>inputs=""</code>) can have as many inputs and outputs as
+            it likes — outputs are per-node overridable, so a step’s config can add and remove branches at runtime.
+          </p>
+          <p>
+            It ships with <strong>no built-in node types</strong> — every step you see below is registered by the
+            consumer. This keeps the component generic and lets it be extended for any future workflow without changing
+            the library.
+          </p>
+          <zn-button
+            href="/components/flow-builder-demo/"
+            target="_blank"
+            icon="open_in_new"
+            style="margin-bottom: 1.5rem"
+          >
+            Open the full-page demo
+          </zn-button>
+          <zn-button
+            href="/components/flow-builder-troubleshooter-demo/"
+            target="_blank"
+            icon="open_in_new"
+            style="margin-bottom: 1.5rem"
+          >
+            Open the Troubleshoot Q&amp;A demo
+          </zn-button>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div style="height: 900px">
+                <zn-flow-builder
+                  id="flow-demo"
+                  heading="Retention – Annual Cancellation_v1"
+                  subheading="Last updated 16th June 2026"
+                  triggers-hint="Automations require a trigger to start. Choose a trigger below and drag it to the canvas to begin."
+                  actions-hint="Actions run as the automation progresses. Drag one onto the canvas or a + slot."
+                  rules-hint="Rules branch the flow based on conditions you configure on each step."
+                >
+                  <zn-flow-step
+                    type="webhook"
+                    group="entrypoint"
+                    category="Events"
+                    icon="webhook@lu"
+                    color="rgb(236, 68, 91)"
+                    description="User hits webhook XYZ"
+                    >Cancellation Requested
+                  </zn-flow-step>
+                  <zn-flow-step
+                    type="manual"
+                    group="entrypoint"
+                    category="Contacts"
+                    icon="user-plus@lu"
+                    color="rgb(236, 68, 91)"
+                    >Contact added manually
+                  </zn-flow-step>
+                  <zn-flow-step
+                    type="list-add"
+                    group="entrypoint"
+                    category="Contacts"
+                    icon="list-plus@lu"
+                    color="rgb(236, 68, 91)"
+                    >Contact added to a list
+                  </zn-flow-step>
+
+                  <zn-flow-step
+                    type="email-parser"
+                    group="action"
+                    category="Email"
+                    icon="mail@lu"
+                    color="rgb(43, 192, 145)"
+                    >IMAP Email Parser
+                  </zn-flow-step>
+                  <zn-flow-step
+                    type="send-reply"
+                    group="action"
+                    category="Email"
+                    icon="send@lu"
+                    color="rgb(43, 192, 145)"
+                    >Send Reply
+                  </zn-flow-step>
+                  <zn-flow-step type="claude" group="action" category="AI" icon="bot@lu" color="rgb(43, 192, 145)"
+                    >Claude
+                  </zn-flow-step>
+                  <zn-flow-step type="notify" group="action" category="Support" icon="user@lu" color="rgb(43, 192, 145)"
+                    >Notify User
+                  </zn-flow-step>
+
+                  <zn-flow-step
+                    type="split"
+                    group="rule"
+                    category="Logic"
+                    icon="split@lu"
+                    color="rgb(105, 54, 245)"
+                    outputs='[{"id":"true","label":"TRUE"},{"id":"false","label":"FALSE"}]'
+                    >Conditional Split
+                  </zn-flow-step>
+
+                  <div slot="sidebar" class="flow-sidebar-demo">
+                    <label
+                      >Status
+                      <zn-select>
+                        <zn-option selected="">Active</zn-option>
+                        <zn-option>Paused</zn-option>
+                        <zn-option>Draft</zn-option>
+                      </zn-select>
+                    </label>
+                    <h4>Version History</h4>
+                    <ul>
+                      <li><strong>John Smith</strong><span>16th June 2026 · 14:03</span></li>
+                      <li><strong>John Smith</strong><span>16th June 2026 · 11:20</span></li>
+                      <li><strong>Jane Doe</strong><span>15th June 2026 · 09:48</span></li>
+                    </ul>
+                  </div>
+                </zn-flow-builder>
+              </div>
+
+              <style>
+                .flow-sidebar-demo {
+                  margin-top: 16px;
+                  font-size: 0.8125rem;
+                }
+
+                .flow-sidebar-demo label {
+                  display: flex;
+                  flex-direction: column;
+                  gap: 4px;
+                  font-weight: 600;
+                }
+
+                .flow-sidebar-demo select {
+                  padding: 6px 8px;
+                  border: 1px solid rgb(var(--zn-border-color));
+                  border-radius: 6px;
+                }
+
+                .flow-sidebar-demo h4 {
+                  margin: 16px 0 8px;
+                }
+
+                .flow-sidebar-demo ul {
+                  list-style: none;
+                  margin: 0;
+                  padding: 0;
+                }
+
+                .flow-sidebar-demo li {
+                  display: flex;
+                  flex-direction: column;
+                  padding: 8px 0;
+                  border-top: 1px solid rgb(var(--zn-border-color));
+                }
+
+                .flow-sidebar-demo li span {
+                  color: rgb(var(--zn-color-muted-text));
+                  font-size: 0.75rem;
+                }
+              </style>
+
+              <script type="module">
+                const initial = {
+                  nodes: [
+                    { id: 'n1', type: 'webhook', x: 280, y: 60, data: { subtitle: 'User hits webhook XYZ' } },
+                    { id: 'n2', type: 'split', x: 280, y: 220, data: { subtitle: 'ARR Threshold' } },
+                    { id: 'n3', type: 'email-parser', x: 80, y: 480, data: { subtitle: 'Import Email Attachment' } },
+                    { id: 'n4', type: 'notify', x: 80, y: 640, data: { subtitle: 'Notify Frank Furt' } },
+                    { id: 'n5', type: 'claude', x: 480, y: 480, data: { subtitle: 'Generate Reply' } },
+                    { id: 'n6', type: 'send-reply', x: 480, y: 640, data: { subtitle: 'Generate Reply' } }
+                  ],
+                  connections: [
+                    { id: 'c1', source: { node: 'n1', port: 'out' }, target: { node: 'n2', port: 'in' } },
+                    { id: 'c2', source: { node: 'n2', port: 'true' }, target: { node: 'n3', port: 'in' } },
+                    { id: 'c3', source: { node: 'n2', port: 'false' }, target: { node: 'n5', port: 'in' } },
+                    { id: 'c4', source: { node: 'n3', port: 'out' }, target: { node: 'n4', port: 'in' } },
+                    { id: 'c5', source: { node: 'n5', port: 'out' }, target: { node: 'n6', port: 'in' } }
+                  ],
+                  notes: [{ id: 'note1', x: 760, y: 440, text: 'This is a sticky note.' }]
+                };
+
+                // The Conditional Split's outputs are user-configurable per node: its renderConfig
+                // edits node.outputs (add / rename / remove branches). The canvas re-renders the
+                // outputs and the builder prunes connections to any removed branch.
+                const splitType = {
+                  type: 'split',
+                  label: 'Conditional Split',
+                  group: 'rule',
+                  category: 'Logic',
+                  icon: 'split@lu',
+                  color: 'rgb(105, 54, 245)',
+                  outputs: [
+                    { id: 'true', label: 'TRUE' },
+                    { id: 'false', label: 'FALSE' }
+                  ],
+                  renderConfig: (node, update) => {
+                    const branches = node.outputs ?? [
+                      { id: 'true', label: 'TRUE' },
+                      { id: 'false', label: 'FALSE' }
+                    ];
+                    const setBranches = next => {
+                      node.outputs = next;
+                      update({});
+                    };
+
+                    const wrap = document.createElement('div');
+                    wrap.style.cssText = 'display:flex;flex-direction:column;gap:8px';
+
+                    const heading = document.createElement('p');
+                    heading.textContent = 'Branches';
+                    heading.style.cssText = 'margin:0;font-weight:600;font-size:0.8125rem';
+                    wrap.appendChild(heading);
+
+                    branches.forEach((branch, i) => {
+                      const row = document.createElement('div');
+                      row.style.cssText = 'display:flex;gap:6px;align-items:center';
+
+                      const input = document.createElement('zn-input');
+                      input.setAttribute('size', 'small');
+                      input.value = branch.label ?? branch.id;
+                      input.style.flex = '1';
+                      input.addEventListener('change', () =>
+                        setBranches(branches.map((b, j) => (j === i ? { ...b, label: input.value } : b)))
+                      );
+
+                      const remove = document.createElement('zn-button');
+                      remove.setAttribute('icon', 'x@lu');
+                      remove.setAttribute('icon-button', 'small');
+                      remove.setAttribute('plain', '');
+                      remove.addEventListener('click', () => setBranches(branches.filter((_, j) => j !== i)));
+
+                      row.append(input, remove);
+                      wrap.appendChild(row);
+                    });
+
+                    const add = document.createElement('zn-button');
+                    add.setAttribute('size', 'small');
+                    add.setAttribute('icon', 'plus@lu');
+                    add.textContent = 'Add branch';
+                    add.addEventListener('click', () =>
+                      setBranches([...branches, { id: 'branch-' + (branches.length + 1), label: 'New branch' }])
+                    );
+                    wrap.appendChild(add);
+
+                    return wrap;
+                  }
+                };
+
+                customElements.whenDefined('zn-flow-builder').then(() => {
+                  const el = document.getElementById('flow-demo');
+                  el.registerNodeType(splitType);
+                  el.setState(initial);
+                  el.errorNodes = ['n3'];
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-520">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-651">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 900px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-flow-builder</span>
+    <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>flow-demo<span class="token punctuation">"</span></span>
+    <span class="token attr-name">heading</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Retention – Annual Cancellation_v1<span class="token punctuation">"</span></span>
+    <span class="token attr-name">subheading</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Last updated 16th June 2026<span class="token punctuation">"</span></span>
+    <span class="token attr-name">triggers-hint</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Automations require a trigger to start. Choose a trigger below and drag it to the canvas to begin.<span class="token punctuation">"</span></span>
+    <span class="token attr-name">actions-hint</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Actions run as the automation progresses. Drag one onto the canvas or a + slot.<span class="token punctuation">"</span></span>
+    <span class="token attr-name">rules-hint</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Rules branch the flow based on conditions you configure on each step.<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-flow-step</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>webhook<span class="token punctuation">"</span></span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>entrypoint<span class="token punctuation">"</span></span> <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Events<span class="token punctuation">"</span></span>
+                  <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>webhook@lu<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>rgb(236, 68, 91)<span class="token punctuation">"</span></span>
+                  <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>User hits webhook XYZ<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Cancellation Requested
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-flow-step</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-flow-step</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>manual<span class="token punctuation">"</span></span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>entrypoint<span class="token punctuation">"</span></span> <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Contacts<span class="token punctuation">"</span></span>
+                  <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>user-plus@lu<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>rgb(236, 68, 91)<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Contact added manually
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-flow-step</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-flow-step</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>list-add<span class="token punctuation">"</span></span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>entrypoint<span class="token punctuation">"</span></span> <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Contacts<span class="token punctuation">"</span></span>
+                  <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>list-plus@lu<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>rgb(236, 68, 91)<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Contact added to a list
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-flow-step</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-flow-step</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email-parser<span class="token punctuation">"</span></span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>action<span class="token punctuation">"</span></span> <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Email<span class="token punctuation">"</span></span>
+                  <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>mail@lu<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>rgb(43, 192, 145)<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>IMAP Email Parser
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-flow-step</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-flow-step</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>send-reply<span class="token punctuation">"</span></span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>action<span class="token punctuation">"</span></span> <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Email<span class="token punctuation">"</span></span>
+                  <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>send@lu<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>rgb(43, 192, 145)<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Send Reply
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-flow-step</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-flow-step</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>claude<span class="token punctuation">"</span></span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>action<span class="token punctuation">"</span></span> <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>AI<span class="token punctuation">"</span></span>
+                  <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bot@lu<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>rgb(43, 192, 145)<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Claude
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-flow-step</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-flow-step</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>notify<span class="token punctuation">"</span></span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>action<span class="token punctuation">"</span></span> <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Support<span class="token punctuation">"</span></span>
+                  <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>user@lu<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>rgb(43, 192, 145)<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Notify User
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-flow-step</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-flow-step</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>split<span class="token punctuation">"</span></span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>rule<span class="token punctuation">"</span></span> <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Logic<span class="token punctuation">"</span></span>
+                  <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>split@lu<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>rgb(105, 54, 245)<span class="token punctuation">"</span></span>
+                  <span class="token attr-name">outputs</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>[{"id":"true","label":"TRUE"},{"id":"false","label":"FALSE"}]<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>Conditional Split
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-flow-step</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>sidebar<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>flow-sidebar-demo<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>label</span><span class="token punctuation">&gt;</span></span>Status
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-select</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span> <span class="token attr-name">selected</span><span class="token punctuation">&gt;</span></span>Active<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span><span class="token punctuation">&gt;</span></span>Paused<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span><span class="token punctuation">&gt;</span></span>Draft<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-select</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>label</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h4</span><span class="token punctuation">&gt;</span></span>Version History<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h4</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ul</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>John Smith<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">&gt;</span></span>16th June 2026 · 14:03<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>John Smith<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">&gt;</span></span>16th June 2026 · 11:20<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Jane Doe<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">&gt;</span></span>15th June 2026 · 09:48<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ul</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-flow-builder</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">&gt;</span></span><span class="token style"><span class="token language-css">
+  <span class="token selector">.flow-sidebar-demo</span> <span class="token punctuation">{</span>
+    <span class="token property">margin-top</span><span class="token punctuation">:</span> 16px<span class="token punctuation">;</span>
+    <span class="token property">font-size</span><span class="token punctuation">:</span> 0.8125rem<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.flow-sidebar-demo label</span> <span class="token punctuation">{</span>
+    <span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span>
+    <span class="token property">flex-direction</span><span class="token punctuation">:</span> column<span class="token punctuation">;</span>
+    <span class="token property">gap</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span>
+    <span class="token property">font-weight</span><span class="token punctuation">:</span> 600<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.flow-sidebar-demo select</span> <span class="token punctuation">{</span>
+    <span class="token property">padding</span><span class="token punctuation">:</span> 6px 8px<span class="token punctuation">;</span>
+    <span class="token property">border</span><span class="token punctuation">:</span> 1px solid <span class="token function">rgb</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--zn-border-color<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token property">border-radius</span><span class="token punctuation">:</span> 6px<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.flow-sidebar-demo h4</span> <span class="token punctuation">{</span>
+    <span class="token property">margin</span><span class="token punctuation">:</span> 16px 0 8px<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.flow-sidebar-demo ul</span> <span class="token punctuation">{</span>
+    <span class="token property">list-style</span><span class="token punctuation">:</span> none<span class="token punctuation">;</span>
+    <span class="token property">margin</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+    <span class="token property">padding</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.flow-sidebar-demo li</span> <span class="token punctuation">{</span>
+    <span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span>
+    <span class="token property">flex-direction</span><span class="token punctuation">:</span> column<span class="token punctuation">;</span>
+    <span class="token property">padding</span><span class="token punctuation">:</span> 8px 0<span class="token punctuation">;</span>
+    <span class="token property">border-top</span><span class="token punctuation">:</span> 1px solid <span class="token function">rgb</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--zn-border-color<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.flow-sidebar-demo li span</span> <span class="token punctuation">{</span>
+    <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">rgb</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--zn-color-muted-text<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token property">font-size</span><span class="token punctuation">:</span> 0.75rem<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> initial <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">nodes</span><span class="token operator">:</span>       <span class="token punctuation">[</span>
+      <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'n1'</span><span class="token punctuation">,</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">'webhook'</span><span class="token punctuation">,</span> <span class="token literal-property property">x</span><span class="token operator">:</span> <span class="token number">280</span><span class="token punctuation">,</span> <span class="token literal-property property">y</span><span class="token operator">:</span> <span class="token number">60</span><span class="token punctuation">,</span> <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">subtitle</span><span class="token operator">:</span> <span class="token string">'User hits webhook XYZ'</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'n2'</span><span class="token punctuation">,</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">'split'</span><span class="token punctuation">,</span> <span class="token literal-property property">x</span><span class="token operator">:</span> <span class="token number">280</span><span class="token punctuation">,</span> <span class="token literal-property property">y</span><span class="token operator">:</span> <span class="token number">220</span><span class="token punctuation">,</span> <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">subtitle</span><span class="token operator">:</span> <span class="token string">'ARR Threshold'</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'n3'</span><span class="token punctuation">,</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">'email-parser'</span><span class="token punctuation">,</span> <span class="token literal-property property">x</span><span class="token operator">:</span> <span class="token number">80</span><span class="token punctuation">,</span> <span class="token literal-property property">y</span><span class="token operator">:</span> <span class="token number">480</span><span class="token punctuation">,</span> <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">subtitle</span><span class="token operator">:</span> <span class="token string">'Import Email Attachment'</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'n4'</span><span class="token punctuation">,</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">'notify'</span><span class="token punctuation">,</span> <span class="token literal-property property">x</span><span class="token operator">:</span> <span class="token number">80</span><span class="token punctuation">,</span> <span class="token literal-property property">y</span><span class="token operator">:</span> <span class="token number">640</span><span class="token punctuation">,</span> <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">subtitle</span><span class="token operator">:</span> <span class="token string">'Notify Frank Furt'</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'n5'</span><span class="token punctuation">,</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">'claude'</span><span class="token punctuation">,</span> <span class="token literal-property property">x</span><span class="token operator">:</span> <span class="token number">480</span><span class="token punctuation">,</span> <span class="token literal-property property">y</span><span class="token operator">:</span> <span class="token number">480</span><span class="token punctuation">,</span> <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">subtitle</span><span class="token operator">:</span> <span class="token string">'Generate Reply'</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'n6'</span><span class="token punctuation">,</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">'send-reply'</span><span class="token punctuation">,</span> <span class="token literal-property property">x</span><span class="token operator">:</span> <span class="token number">480</span><span class="token punctuation">,</span> <span class="token literal-property property">y</span><span class="token operator">:</span> <span class="token number">640</span><span class="token punctuation">,</span> <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">subtitle</span><span class="token operator">:</span> <span class="token string">'Generate Reply'</span><span class="token punctuation">}</span><span class="token punctuation">}</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">connections</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'c1'</span><span class="token punctuation">,</span> <span class="token literal-property property">source</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">node</span><span class="token operator">:</span> <span class="token string">'n1'</span><span class="token punctuation">,</span> <span class="token literal-property property">port</span><span class="token operator">:</span> <span class="token string">'out'</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token literal-property property">target</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">node</span><span class="token operator">:</span> <span class="token string">'n2'</span><span class="token punctuation">,</span> <span class="token literal-property property">port</span><span class="token operator">:</span> <span class="token string">'in'</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'c2'</span><span class="token punctuation">,</span> <span class="token literal-property property">source</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">node</span><span class="token operator">:</span> <span class="token string">'n2'</span><span class="token punctuation">,</span> <span class="token literal-property property">port</span><span class="token operator">:</span> <span class="token string">'true'</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token literal-property property">target</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">node</span><span class="token operator">:</span> <span class="token string">'n3'</span><span class="token punctuation">,</span> <span class="token literal-property property">port</span><span class="token operator">:</span> <span class="token string">'in'</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'c3'</span><span class="token punctuation">,</span> <span class="token literal-property property">source</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">node</span><span class="token operator">:</span> <span class="token string">'n2'</span><span class="token punctuation">,</span> <span class="token literal-property property">port</span><span class="token operator">:</span> <span class="token string">'false'</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token literal-property property">target</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">node</span><span class="token operator">:</span> <span class="token string">'n5'</span><span class="token punctuation">,</span> <span class="token literal-property property">port</span><span class="token operator">:</span> <span class="token string">'in'</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'c4'</span><span class="token punctuation">,</span> <span class="token literal-property property">source</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">node</span><span class="token operator">:</span> <span class="token string">'n3'</span><span class="token punctuation">,</span> <span class="token literal-property property">port</span><span class="token operator">:</span> <span class="token string">'out'</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token literal-property property">target</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">node</span><span class="token operator">:</span> <span class="token string">'n4'</span><span class="token punctuation">,</span> <span class="token literal-property property">port</span><span class="token operator">:</span> <span class="token string">'in'</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'c5'</span><span class="token punctuation">,</span> <span class="token literal-property property">source</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">node</span><span class="token operator">:</span> <span class="token string">'n5'</span><span class="token punctuation">,</span> <span class="token literal-property property">port</span><span class="token operator">:</span> <span class="token string">'out'</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token literal-property property">target</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">node</span><span class="token operator">:</span> <span class="token string">'n6'</span><span class="token punctuation">,</span> <span class="token literal-property property">port</span><span class="token operator">:</span> <span class="token string">'in'</span><span class="token punctuation">}</span><span class="token punctuation">}</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">notes</span><span class="token operator">:</span>       <span class="token punctuation">[</span>
+      <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'note1'</span><span class="token punctuation">,</span> <span class="token literal-property property">x</span><span class="token operator">:</span> <span class="token number">760</span><span class="token punctuation">,</span> <span class="token literal-property property">y</span><span class="token operator">:</span> <span class="token number">440</span><span class="token punctuation">,</span> <span class="token literal-property property">text</span><span class="token operator">:</span> <span class="token string">'This is a sticky note.'</span><span class="token punctuation">}</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// The Conditional Split's outputs are user-configurable per node: its renderConfig</span>
+  <span class="token comment">// edits node.outputs (add / rename / remove branches). The canvas re-renders the</span>
+  <span class="token comment">// outputs and the builder prunes connections to any removed branch.</span>
+  <span class="token keyword">const</span> splitType <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">type</span><span class="token operator">:</span>         <span class="token string">'split'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">label</span><span class="token operator">:</span>        <span class="token string">'Conditional Split'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">group</span><span class="token operator">:</span>        <span class="token string">'rule'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">category</span><span class="token operator">:</span>     <span class="token string">'Logic'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">icon</span><span class="token operator">:</span>         <span class="token string">'split@lu'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">color</span><span class="token operator">:</span>        <span class="token string">'rgb(105, 54, 245)'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">outputs</span><span class="token operator">:</span>      <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'true'</span><span class="token punctuation">,</span> <span class="token literal-property property">label</span><span class="token operator">:</span> <span class="token string">'TRUE'</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'false'</span><span class="token punctuation">,</span> <span class="token literal-property property">label</span><span class="token operator">:</span> <span class="token string">'FALSE'</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">renderConfig</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">node<span class="token punctuation">,</span> update</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span>
+                  <span class="token punctuation">{</span>
+                    <span class="token keyword">const</span> branches <span class="token operator">=</span> node<span class="token punctuation">.</span>outputs <span class="token operator">??</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'true'</span><span class="token punctuation">,</span> <span class="token literal-property property">label</span><span class="token operator">:</span> <span class="token string">'TRUE'</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'false'</span><span class="token punctuation">,</span> <span class="token literal-property property">label</span><span class="token operator">:</span> <span class="token string">'FALSE'</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+                    <span class="token keyword">const</span> <span class="token function-variable function">setBranches</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">next</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span>
+                    <span class="token punctuation">{</span>
+                      node<span class="token punctuation">.</span>outputs <span class="token operator">=</span> next<span class="token punctuation">;</span>
+                      <span class="token function">update</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+                    <span class="token keyword">const</span> wrap <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'div'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    wrap<span class="token punctuation">.</span>style<span class="token punctuation">.</span>cssText <span class="token operator">=</span> <span class="token string">'display:flex;flex-direction:column;gap:8px'</span><span class="token punctuation">;</span>
+
+                    <span class="token keyword">const</span> heading <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'p'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    heading<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token string">'Branches'</span><span class="token punctuation">;</span>
+                    heading<span class="token punctuation">.</span>style<span class="token punctuation">.</span>cssText <span class="token operator">=</span> <span class="token string">'margin:0;font-weight:600;font-size:0.8125rem'</span><span class="token punctuation">;</span>
+                    wrap<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>heading<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+                    branches<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">branch<span class="token punctuation">,</span> i</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span>
+                    <span class="token punctuation">{</span>
+                      <span class="token keyword">const</span> row <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'div'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                      row<span class="token punctuation">.</span>style<span class="token punctuation">.</span>cssText <span class="token operator">=</span> <span class="token string">'display:flex;gap:6px;align-items:center'</span><span class="token punctuation">;</span>
+
+                      <span class="token keyword">const</span> input <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'zn-input'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                      input<span class="token punctuation">.</span><span class="token function">setAttribute</span><span class="token punctuation">(</span><span class="token string">'size'</span><span class="token punctuation">,</span> <span class="token string">'small'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                      input<span class="token punctuation">.</span>value <span class="token operator">=</span> branch<span class="token punctuation">.</span>label <span class="token operator">??</span> branch<span class="token punctuation">.</span>id<span class="token punctuation">;</span>
+                      input<span class="token punctuation">.</span>style<span class="token punctuation">.</span>flex <span class="token operator">=</span> <span class="token string">'1'</span><span class="token punctuation">;</span>
+                      input<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'change'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span>
+                        <span class="token function">setBranches</span><span class="token punctuation">(</span>branches<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">b<span class="token punctuation">,</span> j</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">(</span>j <span class="token operator">===</span> i <span class="token operator">?</span> <span class="token punctuation">{</span><span class="token operator">...</span>b<span class="token punctuation">,</span> <span class="token literal-property property">label</span><span class="token operator">:</span> input<span class="token punctuation">.</span>value<span class="token punctuation">}</span> <span class="token operator">:</span> b<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+                      <span class="token keyword">const</span> remove <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'zn-button'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                      remove<span class="token punctuation">.</span><span class="token function">setAttribute</span><span class="token punctuation">(</span><span class="token string">'icon'</span><span class="token punctuation">,</span> <span class="token string">'x@lu'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                      remove<span class="token punctuation">.</span><span class="token function">setAttribute</span><span class="token punctuation">(</span><span class="token string">'icon-button'</span><span class="token punctuation">,</span> <span class="token string">'small'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                      remove<span class="token punctuation">.</span><span class="token function">setAttribute</span><span class="token punctuation">(</span><span class="token string">'plain'</span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                      remove<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token function">setBranches</span><span class="token punctuation">(</span>branches<span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">_<span class="token punctuation">,</span> j</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> j <span class="token operator">!==</span> i<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+                      row<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span>input<span class="token punctuation">,</span> remove<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                      wrap<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>row<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+                    <span class="token keyword">const</span> add <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'zn-button'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    add<span class="token punctuation">.</span><span class="token function">setAttribute</span><span class="token punctuation">(</span><span class="token string">'size'</span><span class="token punctuation">,</span> <span class="token string">'small'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    add<span class="token punctuation">.</span><span class="token function">setAttribute</span><span class="token punctuation">(</span><span class="token string">'icon'</span><span class="token punctuation">,</span> <span class="token string">'plus@lu'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    add<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token string">'Add branch'</span><span class="token punctuation">;</span>
+                    add<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span>
+                      <span class="token function">setBranches</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token operator">...</span>branches<span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'branch-'</span> <span class="token operator">+</span> <span class="token punctuation">(</span>branches<span class="token punctuation">.</span>length <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token literal-property property">label</span><span class="token operator">:</span> <span class="token string">'New branch'</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    wrap<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>add<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+                    <span class="token keyword">return</span> wrap<span class="token punctuation">;</span>
+                  <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+  customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-flow-builder'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span>
+  <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> el <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'flow-demo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    el<span class="token punctuation">.</span><span class="token function">registerNodeType</span><span class="token punctuation">(</span>splitType<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    el<span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span>initial<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    el<span class="token punctuation">.</span>errorNodes <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'n3'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-651"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-520"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h2 id="examples" class="anchor-heading">
+            Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
+          </h2>
+          <h3 id="empty-builder" class="anchor-heading">
+            Empty builder<a href="#empty-builder" aria-label='Direct link to "Empty builder"'></a>
+          </h3>
+          <p>With no node types registered, the steps panel is empty. Register types to populate it.</p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div style="height: 560px">
+                <zn-flow-builder heading="New Flow" subheading="Drafting"></zn-flow-builder>
+              </div>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-521">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-652">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 560px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-flow-builder</span> <span class="token attr-name">heading</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>New Flow<span class="token punctuation">"</span></span> <span class="token attr-name">subheading</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Drafting<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-flow-builder</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-652"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-521"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="declaring-the-steps-panel" class="anchor-heading">
+            Declaring the steps panel<a
+              href="#declaring-the-steps-panel"
+              aria-label='Direct link to "Declaring the steps panel"'
+            ></a>
+          </h3>
+          <p>
+            The builder owns the steps panel: <strong>Entrypoints / Triggers / Actions / Rules</strong> tabs with a
+            search box. You don’t author the tabs or their layout — you just declare the node types, and each is routed
+            to the right tab by its <code>group</code> and grouped under a collapsible <code>category</code>. A tab only
+            renders when its group has at least one registered step, so unused groups never appear.
+          </p>
+          <p>
+            Declare each type as a <code>&lt;zn-flow-step&gt;</code> (the items themselves are never shown — they’re
+            declarations that drive the rendered panel):
+          </p>
+          <ul>
+            <li><code>type</code> (required) — the node type id.</li>
+            <li>
+              <code>group</code> — <code>entrypoint</code> | <code>trigger</code> | <code>action</code> |
+              <code>rule</code>; picks the tab (defaults to <code>action</code>).
+            </li>
+            <li><code>category</code> — collapsible group within the tab (e.g. “Email”).</li>
+            <li>label — the slotted text (or a <code>label</code> attribute).</li>
+            <li><code>icon</code>, <code>icon-library</code>, <code>color</code>, <code>description</code>.</li>
+            <li>
+              <code>inputs</code> — a JSON array of input ports. Omit for a single default input; use
+              <code>inputs=""</code> for a trigger with no input.
+            </li>
+            <li>
+              <code>outputs</code> — a JSON array of ports, each a string id or a <code>{"id","label"}</code> object
+              (e.g. <code>outputs='[{"id":"true","label":"TRUE"},{"id":"false","label":"FALSE"}]'</code>). Omit for a
+              single default output.
+            </li>
+          </ul>
+          <p>
+            Set an optional per-tab hint with the <code>triggers-hint</code> / <code>actions-hint</code> /
+            <code>rules-hint</code> attributes on the builder. (A node’s inspector <code>renderConfig</code> can’t be
+            expressed in markup — supply it via <code>registerNodeTypes()</code> for the same <code>type</code> id if
+            you need a custom config panel.)
+          </p>
+          <pre><code class="language-html" id="code-block-653">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-flow-builder</span> <span class="token attr-name">triggers-hint</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Choose a trigger and drag it to the canvas.<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-flow-step</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>webhook<span class="token punctuation">"</span></span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>trigger<span class="token punctuation">"</span></span> <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Events<span class="token punctuation">"</span></span>
+                        <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>webhook@lu<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>rgb(236,68,91)<span class="token punctuation">"</span></span> <span class="token attr-name">inputs</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span>
+                        <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>User hits webhook XYZ<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Cancellation Requested<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-flow-step</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-flow-step</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>split<span class="token punctuation">"</span></span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>rule<span class="token punctuation">"</span></span> <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Logic<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>split@lu<span class="token punctuation">"</span></span>
+                        <span class="token attr-name">outputs</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>[{"id":"true","label":"TRUE"},{"id":"false","label":"FALSE"}]<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>Conditional Split<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-flow-step</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-flow-builder</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-653"></zn-copy-button></pre>
+          <h3 id="registering-custom-node-types" class="anchor-heading">
+            Registering custom node types<a
+              href="#registering-custom-node-types"
+              aria-label='Direct link to "Registering custom node types"'
+            ></a>
+          </h3>
+          <p>
+            Node types are the modular extension point. Instead of (or alongside) slotted steps, register an array of
+            <code>FlowNodeType</code> objects with <code>registerNodeTypes()</code> (or set the
+            <code>.nodeTypes</code> property) — the two sources merge into the same panel. Each type’s
+            <code>group</code>/<code>category</code> place it in the tabs; its icon, color, input/output ports, and
+            optional <code>renderConfig</code> define the node’s behavior and inspector.
+          </p>
+          <pre><code class="language-js" id="code-block-654"><span class="token keyword">import</span> <span class="token punctuation">{</span>html<span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'lit'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> builder <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'zn-flow-builder'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+builder<span class="token punctuation">.</span><span class="token function">registerNodeTypes</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+  <span class="token punctuation">{</span>
+    <span class="token literal-property property">type</span><span class="token operator">:</span>        <span class="token string">'send-email'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">label</span><span class="token operator">:</span>       <span class="token string">'Send Email'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">group</span><span class="token operator">:</span>       <span class="token string">'action'</span><span class="token punctuation">,</span>          <span class="token comment">// 'trigger' | 'action' | 'rule' — which steps-panel tab</span>
+    <span class="token literal-property property">category</span><span class="token operator">:</span>    <span class="token string">'Email'</span><span class="token punctuation">,</span>        <span class="token comment">// collapsible group within the tab</span>
+    <span class="token literal-property property">icon</span><span class="token operator">:</span>        <span class="token string">'mail@lu'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">color</span><span class="token operator">:</span>       <span class="token string">'rgb(43, 192, 145)'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">defaultData</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">subject</span><span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token comment">// Inspector UI for a selected node of this type:</span>
+    <span class="token function-variable function">renderConfig</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">node<span class="token punctuation">,</span> update</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+      &lt;zn-input
+        label="Subject"
+        .value=</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>node<span class="token punctuation">.</span>data<span class="token punctuation">.</span>subject <span class="token operator">??</span> <span class="token string">''</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">
+        @zn-input=</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token parameter">e</span> <span class="token operator">=&gt;</span> <span class="token function">update</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">subject</span><span class="token operator">:</span> e<span class="token punctuation">.</span>target<span class="token punctuation">.</span>value<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&gt;&lt;/zn-input&gt;
+    </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    <span class="token literal-property property">type</span><span class="token operator">:</span>  <span class="token string">'ab-split'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">label</span><span class="token operator">:</span> <span class="token string">'A/B Split'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">group</span><span class="token operator">:</span> <span class="token string">'rule'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">icon</span><span class="token operator">:</span>  <span class="token string">'split@lu'</span><span class="token punctuation">,</span>
+    <span class="token comment">// Multiple outputs become labelled connection points (TRUE / FALSE here):</span>
+    <span class="token literal-property property">outputs</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'true'</span><span class="token punctuation">,</span> <span class="token literal-property property">label</span><span class="token operator">:</span> <span class="token string">'TRUE'</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'false'</span><span class="token punctuation">,</span> <span class="token literal-property property">label</span><span class="token operator">:</span> <span class="token string">'FALSE'</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code><zn-copy-button class="copy-code-button" from="code-block-654"></zn-copy-button></pre>
+          <p>
+            A node type with <code>inputs: []</code> is a starting point (a trigger) with no incoming port. A type with
+            multiple <code>outputs</code> renders one labeled port per output, so a branch can fan out to different
+            steps.
+          </p>
+          <h4 id="user-configurable-outputs" class="anchor-heading">
+            User-configurable outputs<a
+              href="#user-configurable-outputs"
+              aria-label='Direct link to "User-configurable outputs"'
+            ></a>
+          </h4>
+          <p>
+            A type’s <code>outputs</code> are the default. For steps whose branches are defined by the user (e.g. a
+            conditional split), set <strong><code>node.outputs</code></strong> on the instance from
+            <code>renderConfig</code> — the canvas renders those ports, and the builder prunes any connection whose
+            branch is removed. <code>node.inputs</code> works the same way. Set the new ports then call
+            <code>update({})</code> to commit:
+          </p>
+          <pre><code class="language-js" id="code-block-655"><span class="token function-variable function">renderConfig</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">node<span class="token punctuation">,</span> update</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> branches <span class="token operator">=</span> node<span class="token punctuation">.</span>outputs <span class="token operator">??</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'true'</span><span class="token punctuation">,</span> <span class="token literal-property property">label</span><span class="token operator">:</span> <span class="token string">'TRUE'</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'false'</span><span class="token punctuation">,</span> <span class="token literal-property property">label</span><span class="token operator">:</span> <span class="token string">'FALSE'</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> <span class="token function-variable function">addBranch</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    node<span class="token punctuation">.</span>outputs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token operator">...</span>branches<span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> crypto<span class="token punctuation">.</span><span class="token function">randomUUID</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token literal-property property">label</span><span class="token operator">:</span> <span class="token string">'New branch'</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token function">update</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// commit — re-renders the outputs, prunes dropped branches' connections</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token comment">// …render an editor for `branches` that calls addBranch / removes / renames…</span>
+<span class="token punctuation">}</span>
+</code><zn-copy-button class="copy-code-button" from="code-block-655"></zn-copy-button></pre>
+          <h3 id="reacting-to-changes" class="anchor-heading">
+            Reacting to changes<a href="#reacting-to-changes" aria-label='Direct link to "Reacting to changes"'></a>
+          </h3>
+          <p>
+            The builder emits events as the flow is edited. Use <code>zn-flow-change</code> to persist, or read
+            <code>.value</code> (a JSON string of the full <code>FlowState</code>) at any time.
+          </p>
+          <pre><code class="language-js" id="code-block-656"><span class="token keyword">const</span> builder <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'zn-flow-builder'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+builder<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'zn-flow-change'</span><span class="token punctuation">,</span> <span class="token parameter">e</span> <span class="token operator">=&gt;</span>
+<span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'flow updated'</span><span class="token punctuation">,</span> e<span class="token punctuation">.</span>detail<span class="token punctuation">.</span>state<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+builder<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'zn-flow-selection-change'</span><span class="token punctuation">,</span> <span class="token parameter">e</span> <span class="token operator">=&gt;</span>
+<span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'selected node'</span><span class="token punctuation">,</span> e<span class="token punctuation">.</span>detail<span class="token punctuation">.</span>nodeId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+builder<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'zn-flow-connect'</span><span class="token punctuation">,</span> <span class="token parameter">e</span> <span class="token operator">=&gt;</span>
+<span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'new connection'</span><span class="token punctuation">,</span> e<span class="token punctuation">.</span>detail<span class="token punctuation">.</span>connection<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Persist / restore:</span>
+localStorage<span class="token punctuation">.</span><span class="token function">setItem</span><span class="token punctuation">(</span><span class="token string">'flow'</span><span class="token punctuation">,</span> builder<span class="token punctuation">.</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+builder<span class="token punctuation">.</span>value <span class="token operator">=</span> localStorage<span class="token punctuation">.</span><span class="token function">getItem</span><span class="token punctuation">(</span><span class="token string">'flow'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code><zn-copy-button class="copy-code-button" from="code-block-656"></zn-copy-button></pre>
+
+          <h2 id="importing" class="anchor-heading">
+            Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
+          </h2>
+          <p>
+            If you’re using the autoloader or the traditional loader, you can ignore this section. Otherwise, feel free
+            to use any of the following snippets to
+            <a href="/getting-started/installation#cherry-picking">cherry pick</a> this component.
+          </p>
+
+          <zn-collapsible caption="Script">
+            <p>
+              To import this component from
+              <a
+                href="https://www.jsdelivr.com/package/npm/@kubex/zinc"
+                class="external-link"
+                rel="noopener noreferrer"
+                target="_blank"
+                >the CDN</a
+              >
+              using a script tag:
+            </p>
+            <pre><code class="language-html" id="code-block-657"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.24/dist/components/flow-builder/flow-builder.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-657"></zn-copy-button></pre>
+          </zn-collapsible>
+
+          <zn-collapsible caption="JavaScript">
+            <p>
+              To import this component from
+              <a
+                href="https://www.jsdelivr.com/package/npm/@kubex/zinc"
+                class="external-link"
+                rel="noopener noreferrer"
+                target="_blank"
+                >the CDN</a
+              >
+              using a JavaScript import:
+            </p>
+            <pre><code class="language-js" id="code-block-658"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.24/dist/components/flow-builder/flow-builder.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-658"></zn-copy-button></pre>
+          </zn-collapsible>
+
+          <zn-collapsible caption="Bundler">
+            <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
+            <pre><code class="language-js" id="code-block-659"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/flow-builder/flow-builder.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-659"></zn-copy-button></pre>
+          </zn-collapsible>
+
+          <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap">(default)</td>
+                  <td>
+                    <code>&lt;zn-flow-step&gt;</code> type declarations; never displayed, each <code>group</code>/<code
+                      >category</code
+                    >
+                    routes the step into the right tab and collapsible grouping of the rendered panel.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap">
+                    <code>header-left</code>
+                  </td>
+                  <td>Actions shown on the left of the header bar (e.g. Close / Undo All Changes).</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap">
+                    <code>header-right</code>
+                  </td>
+                  <td>Actions shown on the right of the header bar (e.g. Apply Changes).</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap">
+                    <code>sidebar</code>
+                  </td>
+                  <td>Extra right-panel content (status, version history), below the configuration errors.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/usage#slots">using slots</a>.</em>
+          </p>
+
+          <h2 id="properties" class="anchor-heading">
+            Properties<a href="#properties" aria-label='Direct link to "Properties"'></a>
+          </h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-reflects">Reflects</th>
+                  <th class="table-type">Type</th>
+                  <th class="table-default">Default</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <code class="nowrap">nodeTypes</code>
+                  </td>
+                  <td>Node types to make available, registered into the internal registry.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>FlowNodeType[]</code>
+                  </td>
+                  <td>
+                    <code>[]</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">errorNodes</code>
+                  </td>
+                  <td>Node ids flagged as having configuration errors (drives the red node styling).</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string[]</code>
+                  </td>
+                  <td>
+                    <code>[]</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">entrypointsHint</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> entrypoints-hint </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>Optional hint shown beneath each steps-panel tab.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">untangle</code>
+                  </td>
+                  <td>
+                    Auto-arrange the nodes into evenly spaced layers that follow the flow, animating them into place
+                    (wires and pills track them since everything is derived from the node coordinates). Undoable as a
+                    single step.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>updateComplete</code></td>
+                  <td>
+                    A read-only promise that resolves when the component has
+                    <a href="/getting-started/usage?#component-rendering-and-updating">finished updating</a>.
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em
+              >Learn more about
+              <a href="/getting-started/usage#attributes-and-properties">attributes and properties</a>.</em
+            >
+          </p>
+
+          <h2 id="events" class="anchor-heading">Events<a href="#events" aria-label='Direct link to "Events"'></a></h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name" data-flavor="html">Name</th>
+                  <th class="table-name" data-flavor="react">React Event</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-event-detail">Event Detail</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-flow-change</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>
+                    Emitted whenever the flow state changes. <code>event.detail.state</code> is the new FlowState.
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-flow-selection-change</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted when the selected node changes. <code>event.detail.nodeId</code>.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-flow-connect</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted when a connection is created. <code>event.detail.connection</code>.</td>
+                  <td>-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/usage#events">events</a>.</em>
+          </p>
+
+          <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap"><code>base</code></td>
+                  <td>The grid wrapper.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>header</code></td>
+                  <td>The full-width header action bar (only rendered when header slots are filled).</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>steps</code></td>
+                  <td>The left steps panel.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>inspector</code></td>
+                  <td>The right panel while a node or branch is selected.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/customizing/#css-parts">customizing CSS parts</a>.</em>
+          </p>
+
+          <h2 id="dependencies" class="anchor-heading">
+            Dependencies<a href="#dependencies" aria-label='Direct link to "Dependencies"'></a>
+          </h2>
+
+          <p>This component automatically imports the following dependencies.</p>
+
+          <ul>
+            <li><code>&lt;zn-dropdown&gt;</code></li>
+
+            <li><code>&lt;zn-example&gt;</code></li>
+
+            <li><code>&lt;zn-flow-canvas&gt;</code></li>
+
+            <li><code>&lt;zn-flow-node&gt;</code></li>
+
+            <li><code>&lt;zn-icon&gt;</code></li>
+
+            <li><code>&lt;zn-input&gt;</code></li>
+
+            <li><code>&lt;zn-navbar&gt;</code></li>
+
+            <li><code>&lt;zn-tabs&gt;</code></li>
+
+            <li><code>&lt;zn-tooltip&gt;</code></li>
+          </ul>
+        </div>
+      </article>
+    </main>
+  </body>
+</html>

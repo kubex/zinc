@@ -14,6 +14,17 @@
       ]
     },
     {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
+        }
+      ]
+    },
+    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -49,17 +60,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
-        }
-      ]
-    },
-    {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -1595,6 +1595,28 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/filter-wrapper"
+        }
+      ]
+    },
+    {
+      "name": "zn-flow-builder",
+      "description": "A drag-and-drop visual flow builder: steps panel, pan/zoom canvas, and a config inspector.\n---\n\n\n### **Events:**\n - **zn-flow-change** - Emitted whenever the flow state changes. `event.detail.state` is the new FlowState.\n- **zn-flow-selection-change** - Emitted when the selected node changes. `event.detail.nodeId`.\n- **zn-flow-connect** - Emitted when a connection is created. `event.detail.connection`.\n\n### **Slots:**\n - _default_ - `<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the step into the right tab and collapsible grouping of the rendered panel.\n- **header-left** - Actions shown on the left of the header bar (e.g. Close / Undo All Changes).\n- **header-right** - Actions shown on the right of the header bar (e.g. Apply Changes).\n- **sidebar** - Extra right-panel content (status, version history), below the configuration errors.\n\n### **CSS Parts:**\n - **base** - The grid wrapper.\n- **header** - The full-width header action bar (only rendered when header slots are filled).\n- **steps** - The left steps panel.\n- **inspector** - The right panel while a node or branch is selected.",
+      "attributes": [
+        { "name": "heading", "values": [] },
+        { "name": "subheading", "values": [] },
+        {
+          "name": "entrypoints-hint",
+          "description": "Optional hint shown beneath each steps-panel tab.",
+          "values": []
+        },
+        { "name": "triggers-hint", "values": [] },
+        { "name": "actions-hint", "values": [] },
+        { "name": "rules-hint", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/flow-builder"
         }
       ]
     },

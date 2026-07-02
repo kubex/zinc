@@ -49,6 +49,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -219,79 +292,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -13131,6 +13131,1090 @@
           "declaration": {
             "name": "ZnFilterWrapper",
             "module": "components/filter-wrapper/filter-wrapper.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/flow-builder/flow-builder.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnFlowBuilder",
+          "cssParts": [
+            {
+              "description": "The grid wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The full-width header action bar (only rendered when header slots are filled).",
+              "name": "header"
+            },
+            {
+              "description": "The left steps panel.",
+              "name": "steps"
+            },
+            {
+              "description": "The right panel while a node or branch is selected.",
+              "name": "inspector"
+            }
+          ],
+          "slots": [
+            {
+              "description": "`<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the step into the right tab and collapsible grouping of the rendered panel.",
+              "name": ""
+            },
+            {
+              "description": "Actions shown on the left of the header bar (e.g. Close / Undo All Changes).",
+              "name": "header-left"
+            },
+            {
+              "description": "Actions shown on the right of the header bar (e.g. Apply Changes).",
+              "name": "header-right"
+            },
+            {
+              "description": "Extra right-panel content (status, version history), below the configuration errors.",
+              "name": "sidebar"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-icon': ZnIcon, 'zn-input': ZnInput, 'zn-tabs': ZnTabs, 'zn-navbar': ZnNavbar, 'zn-flow-canvas': ZnFlowCanvas, 'zn-flow-step-group': ZnFlowStepGroup, }"
+            },
+            {
+              "kind": "field",
+              "name": "nodeTypes",
+              "type": {
+                "text": "FlowNodeType[]"
+              },
+              "default": "[]",
+              "description": "Node types to make available, registered into the internal registry."
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "heading",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "subheading",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "subheading",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "errorNodes",
+              "type": {
+                "text": "string[]"
+              },
+              "default": "[]",
+              "description": "Node ids flagged as having configuration errors (drives the red node styling)."
+            },
+            {
+              "kind": "field",
+              "name": "entrypointsHint",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Optional hint shown beneath each steps-panel tab.",
+              "attribute": "entrypoints-hint"
+            },
+            {
+              "kind": "field",
+              "name": "triggersHint",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "triggers-hint"
+            },
+            {
+              "kind": "field",
+              "name": "actionsHint",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "actions-hint"
+            },
+            {
+              "kind": "field",
+              "name": "rulesHint",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "rules-hint"
+            },
+            {
+              "kind": "field",
+              "name": "registry",
+              "privacy": "private",
+              "default": "new FlowRegistry()"
+            },
+            {
+              "kind": "field",
+              "name": "_state",
+              "type": {
+                "text": "FlowState"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_selectedNodeId",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_selectedBranch",
+              "type": {
+                "text": "{ nodeId: string; port: string } | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The output branch open in the branch editor, if any."
+            },
+            {
+              "kind": "field",
+              "name": "_search",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "_activeGroup",
+              "type": {
+                "text": "FlowGroup | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The steps-panel tab currently shown; the search only filters this tab."
+            },
+            {
+              "kind": "field",
+              "name": "_hasSlot",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'header-left', 'header-right')"
+            },
+            {
+              "kind": "field",
+              "name": "_movingNodeId",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The node being relocated via the MOVE menu action, if any."
+            },
+            {
+              "kind": "field",
+              "name": "_picker",
+              "type": {
+                "text": "{ x: number; y: number; target: PickerTarget } | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The \"+\" picker popover target (an open output, or a wire to insert into), if open."
+            },
+            {
+              "kind": "field",
+              "name": "_draggingType",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The node type currently being dragged from the steps panel, for the canvas drop preview."
+            },
+            {
+              "kind": "field",
+              "name": "_history",
+              "type": {
+                "text": "FlowState[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_redo",
+              "type": {
+                "text": "FlowState[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_seq",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_untangleRaf",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_untangleSettle",
+              "type": {
+                "text": "(() => void) | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "Applies the in-flight untangle's final positions; used when it's cut short."
+            },
+            {
+              "kind": "field",
+              "name": "_configRevision",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0",
+              "description": "Bumped whenever the state is replaced wholesale (undo / redo / setState) so the\nguarded renderConfig / renderBranchConfig bodies rebuild against the fresh node\nobjects. Value edits don't bump it — the consumer's config DOM stays in place,\nwhich is what lets its inputs commit live without losing focus."
+            },
+            {
+              "kind": "field",
+              "name": "_listeners",
+              "type": {
+                "text": "[string, EventListener][]"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_onKeyDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_parsePorts",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "FlowPort[] | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "attr",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_typeFromStep",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "FlowNodeType | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "Element"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_registerSlottedTypes",
+              "privacy": "private",
+              "description": "Register a FlowNodeType for every slotted <zn-flow-step>."
+            },
+            {
+              "kind": "method",
+              "name": "registerNodeType",
+              "return": {
+                "type": {
+                  "text": "this"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "FlowNodeType"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "registerNodeTypes",
+              "return": {
+                "type": {
+                  "text": "this"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "types",
+                  "type": {
+                    "text": "FlowNodeType[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getState",
+              "return": {
+                "type": {
+                  "text": "FlowState"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setState",
+              "parameters": [
+                {
+                  "name": "next",
+                  "type": {
+                    "text": "FlowState"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "undo"
+            },
+            {
+              "kind": "field",
+              "name": "redo"
+            },
+            {
+              "kind": "field",
+              "name": "untangle",
+              "description": "Auto-arrange the nodes into evenly spaced layers that follow the flow,\nanimating them into place (wires and pills track them since everything is\nderived from the node coordinates). Undoable as a single step."
+            },
+            {
+              "kind": "method",
+              "name": "_cancelUntangle",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_clone",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "FlowState"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "s",
+                  "type": {
+                    "text": "FlowState"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_pushHistory",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_commit",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_pruneConnections",
+              "privacy": "private",
+              "description": "Drop connections whose endpoints reference ports that no longer exist — e.g.\nafter a user removes a node's output (branch) via its config."
+            },
+            {
+              "kind": "method",
+              "name": "_syncSelection",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_branchSelection",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "{ node: FlowNodeInstance; port: FlowPort } | null"
+                }
+              },
+              "description": "The node + output port of the branch open in the editor, if both still exist."
+            },
+            {
+              "kind": "method",
+              "name": "_id",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "prefix",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_freePosition",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "{ x: number; y: number }"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "x",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "y",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "excludeId",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Snap to the grid and, if another node's footprint (card or branch pills)\noccupies the spot, walk outward in grid-step rings to the nearest free one."
+            },
+            {
+              "kind": "method",
+              "name": "_addNode",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "typeKey",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "x",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "y",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_deleteNode",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_duplicateNode",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_positionBelowOutput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "{ x: number; y: number }"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "source",
+                  "type": {
+                    "text": "FlowNodeInstance"
+                  }
+                },
+                {
+                  "name": "port",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Canvas position for a node newly placed off a source node's output."
+            },
+            {
+              "kind": "method",
+              "name": "_ensureOutput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "FlowNodeInstance"
+                  }
+                },
+                {
+                  "name": "port",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve an output port id on a node: the \"new branch\" sentinel materialises a\nfresh, labelled output port (per-instance), so it exists before connecting."
+            },
+            {
+              "kind": "method",
+              "name": "_ensureBranchLabel",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "FlowNodeInstance"
+                  }
+                },
+                {
+                  "name": "port",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Every connected output is a configurable branch — default its name so the\npill renders, however the connection was made (arrow, drop, or move)."
+            },
+            {
+              "kind": "method",
+              "name": "_addNodeAtOutput",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "sourceId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "port",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "typeKey",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Create a node and attach it to an open output slot of an existing node."
+            },
+            {
+              "kind": "method",
+              "name": "_linkNodeAtOutput",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "sourceId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "port",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "targetId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Wire an open output to an existing node — targets its first input. Fan-in\nand loops (a branch pointing back to an earlier step) are both allowed;\nonly wiring a node directly to itself is refused."
+            },
+            {
+              "kind": "method",
+              "name": "_insertNodeOnWire",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "connectionId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "typeKey",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Insert a new node in the middle of an existing connection (split the wire)."
+            },
+            {
+              "kind": "method",
+              "name": "_select",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_onBranchPick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onBranchDelete",
+              "privacy": "private",
+              "description": "Remove an output branch and its wire. Undoable."
+            },
+            {
+              "kind": "field",
+              "name": "_onSelect",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onNodeAction",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onInteractionStart",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onOutputAssign",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onLinkAssign",
+              "privacy": "private",
+              "description": "A stray branch was attached to an existing node (fan-in)."
+            },
+            {
+              "kind": "field",
+              "name": "_onWirePick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onWireAssign",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onOutputMoveTarget",
+              "privacy": "private",
+              "description": "Re-attach the node being moved to the chosen open output slot."
+            },
+            {
+              "kind": "field",
+              "name": "_onAddNote",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onNoteChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onNoteDelete",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_onDragStart",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "DragEvent"
+                  }
+                },
+                {
+                  "name": "typeKey",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_onDragEnd",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onStepDrag",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onCanvasDragOver",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onCanvasDrop",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_renderSteps",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_hintFor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "group",
+                  "type": {
+                    "text": "FlowGroup"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderStep",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "FlowNodeType"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderStepsContent",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_renderStepsPanel",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "group",
+                  "type": {
+                    "text": "FlowGroup"
+                  }
+                },
+                {
+                  "name": "panelId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "active",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderInspector",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "FlowNodeInstance"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_updateBranch",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "FlowNodeInstance"
+                  }
+                },
+                {
+                  "name": "portId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "patch",
+                  "type": {
+                    "text": "Partial<FlowPort>"
+                  }
+                }
+              ],
+              "description": "Replace one of the node's output ports (per-instance override), keeping its id."
+            },
+            {
+              "kind": "method",
+              "name": "_renderBranchEditor",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "FlowNodeInstance"
+                  }
+                },
+                {
+                  "name": "port",
+                  "type": {
+                    "text": "FlowPort"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderRightPanel",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_renderHeader",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_renderSidebar",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_renderPicker",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_pickType",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "typeKey",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted whenever the flow state changes. `event.detail.state` is the new FlowState.",
+              "name": "zn-flow-change"
+            },
+            {
+              "description": "Emitted when the selected node changes. `event.detail.nodeId`.",
+              "name": "zn-flow-selection-change"
+            },
+            {
+              "description": "Emitted when a connection is created. `event.detail.connection`.",
+              "name": "zn-flow-connect"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "heading"
+            },
+            {
+              "name": "subheading",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "subheading"
+            },
+            {
+              "name": "entrypoints-hint",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Optional hint shown beneath each steps-panel tab.",
+              "fieldName": "entrypointsHint"
+            },
+            {
+              "name": "triggers-hint",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "triggersHint"
+            },
+            {
+              "name": "actions-hint",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "actionsHint"
+            },
+            {
+              "name": "rules-hint",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "rulesHint"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A drag-and-drop visual flow builder: steps panel, pan/zoom canvas, and a config inspector.",
+          "tagNameWithoutPrefix": "flow-builder",
+          "tagName": "zn-flow-builder",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A drag-and-drop visual flow builder: steps panel, pan/zoom canvas, and a config inspector.\n * @documentation https://zinc.style/components/flow-builder\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n * @dependency zn-input\n * @dependency zn-tabs\n * @dependency zn-navbar\n * @dependency zn-flow-canvas\n * @dependency zn-flow-node\n *\n * @event zn-flow-change - Emitted whenever the flow state changes. `event.detail.state` is the new FlowState.\n * @event zn-flow-selection-change - Emitted when the selected node changes. `event.detail.nodeId`.\n * @event zn-flow-connect - Emitted when a connection is created. `event.detail.connection`.\n *\n * @slot - `<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the\n *   step into the right tab and collapsible grouping of the rendered panel.\n * @slot header-left - Actions shown on the left of the header bar (e.g. Close / Undo All Changes).\n * @slot header-right - Actions shown on the right of the header bar (e.g. Apply Changes).\n * @slot sidebar - Extra right-panel content (status, version history), below the configuration errors.\n *\n * @csspart base - The grid wrapper.\n * @csspart header - The full-width header action bar (only rendered when header slots are filled).\n * @csspart steps - The left steps panel.\n * @csspart inspector - The right panel while a node or branch is selected.\n */",
+          "documentation": "https://zinc.style/components/flow-builder",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-icon",
+            "zn-input",
+            "zn-tabs",
+            "zn-navbar",
+            "zn-flow-canvas",
+            "zn-flow-node"
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "port"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnFlowBuilder",
+            "module": "components/flow-builder/flow-builder.js"
           }
         }
       ]
@@ -37187,7 +38271,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.23",
+    "version": "1.1.24",
     "author": "",
     "license": "MIT"
   }

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en" data-layout="full-page" data-zinc-version="1.1.24">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A full-page demo of zn-flow-builder driving a tiered troubleshooting Q&amp;A flow."
+    />
+    <title>Flow Builder — Troubleshoot Q&amp;A Demo</title>
+
+    <script type="module" src="/dist/zn.min.js"></script>
+    <link rel="stylesheet" href="/dist/zn.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700&amp;display=swap" />
+
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        font-family: var(--zn-font-sans, 'Inter', sans-serif);
+        background: rgb(var(--zn-body));
+        color: rgb(var(--zn-text));
+      }
+
+      /* The page content fills the viewport — no docs chrome, no code preview. */
+      .full-page {
+        height: 100vh;
+        width: 100vw;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="full-page">
+      <zn-flow-builder
+        id="ts-demo"
+        style="height: 100%"
+        heading="Total AV - Installation Troubleshooter"
+        subheading="Last updated 16th June 2026"
+        triggers-hint="Automations require a trigger to start. Choose a trigger below and drag it to the canvas to begin."
+        actions-hint="Actions run as the troubleshooter progresses. Drag one onto the canvas or a + slot."
+      >
+        <!-- Header actions slot left/right of the full-width action bar. -->
+        <zn-button slot="header-left" icon="x@lu" id="ts-close" panel-bg="">Close</zn-button>
+        <zn-button slot="header-left" icon="refresh-cw@lu" id="ts-reset" panel-bg="">Undo All Changes</zn-button>
+        <zn-button slot="header-right" icon="check@lu" color="primary" id="ts-apply">Apply Changes</zn-button>
+
+        <!-- Node types are declared as slotted steps; the builder routes each into a tab
+       by its `group` (empty groups get no tab), and groups it under its `category`. -->
+        <zn-flow-step
+          type="manual"
+          group="trigger"
+          category="Contacts"
+          icon="user-plus@lu"
+          color="rgb(236, 68, 91)"
+          inputs=""
+          >Contact added manually</zn-flow-step
+        >
+        <zn-flow-step
+          type="form-submit"
+          group="trigger"
+          category="Forms"
+          icon="clipboard-list@lu"
+          color="rgb(236, 68, 91)"
+          inputs=""
+          >Form submitted</zn-flow-step
+        >
+
+        <zn-flow-step type="send-email" group="action" category="Email" icon="mail@lu" color="rgb(43, 192, 145)"
+          >Send Email</zn-flow-step
+        >
+        <zn-flow-step type="notify" group="action" category="Support" icon="user@lu" color="rgb(43, 192, 145)"
+          >Notify User</zn-flow-step
+        >
+
+        <div slot="sidebar" class="ts-sidebar">
+          <label
+            >Status
+            <zn-select>
+              <zn-option>Active</zn-option>
+              <zn-option>Paused</zn-option>
+              <zn-option selected="">Draft</zn-option>
+            </zn-select>
+          </label>
+          <h4>Version History</h4>
+          <ul>
+            <li><strong>John Smith</strong><span>16th June 2026 · 14:03</span></li>
+            <li><strong>John Smith</strong><span>16th June 2026 · 14:03</span></li>
+            <li><strong>John Smith</strong><span>16th June 2026 · 14:03</span></li>
+            <li><strong>John Smith</strong><span>16th June 2026 · 14:03</span></li>
+            <li><strong>John Smith</strong><span>16th June 2026 · 14:03</span></li>
+          </ul>
+        </div>
+      </zn-flow-builder>
+
+      <style>
+        .ts-sidebar {
+          margin-top: 16px;
+          font-size: 0.8125rem;
+        }
+
+        .ts-sidebar label {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          font-weight: 600;
+        }
+
+        .ts-sidebar h4 {
+          margin: 16px 0 8px;
+        }
+
+        .ts-sidebar ul {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        }
+
+        .ts-sidebar li {
+          display: flex;
+          flex-direction: column;
+          padding: 8px 0;
+          border-top: 1px solid rgb(var(--zn-border-color));
+        }
+
+        .ts-sidebar li span {
+          color: rgb(var(--zn-color-muted-text));
+          font-size: 0.75rem;
+        }
+      </style>
+
+      <script type="module">
+        const QUESTION_COLOR = 'rgb(43, 192, 145)';
+        const ANSWER_COLOR = 'rgb(59, 130, 246)';
+
+        // Shared branch editor body: the conditions/filters required to take this path.
+        // The builder supplies the "Branch name" input; this adds the condition fields,
+        // persisted on the output port's `data`.
+        const renderBranchConfig = (node, port, update) => {
+          const wrap = document.createElement('div');
+          wrap.style.cssText = 'display:flex;flex-direction:column;gap:10px';
+
+          const filter = document.createElement('zn-input');
+          filter.setAttribute('label', 'Filter');
+          filter.setAttribute('placeholder', 'e.g. platform = macOS');
+          filter.value = port.data?.filter ?? '';
+          filter.addEventListener('change', () => update({ data: { ...port.data, filter: filter.value } }));
+
+          const condition = document.createElement('zn-input');
+          condition.setAttribute('label', 'Condition');
+          condition.setAttribute('placeholder', 'e.g. answer contains "reinstalled"');
+          condition.value = port.data?.condition ?? '';
+          condition.addEventListener('change', () => update({ data: { ...port.data, condition: condition.value } }));
+
+          wrap.append(filter, condition);
+          return wrap;
+        };
+
+        // Node config: label + body text, plus a branch manager — every question or
+        // answer can have as many outputs as it likes. Inputs commit on every keystroke
+        // so the canvas (node card, branch pills) updates live; the builder keeps this
+        // DOM in place across those re-renders, so read node.outputs at event time.
+        const live = (input, fn) => ['input', 'zn-input'].forEach(ev => input.addEventListener(ev, fn));
+
+        const renderConfig = bodyLabel => (node, update) => {
+          const wrap = document.createElement('div');
+          wrap.style.cssText = 'display:flex;flex-direction:column;gap:10px';
+
+          const label = document.createElement('zn-input');
+          label.setAttribute('label', 'Label');
+          label.value = node.label ?? '';
+          live(label, () => {
+            node.label = label.value;
+            update({});
+          });
+
+          const body = document.createElement('zn-input');
+          body.setAttribute('label', bodyLabel);
+          body.value = node.data.subtitle ?? '';
+          live(body, () => update({ subtitle: body.value }));
+
+          const heading = document.createElement('p');
+          heading.textContent = 'Branches';
+          heading.style.cssText = 'margin:4px 0 0;font-weight:600;font-size:0.8125rem';
+
+          wrap.append(label, body, heading);
+
+          const branches = node.outputs ?? [{ id: 'out' }];
+          const setBranches = next => {
+            node.outputs = next;
+            update({});
+          };
+          const currentBranches = () => node.outputs ?? branches;
+
+          branches.forEach((branch, i) => {
+            const row = document.createElement('div');
+            row.style.cssText = 'display:flex;gap:6px;align-items:center';
+
+            const input = document.createElement('zn-input');
+            input.setAttribute('size', 'small');
+            input.value = branch.label ?? branch.id;
+            input.style.flex = '1';
+            live(input, () =>
+              setBranches(currentBranches().map((b, j) => (j === i ? { ...b, label: input.value } : b)))
+            );
+
+            const remove = document.createElement('zn-button');
+            remove.setAttribute('icon', 'x@lu');
+            remove.setAttribute('icon-button', 'small');
+            remove.setAttribute('plain', '');
+            remove.addEventListener('click', () => setBranches(currentBranches().filter((_, j) => j !== i)));
+
+            row.append(input, remove);
+            wrap.appendChild(row);
+          });
+
+          const add = document.createElement('zn-button');
+          add.setAttribute('size', 'small');
+          add.setAttribute('icon', 'plus@lu');
+          add.textContent = 'Add branch';
+          add.addEventListener('click', () =>
+            setBranches([...currentBranches(), { id: 'branch-' + Date.now().toString(36), label: 'New branch' }])
+          );
+          wrap.appendChild(add);
+
+          return wrap;
+        };
+
+        const questionType = {
+          type: 'ts-question',
+          label: 'Question',
+          group: 'action',
+          category: 'Troubleshooter',
+          icon: 'message-circle-more@lu',
+          color: QUESTION_COLOR,
+          description: 'Ask the user a question',
+          renderConfig: renderConfig('Question'),
+          renderBranchConfig
+        };
+
+        const answerType = {
+          type: 'ts-answer',
+          label: 'Answer',
+          group: 'action',
+          category: 'Troubleshooter',
+          icon: 'message-circle-reply@lu',
+          color: ANSWER_COLOR,
+          description: 'A user answer to branch on',
+          renderConfig: renderConfig('Answer'),
+          renderBranchConfig
+        };
+
+        // The tiered Q&A flow from the design: one question fanning out to three
+        // answers, second-tier questions below, and a fan-in — Answer 2 and Answer 3
+        // both route to Tier 2 - Question 2.
+        const initial = {
+          nodes: [
+            // The root question is the flow's entrypoint: `inputs: []` removes its
+            // input ports so nothing can be wired into it.
+            {
+              id: 't1q1',
+              type: 'ts-question',
+              x: 620,
+              y: 40,
+              label: 'Tier 1 - Question 1',
+              inputs: [],
+              outputs: [
+                { id: 'a', label: 'Branch A' },
+                { id: 'b', label: 'Branch B' },
+                { id: 'c', label: 'Branch C' }
+              ],
+              data: { subtitle: 'How do you....' }
+            },
+            {
+              id: 't1a1',
+              type: 'ts-answer',
+              x: 220,
+              y: 340,
+              label: 'Tier 1 - Answer 1',
+              outputs: [{ id: 'out', label: 'Branch C' }],
+              data: { subtitle: 'I did XYZ...' }
+            },
+            {
+              id: 't1a2',
+              type: 'ts-answer',
+              x: 620,
+              y: 340,
+              label: 'Tier 1 - Answer 2',
+              outputs: [{ id: 'out', label: 'Branch D' }],
+              data: { subtitle: 'I did XYZ...' }
+            },
+            {
+              id: 't1a3',
+              type: 'ts-answer',
+              x: 1020,
+              y: 340,
+              label: 'Tier 1 - Answer 3',
+              outputs: [{ id: 'out', label: 'Branch E' }],
+              data: { subtitle: 'I did XYZ...' }
+            },
+            {
+              id: 't2q1',
+              type: 'ts-question',
+              x: 420,
+              y: 640,
+              label: 'Tier 2 - Question 1',
+              outputs: [{ id: 'out', label: 'Branch F' }],
+              data: { subtitle: 'How do you....' }
+            },
+            {
+              id: 't2q2',
+              type: 'ts-question',
+              x: 820,
+              y: 640,
+              label: 'Tier 2 - Question 2',
+              outputs: [{ id: 'out' }],
+              data: { subtitle: 'How do you....' }
+            },
+            {
+              id: 't2a2',
+              type: 'ts-answer',
+              x: 420,
+              y: 940,
+              label: 'Tier 2 - Answer 2',
+              outputs: [{ id: 'out' }],
+              data: { subtitle: 'I did XYZ...' }
+            }
+          ],
+          connections: [
+            { id: 'c1', source: { node: 't1q1', port: 'a' }, target: { node: 't1a1', port: 'in' } },
+            { id: 'c2', source: { node: 't1q1', port: 'b' }, target: { node: 't1a2', port: 'in' } },
+            { id: 'c3', source: { node: 't1q1', port: 'c' }, target: { node: 't1a3', port: 'in' } },
+            { id: 'c4', source: { node: 't1a1', port: 'out' }, target: { node: 't2q1', port: 'in' } },
+            { id: 'c5', source: { node: 't1a2', port: 'out' }, target: { node: 't2q2', port: 'in' } },
+            // Fan-in: Answer 3 routes to the same question as Answer 2.
+            { id: 'c6', source: { node: 't1a3', port: 'out' }, target: { node: 't2q2', port: 'in' } },
+            { id: 'c7', source: { node: 't2q1', port: 'out' }, target: { node: 't2a2', port: 'in' } }
+          ],
+          notes: []
+        };
+
+        customElements.whenDefined('zn-flow-builder').then(() => {
+          const el = document.getElementById('ts-demo');
+          el.registerNodeTypes([questionType, answerType]);
+          el.setState(initial);
+          el.errorNodes = ['t2q2']; // "Missing Answers" in the design
+
+          const pristine = el.value;
+          document.getElementById('ts-reset').addEventListener('click', () => (el.value = pristine));
+          document
+            .getElementById('ts-apply')
+            .addEventListener('click', () => console.log('Apply changes', el.getState()));
+          document.getElementById('ts-close').addEventListener('click', () => history.back());
+        });
+      </script>
+    </div>
+  </body>
+</html>

@@ -8430,6 +8430,831 @@ declare module "components/markdown-editor/index" {
         }
     }
 }
+declare module "components/flow-builder/flow.types" {
+    import type { TemplateResult } from 'lit';
+    /** Which steps-panel tab a node type appears under. */
+    export type FlowGroup = 'entrypoint' | 'trigger' | 'action' | 'rule';
+    /** A single connection point on a node (input or output). */
+    export interface FlowPort {
+        id: string;
+        /** Branch name shown on the wire pill (outputs). */
+        label?: string;
+        /** Branch configuration (filters / conditions for taking this path), edited via the branch editor. */
+        data?: Record<string, unknown>;
+    }
+    /**
+     * Describes a kind of node that can be placed on the canvas. Consumers register
+     * these with the builder to extend it — the steps panel and inspector are driven
+     * entirely by the registered types, so no library changes are needed to add a
+     * new custom component.
+     */
+    export interface FlowNodeType {
+        /** Unique key, persisted on every placed node. */
+        type: string;
+        label: string;
+        /** Steps-panel tab the type is listed under. */
+        group: FlowGroup;
+        /** Collapsible category within the tab (e.g. "Contacts"). */
+        category?: string;
+        /** zn-icon `src` (e.g. "mail" or "mail@lu"). */
+        icon?: string;
+        /** zn-icon `library`, when not encoded in `icon`. */
+        iconLibrary?: string;
+        /** Accent color for the icon tile / ports — any CSS color. */
+        color?: string;
+        description?: string;
+        /** Input ports. Defaults to a single unlabelled input. Pass `[]` for a trigger. */
+        inputs?: FlowPort[];
+        /** Output ports. Defaults to a single unlabelled output. e.g. TRUE/FALSE for a split. */
+        outputs?: FlowPort[];
+        /** Initial `data` for a freshly placed node. */
+        defaultData?: Record<string, unknown>;
+        /** Renders the inspector body for a selected node of this type. */
+        renderConfig?: (node: FlowNodeInstance, update: (data: Record<string, unknown>) => void) => TemplateResult;
+        /** Renders the branch editor body (filters / conditions) for one of this type's output branches. */
+        renderBranchConfig?: (node: FlowNodeInstance, port: FlowPort, update: (patch: Partial<FlowPort>) => void) => TemplateResult;
+    }
+    /** A node placed on the canvas. */
+    export interface FlowNodeInstance {
+        id: string;
+        type: string;
+        x: number;
+        y: number;
+        /** Overrides the type label when set. */
+        label?: string;
+        /** Per-instance input ports; overrides the type's when set (user-configurable). */
+        inputs?: FlowPort[];
+        /** Per-instance output ports; overrides the type's when set (user-configurable). */
+        outputs?: FlowPort[];
+        data: Record<string, unknown>;
+    }
+    export interface FlowEndpoint {
+        node: string;
+        port: string;
+    }
+    export interface FlowConnection {
+        id: string;
+        source: FlowEndpoint;
+        target: FlowEndpoint;
+    }
+    export interface FlowNote {
+        id: string;
+        x: number;
+        y: number;
+        text: string;
+        width?: number;
+        height?: number;
+    }
+    /** The complete serialisable state of a flow. */
+    export interface FlowState {
+        nodes: FlowNodeInstance[];
+        connections: FlowConnection[];
+        notes: FlowNote[];
+    }
+    export const DEFAULT_INPUT: FlowPort;
+    export const DEFAULT_OUTPUT: FlowPort;
+    /**
+     * Sentinel port id for the extra "+" a fully-connected node always offers.
+     * Using it (attaching a stray branch, dropping a step, or moving a node onto it)
+     * materialises a real output port on the node first.
+     */
+    export const NEW_OUTPUT_PORT = "__new__";
+    /** Drag-and-drop MIME used to carry a node type id from the steps panel to the canvas. */
+    export const FLOW_TYPE_MIME = "application/x-zn-flow-type";
+    /**
+     * A cached 1×1 transparent image. Pass it to `dataTransfer.setDragImage()` to
+     * suppress the browser's default drag image — the builder renders its own
+     * in-canvas drop preview instead.
+     */
+    export function emptyDragImage(): HTMLImageElement;
+    /**
+     * Fixed node geometry. Cards are a uniform size so the canvas can compute exact
+     * port coordinates from a node's position alone — no DOM measurement, which
+     * keeps connection rendering and hit-testing reliable under pan/zoom.
+     */
+    export const NODE_WIDTH = 240;
+    export const NODE_HEIGHT = 60;
+    /** Horizontal spacing between the branches of a multi-output node. */
+    export const BRANCH_SPREAD = 200;
+    export const BUS_OFFSET = 40;
+    export const PILL_DROP = 40;
+    export const PILL_HEIGHT = 40;
+    export const PILL_MAX_WIDTH = 240;
+    /** Extra pill height per wrapped line (matches the pill's CSS line-height). */
+    export const PILL_LINE_HEIGHT = 20;
+    /**
+     * Estimated pill box for a branch name: sizes to the text up to the max width,
+     * then hard-wraps — the height grows a grid unit per extra line. The pill DOM
+     * sizes itself from its content (fixed padding); this estimate drives the wire
+     * geometry and collision footprints, so it uses the same ~7.2px/char metric.
+     */
+    export function pillSize(label: string): {
+        w: number;
+        h: number;
+    };
+    /** The grid everything on the canvas snaps to (matches the dotted background). */
+    export const GRID_SIZE = 20;
+    export function snapToGrid(v: number): number;
+    interface Rect {
+        x: number;
+        y: number;
+        w: number;
+        h: number;
+        /** Clearance this rect claims around itself. */
+        m: number;
+    }
+    /** A function resolving a node type key to its registered type. */
+    export type FlowTypeOf = (type: string) => FlowNodeType | undefined;
+    /**
+     * Canvas x for each of a node's branch drops. A connected branch pulls straight
+     * above its child's input — a bend-free wire — when it's the only wire into that
+     * input, the child is within the branch's natural fan range, and the position
+     * keeps clear of sibling branches; otherwise it fans out source-side.
+     */
+    export function branchDropXs(node: FlowNodeInstance, typeOf: FlowTypeOf, nodes: FlowNodeInstance[], connections: FlowConnection[]): number[];
+    /**
+     * The rects a node occupies on the canvas: its card plus each branch-name pill,
+     * at the exact positions the canvas draws them.
+     */
+    export function nodeObstacles(node: FlowNodeInstance, typeOf: FlowTypeOf, nodes: FlowNodeInstance[], connections: FlowConnection[]): Rect[];
+    /** Whether two nodes' footprints (cards and branch pills) would overlap. */
+    export function nodesCollide(a: FlowNodeInstance, b: FlowNodeInstance, typeOf: FlowTypeOf, nodes: FlowNodeInstance[], connections: FlowConnection[]): boolean;
+    /** Whether a bare card placed at `pos` would hit any of `node`'s footprint. */
+    export function cardCollides(pos: {
+        x: number;
+        y: number;
+    }, node: FlowNodeInstance, typeOf: FlowTypeOf, nodes: FlowNodeInstance[], connections: FlowConnection[]): boolean;
+    export const NOTE_WIDTH = 200;
+    export const NOTE_HEIGHT = 120;
+    export const NOTE_MIN_WIDTH = 120;
+    export const NOTE_MIN_HEIGHT = 80;
+    /** Canvas-space coordinate of a port anchor on a node of the given size. */
+    export function portAnchor(node: Pick<FlowNodeInstance, 'x' | 'y'>, side: 'in' | 'out', index: number, count: number): {
+        x: number;
+        y: number;
+    };
+    export function emptyFlowState(): FlowState;
+    /** Resolve a type's inputs, falling back to a single default input. */
+    export function typeInputs(type: FlowNodeType | undefined): FlowPort[];
+    /** Resolve a type's outputs, falling back to a single default output. */
+    export function typeOutputs(type: FlowNodeType | undefined): FlowPort[];
+    /** A node's effective inputs — its per-instance override, else the type's. */
+    export function nodeInputs(node: FlowNodeInstance, type: FlowNodeType | undefined): FlowPort[];
+    /** A node's effective outputs — its per-instance override, else the type's. */
+    export function nodeOutputs(node: FlowNodeInstance, type: FlowNodeType | undefined): FlowPort[];
+    /** A node's first input id, or null when it accepts no inputs (an entrypoint). */
+    export function firstInputId(node: FlowNodeInstance, type: FlowNodeType | undefined): string | null;
+    /** The connection occupying a given output port, if any. */
+    export function connectionAt(state: FlowState, nodeId: string, port: string): FlowConnection | undefined;
+    /** Whether an output port has no downstream connection (shows a "+"). */
+    export function isOpenOutput(state: FlowState, nodeId: string, port: string): boolean;
+    /** All node ids reachable downstream from a node (excluding the node itself). */
+    export function descendantIds(state: FlowState, nodeId: string): Set<string>;
+    /**
+     * Whether connecting `sourceNode`'s output to `targetNode` would create a cycle —
+     * i.e. the target is the source itself or already downstream of it. The builder
+     * allows loops, but consumers can use this to validate flows that must stay acyclic.
+     */
+    export function wouldCreateCycle(state: FlowState, sourceNode: string, targetNode: string): boolean;
+    /**
+     * The connections that close loops: each cycle's back-edge in a DFS forest
+     * grown from the roots (every cycle contains exactly one such edge). Used to
+     * render loop wires distinctly and to keep the untangle layering acyclic.
+     */
+    export function loopConnections(nodes: FlowNodeInstance[], connections: FlowConnection[]): Set<FlowConnection>;
+}
+declare module "components/flow-builder/modules/flow-node/flow-node.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    import ZnDropdown from "components/dropdown/index";
+    import ZnIcon from "components/icon/index";
+    import ZnMenu from "components/menu/index";
+    import ZnMenuItem from "components/menu-item/index";
+    import { type FlowNodeInstance, type FlowNodeType } from "components/flow-builder/flow.types";
+    /**
+     * @summary A single node tile on the flow canvas, with input/output ports and a context menu.
+     * @documentation https://zinc.style/components/flow-node
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     * @dependency zn-button
+     * @dependency zn-dropdown
+     * @dependency zn-menu
+     * @dependency zn-menu-item
+     *
+     * @event flow-node-select - Emitted when the node body is clicked.
+     * @event flow-node-grab - Emitted on pointerdown of the node body to begin a move (handled by the canvas).
+     * @event flow-node-action - Emitted when a context-menu action (delete/duplicate/move) is chosen.
+     * @event flow-port-click - An output port was clicked; the canvas starts (or attaches) a branch.
+     *
+     * @csspart base - The node card wrapper.
+     */
+    export default class ZnFlowNode extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+            'zn-button': typeof ZnButton;
+            'zn-dropdown': typeof ZnDropdown;
+            'zn-menu': typeof ZnMenu;
+            'zn-menu-item': typeof ZnMenuItem;
+        };
+        node: FlowNodeInstance;
+        type: FlowNodeType;
+        selected: boolean;
+        error: boolean;
+        dragging: boolean;
+        /** A stray branch is snapped onto this node — highlight it as the drop target. */
+        linkTarget: boolean;
+        protected updated(changed: PropertyValues): void;
+        private get nodeTitle();
+        private get nodeSubtitle();
+        private _emit;
+        private _onBodyPointerDown;
+        private _action;
+        private _renderPorts;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/flow-builder/modules/flow-node/index" {
+    import ZnFlowNode from "components/flow-builder/modules/flow-node/flow-node.component";
+    export * from "components/flow-builder/modules/flow-node/flow-node.component";
+    export default ZnFlowNode;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-flow-node': ZnFlowNode;
+        }
+    }
+}
+declare module "components/flow-builder/flow-registry" {
+    import type { FlowGroup, FlowNodeType } from "components/flow-builder/flow.types";
+    /**
+     * Holds the set of {@link FlowNodeType}s available to a flow builder. This is
+     * the modular extension point: register custom node types here and the steps panel
+     * and inspector pick them up automatically.
+     */
+    export class FlowRegistry {
+        private types;
+        register(type: FlowNodeType): this;
+        registerAll(types: FlowNodeType[]): this;
+        get(type: string): FlowNodeType | undefined;
+        has(type: string): boolean;
+        all(): FlowNodeType[];
+        byGroup(group: FlowGroup): FlowNodeType[];
+        /** Map of category name -> types, preserving insertion order, for one group. */
+        categories(group: FlowGroup): Map<string, FlowNodeType[]>;
+        clear(): void;
+    }
+}
+declare module "components/flow-builder/modules/flow-canvas/flow-canvas.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    import ZnFlowNode from "components/flow-builder/modules/flow-node/index";
+    import ZnIcon from "components/icon/index";
+    import { type FlowConnection, type FlowNodeInstance, type FlowNote } from "components/flow-builder/flow.types";
+    import type { FlowRegistry } from "components/flow-builder/flow-registry";
+    /**
+     * @summary The pannable, zoomable surface that renders flow nodes and the connections between them.
+     * @documentation https://zinc.style/components/flow-canvas
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-button
+     * @dependency zn-icon
+     * @dependency zn-flow-node
+     *
+     * @event flow-interaction-start - A drag (node/note move or resize) has begun; the builder snapshots for undo.
+     * @event flow-change-commit - A drag or operation finished and the state should be persisted/emitted.
+     * @event flow-output-assign - A step was dropped on an open output's "+".
+     * @event flow-output-move-target - An open output's "+" was chosen as the destination while moving a node.
+     * @event flow-link-assign - A stray branch (started from an output's "+") was attached to an existing node.
+     * @event flow-wire-pick - An existing wire's "+" was clicked; the builder opens the step picker to insert.
+     * @event flow-wire-assign - A step was dropped on a wire's "+" to insert a step.
+     * @event flow-branch-pick - A branch pill was clicked; the builder opens the branch editor.
+     * @event flow-branch-delete - A branch pill's delete button was clicked; the builder removes the branch.
+     * @event flow-undo - The undo toolbar button was pressed.
+     * @event flow-redo - The redo toolbar button was pressed.
+     * @event flow-add-note - The add-note toolbar button was pressed.
+     * @event flow-untangle - The untangle toolbar button was pressed; the builder auto-arranges the nodes.
+     * @event flow-note-change - A note's text was edited.
+     * @event flow-note-delete - A note was removed.
+     *
+     * @csspart base - The canvas viewport.
+     * @csspart toolbar - The floating toolbar.
+     */
+    export default class ZnFlowCanvas extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-button': typeof ZnButton;
+            'zn-icon': typeof ZnIcon;
+            'zn-flow-node': typeof ZnFlowNode;
+        };
+        nodes: FlowNodeInstance[];
+        connections: FlowConnection[];
+        notes: FlowNote[];
+        registry: FlowRegistry;
+        selectedNodeId: string | null;
+        errorNodes: Set<string>;
+        /** When set, the canvas is in "move" mode: open "+" slots act as drop targets for this node. */
+        movingNodeId: string | null;
+        /** The node type being dragged from the steps panel, used to render the drop preview. */
+        dragType: string | null;
+        /** The branch being edited, as `nodeId:portId` — highlights its pill. */
+        selectedBranch: string | null;
+        private zoom;
+        private panX;
+        private panY;
+        private drag;
+        /** Canvas-space top-left where a step, if dropped now, would be placed. */
+        private _dropGhost;
+        /** The stray branch being drawn from an output port until it attaches or cancels. */
+        private _linking;
+        private _linkPos;
+        /** The valid node under the cursor while linking — the preview snaps to its input. */
+        private _linkTarget;
+        private _dragMoved;
+        /** Centre the flow when it first arrives; any earlier user interaction opts out. */
+        private _viewInitialised;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        /**
+         * Wheel navigation: scroll pans vertically, side-scroll (or Shift+scroll)
+         * pans horizontally, and Ctrl/Cmd+scroll — including trackpad pinch — zooms
+         * toward the cursor.
+         */
+        private _onWheel;
+        protected updated(changed: PropertyValues): void;
+        private _emit;
+        /** Convert a client (screen) coordinate to canvas space, accounting for pan/zoom. */
+        screenToCanvas(clientX: number, clientY: number): {
+            x: number;
+            y: number;
+        };
+        private _typeFor;
+        private _setupWindow;
+        private _teardownWindow;
+        private _onBackgroundPointerDown;
+        private _onNodeGrab;
+        /** While linking, a node click attaches the branch — swallow the selection. */
+        private _onNodeSelect;
+        /**
+         * A node's output stem port was clicked. If a branch is already in flight from
+         * another node, attach it here; otherwise start one — from the node's first
+         * open output if it has one, else as a brand-new branch (materialised by the
+         * builder on attach).
+         */
+        private _onPortClick;
+        private _startLink;
+        private _onLinkPointerMove;
+        private _onLinkKeyDown;
+        private _cancelLink;
+        private _onPointerMove;
+        private _onPointerUp;
+        private _beginMove;
+        /**
+         * A node's outputs all leave from a single bottom-centre stem and fan out along a
+         * shared horizontal bus — one branch per output. Each branch drops on the source's
+         * own side (so fan-in branches from different nodes never stack their pills), then
+         * routes to its connected child or ends in a "+" add-point (open).
+         */
+        private _outputLayout;
+        /** Canvas-space anchor of a node's input port for an incoming connection. */
+        private _inputAnchor;
+        /**
+         * Per-connection nudges for elbow horizontals. An elbow runs at the exact
+         * midpoint of its gap (equal drop and approach) unless wires to *different*
+         * targets would share the same line — those read as a merge, so each
+         * conflicting target gets its own grid-step offset. Wires fanning in to the
+         * same input keep sharing a line: their join is real.
+         */
+        private _elbowMidOffsets;
+        /** Whether an orthogonal segment passes through any node card (with margin). */
+        private _segmentBlocked;
+        private _routeClear;
+        /**
+         * Orthogonal waypoints from a branch exit to a child's input. The wire always
+         * enters the input from above (arrow pointing down), and never passes through
+         * a node card: each candidate route is checked against every card, scanning
+         * alternative lanes / side-steps / detours until one is clear.
+         */
+        private _routePoints;
+        private static _pathFrom;
+        /**
+         * Open output slots ("+" add-points) across all nodes — only rendered while
+         * they're meaningful targets (dragging a step in, or moving a node). Idle
+         * canvases show no stray stubs; branches start from the node's output port.
+         */
+        private _addPoints;
+        /** Midpoint "+" insert-points on each connected branch (hidden while moving). */
+        private _wirePoints;
+        /** Convert a canvas-space point to screen coordinates (for anchoring popovers). */
+        private _screenFromCanvas;
+        private _onAddClick;
+        private _onWireAddClick;
+        private _onViewportDragOver;
+        private _onViewportDragLeave;
+        private _clearDropGhost;
+        private _onAddPointDragOver;
+        private _onAddDrop;
+        private _onWireDrop;
+        private _zoomBy;
+        /** Canvas-space bounding box of the whole flow: nodes, branch drops, and notes. */
+        private _contentBounds;
+        /** Reset zoom and centre the flow in the viewport, zooming out to fit if needed. */
+        private _resetView;
+        private _viewportCursorClass;
+        private _renderConnections;
+        /**
+         * Output labels (branch names) render as a clickable pill on their branch;
+         * hovering slides out a delete button that removes the branch (and its wire).
+         * Keyed by node+port so deleting one never hands its DOM (with its hovered,
+         * visible delete button) to a different pill — which flickered on screen.
+         */
+        private _renderBranchPills;
+        private _renderAddPoints;
+        private _renderWireAddPoints;
+        private _renderDropGhost;
+        private _startNoteGrab;
+        private _startNoteResize;
+        private _renderNotes;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/flow-builder/modules/flow-canvas/index" {
+    import ZnFlowCanvas from "components/flow-builder/modules/flow-canvas/flow-canvas.component";
+    export * from "components/flow-builder/modules/flow-canvas/flow-canvas.component";
+    export default ZnFlowCanvas;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-flow-canvas': ZnFlowCanvas;
+        }
+    }
+}
+declare module "components/flow-builder/modules/flow-step-group/flow-step-group.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnCollapsible from "components/collapsible/index";
+    /**
+     * @summary A collapsible category of `<zn-flow-step>`s inside a `<zn-flow-steps>` (typically a `<zn-tabs>` panel).
+     *   Wraps `<zn-collapsible>` for the standard expand/collapse behaviour and spacing.
+     * @documentation https://zinc.style/components/flow-step-group
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-collapsible
+     *
+     * @slot - The group's `<zn-flow-step>`s.
+     */
+    export default class ZnFlowStepGroup extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-collapsible': typeof ZnCollapsible;
+        };
+        caption: string;
+        /** Start collapsed. Defaults to open. */
+        collapsed: boolean;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/flow-builder/modules/flow-step-group/index" {
+    import ZnFlowStepGroup from "components/flow-builder/modules/flow-step-group/flow-step-group.component";
+    export * from "components/flow-builder/modules/flow-step-group/flow-step-group.component";
+    export default ZnFlowStepGroup;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-flow-step-group': ZnFlowStepGroup;
+        }
+    }
+}
+declare module "components/flow-builder/flow-layout" {
+    import { type FlowNodeType, type FlowState } from "components/flow-builder/flow.types";
+    /** Horizontal gap between node origins within a layer. */
+    export const LAYOUT_H_GAP: number;
+    /** Vertical gap between layers — clears the bus, a branch pill, and the wire run-in. */
+    export const LAYOUT_V_GAP = 300;
+    /**
+     * "Untangle" auto-layout: assigns every node a position in a layered, top-down
+     * flow. Layers come from the longest path back to a root (the graph is a DAG —
+     * connects are cycle-guarded), ordering within a layer follows where each node's
+     * parents sit (barycenter, respecting the parents' output-port order), and the
+     * coordinate passes centre children under the branch anchors they hang from.
+     * Returns the new positions; the caller applies them.
+     */
+    export function untangledPositions(state: FlowState, typeOf: (type: string) => FlowNodeType | undefined): Map<string, {
+        x: number;
+        y: number;
+    }>;
+}
+declare module "components/flow-builder/flow-builder.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnFlowCanvas from "components/flow-builder/modules/flow-canvas/index";
+    import ZnFlowStepGroup from "components/flow-builder/modules/flow-step-group/index";
+    import ZnIcon from "components/icon/index";
+    import ZnInput from "components/input/index";
+    import ZnNavbar from "components/navbar/index";
+    import ZnTabs from "components/tabs/index";
+    import { type FlowNodeType, type FlowState } from "components/flow-builder/flow.types";
+    /**
+     * @summary A drag-and-drop visual flow builder: steps panel, pan/zoom canvas, and a config inspector.
+     * @documentation https://zinc.style/components/flow-builder
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     * @dependency zn-input
+     * @dependency zn-tabs
+     * @dependency zn-navbar
+     * @dependency zn-flow-canvas
+     * @dependency zn-flow-node
+     *
+     * @event zn-flow-change - Emitted whenever the flow state changes. `event.detail.state` is the new FlowState.
+     * @event zn-flow-selection-change - Emitted when the selected node changes. `event.detail.nodeId`.
+     * @event zn-flow-connect - Emitted when a connection is created. `event.detail.connection`.
+     *
+     * @slot - `<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the
+     *   step into the right tab and collapsible grouping of the rendered panel.
+     * @slot header-left - Actions shown on the left of the header bar (e.g. Close / Undo All Changes).
+     * @slot header-right - Actions shown on the right of the header bar (e.g. Apply Changes).
+     * @slot sidebar - Extra right-panel content (status, version history), below the configuration errors.
+     *
+     * @csspart base - The grid wrapper.
+     * @csspart header - The full-width header action bar (only rendered when header slots are filled).
+     * @csspart steps - The left steps panel.
+     * @csspart inspector - The right panel while a node or branch is selected.
+     */
+    export default class ZnFlowBuilder extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+            'zn-input': typeof ZnInput;
+            'zn-tabs': typeof ZnTabs;
+            'zn-navbar': typeof ZnNavbar;
+            'zn-flow-canvas': typeof ZnFlowCanvas;
+            'zn-flow-step-group': typeof ZnFlowStepGroup;
+        };
+        /** Node types to make available, registered into the internal registry. */
+        nodeTypes: FlowNodeType[];
+        heading: string;
+        subheading: string;
+        /** Node ids flagged as having configuration errors (drives the red node styling). */
+        errorNodes: string[];
+        /** Optional hint shown beneath each steps-panel tab. */
+        entrypointsHint: string;
+        triggersHint: string;
+        actionsHint: string;
+        rulesHint: string;
+        private registry;
+        private _state;
+        private _selectedNodeId;
+        /** The output branch open in the branch editor, if any. */
+        private _selectedBranch;
+        private _search;
+        /** The steps-panel tab currently shown; the search only filters this tab. */
+        private _activeGroup;
+        private readonly _hasSlot;
+        /** The node being relocated via the MOVE menu action, if any. */
+        private _movingNodeId;
+        /** The "+" picker popover target (an open output, or a wire to insert into), if open. */
+        private _picker;
+        /** The node type currently being dragged from the steps panel, for the canvas drop preview. */
+        private _draggingType;
+        private _history;
+        private _redo;
+        private _seq;
+        private _untangleRaf;
+        /** Applies the in-flight untangle's final positions; used when it's cut short. */
+        private _untangleSettle;
+        /**
+         * Bumped whenever the state is replaced wholesale (undo / redo / setState) so the
+         * guarded renderConfig / renderBranchConfig bodies rebuild against the fresh node
+         * objects. Value edits don't bump it — the consumer's config DOM stays in place,
+         * which is what lets its inputs commit live without losing focus.
+         */
+        private _configRevision;
+        private get _listeners();
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        private _onKeyDown;
+        protected willUpdate(changed: PropertyValues): void;
+        protected firstUpdated(changed: PropertyValues): void;
+        private static _parsePorts;
+        private _typeFromStep;
+        /** Register a FlowNodeType for every slotted <zn-flow-step>. */
+        private _registerSlottedTypes;
+        registerNodeType(type: FlowNodeType): this;
+        registerNodeTypes(types: FlowNodeType[]): this;
+        getState(): FlowState;
+        setState(next: FlowState): void;
+        get value(): string;
+        set value(json: string);
+        undo: () => void;
+        redo: () => void;
+        /**
+         * Auto-arrange the nodes into evenly spaced layers that follow the flow,
+         * animating them into place (wires and pills track them since everything is
+         * derived from the node coordinates). Undoable as a single step.
+         */
+        untangle: () => void;
+        private _cancelUntangle;
+        private _clone;
+        private _pushHistory;
+        private _commit;
+        /**
+         * Drop connections whose endpoints reference ports that no longer exist — e.g.
+         * after a user removes a node's output (branch) via its config.
+         */
+        private _pruneConnections;
+        private _syncSelection;
+        /** The node + output port of the branch open in the editor, if both still exist. */
+        private _branchSelection;
+        private _id;
+        /**
+         * Snap to the grid and, if another node's footprint (card or branch pills)
+         * occupies the spot, walk outward in grid-step rings to the nearest free one.
+         */
+        private _freePosition;
+        private _addNode;
+        private _deleteNode;
+        private _duplicateNode;
+        /** Canvas position for a node newly placed off a source node's output. */
+        private _positionBelowOutput;
+        /**
+         * Resolve an output port id on a node: the "new branch" sentinel materialises a
+         * fresh, labelled output port (per-instance), so it exists before connecting.
+         */
+        private _ensureOutput;
+        /**
+         * Every connected output is a configurable branch — default its name so the
+         * pill renders, however the connection was made (arrow, drop, or move).
+         */
+        private _ensureBranchLabel;
+        /** Create a node and attach it to an open output slot of an existing node. */
+        private _addNodeAtOutput;
+        /**
+         * Wire an open output to an existing node — targets its first input. Fan-in
+         * and loops (a branch pointing back to an earlier step) are both allowed;
+         * only wiring a node directly to itself is refused.
+         */
+        private _linkNodeAtOutput;
+        /** Insert a new node in the middle of an existing connection (split the wire). */
+        private _insertNodeOnWire;
+        private _select;
+        private _onBranchPick;
+        /** Remove an output branch and its wire. Undoable. */
+        private _onBranchDelete;
+        private _onSelect;
+        private _onNodeAction;
+        private _onInteractionStart;
+        private _onOutputAssign;
+        /** A stray branch was attached to an existing node (fan-in). */
+        private _onLinkAssign;
+        private _onWirePick;
+        private _onWireAssign;
+        /** Re-attach the node being moved to the chosen open output slot. */
+        private _onOutputMoveTarget;
+        private _onAddNote;
+        private _onNoteChange;
+        private _onNoteDelete;
+        private _onDragStart;
+        private _onDragEnd;
+        private _onStepDrag;
+        private _onCanvasDragOver;
+        private _onCanvasDrop;
+        private _renderSteps;
+        private _hintFor;
+        private _renderStep;
+        private _renderStepsContent;
+        private _renderStepsPanel;
+        private _renderInspector;
+        /** Replace one of the node's output ports (per-instance override), keeping its id. */
+        private _updateBranch;
+        private _renderBranchEditor;
+        private _renderRightPanel;
+        private _renderHeader;
+        private _renderSidebar;
+        private _renderPicker;
+        private _pickType;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/flow-builder/index" {
+    import ZnFlowBuilder from "components/flow-builder/flow-builder.component";
+    export * from "components/flow-builder/flow-builder.component";
+    export * from "components/flow-builder/flow.types";
+    export * from "components/flow-builder/flow-registry";
+    export default ZnFlowBuilder;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-flow-builder': ZnFlowBuilder;
+        }
+    }
+}
+declare module "components/flow-builder/modules/flow-steps/flow-steps.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnInput from "components/input/index";
+    /**
+     * @summary A search + scroll wrapper for building a standalone steps panel. Place a standard
+     *   `<zn-tabs>` (with a `<zn-navbar slot="top">` and panels of `<zn-flow-step-group>` /
+     *   `<zn-flow-step>`) inside it; the search box filters the slotted items.
+     * @documentation https://zinc.style/components/flow-steps
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-input
+     *
+     * @slot - The steps panel content, typically a `<zn-tabs>`.
+     *
+     * @csspart search - The search input.
+     */
+    export default class ZnFlowSteps extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-input': typeof ZnInput;
+        };
+        searchable: boolean;
+        searchPlaceholder: string;
+        private _search;
+        /** Re-applies the filter when zn-tabs moves `selected` to another panel. */
+        private _tabObserver;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        protected updated(changed: PropertyValues): void;
+        /** True when the element isn't tabbed, or sits in the active (selected) tab panel. */
+        private _inActiveTab;
+        /** Filter the slotted items (and hide emptied groups) by the search term — active tab only. */
+        private _applyFilter;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/flow-builder/modules/flow-steps/index" {
+    import ZnFlowSteps from "components/flow-builder/modules/flow-steps/flow-steps.component";
+    export * from "components/flow-builder/modules/flow-steps/flow-steps.component";
+    export default ZnFlowSteps;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-flow-steps': ZnFlowSteps;
+        }
+    }
+}
+declare module "components/flow-builder/modules/flow-step/flow-step.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    /**
+     * @summary A draggable step in the `<zn-flow-steps>`, representing a registered node type. Drag
+     *   it onto the canvas (or a "+" slot) of a `<zn-flow-builder>` to add that step.
+     * @documentation https://zinc.style/components/flow-step
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     *
+     * @event flow-step-drag - Emitted on dragstart with `detail.type`, so the builder can preview the drop.
+     * @event flow-step-drag-end - Emitted on dragend.
+     *
+     * @slot - The step's label.
+     *
+     * @csspart base - The row.
+     */
+    export default class ZnFlowStep extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+        };
+        /** The node type id this item creates when dropped. */
+        type: string;
+        /** Display label; falls back to the slotted text. Also used as the node's label. */
+        label: string;
+        icon: string;
+        iconLibrary: string;
+        color: string;
+        description: string;
+        /** JSON array of input ports — `""` for a trigger (no input), omit for a single default input. */
+        inputs: string;
+        /** JSON array of outputs (`"a"` or `{"id","label"}`), e.g. `'[{"id":"true","label":"TRUE"}]'`. Omit for one default output. */
+        outputs: string;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        protected updated(changed: PropertyValues): void;
+        private _onDragStart;
+        private _onDragEnd;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/flow-builder/modules/flow-step/index" {
+    import ZnFlowStep from "components/flow-builder/modules/flow-step/flow-step.component";
+    export * from "components/flow-builder/modules/flow-step/flow-step.component";
+    export default ZnFlowStep;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-flow-step': ZnFlowStep;
+        }
+    }
+}
 declare module "utilities/form" {
     export { clearFormStoreValues } from "internal/form";
 }
@@ -8543,6 +9368,38 @@ declare module "events/zn-reject" {
         }
     }
 }
+declare module "events/zn-flow-change" {
+    import type { FlowState } from "components/flow-builder/flow.types";
+    export type ZnFlowChangeEvent = CustomEvent<{
+        state: FlowState;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-flow-change': ZnFlowChangeEvent;
+        }
+    }
+}
+declare module "events/zn-flow-selection-change" {
+    export type ZnFlowSelectionChangeEvent = CustomEvent<{
+        nodeId: string | null;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-flow-selection-change': ZnFlowSelectionChangeEvent;
+        }
+    }
+}
+declare module "events/zn-flow-connect" {
+    import type { FlowConnection } from "components/flow-builder/flow.types";
+    export type ZnFlowConnectEvent = CustomEvent<{
+        connection: FlowConnection;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-flow-connect': ZnFlowConnectEvent;
+        }
+    }
+}
 declare module "events/events" {
     export type { ZnAfterHideEvent } from "events/zn-after-hide";
     export type { ZnAfterShowEvent } from "events/zn-after-show";
@@ -8558,6 +9415,9 @@ declare module "events/events" {
     export type { ZnReorderEvent } from "events/zn-reorder";
     export type { ZnAcceptEvent } from "events/zn-accept";
     export type { ZnRejectEvent } from "events/zn-reject";
+    export type { ZnFlowChangeEvent } from "events/zn-flow-change";
+    export type { ZnFlowSelectionChangeEvent } from "events/zn-flow-selection-change";
+    export type { ZnFlowConnectEvent } from "events/zn-flow-connect";
 }
 declare module "zinc" {
     export { default as Button } from "components/button/index";
@@ -8661,6 +9521,10 @@ declare module "zinc" {
     export { default as OptGroup } from "components/opt-group/index";
     export { default as PriorityList } from "components/priority-list/index";
     export { default as MarkdownEditor } from "components/markdown-editor/index";
+    export { default as FlowBuilder } from "components/flow-builder/index";
+    export { default as FlowSteps } from "components/flow-builder/modules/flow-steps/index";
+    export { default as FlowStepGroup } from "components/flow-builder/modules/flow-step-group/index";
+    export { default as FlowStep } from "components/flow-builder/modules/flow-step/index";
     export { default as ZincElement } from "internal/zinc-element";
     export * from "utilities/on";
     export * from "utilities/query";

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" data-layout="full-page" data-zinc-version="1.1.24">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A full-page, chrome-free demo of the zn-flow-builder component." />
+    <title>Flow Builder — Full Page Demo</title>
+
+    <script type="module" src="/dist/zn.min.js"></script>
+    <link rel="stylesheet" href="/dist/zn.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700&amp;display=swap" />
+
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        font-family: var(--zn-font-sans, 'Inter', sans-serif);
+        background: rgb(var(--zn-body));
+        color: rgb(var(--zn-text));
+      }
+
+      /* The page content fills the viewport — no docs chrome, no code preview. */
+      .full-page {
+        height: 100vh;
+        width: 100vw;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="full-page">
+      <zn-flow-builder
+        id="flow-demo"
+        style="height: 100%"
+        heading="Retention – Annual Cancellation_v1"
+        subheading="Last updated 16th June 2026"
+        triggers-hint="Automations require a trigger to start. Choose a trigger below and drag it to the canvas to begin."
+        actions-hint="Actions run as the automation progresses. Drag one onto the canvas or a + slot."
+        rules-hint="Rules branch the flow based on conditions you configure on each step."
+      >
+        <!-- Node types are declared as slotted steps; the builder routes each into a tab
+       by its `group` (empty groups get no tab), and groups it under its `category`. -->
+        <zn-flow-step
+          type="webhook"
+          group="trigger"
+          category="Events"
+          icon="webhook@lu"
+          color="rgb(236, 68, 91)"
+          inputs=""
+          description="User hits webhook XYZ"
+          >Cancellation Requested</zn-flow-step
+        >
+        <zn-flow-step
+          type="manual"
+          group="trigger"
+          category="Contacts"
+          icon="user-plus@lu"
+          color="rgb(236, 68, 91)"
+          inputs=""
+          >Contact added manually</zn-flow-step
+        >
+        <zn-flow-step
+          type="list-add"
+          group="trigger"
+          category="Contacts"
+          icon="list-plus@lu"
+          color="rgb(236, 68, 91)"
+          inputs=""
+          >Contact added to a list</zn-flow-step
+        >
+
+        <zn-flow-step type="email-parser" group="action" category="Email" icon="mail@lu" color="rgb(43, 192, 145)"
+          >IMAP Email Parser</zn-flow-step
+        >
+        <zn-flow-step type="send-reply" group="action" category="Email" icon="send@lu" color="rgb(43, 192, 145)"
+          >Send Reply</zn-flow-step
+        >
+        <zn-flow-step type="claude" group="action" category="AI" icon="bot@lu" color="rgb(43, 192, 145)"
+          >Claude</zn-flow-step
+        >
+        <zn-flow-step type="notify" group="action" category="Support" icon="user@lu" color="rgb(43, 192, 145)"
+          >Notify User</zn-flow-step
+        >
+
+        <zn-flow-step
+          type="split"
+          group="rule"
+          category="Logic"
+          icon="split@lu"
+          color="rgb(105, 54, 245)"
+          outputs='[{"id":"true","label":"TRUE"},{"id":"false","label":"FALSE"}]'
+          >Conditional Split</zn-flow-step
+        >
+
+        <div slot="sidebar" class="flow-sidebar-demo">
+          <label
+            >Status
+            <zn-select>
+              <zn-option selected="">Active</zn-option>
+              <zn-option>Paused</zn-option>
+              <zn-option>Draft</zn-option>
+            </zn-select>
+          </label>
+          <h4>Version History</h4>
+          <ul>
+            <li><strong>John Smith</strong><span>16th June 2026 · 14:03</span></li>
+            <li><strong>John Smith</strong><span>16th June 2026 · 11:20</span></li>
+            <li><strong>Jane Doe</strong><span>15th June 2026 · 09:48</span></li>
+          </ul>
+        </div>
+      </zn-flow-builder>
+
+      <style>
+        .flow-sidebar-demo {
+          margin-top: 16px;
+          font-size: 0.8125rem;
+        }
+
+        .flow-sidebar-demo label {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          font-weight: 600;
+        }
+
+        .flow-sidebar-demo select {
+          padding: 6px 8px;
+          border: 1px solid rgb(var(--zn-border-color));
+          border-radius: 6px;
+        }
+
+        .flow-sidebar-demo h4 {
+          margin: 16px 0 8px;
+        }
+
+        .flow-sidebar-demo ul {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        }
+
+        .flow-sidebar-demo li {
+          display: flex;
+          flex-direction: column;
+          padding: 8px 0;
+          border-top: 1px solid rgb(var(--zn-border-color));
+        }
+
+        .flow-sidebar-demo li span {
+          color: rgb(var(--zn-color-muted-text));
+          font-size: 0.75rem;
+        }
+      </style>
+
+      <script type="module">
+        const initial = {
+          nodes: [
+            { id: 'n1', type: 'webhook', x: 280, y: 60, data: { subtitle: 'User hits webhook XYZ' } },
+            { id: 'n2', type: 'split', x: 280, y: 210, data: { subtitle: 'ARR Threshold' } },
+            { id: 'n3', type: 'email-parser', x: 80, y: 470, data: { subtitle: 'Import Email Attachment' } },
+            { id: 'n4', type: 'notify', x: 80, y: 640, data: { subtitle: 'Notify Frank Furt' } },
+            { id: 'n5', type: 'claude', x: 480, y: 470, data: { subtitle: 'Generate Reply' } },
+            { id: 'n6', type: 'send-reply', x: 480, y: 640, data: { subtitle: 'Generate Reply' } }
+          ],
+          connections: [
+            { id: 'c1', source: { node: 'n1', port: 'out' }, target: { node: 'n2', port: 'in' } },
+            { id: 'c2', source: { node: 'n2', port: 'true' }, target: { node: 'n3', port: 'in' } },
+            { id: 'c3', source: { node: 'n2', port: 'false' }, target: { node: 'n5', port: 'in' } },
+            { id: 'c4', source: { node: 'n3', port: 'out' }, target: { node: 'n4', port: 'in' } },
+            { id: 'c5', source: { node: 'n5', port: 'out' }, target: { node: 'n6', port: 'in' } }
+          ],
+          notes: [{ id: 'note1', x: 760, y: 430, text: 'This is a sticky note.' }]
+        };
+
+        // The Conditional Split's outputs are user-configurable per node: its renderConfig
+        // edits node.outputs (add / rename / remove branches). The canvas re-renders the
+        // outputs and the builder prunes connections to any removed branch.
+        const splitType = {
+          type: 'split',
+          label: 'Conditional Split',
+          group: 'rule',
+          category: 'Logic',
+          icon: 'split@lu',
+          color: 'rgb(105, 54, 245)',
+          outputs: [
+            { id: 'true', label: 'TRUE' },
+            { id: 'false', label: 'FALSE' }
+          ],
+          renderConfig: (node, update) => {
+            const branches = node.outputs ?? [
+              { id: 'true', label: 'TRUE' },
+              { id: 'false', label: 'FALSE' }
+            ];
+            const setBranches = next => {
+              node.outputs = next;
+              update({});
+            };
+
+            const wrap = document.createElement('div');
+            wrap.style.cssText = 'display:flex;flex-direction:column;gap:8px';
+
+            const heading = document.createElement('p');
+            heading.textContent = 'Branches';
+            heading.style.cssText = 'margin:0;font-weight:600;font-size:0.8125rem';
+            wrap.appendChild(heading);
+
+            branches.forEach((branch, i) => {
+              const row = document.createElement('div');
+              row.style.cssText = 'display:flex;gap:6px;align-items:center';
+
+              const input = document.createElement('zn-input');
+              input.setAttribute('size', 'small');
+              input.value = branch.label ?? branch.id;
+              input.style.flex = '1';
+              input.addEventListener('change', () =>
+                setBranches(branches.map((b, j) => (j === i ? { ...b, label: input.value } : b)))
+              );
+
+              const remove = document.createElement('zn-button');
+              remove.setAttribute('icon', 'x@lu');
+              remove.setAttribute('icon-button', 'small');
+              remove.setAttribute('plain', '');
+              remove.addEventListener('click', () => setBranches(branches.filter((_, j) => j !== i)));
+
+              row.append(input, remove);
+              wrap.appendChild(row);
+            });
+
+            const add = document.createElement('zn-button');
+            add.setAttribute('size', 'small');
+            add.setAttribute('icon', 'plus@lu');
+            add.textContent = 'Add branch';
+            add.addEventListener('click', () =>
+              setBranches([...branches, { id: 'branch-' + (branches.length + 1), label: 'New branch' }])
+            );
+            wrap.appendChild(add);
+
+            return wrap;
+          }
+        };
+
+        customElements.whenDefined('zn-flow-builder').then(() => {
+          const el = document.getElementById('flow-demo');
+          el.registerNodeType(splitType);
+          el.setState(initial);
+          el.errorNodes = ['n3'];
+        });
+      </script>
+    </div>
+  </body>
+</html>

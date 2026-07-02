@@ -513,7 +513,8 @@ export default class ZnFlowCanvas extends ZincElement {
     child: FlowNodeInstance,
     targetPort: string,
     midOffset = 0,
-    sourceId?: string
+    sourceId?: string,
+    loop = false
   ) {
     const {x: tx, y: ty} = this._inputAnchor(child, targetPort);
     const ignore = new Set(sourceId ? [child.id, sourceId] : [child.id]);
@@ -551,12 +552,16 @@ export default class ZnFlowCanvas extends ZincElement {
 
       // No simple route is clear (e.g. a card sits right under the exit) —
       // side-step: drop to m1, jog sideways to sx, descend, and approach the
-      // input from above. Scan both the drop height and the jog distance.
-      const m2 = ty - WIRE_APPROACH;
-      for (let mStep = 0; mStep <= 12; mStep++) {
-        for (const mCand of mStep === 0 ? [base] : [base + mStep * GRID_SIZE, base - mStep * GRID_SIZE]) {
-          const m1 = clampY(mCand);
-          if (m1 !== mCand && mStep > 0) continue;
+      // input from above. The drop and the final approach share one run-in
+      // depth (equal lengths by construction); scan that depth and the jog.
+      const half = Math.floor(span / 2 / 10) * 10;
+      const baseDepth = Math.max(10, Math.round(span / 4 / 10) * 10);
+      for (let dStep = 0; dStep <= 12; dStep++) {
+        for (const depth of dStep === 0 ? [baseDepth] : [baseDepth + dStep * 10, baseDepth - dStep * 10]) {
+          if (depth < 10 || depth > half) continue;
+          const m1 = from.y + depth;
+          const m2 = ty - depth;
+          if (m2 < m1) continue;
           for (let sStep = 1; sStep <= 14; sStep++) {
             for (const dir of [1, -1]) {
               const sx = from.x + dir * sStep * GRID_SIZE;
@@ -576,13 +581,30 @@ export default class ZnFlowCanvas extends ZincElement {
       return fallback!;
     }
 
-    // Child is beside/above: stub down, clear the card on its nearer side, rise
-    // above the input, then approach it from the top — widening the detour until
-    // nothing is crossed.
+    // Child is beside/above: stub down, clear the card, rise above the input,
+    // then approach it from the top — widening the detour until nothing is
+    // crossed.
     const stubY = from.y + WIRE_STUB;
     const overY = ty - WIRE_APPROACH;
-    const rightSide = from.x >= child.x + NODE_WIDTH / 2;
-    const baseDetour = rightSide ? child.x + NODE_WIDTH + WIRE_DETOUR : child.x - WIRE_DETOUR;
+    let rightSide: boolean;
+    let baseDetour: number;
+    if (loop) {
+      // Loop-backs travel around the OUTSIDE of everything they span
+      // vertically, instead of squeezing through corridors inside the flow —
+      // on whichever side costs less horizontal travel.
+      const spanned = this.nodes.filter(
+        n => n.y + NODE_HEIGHT > overY - GRID_SIZE && n.y < stubY + GRID_SIZE
+      );
+      const rightEdge = Math.max(...spanned.map(n => n.x + NODE_WIDTH)) + WIRE_DETOUR;
+      const leftEdge = Math.min(...spanned.map(n => n.x)) - WIRE_DETOUR;
+      const costRight = Math.abs(rightEdge - from.x) + Math.abs(rightEdge - tx);
+      const costLeft = Math.abs(from.x - leftEdge) + Math.abs(tx - leftEdge);
+      rightSide = costRight <= costLeft;
+      baseDetour = rightSide ? rightEdge : leftEdge;
+    } else {
+      rightSide = from.x >= child.x + NODE_WIDTH / 2;
+      baseDetour = rightSide ? child.x + NODE_WIDTH + WIRE_DETOUR : child.x - WIRE_DETOUR;
+    }
     let fallback: { x: number; y: number }[] | null = null;
     for (let step = 0; step <= 20; step++) {
       const dx = baseDetour + (rightSide ? 1 : -1) * step * GRID_SIZE;
@@ -619,6 +641,7 @@ export default class ZnFlowCanvas extends ZincElement {
   private _wirePoints() {
     if (this.movingNodeId) return [];
     const midOffsets = this._elbowMidOffsets();
+    const loops = loopConnections(this.nodes, this.connections);
     const points: { connectionId: string; px: number; py: number }[] = [];
     for (const node of this.nodes) {
       const {branches} = this._outputLayout(node);
@@ -627,7 +650,8 @@ export default class ZnFlowCanvas extends ZincElement {
         // Sit the "+" on the route's longest segment so it stays on the wire
         // whatever shape the routing took.
         const offset = midOffsets.get(b.conn.id) ?? 0;
-        const pts = this._routePoints({x: b.x, y: b.exitY}, b.child, b.conn.target.port, offset, node.id);
+        const pts = this._routePoints(
+          {x: b.x, y: b.exitY}, b.child, b.conn.target.port, offset, node.id, loops.has(b.conn));
         let seg = 0;
         let best = -1;
         for (let i = 0; i < pts.length - 1; i++) {
@@ -816,8 +840,8 @@ export default class ZnFlowCanvas extends ZincElement {
         }
         if (b.conn && b.child) {
           const offset = midOffsets.get(b.conn.id) ?? 0;
-          const pts = this._routePoints({x: b.x, y: b.exitY}, b.child, b.conn.target.port, offset, node.id);
           const loop = loops.has(b.conn);
+          const pts = this._routePoints({x: b.x, y: b.exitY}, b.child, b.conn.target.port, offset, node.id, loop);
           paths.push(svg`<path
             class="wire ${loop ? 'wire--loop' : ''}"
             d="${ZnFlowCanvas._pathFrom(pts)}"

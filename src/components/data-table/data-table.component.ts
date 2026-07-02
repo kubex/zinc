@@ -722,14 +722,14 @@ export default class ZnDataTable extends ZincElement {
 
     return html`
       <div class="table__footer__pagination-buttons">
-        <zn-button color="white"
-                   @click="${this.page !== 1 ? this.goToFirstPage : undefined}"
+        <zn-button @click="${this.page !== 1 ? this.goToFirstPage : undefined}"
                    ?disabled="${this.page === 1}"
-                   icon="arrow_left@lu">First
+                   icon="arrow_left@lu"
+                   panel-bg>First
         </zn-button>
-        <zn-button color="white"
-                   @click="${this.page !== 1 ? this.goToPreviousPage : undefined}"
-                   ?disabled="${this.page === 1}">Back
+        <zn-button @click="${this.page !== 1 ? this.goToPreviousPage : undefined}"
+                   ?disabled="${this.page === 1}"
+                   panel-bg>Back
         </zn-button>
         ${this.getPageRange().map((p) => p === 'ellipsis'
           ? html`<span class="table__footer__pagination-ellipsis">…</span>`
@@ -739,15 +739,15 @@ export default class ZnDataTable extends ZincElement {
                        class="${p === this.page ? 'table__footer__pagination-page--active' : ''}">${p}
             </zn-button>`
         )}
-        <zn-button color="white"
-                   @click="${this.page !== this.totalPages ? this.goToNextPage : undefined}"
-                   ?disabled="${this.page === this.totalPages}">Next
+        <zn-button @click="${this.page !== this.totalPages ? this.goToNextPage : undefined}"
+                   ?disabled="${this.page === this.totalPages}"
+                   panel-bg>Next
         </zn-button>
-        <zn-button color="white"
-                   @click="${this.page !== this.totalPages ? this.goToLastPage : undefined}"
+        <zn-button @click="${this.page !== this.totalPages ? this.goToLastPage : undefined}"
                    ?disabled="${this.page === this.totalPages}"
                    icon="arrow_right@lu"
-                   icon-position="right">Last
+                   icon-position="right"
+                   panel-bg>Last
         </zn-button>
       </div>`;
   }

@@ -245,22 +245,6 @@
 }
 
 /**
- * White: white panel background with a neutral border, matching the
- * icon-button look but for normal (auto-width, text) buttons.
- *
- * Doubled-up selector so it out-cascades the standard/secondary combos.
- */
-.button.button--white {
-  background: rgb(var(--zn-panel));
-  border-color: var(--zn-button-border-color, rgb(var(--zn-border-color)));
-  color: rgb(var(--zn-text));
-
-  &:hover:not([disabled]), &:active:not([disabled]) {
-    background: rgba(var(--zn-color-tab), 0.5);
-  }
-}
-
-/**
  * Icon buttons
  *
  * Standard:  40x36, white background, 1px border, 6px radius
@@ -489,4 +473,10 @@
 
 .button--panel-bg {
   background: rgb(var(--zn-panel));
+  border-color: var(--zn-button-border-color, rgb(var(--zn-border-color)));
+  color: rgb(var(--zn-text));
+
+  &:hover:not([disabled]), &:active:not([disabled]) {
+    background: rgba(var(--zn-color-tab), 0.5);
+  }
 }

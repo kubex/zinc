@@ -4425,7 +4425,6 @@ declare module "components/icon-picker/icon-picker.component" {
         private handleFreeInput;
         private handleClear;
         private _handleTriggerClick;
-        private _handleTriggerKeyDown;
         render(): import("lit-html").TemplateResult<1>;
     }
 }

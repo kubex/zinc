@@ -3,6 +3,7 @@ import {guard} from 'lit/directives/guard.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {property, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
+import ZnFlowBranchConditions from './modules/flow-branch-conditions';
 import ZnFlowCanvas from './modules/flow-canvas';
 import ZnFlowStepGroup from './modules/flow-step-group';
 import ZnIcon from '../icon';
@@ -11,6 +12,8 @@ import ZnNavbar from '../navbar';
 import ZnTabs from '../tabs';
 
 import {
+  branchConditions,
+  branchDropXs,
   cardCollides,
   DEFAULT_OUTPUT,
   descendantIds,
@@ -18,7 +21,11 @@ import {
   emptyFlowState,
   firstInputId,
   FLOW_TYPE_MIME,
+  type FlowBranchConditions,
+  type FlowBranchFilter,
   type FlowConnection,
+  type FlowFilterField,
+  type FlowFilterOption,
   type FlowGroup,
   type FlowNodeInstance,
   type FlowNodeType,
@@ -31,7 +38,6 @@ import {
   NODE_WIDTH,
   nodeInputs,
   nodeOutputs,
-  portAnchor,
   snapToGrid,
   typeInputs,
   typeOutputs,
@@ -44,6 +50,21 @@ import styles from './flow-builder.scss';
 
 const HISTORY_LIMIT = 50;
 const TYPE_MIME = FLOW_TYPE_MIME;
+
+const AUTO_SAVE_DEFAULT_MINUTES = 5;
+const AUTO_SAVE_TTL_MS = 24 * 60 * 60 * 1000;
+
+/** Compact relative time for the auto-save status ("just now", "3m ago"). */
+function timeAgo(ms: number): string {
+  const s = Math.floor(ms / 1000);
+  if (s < 10) return 'just now';
+  if (s < 60) return `${s}s ago`;
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  return `${Math.floor(h / 24)}d ago`;
+}
 
 const TABS: { group: FlowGroup; label: string }[] = [
   {group: 'entrypoint', label: 'Entrypoint'},
@@ -64,6 +85,7 @@ interface PickerTarget { kind: 'wire'; connectionId: string }
  * @dependency zn-input
  * @dependency zn-tabs
  * @dependency zn-navbar
+ * @dependency zn-flow-branch-conditions
  * @dependency zn-flow-canvas
  * @dependency zn-flow-node
  *
@@ -72,7 +94,10 @@ interface PickerTarget { kind: 'wire'; connectionId: string }
  * @event zn-flow-connect - Emitted when a connection is created. `event.detail.connection`.
  *
  * @slot - `<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the
- *   step into the right tab and collapsible grouping of the rendered panel.
+ *   step into the right tab and collapsible grouping of the rendered panel. A step may nest
+ *   `<zn-flow-filter>` declarations (each holding `<zn-flow-filter-field>`s, whose operator /
+ *   option choices are nested `<zn-flow-operator>` / `<zn-flow-option>` elements) — or set a
+ *   `branch-filters` JSON attribute — to drive the built-in branch conditions editor.
  * @slot header-left - Actions shown on the left of the header bar (e.g. Close / Undo All Changes).
  * @slot header-right - Actions shown on the right of the header bar (e.g. Apply Changes).
  * @slot sidebar - Extra right-panel content (status, version history), below the configuration errors.
@@ -90,6 +115,7 @@ export default class ZnFlowBuilder extends ZincElement {
     'zn-input': ZnInput,
     'zn-tabs': ZnTabs,
     'zn-navbar': ZnNavbar,
+    'zn-flow-branch-conditions': ZnFlowBranchConditions,
     'zn-flow-canvas': ZnFlowCanvas,
     'zn-flow-step-group': ZnFlowStepGroup,
   };
@@ -102,6 +128,23 @@ export default class ZnFlowBuilder extends ZincElement {
 
   /** Node ids flagged as having configuration errors (drives the red node styling). */
   @property({attribute: false}) errorNodes: string[] = [];
+
+  /**
+   * Auto-save the flow to localStorage (1-day TTL). Omit to disable. A bare
+   * `auto-save` saves every 5 minutes; a numeric value sets the interval in
+   * minutes (`auto-save="5"`). Restore with `restoreAutoSave()`.
+   */
+  @property({
+    attribute: 'auto-save',
+    converter: {
+      fromAttribute: (value: string | null) => {
+        if (value === null) return null;
+        const minutes = parseFloat(value);
+        return Number.isFinite(minutes) && minutes > 0 ? minutes : AUTO_SAVE_DEFAULT_MINUTES;
+      },
+      toAttribute: (value: number | null) => (value === null ? null : String(value)),
+    },
+  }) autoSave: number | null = null;
 
   /** Optional hint shown beneath each steps-panel tab. */
   @property({attribute: 'entrypoints-hint'}) entrypointsHint = '';
@@ -120,6 +163,9 @@ export default class ZnFlowBuilder extends ZincElement {
   @state() private _activeGroup: FlowGroup | null = null;
 
   private readonly _hasSlot = new HasSlotController(this, 'header-left', 'header-right');
+  /** Side panels tucked away via their edge chevrons. */
+  @state() private _stepsCollapsed = false;
+  @state() private _sideCollapsed = false;
   /** The node being relocated via the MOVE menu action, if any. */
   @state() private _movingNodeId: string | null = null;
   /** The "+" picker popover target (an open output, or a wire to insert into), if open. */
@@ -175,7 +221,115 @@ export default class ZnFlowBuilder extends ZincElement {
     this._listeners.forEach(([name, fn]) => this.removeEventListener(name, fn));
     document.removeEventListener('keydown', this._onKeyDown);
     this._cancelUntangle();
+    this._stopAutoSave();
+    if (this._justSavedTimer !== null) {
+      clearTimeout(this._justSavedTimer);
+      this._justSavedTimer = null;
+    }
     super.disconnectedCallback();
+  }
+
+  // --- Auto-save --------------------------------------------------------------
+
+  private _autoSaveTimer: number | null = null;
+  private _statusTimer: number | null = null;
+  private _justSavedTimer: number | null = null;
+  /** Guards the restore prompt from re-triggering on restoreAutoSave's own setState. */
+  private _restoring = false;
+
+  /** Epoch of the newest auto-save (also picked up from storage on start). */
+  @state() private _lastSavedAt: number | null = null;
+  /** Briefly true right after a save — flashes "Auto-saved" in the status pill. */
+  @state() private _justSaved = false;
+  /** Re-render clock for the "last saved Xm ago" label. */
+  @state() private _statusNow = Date.now();
+  /** A fresh auto-save differing from the loaded flow — offer to restore it. */
+  @state() private _restorePrompt: { savedAt: number } | null = null;
+
+  /** localStorage key for this builder's auto-saves — its id, else its heading. */
+  private get _autoSaveKey(): string {
+    return `zn-flow-builder:${this.id || this.heading || 'flow'}`;
+  }
+
+  // The "Auto-saved" flash timeout is deliberately not cleared here — it always
+  // runs out 2.5s after the last save, even if the schedule changes meanwhile.
+  private _stopAutoSave() {
+    if (this._autoSaveTimer !== null) {
+      clearInterval(this._autoSaveTimer);
+      this._autoSaveTimer = null;
+    }
+    if (this._statusTimer !== null) {
+      clearInterval(this._statusTimer);
+      this._statusTimer = null;
+    }
+  }
+
+  private _restartAutoSave() {
+    this._stopAutoSave();
+    if (this.autoSave === null) return;
+    // Housekeeping: drop an expired auto-save, and carry its timestamp into the
+    // status pill when one survives — "last saved" outlives a reload.
+    const saved = this._readAutoSave();
+    if (saved) this._lastSavedAt = saved.savedAt;
+    this._autoSaveTimer = window.setInterval(this._autoSaveTick, this.autoSave * 60_000);
+    this._statusTimer = window.setInterval(() => (this._statusNow = Date.now()), 30_000);
+  }
+
+  /** An empty canvas is never saved — it would clobber a stored flow with nothing. */
+  private _autoSaveTick = () => {
+    const state = this.getState();
+    if (!state.nodes.length && !state.connections.length && !state.notes.length) return;
+    try {
+      localStorage.setItem(this._autoSaveKey, JSON.stringify({savedAt: Date.now(), state}));
+      this._lastSavedAt = Date.now();
+      this._justSaved = true;
+      if (this._justSavedTimer !== null) clearTimeout(this._justSavedTimer);
+      this._justSavedTimer = window.setTimeout(() => (this._justSaved = false), 2500);
+    } catch {
+      /* storage unavailable / full */
+    }
+  };
+
+  /** The stored auto-save, purging it when past its TTL (or unreadable). */
+  private _readAutoSave(): { savedAt: number; state: FlowState } | null {
+    try {
+      const raw = localStorage.getItem(this._autoSaveKey);
+      if (!raw) return null;
+      const saved = JSON.parse(raw) as { savedAt: number; state: FlowState };
+      if (!saved.state || Date.now() - saved.savedAt > AUTO_SAVE_TTL_MS) {
+        localStorage.removeItem(this._autoSaveKey);
+        return null;
+      }
+      return saved;
+    } catch {
+      return null;
+    }
+  }
+
+  /** Load the auto-saved flow, if one exists within the 1-day TTL. */
+  restoreAutoSave(): boolean {
+    const saved = this._readAutoSave();
+    if (!saved) return false;
+    this._restoring = true;
+    try {
+      this.setState(saved.state);
+    } finally {
+      this._restoring = false;
+    }
+    this._restorePrompt = null;
+    return true;
+  }
+
+  /**
+   * A flow was just loaded — when a fresh auto-save differs from it, ask the
+   * user whether to pick up their draft instead.
+   */
+  private _offerRestoreIfNewer() {
+    if (this.autoSave === null || this._restoring) return;
+    const saved = this._readAutoSave();
+    this._restorePrompt = saved && JSON.stringify(saved.state) !== JSON.stringify(this._state)
+      ? {savedAt: saved.savedAt}
+      : null;
   }
 
   private _onKeyDown = (e: KeyboardEvent) => {
@@ -189,6 +343,9 @@ export default class ZnFlowBuilder extends ZincElement {
   protected willUpdate(changed: PropertyValues) {
     if (changed.has('nodeTypes') && this.nodeTypes?.length) {
       this.registry.registerAll(this.nodeTypes);
+    }
+    if (changed.has('autoSave')) {
+      this._restartAutoSave();
     }
     super.willUpdate(changed);
   }
@@ -214,12 +371,116 @@ export default class ZnFlowBuilder extends ZincElement {
     }
   }
 
+  /** Parse an operator / option list: a JSON array (strings or `{value,label}`) or comma-separated values. */
+  private static _parseFilterOptions(attr: string | null): FlowFilterOption[] | undefined {
+    if (attr === null) return undefined;
+    const trimmed = attr.trim();
+    if (trimmed === '') return undefined;
+    if (trimmed.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(trimmed) as unknown;
+        if (!Array.isArray(parsed)) return undefined;
+        return parsed.map(o => (typeof o === 'string' ? {value: o} : (o as FlowFilterOption)));
+      } catch {
+        return undefined;
+      }
+    }
+    return trimmed.split(',').map(s => s.trim()).filter(Boolean).map(value => ({value}));
+  }
+
+  /**
+   * Option list declared as child elements — the tidy form. The element's text
+   * is the label; a `value` attribute overrides the stored value:
+   * `<zn-flow-operator value="gte">at least</zn-flow-operator>`.
+   */
+  private static _nestedFilterOptions(el: Element, tag: string): FlowFilterOption[] | undefined {
+    const els = Array.from(el.querySelectorAll(`:scope > ${tag}`));
+    if (!els.length) return undefined;
+    return els.map(o => {
+      const text = o.textContent?.trim() ?? '';
+      const value = o.getAttribute('value');
+      return value !== null && text ? {value, label: text} : {value: value ?? text};
+    });
+  }
+
+  private static _filterFieldFromEl(el: Element): FlowFilterField | null {
+    const id = el.getAttribute('id');
+    if (!id) return null;
+    const value = el.getAttribute('value');
+    const type = el.getAttribute('type') as FlowFilterField['type'] | null;
+    return {
+      id,
+      label: el.getAttribute('label') ?? undefined,
+      type: type ?? undefined,
+      operators: ZnFlowBuilder._nestedFilterOptions(el, 'zn-flow-operator')
+        ?? ZnFlowBuilder._parseFilterOptions(el.getAttribute('operators')),
+      options: ZnFlowBuilder._nestedFilterOptions(el, 'zn-flow-option')
+        ?? ZnFlowBuilder._parseFilterOptions(el.getAttribute('options')),
+      units: ZnFlowBuilder._nestedFilterOptions(el, 'zn-flow-unit')
+        ?? ZnFlowBuilder._parseFilterOptions(el.getAttribute('units')),
+      suffix: el.getAttribute('suffix') ?? undefined,
+      placeholder: el.getAttribute('placeholder') ?? undefined,
+      value: value === null ? undefined : type === 'number' ? Number(value) : value,
+    };
+  }
+
+  /**
+   * A step's branch filters: the `branch-filters` JSON attribute, or nested
+   * `<zn-flow-filter>` declarations each holding `<zn-flow-filter-field>`s.
+   */
+  private static _parseBranchFilters(el: Element): FlowBranchFilter[] | undefined {
+    // Option lists in the JSON may use the string shorthand — normalise to objects.
+    const norm = (opts?: (string | FlowFilterOption)[]) =>
+      opts?.map(o => (typeof o === 'string' ? {value: o} : o));
+    const attr = el.getAttribute('branch-filters');
+    if (attr) {
+      try {
+        const parsed = JSON.parse(attr) as unknown;
+        if (Array.isArray(parsed)) {
+          return (parsed as FlowBranchFilter[]).map(f => ({
+            ...f,
+            fields: (f.fields ?? []).map(field => ({
+              ...field,
+              ...(field.operators ? {operators: norm(field.operators)} : {}),
+              ...(field.options ? {options: norm(field.options)} : {}),
+              ...(field.units ? {units: norm(field.units)} : {}),
+            })),
+          }));
+        }
+      } catch {
+        /* fall through to nested declarations */
+      }
+    }
+    const filters = Array.from(el.querySelectorAll(':scope > zn-flow-filter'))
+      .map((f): FlowBranchFilter | null => {
+        const id = f.getAttribute('id') ?? f.getAttribute('label');
+        if (!id) return null;
+        return {
+          id,
+          label: f.getAttribute('label') ?? id,
+          description: f.getAttribute('description') ?? undefined,
+          fields: Array.from(f.querySelectorAll(':scope > zn-flow-filter-field'))
+            .map(field => ZnFlowBuilder._filterFieldFromEl(field))
+            .filter((field): field is FlowFilterField => !!field),
+        };
+      })
+      .filter((f): f is FlowBranchFilter => !!f);
+    return filters.length ? filters : undefined;
+  }
+
   private _typeFromStep(el: Element): FlowNodeType | null {
     const type = el.getAttribute('type');
     if (!type) return null;
+    // The label falls back to the step's own text only — not the text of
+    // nested <zn-flow-filter> declarations.
+    const ownText = Array.from(el.childNodes)
+      .filter(n => n.nodeType === Node.TEXT_NODE)
+      .map(n => n.textContent ?? '')
+      .join('')
+      .trim();
     return {
       type,
-      label: el.getAttribute('label') ?? el.textContent?.trim() ?? type,
+      label: el.getAttribute('label') ?? (ownText || type),
       group: (el.getAttribute('group') as FlowGroup) ?? 'action',
       category: el.getAttribute('category') ?? undefined,
       icon: el.getAttribute('icon') ?? undefined,
@@ -228,6 +489,7 @@ export default class ZnFlowBuilder extends ZincElement {
       description: el.getAttribute('description') ?? undefined,
       inputs: ZnFlowBuilder._parsePorts(el.getAttribute('inputs')),
       outputs: ZnFlowBuilder._parsePorts(el.getAttribute('outputs')),
+      branchFilters: ZnFlowBuilder._parseBranchFilters(el),
     };
   }
 
@@ -269,6 +531,7 @@ export default class ZnFlowBuilder extends ZincElement {
     this._redo = [];
     this._selectedNodeId = null;
     this._configRevision++;
+    this._offerRestoreIfNewer();
   }
 
   get value(): string {
@@ -286,6 +549,15 @@ export default class ZnFlowBuilder extends ZincElement {
     } catch {
       /* ignore malformed JSON */
     }
+  }
+
+  /**
+   * The full flow state — nodes with their positions, connections, branch
+   * data, and notes — ready for persisting. Lets `JSON.stringify(builder)`
+   * serialize the flow directly, e.g. as a POST body.
+   */
+  toJSON(): FlowState {
+    return this.getState();
   }
 
   undo = () => {
@@ -396,6 +668,8 @@ export default class ZnFlowBuilder extends ZincElement {
       connections: [...this._state.connections],
       notes: [...this._state.notes],
     };
+    // Editing is choosing the loaded flow — stop offering the auto-saved draft.
+    this._restorePrompt = null;
     this.emit('zn-flow-change', {detail: {state: this.getState()}});
   };
 
@@ -513,11 +787,11 @@ export default class ZnFlowBuilder extends ZincElement {
   private _positionBelowOutput(source: FlowNodeInstance, port: string): { x: number; y: number } {
     const outputs = nodeOutputs(source, this.registry.get(source.type));
     const idx = Math.max(outputs.findIndex(o => o.id === port), 0);
-    const anchor = portAnchor(source, 'out', idx, outputs.length);
-    // A full layer below the source (same rhythm as untangle) — clears the bus,
-    // the branch pill, and leaves wire room, so the child lands in a straight
+    // Centred under the branch drop (where the pill hangs), a full layer below
+    // the source (same rhythm as untangle) — the child lands in a straight
     // line under the branch instead of being shoved sideways by collision.
-    return {x: Math.round(anchor.x - NODE_WIDTH / 2), y: source.y + LAYOUT_V_GAP};
+    const x = branchDropXs(source, t => this.registry.get(t))[idx];
+    return {x: Math.round(x - NODE_WIDTH / 2), y: source.y + LAYOUT_V_GAP};
   }
 
   /**
@@ -659,6 +933,8 @@ export default class ZnFlowBuilder extends ZincElement {
 
   private _select(id: string | null) {
     this._selectedBranch = null;
+    // A selection needs the inspector — bring the panel back if it's tucked away.
+    if (id) this._sideCollapsed = false;
     if (this._selectedNodeId === id) return;
     this._selectedNodeId = id;
     this.emit('zn-flow-selection-change', {detail: {nodeId: id}});
@@ -666,6 +942,7 @@ export default class ZnFlowBuilder extends ZincElement {
 
   private _onBranchPick = (e: CustomEvent<{ nodeId: string; port: string }>) => {
     this._select(null);
+    this._sideCollapsed = false;
     this._selectedBranch = {nodeId: e.detail.nodeId, port: e.detail.port};
   };
 
@@ -931,8 +1208,9 @@ export default class ZnFlowBuilder extends ZincElement {
     };
     // The guard keeps the consumer's config DOM in place across value-only
     // re-renders (so live-typing inputs keep focus); it rebuilds when the node
-    // changes, the state is replaced, or a branch is added / removed.
-    const configKey = [node.id, this._configRevision, nodeOutputs(node, type).length];
+    // changes, the state is replaced, or a branch is added / removed /
+    // replaced (ids, not count — a swap like delete-last keeps the count).
+    const configKey = [node.id, this._configRevision, nodeOutputs(node, type).map(p => p.id).join('|')];
 
     return html`
       <aside part="inspector" class="inspector">
@@ -976,6 +1254,13 @@ export default class ZnFlowBuilder extends ZincElement {
     const type = this.registry.get(node.type);
     node.outputs = nodeOutputs(node, type).map(p => (p.id === portId ? {...p, ...patch, id: p.id} : p));
     this._commit();
+  }
+
+  /** Persist the built-in conditions editor's draft onto the branch and close it. Undoable. */
+  private _saveBranchConditions(node: FlowNodeInstance, port: FlowPort, conditions: FlowBranchConditions) {
+    this._pushHistory();
+    this._updateBranch(node, port.id, {data: {...port.data, conditions}});
+    this._selectedBranch = null;
   }
 
   // The branch editor: rename an output branch and configure its conditions.
@@ -1031,7 +1316,16 @@ export default class ZnFlowBuilder extends ZincElement {
           ></zn-input>
           ${renderBranchConfig
             ? guard(configKey, () => renderBranchConfig(node, port, update))
-            : html`<p class="inspector-hint">This step type has no branch conditions.</p>`}
+            : type?.branchFilters?.length
+              ? html`
+                <zn-flow-branch-conditions
+                  .filters="${type.branchFilters}"
+                  .value="${branchConditions(port)}"
+                  @flow-conditions-save="${(e: CustomEvent<{ conditions: FlowBranchConditions }>) =>
+                    this._saveBranchConditions(node, port, e.detail.conditions)}"
+                  @flow-conditions-cancel="${() => (this._selectedBranch = null)}"
+                ></zn-flow-branch-conditions>`
+              : html`<p class="inspector-hint">This step type has no branch conditions.</p>`}
         </div>
       </aside>
     `;
@@ -1092,6 +1386,34 @@ export default class ZnFlowBuilder extends ZincElement {
     `;
   }
 
+  // Bottom-left of the canvas: flashes as each auto-save lands, otherwise
+  // shows how long ago the last one happened.
+  private _renderAutoSaveStatus() {
+    if (this.autoSave === null || (!this._justSaved && this._lastSavedAt === null)) return '';
+    const label = this._justSaved
+      ? 'Auto-saved'
+      : `Last saved ${timeAgo(Math.max(0, this._statusNow - (this._lastSavedAt ?? 0)))}`;
+    return html`
+      <div class="save-status ${this._justSaved ? 'save-status--saved' : ''}">
+        <zn-icon src="${this._justSaved ? 'check@lu' : 'history@lu'}" size="14"></zn-icon>
+        <span>${label}</span>
+      </div>
+    `;
+  }
+
+  // Offered when a loaded flow differs from a fresh auto-saved draft.
+  private _renderRestorePrompt() {
+    if (!this._restorePrompt) return '';
+    return html`
+      <div class="restore-banner">
+        <zn-icon src="history@lu" size="16"></zn-icon>
+        <span>An auto-saved draft from ${timeAgo(Date.now() - this._restorePrompt.savedAt)} differs from this flow.</span>
+        <button class="restore-banner__restore" @click="${() => this.restoreAutoSave()}">Restore</button>
+        <button class="restore-banner__dismiss" @click="${() => (this._restorePrompt = null)}">Dismiss</button>
+      </div>
+    `;
+  }
+
   private _renderPicker() {
     if (!this._picker) return '';
     const {x, y} = this._picker;
@@ -1134,7 +1456,10 @@ export default class ZnFlowBuilder extends ZincElement {
 
   render() {
     return html`
-      <div part="base" class="builder">
+      <div
+        part="base"
+        class="builder ${this._stepsCollapsed ? 'builder--steps-collapsed' : ''} ${this._sideCollapsed ? 'builder--side-collapsed' : ''}"
+      >
         ${this._renderHeader()}
         ${this._renderSteps()}
         <div
@@ -1142,6 +1467,20 @@ export default class ZnFlowBuilder extends ZincElement {
           @dragover="${this._onCanvasDragOver}"
           @drop="${this._onCanvasDrop}"
         >
+          <button
+            class="panel-toggle panel-toggle--left ${this._stepsCollapsed ? 'panel-toggle--tucked' : ''}"
+            title="${this._stepsCollapsed ? 'Show steps panel' : 'Hide steps panel'}"
+            @click="${() => (this._stepsCollapsed = !this._stepsCollapsed)}"
+          >
+            <zn-icon src="${this._stepsCollapsed ? 'chevron-right@lu' : 'chevron-left@lu'}" size="16"></zn-icon>
+          </button>
+          <button
+            class="panel-toggle panel-toggle--right ${this._sideCollapsed ? 'panel-toggle--tucked' : ''}"
+            title="${this._sideCollapsed ? 'Show panel' : 'Hide panel'}"
+            @click="${() => (this._sideCollapsed = !this._sideCollapsed)}"
+          >
+            <zn-icon src="${this._sideCollapsed ? 'chevron-left@lu' : 'chevron-right@lu'}" size="16"></zn-icon>
+          </button>
           <zn-flow-canvas
             .nodes="${this._state.nodes}"
             .connections="${this._state.connections}"
@@ -1162,6 +1501,8 @@ export default class ZnFlowBuilder extends ZincElement {
               </div>
             `
             : ''}
+          ${this._renderAutoSaveStatus()}
+          ${this._renderRestorePrompt()}
           ${this._renderPicker()}
         </div>
         ${this._renderRightPanel()}

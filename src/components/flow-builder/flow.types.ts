@@ -12,6 +12,94 @@ export interface FlowPort {
   data?: Record<string, unknown>;
 }
 
+/** A choice in a filter field's operator or value dropdown. */
+export interface FlowFilterOption {
+  value: string;
+  /** Display text; defaults to the value. */
+  label?: string;
+}
+
+/** One control row of a branch filter (e.g. "[in the last ▾] [6] [month(s) ▾]"). */
+export interface FlowFilterField {
+  id: string;
+  /** Leading text shown before the controls. */
+  label?: string;
+  /** The value control. Defaults to 'select' when `options` are given, else 'text'. */
+  type?: 'select' | 'number' | 'text';
+  /** Operator choices shown before the value (e.g. "at least" / "in the last" / "is equal to"). */
+  operators?: FlowFilterOption[];
+  /** Value choices for a 'select' field. */
+  options?: FlowFilterOption[];
+  /** Choices for an adjustable trailing unit dropdown (e.g. day(s) / month(s)); shown instead of `suffix`. */
+  units?: FlowFilterOption[];
+  /** Trailing unit text (e.g. "time(s)") when the unit isn't adjustable. */
+  suffix?: string;
+  placeholder?: string;
+  /** Initial value when the filter is added to a condition. */
+  value?: string | number;
+}
+
+/**
+ * Default display labels for well-known operator keys, used when a declaration
+ * provides a value but no text (e.g. `<zn-flow-operator value="gte">`).
+ */
+const OPERATOR_LABELS: Record<string, string> = {
+  eq: 'Is Equal To',
+  neq: 'Is Not Equal To',
+  gt: 'Greater Than',
+  gte: 'Greater Than or Equal To',
+  lt: 'Less Than',
+  lte: 'Less Than or Equal To',
+  is: 'Is',
+  'is-not': 'Is Not',
+  in: 'Is One Of',
+  'not-in': 'Is Not One Of',
+  contains: 'Contains',
+  'not-contains': 'Does Not Contain',
+  'starts-with': 'Starts With',
+  'ends-with': 'Ends With',
+  empty: 'Is Empty',
+  'not-empty': 'Is Not Empty',
+  within: 'Within the Last',
+  before: 'Before the Last',
+  between: 'Between',
+  matches: 'Matches',
+};
+
+/** An operator's display label: its own, a well-known default for its value, else the value itself. */
+export function operatorLabel(option: FlowFilterOption): string {
+  return option.label ?? OPERATOR_LABELS[option.value] ?? option.value;
+}
+
+/** A filter offered by the built-in branch conditions editor. */
+export interface FlowBranchFilter {
+  id: string;
+  label: string;
+  description?: string;
+  fields: FlowFilterField[];
+}
+
+/** One configured condition: a filter plus its per-field operator / value / unit entries. */
+export interface FlowBranchCondition {
+  /** The `FlowBranchFilter` id this condition uses. */
+  filter: string;
+  values: Record<string, { operator?: string; value?: string | number; unit?: string }>;
+}
+
+/**
+ * A branch's full condition set as persisted on the output port's
+ * `data.conditions`: the outer array is OR-ed, each inner group AND-ed.
+ */
+export type FlowBranchConditions = FlowBranchCondition[][];
+
+const NO_CONDITIONS: FlowBranchConditions = [];
+
+/** Read the conditions persisted on an output port (`port.data.conditions`). */
+export function branchConditions(port: FlowPort): FlowBranchConditions {
+  const raw = port.data?.conditions;
+  return Array.isArray(raw) ? (raw as FlowBranchConditions) : NO_CONDITIONS;
+}
+
 /**
  * Describes a kind of node that can be placed on the canvas. Consumers register
  * these with the builder to extend it — the steps panel and inspector are driven
@@ -39,6 +127,12 @@ export interface FlowNodeType {
   outputs?: FlowPort[];
   /** Initial `data` for a freshly placed node. */
   defaultData?: Record<string, unknown>;
+  /**
+   * Filters offered by the built-in branch conditions editor for this type's
+   * output branches (AND/OR groups persisted on the port's `data.conditions`).
+   * Ignored when `renderBranchConfig` is set.
+   */
+  branchFilters?: FlowBranchFilter[];
   /** Renders the inspector body for a selected node of this type. */
   renderConfig?: (node: FlowNodeInstance, update: (data: Record<string, unknown>) => void) => TemplateResult;
   /** Renders the branch editor body (filters / conditions) for one of this type's output branches. */
@@ -129,8 +223,12 @@ export function emptyDragImage(): HTMLImageElement {
 export const NODE_WIDTH = 240;
 export const NODE_HEIGHT = 60;
 
-/** Horizontal spacing between the branches of a multi-output node. */
-export const BRANCH_SPREAD = 200;
+/**
+ * Horizontal spacing between the branches of a multi-output node. Matches the
+ * untangle layer gap (card width + 80) so two sibling children fit side by side
+ * directly under their drops — straight downward wires, no elbows.
+ */
+export const BRANCH_SPREAD = NODE_WIDTH + 80;
 
 // Branch geometry below a node: outputs fork from a stem onto a horizontal bus,
 // and labelled outputs drop from it into a name pill.
@@ -140,6 +238,35 @@ export const PILL_HEIGHT = 40;
 export const PILL_MAX_WIDTH = 240;
 /** Extra pill height per wrapped line (matches the pill's CSS line-height). */
 export const PILL_LINE_HEIGHT = 20;
+
+/** Wire clearance kept between a branch pill's exit and the child card it feeds. */
+const PILL_APPROACH = 20;
+/** The least wire kept above a sole output's pill in a tight gap. */
+const PILL_MIN_STUB = 20;
+
+/**
+ * Canvas y of a branch pill's top edge. A pill on a wire to a child below is
+ * centred along the run from its node's bottom to the child's top — equal wire
+ * above and below, however long or tight. A sole output's wire is a straight
+ * stem with no bus to respect, so its pill may rise above the bus line to stay
+ * centred; fan branches stop at the bus. Open branches and loop/side wires
+ * keep the fixed drop below the bus.
+ */
+export function branchPillTop(
+  node: Pick<FlowNodeInstance, 'y'>,
+  pillH: number,
+  child?: Pick<FlowNodeInstance, 'y'>,
+  soleOutput = false
+): number {
+  const bottom = node.y + NODE_HEIGHT;
+  const busY = bottom + BUS_OFFSET;
+  if (child && child.y >= bottom) {
+    const minTop = soleOutput ? bottom + PILL_MIN_STUB : busY;
+    const centered = Math.round((bottom + child.y) / 2 - pillH / 2);
+    return Math.max(minTop, Math.min(centered, child.y - PILL_APPROACH - pillH));
+  }
+  return busY + PILL_DROP;
+}
 
 /**
  * Estimated pill box for a branch name: sizes to the text up to the max width,
@@ -167,6 +294,13 @@ export function snapToGrid(v: number): number {
 // while pills allow tighter packing.
 const CARD_MARGIN = 10;
 const PILL_MARGIN = 4;
+/**
+ * Extra height a pill's footprint claims below itself: room for the wire "+"
+ * between the pill and its child's input port. Keeps drags from compressing a
+ * branch past the point where the "+" fits (with the grid, the tightest
+ * card-to-card gap across a pill becomes 120).
+ */
+const PILL_PLUS_ROOM = 20;
 
 interface Rect {
   x: number;
@@ -187,47 +321,17 @@ function rectsOverlap(a: Rect, b: Rect): boolean {
 export type FlowTypeOf = (type: string) => FlowNodeType | undefined;
 
 /**
- * Canvas x for each of a node's branch drops. A connected branch pulls straight
- * above its child's input — a bend-free wire — when it's the only wire into that
- * input, the child is within the branch's natural fan range, and the position
- * keeps clear of sibling branches; otherwise it fans out source-side.
+ * Canvas x for each of a node's branch drops: the natural fan position under
+ * the source. Pills never shift sideways to chase their child — the wire into
+ * a pill is always a straight vertical, and any lateral offset to the child is
+ * taken up by the elbow below the pill (which still enters the child from
+ * straight above).
  */
-export function branchDropXs(
-  node: FlowNodeInstance,
-  typeOf: FlowTypeOf,
-  nodes: FlowNodeInstance[],
-  connections: FlowConnection[]
-): number[] {
+export function branchDropXs(node: FlowNodeInstance, typeOf: FlowTypeOf): number[] {
   const outputs = nodeOutputs(node, typeOf(node.type));
   const cx = node.x + NODE_WIDTH / 2;
-  const natural = (i: number) =>
-    Math.round(cx + (outputs.length === 1 ? 0 : (i - (outputs.length - 1) / 2) * BRANCH_SPREAD));
-  const MIN_SEP = 170;
-
-  const xs = outputs.map((port, i) => {
-    const spread = natural(i);
-    const conn = connections.find(c => c.source.node === node.id && c.source.port === port.id);
-    const child = conn ? nodes.find(n => n.id === conn.target.node) : undefined;
-    if (!conn || !child) return {x: spread, aligned: false};
-    // Fan-in wires converge on the target — keep their pills on the source side.
-    const fanIn = connections.some(
-      c => c !== conn && c.target.node === conn.target.node && c.target.port === conn.target.port
-    );
-    if (fanIn) return {x: spread, aligned: false};
-    const inputs = nodeInputs(child, typeOf(child.type));
-    const idx = Math.max(inputs.findIndex(p => p.id === conn.target.port), 0);
-    const anchor = portAnchor(child, 'in', idx, inputs.length).x;
-    if (Math.abs(anchor - spread) > BRANCH_SPREAD) return {x: spread, aligned: false};
-    return {x: anchor, aligned: true};
-  });
-
-  // Aligned branches yield back to their fan position rather than crowding siblings.
-  for (let i = 0; i < xs.length; i++) {
-    if (xs[i].aligned && xs.some((o, j) => j !== i && Math.abs(o.x - xs[i].x) < MIN_SEP)) {
-      xs[i] = {x: natural(i), aligned: false};
-    }
-  }
-  return xs.map(o => o.x);
+  return outputs.map((_, i) =>
+    Math.round(cx + (outputs.length === 1 ? 0 : (i - (outputs.length - 1) / 2) * BRANCH_SPREAD)));
 }
 
 /**
@@ -242,15 +346,17 @@ export function nodeObstacles(
 ): Rect[] {
   const rects: Rect[] = [{x: node.x, y: node.y, w: NODE_WIDTH, h: NODE_HEIGHT, m: CARD_MARGIN}];
   const ports = nodeOutputs(node, typeOf(node.type));
-  const xs = branchDropXs(node, typeOf, nodes, connections);
+  const xs = branchDropXs(node, typeOf);
   ports.forEach((port, i) => {
     if (!port.label) return;
     const size = pillSize(port.label);
+    const conn = connections.find(c => c.source.node === node.id && c.source.port === port.id);
+    const child = conn ? nodes.find(n => n.id === conn.target.node) : undefined;
     rects.push({
       x: xs[i] - size.w / 2,
-      y: node.y + NODE_HEIGHT + BUS_OFFSET + PILL_DROP,
+      y: branchPillTop(node, size.h, child, ports.length === 1),
       w: size.w,
-      h: size.h,
+      h: size.h + PILL_PLUS_ROOM,
       m: PILL_MARGIN,
     });
   });

@@ -118,11 +118,6 @@ zn-menu-item.danger {
   }
 }
 
-// Anchored at the card edge, at its horizontal position (set inline as left:%).
-.port-wrap {
-  position: absolute;
-}
-
 .port {
   position: absolute;
   left: 0;
@@ -135,46 +130,51 @@ zn-menu-item.danger {
   border: 2px solid var(--node-accent);
   box-sizing: border-box;
   pointer-events: none;
-}
 
-// Input ports ease in and out of the snap highlight with the same timing as
-// the output ports' hover effect.
-.port--in {
-  transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
-}
+  // Input ports ease in and out of the snap highlight with the same timing as
+  // the output ports' hover effect.
+  &--in {
+    transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
 
-// The snapped arrow lands on the input — light the port up while targeted.
-:host([link-target]) .port--in {
-  transform: translate(-50%, -50%) scale(1.4);
-  background: rgb(var(--zn-color-primary));
-  border-color: rgb(var(--zn-color-primary));
-  box-shadow: 0 0 0 4px color-mix(in srgb, rgb(var(--zn-color-primary)) 25%, transparent);
-}
-
-// Output ports are the branch spawn points: hover to highlight, click to start
-// a branch that follows the cursor to its target node.
-.port--out {
-  pointer-events: auto;
-  cursor: pointer;
-  transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
-
-  &:hover {
-    transform: translate(-50%, -50%) scale(1.4);
-    background: var(--node-accent);
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--node-accent) 25%, transparent);
+    // The snapped arrow lands on the input — light the port up while targeted.
+    :host([link-target]) & {
+      transform: translate(-50%, -50%) scale(1.4);
+      background: rgb(var(--zn-color-primary));
+      border-color: rgb(var(--zn-color-primary));
+      box-shadow: 0 0 0 4px color-mix(in srgb, rgb(var(--zn-color-primary)) 25%, transparent);
+    }
   }
-}
 
-// Output labels (e.g. TRUE / FALSE) sit just below the card edge, beside the
-// outgoing arrow — never overlapping the card content.
-.port-label {
-  position: absolute;
-  top: calc(var(--port-size) / 2 + 3px);
-  left: 8px;
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: rgb(var(--zn-color-muted-text));
-  white-space: nowrap;
-  pointer-events: none;
+  // Output ports are the branch spawn points: hover to highlight, click to start
+  // a branch that follows the cursor to its target node.
+  &--out {
+    pointer-events: auto;
+    cursor: pointer;
+    transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+
+    &:hover {
+      transform: translate(-50%, -50%) scale(1.4);
+      background: var(--node-accent);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--node-accent) 25%, transparent);
+    }
+  }
+
+  // Anchored at the card edge, at its horizontal position (set inline as left:%).
+  &-wrap {
+    position: absolute;
+  }
+
+  // Output labels (e.g. TRUE / FALSE) sit just below the card edge, beside the
+  // outgoing arrow — never overlapping the card content.
+  &-label {
+    position: absolute;
+    top: calc(var(--port-size) / 2 + 3px);
+    left: 8px;
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: rgb(var(--zn-color-muted-text));
+    white-space: nowrap;
+    pointer-events: none;
+  }
 }

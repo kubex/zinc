@@ -32,21 +32,29 @@
   display: none;
 }
 
-.item__icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 auto;
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  color: var(--node-accent);
-  background: color-mix(in srgb, var(--node-accent) 14%, transparent);
-}
+.item {
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    color: var(--node-accent);
+    background: color-mix(in srgb, var(--node-accent) 14%, transparent);
+  }
 
-.item__label {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  &__label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    // Only slotted text is the label — nested declarations (<zn-flow-filter>
+    // and friends) are data for the flow builder, never displayed.
+    ::slotted(*) {
+      display: none;
+    }
+  }
 }

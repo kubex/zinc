@@ -10,8 +10,11 @@
 }
 
 .builder {
+  --steps-width: 343px;
+  --side-width: 500px;
+
   display: grid;
-  grid-template-columns: 343px minmax(0, 1fr) 343px;
+  grid-template-columns: var(--steps-width) minmax(0, 1fr) var(--side-width);
   grid-template-rows: auto minmax(0, 1fr);
   width: 100%;
   height: 100%;
@@ -19,6 +22,27 @@
   border: 1px solid rgb(var(--zn-border-color));
   border-radius: 8px;
   overflow: hidden;
+  transition: grid-template-columns 0.2s ease;
+
+  // Side panels tuck away via the canvas-edge chevrons. Their padding and
+  // border would floor the width above zero, so those collapse too.
+  &--steps-collapsed {
+    --steps-width: 0px;
+
+    .steps {
+      border-right: none;
+    }
+  }
+
+  &--side-collapsed {
+    --side-width: 0px;
+
+    .sidebar,
+    .inspector {
+      padding: 0;
+      border-left: none;
+    }
+  }
 }
 
 // Full-width action bar above the three panels; hidden unless actions are slotted.
@@ -54,41 +78,10 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
+  // Clip cleanly while the column animates to zero width.
+  min-width: 0;
+  overflow: hidden;
   background: rgb(var(--zn-panel));
-}
-
-// Colour the slotted zn-navbar's active tab to match the steps panel surface,
-// rather than the navbar's default body colour.
-.steps {
-  --zn-active-nav-background: var(--zn-panel);
-}
-
-// Left column (steps panel).
-.steps {
-  border-right: 1px solid rgb(var(--zn-border-color));
-}
-
-// Right column (version history / errors, or the node/branch editor).
-.sidebar,
-.inspector {
-  border-left: 1px solid rgb(var(--zn-border-color));
-}
-
-// The editor slides in from the right when a node or branch is selected.
-.inspector {
-  animation: inspector-in 0.18s ease;
-}
-
-@keyframes inspector-in {
-  from {
-    transform: translateX(32px);
-    opacity: 0.3;
-  }
-
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
 }
 
 .canvas-cell {
@@ -98,14 +91,106 @@
   min-height: 0;
 }
 
-// --- Steps panel -----------------------------------------------------------------
-
-// The registry-driven steps panel fills the column below the title block.
-.steps-content {
-  flex: 1;
-  min-height: 0;
+// Chevrons straddling the canvas edges — tuck a side panel away / bring it back.
+.panel-toggle {
+  position: absolute;
+  top: 50%;
+  z-index: 6;
+  transform: translateY(-50%);
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border-radius: 50%;
+  color: rgb(var(--zn-color-muted-text));
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  box-shadow: 0 1px 3px rgba(var(--zn-shadow), 0.4);
+  cursor: pointer;
+  transition: left 0.2s ease, right 0.2s ease, color 0.12s ease, border-color 0.12s ease;
+
+  &:hover {
+    color: rgb(var(--zn-text));
+    border-color: rgb(var(--zn-color-border-active));
+  }
+
+  &--left {
+    left: -12px;
+
+    // With the panel tucked away, sit fully inside the canvas.
+    &.panel-toggle--tucked {
+      left: 8px;
+    }
+  }
+
+  &--right {
+    right: -12px;
+
+    &.panel-toggle--tucked {
+      right: 8px;
+    }
+  }
+}
+
+// --- Steps panel (left column) -----------------------------------------------
+
+.steps {
+  // Colour the slotted zn-navbar's active tab to match the steps panel surface,
+  // rather than the navbar's default body colour.
+  --zn-active-nav-background: var(--zn-panel);
+
+  border-right: 1px solid rgb(var(--zn-border-color));
+
+  // The registry-driven steps panel fills the column below the title block.
+  &-content {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  // Each tab panel fills the zn-tabs content area and lets its category list scroll.
+  &-panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%;
+  }
+
+  // Per-tab hint, shown beneath the tab bar with a divider before the categories.
+  &-hint {
+    margin: 0;
+    padding: 12px var(--zn-base-gap);
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    color: rgb(var(--zn-color-muted-text));
+  }
+
+  &-scroll {
+    @include wc.scrollbars;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-bottom: 16px;
+
+    // Divider above every category (and between the hint/tabs and the first one).
+    zn-flow-step-group {
+      display: block;
+      border-top: 1px solid rgb(var(--zn-border-color));
+    }
+  }
+
+  &-uncategorized {
+    padding: 8px var(--zn-base-gap);
+  }
+
+  &-empty {
+    padding: 16px var(--zn-base-gap);
+    font-size: 0.8125rem;
+    color: rgb(var(--zn-color-muted-text));
+  }
 }
 
 // Slotted <zn-flow-step>s are type declarations only — never displayed.
@@ -131,47 +216,6 @@
 
 .search {
   padding: 12px 12px 8px;
-}
-
-// Each tab panel fills the zn-tabs content area and lets its category list scroll.
-.steps-panel {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  height: 100%;
-}
-
-// Per-tab hint, shown beneath the tab bar with a divider before the categories.
-.steps-hint {
-  margin: 0;
-  padding: 12px var(--zn-base-gap);
-  font-size: 0.8125rem;
-  line-height: 1.4;
-  color: rgb(var(--zn-color-muted-text));
-}
-
-.steps-scroll {
-  @include wc.scrollbars;
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  padding-bottom: 16px;
-
-  // Divider above every category (and between the hint/tabs and the first one).
-  zn-flow-step-group {
-    display: block;
-    border-top: 1px solid rgb(var(--zn-border-color));
-  }
-}
-
-.steps-uncategorized {
-  padding: 8px var(--zn-base-gap);
-}
-
-.steps-empty {
-  padding: 16px var(--zn-base-gap);
-  font-size: 0.8125rem;
-  color: rgb(var(--zn-color-muted-text));
 }
 
 .step {
@@ -217,187 +261,200 @@
   }
 }
 
-// --- Inspector ---------------------------------------------------------------
+// --- Inspector (right column while a node / branch is selected) ---------------
 
-.inspector-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  height: 100%;
-  padding: 24px;
-  text-align: center;
-  color: rgb(var(--zn-color-muted-text));
-  font-size: 0.8125rem;
-}
+.inspector {
+  border-left: 1px solid rgb(var(--zn-border-color));
+  // The editor slides in from the right when a node or branch is selected.
+  animation: inspector-in 0.18s ease;
 
-.inspector-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px;
-  border-bottom: 1px solid rgb(var(--zn-border-color));
+  &-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 100%;
+    padding: 24px;
+    text-align: center;
+    color: rgb(var(--zn-color-muted-text));
+    font-size: 0.8125rem;
+  }
 
-  &__icon {
-    --node-accent: rgb(var(--zn-color-primary));
+  &-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border-bottom: 1px solid rgb(var(--zn-border-color));
+
+    &__icon {
+      --node-accent: rgb(var(--zn-color-primary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      color: var(--node-accent);
+      background: color-mix(in srgb, var(--node-accent) 14%, transparent);
+    }
+
+    // Long labels truncate rather than pushing the close button out of the panel.
+    &__text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    // Title + badges (e.g. the Loop tag) on one line: the title shrinks with an
+    // ellipsis while the badge always stays visible.
+    &__title-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+
+      .inspector-head__title {
+        min-width: 0;
+      }
+    }
+
+    &__title {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    &__title,
+    &__type {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &__type {
+      font-size: 0.75rem;
+      color: rgb(var(--zn-color-muted-text));
+    }
+  }
+
+  &-body {
+    @include wc.scrollbars;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 16px;
+  }
+
+  &-hint {
+    margin: 0;
+    font-size: 0.75rem;
+    color: rgb(var(--zn-color-muted-text));
+  }
+
+  // Marks a loop branch in the editor head, matching its amber pill and wire.
+  &-loop-tag {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    gap: 3px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1;
+    color: rgb(var(--zn-color-warning));
+    background: color-mix(in srgb, rgb(var(--zn-color-warning)) 14%, transparent);
+  }
+
+  &-close {
     display: flex;
     align-items: center;
     justify-content: center;
     flex: 0 0 auto;
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    color: var(--node-accent);
-    background: color-mix(in srgb, var(--node-accent) 14%, transparent);
-  }
+    margin-left: auto;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border-radius: 6px;
+    color: rgb(var(--zn-color-muted-text));
+    background: transparent;
+    cursor: pointer;
 
-  // Long labels truncate rather than pushing the close button out of the panel.
-  &__text {
-    flex: 1;
-    min-width: 0;
-  }
-
-  // Title + badges (e.g. the Loop tag) on one line: the title shrinks with an
-  // ellipsis while the badge always stays visible.
-  &__title-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    min-width: 0;
-
-    .inspector-head__title {
-      min-width: 0;
+    &:hover {
+      background: rgb(var(--zn-color-tab));
+      color: rgb(var(--zn-text));
     }
   }
+}
 
-  &__title {
-    font-size: 0.875rem;
-    font-weight: 600;
+@keyframes inspector-in {
+  from {
+    transform: translateX(32px);
+    opacity: 0.3;
   }
 
-  &__title,
-  &__type {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  &__type {
-    font-size: 0.75rem;
-    color: rgb(var(--zn-color-muted-text));
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
 }
 
-.inspector-body {
-  @include wc.scrollbars;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  padding: 16px;
-}
-
-.inspector-hint {
-  margin: 0;
-  font-size: 0.75rem;
-  color: rgb(var(--zn-color-muted-text));
-}
-
-// Marks a loop branch in the editor head, matching its amber pill and wire.
-.inspector-loop-tag {
-  display: inline-flex;
-  align-items: center;
-  flex: 0 0 auto;
-  gap: 3px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  line-height: 1;
-  color: rgb(var(--zn-color-warning));
-  background: color-mix(in srgb, rgb(var(--zn-color-warning)) 14%, transparent);
-}
-
-.inspector-close {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 auto;
-  margin-left: auto;
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  border-radius: 6px;
-  color: rgb(var(--zn-color-muted-text));
-  background: transparent;
-  cursor: pointer;
-
-  &:hover {
-    background: rgb(var(--zn-color-tab));
-    color: rgb(var(--zn-text));
-  }
-}
-
-// --- Sidebar (right rail) ----------------------------------------------------
+// --- Sidebar (right rail: status / errors / version history) ------------------
 
 .sidebar {
   @include wc.scrollbars;
+  border-left: 1px solid rgb(var(--zn-border-color));
   overflow-y: auto;
   padding: 16px;
-}
 
-.sidebar-section__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  font-size: 0.8125rem;
-  font-weight: 600;
-}
+  &-section__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
 
-.sidebar-count {
-  min-width: 20px;
-  padding: 0 6px;
-  font-size: 0.75rem;
-  line-height: 18px;
-  text-align: center;
-  border-radius: 9px;
-  color: rgb(var(--zn-color-muted-text));
-  background: rgb(var(--zn-color-tab));
-}
+  &-count {
+    min-width: 20px;
+    padding: 0 6px;
+    font-size: 0.75rem;
+    line-height: 18px;
+    text-align: center;
+    border-radius: 9px;
+    color: rgb(var(--zn-color-muted-text));
+    background: rgb(var(--zn-color-tab));
+  }
 
-.sidebar-empty {
-  margin: 0;
-  font-size: 0.75rem;
-  color: rgb(var(--zn-color-muted-text));
-}
+  &-empty {
+    margin: 0;
+    font-size: 0.75rem;
+    color: rgb(var(--zn-color-muted-text));
+  }
 
-.sidebar-error {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  margin-bottom: 6px;
-  padding: 8px 10px;
-  font-size: 0.8125rem;
-  text-align: left;
-  color: rgb(var(--zn-color-error));
-  background: color-mix(in srgb, rgb(var(--zn-color-error)) 7%, transparent);
-  border: 1px solid color-mix(in srgb, rgb(var(--zn-color-error)) 25%, transparent);
-  border-radius: 8px;
-  cursor: pointer;
+  &-error {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 6px;
+    padding: 8px 10px;
+    font-size: 0.8125rem;
+    text-align: left;
+    color: rgb(var(--zn-color-error));
+    background: color-mix(in srgb, rgb(var(--zn-color-error)) 7%, transparent);
+    border: 1px solid color-mix(in srgb, rgb(var(--zn-color-error)) 25%, transparent);
+    border-radius: 8px;
+    cursor: pointer;
+  }
 }
 
 // --- "+" picker popover ------------------------------------------------------
-
-.picker-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 20;
-}
 
 .picker {
   position: fixed;
@@ -411,52 +468,133 @@
   border-radius: 8px;
   box-shadow: 0 6px 24px rgba(var(--zn-shadow), 0.5);
   @include wc.scrollbars;
-}
 
-.picker-group {
-  padding: 8px 8px 4px;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: rgb(var(--zn-color-muted-text));
-}
-
-.picker-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 7px 8px;
-  font-size: 0.8125rem;
-  text-align: left;
-  background: transparent;
-  border-radius: 6px;
-  cursor: pointer;
-
-  &:hover {
-    background: rgb(var(--zn-color-tab));
+  &-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
   }
 
-  &__icon {
-    --node-accent: rgb(var(--zn-color-primary));
+  &-group {
+    padding: 8px 8px 4px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: rgb(var(--zn-color-muted-text));
+  }
+
+  &-item {
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex: 0 0 auto;
-    width: 26px;
-    height: 26px;
+    gap: 10px;
+    width: 100%;
+    padding: 7px 8px;
+    font-size: 0.8125rem;
+    text-align: left;
+    background: transparent;
     border-radius: 6px;
-    color: var(--node-accent);
-    background: color-mix(in srgb, var(--node-accent) 14%, transparent);
+    cursor: pointer;
+
+    &:hover {
+      background: rgb(var(--zn-color-tab));
+    }
+
+    &__icon {
+      --node-accent: rgb(var(--zn-color-primary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      color: var(--node-accent);
+      background: color-mix(in srgb, var(--node-accent) 14%, transparent);
+    }
+  }
+
+  &-empty {
+    margin: 0;
+    padding: 10px;
+    font-size: 0.75rem;
+    color: rgb(var(--zn-color-muted-text));
   }
 }
 
-.picker-empty {
-  margin: 0;
-  padding: 10px;
+// --- Auto-save overlays --------------------------------------------------------
+
+// Bottom-left status pill: flashes green as a save lands, then keeps a quiet
+// "last saved Xm ago".
+.save-status {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
   font-size: 0.75rem;
   color: rgb(var(--zn-color-muted-text));
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(var(--zn-shadow), 0.4);
+  pointer-events: none;
+  transition: color 0.15s ease, border-color 0.15s ease;
+
+  &--saved {
+    color: rgb(var(--zn-color-success));
+    border-color: color-mix(in srgb, rgb(var(--zn-color-success)) 45%, transparent);
+  }
+}
+
+// Top-centre prompt offering a differing auto-saved draft after a load.
+.restore-banner {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: calc(100% - 32px);
+  padding: 8px 12px;
+  font-size: 0.8125rem;
+  color: rgb(var(--zn-text));
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(var(--zn-shadow), 0.5);
+
+  button {
+    flex: 0 0 auto;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  &__restore {
+    color: rgb(var(--zn-panel));
+    background: rgb(var(--zn-color-primary));
+
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+
+  &__dismiss {
+    color: rgb(var(--zn-color-muted-text));
+    background: transparent;
+
+    &:hover {
+      background: rgb(var(--zn-color-tab));
+    }
+  }
 }
 
 // --- Move banner -------------------------------------------------------------

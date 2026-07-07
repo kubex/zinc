@@ -20,7 +20,8 @@ import styles from './flow-step.scss';
  * @event flow-step-drag - Emitted on dragstart with `detail.type`, so the builder can preview the drop.
  * @event flow-step-drag-end - Emitted on dragend.
  *
- * @slot - The step's label.
+ * @slot - The step's label. May also hold `<zn-flow-filter>` declarations (never displayed)
+ *   that drive the flow builder's built-in branch conditions editor.
  *
  * @csspart base - The row.
  */

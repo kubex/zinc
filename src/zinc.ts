@@ -104,6 +104,7 @@ export { default as FlowBuilder } from './components/flow-builder';
 export { default as FlowSteps } from './components/flow-builder/modules/flow-steps';
 export { default as FlowStepGroup } from './components/flow-builder/modules/flow-step-group';
 export { default as FlowStep } from './components/flow-builder/modules/flow-step';
+export { default as FlowBranchConditions } from './components/flow-builder/modules/flow-branch-conditions';
 /* plop:component */
 
 // Base Component

@@ -10,10 +10,13 @@ import {
   snapToGrid,
 } from './flow.types';
 
-/** Horizontal gap between node origins within a layer. */
+/** Horizontal gap between node origins within a layer (= BRANCH_SPREAD, so siblings land under their drops). */
 export const LAYOUT_H_GAP = NODE_WIDTH + 80;
-/** Vertical gap between layers — clears the bus, a branch pill, and the wire run-in. */
-export const LAYOUT_V_GAP = 300;
+/**
+ * Vertical gap between layers: a 160 card-to-card gap — a centred pill gets 60
+ * of wire above and below — keeping the arranged flow compact.
+ */
+export const LAYOUT_V_GAP = 220;
 const MARGIN = 40;
 
 const avg = (ns: number[]) => ns.reduce((a, b) => a + b, 0) / ns.length;
@@ -60,6 +63,17 @@ export function untangledPositions(
   };
   nodes.forEach(n => layerFor(n.id));
 
+  // Secondary roots (no forward parents — e.g. a stray answer that only feeds
+  // into the flow) sink to just above their earliest child, instead of floating
+  // at the very top with a wire spanning the whole flow.
+  nodes.forEach(n => {
+    if (incoming.get(n.id)!.some(c => !backEdges.has(c))) return;
+    const outs = outgoing.get(n.id)!.filter(c => !backEdges.has(c));
+    if (!outs.length) return;
+    const above = Math.min(...outs.map(c => layerOf.get(c.target.node)!)) - 1;
+    if (above > layerOf.get(n.id)!) layerOf.set(n.id, above);
+  });
+
   const layers: FlowNodeInstance[][] = Array.from(
     {length: Math.max(...layerOf.values()) + 1},
     () => []
@@ -78,23 +92,34 @@ export function untangledPositions(
 
   // 2. Ordering: roots keep their left-to-right order; deeper layers sort by the
   //    mean of their parents' order (nudged by which output port they hang from),
-  //    which keeps siblings in port order and reduces wire crossings.
+  //    which keeps siblings in port order and reduces wire crossings. A second
+  //    pass keys parentless nodes (secondary roots sunk beside the flow they
+  //    join) on their children's first-pass order, so they sort next to what
+  //    they feed instead of defaulting to the far left.
   const orderIdx = new Map<string, number>();
+  const parentBary = (n: FlowNodeInstance): number | null => {
+    // Forward parents only — loops don't influence ordering.
+    const ordered = incoming.get(n.id)!.filter(c => !backEdges.has(c) && orderIdx.has(c.source.node));
+    if (!ordered.length) return null;
+    return avg(ordered.map(c => {
+      const parent = byId.get(c.source.node)!;
+      const outputs = nodeOutputs(parent, typeOf(parent.type));
+      const count = Math.max(outputs.length, 1);
+      const idx = Math.max(outputs.findIndex(p => p.id === c.source.port), 0);
+      return orderIdx.get(parent.id)! + (idx + 1) / (count + 1) - 0.5;
+    }));
+  };
+  const childBary = (n: FlowNodeInstance): number | null => {
+    const outs = outgoing.get(n.id)!.filter(c => !backEdges.has(c) && orderIdx.has(c.target.node));
+    return outs.length ? avg(outs.map(c => orderIdx.get(c.target.node)!)) : null;
+  };
   layers[0].sort((a, b) => a.x - b.x).forEach((n, i) => orderIdx.set(n.id, i));
   for (let l = 1; l < layers.length; l++) {
-    const bary = (n: FlowNodeInstance) => {
-      // Forward parents only — loops don't influence ordering.
-      const ordered = incoming.get(n.id)!.filter(c => !backEdges.has(c) && orderIdx.has(c.source.node));
-      if (!ordered.length) return 0;
-      return avg(ordered.map(c => {
-        const parent = byId.get(c.source.node)!;
-        const outputs = nodeOutputs(parent, typeOf(parent.type));
-        const count = Math.max(outputs.length, 1);
-        const idx = Math.max(outputs.findIndex(p => p.id === c.source.port), 0);
-        return orderIdx.get(parent.id)! + (idx + 1) / (count + 1) - 0.5;
-      }));
-    };
-    layers[l].sort((a, b) => bary(a) - bary(b)).forEach((n, i) => orderIdx.set(n.id, i));
+    layers[l].sort((a, b) => (parentBary(a) ?? 0) - (parentBary(b) ?? 0)).forEach((n, i) => orderIdx.set(n.id, i));
+  }
+  for (let l = 1; l < layers.length; l++) {
+    const key = (n: FlowNodeInstance) => parentBary(n) ?? childBary(n) ?? 0;
+    layers[l].sort((a, b) => key(a) - key(b)).forEach((n, i) => orderIdx.set(n.id, i));
   }
 
   // 3. Coordinates: place a layer at each node's desired x, resolving overlaps

@@ -9,6 +9,7 @@ import ZnIcon from '../../../icon';
 
 import {
   branchDropXs,
+  branchPillTop,
   BUS_OFFSET,
   firstInputId,
   FLOW_TYPE_MIME,
@@ -27,7 +28,6 @@ import {
   NOTE_MIN_HEIGHT,
   NOTE_MIN_WIDTH,
   NOTE_WIDTH,
-  PILL_DROP,
   pillSize,
   portAnchor,
   snapToGrid,
@@ -46,6 +46,10 @@ const ADD_POINT_OFFSET = 40;
 // whole grid units so wire runs sit on grid lines.
 const WIRE_STUB = 20;
 const WIRE_APPROACH = 20;
+// Half the wire "+"'s footprint.
+const WIRE_PLUS_RADIUS = 10;
+// How far a node's input port circle pokes up into the wire's last segment.
+const WIRE_PORT_POKE = 8;
 const WIRE_DETOUR = 40;
 // Vertical spacing between the horizontal runs of wires heading to different
 // targets, so unrelated wires never share a line (which reads as a join).
@@ -54,7 +58,7 @@ const TYPE_MIME = FLOW_TYPE_MIME;
 
 type DragState =
   | { kind: 'pan'; ox: number; oy: number; px: number; py: number }
-  | { kind: 'node'; id: string; offX: number; offY: number }
+  | { kind: 'node'; id: string; offX: number; offY: number; startX: number; startY: number }
   | { kind: 'note'; id: string; offX: number; offY: number }
   | { kind: 'note-resize'; id: string };
 
@@ -86,6 +90,7 @@ type DragState =
  *
  * @csspart base - The canvas viewport.
  * @csspart toolbar - The floating toolbar.
+ * @csspart bin - The delete drop-zone shown bottom-right while dragging a node or step.
  */
 export default class ZnFlowCanvas extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -113,6 +118,8 @@ export default class ZnFlowCanvas extends ZincElement {
   @state() private panX = 0;
   @state() private panY = 0;
   @state() private drag: DragState | null = null;
+  /** Whether the current drag (node or step) is over the delete bin. */
+  @state() private _overBin = false;
   /** Canvas-space top-left where a step, if dropped now, would be placed. */
   @state() private _dropGhost: { x: number; y: number } | null = null;
   /** The stray branch being drawn from an output port until it attaches or cancels. */
@@ -273,7 +280,7 @@ export default class ZnFlowCanvas extends ZincElement {
     const node = this.nodes.find(n => n.id === e.detail.nodeId);
     if (!node) return;
     const p = this.screenToCanvas(e.detail.clientX, e.detail.clientY);
-    this.drag = {kind: 'node', id: node.id, offX: p.x - node.x, offY: p.y - node.y};
+    this.drag = {kind: 'node', id: node.id, offX: p.x - node.x, offY: p.y - node.y, startX: node.x, startY: node.y};
     this._dragMoved = false;
     this._setupWindow('grabbing');
   };
@@ -306,6 +313,23 @@ export default class ZnFlowCanvas extends ZincElement {
     );
     this._startLink(nodeId, open?.id ?? NEW_OUTPUT_PORT);
   };
+
+  /**
+   * An orphaned branch pill's port was clicked. If a branch from another node
+   * is already in flight, attach it to this pill's node; otherwise start a
+   * stray branch that continues from this pill.
+   */
+  private _onBranchPortClick(nodeId: string, port: string) {
+    if (this._linking) {
+      const link = this._linking;
+      this._cancelLink();
+      if (link.nodeId !== nodeId) {
+        this._emit('flow-link-assign', {nodeId: link.nodeId, port: link.port, targetId: nodeId});
+      }
+      return;
+    }
+    this._startLink(nodeId, port);
+  }
 
   private _startLink(nodeId: string, port: string) {
     this._linking = {nodeId, port};
@@ -398,6 +422,7 @@ export default class ZnFlowCanvas extends ZincElement {
     }
     const p = this.screenToCanvas(e.clientX, e.clientY);
     if (this.drag.kind === 'node') {
+      this._overBin = this._binHit(e.clientX, e.clientY);
       const node = this.nodes.find(n => n.id === (this.drag as { id: string }).id);
       if (node) {
         // Snap to the grid, and refuse positions where any part of the node's
@@ -442,14 +467,34 @@ export default class ZnFlowCanvas extends ZincElement {
 
   private _onPointerUp = () => {
     const drag = this.drag;
+    const overBin = this._overBin;
     this.drag = null;
+    this._overBin = false;
     this._teardownWindow();
     if (!drag) return;
+
+    // Dropped on the bin: put the node back where the drag started (so the
+    // delete's undo restores the pre-drag layout) and delete it.
+    if (drag.kind === 'node' && this._dragMoved && overBin) {
+      const node = this.nodes.find(n => n.id === drag.id);
+      if (node) {
+        node.x = drag.startX;
+        node.y = drag.startY;
+      }
+      this._emit('flow-node-action', {nodeId: drag.id, action: 'delete'});
+      return;
+    }
 
     if ((drag.kind === 'node' || drag.kind === 'note' || drag.kind === 'note-resize') && this._dragMoved) {
       this._emit('flow-change-commit');
     }
   };
+
+  /** Whether a client-space point is over the delete bin. */
+  private _binHit(clientX: number, clientY: number): boolean {
+    const rect = this.shadowRoot?.querySelector('.bin')?.getBoundingClientRect();
+    return !!rect && clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom;
+  }
 
   private _beginMove() {
     this._dragMoved = true;
@@ -469,17 +514,20 @@ export default class ZnFlowCanvas extends ZincElement {
     const cx = node.x + NODE_WIDTH / 2;
     const by = node.y + NODE_HEIGHT;
     const busY = by + BUS_OFFSET;
-    // Drop positions prefer a straight line above each branch's child.
-    const dropXs = branchDropXs(node, t => this.registry?.get(t), this.nodes, this.connections);
+    // Drops always sit at the natural fan position under the source, so the
+    // arrow into a pill is a straight vertical; the wire below the pill takes
+    // up any lateral offset to the child.
+    const dropXs = branchDropXs(node, t => this.registry?.get(t));
     const branches = outputs.map((port, i) => {
       const conn = this.connections.find(c => c.source.node === node.id && c.source.port === port.id);
       const child = conn ? this.nodes.find(n => n.id === conn.target.node) : undefined;
       const x = dropXs[i];
-      // Labelled outputs show their branch pill on the drop; the wire continues
-      // from below it. Long names wrap, so the pill height (and the exit where
-      // the +/child wire begins) grows with the text.
-      const pillTop = port.label ? busY + PILL_DROP : null;
+      // Labelled outputs show their branch pill on the drop, centred along the
+      // wire when a child sits below; the wire continues from below it. Long
+      // names wrap, so the pill height (and the exit where the +/child wire
+      // begins) grows with the text.
       const pillH = port.label ? pillSize(port.label).h : 0;
+      const pillTop = port.label ? branchPillTop(node, pillH, child, outputs.length === 1) : null;
       const exitY = pillTop === null ? busY : pillTop + pillH;
       return {port, conn, child, x, pillTop, pillH, exitY};
     });
@@ -707,11 +755,36 @@ export default class ZnFlowCanvas extends ZincElement {
             seg = i;
           }
         }
-        points.push({
-          connectionId: b.conn.id,
-          px: (pts[seg].x + pts[seg + 1].x) / 2,
-          py: (pts[seg].y + pts[seg + 1].y) / 2,
-        });
+        // The "+" centres in the segment's free run — the child's input port
+        // circle pokes into the last segment's end, so the "+" splits the
+        // pill-to-port gap evenly however tight it is. It always renders, and
+        // never sits on a node card: if fallback routing ran the segment over
+        // one, it slides to the nearest card-free spot.
+        const a = pts[seg];
+        const c = pts[seg + 1];
+        const len = Math.abs(c.x - a.x) + Math.abs(c.y - a.y);
+        const dx = Math.sign(c.x - a.x);
+        const dy = Math.sign(c.y - a.y);
+        const at = (d: number) => ({px: a.x + dx * d, py: a.y + dy * d});
+        let d = Math.max(0, (seg === pts.length - 2 ? len - WIRE_PORT_POKE : len) / 2);
+        const M = WIRE_PLUS_RADIUS;
+        const onCard = ({px, py}: { px: number; py: number }) => this.nodes.some(n =>
+          px > n.x - M && px < n.x + NODE_WIDTH + M && py > n.y - M && py < n.y + NODE_HEIGHT + M);
+        if (onCard(at(d))) {
+          for (let step = GRID_SIZE / 2; step <= len; step += GRID_SIZE / 2) {
+            const up = d - step;
+            const down = d + step;
+            if (up >= 0 && !onCard(at(up))) {
+              d = up;
+              break;
+            }
+            if (down <= len && !onCard(at(down))) {
+              d = down;
+              break;
+            }
+          }
+        }
+        points.push({connectionId: b.conn.id, ...at(d)});
       });
     }
     return points;
@@ -787,6 +860,31 @@ export default class ZnFlowCanvas extends ZincElement {
     e.stopPropagation();
     this._emit('flow-wire-assign', {connectionId, type});
   }
+
+  // --- Delete bin ------------------------------------------------------------
+  // Shown while a node is dragged (drop it there to delete) or while a step is
+  // dragged in from the panel (drop it there to discard instead of placing).
+
+  private _onBinDragOver = (e: DragEvent) => {
+    if (!e.dataTransfer?.types.includes(TYPE_MIME)) return;
+    e.preventDefault();
+    e.stopPropagation();
+    e.dataTransfer.dropEffect = 'move';
+    this._overBin = true;
+    this._dropGhost = null; // nothing will be placed from here
+  };
+
+  private _onBinDragLeave = () => {
+    this._overBin = false;
+  };
+
+  private _onBinDrop = (e: DragEvent) => {
+    // Swallow the drop — the step is discarded, never reaching the canvas.
+    e.preventDefault();
+    e.stopPropagation();
+    this._overBin = false;
+    this._dropGhost = null;
+  };
 
   // --- Toolbar ----------------------------------------------------------------
 
@@ -882,7 +980,9 @@ export default class ZnFlowCanvas extends ZincElement {
       // (arrowhead), then continue from the pill to the child / open "+".
       active.forEach(b => {
         if (b.pillTop !== null) {
-          paths.push(svg`<path class="wire" d="M ${b.x} ${busY} L ${b.x} ${b.pillTop}" marker-end="url(#flow-arrow)"></path>`);
+          // Start no lower than 10 above the pill, so the arrowhead keeps a
+          // tail even when a tight gap pins the pill right up against the bus.
+          paths.push(svg`<path class="wire" d="M ${b.x} ${Math.min(busY, b.pillTop - 10)} L ${b.x} ${b.pillTop}" marker-end="url(#flow-arrow)"></path>`);
         }
         if (b.conn && b.child) {
           const offset = midOffsets.get(b.conn.id) ?? 0;
@@ -900,12 +1000,17 @@ export default class ZnFlowCanvas extends ZincElement {
       });
     }
 
-    // The in-progress branch follows the cursor from the node's bottom port,
-    // snapping onto the hovered target's input until it attaches or cancels.
+    // The in-progress branch follows the cursor from the node's bottom port —
+    // or from the branch's pill when it has one (an orphaned branch continues
+    // from its pill) — snapping onto the hovered target's input until it
+    // attaches or cancels.
     if (this._linking && this._linkPos) {
       const src = this.nodes.find(n => n.id === this._linking!.nodeId);
       if (src) {
-        const from = {x: src.x + NODE_WIDTH / 2, y: src.y + NODE_HEIGHT};
+        const branch = this._outputLayout(src).branches.find(b => b.port.id === this._linking!.port);
+        const from = branch && branch.pillTop !== null
+          ? {x: branch.x, y: branch.exitY}
+          : {x: src.x + NODE_WIDTH / 2, y: src.y + NODE_HEIGHT};
         const target = this._linkTarget ? this.nodes.find(n => n.id === this._linkTarget) : undefined;
         const end = target
           ? this._inputAnchor(target, firstInputId(target, this._typeFor(target)) ?? '')
@@ -940,7 +1045,8 @@ export default class ZnFlowCanvas extends ZincElement {
   private _renderBranchPills() {
     const loops = loopConnections(this.nodes, this.connections);
     const items: {
-      key: string; nodeId: string; portId: string; label: string; x: number; top: number; height: number; loop: boolean;
+      key: string; nodeId: string; portId: string; label: string; x: number; top: number; height: number;
+      loop: boolean; open: boolean;
     }[] = [];
     for (const node of this.nodes) {
       const {branches} = this._outputLayout(node);
@@ -955,6 +1061,7 @@ export default class ZnFlowCanvas extends ZincElement {
           top: b.pillTop,
           height: b.pillH,
           loop: !!b.conn && loops.has(b.conn),
+          open: !b.conn,
         });
       }
     }
@@ -986,6 +1093,16 @@ export default class ZnFlowCanvas extends ZincElement {
           >
             <zn-icon src="x@lu" size="14"></zn-icon>
           </button>
+          ${i.open ? html`
+            <span
+              class="branch-pill-port"
+              title="Start a branch"
+              @pointerdown="${(e: PointerEvent) => e.button === 0 && e.stopPropagation()}"
+              @click="${(e: Event) => {
+                e.stopPropagation();
+                this._onBranchPortClick(i.nodeId, i.portId);
+              }}"
+            ></span>` : ''}
         </div>
       `
     );
@@ -1150,6 +1267,18 @@ export default class ZnFlowCanvas extends ZincElement {
           <zn-button icon="minus@lu" icon-size="18" icon-button="small" plain
                      @click="${() => this._zoomBy(-ZOOM_STEP)}"></zn-button>
         </div>
+
+        ${(this.drag?.kind === 'node' && this._dragMoved) || this.dragType ? html`
+          <div
+            part="bin"
+            class="bin ${this._overBin ? 'bin--over' : ''}"
+            title="Drop here to delete"
+            @dragover="${this._onBinDragOver}"
+            @dragleave="${this._onBinDragLeave}"
+            @drop="${this._onBinDrop}"
+          >
+            <zn-icon src="trash-2@lu" size="22"></zn-icon>
+          </div>` : ''}
       </div>
     `;
   }

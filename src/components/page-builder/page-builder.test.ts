@@ -27,25 +27,49 @@ describe('<zn-page-builder>', () => {
     expect(categories).to.deep.equal(['Headers', 'Content']);
   });
 
-  it('should collapse and expand the palette', async () => {
+  it('should tuck the palette away via the canvas-edge chevron', async () => {
     const el = await fixture<ZnPageBuilder>(html`
       <zn-page-builder>
         <template type="hero" slot="config" label="Hero"></template>
       </zn-page-builder>`);
     await el.updateComplete;
 
-    el.shadowRoot?.querySelector<HTMLButtonElement>('.palette .panel-toggle')?.click();
-    await el.updateComplete;
+    const toggle = el.shadowRoot?.querySelector<HTMLButtonElement>('.canvas-cell .panel-toggle--left');
+    expect(toggle, 'edge chevron').to.exist;
 
+    toggle!.click();
+    await el.updateComplete;
     expect(el.paletteCollapsed).to.be.true;
-    expect(el.shadowRoot?.querySelector('.palette--collapsed')).to.exist;
-    expect(el.shadowRoot?.querySelector('zn-page-palette-item')).to.not.exist;
+    expect(el.shadowRoot?.querySelector('.builder--palette-collapsed')).to.exist;
+    expect(toggle!.classList.contains('panel-toggle--tucked'), 'chevron tucks into the canvas').to.be.true;
 
-    el.shadowRoot?.querySelector<HTMLButtonElement>('.palette--collapsed .panel-toggle')?.click();
+    toggle!.click();
     await el.updateComplete;
-
     expect(el.paletteCollapsed).to.be.false;
-    expect(el.shadowRoot?.querySelector('zn-page-palette-item')).to.exist;
+    expect(el.shadowRoot?.querySelector('.builder--palette-collapsed')).to.not.exist;
+  });
+
+  it('should offer and restore an auto-saved draft', async () => {
+    const draft = {savedAt: Date.now(), state: {sections: [{id: 'd1', type: 'hero', data: {title: 'Draft'}}]}};
+    localStorage.setItem('zn-page-builder:pb-autosave-test', JSON.stringify(draft));
+
+    try {
+      const el = await fixture<ZnPageBuilder>(html`
+        <zn-page-builder id="pb-autosave-test" auto-save config='{"sections":[]}'>
+          <template type="hero" slot="config" label="Hero"></template>
+        </zn-page-builder>`);
+      await el.updateComplete;
+
+      // The loaded (empty) page differs from the fresh draft — banner offered.
+      expect(el.shadowRoot?.querySelector('.restore-banner'), 'restore banner').to.exist;
+
+      expect(el.restoreAutoSave()).to.be.true;
+      await el.updateComplete;
+      expect(el.state.sections[0]?.id).to.equal('d1');
+      expect(el.shadowRoot?.querySelector('.restore-banner')).to.not.exist;
+    } finally {
+      localStorage.removeItem('zn-page-builder:pb-autosave-test');
+    }
   });
 
   it('should round-trip state through the config attribute and state property', async () => {

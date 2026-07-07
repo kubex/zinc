@@ -18,7 +18,11 @@ are bound by their `name` attribute: values prefill from the section's data and 
 `change` / `zn-change`.
 
 ```html:preview
-<zn-page-builder heading="KB Homepage" subheading="Last updated 7th July 2026" style="height: 560px">
+<zn-page-builder id="kb-homepage-demo" heading="KB Homepage" subheading="Last updated 7th July 2026" auto-save style="height: 560px">
+  <zn-button slot="header-left" icon="refresh-cw@lu" panel-bg
+             onclick="this.closest('zn-page-builder').undo()">Undo</zn-button>
+  <zn-button slot="header-right" icon="check@lu" color="primary"
+             onclick="alert(JSON.stringify(this.closest('zn-page-builder').state, null, 2))">Save All Changes</zn-button>
   <template type="hero" slot="config" label="Hero" icon="star" category="Headers"
             description="Large banner with optional search">
     <zn-input name="title" label="Title"></zn-input>
@@ -48,6 +52,41 @@ inspector bodies that need real logic.
 - `registerSectionType(type)` / `registerSectionTypes(types)` — programmatic registration,
   equivalent to slotting templates. Registration is additive — removing an entry from
   `sectionTypes` later does not unregister it.
+- `restoreAutoSave()` — load the auto-saved draft, if one exists within its 1-day TTL
+  (returns `false` otherwise). See Saving below.
+
+## Saving
+
+Wire your own save action into the header slots (rendered only when filled, as in the
+flow builder) and read `state` — or persist on every `zn-page-change`:
+
+```html
+<zn-page-builder id="kb-home" heading="KB Homepage" auto-save>
+  <zn-button slot="header-right" color="primary" id="save-page">Save All Changes</zn-button>
+  <!-- templates… -->
+</zn-page-builder>
+<script>
+  const builder = document.querySelector('#kb-home');
+  document.querySelector('#save-page').addEventListener('click', () => {
+    fetch('/api/pages/home', {method: 'PUT', body: JSON.stringify(builder.state)});
+  });
+</script>
+```
+
+Add the `auto-save` attribute to also snapshot the page into localStorage, keyed by the
+builder's `id` (falling back to its `heading`), with a **1-day TTL** — identical to the
+flow builder's auto-save:
+
+```html
+<zn-page-builder id="kb-home" auto-save></zn-page-builder>      <!-- every 5 minutes -->
+<zn-page-builder id="kb-home" auto-save="2"></zn-page-builder>  <!-- every 2 minutes -->
+```
+
+Without the attribute nothing is saved, and an empty page is never written. While auto-save
+is on, a status pill in the canvas's bottom-left flashes "Auto-saved" as each snapshot lands
+and otherwise shows how long ago the last one happened. When a page is loaded (`config` /
+`state`) that differs from a fresh auto-saved draft, a banner offers to restore the draft —
+or call `restoreAutoSave()` yourself.
 
 ## The config
 

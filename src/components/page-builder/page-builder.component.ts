@@ -32,6 +32,21 @@ const MAX_CHILDREN = 24;
 /** Builder width below which the palette auto-collapses — keep in sync with the @container query in page-builder.scss. */
 const NARROW_WIDTH = 768;
 
+const AUTO_SAVE_DEFAULT_MINUTES = 5;
+const AUTO_SAVE_TTL_MS = 24 * 60 * 60 * 1000;
+
+/** Compact relative time for the auto-save status ("just now", "3m ago"). */
+function timeAgo(ms: number): string {
+  const s = Math.floor(ms / 1000);
+  if (s < 10) return 'just now';
+  if (s < 60) return `${s}s ago`;
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  return `${Math.floor(h / 24)}d ago`;
+}
+
 /**
  * @summary A config-driven page composer: a palette of predefined section types, a linear
  *   canvas of section cards, and an inspector for editing each section's content.
@@ -82,11 +97,28 @@ export default class ZnPageBuilder extends ZincElement {
   /** Section types to make available, registered into the internal registry. */
   @property({attribute: false}) sectionTypes: PageSectionType[] = [];
 
-  /** Collapses the left palette to a slim rail. Auto-set on small screens. */
+  /** Collapses the left palette. Auto-set when the builder becomes narrow. */
   @property({type: Boolean, reflect: true, attribute: 'palette-collapsed'}) paletteCollapsed = false;
 
-  /** Collapses the inspector to a slim rail while a section is selected. */
+  /** Collapses the inspector while a section is selected. */
   @property({type: Boolean, reflect: true, attribute: 'inspector-collapsed'}) inspectorCollapsed = false;
+
+  /**
+   * Auto-save the page to localStorage (1-day TTL). Omit to disable. A bare
+   * `auto-save` saves every 5 minutes; a numeric value sets the interval in
+   * minutes (`auto-save="2"`). Restore with `restoreAutoSave()`.
+   */
+  @property({
+    attribute: 'auto-save',
+    converter: {
+      fromAttribute: (value: string | null) => {
+        if (value === null) return null;
+        const minutes = parseFloat(value);
+        return Number.isFinite(minutes) && minutes > 0 ? minutes : AUTO_SAVE_DEFAULT_MINUTES;
+      },
+      toAttribute: (value: number | null) => (value === null ? null : String(value)),
+    },
+  }) autoSave: number | null = null;
 
   private registry = new PageSectionRegistry();
 
@@ -172,12 +204,120 @@ export default class ZnPageBuilder extends ZincElement {
 
   disconnectedCallback() {
     this._resizeObserver.disconnect();
+    this._stopAutoSave();
+    if (this._justSavedTimer !== null) {
+      clearTimeout(this._justSavedTimer);
+      this._justSavedTimer = null;
+    }
     super.disconnectedCallback();
+  }
+
+  // --- Auto-save (mirrors flow-builder's) --------------------------------------
+
+  private _autoSaveTimer: number | null = null;
+  private _statusTimer: number | null = null;
+  private _justSavedTimer: number | null = null;
+  /** Guards the restore prompt from re-triggering on restoreAutoSave's own state install. */
+  private _restoring = false;
+
+  /** Epoch of the newest auto-save (also picked up from storage on start). */
+  @state() private _lastSavedAt: number | null = null;
+  /** Briefly true right after a save — flashes "Auto-saved" in the status pill. */
+  @state() private _justSaved = false;
+  /** Re-render clock for the "last saved Xm ago" label. */
+  @state() private _statusNow = Date.now();
+  /** A fresh auto-save differing from the loaded page — offer to restore it. */
+  @state() private _restorePrompt: {savedAt: number} | null = null;
+
+  /** localStorage key for this builder's auto-saves — its id, else its heading. */
+  private get _autoSaveKey(): string {
+    return `zn-page-builder:${this.id || this.heading || 'page'}`;
+  }
+
+  // The "Auto-saved" flash timeout is deliberately not cleared here — it always
+  // runs out 2.5s after the last save, even if the schedule changes meanwhile.
+  private _stopAutoSave() {
+    if (this._autoSaveTimer !== null) {
+      clearInterval(this._autoSaveTimer);
+      this._autoSaveTimer = null;
+    }
+    if (this._statusTimer !== null) {
+      clearInterval(this._statusTimer);
+      this._statusTimer = null;
+    }
+  }
+
+  private _restartAutoSave() {
+    this._stopAutoSave();
+    if (this.autoSave === null) return;
+    // Housekeeping: drop an expired auto-save, and carry its timestamp into the
+    // status pill when one survives — "last saved" outlives a reload.
+    const saved = this._readAutoSave();
+    if (saved) this._lastSavedAt = saved.savedAt;
+    this._autoSaveTimer = window.setInterval(this._autoSaveTick, this.autoSave * 60_000);
+    this._statusTimer = window.setInterval(() => (this._statusNow = Date.now()), 30_000);
+  }
+
+  /** An empty page is never saved — it would clobber a stored page with nothing. */
+  private _autoSaveTick = () => {
+    if (!this._state.sections.length) return;
+    try {
+      localStorage.setItem(this._autoSaveKey, JSON.stringify({savedAt: Date.now(), state: this._state}));
+      this._lastSavedAt = Date.now();
+      this._justSaved = true;
+      if (this._justSavedTimer !== null) clearTimeout(this._justSavedTimer);
+      this._justSavedTimer = window.setTimeout(() => (this._justSaved = false), 2500);
+    } catch {
+      /* storage unavailable / full */
+    }
+  };
+
+  /** The stored auto-save, purging it when past its TTL (or unreadable). */
+  private _readAutoSave(): {savedAt: number; state: PageState} | null {
+    try {
+      const raw = localStorage.getItem(this._autoSaveKey);
+      if (!raw) return null;
+      const saved = JSON.parse(raw) as {savedAt: number; state: PageState};
+      if (!saved.state || Date.now() - saved.savedAt > AUTO_SAVE_TTL_MS) {
+        localStorage.removeItem(this._autoSaveKey);
+        return null;
+      }
+      return saved;
+    } catch {
+      return null;
+    }
+  }
+
+  /** Load the auto-saved page, if one exists within the 1-day TTL. */
+  restoreAutoSave = (): boolean => {
+    const saved = this._readAutoSave();
+    if (!saved) return false;
+    this._restoring = true;
+    try {
+      this._applyExternalState(saved.state);
+    } finally {
+      this._restoring = false;
+    }
+    this._restorePrompt = null;
+    return true;
+  };
+
+  /**
+   * A page was just loaded — when a fresh auto-save differs from it, ask the
+   * user whether to pick up their draft instead.
+   */
+  private _offerRestoreIfNewer() {
+    if (this.autoSave === null || this._restoring) return;
+    const saved = this._readAutoSave();
+    this._restorePrompt = saved && JSON.stringify(saved.state) !== JSON.stringify(this._state)
+      ? {savedAt: saved.savedAt}
+      : null;
   }
 
   protected willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
     if (changed.has('_selectedId')) this._buildInspectorForm();
+    if (changed.has('autoSave')) this._restartAutoSave();
   }
 
   // --- Slotted templates define section types --------------------------------
@@ -248,6 +388,7 @@ export default class ZnPageBuilder extends ZincElement {
     this._state = {sections};
     this._selectedId = null;
     this._pickerIndex = null;
+    this._offerRestoreIfNewer();
   }
 
   /** Finds a section by id, searching top-level sections and slotted children. */
@@ -552,20 +693,6 @@ export default class ZnPageBuilder extends ZincElement {
       if (matches.length) categories.set(category, matches);
     }
 
-    if (this.paletteCollapsed) {
-      return html`
-        <aside part="palette" class="palette palette--collapsed">
-          <button
-            type="button"
-            class="panel-toggle"
-            aria-label="Expand sections palette"
-            title="Expand sections palette"
-            @click="${() => (this.paletteCollapsed = false)}">
-            <zn-icon src="chevron_right" size="18"></zn-icon>
-          </button>
-        </aside>`;
-    }
-
     return html`
       <aside part="palette" class="palette">
         <div class="palette__title">
@@ -574,14 +701,6 @@ export default class ZnPageBuilder extends ZincElement {
             ${this.subheading ? html`
               <div class="palette__subheading">${this.subheading}</div>` : ''}
           </div>
-          <button
-            type="button"
-            class="panel-toggle"
-            aria-label="Collapse sections palette"
-            title="Collapse sections palette"
-            @click="${() => (this.paletteCollapsed = true)}">
-            <zn-icon src="chevron_left" size="18"></zn-icon>
-          </button>
         </div>
         <zn-input
           class="palette__search"
@@ -613,15 +732,69 @@ export default class ZnPageBuilder extends ZincElement {
         color="${ifDefined(type.color)}"></zn-page-palette-item>`;
   }
 
+  // Bottom-left of the canvas: flashes as each auto-save lands, otherwise
+  // shows how long ago the last one happened.
+  private _renderAutoSaveStatus() {
+    if (this.autoSave === null || (!this._justSaved && this._lastSavedAt === null)) return '';
+    const label = this._justSaved
+      ? 'Auto-saved'
+      : `Last saved ${timeAgo(Math.max(0, this._statusNow - (this._lastSavedAt ?? 0)))}`;
+    return html`
+      <div class="save-status ${this._justSaved ? 'save-status--saved' : ''}">
+        <zn-icon src="${this._justSaved ? 'check@lu' : 'history@lu'}" size="14"></zn-icon>
+        <span>${label}</span>
+      </div>
+    `;
+  }
+
+  // Offered when a loaded page differs from a fresh auto-saved draft.
+  private _renderRestorePrompt() {
+    if (!this._restorePrompt) return '';
+    return html`
+      <div class="restore-banner" @click="${(e: Event) => e.stopPropagation()}">
+        <zn-icon src="history@lu" size="16"></zn-icon>
+        <span>An auto-saved draft from ${timeAgo(Date.now() - this._restorePrompt.savedAt)} differs from this page.</span>
+        <button class="restore-banner__restore" @click="${() => this.restoreAutoSave()}">Restore</button>
+        <button class="restore-banner__dismiss" @click="${() => (this._restorePrompt = null)}">Dismiss</button>
+      </div>
+    `;
+  }
+
   private _renderCanvas() {
     const sections = this._state.sections;
     return html`
-      <main
-        part="canvas"
-        class="canvas"
-        @click="${() => this._select(null)}"
-        @dragover="${this._onCanvasDragOver}"
-        @drop="${this._onCanvasDrop}">
+      <div class="canvas-cell">
+        <button
+          type="button"
+          class="panel-toggle panel-toggle--left ${this.paletteCollapsed ? 'panel-toggle--tucked' : ''}"
+          title="${this.paletteCollapsed ? 'Show sections palette' : 'Hide sections palette'}"
+          aria-label="${this.paletteCollapsed ? 'Show sections palette' : 'Hide sections palette'}"
+          @click="${(e: Event) => {
+            e.stopPropagation();
+            this.paletteCollapsed = !this.paletteCollapsed;
+          }}">
+          <zn-icon src="${this.paletteCollapsed ? 'chevron-right@lu' : 'chevron-left@lu'}" size="16"></zn-icon>
+        </button>
+        ${this._selectedId ? html`
+          <button
+            type="button"
+            class="panel-toggle panel-toggle--right ${this.inspectorCollapsed ? 'panel-toggle--tucked' : ''}"
+            title="${this.inspectorCollapsed ? 'Show section settings' : 'Hide section settings'}"
+            aria-label="${this.inspectorCollapsed ? 'Show section settings' : 'Hide section settings'}"
+            @click="${(e: Event) => {
+              e.stopPropagation();
+              this.inspectorCollapsed = !this.inspectorCollapsed;
+            }}">
+            <zn-icon src="${this.inspectorCollapsed ? 'chevron-left@lu' : 'chevron-right@lu'}" size="16"></zn-icon>
+          </button>` : ''}
+        ${this._renderAutoSaveStatus()}
+        ${this._renderRestorePrompt()}
+        <main
+          part="canvas"
+          class="canvas"
+          @click="${() => this._select(null)}"
+          @dragover="${this._onCanvasDragOver}"
+          @drop="${this._onCanvasDrop}">
         ${sections.length === 0 ? html`
           <div class="canvas__empty" ?hidden="${this._dragOverIndex !== null}">
             Drag sections here to build your page
@@ -630,8 +803,9 @@ export default class ZnPageBuilder extends ZincElement {
           ${this._renderDropZone(i)}
           ${this._renderCard(section, i)}
         `)}
-        ${this._renderDropZone(sections.length)}
-      </main>`;
+          ${this._renderDropZone(sections.length)}
+        </main>
+      </div>`;
   }
 
   /** The one card template both the page list and slot cells render. */
@@ -831,31 +1005,8 @@ export default class ZnPageBuilder extends ZincElement {
     const section = this._selectedSection();
     if (!section) return html``;
     const type = this.registry.get(section.type);
-    if (this.inspectorCollapsed) {
-      return html`
-        <aside part="inspector" class="inspector inspector--collapsed">
-          <button
-            type="button"
-            class="panel-toggle"
-            aria-label="Expand section settings"
-            title="Expand section settings"
-            @click="${() => (this.inspectorCollapsed = false)}">
-            <zn-icon src="chevron_left" size="18"></zn-icon>
-          </button>
-        </aside>`;
-    }
     return html`
       <aside part="inspector" class="inspector">
-        <div class="inspector__header">
-          <button
-            type="button"
-            class="panel-toggle"
-            aria-label="Collapse section settings"
-            title="Collapse section settings"
-            @click="${() => (this.inspectorCollapsed = true)}">
-            <zn-icon src="chevron_right" size="18"></zn-icon>
-          </button>
-        </div>
         <zn-input
           class="inspector__rename"
           label="Section name"

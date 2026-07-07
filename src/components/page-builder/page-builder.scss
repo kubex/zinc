@@ -34,16 +34,29 @@
     grid-template-columns: var(--palette-col) minmax(0, 1fr) var(--inspector-col);
   }
 
+  transition: grid-template-columns 0.2s ease;
+
+  // Side panels tuck away via the canvas-edge chevrons (flow-builder pattern).
+  // Their border would floor the width above zero, so it collapses too.
   &--palette-collapsed {
-    --palette-col: 44px;
+    --palette-col: 0px;
+
+    .palette {
+      border-right: none;
+    }
   }
 
   &--inspector-collapsed {
-    --inspector-col: 44px;
+    --inspector-col: 0px;
+
+    .inspector {
+      padding: 0;
+      border-left: none;
+    }
   }
 }
 
-// :not() keeps these from out-cascading the collapsed modifiers' 44px rails.
+// :not() keeps these from out-cascading the collapsed modifiers' zero-width state.
 // 768 must match NARROW_WIDTH in page-builder.component.ts (palette auto-collapse).
 @container (max-width: 768px) {
   .builder:not(.builder--palette-collapsed) {
@@ -55,22 +68,47 @@
   }
 }
 
-// Chevron button that collapses / expands a side panel.
+// Chevrons straddling the canvas edges — tuck a side panel away / bring it
+// back (copied from flow-builder).
 .panel-toggle {
+  position: absolute;
+  top: 50%;
+  z-index: 6;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 auto;
-  width: 26px;
-  height: 26px;
-  border: none;
-  border-radius: 6px;
-  background: transparent;
-  color: rgb(var(--zn-text));
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border-radius: 50%;
+  color: rgb(var(--zn-color-muted-text));
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  box-shadow: 0 1px 3px rgba(var(--zn-shadow), 0.4);
   cursor: pointer;
+  transition: left 0.2s ease, right 0.2s ease, color 0.12s ease, border-color 0.12s ease;
 
   &:hover {
-    background: rgba(var(--zn-text), 0.08);
+    color: rgb(var(--zn-text));
+    border-color: rgb(var(--zn-color-border-active));
+  }
+
+  &--left {
+    left: -12px;
+
+    // With the panel tucked away, sit fully inside the canvas.
+    &.panel-toggle--tucked {
+      left: 8px;
+    }
+  }
+
+  &--right {
+    right: -12px;
+
+    &.panel-toggle--tucked {
+      right: 8px;
+    }
   }
 }
 
@@ -98,10 +136,19 @@
 // The hidden header leaves the grid entirely, so pin the panels to row 2
 // explicitly or auto-placement collapses the builder to content height.
 .palette,
-.canvas,
+.canvas-cell,
 .inspector {
   grid-row: 2;
   min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+// Non-scrolling wrapper: anchors the edge chevrons, save status and restore
+// banner so they don't scroll with (or get clipped by) the canvas.
+.canvas-cell {
+  position: relative;
+  overflow: visible; // the edge chevrons straddle the panel borders
 }
 
 // Left column — anatomy and metrics copied from flow-builder's steps panel
@@ -183,11 +230,6 @@
   &__uncategorized {
     padding: 8px var(--zn-base-gap);
   }
-
-  &--collapsed {
-    align-items: center;
-    padding: 8px 0;
-  }
 }
 
 zn-page-palette-item {
@@ -195,6 +237,8 @@ zn-page-palette-item {
 }
 
 .canvas {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -213,15 +257,6 @@ zn-page-palette-item {
   border-left: 1px solid rgb(var(--zn-border-color));
   overflow-y: auto;
 
-  &__header {
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  &--collapsed {
-    align-items: center;
-    padding: 8px 0;
-  }
 }
 
 .inspector__body,
@@ -379,6 +414,81 @@ zn-page-palette-item {
 
     &:hover {
       background: rgba(var(--zn-text), 0.08);
+    }
+  }
+}
+
+// Bottom-left status pill: flashes green as a save lands, then keeps a quiet
+// "last saved Xm ago" (copied from flow-builder).
+.save-status {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  color: rgb(var(--zn-color-muted-text));
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(var(--zn-shadow), 0.4);
+  pointer-events: none;
+  transition: color 0.15s ease, border-color 0.15s ease;
+
+  &--saved {
+    color: rgb(var(--zn-color-success));
+    border-color: color-mix(in srgb, rgb(var(--zn-color-success)) 45%, transparent);
+  }
+}
+
+// Offered when a loaded page differs from a fresh auto-saved draft.
+.restore-banner {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: calc(100% - 32px);
+  padding: 8px 12px;
+  font-size: 0.8125rem;
+  color: rgb(var(--zn-text));
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(var(--zn-shadow), 0.5);
+
+  button {
+    flex: 0 0 auto;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  &__restore {
+    color: rgb(var(--zn-panel));
+    background: rgb(var(--zn-color-primary));
+    border: none;
+
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+
+  &__dismiss {
+    color: rgb(var(--zn-color-muted-text));
+    background: transparent;
+    border: none;
+
+    &:hover {
+      background: rgb(var(--zn-color-tab));
     }
   }
 }

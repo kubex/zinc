@@ -7,7 +7,12 @@ export default {
   files: 'src/**/*.test.ts',
   concurrentBrowsers: 3,
   plugins: [
-    vitePlugin()
+    vitePlugin({
+      // Vite's dep optimizer rewrites the /__web-dev-server__web-socket.js dynamic
+      // import to a relative path the plugin's externaliser can't match — keep the
+      // packages that import it out of pre-bundling.
+      optimizeDeps: {exclude: ['@open-wc/testing', '@web/test-runner-commands']}
+    })
   ],
   filterBrowserLogs: removeViteLogging,
   browsers: [

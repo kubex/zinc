@@ -1,0 +1,109 @@
+@use "../../../../wc";
+
+:host {
+  --section-accent: rgb(var(--zn-color-primary));
+
+  display: block;
+  width: 100%;
+  max-width: var(--pb-card-width, 560px);
+  margin: 0 auto;
+  cursor: grab;
+  outline: none;
+}
+
+:host(:active) {
+  cursor: grabbing;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 8px;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+:host(:hover) .card,
+:host(:focus-visible) .card {
+  border-color: rgb(var(--zn-color-border-active));
+  box-shadow: 0 1px 3px rgba(var(--zn-shadow), 0.4);
+}
+
+:host([selected]) .card {
+  border-color: var(--section-accent);
+  box-shadow: 0 0 0 1px var(--section-accent);
+}
+
+:host([unknown]) .card {
+  opacity: 0.6;
+  border-style: dashed;
+}
+
+.card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--section-accent) 15%, transparent);
+  color: var(--section-accent);
+}
+
+.card__text {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.card__label {
+  font-weight: 600;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card__summary {
+  font-size: 12px;
+  opacity: 0.7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Space is always reserved (visibility, not display) so the card never
+// changes size or shifts its text when the actions appear on hover.
+.card__actions {
+  display: flex;
+  gap: 4px;
+  visibility: hidden;
+}
+
+:host(:hover) .card__actions,
+:host(:focus-within) .card__actions,
+:host([selected]) .card__actions {
+  visibility: visible;
+}
+
+.card__action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: rgb(var(--zn-text));
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(var(--zn-text), 0.08);
+  }
+}

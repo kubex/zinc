@@ -1,0 +1,70 @@
+@use "../../../../wc";
+
+// The card chrome lives on an inner wrapper, not :host — document-level CSS
+// resets (e.g. the docs site's `*` border reset) override :host rules but
+// cannot reach inside the shadow root.
+:host {
+  --section-accent: rgb(var(--zn-color-primary));
+
+  display: block;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: grab;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.item:hover {
+  border-color: rgb(var(--zn-color-border-active));
+  box-shadow: 0 1px 3px rgba(var(--zn-shadow), 0.4);
+}
+
+:host(:active) .item {
+  cursor: grabbing;
+}
+
+.item__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--section-accent) 15%, transparent);
+  color: var(--section-accent);
+}
+
+.item__text {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.item__label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.8125rem;
+}
+
+.item__description {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.75rem;
+  color: rgb(var(--zn-color-muted-text));
+}

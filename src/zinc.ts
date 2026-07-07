@@ -105,6 +105,9 @@ export { default as FlowSteps } from './components/flow-builder/modules/flow-ste
 export { default as FlowStepGroup } from './components/flow-builder/modules/flow-step-group';
 export { default as FlowStep } from './components/flow-builder/modules/flow-step';
 export { default as FlowBranchConditions } from './components/flow-builder/modules/flow-branch-conditions';
+export { default as PageBuilder } from './components/page-builder';
+export { default as PagePaletteItem } from './components/page-builder/modules/page-palette-item';
+export { default as PageSectionCard } from './components/page-builder/modules/page-section-card';
 /* plop:component */
 
 // Base Component

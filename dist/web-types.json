@@ -16,6 +16,28 @@
           "js": { "properties": [], "events": [] }
         },
         {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -70,28 +92,6 @@
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -3731,7 +3731,7 @@
         },
         {
           "name": "zn-flow-builder",
-          "description": "A drag-and-drop visual flow builder: steps panel, pan/zoom canvas, and a config inspector.\n---\n\n\n### **Events:**\n - **zn-flow-change** - Emitted whenever the flow state changes. `event.detail.state` is the new FlowState.\n- **zn-flow-selection-change** - Emitted when the selected node changes. `event.detail.nodeId`.\n- **zn-flow-connect** - Emitted when a connection is created. `event.detail.connection`.\n\n### **Slots:**\n - _default_ - `<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the step into the right tab and collapsible grouping of the rendered panel.\n- **header-left** - Actions shown on the left of the header bar (e.g. Close / Undo All Changes).\n- **header-right** - Actions shown on the right of the header bar (e.g. Apply Changes).\n- **sidebar** - Extra right-panel content (status, version history), below the configuration errors.\n\n### **CSS Parts:**\n - **base** - The grid wrapper.\n- **header** - The full-width header action bar (only rendered when header slots are filled).\n- **steps** - The left steps panel.\n- **inspector** - The right panel while a node or branch is selected.",
+          "description": "A drag-and-drop visual flow builder: steps panel, pan/zoom canvas, and a config inspector.\n---\n\n\n### **Events:**\n - **zn-flow-change** - Emitted whenever the flow state changes. `event.detail.state` is the new FlowState.\n- **zn-flow-selection-change** - Emitted when the selected node changes. `event.detail.nodeId`.\n- **zn-flow-connect** - Emitted when a connection is created. `event.detail.connection`.\n\n### **Methods:**\n - **restoreAutoSave(): _boolean_** - Load the auto-saved flow, if one exists within the 1-day TTL.\n- **toJSON(): _FlowState_** - The full flow state — nodes with their positions, connections, branch\ndata, and notes — ready for persisting. Lets `JSON.stringify(builder)`\nserialize the flow directly, e.g. as a POST body.\n\n### **Slots:**\n - _default_ - `<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the step into the right tab and collapsible grouping of the rendered panel. A step may nest `<zn-flow-filter>` declarations (each holding `<zn-flow-filter-field>`s, whose operator / option choices are nested `<zn-flow-operator>` / `<zn-flow-option>` elements) — or set a `branch-filters` JSON attribute — to drive the built-in branch conditions editor.\n- **header-left** - Actions shown on the left of the header bar (e.g. Close / Undo All Changes).\n- **header-right** - Actions shown on the right of the header bar (e.g. Apply Changes).\n- **sidebar** - Extra right-panel content (status, version history), below the configuration errors.\n\n### **CSS Parts:**\n - **base** - The grid wrapper.\n- **header** - The full-width header action bar (only rendered when header slots are filled).\n- **steps** - The left steps panel.\n- **inspector** - The right panel while a node or branch is selected.",
           "doc-url": "",
           "attributes": [
             {
@@ -3741,6 +3741,11 @@
             {
               "name": "subheading",
               "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "auto-save",
+              "description": "Auto-save the flow to localStorage (1-day TTL). Omit to disable. A bare\n`auto-save` saves every 5 minutes; a numeric value sets the interval in\nminutes (`auto-save=\"5\"`). Restore with `restoreAutoSave()`.",
+              "value": { "type": "number | null", "default": "null" }
             },
             {
               "name": "entrypoints-hint",
@@ -3763,7 +3768,7 @@
           "slots": [
             {
               "name": "",
-              "description": "`<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the step into the right tab and collapsible grouping of the rendered panel."
+              "description": "`<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the step into the right tab and collapsible grouping of the rendered panel. A step may nest `<zn-flow-filter>` declarations (each holding `<zn-flow-filter-field>`s, whose operator / option choices are nested `<zn-flow-operator>` / `<zn-flow-option>` elements) — or set a `branch-filters` JSON attribute — to drive the built-in branch conditions editor."
             },
             {
               "name": "header-left",
@@ -3805,6 +3810,11 @@
                 "name": "errorNodes",
                 "description": "Node ids flagged as having configuration errors (drives the red node styling).",
                 "type": "string[]"
+              },
+              {
+                "name": "autoSave",
+                "description": "Auto-save the flow to localStorage (1-day TTL). Omit to disable. A bare\n`auto-save` saves every 5 minutes; a numeric value sets the interval in\nminutes (`auto-save=\"5\"`). Restore with `restoreAutoSave()`.",
+                "type": "number | null"
               },
               {
                 "name": "entrypointsHint",

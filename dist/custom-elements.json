@@ -49,6 +49,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -219,79 +292,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -13163,7 +13163,7 @@
           ],
           "slots": [
             {
-              "description": "`<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the step into the right tab and collapsible grouping of the rendered panel.",
+              "description": "`<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the step into the right tab and collapsible grouping of the rendered panel. A step may nest `<zn-flow-filter>` declarations (each holding `<zn-flow-filter-field>`s, whose operator / option choices are nested `<zn-flow-operator>` / `<zn-flow-option>` elements) — or set a `branch-filters` JSON attribute — to drive the built-in branch conditions editor.",
               "name": ""
             },
             {
@@ -13187,7 +13187,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ 'zn-icon': ZnIcon, 'zn-input': ZnInput, 'zn-tabs': ZnTabs, 'zn-navbar': ZnNavbar, 'zn-flow-canvas': ZnFlowCanvas, 'zn-flow-step-group': ZnFlowStepGroup, }"
+              "default": "{ 'zn-icon': ZnIcon, 'zn-input': ZnInput, 'zn-tabs': ZnTabs, 'zn-navbar': ZnNavbar, 'zn-flow-branch-conditions': ZnFlowBranchConditions, 'zn-flow-canvas': ZnFlowCanvas, 'zn-flow-step-group': ZnFlowStepGroup, }"
             },
             {
               "kind": "field",
@@ -13226,6 +13226,16 @@
               },
               "default": "[]",
               "description": "Node ids flagged as having configuration errors (drives the red node styling)."
+            },
+            {
+              "kind": "field",
+              "name": "autoSave",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "description": "Auto-save the flow to localStorage (1-day TTL). Omit to disable. A bare\n`auto-save` saves every 5 minutes; a numeric value sets the interval in\nminutes (`auto-save=\"5\"`). Restore with `restoreAutoSave()`.",
+              "attribute": "auto-save"
             },
             {
               "kind": "field",
@@ -13325,6 +13335,25 @@
             },
             {
               "kind": "field",
+              "name": "_stepsCollapsed",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Side panels tucked away via their edge chevrons."
+            },
+            {
+              "kind": "field",
+              "name": "_sideCollapsed",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
               "name": "_movingNodeId",
               "type": {
                 "text": "string | null"
@@ -13420,6 +13449,132 @@
             },
             {
               "kind": "field",
+              "name": "_autoSaveTimer",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_statusTimer",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_justSavedTimer",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_restoring",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Guards the restore prompt from re-triggering on restoreAutoSave's own setState."
+            },
+            {
+              "kind": "field",
+              "name": "_lastSavedAt",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "Epoch of the newest auto-save (also picked up from storage on start)."
+            },
+            {
+              "kind": "field",
+              "name": "_justSaved",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Briefly true right after a save — flashes \"Auto-saved\" in the status pill."
+            },
+            {
+              "kind": "field",
+              "name": "_statusNow",
+              "privacy": "private",
+              "description": "Re-render clock for the \"last saved Xm ago\" label."
+            },
+            {
+              "kind": "field",
+              "name": "_restorePrompt",
+              "type": {
+                "text": "{ savedAt: number } | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "A fresh auto-save differing from the loaded flow — offer to restore it."
+            },
+            {
+              "kind": "field",
+              "name": "_autoSaveKey",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "description": "localStorage key for this builder's auto-saves — its id, else its heading.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_stopAutoSave",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_restartAutoSave",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_autoSaveTick",
+              "privacy": "private",
+              "description": "An empty canvas is never saved — it would clobber a stored flow with nothing."
+            },
+            {
+              "kind": "method",
+              "name": "_readAutoSave",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "{ savedAt: number; state: FlowState } | null"
+                }
+              },
+              "description": "The stored auto-save, purging it when past its TTL (or unreadable)."
+            },
+            {
+              "kind": "method",
+              "name": "restoreAutoSave",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Load the auto-saved flow, if one exists within the 1-day TTL."
+            },
+            {
+              "kind": "method",
+              "name": "_offerRestoreIfNewer",
+              "privacy": "private",
+              "description": "A flow was just loaded — when a fresh auto-save differs from it, ask the\nuser whether to pick up their draft instead."
+            },
+            {
+              "kind": "field",
               "name": "_onKeyDown",
               "privacy": "private"
             },
@@ -13441,6 +13596,91 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "_parseFilterOptions",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "FlowFilterOption[] | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "attr",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ],
+              "description": "Parse an operator / option list: a JSON array (strings or `{value,label}`) or comma-separated values."
+            },
+            {
+              "kind": "method",
+              "name": "_nestedFilterOptions",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "FlowFilterOption[] | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "Element"
+                  }
+                },
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Option list declared as child elements — the tidy form. The element's text\nis the label; a `value` attribute overrides the stored value:\n`<zn-flow-operator value=\"gte\">at least</zn-flow-operator>`."
+            },
+            {
+              "kind": "method",
+              "name": "_filterFieldFromEl",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "FlowFilterField | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "Element"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_parseBranchFilters",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "FlowBranchFilter[] | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "Element"
+                  }
+                }
+              ],
+              "description": "A step's branch filters: the `branch-filters` JSON attribute, or nested\n`<zn-flow-filter>` declarations each holding `<zn-flow-filter-field>`s."
             },
             {
               "kind": "method",
@@ -13527,6 +13767,16 @@
               "type": {
                 "text": "string"
               }
+            },
+            {
+              "kind": "method",
+              "name": "toJSON",
+              "return": {
+                "type": {
+                  "text": "FlowState"
+                }
+              },
+              "description": "The full flow state — nodes with their positions, connections, branch\ndata, and notes — ready for persisting. Lets `JSON.stringify(builder)`\nserialize the flow directly, e.g. as a POST body."
             },
             {
               "kind": "field",
@@ -14066,6 +14316,32 @@
             },
             {
               "kind": "method",
+              "name": "_saveBranchConditions",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "FlowNodeInstance"
+                  }
+                },
+                {
+                  "name": "port",
+                  "type": {
+                    "text": "FlowPort"
+                  }
+                },
+                {
+                  "name": "conditions",
+                  "type": {
+                    "text": "FlowBranchConditions"
+                  }
+                }
+              ],
+              "description": "Persist the built-in conditions editor's draft onto the branch and close it. Undoable."
+            },
+            {
+              "kind": "method",
               "name": "_renderBranchEditor",
               "privacy": "private",
               "parameters": [
@@ -14096,6 +14372,16 @@
             {
               "kind": "method",
               "name": "_renderSidebar",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_renderAutoSaveStatus",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_renderRestorePrompt",
               "privacy": "private"
             },
             {
@@ -14149,6 +14435,15 @@
               "fieldName": "subheading"
             },
             {
+              "name": "auto-save",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "description": "Auto-save the flow to localStorage (1-day TTL). Omit to disable. A bare\n`auto-save` saves every 5 minutes; a numeric value sets the interval in\nminutes (`auto-save=\"5\"`). Restore with `restoreAutoSave()`.",
+              "fieldName": "autoSave"
+            },
+            {
               "name": "entrypoints-hint",
               "type": {
                 "text": "string"
@@ -14190,7 +14485,7 @@
           "tagNameWithoutPrefix": "flow-builder",
           "tagName": "zn-flow-builder",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A drag-and-drop visual flow builder: steps panel, pan/zoom canvas, and a config inspector.\n * @documentation https://zinc.style/components/flow-builder\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n * @dependency zn-input\n * @dependency zn-tabs\n * @dependency zn-navbar\n * @dependency zn-flow-canvas\n * @dependency zn-flow-node\n *\n * @event zn-flow-change - Emitted whenever the flow state changes. `event.detail.state` is the new FlowState.\n * @event zn-flow-selection-change - Emitted when the selected node changes. `event.detail.nodeId`.\n * @event zn-flow-connect - Emitted when a connection is created. `event.detail.connection`.\n *\n * @slot - `<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the\n *   step into the right tab and collapsible grouping of the rendered panel.\n * @slot header-left - Actions shown on the left of the header bar (e.g. Close / Undo All Changes).\n * @slot header-right - Actions shown on the right of the header bar (e.g. Apply Changes).\n * @slot sidebar - Extra right-panel content (status, version history), below the configuration errors.\n *\n * @csspart base - The grid wrapper.\n * @csspart header - The full-width header action bar (only rendered when header slots are filled).\n * @csspart steps - The left steps panel.\n * @csspart inspector - The right panel while a node or branch is selected.\n */",
+          "jsDoc": "/**\n * @summary A drag-and-drop visual flow builder: steps panel, pan/zoom canvas, and a config inspector.\n * @documentation https://zinc.style/components/flow-builder\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n * @dependency zn-input\n * @dependency zn-tabs\n * @dependency zn-navbar\n * @dependency zn-flow-branch-conditions\n * @dependency zn-flow-canvas\n * @dependency zn-flow-node\n *\n * @event zn-flow-change - Emitted whenever the flow state changes. `event.detail.state` is the new FlowState.\n * @event zn-flow-selection-change - Emitted when the selected node changes. `event.detail.nodeId`.\n * @event zn-flow-connect - Emitted when a connection is created. `event.detail.connection`.\n *\n * @slot - `<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the\n *   step into the right tab and collapsible grouping of the rendered panel. A step may nest\n *   `<zn-flow-filter>` declarations (each holding `<zn-flow-filter-field>`s, whose operator /\n *   option choices are nested `<zn-flow-operator>` / `<zn-flow-option>` elements) — or set a\n *   `branch-filters` JSON attribute — to drive the built-in branch conditions editor.\n * @slot header-left - Actions shown on the left of the header bar (e.g. Close / Undo All Changes).\n * @slot header-right - Actions shown on the right of the header bar (e.g. Apply Changes).\n * @slot sidebar - Extra right-panel content (status, version history), below the configuration errors.\n *\n * @csspart base - The grid wrapper.\n * @csspart header - The full-width header action bar (only rendered when header slots are filled).\n * @csspart steps - The left steps panel.\n * @csspart inspector - The right panel while a node or branch is selected.\n */",
           "documentation": "https://zinc.style/components/flow-builder",
           "status": "experimental",
           "since": "1.0",
@@ -14199,6 +14494,7 @@
             "zn-input",
             "zn-tabs",
             "zn-navbar",
+            "zn-flow-branch-conditions",
             "zn-flow-canvas",
             "zn-flow-node"
           ]

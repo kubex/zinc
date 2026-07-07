@@ -8441,6 +8441,57 @@ declare module "components/flow-builder/flow.types" {
         /** Branch configuration (filters / conditions for taking this path), edited via the branch editor. */
         data?: Record<string, unknown>;
     }
+    /** A choice in a filter field's operator or value dropdown. */
+    export interface FlowFilterOption {
+        value: string;
+        /** Display text; defaults to the value. */
+        label?: string;
+    }
+    /** One control row of a branch filter (e.g. "[in the last ▾] [6] [month(s) ▾]"). */
+    export interface FlowFilterField {
+        id: string;
+        /** Leading text shown before the controls. */
+        label?: string;
+        /** The value control. Defaults to 'select' when `options` are given, else 'text'. */
+        type?: 'select' | 'number' | 'text';
+        /** Operator choices shown before the value (e.g. "at least" / "in the last" / "is equal to"). */
+        operators?: FlowFilterOption[];
+        /** Value choices for a 'select' field. */
+        options?: FlowFilterOption[];
+        /** Choices for an adjustable trailing unit dropdown (e.g. day(s) / month(s)); shown instead of `suffix`. */
+        units?: FlowFilterOption[];
+        /** Trailing unit text (e.g. "time(s)") when the unit isn't adjustable. */
+        suffix?: string;
+        placeholder?: string;
+        /** Initial value when the filter is added to a condition. */
+        value?: string | number;
+    }
+    /** An operator's display label: its own, a well-known default for its value, else the value itself. */
+    export function operatorLabel(option: FlowFilterOption): string;
+    /** A filter offered by the built-in branch conditions editor. */
+    export interface FlowBranchFilter {
+        id: string;
+        label: string;
+        description?: string;
+        fields: FlowFilterField[];
+    }
+    /** One configured condition: a filter plus its per-field operator / value / unit entries. */
+    export interface FlowBranchCondition {
+        /** The `FlowBranchFilter` id this condition uses. */
+        filter: string;
+        values: Record<string, {
+            operator?: string;
+            value?: string | number;
+            unit?: string;
+        }>;
+    }
+    /**
+     * A branch's full condition set as persisted on the output port's
+     * `data.conditions`: the outer array is OR-ed, each inner group AND-ed.
+     */
+    export type FlowBranchConditions = FlowBranchCondition[][];
+    /** Read the conditions persisted on an output port (`port.data.conditions`). */
+    export function branchConditions(port: FlowPort): FlowBranchConditions;
     /**
      * Describes a kind of node that can be placed on the canvas. Consumers register
      * these with the builder to extend it — the steps panel and inspector are driven
@@ -8468,6 +8519,12 @@ declare module "components/flow-builder/flow.types" {
         outputs?: FlowPort[];
         /** Initial `data` for a freshly placed node. */
         defaultData?: Record<string, unknown>;
+        /**
+         * Filters offered by the built-in branch conditions editor for this type's
+         * output branches (AND/OR groups persisted on the port's `data.conditions`).
+         * Ignored when `renderBranchConfig` is set.
+         */
+        branchFilters?: FlowBranchFilter[];
         /** Renders the inspector body for a selected node of this type. */
         renderConfig?: (node: FlowNodeInstance, update: (data: Record<string, unknown>) => void) => TemplateResult;
         /** Renders the branch editor body (filters / conditions) for one of this type's output branches. */
@@ -8533,14 +8590,27 @@ declare module "components/flow-builder/flow.types" {
      */
     export const NODE_WIDTH = 240;
     export const NODE_HEIGHT = 60;
-    /** Horizontal spacing between the branches of a multi-output node. */
-    export const BRANCH_SPREAD = 200;
+    /**
+     * Horizontal spacing between the branches of a multi-output node. Matches the
+     * untangle layer gap (card width + 80) so two sibling children fit side by side
+     * directly under their drops — straight downward wires, no elbows.
+     */
+    export const BRANCH_SPREAD: number;
     export const BUS_OFFSET = 40;
     export const PILL_DROP = 40;
     export const PILL_HEIGHT = 40;
     export const PILL_MAX_WIDTH = 240;
     /** Extra pill height per wrapped line (matches the pill's CSS line-height). */
     export const PILL_LINE_HEIGHT = 20;
+    /**
+     * Canvas y of a branch pill's top edge. A pill on a wire to a child below is
+     * centred along the run from its node's bottom to the child's top — equal wire
+     * above and below, however long or tight. A sole output's wire is a straight
+     * stem with no bus to respect, so its pill may rise above the bus line to stay
+     * centred; fan branches stop at the bus. Open branches and loop/side wires
+     * keep the fixed drop below the bus.
+     */
+    export function branchPillTop(node: Pick<FlowNodeInstance, 'y'>, pillH: number, child?: Pick<FlowNodeInstance, 'y'>, soleOutput?: boolean): number;
     /**
      * Estimated pill box for a branch name: sizes to the text up to the max width,
      * then hard-wraps — the height grows a grid unit per extra line. The pill DOM
@@ -8565,12 +8635,13 @@ declare module "components/flow-builder/flow.types" {
     /** A function resolving a node type key to its registered type. */
     export type FlowTypeOf = (type: string) => FlowNodeType | undefined;
     /**
-     * Canvas x for each of a node's branch drops. A connected branch pulls straight
-     * above its child's input — a bend-free wire — when it's the only wire into that
-     * input, the child is within the branch's natural fan range, and the position
-     * keeps clear of sibling branches; otherwise it fans out source-side.
+     * Canvas x for each of a node's branch drops: the natural fan position under
+     * the source. Pills never shift sideways to chase their child — the wire into
+     * a pill is always a straight vertical, and any lateral offset to the child is
+     * taken up by the elbow below the pill (which still enters the child from
+     * straight above).
      */
-    export function branchDropXs(node: FlowNodeInstance, typeOf: FlowTypeOf, nodes: FlowNodeInstance[], connections: FlowConnection[]): number[];
+    export function branchDropXs(node: FlowNodeInstance, typeOf: FlowTypeOf): number[];
     /**
      * The rects a node occupies on the canvas: its card plus each branch-name pill,
      * at the exact positions the canvas draws them.
@@ -8621,6 +8692,88 @@ declare module "components/flow-builder/flow.types" {
      * render loop wires distinctly and to keep the untangle layering acyclic.
      */
     export function loopConnections(nodes: FlowNodeInstance[], connections: FlowConnection[]): Set<FlowConnection>;
+}
+declare module "components/flow-builder/modules/flow-branch-conditions/flow-branch-conditions.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    import ZnIcon from "components/icon/index";
+    import ZnInput from "components/input/index";
+    import ZnOption from "components/option/index";
+    import ZnSelect from "components/select/index";
+    import { type FlowBranchConditions, type FlowBranchFilter } from "components/flow-builder/flow.types";
+    /**
+     * @summary The built-in branch conditions editor: pick filters from a searchable list, then
+     *   combine them into AND groups joined by OR. Rendered by `<zn-flow-builder>`'s branch editor
+     *   for node types that declare `branchFilters`; edits are drafted locally and only applied
+     *   on Save.
+     * @documentation https://zinc.style/components/flow-branch-conditions
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-button
+     * @dependency zn-icon
+     * @dependency zn-input
+     * @dependency zn-option
+     * @dependency zn-select
+     *
+     * @event flow-conditions-save - Emitted on Save with `detail.conditions` (OR groups of AND-ed conditions).
+     * @event flow-conditions-cancel - Emitted on Cancel, with the draft discarded.
+     *
+     * @csspart base - The editor wrapper.
+     * @csspart picker - The filter picker (search + list).
+     * @csspart conditions - The configured condition groups.
+     */
+    export default class ZnFlowBranchConditions extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-button': typeof ZnButton;
+            'zn-icon': typeof ZnIcon;
+            'zn-input': typeof ZnInput;
+            'zn-option': typeof ZnOption;
+            'zn-select': typeof ZnSelect;
+        };
+        /** The filters available to build conditions from. */
+        filters: FlowBranchFilter[];
+        /** The saved conditions being edited; changes stay in a local draft until Save. */
+        value: FlowBranchConditions;
+        private _draft;
+        /** Group index the picker adds into (`_draft.length` starts a new OR group), or null when closed. */
+        private _picker;
+        private _search;
+        /** JSON of the last `value` the draft was built from, so re-renders that pass an
+         *  equivalent value (fresh array refs) don't wipe in-progress edits. */
+        private _valueJson;
+        protected willUpdate(changed: PropertyValues): void;
+        private _emit;
+        private _save;
+        private _cancel;
+        private _cloneDraft;
+        private _addCondition;
+        private _removeCondition;
+        private _setField;
+        private _renderPicker;
+        /**
+         * A select's minimum width, sized so its longest label never truncates
+         * (estimated per char, plus padding and the chevron). When the row can't
+         * fit it, flex-wrap gives the select its own full-width line instead.
+         */
+        private static _selectMinWidth;
+        private _renderField;
+        private _renderCondition;
+        private _renderConditions;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/flow-builder/modules/flow-branch-conditions/index" {
+    import ZnFlowBranchConditions from "components/flow-builder/modules/flow-branch-conditions/flow-branch-conditions.component";
+    export * from "components/flow-builder/modules/flow-branch-conditions/flow-branch-conditions.component";
+    export default ZnFlowBranchConditions;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-flow-branch-conditions': ZnFlowBranchConditions;
+        }
+    }
 }
 declare module "components/flow-builder/modules/flow-node/flow-node.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
@@ -8742,6 +8895,7 @@ declare module "components/flow-builder/modules/flow-canvas/flow-canvas.componen
      *
      * @csspart base - The canvas viewport.
      * @csspart toolbar - The floating toolbar.
+     * @csspart bin - The delete drop-zone shown bottom-right while dragging a node or step.
      */
     export default class ZnFlowCanvas extends ZincElement {
         static styles: CSSResultGroup;
@@ -8766,6 +8920,8 @@ declare module "components/flow-builder/modules/flow-canvas/flow-canvas.componen
         private panX;
         private panY;
         private drag;
+        /** Whether the current drag (node or step) is over the delete bin. */
+        private _overBin;
         /** Canvas-space top-left where a step, if dropped now, would be placed. */
         private _dropGhost;
         /** The stray branch being drawn from an output port until it attaches or cancels. */
@@ -8808,6 +8964,12 @@ declare module "components/flow-builder/modules/flow-canvas/flow-canvas.componen
          * builder on attach).
          */
         private _onPortClick;
+        /**
+         * An orphaned branch pill's port was clicked. If a branch from another node
+         * is already in flight, attach it to this pill's node; otherwise start a
+         * stray branch that continues from this pill.
+         */
+        private _onBranchPortClick;
         private _startLink;
         private _onLinkPointerMove;
         private _updateLinkFromClient;
@@ -8821,6 +8983,8 @@ declare module "components/flow-builder/modules/flow-canvas/flow-canvas.componen
         private _cancelLink;
         private _onPointerMove;
         private _onPointerUp;
+        /** Whether a client-space point is over the delete bin. */
+        private _binHit;
         private _beginMove;
         /**
          * A node's outputs all leave from a single bottom-centre stem and fan out along a
@@ -8868,6 +9032,9 @@ declare module "components/flow-builder/modules/flow-canvas/flow-canvas.componen
         private _onAddPointDragOver;
         private _onAddDrop;
         private _onWireDrop;
+        private _onBinDragOver;
+        private _onBinDragLeave;
+        private _onBinDrop;
         private _zoomBy;
         /** Canvas-space bounding box of the whole flow: nodes, branch drops, and notes. */
         private _contentBounds;
@@ -8939,10 +9106,13 @@ declare module "components/flow-builder/modules/flow-step-group/index" {
 }
 declare module "components/flow-builder/flow-layout" {
     import { type FlowNodeType, type FlowState } from "components/flow-builder/flow.types";
-    /** Horizontal gap between node origins within a layer. */
+    /** Horizontal gap between node origins within a layer (= BRANCH_SPREAD, so siblings land under their drops). */
     export const LAYOUT_H_GAP: number;
-    /** Vertical gap between layers — clears the bus, a branch pill, and the wire run-in. */
-    export const LAYOUT_V_GAP = 300;
+    /**
+     * Vertical gap between layers: a 160 card-to-card gap — a centred pill gets 60
+     * of wire above and below — keeping the arranged flow compact.
+     */
+    export const LAYOUT_V_GAP = 220;
     /**
      * "Untangle" auto-layout: assigns every node a position in a layered, top-down
      * flow. Layers come from the longest path back to a root (the graph is a DAG —
@@ -8959,6 +9129,7 @@ declare module "components/flow-builder/flow-layout" {
 declare module "components/flow-builder/flow-builder.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import ZnFlowBranchConditions from "components/flow-builder/modules/flow-branch-conditions/index";
     import ZnFlowCanvas from "components/flow-builder/modules/flow-canvas/index";
     import ZnFlowStepGroup from "components/flow-builder/modules/flow-step-group/index";
     import ZnIcon from "components/icon/index";
@@ -8976,6 +9147,7 @@ declare module "components/flow-builder/flow-builder.component" {
      * @dependency zn-input
      * @dependency zn-tabs
      * @dependency zn-navbar
+     * @dependency zn-flow-branch-conditions
      * @dependency zn-flow-canvas
      * @dependency zn-flow-node
      *
@@ -8984,7 +9156,10 @@ declare module "components/flow-builder/flow-builder.component" {
      * @event zn-flow-connect - Emitted when a connection is created. `event.detail.connection`.
      *
      * @slot - `<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the
-     *   step into the right tab and collapsible grouping of the rendered panel.
+     *   step into the right tab and collapsible grouping of the rendered panel. A step may nest
+     *   `<zn-flow-filter>` declarations (each holding `<zn-flow-filter-field>`s, whose operator /
+     *   option choices are nested `<zn-flow-operator>` / `<zn-flow-option>` elements) — or set a
+     *   `branch-filters` JSON attribute — to drive the built-in branch conditions editor.
      * @slot header-left - Actions shown on the left of the header bar (e.g. Close / Undo All Changes).
      * @slot header-right - Actions shown on the right of the header bar (e.g. Apply Changes).
      * @slot sidebar - Extra right-panel content (status, version history), below the configuration errors.
@@ -9001,6 +9176,7 @@ declare module "components/flow-builder/flow-builder.component" {
             'zn-input': typeof ZnInput;
             'zn-tabs': typeof ZnTabs;
             'zn-navbar': typeof ZnNavbar;
+            'zn-flow-branch-conditions': typeof ZnFlowBranchConditions;
             'zn-flow-canvas': typeof ZnFlowCanvas;
             'zn-flow-step-group': typeof ZnFlowStepGroup;
         };
@@ -9010,6 +9186,12 @@ declare module "components/flow-builder/flow-builder.component" {
         subheading: string;
         /** Node ids flagged as having configuration errors (drives the red node styling). */
         errorNodes: string[];
+        /**
+         * Auto-save the flow to localStorage (1-day TTL). Omit to disable. A bare
+         * `auto-save` saves every 5 minutes; a numeric value sets the interval in
+         * minutes (`auto-save="5"`). Restore with `restoreAutoSave()`.
+         */
+        autoSave: number | null;
         /** Optional hint shown beneath each steps-panel tab. */
         entrypointsHint: string;
         triggersHint: string;
@@ -9024,6 +9206,9 @@ declare module "components/flow-builder/flow-builder.component" {
         /** The steps-panel tab currently shown; the search only filters this tab. */
         private _activeGroup;
         private readonly _hasSlot;
+        /** Side panels tucked away via their edge chevrons. */
+        private _stepsCollapsed;
+        private _sideCollapsed;
         /** The node being relocated via the MOVE menu action, if any. */
         private _movingNodeId;
         /** The "+" picker popover target (an open output, or a wire to insert into), if open. */
@@ -9046,10 +9231,52 @@ declare module "components/flow-builder/flow-builder.component" {
         private get _listeners();
         connectedCallback(): void;
         disconnectedCallback(): void;
+        private _autoSaveTimer;
+        private _statusTimer;
+        private _justSavedTimer;
+        /** Guards the restore prompt from re-triggering on restoreAutoSave's own setState. */
+        private _restoring;
+        /** Epoch of the newest auto-save (also picked up from storage on start). */
+        private _lastSavedAt;
+        /** Briefly true right after a save — flashes "Auto-saved" in the status pill. */
+        private _justSaved;
+        /** Re-render clock for the "last saved Xm ago" label. */
+        private _statusNow;
+        /** A fresh auto-save differing from the loaded flow — offer to restore it. */
+        private _restorePrompt;
+        /** localStorage key for this builder's auto-saves — its id, else its heading. */
+        private get _autoSaveKey();
+        private _stopAutoSave;
+        private _restartAutoSave;
+        /** An empty canvas is never saved — it would clobber a stored flow with nothing. */
+        private _autoSaveTick;
+        /** The stored auto-save, purging it when past its TTL (or unreadable). */
+        private _readAutoSave;
+        /** Load the auto-saved flow, if one exists within the 1-day TTL. */
+        restoreAutoSave(): boolean;
+        /**
+         * A flow was just loaded — when a fresh auto-save differs from it, ask the
+         * user whether to pick up their draft instead.
+         */
+        private _offerRestoreIfNewer;
         private _onKeyDown;
         protected willUpdate(changed: PropertyValues): void;
         protected firstUpdated(changed: PropertyValues): void;
         private static _parsePorts;
+        /** Parse an operator / option list: a JSON array (strings or `{value,label}`) or comma-separated values. */
+        private static _parseFilterOptions;
+        /**
+         * Option list declared as child elements — the tidy form. The element's text
+         * is the label; a `value` attribute overrides the stored value:
+         * `<zn-flow-operator value="gte">at least</zn-flow-operator>`.
+         */
+        private static _nestedFilterOptions;
+        private static _filterFieldFromEl;
+        /**
+         * A step's branch filters: the `branch-filters` JSON attribute, or nested
+         * `<zn-flow-filter>` declarations each holding `<zn-flow-filter-field>`s.
+         */
+        private static _parseBranchFilters;
         private _typeFromStep;
         /** Register a FlowNodeType for every slotted <zn-flow-step>. */
         private _registerSlottedTypes;
@@ -9059,6 +9286,12 @@ declare module "components/flow-builder/flow-builder.component" {
         setState(next: FlowState): void;
         get value(): string;
         set value(json: string);
+        /**
+         * The full flow state — nodes with their positions, connections, branch
+         * data, and notes — ready for persisting. Lets `JSON.stringify(builder)`
+         * serialize the flow directly, e.g. as a POST body.
+         */
+        toJSON(): FlowState;
         undo: () => void;
         redo: () => void;
         /**
@@ -9140,10 +9373,14 @@ declare module "components/flow-builder/flow-builder.component" {
         private _renderInspector;
         /** Replace one of the node's output ports (per-instance override), keeping its id. */
         private _updateBranch;
+        /** Persist the built-in conditions editor's draft onto the branch and close it. Undoable. */
+        private _saveBranchConditions;
         private _renderBranchEditor;
         private _renderRightPanel;
         private _renderHeader;
         private _renderSidebar;
+        private _renderAutoSaveStatus;
+        private _renderRestorePrompt;
         private _renderPicker;
         private _pickType;
         render(): import("lit-html").TemplateResult<1>;
@@ -9225,7 +9462,8 @@ declare module "components/flow-builder/modules/flow-step/flow-step.component" {
      * @event flow-step-drag - Emitted on dragstart with `detail.type`, so the builder can preview the drop.
      * @event flow-step-drag-end - Emitted on dragend.
      *
-     * @slot - The step's label.
+     * @slot - The step's label. May also hold `<zn-flow-filter>` declarations (never displayed)
+     *   that drive the flow builder's built-in branch conditions editor.
      *
      * @csspart base - The row.
      */
@@ -9534,6 +9772,7 @@ declare module "zinc" {
     export { default as FlowSteps } from "components/flow-builder/modules/flow-steps/index";
     export { default as FlowStepGroup } from "components/flow-builder/modules/flow-step-group/index";
     export { default as FlowStep } from "components/flow-builder/modules/flow-step/index";
+    export { default as FlowBranchConditions } from "components/flow-builder/modules/flow-branch-conditions/index";
     export { default as ZincElement } from "internal/zinc-element";
     export * from "utilities/on";
     export * from "utilities/query";

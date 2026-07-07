@@ -136,33 +136,90 @@
         const QUESTION_COLOR = 'rgb(43, 192, 145)';
         const ANSWER_COLOR = 'rgb(59, 130, 246)';
 
-        // Shared branch editor body: the conditions/filters required to take this path.
-        // The builder supplies the "Branch name" input; this adds the condition fields,
-        // persisted on the output port's `data`.
-        const renderBranchConfig = (node, port, update) => {
-          const wrap = document.createElement('div');
-          wrap.style.cssText = 'display:flex;flex-direction:column;gap:10px';
+        // Shared branch filters: clicking a branch pill opens the built-in conditions
+        // editor (searchable picker, AND groups joined by OR), saved onto the output
+        // port's `data.conditions`. Operators without labels (eq, neq, gte…) get
+        // their well-known default labels.
+        const branchFilters = [
+          {
+            id: 'platform',
+            label: 'Platform',
+            description: 'The operating system the user reported',
+            fields: [
+              {
+                id: 'os',
+                operators: [{ value: 'is' }, { value: 'is-not' }],
+                options: [
+                  { value: 'macos', label: 'macOS' },
+                  { value: 'windows', label: 'Windows' },
+                  { value: 'linux', label: 'Linux' },
+                  { value: 'ios', label: 'iOS' },
+                  { value: 'android', label: 'Android' }
+                ]
+              }
+            ]
+          },
+          {
+            id: 'answer-text',
+            label: 'Answer text',
+            description: 'What the user typed in their reply',
+            fields: [
+              {
+                id: 'text',
+                type: 'text',
+                placeholder: 'e.g. reinstalled',
+                operators: [{ value: 'contains' }, { value: 'not-contains' }]
+              }
+            ]
+          },
+          {
+            id: 'attempts',
+            label: 'Troubleshooting attempts',
+            description: 'How many times this flow ran for the contact',
+            fields: [
+              {
+                id: 'count',
+                type: 'number',
+                suffix: 'time(s)',
+                value: 2,
+                operators: [{ value: 'gte' }, { value: 'lte' }, { value: 'eq' }]
+              }
+            ]
+          },
+          {
+            id: 'app-version',
+            label: 'App version',
+            fields: [
+              {
+                id: 'version',
+                type: 'text',
+                placeholder: 'e.g. 4.2.0',
+                operators: [{ value: 'gte' }, { value: 'lte' }, { value: 'eq' }]
+              }
+            ]
+          },
+          {
+            id: 'plan',
+            label: 'Subscription plan',
+            fields: [
+              {
+                id: 'name',
+                operators: [{ value: 'is' }, { value: 'is-not' }],
+                options: [
+                  { value: 'trial', label: 'Trial' },
+                  { value: 'personal', label: 'Personal' },
+                  { value: 'family', label: 'Family' },
+                  { value: 'business', label: 'Business' }
+                ]
+              }
+            ]
+          }
+        ];
 
-          const filter = document.createElement('zn-input');
-          filter.setAttribute('label', 'Filter');
-          filter.setAttribute('placeholder', 'e.g. platform = macOS');
-          filter.value = port.data?.filter ?? '';
-          filter.addEventListener('change', () => update({ data: { ...port.data, filter: filter.value } }));
-
-          const condition = document.createElement('zn-input');
-          condition.setAttribute('label', 'Condition');
-          condition.setAttribute('placeholder', 'e.g. answer contains "reinstalled"');
-          condition.value = port.data?.condition ?? '';
-          condition.addEventListener('change', () => update({ data: { ...port.data, condition: condition.value } }));
-
-          wrap.append(filter, condition);
-          return wrap;
-        };
-
-        // Node config: label + body text, plus a branch manager — every question or
-        // answer can have as many outputs as it likes. Inputs commit on every keystroke
-        // so the canvas (node card, branch pills) updates live; the builder keeps this
-        // DOM in place across those re-renders, so read node.outputs at event time.
+        // Node config: label + body text. Branches are managed entirely on the
+        // canvas — click a node's output port to draw one, rename/configure it via
+        // its pill, delete it via the pill's ✕. Inputs commit on every keystroke so
+        // the canvas (node card, branch pills) updates live.
         const live = (input, fn) => ['input', 'zn-input'].forEach(ev => input.addEventListener(ev, fn));
 
         const renderConfig = bodyLabel => (node, update) => {
@@ -182,50 +239,7 @@
           body.value = node.data.subtitle ?? '';
           live(body, () => update({ subtitle: body.value }));
 
-          const heading = document.createElement('p');
-          heading.textContent = 'Branches';
-          heading.style.cssText = 'margin:4px 0 0;font-weight:600;font-size:0.8125rem';
-
-          wrap.append(label, body, heading);
-
-          const branches = node.outputs ?? [{ id: 'out' }];
-          const setBranches = next => {
-            node.outputs = next;
-            update({});
-          };
-          const currentBranches = () => node.outputs ?? branches;
-
-          branches.forEach((branch, i) => {
-            const row = document.createElement('div');
-            row.style.cssText = 'display:flex;gap:6px;align-items:center';
-
-            const input = document.createElement('zn-input');
-            input.setAttribute('size', 'small');
-            input.value = branch.label ?? branch.id;
-            input.style.flex = '1';
-            live(input, () =>
-              setBranches(currentBranches().map((b, j) => (j === i ? { ...b, label: input.value } : b)))
-            );
-
-            const remove = document.createElement('zn-button');
-            remove.setAttribute('icon', 'x@lu');
-            remove.setAttribute('icon-button', 'small');
-            remove.setAttribute('plain', '');
-            remove.addEventListener('click', () => setBranches(currentBranches().filter((_, j) => j !== i)));
-
-            row.append(input, remove);
-            wrap.appendChild(row);
-          });
-
-          const add = document.createElement('zn-button');
-          add.setAttribute('size', 'small');
-          add.setAttribute('icon', 'plus@lu');
-          add.textContent = 'Add branch';
-          add.addEventListener('click', () =>
-            setBranches([...currentBranches(), { id: 'branch-' + Date.now().toString(36), label: 'New branch' }])
-          );
-          wrap.appendChild(add);
-
+          wrap.append(label, body);
           return wrap;
         };
 
@@ -238,7 +252,7 @@
           color: QUESTION_COLOR,
           description: 'Ask the user a question',
           renderConfig: renderConfig('Question'),
-          renderBranchConfig
+          branchFilters
         };
 
         const answerType = {
@@ -250,7 +264,7 @@
           color: ANSWER_COLOR,
           description: 'A user answer to branch on',
           renderConfig: renderConfig('Answer'),
-          renderBranchConfig
+          branchFilters
         };
 
         // The tiered Q&A flow from the design: one question fanning out to three
@@ -280,7 +294,22 @@
               x: 220,
               y: 340,
               label: 'Tier 1 - Answer 1',
-              outputs: [{ id: 'out', label: 'Branch C' }],
+              // Branch C ships with saved conditions — click its pill to see them.
+              outputs: [
+                {
+                  id: 'out',
+                  label: 'Branch C',
+                  data: {
+                    conditions: [
+                      [
+                        { filter: 'platform', values: { os: { operator: 'is', value: 'macos' } } },
+                        { filter: 'attempts', values: { count: { operator: 'gte', value: 2 } } }
+                      ],
+                      [{ filter: 'answer-text', values: { text: { operator: 'contains', value: 'reinstalled' } } }]
+                    ]
+                  }
+                }
+              ],
               data: { subtitle: 'I did XYZ...' }
             },
             {
@@ -350,9 +379,11 @@
 
           const pristine = el.value;
           document.getElementById('ts-reset').addEventListener('click', () => (el.value = pristine));
+          // The builder serialises straight to its FlowState (positions included) —
+          // `JSON.stringify(el)` is the ready-made POST body for persisting.
           document
             .getElementById('ts-apply')
-            .addEventListener('click', () => console.log('Apply changes', el.getState()));
+            .addEventListener('click', () => console.log('Apply changes — POST body:', JSON.stringify(el)));
           document.getElementById('ts-close').addEventListener('click', () => history.back());
         });
       </script>

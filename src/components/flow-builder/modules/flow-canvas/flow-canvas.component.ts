@@ -28,6 +28,7 @@ import {
   NOTE_MIN_HEIGHT,
   NOTE_MIN_WIDTH,
   NOTE_WIDTH,
+  pillsCollide,
   pillSize,
   portAnchor,
   snapToGrid,
@@ -427,13 +428,26 @@ export default class ZnFlowCanvas extends ZincElement {
       if (node) {
         // Snap to the grid, and refuse positions where any part of the node's
         // footprint (card or branch pills) would overlap another's — falling
-        // back to one axis at a time so the node slides along edges.
+        // back to one axis at a time so the node slides along edges. The
+        // candidate position substitutes into the node list, because moving a
+        // node also moves its parent's pill (it centres between the two): the
+        // pills must be checked where they WOULD be, not where they were.
         const desired = {x: snapToGrid(p.x - this.drag.offX), y: snapToGrid(p.y - this.drag.offY)};
-        const others = this.nodes.filter(o => o.id !== node.id);
+        const parents = new Set(
+          this.connections.filter(c => c.target.node === node.id && c.source.node !== node.id).map(c => c.source.node));
         const fits = (pos: { x: number; y: number }) => {
           const moved = {...node, ...pos};
-          return !others.some(o =>
-            nodesCollide(moved, o, t => this.registry?.get(t), this.nodes, this.connections));
+          const placed = this.nodes.map(n => (n.id === node.id ? moved : n));
+          const typeOf = (t: string) => this.registry?.get(t);
+          if (placed.some(o => o !== moved && nodesCollide(moved, o, typeOf, placed, this.connections))) {
+            return false;
+          }
+          // The parents' pills re-centre with this move — they must land clear
+          // of everything too (a pair that doesn't involve the moved node).
+          return ![...parents].some(pid => {
+            const parent = placed.find(n => n.id === pid);
+            return !!parent && pillsCollide(parent, typeOf, placed, this.connections);
+          });
         };
         const next = fits(desired) ? desired
           : fits({x: desired.x, y: node.y}) ? {x: desired.x, y: node.y}
@@ -575,9 +589,15 @@ export default class ZnFlowCanvas extends ZincElement {
     return offsets;
   }
 
-  /** Whether an orthogonal segment passes through any node card (with margin). */
+  /**
+   * Whether an orthogonal segment passes through any node card (with margin) —
+   * or the approach zone above one, where incoming arrows land. A foreign wire
+   * running just over a card's input port reads as connecting to it, so routes
+   * keep well clear of that strip too.
+   */
   private _segmentBlocked(a: { x: number; y: number }, b: { x: number; y: number }, ignore: Set<string>): boolean {
     const M = 8;
+    const APPROACH_ZONE = 48;
     const minX = Math.min(a.x, b.x);
     const maxX = Math.max(a.x, b.x);
     const minY = Math.min(a.y, b.y);
@@ -585,7 +605,7 @@ export default class ZnFlowCanvas extends ZincElement {
     return this.nodes.some(n =>
       !ignore.has(n.id)
       && minX < n.x + NODE_WIDTH + M && maxX > n.x - M
-      && minY < n.y + NODE_HEIGHT + M && maxY > n.y - M
+      && minY < n.y + NODE_HEIGHT + M && maxY > n.y - APPROACH_ZONE
     );
   }
 
@@ -736,7 +756,7 @@ export default class ZnFlowCanvas extends ZincElement {
     if (this.movingNodeId) return [];
     const midOffsets = this._elbowMidOffsets();
     const loops = loopConnections(this.nodes, this.connections);
-    const points: { connectionId: string; px: number; py: number }[] = [];
+    const candidates: { connectionId: string; at: (d: number) => { px: number; py: number }; d: number; len: number }[] = [];
     for (const node of this.nodes) {
       const {branches} = this._outputLayout(node);
       branches.forEach(b => {
@@ -755,37 +775,46 @@ export default class ZnFlowCanvas extends ZincElement {
             seg = i;
           }
         }
-        // The "+" centres in the segment's free run — the child's input port
-        // circle pokes into the last segment's end, so the "+" splits the
-        // pill-to-port gap evenly however tight it is. It always renders, and
-        // never sits on a node card: if fallback routing ran the segment over
-        // one, it slides to the nearest card-free spot.
+        // The "+" prefers the segment's free run centre — the child's input
+        // port circle pokes into the last segment's end, so the "+" splits the
+        // pill-to-port gap evenly however tight it is.
         const a = pts[seg];
         const c = pts[seg + 1];
         const len = Math.abs(c.x - a.x) + Math.abs(c.y - a.y);
         const dx = Math.sign(c.x - a.x);
         const dy = Math.sign(c.y - a.y);
         const at = (d: number) => ({px: a.x + dx * d, py: a.y + dy * d});
-        let d = Math.max(0, (seg === pts.length - 2 ? len - WIRE_PORT_POKE : len) / 2);
-        const M = WIRE_PLUS_RADIUS;
-        const onCard = ({px, py}: { px: number; py: number }) => this.nodes.some(n =>
-          px > n.x - M && px < n.x + NODE_WIDTH + M && py > n.y - M && py < n.y + NODE_HEIGHT + M);
-        if (onCard(at(d))) {
-          for (let step = GRID_SIZE / 2; step <= len; step += GRID_SIZE / 2) {
-            const up = d - step;
-            const down = d + step;
-            if (up >= 0 && !onCard(at(up))) {
-              d = up;
-              break;
-            }
-            if (down <= len && !onCard(at(down))) {
-              d = down;
-              break;
+        const d = Math.max(0, (seg === pts.length - 2 ? len - WIRE_PORT_POKE : len) / 2);
+        candidates.push({connectionId: b.conn.id, at, d, len});
+      });
+    }
+
+    // Place each "+" — always rendered, sliding along its own wire away from
+    // node cards and from "+"s already placed, so wires sharing a corridor
+    // never stack their buttons on top of each other.
+    const M = WIRE_PLUS_RADIUS;
+    const onCard = (px: number, py: number) => this.nodes.some(n =>
+      px > n.x - M && px < n.x + NODE_WIDTH + M && py > n.y - M && py < n.y + NODE_HEIGHT + M);
+    const points: { connectionId: string; px: number; py: number }[] = [];
+    for (const cand of candidates) {
+      const clash = (p: { px: number; py: number }) =>
+        onCard(p.px, p.py) || points.some(f => Math.hypot(f.px - p.px, f.py - p.py) < WIRE_PLUS_RADIUS * 2 + 6);
+      let spot = cand.at(cand.d);
+      if (clash(spot)) {
+        // eslint-disable-next-line no-labels
+        outer: for (let step = GRID_SIZE / 2; step <= cand.len; step += GRID_SIZE / 2) {
+          for (const dd of [cand.d - step, cand.d + step]) {
+            if (dd < 0 || dd > cand.len) continue;
+            const p = cand.at(dd);
+            if (!clash(p)) {
+              spot = p;
+              // eslint-disable-next-line no-labels
+              break outer;
             }
           }
         }
-        points.push({connectionId: b.conn.id, ...at(d)});
-      });
+      }
+      points.push({connectionId: cand.connectionId, ...spot});
     }
     return points;
   }

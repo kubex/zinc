@@ -38,6 +38,7 @@ import {
   NODE_WIDTH,
   nodeInputs,
   nodeOutputs,
+  pillsCollide,
   snapToGrid,
   typeInputs,
   typeOutputs,
@@ -721,11 +722,27 @@ export default class ZnFlowBuilder extends ZincElement {
    * occupies the spot, walk outward in grid-step rings to the nearest free one.
    */
   private _freePosition(x: number, y: number, excludeId?: string): { x: number; y: number } {
-    const collides = (px: number, py: number) =>
-      this._state.nodes.some(n =>
-        n.id !== excludeId
-        && cardCollides({x: px, y: py}, n, t => this.registry.get(t), this._state.nodes, this._state.connections)
-      );
+    const parents = new Set(
+      this._state.connections
+        .filter(c => excludeId && c.target.node === excludeId && c.source.node !== excludeId)
+        .map(c => c.source.node)
+    );
+    const collides = (px: number, py: number) => {
+      // Test with the excluded node AT the candidate spot — its parents' pills
+      // centre between the two, so they shift along with the move and must
+      // land clear of everything as well.
+      const nodes = excludeId
+        ? this._state.nodes.map(n => (n.id === excludeId ? {...n, x: px, y: py} : n))
+        : this._state.nodes;
+      const typeOf = (t: string) => this.registry.get(t);
+      if (nodes.some(n => n.id !== excludeId && cardCollides({x: px, y: py}, n, typeOf, nodes, this._state.connections))) {
+        return true;
+      }
+      return [...parents].some(pid => {
+        const parent = nodes.find(n => n.id === pid);
+        return !!parent && pillsCollide(parent, typeOf, nodes, this._state.connections);
+      });
+    };
     x = snapToGrid(x);
     y = snapToGrid(y);
     if (!collides(x, y)) return {x, y};

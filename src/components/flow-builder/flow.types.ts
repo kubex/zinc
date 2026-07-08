@@ -375,6 +375,25 @@ export function nodesCollide(
   return nodeObstacles(b, typeOf, nodes, connections).some(rb => rectsA.some(ra => rectsOverlap(ra, rb)));
 }
 
+/**
+ * Whether any of `node`'s branch pills overlap another node's footprint. A
+ * pill centres between its node and the connected child, so moving the CHILD
+ * moves the pill — drags use this to check the moved node's parents, whose
+ * displaced pills could land on a third node.
+ */
+export function pillsCollide(
+  node: FlowNodeInstance,
+  typeOf: FlowTypeOf,
+  nodes: FlowNodeInstance[],
+  connections: FlowConnection[]
+): boolean {
+  const pills = nodeObstacles(node, typeOf, nodes, connections).slice(1);
+  if (!pills.length) return false;
+  return nodes.some(o =>
+    o.id !== node.id
+    && nodeObstacles(o, typeOf, nodes, connections).some(rb => pills.some(ra => rectsOverlap(ra, rb))));
+}
+
 /** Whether a bare card placed at `pos` would hit any of `node`'s footprint. */
 export function cardCollides(
   pos: { x: number; y: number },

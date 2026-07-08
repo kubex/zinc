@@ -1,0 +1,494 @@
+@use "../../wc";
+
+:host {
+  @include wc.scrollbars;
+  // Canonical canvas card/container width, inherited by the section-card
+  // component's shadow styles (whose 560px var() fallback only applies when
+  // the card is used outside a builder).
+  --pb-card-width: 560px;
+
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 480px;
+  color: rgb(var(--zn-text));
+  // Panels adapt to the builder's own width, not the viewport's.
+  container-type: inline-size;
+}
+
+.builder {
+  --palette-col: 343px;
+  --inspector-col: 343px;
+
+  display: grid;
+  grid-template-columns: var(--palette-col) minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  width: 100%;
+  height: 100%;
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 8px;
+  overflow: hidden;
+
+  &--inspecting {
+    grid-template-columns: var(--palette-col) minmax(0, 1fr) var(--inspector-col);
+  }
+
+  transition: grid-template-columns 0.2s ease;
+
+  // Side panels tuck away via the canvas-edge chevrons (flow-builder pattern).
+  // Their border would floor the width above zero, so it collapses too.
+  &--palette-collapsed {
+    --palette-col: 0px;
+
+    .palette {
+      border-right: none;
+    }
+  }
+
+  &--inspector-collapsed {
+    --inspector-col: 0px;
+
+    .inspector {
+      padding: 0;
+      border-left: none;
+    }
+  }
+}
+
+// :not() keeps these from out-cascading the collapsed modifiers' zero-width state.
+// 768 must match NARROW_WIDTH in page-builder.component.ts (palette auto-collapse).
+@container (max-width: 768px) {
+  .builder:not(.builder--palette-collapsed) {
+    --palette-col: 240px;
+  }
+
+  .builder:not(.builder--inspector-collapsed) {
+    --inspector-col: 280px;
+  }
+}
+
+// Chevrons straddling the canvas edges — tuck a side panel away / bring it
+// back (copied from flow-builder).
+.panel-toggle {
+  position: absolute;
+  top: 50%;
+  z-index: 6;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border-radius: 50%;
+  color: rgb(var(--zn-color-muted-text));
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  box-shadow: 0 1px 3px rgba(var(--zn-shadow), 0.4);
+  cursor: pointer;
+  transition: left 0.2s ease, right 0.2s ease, color 0.12s ease, border-color 0.12s ease;
+
+  &:hover {
+    color: rgb(var(--zn-text));
+    border-color: rgb(var(--zn-color-border-active));
+  }
+
+  &--left {
+    left: -12px;
+
+    // With the panel tucked away, sit fully inside the canvas.
+    &.panel-toggle--tucked {
+      left: 8px;
+    }
+  }
+
+  &--right {
+    right: -12px;
+
+    &.panel-toggle--tucked {
+      right: 8px;
+    }
+  }
+}
+
+.header {
+  grid-row: 1;
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgb(var(--zn-border-color));
+
+  &[hidden] {
+    display: none;
+  }
+
+  &__group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+// The hidden header leaves the grid entirely, so pin the panels to row 2
+// explicitly or auto-placement collapses the builder to content height.
+.palette,
+.canvas-cell,
+.inspector {
+  grid-row: 2;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+// Non-scrolling wrapper: anchors the edge chevrons, save status and restore
+// banner so they don't scroll with (or get clipped by) the canvas.
+.canvas-cell {
+  position: relative;
+  overflow: visible; // the edge chevrons straddle the panel borders
+}
+
+// Left column — anatomy and metrics copied from flow-builder's steps panel
+// (title block, search, full-bleed categories with dividers); no tabs.
+.palette {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgb(var(--zn-border-color));
+
+  &__title {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 16px;
+    border-bottom: 1px solid rgb(var(--zn-border-color));
+  }
+
+  &__text {
+    min-width: 0;
+  }
+
+  &__heading {
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+
+  &__subheading {
+    margin-top: 2px;
+    font-size: 0.75rem;
+    color: rgb(var(--zn-color-muted-text));
+  }
+
+  &__search {
+    padding: 12px 12px 8px;
+
+    // Placeholder-only look (as flow-builder), but the label stays in the
+    // accessibility tree — visually hidden, not display:none.
+    &::part(form-control-label) {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+
+  &__scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-bottom: 16px;
+  }
+
+  // Divider above every category; header/caption styling copied from
+  // flow-builder's flow-step-group.
+  &__category {
+    display: block;
+    border-top: 1px solid rgb(var(--zn-border-color));
+
+    // 16px block padding on the header. The !important beats the collapsible's
+    // internal `.header` class specificity. align-items centres the caption
+    // with the chevron regardless of the header's internal column layout.
+    &::part(header) {
+      align-items: center !important;
+      padding-block: calc(var(--zn-base-px) * 2) !important;
+    }
+
+    // Caption type: Inter SemiBold 14 / 16 (Primary text).
+    &::part(caption) {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 16px;
+      color: rgb(var(--zn-text));
+    }
+  }
+
+  &__uncategorized {
+    padding: 8px var(--zn-base-gap);
+  }
+}
+
+zn-page-palette-item {
+  margin-bottom: 6px;
+}
+
+.canvas {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 24px;
+  overflow-y: auto;
+  background:
+    radial-gradient(circle, rgba(var(--zn-text), 0.08) 1px, transparent 1px) 0 0 / 20px 20px,
+    rgb(var(--zn-body));
+}
+
+.inspector {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border-left: 1px solid rgb(var(--zn-border-color));
+  overflow-y: auto;
+
+}
+
+.inspector__body,
+.inspector__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.declarations {
+  display: none;
+}
+
+.canvas__empty {
+  margin: auto auto 8px;
+  font-size: 13px;
+  opacity: 0.6;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.drop {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: var(--pb-card-width);
+  margin: 0 auto;
+  min-height: 28px;
+  transition: min-height 0.12s ease;
+
+  // Drop placeholder: an outlined box the size of a card, so the insertion
+  // point reads clearly between two existing sections.
+  &--active {
+    min-height: 72px;
+  }
+
+  // The empty canvas's only drop zone sits just below the centred hint text;
+  // once a drag is over the canvas the hint hides and the placeholder box
+  // takes the centre itself.
+  &--solo {
+    margin: 0 auto auto;
+  }
+
+  &--solo#{&}--active {
+    margin: auto;
+    min-height: 96px;
+  }
+
+  &--active::before {
+    content: '';
+    position: absolute;
+    inset: 6px 0;
+    border: 2px dashed rgb(var(--zn-color-primary));
+    border-radius: 8px;
+    background: rgba(var(--zn-color-primary), 0.06);
+  }
+
+  &__add {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border: 1px solid rgb(var(--zn-border-color));
+    border-radius: 50%;
+    background: rgb(var(--zn-panel));
+    color: rgb(var(--zn-text));
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.12s ease;
+  }
+
+  &:hover &__add,
+  &--active &__add {
+    opacity: 1;
+  }
+}
+
+// A container section: its card spans the row with a grid of child slots below.
+.container {
+  width: 100%;
+  max-width: var(--pb-card-width);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.slots {
+  display: grid;
+  // minmax(0) lets cells shrink below their content's min width — otherwise a
+  // child card's text forces the tracks wider than the parent tile.
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.slot {
+  position: relative;
+  min-height: 64px;
+
+  &--empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed rgb(var(--zn-border-color));
+    border-radius: 8px;
+    color: rgba(var(--zn-text), 0.4);
+    cursor: pointer;
+    transition: border-color 0.12s ease, background 0.12s ease;
+
+    &:hover {
+      border-color: rgb(var(--zn-color-border-active));
+      color: rgba(var(--zn-text), 0.7);
+    }
+  }
+
+  &--active {
+    border-color: rgb(var(--zn-color-primary));
+    border-style: dashed;
+    background: rgba(var(--zn-color-primary), 0.06);
+  }
+}
+
+.picker {
+  position: absolute;
+  top: calc(100% - 2px);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  min-width: 220px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 6px;
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(var(--zn-shadow), 0.4);
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 8px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: rgb(var(--zn-text));
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(var(--zn-text), 0.08);
+    }
+  }
+}
+
+// Bottom-left status pill: flashes green as a save lands, then keeps a quiet
+// "last saved Xm ago" (copied from flow-builder).
+.save-status {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  color: rgb(var(--zn-color-muted-text));
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(var(--zn-shadow), 0.4);
+  pointer-events: none;
+  transition: color 0.15s ease, border-color 0.15s ease;
+
+  &--saved {
+    color: rgb(var(--zn-color-success));
+    border-color: color-mix(in srgb, rgb(var(--zn-color-success)) 45%, transparent);
+  }
+}
+
+// Offered when a loaded page differs from a fresh auto-saved draft.
+.restore-banner {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: calc(100% - 32px);
+  padding: 8px 12px;
+  font-size: 0.8125rem;
+  color: rgb(var(--zn-text));
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(var(--zn-shadow), 0.5);
+
+  button {
+    flex: 0 0 auto;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  &__restore {
+    color: rgb(var(--zn-panel));
+    background: rgb(var(--zn-color-primary));
+    border: none;
+
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+
+  &__dismiss {
+    color: rgb(var(--zn-color-muted-text));
+    background: transparent;
+    border: none;
+
+    &:hover {
+      background: rgb(var(--zn-color-tab));
+    }
+  }
+}

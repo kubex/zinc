@@ -15,3 +15,5 @@ export type {ZnRejectEvent} from './zn-reject';
 export type {ZnFlowChangeEvent} from './zn-flow-change';
 export type {ZnFlowSelectionChangeEvent} from './zn-flow-selection-change';
 export type {ZnFlowConnectEvent} from './zn-flow-connect';
+export type {ZnPageChangeEvent} from './zn-page-change';
+export type {ZnPageSelectionChangeEvent} from './zn-page-selection-change';

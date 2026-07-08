@@ -8649,6 +8649,13 @@ declare module "components/flow-builder/flow.types" {
     export function nodeObstacles(node: FlowNodeInstance, typeOf: FlowTypeOf, nodes: FlowNodeInstance[], connections: FlowConnection[]): Rect[];
     /** Whether two nodes' footprints (cards and branch pills) would overlap. */
     export function nodesCollide(a: FlowNodeInstance, b: FlowNodeInstance, typeOf: FlowTypeOf, nodes: FlowNodeInstance[], connections: FlowConnection[]): boolean;
+    /**
+     * Whether any of `node`'s branch pills overlap another node's footprint. A
+     * pill centres between its node and the connected child, so moving the CHILD
+     * moves the pill — drags use this to check the moved node's parents, whose
+     * displaced pills could land on a third node.
+     */
+    export function pillsCollide(node: FlowNodeInstance, typeOf: FlowTypeOf, nodes: FlowNodeInstance[], connections: FlowConnection[]): boolean;
     /** Whether a bare card placed at `pos` would hit any of `node`'s footprint. */
     export function cardCollides(pos: {
         x: number;
@@ -9003,7 +9010,12 @@ declare module "components/flow-builder/modules/flow-canvas/flow-canvas.componen
          * same input keep sharing a line: their join is real.
          */
         private _elbowMidOffsets;
-        /** Whether an orthogonal segment passes through any node card (with margin). */
+        /**
+         * Whether an orthogonal segment passes through any node card (with margin) —
+         * or the approach zone above one, where incoming arrows land. A foreign wire
+         * running just over a card's input port reads as connecting to it, so routes
+         * keep well clear of that strip too.
+         */
         private _segmentBlocked;
         private _routeClear;
         /**

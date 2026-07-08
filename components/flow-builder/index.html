@@ -1179,7 +1179,7 @@
                      <span class="token keyword">const</span> el <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'flow-demo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
                      <span class="token keyword">const</span> connected <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Set</span><span class="token punctuation">(</span>
                        el<span class="token punctuation">.</span><span class="token function">getState</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>connections<span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token parameter">c</span> <span class="token operator">=&gt;</span> c<span class="token punctuation">.</span>source<span class="token punctuation">.</span>node <span class="token operator">===</span> node<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token parameter">c</span> <span class="token operator">=&gt;</span> c<span class="token punctuation">.</span>source<span class="token punctuation">.</span>port<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                     <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>branches<span class="token punctuation">.</span><span class="token function">some</span><span class="token punctuation">(</span><span class="token parameter">b</span> <span class="token operator">=&gt;</span> b<span class="token punctuation">.</span>label <span class="token operator">||</span> connected<span class="token punctuation">.</span><span class="token function">has</span><span class="token punctuation">(</span>b<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> wrap<span class="token punctuation">;</span>
+                     <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span>branches<span class="token punctuation">.</span><span class="token function">some</span><span class="token punctuation">(</span><span class="token parameter">b</span> <span class="token operator">=&gt;</span> b<span class="token punctuation">.</span>label <span class="token operator">||</span> connected<span class="token punctuation">.</span><span class="token function">has</span><span class="token punctuation">(</span>b<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> wrap<span class="token punctuation">;</span>
 
                      <span class="token keyword">const</span> heading <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'p'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
                      heading<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token string">'Branches'</span><span class="token punctuation">;</span>
@@ -1760,7 +1760,9 @@
           </p>
           <pre><code class="language-js" id="code-block-655"><span class="token punctuation">[</span>
   <span class="token punctuation">[</span> <span class="token comment">// group 1 (AND-ed)…</span>
-    <span class="token punctuation">{</span><span class="token literal-property property">filter</span><span class="token operator">:</span> <span class="token string">'engagement'</span><span class="token punctuation">,</span> <span class="token literal-property property">values</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">count</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">operator</span><span class="token operator">:</span> <span class="token string">'gte'</span><span class="token punctuation">,</span> <span class="token literal-property property">value</span><span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token literal-property property">window</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">operator</span><span class="token operator">:</span> <span class="token string">'within'</span><span class="token punctuation">,</span> <span class="token literal-property property">value</span><span class="token operator">:</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token literal-property property">unit</span><span class="token operator">:</span> <span class="token string">'months'</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span><span class="token literal-property property">filter</span><span class="token operator">:</span>  <span class="token string">'engagement'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">values</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">count</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">operator</span><span class="token operator">:</span> <span class="token string">'gte'</span><span class="token punctuation">,</span> <span class="token literal-property property">value</span><span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token literal-property property">window</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">operator</span><span class="token operator">:</span> <span class="token string">'within'</span><span class="token punctuation">,</span> <span class="token literal-property property">value</span><span class="token operator">:</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token literal-property property">unit</span><span class="token operator">:</span> <span class="token string">'months'</span><span class="token punctuation">}</span><span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
     <span class="token punctuation">{</span><span class="token literal-property property">filter</span><span class="token operator">:</span> <span class="token string">'lost-reason'</span><span class="token punctuation">,</span> <span class="token literal-property property">values</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">reason</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">operator</span><span class="token operator">:</span> <span class="token string">'eq'</span><span class="token punctuation">,</span> <span class="token literal-property property">value</span><span class="token operator">:</span> <span class="token string">'price'</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">}</span>
   <span class="token punctuation">]</span><span class="token punctuation">,</span>
   <span class="token comment">// …OR group 2</span>
@@ -1871,9 +1873,9 @@ builder<span class="token punctuation">.</span>value <span class="token operator
 <span class="token comment">// Saving to a server: the builder serialises directly (toJSON returns the</span>
 <span class="token comment">// FlowState), so the POST body is one expression either way:</span>
 <span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token string">'/api/flows/123'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
-  <span class="token literal-property property">method</span><span class="token operator">:</span> <span class="token string">'POST'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">method</span><span class="token operator">:</span>  <span class="token string">'POST'</span><span class="token punctuation">,</span>
   <span class="token literal-property property">headers</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token string-property property">'Content-Type'</span><span class="token operator">:</span> <span class="token string">'application/json'</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">body</span><span class="token operator">:</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>builder<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token comment">// === builder.value</span>
+  <span class="token literal-property property">body</span><span class="token operator">:</span>    <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>builder<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token comment">// === builder.value</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code><zn-copy-button class="copy-code-button" from="code-block-658"></zn-copy-button></pre>
           <h3 id="auto-save" class="anchor-heading">
@@ -1884,7 +1886,8 @@ builder<span class="token punctuation">.</span>value <span class="token operator
             localStorage, keyed by the builder’s <code>id</code> (falling back to its <code>heading</code>), with a
             <strong>1-day TTL</strong>:
           </p>
-          <pre><code class="language-html" id="code-block-659"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-flow-builder</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>my-flow<span class="token punctuation">"</span></span> <span class="token attr-name">auto-save</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-flow-builder</span><span class="token punctuation">&gt;</span></span>      <span class="token comment">&lt;!-- every 5 minutes --&gt;</span>
+          <pre><code class="language-html" id="code-block-659">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-flow-builder</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>my-flow<span class="token punctuation">"</span></span> <span class="token attr-name">auto-save</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-flow-builder</span><span class="token punctuation">&gt;</span></span>      <span class="token comment">&lt;!-- every 5 minutes --&gt;</span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-flow-builder</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>my-flow<span class="token punctuation">"</span></span> <span class="token attr-name">auto-save</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-flow-builder</span><span class="token punctuation">&gt;</span></span>  <span class="token comment">&lt;!-- every 2 minutes --&gt;</span>
 </code><zn-copy-button class="copy-code-button" from="code-block-659"></zn-copy-button></pre>
           <p>
@@ -1899,10 +1902,138 @@ builder<span class="token punctuation">.</span>value <span class="token operator
             loaded flow or dismissing the banner keeps what was loaded. Restoring can also be done programmatically:
           </p>
           <pre><code class="language-js" id="code-block-660"><span class="token keyword">const</span> builder <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'zn-flow-builder'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">if</span> <span class="token punctuation">(</span>builder<span class="token punctuation">.</span><span class="token function">restoreAutoSave</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span>builder<span class="token punctuation">.</span><span class="token function">restoreAutoSave</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Restored an auto-saved draft'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// false when none exists / it expired</span>
 <span class="token punctuation">}</span>
 </code><zn-copy-button class="copy-code-button" from="code-block-660"></zn-copy-button></pre>
+          <p>
+            Try it below — the demo saves every <strong>6 seconds</strong> (<code>auto-save="0.1"</code>; real flows
+            would use minutes). Drag a node and watch the pill flash <strong>Auto-saved</strong>. Then
+            <strong>reload the page</strong>: the demo always loads its original flow, so if your draft differs a banner
+            offers to restore it.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div style="height: 480px">
+                <zn-flow-builder
+                  id="autosave-demo"
+                  auto-save="0.1"
+                  heading="Auto-save"
+                  subheading="Saves every 6s in this demo"
+                >
+                  <zn-flow-step
+                    type="webhook"
+                    group="entrypoint"
+                    category="Events"
+                    icon="webhook@lu"
+                    color="rgb(236, 68, 91)"
+                    inputs=""
+                    >Order Placed
+                  </zn-flow-step>
+                  <zn-flow-step
+                    type="send-email"
+                    group="action"
+                    category="Email"
+                    icon="mail@lu"
+                    color="rgb(43, 192, 145)"
+                    >Send Confirmation
+                  </zn-flow-step>
+                  <zn-flow-step type="notify" group="action" category="Support" icon="user@lu" color="rgb(43, 192, 145)"
+                    >Notify Team
+                  </zn-flow-step>
+                </zn-flow-builder>
+              </div>
+
+              <script type="module">
+                customElements.whenDefined('zn-flow-builder').then(() => {
+                  const el = document.getElementById('autosave-demo');
+                  // Always load the same baseline — after editing and reloading, the
+                  // auto-saved draft differs from it and the restore banner appears.
+                  el.setState({
+                    nodes: [
+                      { id: 'n1', type: 'webhook', x: 300, y: 40, data: { subtitle: 'Webhook fires' } },
+                      { id: 'n2', type: 'send-email', x: 300, y: 260, data: { subtitle: 'Order confirmation' } },
+                      { id: 'n3', type: 'notify', x: 300, y: 480, data: { subtitle: 'Ping #orders' } }
+                    ],
+                    connections: [
+                      { id: 'c1', source: { node: 'n1', port: 'out' }, target: { node: 'n2', port: 'in' } },
+                      { id: 'c2', source: { node: 'n2', port: 'out' }, target: { node: 'n3', port: 'in' } }
+                    ],
+                    notes: []
+                  });
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-523">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-661">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 480px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-flow-builder</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>autosave-demo<span class="token punctuation">"</span></span> <span class="token attr-name">auto-save</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0.1<span class="token punctuation">"</span></span>
+                   <span class="token attr-name">heading</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Auto-save<span class="token punctuation">"</span></span> <span class="token attr-name">subheading</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Saves every 6s in this demo<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-flow-step</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>webhook<span class="token punctuation">"</span></span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>entrypoint<span class="token punctuation">"</span></span> <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Events<span class="token punctuation">"</span></span>
+                  <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>webhook@lu<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>rgb(236, 68, 91)<span class="token punctuation">"</span></span> <span class="token attr-name">inputs</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Order Placed
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-flow-step</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-flow-step</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>send-email<span class="token punctuation">"</span></span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>action<span class="token punctuation">"</span></span> <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Email<span class="token punctuation">"</span></span>
+                  <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>mail@lu<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>rgb(43, 192, 145)<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Send Confirmation
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-flow-step</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-flow-step</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>notify<span class="token punctuation">"</span></span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>action<span class="token punctuation">"</span></span> <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Support<span class="token punctuation">"</span></span>
+                  <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>user@lu<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>rgb(43, 192, 145)<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Notify Team
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-flow-step</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-flow-builder</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-flow-builder'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span>
+  <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> el <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'autosave-demo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// Always load the same baseline — after editing and reloading, the</span>
+    <span class="token comment">// auto-saved draft differs from it and the restore banner appears.</span>
+    el<span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      <span class="token literal-property property">nodes</span><span class="token operator">:</span>       <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'n1'</span><span class="token punctuation">,</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">'webhook'</span><span class="token punctuation">,</span> <span class="token literal-property property">x</span><span class="token operator">:</span> <span class="token number">300</span><span class="token punctuation">,</span> <span class="token literal-property property">y</span><span class="token operator">:</span> <span class="token number">40</span><span class="token punctuation">,</span> <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">subtitle</span><span class="token operator">:</span> <span class="token string">'Webhook fires'</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'n2'</span><span class="token punctuation">,</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">'send-email'</span><span class="token punctuation">,</span> <span class="token literal-property property">x</span><span class="token operator">:</span> <span class="token number">300</span><span class="token punctuation">,</span> <span class="token literal-property property">y</span><span class="token operator">:</span> <span class="token number">260</span><span class="token punctuation">,</span> <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">subtitle</span><span class="token operator">:</span> <span class="token string">'Order confirmation'</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'n3'</span><span class="token punctuation">,</span> <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">'notify'</span><span class="token punctuation">,</span> <span class="token literal-property property">x</span><span class="token operator">:</span> <span class="token number">300</span><span class="token punctuation">,</span> <span class="token literal-property property">y</span><span class="token operator">:</span> <span class="token number">480</span><span class="token punctuation">,</span> <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">subtitle</span><span class="token operator">:</span> <span class="token string">'Ping #orders'</span><span class="token punctuation">}</span><span class="token punctuation">}</span>
+      <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">connections</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'c1'</span><span class="token punctuation">,</span> <span class="token literal-property property">source</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">node</span><span class="token operator">:</span> <span class="token string">'n1'</span><span class="token punctuation">,</span> <span class="token literal-property property">port</span><span class="token operator">:</span> <span class="token string">'out'</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token literal-property property">target</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">node</span><span class="token operator">:</span> <span class="token string">'n2'</span><span class="token punctuation">,</span> <span class="token literal-property property">port</span><span class="token operator">:</span> <span class="token string">'in'</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span><span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'c2'</span><span class="token punctuation">,</span> <span class="token literal-property property">source</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">node</span><span class="token operator">:</span> <span class="token string">'n2'</span><span class="token punctuation">,</span> <span class="token literal-property property">port</span><span class="token operator">:</span> <span class="token string">'out'</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token literal-property property">target</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">node</span><span class="token operator">:</span> <span class="token string">'n3'</span><span class="token punctuation">,</span> <span class="token literal-property property">port</span><span class="token operator">:</span> <span class="token string">'in'</span><span class="token punctuation">}</span><span class="token punctuation">}</span>
+      <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">notes</span><span class="token operator">:</span>       <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-661"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-523"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
 
           <h2 id="importing" class="anchor-heading">
             Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
@@ -1925,7 +2056,7 @@ builder<span class="token punctuation">.</span>value <span class="token operator
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-661"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.28/dist/components/flow-builder/flow-builder.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-661"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-662"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.28/dist/components/flow-builder/flow-builder.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-662"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1940,12 +2071,12 @@ builder<span class="token punctuation">.</span>value <span class="token operator
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-662"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.28/dist/components/flow-builder/flow-builder.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-662"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-663"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.28/dist/components/flow-builder/flow-builder.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-663"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-663"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/flow-builder/flow-builder.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-663"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-664"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/flow-builder/flow-builder.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-664"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>

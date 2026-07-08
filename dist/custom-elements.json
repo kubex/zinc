@@ -23893,6 +23893,1189 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/page-builder/page-builder.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnPageBuilder",
+          "cssParts": [
+            {
+              "description": "The grid wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The full-width header action bar (only rendered when header slots are filled).",
+              "name": "header"
+            },
+            {
+              "description": "The left palette panel.",
+              "name": "palette"
+            },
+            {
+              "description": "The centre section-card canvas.",
+              "name": "canvas"
+            },
+            {
+              "description": "The right panel while a section is selected.",
+              "name": "inspector"
+            }
+          ],
+          "slots": [
+            {
+              "description": "`<template type=\"…\">` declarations; never displayed. Each template's attributes (type, label, icon, icon-library, color, category, description, slots, accepts) declare a palette entry and its content declares the inspector form for that type. `slots` makes the section a container with that many child slots; `accepts` is a comma-separated list of the type keys its slots allow.",
+              "name": "config"
+            },
+            {
+              "description": "Actions shown on the left of the header bar.",
+              "name": "header-left"
+            },
+            {
+              "description": "Actions shown on the right of the header bar.",
+              "name": "header-right"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-collapsible': ZnCollapsible, 'zn-icon': ZnIcon, 'zn-input': ZnInput, 'zn-page-palette-item': ZnPagePaletteItem, 'zn-page-section-card': ZnPageSectionCard, }"
+            },
+            {
+              "kind": "field",
+              "name": "config",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The page state as a JSON string. Parsed on set; invalid JSON is ignored with a warning.",
+              "attribute": "config"
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "heading",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "subheading",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "subheading",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "sectionTypes",
+              "type": {
+                "text": "PageSectionType[]"
+              },
+              "default": "[]",
+              "description": "Section types to make available, registered into the internal registry."
+            },
+            {
+              "kind": "field",
+              "name": "paletteCollapsed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Collapses the left palette. Auto-set when the builder becomes narrow.",
+              "attribute": "palette-collapsed",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "inspectorCollapsed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Collapses the inspector while a section is selected.",
+              "attribute": "inspector-collapsed",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "autoSave",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "description": "Auto-save the page to localStorage (1-day TTL). Omit to disable. A bare\n`auto-save` saves every 5 minutes; a numeric value sets the interval in\nminutes (`auto-save=\"2\"`). Restore with `restoreAutoSave()`.",
+              "attribute": "auto-save"
+            },
+            {
+              "kind": "field",
+              "name": "registry",
+              "privacy": "private",
+              "default": "new PageSectionRegistry()"
+            },
+            {
+              "kind": "field",
+              "name": "_state",
+              "type": {
+                "text": "PageState"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_selectedId",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_search",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "_pickerIndex",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "Index of the drop zone whose \"+\" type picker is open, if any."
+            },
+            {
+              "kind": "field",
+              "name": "_dragOverIndex",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_slotDragOver",
+              "type": {
+                "text": "{containerId: string; index: number} | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The container slot a drag is currently over, if any."
+            },
+            {
+              "kind": "field",
+              "name": "_slotPicker",
+              "type": {
+                "text": "{containerId: string; index: number} | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The container slot whose \"+\" type picker is open, if any."
+            },
+            {
+              "kind": "field",
+              "name": "_form",
+              "type": {
+                "text": "HTMLDivElement | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The stamped config form for the selected section; rebuilt on selection change."
+            },
+            {
+              "kind": "field",
+              "name": "_hasSlot",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'header-left', 'header-right')"
+            },
+            {
+              "kind": "field",
+              "name": "_history",
+              "type": {
+                "text": "PageState[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_redoStack",
+              "type": {
+                "text": "PageState[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "state",
+              "type": {
+                "text": "PageState"
+              },
+              "description": "Replaces the page state wholesale (does not emit zn-page-change)."
+            },
+            {
+              "kind": "method",
+              "name": "handleConfigChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleSectionTypesChange"
+            },
+            {
+              "kind": "method",
+              "name": "registerSectionType",
+              "return": {
+                "type": {
+                  "text": "this"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "PageSectionType"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "registerSectionTypes",
+              "return": {
+                "type": {
+                  "text": "this"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "types",
+                  "type": {
+                    "text": "PageSectionType[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_wasNarrow",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Auto-collapses the palette when the builder crosses into narrow — only on the\ncrossing, so re-expanding while narrow stays a user choice."
+            },
+            {
+              "kind": "field",
+              "name": "_resizeObserver",
+              "privacy": "private",
+              "default": "new ResizeObserver(entries => { const width = entries[0]?.contentRect.width ?? 0; if (width <= 0) return; const narrow = width < NARROW_WIDTH; if (narrow && !this._wasNarrow) this.paletteCollapsed = true; this._wasNarrow = narrow; })"
+            },
+            {
+              "kind": "field",
+              "name": "_autoSaveTimer",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_statusTimer",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_justSavedTimer",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_restoring",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Guards the restore prompt from re-triggering on restoreAutoSave's own state install."
+            },
+            {
+              "kind": "field",
+              "name": "_lastSavedAt",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "Epoch of the newest auto-save (also picked up from storage on start)."
+            },
+            {
+              "kind": "field",
+              "name": "_justSaved",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Briefly true right after a save — flashes \"Auto-saved\" in the status pill."
+            },
+            {
+              "kind": "field",
+              "name": "_statusNow",
+              "privacy": "private",
+              "description": "Re-render clock for the \"last saved Xm ago\" label."
+            },
+            {
+              "kind": "field",
+              "name": "_restorePrompt",
+              "type": {
+                "text": "{savedAt: number} | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "A fresh auto-save differing from the loaded page — offer to restore it."
+            },
+            {
+              "kind": "field",
+              "name": "_autoSaveKey",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "description": "localStorage key for this builder's auto-saves — its id, else its heading.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_stopAutoSave",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_restartAutoSave",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_autoSaveTick",
+              "privacy": "private",
+              "description": "An empty page is never saved — it would clobber a stored page with nothing."
+            },
+            {
+              "kind": "method",
+              "name": "_readAutoSave",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "{savedAt: number; state: PageState} | null"
+                }
+              },
+              "description": "The stored auto-save, purging it when past its TTL (or unreadable)."
+            },
+            {
+              "kind": "field",
+              "name": "restoreAutoSave",
+              "description": "Load the auto-saved page, if one exists within the 1-day TTL."
+            },
+            {
+              "kind": "method",
+              "name": "_offerRestoreIfNewer",
+              "privacy": "private",
+              "description": "A page was just loaded — when a fresh auto-save differs from it, ask the\nuser whether to pick up their draft instead."
+            },
+            {
+              "kind": "method",
+              "name": "_typeFromTemplate",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "PageSectionType | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "HTMLTemplateElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_registerSlottedTemplates",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_applyExternalState",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "next",
+                  "type": {
+                    "text": "PageState"
+                  }
+                }
+              ],
+              "description": "Normalises and installs an externally provided state; resets selection."
+            },
+            {
+              "kind": "method",
+              "name": "_findSection",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "PageSection | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ],
+              "description": "Finds a section by id, searching top-level sections and slotted children."
+            },
+            {
+              "kind": "method",
+              "name": "_patchSection",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "PageSection[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "patch",
+                  "type": {
+                    "text": "(s: PageSection) => PageSection"
+                  }
+                }
+              ],
+              "description": "New sections array with the section patched wherever it lives (top level or slot)."
+            },
+            {
+              "kind": "method",
+              "name": "_extract",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "[PageSection | undefined, PageSection[]]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Detaches a section wherever it lives: removed from the top level, or its slot nulled."
+            },
+            {
+              "kind": "method",
+              "name": "_commit",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "next",
+                  "type": {
+                    "text": "PageState"
+                  }
+                }
+              ],
+              "description": "Installs a new state from a user edit and notifies listeners."
+            },
+            {
+              "kind": "method",
+              "name": "_selectedSection",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "PageSection | undefined"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_select",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_pushHistory",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "undo"
+            },
+            {
+              "kind": "field",
+              "name": "redo"
+            },
+            {
+              "kind": "method",
+              "name": "addSection",
+              "return": {
+                "type": {
+                  "text": "PageSection | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "index",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Adds a section of a registered type at `index` (default: end). Returns null for unknown types."
+            },
+            {
+              "kind": "method",
+              "name": "addSectionToSlot",
+              "return": {
+                "type": {
+                  "text": "PageSection | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "containerId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "slotIndex",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Adds a new section of a registered type into a container's slot. Returns null if not allowed."
+            },
+            {
+              "kind": "method",
+              "name": "_removeSection",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_duplicateSection",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_moveSection",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Moves a section (top-level or slotted) to a top-level position."
+            },
+            {
+              "kind": "method",
+              "name": "_moveToSlot",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "containerId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "slotIndex",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Moves a section into a container's slot. Dropping onto an occupied slot swaps\nthe two children (slot-to-slot reordering); top-level sections and containers\nonly enter empty slots / never enter slots respectively."
+            },
+            {
+              "kind": "method",
+              "name": "_onCardDragStart",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "DragEvent"
+                  }
+                },
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_isPageDrag",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "DragEvent"
+                  }
+                }
+              ],
+              "description": "Whether a drag carries one of the builder's own payloads."
+            },
+            {
+              "kind": "method",
+              "name": "_onSlotDragOver",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "DragEvent"
+                  }
+                },
+                {
+                  "name": "containerId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onSlotDrop",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "DragEvent"
+                  }
+                },
+                {
+                  "name": "containerId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onZoneDragOver",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "DragEvent"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onZoneDrop",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "DragEvent"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_onCanvasDragOver",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onCanvasDrop",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_onCardKeydown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                },
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderPalette",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_renderPaletteItem",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "PageSectionType"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderAutoSaveStatus",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_renderRestorePrompt",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_renderCanvas",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_renderSectionCard",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "section",
+                  "type": {
+                    "text": "PageSection"
+                  }
+                },
+                {
+                  "name": "drop",
+                  "type": {
+                    "text": "{over: (e: DragEvent) => void; drop: (e: DragEvent) => void}"
+                  }
+                },
+                {
+                  "name": "extraClass",
+                  "default": "''"
+                }
+              ],
+              "description": "The one card template both the page list and slot cells render."
+            },
+            {
+              "kind": "method",
+              "name": "_renderCard",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "section",
+                  "type": {
+                    "text": "PageSection"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderSlot",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "container",
+                  "type": {
+                    "text": "PageSection"
+                  }
+                },
+                {
+                  "name": "child",
+                  "type": {
+                    "text": "PageSection | null"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_slotTypes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "PageSectionType[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "container",
+                  "type": {
+                    "text": "PageSection"
+                  }
+                }
+              ],
+              "description": "Types allowed in a container's slots: non-containers, filtered by its accepts list."
+            },
+            {
+              "kind": "method",
+              "name": "_renderTypePicker",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "types",
+                  "type": {
+                    "text": "PageSectionType[]"
+                  }
+                },
+                {
+                  "name": "pick",
+                  "type": {
+                    "text": "(type: string) => void"
+                  }
+                }
+              ],
+              "description": "The one type-picker template both drop zones and slot cells render."
+            },
+            {
+              "kind": "method",
+              "name": "_renderDropZone",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_buildInspectorForm",
+              "privacy": "private",
+              "description": "Clones the selected type's config template into a live form and prefills each\n`[name]` control from the section's data. The element is rendered directly by\nLit (`${this._form}`) so user-entered values survive unrelated re-renders."
+            },
+            {
+              "kind": "method",
+              "name": "_isBooleanControl",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "control",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_onInspectorInput",
+              "privacy": "private",
+              "description": "Handles change/input events bubbling from stamped form controls."
+            },
+            {
+              "kind": "method",
+              "name": "_updateSectionData",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "patch",
+                  "type": {
+                    "text": "Record<string, unknown>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renameSection",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "label",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderInspector",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted whenever the page state changes. `event.detail.state` is the new PageState.",
+              "name": "zn-page-change"
+            },
+            {
+              "description": "Emitted when the selected section changes. `event.detail.sectionId`.",
+              "name": "zn-page-selection-change"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "config",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The page state as a JSON string. Parsed on set; invalid JSON is ignored with a warning.",
+              "fieldName": "config"
+            },
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "heading"
+            },
+            {
+              "name": "subheading",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "subheading"
+            },
+            {
+              "name": "palette-collapsed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Collapses the left palette. Auto-set when the builder becomes narrow.",
+              "fieldName": "paletteCollapsed"
+            },
+            {
+              "name": "inspector-collapsed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Collapses the inspector while a section is selected.",
+              "fieldName": "inspectorCollapsed"
+            },
+            {
+              "name": "auto-save",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "description": "Auto-save the page to localStorage (1-day TTL). Omit to disable. A bare\n`auto-save` saves every 5 minutes; a numeric value sets the interval in\nminutes (`auto-save=\"2\"`). Restore with `restoreAutoSave()`.",
+              "fieldName": "autoSave"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A config-driven page composer: a palette of predefined section types, a linear\ncanvas of section cards, and an inspector for editing each section's content.",
+          "tagNameWithoutPrefix": "page-builder",
+          "tagName": "zn-page-builder",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A config-driven page composer: a palette of predefined section types, a linear\n *   canvas of section cards, and an inspector for editing each section's content.\n * @documentation https://zinc.style/components/page-builder\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-collapsible\n * @dependency zn-icon\n * @dependency zn-input\n * @dependency zn-page-palette-item\n * @dependency zn-page-section-card\n *\n * @event zn-page-change - Emitted whenever the page state changes. `event.detail.state` is the new PageState.\n * @event zn-page-selection-change - Emitted when the selected section changes. `event.detail.sectionId`.\n *\n * @slot config - `<template type=\"…\">` declarations; never displayed. Each template's attributes\n *   (type, label, icon, icon-library, color, category, description, slots, accepts) declare a\n *   palette entry and its content declares the inspector form for that type. `slots` makes the\n *   section a container with that many child slots; `accepts` is a comma-separated list of the\n *   type keys its slots allow.\n * @slot header-left - Actions shown on the left of the header bar.\n * @slot header-right - Actions shown on the right of the header bar.\n *\n * @csspart base - The grid wrapper.\n * @csspart header - The full-width header action bar (only rendered when header slots are filled).\n * @csspart palette - The left palette panel.\n * @csspart canvas - The centre section-card canvas.\n * @csspart inspector - The right panel while a section is selected.\n */",
+          "documentation": "https://zinc.style/components/page-builder",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-collapsible",
+            "zn-icon",
+            "zn-input",
+            "zn-page-palette-item",
+            "zn-page-section-card"
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "type"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnPageBuilder",
+            "module": "components/page-builder/page-builder.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/page-nav/page-nav.js",
       "declarations": [
         {

@@ -9502,6 +9502,386 @@ declare module "components/flow-builder/modules/flow-step/index" {
         }
     }
 }
+declare module "components/page-builder/page.types" {
+    import type { TemplateResult } from 'lit';
+    /** A section placed on a page. */
+    export interface PageSection {
+        id: string;
+        type: string;
+        /** Overrides the type label when set (per-instance rename). */
+        label?: string;
+        /** Section content, keyed by field name (the inspector's `name` attributes). */
+        data: Record<string, unknown>;
+        /** Slot contents for container sections, sized to the type's `slots`. Empty slots are null. */
+        children?: (PageSection | null)[];
+    }
+    /** The complete serialisable state of a page. Order = render order. */
+    export interface PageState {
+        sections: PageSection[];
+    }
+    /**
+     * Describes a kind of section that can be placed on a page. Declared via
+     * `<template type slot="config">` children or registered programmatically —
+     * the palette and inspector are driven entirely by registered types.
+     */
+    export interface PageSectionType {
+        /** Unique key, persisted on every placed section. */
+        type: string;
+        label: string;
+        /** zn-icon `src`. */
+        icon?: string;
+        iconLibrary?: string;
+        /** Accent colour for the icon tile — any CSS colour. */
+        color?: string;
+        /** Collapsible palette category. */
+        category?: string;
+        description?: string;
+        /** Inspector form markup (from a slotted `<template slot="config">`). */
+        configTemplate?: HTMLTemplateElement;
+        /** Programmatic inspector body — takes precedence over `configTemplate`. */
+        renderConfig?: (section: PageSection, update: (data: Record<string, unknown>) => void) => TemplateResult;
+        /**
+         * Number of child slots this section offers on the canvas (a container tile);
+         * rendered as a 3-column grid. Containers cannot be placed inside other containers.
+         */
+        slots?: number;
+        /** Section type keys allowed in this container's slots. Omit to allow any non-container type. */
+        accepts?: string[];
+    }
+    /** A container section's slot contents, padded/truncated to the type's slot count. */
+    export function sectionChildren(section: PageSection, type: PageSectionType): (PageSection | null)[];
+    /** Drag-and-drop MIME carrying a section type id from the palette to the canvas. */
+    export const PAGE_TYPE_MIME = "application/x-zn-page-type";
+    /** Drag-and-drop MIME carrying a placed section's id when reordering. */
+    export const PAGE_SECTION_MIME = "application/x-zn-page-section";
+    export function emptyPageState(): PageState;
+    /** Unique-enough id for a new section, stable across edits once assigned. */
+    export function generateSectionId(): string;
+    /** Card summary: the section's first non-empty string value, else the type description. */
+    export function sectionSummary(section: PageSection, type?: PageSectionType): string;
+}
+declare module "components/page-builder/page-registry" {
+    import type { PageSectionType } from "components/page-builder/page.types";
+    /**
+     * Holds the set of {@link PageSectionType}s available to a page builder.
+     * Register custom section types here (or via slotted templates) and the
+     * palette and inspector pick them up automatically.
+     */
+    export class PageSectionRegistry {
+        private types;
+        register(type: PageSectionType): this;
+        registerAll(types: PageSectionType[]): this;
+        get(type: string): PageSectionType | undefined;
+        has(type: string): boolean;
+        all(): PageSectionType[];
+        /** Map of category name -> types, preserving insertion order. Uncategorised under ''. */
+        categories(): Map<string, PageSectionType[]>;
+        clear(): void;
+    }
+}
+declare module "components/page-builder/modules/page-palette-item/page-palette-item.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    /**
+     * @summary A draggable palette entry in `<zn-page-builder>`, representing a registered
+     *   section type. Drag it onto the canvas to add that section. Unlike zn-page-section-card
+     *   (host-wired), this element wires its own drag behaviour so it is draggable standalone.
+     * @documentation https://zinc.style/components/page-palette-item
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     *
+     * @csspart base - The card row.
+     */
+    export default class ZnPagePaletteItem extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+        };
+        /** The section type id this item creates when dropped. */
+        type: string;
+        label: string;
+        description: string;
+        icon: string;
+        iconLibrary: string;
+        color: string;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        protected updated(changed: PropertyValues): void;
+        private _onDragStart;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/page-builder/modules/page-palette-item/index" {
+    import ZnPagePaletteItem from "components/page-builder/modules/page-palette-item/page-palette-item.component";
+    export * from "components/page-builder/modules/page-palette-item/page-palette-item.component";
+    export default ZnPagePaletteItem;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-page-palette-item': ZnPagePaletteItem;
+        }
+    }
+}
+declare module "components/page-builder/modules/page-section-card/page-section-card.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    import ZnIcon from "components/icon/index";
+    /**
+     * @summary A section card on the `<zn-page-builder>` canvas: icon tile, label, one-line
+     *   summary, and hover actions (duplicate / remove). Purely presentational — the builder
+     *   wires up dragging, focus, selection and keyboard handling on the host element.
+     * @documentation https://zinc.style/components/page-section-card
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-button
+     * @dependency zn-icon
+     *
+     * @event page-card-duplicate - The duplicate action was clicked (internal; not in the typed event map).
+     * @event page-card-remove - The remove action was clicked (internal; not in the typed event map).
+     *
+     * @csspart base - The card row.
+     */
+    export default class ZnPageSectionCard extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-button': typeof ZnButton;
+            'zn-icon': typeof ZnIcon;
+        };
+        label: string;
+        summary: string;
+        icon: string;
+        iconLibrary: string;
+        color: string;
+        selected: boolean;
+        /** Set when the section's type has no registered template — renders greyed. */
+        unknown: boolean;
+        protected updated(changed: PropertyValues): void;
+        private _action;
+        private _actionKeydown;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/page-builder/modules/page-section-card/index" {
+    import ZnPageSectionCard from "components/page-builder/modules/page-section-card/page-section-card.component";
+    export * from "components/page-builder/modules/page-section-card/page-section-card.component";
+    export default ZnPageSectionCard;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-page-section-card': ZnPageSectionCard;
+        }
+    }
+}
+declare module "components/page-builder/page-builder.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import { type PageSection, type PageSectionType, type PageState } from "components/page-builder/page.types";
+    import ZincElement from "internal/zinc-element";
+    import ZnCollapsible from "components/collapsible/index";
+    import ZnIcon from "components/icon/index";
+    import ZnInput from "components/input/index";
+    import ZnPagePaletteItem from "components/page-builder/modules/page-palette-item/index";
+    import ZnPageSectionCard from "components/page-builder/modules/page-section-card/index";
+    /**
+     * @summary A config-driven page composer: a palette of predefined section types, a linear
+     *   canvas of section cards, and an inspector for editing each section's content.
+     * @documentation https://zinc.style/components/page-builder
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-collapsible
+     * @dependency zn-icon
+     * @dependency zn-input
+     * @dependency zn-page-palette-item
+     * @dependency zn-page-section-card
+     *
+     * @event zn-page-change - Emitted whenever the page state changes. `event.detail.state` is the new PageState.
+     * @event zn-page-selection-change - Emitted when the selected section changes. `event.detail.sectionId`.
+     *
+     * @slot config - `<template type="…">` declarations; never displayed. Each template's attributes
+     *   (type, label, icon, icon-library, color, category, description, slots, accepts) declare a
+     *   palette entry and its content declares the inspector form for that type. `slots` makes the
+     *   section a container with that many child slots; `accepts` is a comma-separated list of the
+     *   type keys its slots allow.
+     * @slot header-left - Actions shown on the left of the header bar.
+     * @slot header-right - Actions shown on the right of the header bar.
+     *
+     * @csspart base - The grid wrapper.
+     * @csspart header - The full-width header action bar (only rendered when header slots are filled).
+     * @csspart palette - The left palette panel.
+     * @csspart canvas - The centre section-card canvas.
+     * @csspart inspector - The right panel while a section is selected.
+     */
+    export default class ZnPageBuilder extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-collapsible': typeof ZnCollapsible;
+            'zn-icon': typeof ZnIcon;
+            'zn-input': typeof ZnInput;
+            'zn-page-palette-item': typeof ZnPagePaletteItem;
+            'zn-page-section-card': typeof ZnPageSectionCard;
+        };
+        /** The page state as a JSON string. Parsed on set; invalid JSON is ignored with a warning. */
+        config: string;
+        heading: string;
+        subheading: string;
+        /** Section types to make available, registered into the internal registry. */
+        sectionTypes: PageSectionType[];
+        /** Collapses the left palette. Auto-set when the builder becomes narrow. */
+        paletteCollapsed: boolean;
+        /** Collapses the inspector while a section is selected. */
+        inspectorCollapsed: boolean;
+        /**
+         * Auto-save the page to localStorage (1-day TTL). Omit to disable. A bare
+         * `auto-save` saves every 5 minutes; a numeric value sets the interval in
+         * minutes (`auto-save="2"`). Restore with `restoreAutoSave()`.
+         */
+        autoSave: number | null;
+        private registry;
+        private _state;
+        private _selectedId;
+        private _search;
+        /** Index of the drop zone whose "+" type picker is open, if any. */
+        private _pickerIndex;
+        private _dragOverIndex;
+        /** The container slot a drag is currently over, if any. */
+        private _slotDragOver;
+        /** The container slot whose "+" type picker is open, if any. */
+        private _slotPicker;
+        /** The stamped config form for the selected section; rebuilt on selection change. */
+        private _form;
+        private readonly _hasSlot;
+        private _history;
+        private _redoStack;
+        /** A deep copy of the current page state. */
+        get state(): PageState;
+        /** Replaces the page state wholesale (does not emit zn-page-change). */
+        set state(next: PageState);
+        handleConfigChange(): void;
+        handleSectionTypesChange(): void;
+        registerSectionType(type: PageSectionType): this;
+        registerSectionTypes(types: PageSectionType[]): this;
+        /**
+         * Auto-collapses the palette when the builder crosses into narrow — only on the
+         * crossing, so re-expanding while narrow stays a user choice.
+         */
+        private _wasNarrow;
+        private _resizeObserver;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        private _autoSaveTimer;
+        private _statusTimer;
+        private _justSavedTimer;
+        /** Guards the restore prompt from re-triggering on restoreAutoSave's own state install. */
+        private _restoring;
+        /** Epoch of the newest auto-save (also picked up from storage on start). */
+        private _lastSavedAt;
+        /** Briefly true right after a save — flashes "Auto-saved" in the status pill. */
+        private _justSaved;
+        /** Re-render clock for the "last saved Xm ago" label. */
+        private _statusNow;
+        /** A fresh auto-save differing from the loaded page — offer to restore it. */
+        private _restorePrompt;
+        /** localStorage key for this builder's auto-saves — its id, else its heading. */
+        private get _autoSaveKey();
+        private _stopAutoSave;
+        private _restartAutoSave;
+        /** An empty page is never saved — it would clobber a stored page with nothing. */
+        private _autoSaveTick;
+        /** The stored auto-save, purging it when past its TTL (or unreadable). */
+        private _readAutoSave;
+        /** Load the auto-saved page, if one exists within the 1-day TTL. */
+        restoreAutoSave: () => boolean;
+        /**
+         * A page was just loaded — when a fresh auto-save differs from it, ask the
+         * user whether to pick up their draft instead.
+         */
+        private _offerRestoreIfNewer;
+        protected willUpdate(changed: PropertyValues): void;
+        private _typeFromTemplate;
+        private _registerSlottedTemplates;
+        /** Normalises and installs an externally provided state; resets selection. */
+        private _applyExternalState;
+        /** Finds a section by id, searching top-level sections and slotted children. */
+        private _findSection;
+        /** New sections array with the section patched wherever it lives (top level or slot). */
+        private _patchSection;
+        /** Detaches a section wherever it lives: removed from the top level, or its slot nulled. */
+        private _extract;
+        /** Installs a new state from a user edit and notifies listeners. */
+        private _commit;
+        private _selectedSection;
+        private _select;
+        private _pushHistory;
+        undo: () => void;
+        redo: () => void;
+        /** Adds a section of a registered type at `index` (default: end). Returns null for unknown types. */
+        addSection(type: string, index?: number): PageSection | null;
+        /** Adds a new section of a registered type into a container's slot. Returns null if not allowed. */
+        addSectionToSlot(type: string, containerId: string, slotIndex: number): PageSection | null;
+        private _removeSection;
+        private _duplicateSection;
+        /** Moves a section (top-level or slotted) to a top-level position. */
+        private _moveSection;
+        /**
+         * Moves a section into a container's slot. Dropping onto an occupied slot swaps
+         * the two children (slot-to-slot reordering); top-level sections and containers
+         * only enter empty slots / never enter slots respectively.
+         */
+        private _moveToSlot;
+        private _onCardDragStart;
+        /** Whether a drag carries one of the builder's own payloads. */
+        private _isPageDrag;
+        private _onSlotDragOver;
+        private _onSlotDrop;
+        private _onZoneDragOver;
+        private _onZoneDrop;
+        private _onCanvasDragOver;
+        private _onCanvasDrop;
+        private _onCardKeydown;
+        private _renderPalette;
+        private _renderPaletteItem;
+        private _renderAutoSaveStatus;
+        private _renderRestorePrompt;
+        private _renderCanvas;
+        /** The one card template both the page list and slot cells render. */
+        private _renderSectionCard;
+        private _renderCard;
+        private _renderSlot;
+        /** Types allowed in a container's slots: non-containers, filtered by its accepts list. */
+        private _slotTypes;
+        /** The one type-picker template both drop zones and slot cells render. */
+        private _renderTypePicker;
+        private _renderDropZone;
+        /**
+         * Clones the selected type's config template into a live form and prefills each
+         * `[name]` control from the section's data. The element is rendered directly by
+         * Lit (`${this._form}`) so user-entered values survive unrelated re-renders.
+         */
+        private _buildInspectorForm;
+        private _isBooleanControl;
+        /** Handles change/input events bubbling from stamped form controls. */
+        private _onInspectorInput;
+        private _updateSectionData;
+        private _renameSection;
+        private _renderInspector;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/page-builder/index" {
+    import ZnPageBuilder from "components/page-builder/page-builder.component";
+    export * from "components/page-builder/page-builder.component";
+    export * from "components/page-builder/page.types";
+    export * from "components/page-builder/page-registry";
+    export default ZnPageBuilder;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-page-builder': ZnPageBuilder;
+        }
+    }
+}
 declare module "utilities/form" {
     export { clearFormStoreValues } from "internal/form";
 }
@@ -9647,6 +10027,27 @@ declare module "events/zn-flow-connect" {
         }
     }
 }
+declare module "events/zn-page-change" {
+    import type { PageState } from "components/page-builder/page.types";
+    export type ZnPageChangeEvent = CustomEvent<{
+        state: PageState;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-page-change': ZnPageChangeEvent;
+        }
+    }
+}
+declare module "events/zn-page-selection-change" {
+    export type ZnPageSelectionChangeEvent = CustomEvent<{
+        sectionId: string | null;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-page-selection-change': ZnPageSelectionChangeEvent;
+        }
+    }
+}
 declare module "events/events" {
     export type { ZnAfterHideEvent } from "events/zn-after-hide";
     export type { ZnAfterShowEvent } from "events/zn-after-show";
@@ -9665,6 +10066,8 @@ declare module "events/events" {
     export type { ZnFlowChangeEvent } from "events/zn-flow-change";
     export type { ZnFlowSelectionChangeEvent } from "events/zn-flow-selection-change";
     export type { ZnFlowConnectEvent } from "events/zn-flow-connect";
+    export type { ZnPageChangeEvent } from "events/zn-page-change";
+    export type { ZnPageSelectionChangeEvent } from "events/zn-page-selection-change";
 }
 declare module "zinc" {
     export { default as Button } from "components/button/index";
@@ -9773,6 +10176,9 @@ declare module "zinc" {
     export { default as FlowStepGroup } from "components/flow-builder/modules/flow-step-group/index";
     export { default as FlowStep } from "components/flow-builder/modules/flow-step/index";
     export { default as FlowBranchConditions } from "components/flow-builder/modules/flow-branch-conditions/index";
+    export { default as PageBuilder } from "components/page-builder/index";
+    export { default as PagePaletteItem } from "components/page-builder/modules/page-palette-item/index";
+    export { default as PageSectionCard } from "components/page-builder/modules/page-section-card/index";
     export { default as ZincElement } from "internal/zinc-element";
     export * from "utilities/on";
     export * from "utilities/query";

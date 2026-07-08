@@ -269,7 +269,7 @@ component generic and lets it be extended for any future workflow without changi
                      const el = document.getElementById('flow-demo');
                      const connected = new Set(
                        el.getState().connections.filter(c => c.source.node === node.id).map(c => c.source.port));
-                     if (!branches.some(b => b.label || connected.has(b.id))) return wrap;
+                     if(!branches.some(b => b.label || connected.has(b.id))) return wrap;
 
                      const heading = document.createElement('p');
                      heading.textContent = 'Branches';
@@ -551,7 +551,9 @@ array of AND-ed conditions:
 ```js
 [
   [ // group 1 (AND-ed)…
-    {filter: 'engagement', values: {count: {operator: 'gte', value: 2}, window: {operator: 'within', value: 6, unit: 'months'}}},
+    {filter:  'engagement',
+      values: {count: {operator: 'gte', value: 2}, window: {operator: 'within', value: 6, unit: 'months'}}
+    },
     {filter: 'lost-reason', values: {reason: {operator: 'eq', value: 'price'}}}
   ],
   // …OR group 2
@@ -652,9 +654,9 @@ builder.value = localStorage.getItem('flow');
 // Saving to a server: the builder serialises directly (toJSON returns the
 // FlowState), so the POST body is one expression either way:
 await fetch('/api/flows/123', {
-  method: 'POST',
+  method:  'POST',
   headers: {'Content-Type': 'application/json'},
-  body: JSON.stringify(builder), // === builder.value
+  body:    JSON.stringify(builder), // === builder.value
 });
 ```
 
@@ -664,6 +666,7 @@ Add the `auto-save` attribute to periodically snapshot the flow (positions inclu
 localStorage, keyed by the builder's `id` (falling back to its `heading`), with a **1-day TTL**:
 
 ```html
+
 <zn-flow-builder id="my-flow" auto-save></zn-flow-builder>      <!-- every 5 minutes -->
 <zn-flow-builder id="my-flow" auto-save="2"></zn-flow-builder>  <!-- every 2 minutes -->
 ```
@@ -679,7 +682,52 @@ can also be done programmatically:
 
 ```js
 const builder = document.querySelector('zn-flow-builder');
-if (builder.restoreAutoSave()) {
+if(builder.restoreAutoSave())
+{
   console.log('Restored an auto-saved draft'); // false when none exists / it expired
 }
+```
+
+Try it below — the demo saves every **6 seconds** (`auto-save="0.1"`; real flows would use minutes).
+Drag a node and watch the pill flash **Auto-saved**. Then **reload the page**: the demo always loads
+its original flow, so if your draft differs a banner offers to restore it.
+
+```html:preview
+
+<div style="height: 480px;">
+  <zn-flow-builder id="autosave-demo" auto-save="0.1"
+                   heading="Auto-save" subheading="Saves every 6s in this demo">
+
+    <zn-flow-step type="webhook" group="entrypoint" category="Events"
+                  icon="webhook@lu" color="rgb(236, 68, 91)" inputs="">Order Placed
+    </zn-flow-step>
+    <zn-flow-step type="send-email" group="action" category="Email"
+                  icon="mail@lu" color="rgb(43, 192, 145)">Send Confirmation
+    </zn-flow-step>
+    <zn-flow-step type="notify" group="action" category="Support"
+                  icon="user@lu" color="rgb(43, 192, 145)">Notify Team
+    </zn-flow-step>
+  </zn-flow-builder>
+</div>
+
+<script type="module">
+  customElements.whenDefined('zn-flow-builder').then(() =>
+  {
+    const el = document.getElementById('autosave-demo');
+    // Always load the same baseline — after editing and reloading, the
+    // auto-saved draft differs from it and the restore banner appears.
+    el.setState({
+      nodes:       [
+        {id: 'n1', type: 'webhook', x: 300, y: 40, data: {subtitle: 'Webhook fires'}},
+        {id: 'n2', type: 'send-email', x: 300, y: 260, data: {subtitle: 'Order confirmation'}},
+        {id: 'n3', type: 'notify', x: 300, y: 480, data: {subtitle: 'Ping #orders'}}
+      ],
+      connections: [
+        {id: 'c1', source: {node: 'n1', port: 'out'}, target: {node: 'n2', port: 'in'}},
+        {id: 'c2', source: {node: 'n2', port: 'out'}, target: {node: 'n3', port: 'in'}}
+      ],
+      notes:       []
+    });
+  });
+</script>
 ```

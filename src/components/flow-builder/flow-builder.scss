@@ -559,7 +559,12 @@
   z-index: 5;
   display: flex;
   align-items: center;
+  // On a narrow canvas the message keeps sensible line lengths and the
+  // buttons wrap below it, instead of squeezing to a word per line.
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 8px;
+  width: max-content;
   max-width: calc(100% - 32px);
   padding: 8px 12px;
   font-size: 0.8125rem;
@@ -568,6 +573,11 @@
   border: 1px solid rgb(var(--zn-border-color));
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(var(--zn-shadow), 0.5);
+
+  span {
+    flex: 1 1 auto;
+    min-width: min(160px, 100%);
+  }
 
   button {
     flex: 0 0 auto;

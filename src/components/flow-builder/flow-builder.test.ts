@@ -175,6 +175,25 @@ describe('<zn-flow-builder>', () => {
       expect(el.shadowRoot?.querySelector('.restore-banner')).to.equal(null);
     });
 
+    it('should keep the offered draft intact across ticks, so Restore still applies it', async () => {
+      localStorage.setItem(KEY, JSON.stringify({savedAt: Date.now(), state: STATE}));
+      const el = await fixture<ZnFlowBuilder>(html`
+        <zn-flow-builder id="as-test" auto-save="0.001"></zn-flow-builder>`);
+      el.setState({nodes: [{id: 'other', type: 'webhook', x: 0, y: 0, data: {}}], connections: [], notes: []});
+      await el.updateComplete;
+      expect(el.shadowRoot?.querySelector('.restore-banner')).to.not.equal(null);
+
+      // Several auto-save ticks pass while the prompt is open — the draft
+      // must not be overwritten by the loaded flow.
+      await tick(250);
+      const saved = JSON.parse(localStorage.getItem(KEY)!) as { state: FlowState };
+      expect(saved.state.nodes[0].id).to.equal('n1');
+
+      (el.shadowRoot?.querySelector('.restore-banner__restore') as HTMLButtonElement).click();
+      await el.updateComplete;
+      expect(el.getState().nodes[0]).to.deep.include({id: 'n1', x: 40, y: 80});
+    });
+
     it('should restore a fresh auto-save and purge an expired one', async () => {
       const el = await fixture<ZnFlowBuilder>(html`
         <zn-flow-builder id="as-test"></zn-flow-builder>`);

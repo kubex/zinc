@@ -277,6 +277,9 @@ export default class ZnFlowBuilder extends ZincElement {
 
   /** An empty canvas is never saved — it would clobber a stored flow with nothing. */
   private _autoSaveTick = () => {
+    // While a restore is being offered, the stored draft is the user's only
+    // copy — never overwrite it until they've decided.
+    if (this._restorePrompt) return;
     const state = this.getState();
     if (!state.nodes.length && !state.connections.length && !state.notes.length) return;
     try {

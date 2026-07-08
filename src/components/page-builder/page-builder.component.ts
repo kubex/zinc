@@ -260,7 +260,7 @@ export default class ZnPageBuilder extends ZincElement {
 
   /** An empty page is never saved — it would clobber a stored page with nothing. */
   private _autoSaveTick = () => {
-    if (!this._state.sections.length) return;
+    if (!this._state.sections.length || this._restorePrompt) return;
     try {
       localStorage.setItem(this._autoSaveKey, JSON.stringify({savedAt: Date.now(), state: this._state}));
       this._lastSavedAt = Date.now();

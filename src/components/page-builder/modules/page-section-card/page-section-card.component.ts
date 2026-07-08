@@ -2,6 +2,7 @@ import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {property} from 'lit/decorators.js';
 import ZincElement from '../../../../internal/zinc-element';
+import ZnButton from '../../../button';
 import ZnIcon from '../../../icon';
 
 import styles from './page-section-card.scss';
@@ -14,6 +15,7 @@ import styles from './page-section-card.scss';
  * @status experimental
  * @since 1.0
  *
+ * @dependency zn-button
  * @dependency zn-icon
  *
  * @event page-card-duplicate - The duplicate action was clicked (internal; not in the typed event map).
@@ -24,7 +26,10 @@ import styles from './page-section-card.scss';
 export default class ZnPageSectionCard extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  static dependencies = {'zn-icon': ZnIcon};
+  static dependencies = {
+    'zn-button': ZnButton,
+    'zn-icon': ZnIcon,
+  };
 
   @property() label = '';
   @property() summary = '';
@@ -63,14 +68,24 @@ export default class ZnPageSectionCard extends ZincElement {
           ${this.summary ? html`<span class="card__summary">${this.summary}</span>` : ''}
         </span>
         <span class="card__actions" @keydown="${this._actionKeydown}">
-          <button type="button" class="card__action" title="Duplicate" aria-label="Duplicate section"
-                  @click="${(e: Event) => this._action(e, 'page-card-duplicate')}">
-            <zn-icon src="content_copy" size="14"></zn-icon>
-          </button>
-          <button type="button" class="card__action" title="Remove" aria-label="Remove section"
-                  @click="${(e: Event) => this._action(e, 'page-card-remove')}">
-            <zn-icon src="delete" size="14"></zn-icon>
-          </button>
+          <zn-button
+            class="card__action"
+            icon-button="small"
+            plain
+            icon="content_copy"
+            icon-size="14"
+            title="Duplicate section"
+            aria-label="Duplicate section"
+            @click="${(e: Event) => this._action(e, 'page-card-duplicate')}"></zn-button>
+          <zn-button
+            class="card__action"
+            icon-button="small"
+            plain
+            icon="delete"
+            icon-size="14"
+            title="Remove section"
+            aria-label="Remove section"
+            @click="${(e: Event) => this._action(e, 'page-card-remove')}"></zn-button>
         </span>
       </div>
     `;

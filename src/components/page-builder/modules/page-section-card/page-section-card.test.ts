@@ -18,9 +18,12 @@ describe('<zn-page-section-card>', () => {
     el.addEventListener('page-card-remove', () => fired.push('remove'));
     el.addEventListener('click', () => fired.push('click'));
 
-    const buttons = el.shadowRoot!.querySelectorAll<HTMLButtonElement>('.card__action');
-    buttons[0].click();
-    buttons[1].click();
+    // Real MouseEvents, not .click() — zn-button overrides the native click()
+    // method with internal handling that dispatches no event.
+    const buttons = el.shadowRoot!.querySelectorAll('zn-button.card__action');
+    const click = () => new MouseEvent('click', {bubbles: true, composed: true, cancelable: true});
+    buttons[0].dispatchEvent(click());
+    buttons[1].dispatchEvent(click());
 
     expect(fired).to.deep.equal(['duplicate', 'remove']); // stopPropagation keeps click out
   });

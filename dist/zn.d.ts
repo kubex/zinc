@@ -560,6 +560,7 @@ declare module "components/icon/icon.component" {
         private convertIndicatorToLibrary;
         connectedCallback(): void;
         protected willUpdate(changedProperties: PropertyValues<this>): void;
+        protected getUpdateComplete(): Promise<boolean>;
         private parseSrc;
         private applyHashFragment;
         private normalizeRavatarEmail;
@@ -3807,6 +3808,11 @@ declare module "components/chart/builders" {
     export function buildAreaOption(props: BuilderProps): EChartsOption;
     export function buildSankeyOption(props: BuilderProps): EChartsOption;
 }
+declare module "components/chart/echarts-loader" {
+    import type * as echartsCore from 'echarts/core';
+    export type EChartsModule = typeof echartsCore;
+    export function loadECharts(): Promise<EChartsModule>;
+}
 declare module "components/chart/chart.component" {
     import { type ChartType, type SeriesItem } from "components/chart/builders";
     import { type CSSResultGroup, type PropertyValues } from 'lit';
@@ -3838,9 +3844,12 @@ declare module "components/chart/chart.component" {
         smooth: boolean;
         scale: boolean | number;
         private chart?;
+        private echarts?;
+        private initPromise?;
         private liveTimer?;
         private readonly resizeObserver;
         protected firstUpdated(_changedProperties: PropertyValues): void;
+        protected getUpdateComplete(): Promise<boolean>;
         private getTheme;
         private getTextColor;
         private getBorderColor;
@@ -3880,8 +3889,11 @@ declare module "components/simple-chart/simple-chart.component" {
         labels?: string[];
         enableAnimations: boolean | number;
         private chart?;
+        private initPromise?;
         private readonly resizeObserver;
         firstUpdated(): void;
+        protected getUpdateComplete(): Promise<boolean>;
+        private initChart;
         disconnectedCallback(): void;
         render(): import("lit-html").TemplateResult<1>;
     }
@@ -5504,6 +5516,15 @@ declare module "components/editor/modules/dialog/dialog" {
         close(): void;
     }
     export default Dialog;
+}
+declare module "components/editor/modules/emoji/emoji-mart-loader" {
+    import type { Picker, SearchIndex } from 'emoji-mart';
+    export interface EmojiMart {
+        Picker: typeof Picker;
+        SearchIndex: typeof SearchIndex;
+        data: Record<string, unknown>;
+    }
+    export function loadEmojiMart(): Promise<EmojiMart>;
 }
 declare module "components/editor/modules/emoji/emoji" {
     import Quill from 'quill';

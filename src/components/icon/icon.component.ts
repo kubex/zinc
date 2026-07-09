@@ -1,7 +1,6 @@
 import {choose} from 'lit/directives/choose.js';
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, render, unsafeCSS} from 'lit';
-import {icons} from 'lucide';
 import {property} from 'lit/decorators.js';
 import {sha256} from '../../utilities/sha256';
 import {styleMap} from "lit/directives/style-map.js";
@@ -10,6 +9,22 @@ import ZincElement from '../../internal/zinc-element';
 import type {IconNode, SVGProps} from 'lucide';
 
 import styles from './icon.scss';
+
+// The full lucide icon set is large, so it loads lazily into its own chunk the
+// first time a lucide icon is rendered.
+let lucideIcons: Record<string, IconNode> | undefined;
+let lucidePromise: Promise<void> | undefined;
+
+function loadLucideIcons(): Promise<void> {
+  lucidePromise ??= import('lucide').then(m => {
+    lucideIcons = m.icons as Record<string, IconNode>;
+  }).catch(() => {
+    // Failed chunk load: fall back to an empty set so icons render their
+    // "not found" state instead of rejecting updateComplete on every render
+    lucideIcons = {};
+  });
+  return lucidePromise;
+}
 
 export type IconLibrary = "src" | "material" | "material-outlined" | "material-round" | "material-sharp" |
   "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line" |
@@ -161,6 +176,18 @@ export default class ZnIcon extends ZincElement {
     if (changedProperties.has('src')) {
       this.parseSrc();
     }
+  }
+
+  // Make `await el.updateComplete` cover the lazy lucide load and the
+  // re-render it triggers.
+  protected override async getUpdateComplete(): Promise<boolean> {
+    const result = await super.getUpdateComplete();
+    if (this.library === 'lucide' && !lucideIcons) {
+      await loadLucideIcons();
+      this.requestUpdate();
+      await super.getUpdateComplete();
+    }
+    return result;
   }
 
   private parseSrc() {
@@ -325,6 +352,11 @@ export default class ZnIcon extends ZincElement {
   }
 
   private renderLucideIcon() {
+    if (!lucideIcons) {
+      void loadLucideIcons().then(() => this.requestUpdate());
+      return html``;
+    }
+
     const icon = this.getLucideIcon(this.src);
 
     if (!icon) {
@@ -340,7 +372,7 @@ export default class ZnIcon extends ZincElement {
     }
 
     const candidates = [src, this.toPascalCase(src)];
-    const iconSet = icons as Record<string, IconNode>;
+    const iconSet = lucideIcons ?? {};
 
     for (const candidate of candidates) {
       if (Object.prototype.hasOwnProperty.call(iconSet, candidate)) {

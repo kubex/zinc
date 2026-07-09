@@ -1,15 +1,10 @@
-import * as echarts from 'echarts/core';
-import { BarChart } from 'echarts/charts';
-import { CanvasRenderer } from 'echarts/renderers';
 import { type CSSResultGroup, html, unsafeCSS } from 'lit';
-import { GridComponent, TooltipComponent } from 'echarts/components';
+import { loadECharts } from '../chart/echarts-loader';
 import { property } from 'lit/decorators.js';
 import { ResizeController } from '@lit-labs/observers/resize-controller.js';
 import styles from './simple-chart.scss';
 import ZincElement from '../../internal/zinc-element';
 import type { ECharts } from 'echarts/core';
-
-echarts.use([BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
 const DEFAULT_LABELS = [
   'Jun 2016', 'Jul 2016', 'Aug 2016', 'Sep 2016', 'Oct 2016', 'Nov 2016',
@@ -41,6 +36,7 @@ export default class ZnSimpleChart extends ZincElement {
   }) enableAnimations: boolean | number = false;
 
   private chart?: ECharts;
+  private initPromise?: Promise<void>;
   private readonly resizeObserver = new ResizeController(this, {
     target: null,
     skipInitial: true,
@@ -48,8 +44,21 @@ export default class ZnSimpleChart extends ZincElement {
   });
 
   firstUpdated() {
+    this.initPromise = this.initChart().catch(() => undefined);
+  }
+
+  // Make `await el.updateComplete` cover the lazy echarts load and chart init
+  protected override async getUpdateComplete(): Promise<boolean> {
+    const result = await super.getUpdateComplete();
+    await this.initPromise;
+    return result;
+  }
+
+  private async initChart() {
     const host = this.shadowRoot?.getElementById('chart') as HTMLElement | null;
     if (!host) return;
+    const echarts = await loadECharts();
+    if (!this.isConnected || this.chart) return;
     this.chart = echarts.init(host);
     const data = this.datasets?.[0]?.data ?? DEFAULT_DATA;
     const labels = this.labels ?? DEFAULT_LABELS;

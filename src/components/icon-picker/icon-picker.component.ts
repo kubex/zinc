@@ -1,8 +1,8 @@
-import {type CSSResultGroup, html, nothing, unsafeCSS} from 'lit';
 import {classMap} from 'lit/directives/class-map.js';
+import {type CSSResultGroup, html, nothing, unsafeCSS} from 'lit';
 import {defaultValue} from '../../internal/default-value';
-import {property, query, state} from 'lit/decorators.js';
 import {FormControlController} from '../../internal/form';
+import {property, query, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from '../button';
 import ZnDialog from '../dialog';
@@ -12,16 +12,6 @@ import ZnOption from '../option';
 import ZnSelect from '../select';
 import type {ZincFormControl} from '../../internal/zinc-element';
 
-import {brandIcons} from './brand-icons';
-import {lineIcons} from './line-icons';
-import {
-  materialIcons,
-  material_outlinedIcons,
-  material_roundIcons,
-  material_sharpIcons,
-  material_two_toneIcons,
-  material_symbols_outlinedIcons,
-} from './material-icons';
 import styles from './icon-picker.scss';
 
 export default class ZnIconPicker extends ZincElement implements ZincFormControl {
@@ -105,26 +95,36 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
     return ZnIconPicker.freeInputLibraries.has(library);
   }
 
-  private getIconsForLibrary(library: string): string[] {
-    switch (library) {
-      case 'material':
-        return materialIcons;
-      case 'material-outlined':
-        return material_outlinedIcons;
-      case 'material-round':
-        return material_roundIcons;
-      case 'material-sharp':
-        return material_sharpIcons;
-      case 'material-two-tone':
-        return material_two_toneIcons;
-      case 'material-symbols-outlined':
-        return material_symbols_outlinedIcons;
-      case 'brands':
-        return brandIcons;
-      case 'line':
-        return lineIcons;
-      default:
-        return materialIcons;
+  // The icon name lists are only needed once the picker dialog opens, so they
+  // load lazily into their own chunks. Falls back to an empty list on a failed
+  // chunk load so callers never reject.
+  private async getIconsForLibrary(library: string): Promise<string[]> {
+    try {
+      switch (library) {
+        case 'brands':
+          return (await import('./brand-icons')).brandIcons;
+        case 'line':
+          return (await import('./line-icons')).lineIcons;
+        default: {
+          const lists = await import('./material-icons');
+          switch (library) {
+            case 'material-outlined':
+              return lists.material_outlinedIcons;
+            case 'material-round':
+              return lists.material_roundIcons;
+            case 'material-sharp':
+              return lists.material_sharpIcons;
+            case 'material-two-tone':
+              return lists.material_two_toneIcons;
+            case 'material-symbols-outlined':
+              return lists.material_symbols_outlinedIcons;
+            default:
+              return lists.materialIcons;
+          }
+        }
+      }
+    } catch {
+      return [];
     }
   }
 
@@ -133,7 +133,7 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
     this._pendingLibrary = this.library;
     this._pendingColor = this.color;
     this._searchQuery = '';
-    this._iconList = this.getIconsForLibrary(this.library);
+    this._iconList = await this.getIconsForLibrary(this.library);
     this._filteredIcons = this._iconList.slice(0, 200);
     this._dialogOpen = true;
 
@@ -178,7 +178,7 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
     this._pendingIcon = iconName;
   }
 
-  private handleLibraryChange(e: Event) {
+  private async handleLibraryChange(e: Event) {
     const select = e.target as HTMLSelectElement;
     const wasFreeInput = this.isFreeInputLibrary(this._pendingLibrary);
     this._pendingLibrary = select.value;
@@ -190,7 +190,7 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
     }
 
     if (!isFreeInput) {
-      this._iconList = this.getIconsForLibrary(this._pendingLibrary);
+      this._iconList = await this.getIconsForLibrary(this._pendingLibrary);
       this.filterIcons();
     }
   }

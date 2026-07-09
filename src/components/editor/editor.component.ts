@@ -3,7 +3,6 @@ import {deepQuerySelectorAll} from "../../utilities/query";
 import {FormControlController} from '../../internal/form';
 import {on} from "../../utilities/on";
 import {property, query} from 'lit/decorators.js';
-import {trim} from "lodash";
 import Attachment from "./modules/attachment/attachment";
 import ContextMenu from "./modules/context-menu/context-menu";
 import DatePicker from "./modules/date-picker/date-picker";
@@ -456,7 +455,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     }
     if (!content || content === '') return;
 
-    this._content = trim(content);
+    this._content = content.trim();
 
     if (editorMode === 'replace') {
       this._replaceTextAtSelection();

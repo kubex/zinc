@@ -1,5 +1,4 @@
-import {init, Picker} from 'emoji-mart';
-import data from '@emoji-mart/data';
+import {loadEmojiMart} from './emoji-mart-loader';
 import Quill from 'quill';
 import type ToolbarComponent from "../toolbar/toolbar.component";
 
@@ -16,11 +15,6 @@ class Emoji {
 
   constructor(quill: Quill) {
     this._quill = quill;
-    try {
-      void init({data});
-    } catch {
-      // no-op if already initialised
-    }
     this.initPicker();
 
     const host = this.getHostEditor();
@@ -59,7 +53,7 @@ class Emoji {
   }
 
   public initPicker() {
-    this.getToolbarEmojiContainer().then((container) => {
+    void Promise.all([this.getToolbarEmojiContainer(), loadEmojiMart()]).then(([container, {Picker, data}]) => {
       if (!container) return;
 
       container.innerHTML = '';
@@ -67,7 +61,7 @@ class Emoji {
       // eslint-disable-next-line no-new
       new Picker({
         parent: container,
-        data: data as Record<string, unknown>,
+        data,
         previewPosition: 'none',
         skinTonePosition: 'none',
         theme: this.getTheme(),

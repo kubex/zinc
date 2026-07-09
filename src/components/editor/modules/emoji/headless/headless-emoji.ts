@@ -1,8 +1,7 @@
 import './headless-emoji.component';
 import {html} from 'lit';
-import {init, SearchIndex} from 'emoji-mart';
 import {litToHTML} from '../../../../../utilities/lit-to-html';
-import data from '@emoji-mart/data';
+import {loadEmojiMart} from '../emoji-mart-loader';
 import Quill from 'quill';
 import type {EmojiResult} from "../emoji";
 import type {ResultItem} from './headless-emoji.component';
@@ -17,13 +16,6 @@ class HeadlessEmoji {
 
   constructor(quill: Quill) {
     this._quill = quill;
-    // Initialize emoji-mart index once
-    try {
-      void init({data});
-    } catch {
-      // no-op
-    }
-
     this.initComponent();
     this.attachEvents();
   }
@@ -68,6 +60,7 @@ class HeadlessEmoji {
     this._startIndex = start;
 
     try {
+      const {SearchIndex} = await loadEmojiMart();
       const results = await SearchIndex.search(emojiQuery) as EmojiResult[];
       const mapped: ResultItem[] = (Array.isArray(results) ? results : []).slice(0, 20).map((e) => ({
         emojiChar: (e?.skins?.[0]?.native) || e?.native || '',

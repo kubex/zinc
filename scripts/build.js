@@ -131,18 +131,19 @@ async function buildTheSource()
     //    ...(await globby('./src/themes/**/!(*.test).ts'))
   ];
   const config = {
-    format:        'iife', // IIFE when not splitting
-    target:        'es2017',
+    format:        'esm',
+    target:        'es2020',
     legalComments: 'none',
-    outfile:       `${outDir}/zn.min.js`, // While single entry point
-    //    outdir:    outDir, // While multiple entry points
+    outdir:        outDir,
+    entryNames:    'zn.min', // Keep the historical zn.min.js entry name
+    chunkNames:    'chunks/zn.[hash]',
     entryPoints,
     define:    {
       // Floating UI requires this to be set
       'process.env.NODE_ENV': '"production"'
     },
     bundle:    true,
-    splitting: false,
+    splitting: true,
     minify:    true,
     plugins:   [
       sassPlugin({

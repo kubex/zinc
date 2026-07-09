@@ -25,10 +25,13 @@ interface SettingsContainerFilter {
  *
  * @dependency zn-example
  *
- * @event zn-event-name - Emitted as an example.
+ * @event zn-show - Emitted when the pull tab panel opens.
+ * @event zn-hide - Emitted when the pull tab panel closes.
  *
  * @slot - The default slot.
- * @slot example - An example slot.
+ * @slot filter - Filter definitions used to toggle visibility of content.
+ * @slot dropdown-content - Custom content for the settings panel.
+ * @slot tab - Extra content rendered inside the pull tab next to the chevron.
  *
  * @csspart base - The component's base wrapper.
  *
@@ -43,6 +46,10 @@ export default class ZnSettingsContainer extends ZincElement {
 
   @property({attribute: 'store-key'}) storeKey: string;
   @property({attribute: 'no-scroll'}) noScroll: boolean;
+  @property({attribute: 'pull-tab', type: Boolean, reflect: true}) pullTab = false;
+  @property({type: Boolean, reflect: true}) open = false;
+
+  @state() private panelExpanded = false;
 
   private readonly _mutationObserver = new MutationController(this, {
     target: null,
@@ -87,6 +94,40 @@ export default class ZnSettingsContainer extends ZincElement {
 
     this._mutationObserver.observe(this);
   }
+
+  disconnectedCallback() {
+    document.removeEventListener('mousedown', this.handleDocumentMouseDown, true);
+    super.disconnectedCallback();
+  }
+
+  private handleDocumentMouseDown = (e: MouseEvent) => {
+    if (!this.open) return;
+    const pullTab = this.shadowRoot?.querySelector('.pull-tab');
+    if (pullTab && e.composedPath().includes(pullTab)) return;
+    this.hidePullTab();
+  };
+
+  private togglePullTab = () => {
+    if (this.open) {
+      this.hidePullTab();
+    } else {
+      this.open = true;
+      document.addEventListener('mousedown', this.handleDocumentMouseDown, true);
+      this.emit('zn-show');
+    }
+  };
+
+  private hidePullTab() {
+    this.open = false;
+    this.panelExpanded = false;
+    document.removeEventListener('mousedown', this.handleDocumentMouseDown, true);
+    this.emit('zn-hide');
+  }
+
+  private handlePanelTransitionEnd = (e: TransitionEvent) => {
+    if (e.propertyName !== 'grid-template-rows') return;
+    this.panelExpanded = this.open;
+  };
 
   // Debounced scheduling to avoid excessive updates on rapid DOM mutations
   private scheduleUpdateFilters() {
@@ -221,15 +262,39 @@ export default class ZnSettingsContainer extends ZincElement {
         <div class="scroll-content">
           <slot @slotchange="${this.handleContentSlotChange}"></slot>
         </div>
-        <zn-dropdown placement="${placement}" class="${classMap({
-          'setting-container__dropdown': true,
-          [`setting-container__dropdown--${this.position}`]: true,
-        })}">
-          <zn-icon class="setting-container__toggle-button" slot="trigger" size="24" src="settings" round></zn-icon>
-          ${this.getDropdownContent()}
-        </zn-dropdown>
+        ${this.pullTab ? this.renderPullTab() : html`
+          <zn-dropdown placement="${placement}" class="${classMap({
+            'setting-container__dropdown': true,
+            [`setting-container__dropdown--${this.position}`]: true,
+          })}">
+            <zn-icon class="setting-container__toggle-button" slot="trigger" size="24" src="settings" round></zn-icon>
+            ${this.getDropdownContent()}
+          </zn-dropdown>`}
       </div>
     `;
+  }
+
+  private renderPullTab() {
+    return html`
+      <div class="${classMap({
+        'pull-tab': true,
+        'pull-tab--open': this.open,
+        'pull-tab--expanded': this.panelExpanded,
+      })}">
+        <div class="pull-tab__panel" @transitionend="${this.handlePanelTransitionEnd}">
+          <div class="pull-tab__panel-content">
+            ${this.getDropdownContent()}
+          </div>
+        </div>
+        <button class="pull-tab__tab"
+                type="button"
+                aria-expanded="${this.open ? 'true' : 'false'}"
+                aria-label="Settings"
+                @click="${this.togglePullTab}">
+          <slot name="tab"></slot>
+          <zn-icon src="${this.open ? 'chevron-up@lu' : 'chevron-down@lu'}" size="20"></zn-icon>
+        </button>
+      </div>`;
   }
 
   private getDropdownContent() {

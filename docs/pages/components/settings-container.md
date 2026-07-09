@@ -132,6 +132,41 @@ for example by adding item-selector="zn-inline-edit" only the inline edit elemen
 </div>
 ```
 
-### Second Example
+### Pull Tab
 
-TODO
+Add the `pull-tab` attribute to replace the settings dropdown with a pull tab anchored to the top right
+of the container. Clicking the tab slides down a panel containing the settings options. Optional content
+can be placed in the `tab` slot to render alongside the chevron.
+
+```html:preview
+
+<div style="width: 100%; height: 300px; border: 1px solid #ccc;">
+  <zn-settings-container pull-tab store-key="example-pull-tab-filters">
+
+    <zn-tile private caption="Leslie Alexander" description="Leslie.alexander@example.com" href="https://google.com">
+      <zn-icon slot="image" size="40" src="https://i.pravatar.cc/60?img=70" round></zn-icon>
+      <div slot="actions">
+        <zn-button href="#">Action</zn-button>
+      </div>
+    </zn-tile>
+
+    <zn-tile private caption="Leslie Alexander" description="Leslie.alexander@example.com" href="https://google.com">
+      <zn-icon slot="image" size="40" src="https://i.pravatar.cc/60?img=70" round></zn-icon>
+      <div slot="actions">
+        <zn-button href="#">Action</zn-button>
+      </div>
+    </zn-tile>
+
+    <zn-tile original caption="Leslie Alexander" description="Leslie.alexander@example.com" href="https://google.com">
+      <zn-icon slot="image" size="40" src="https://i.pravatar.cc/60?img=70" round></zn-icon>
+      <div slot="actions">
+        <zn-button href="#">Action</zn-button>
+      </div>
+    </zn-tile>
+
+    <div slot="filter" attribute="private" default="true">Toggle Private Messages</div>
+    <div slot="filter" attribute="original" default="true">Toggle Original Messages</div>
+
+  </zn-settings-container>
+</div>
+```

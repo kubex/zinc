@@ -7699,10 +7699,13 @@ declare module "components/settings-container/settings-container.component" {
      *
      * @dependency zn-example
      *
-     * @event zn-event-name - Emitted as an example.
+     * @event zn-show - Emitted when the pull tab panel opens.
+     * @event zn-hide - Emitted when the pull tab panel closes.
      *
      * @slot - The default slot.
-     * @slot example - An example slot.
+     * @slot filter - Filter definitions used to toggle visibility of content.
+     * @slot dropdown-content - Custom content for the settings panel.
+     * @slot tab - Extra content rendered inside the pull tab next to the chevron.
      *
      * @csspart base - The component's base wrapper.
      *
@@ -7714,11 +7717,19 @@ declare module "components/settings-container/settings-container.component" {
         position: 'top-end' | 'top-start' | 'bottom-end' | 'bottom-start';
         storeKey: string;
         noScroll: boolean;
+        pullTab: boolean;
+        open: boolean;
+        private panelExpanded;
         private readonly _mutationObserver;
         private _updateFiltersScheduled;
         private _store;
         private _hiddenElements;
         connectedCallback(): void;
+        disconnectedCallback(): void;
+        private handleDocumentMouseDown;
+        private togglePullTab;
+        private hidePullTab;
+        private handlePanelTransitionEnd;
         private scheduleUpdateFilters;
         private handleContentSlotChange;
         private handleFiltersSlotChange;
@@ -7727,6 +7738,7 @@ declare module "components/settings-container/settings-container.component" {
         updateFilters(): void;
         updateFilter(e: ZnChangeEvent): void;
         render(): import("lit-html").TemplateResult<1>;
+        private renderPullTab;
         private getDropdownContent;
     }
 }

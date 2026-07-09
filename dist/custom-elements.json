@@ -32216,8 +32216,16 @@
               "name": ""
             },
             {
-              "description": "An example slot.",
-              "name": "example"
+              "description": "Filter definitions used to toggle visibility of content.",
+              "name": "filter"
+            },
+            {
+              "description": "Custom content for the settings panel.",
+              "name": "dropdown-content"
+            },
+            {
+              "description": "Extra content rendered inside the pull tab next to the chevron.",
+              "name": "tab"
             }
           ],
           "members": [
@@ -32256,6 +32264,35 @@
             },
             {
               "kind": "field",
+              "name": "pullTab",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "pull-tab",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "panelExpanded",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
               "name": "_mutationObserver",
               "privacy": "private",
               "readonly": true,
@@ -32286,6 +32323,26 @@
               },
               "privacy": "private",
               "default": "new Set()"
+            },
+            {
+              "kind": "field",
+              "name": "handleDocumentMouseDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "togglePullTab",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "hidePullTab",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handlePanelTransitionEnd",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -32344,14 +32401,23 @@
             },
             {
               "kind": "method",
+              "name": "renderPullTab",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
               "name": "getDropdownContent",
               "privacy": "private"
             }
           ],
           "events": [
             {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
+              "description": "Emitted when the pull tab panel opens.",
+              "name": "zn-show"
+            },
+            {
+              "description": "Emitted when the pull tab panel closes.",
+              "name": "zn-hide"
             }
           ],
           "attributes": [
@@ -32376,6 +32442,22 @@
                 "text": "boolean"
               },
               "fieldName": "noScroll"
+            },
+            {
+              "name": "pull-tab",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "pullTab"
+            },
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "open"
             }
           ],
           "superclass": {
@@ -32386,7 +32468,7 @@
           "tagNameWithoutPrefix": "settings-container",
           "tagName": "zn-settings-container",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/settings-container\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/settings-container\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-show - Emitted when the pull tab panel opens.\n * @event zn-hide - Emitted when the pull tab panel closes.\n *\n * @slot - The default slot.\n * @slot filter - Filter definitions used to toggle visibility of content.\n * @slot dropdown-content - Custom content for the settings panel.\n * @slot tab - Extra content rendered inside the pull tab next to the chevron.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
           "documentation": "https://zinc.style/components/settings-container",
           "status": "experimental",
           "since": "1.0",
@@ -39737,7 +39819,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.29",
+    "version": "1.1.31",
     "author": "",
     "license": "MIT"
   }

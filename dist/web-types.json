@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.1.29",
+  "version": "1.1.31",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -7779,7 +7779,7 @@
         },
         {
           "name": "zn-settings-container",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the pull tab panel opens.\n- **zn-hide** - Emitted when the pull tab panel closes.\n\n### **Slots:**\n - _default_ - The default slot.\n- **filter** - Filter definitions used to toggle visibility of content.\n- **dropdown-content** - Custom content for the settings panel.\n- **tab** - Extra content rendered inside the pull tab next to the chevron.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
           "attributes": [
             {
@@ -7790,14 +7790,40 @@
               }
             },
             { "name": "store-key", "value": { "type": "string" } },
-            { "name": "no-scroll", "value": { "type": "boolean" } }
+            { "name": "no-scroll", "value": { "type": "boolean" } },
+            {
+              "name": "pull-tab",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "open",
+              "value": { "type": "boolean", "default": "false" }
+            }
           ],
           "slots": [
             { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
+            {
+              "name": "filter",
+              "description": "Filter definitions used to toggle visibility of content."
+            },
+            {
+              "name": "dropdown-content",
+              "description": "Custom content for the settings panel."
+            },
+            {
+              "name": "tab",
+              "description": "Extra content rendered inside the pull tab next to the chevron."
+            }
           ],
           "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
+            {
+              "name": "zn-show",
+              "description": "Emitted when the pull tab panel opens."
+            },
+            {
+              "name": "zn-hide",
+              "description": "Emitted when the pull tab panel closes."
+            }
           ],
           "js": {
             "properties": [
@@ -7807,12 +7833,18 @@
                 "type": "'top-end' | 'top-start' | 'bottom-end' | 'bottom-start'"
               },
               { "name": "storeKey", "type": "string" },
-              { "name": "noScroll", "type": "boolean" }
+              { "name": "noScroll", "type": "boolean" },
+              { "name": "pullTab", "type": "boolean" },
+              { "name": "open", "type": "boolean" }
             ],
             "events": [
               {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
+                "name": "zn-show",
+                "description": "Emitted when the pull tab panel opens."
+              },
+              {
+                "name": "zn-hide",
+                "description": "Emitted when the pull tab panel closes."
               }
             ]
           }

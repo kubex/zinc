@@ -36,6 +36,7 @@ export default class ZnSimpleChart extends ZincElement {
   }) enableAnimations: boolean | number = false;
 
   private chart?: ECharts;
+  private initPromise?: Promise<void>;
   private readonly resizeObserver = new ResizeController(this, {
     target: null,
     skipInitial: true,
@@ -43,7 +44,14 @@ export default class ZnSimpleChart extends ZincElement {
   });
 
   firstUpdated() {
-    void this.initChart();
+    this.initPromise = this.initChart().catch(() => undefined);
+  }
+
+  // Make `await el.updateComplete` cover the lazy echarts load and chart init
+  protected override async getUpdateComplete(): Promise<boolean> {
+    const result = await super.getUpdateComplete();
+    await this.initPromise;
+    return result;
   }
 
   private async initChart() {

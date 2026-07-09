@@ -53,7 +53,7 @@ class Emoji {
   }
 
   public initPicker() {
-    void Promise.all([this.getToolbarEmojiContainer(), loadEmojiMart()]).then(([container, {Picker, data}]) => {
+    Promise.all([this.getToolbarEmojiContainer(), loadEmojiMart()]).then(([container, {Picker, data}]) => {
       if (!container) return;
 
       container.innerHTML = '';

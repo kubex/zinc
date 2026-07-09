@@ -96,30 +96,35 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
   }
 
   // The icon name lists are only needed once the picker dialog opens, so they
-  // load lazily into their own chunks.
+  // load lazily into their own chunks. Falls back to an empty list on a failed
+  // chunk load so callers never reject.
   private async getIconsForLibrary(library: string): Promise<string[]> {
-    switch (library) {
-      case 'brands':
-        return (await import('./brand-icons')).brandIcons;
-      case 'line':
-        return (await import('./line-icons')).lineIcons;
-      default: {
-        const lists = await import('./material-icons');
-        switch (library) {
-          case 'material-outlined':
-            return lists.material_outlinedIcons;
-          case 'material-round':
-            return lists.material_roundIcons;
-          case 'material-sharp':
-            return lists.material_sharpIcons;
-          case 'material-two-tone':
-            return lists.material_two_toneIcons;
-          case 'material-symbols-outlined':
-            return lists.material_symbols_outlinedIcons;
-          default:
-            return lists.materialIcons;
+    try {
+      switch (library) {
+        case 'brands':
+          return (await import('./brand-icons')).brandIcons;
+        case 'line':
+          return (await import('./line-icons')).lineIcons;
+        default: {
+          const lists = await import('./material-icons');
+          switch (library) {
+            case 'material-outlined':
+              return lists.material_outlinedIcons;
+            case 'material-round':
+              return lists.material_roundIcons;
+            case 'material-sharp':
+              return lists.material_sharpIcons;
+            case 'material-two-tone':
+              return lists.material_two_toneIcons;
+            case 'material-symbols-outlined':
+              return lists.material_symbols_outlinedIcons;
+            default:
+              return lists.materialIcons;
+          }
         }
       }
+    } catch {
+      return [];
     }
   }
 

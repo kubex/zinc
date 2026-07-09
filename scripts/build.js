@@ -130,6 +130,10 @@ async function buildTheSource()
     // Theme stylesheets
     //    ...(await globby('./src/themes/**/!(*.test).ts'))
   ];
+  if(entryPoints.length !== 1)
+  {
+    throw new Error('entryNames is fixed to "zn.min" for the single-entry build; update the naming strategy before adding entry points');
+  }
   const config = {
     format:        'esm',
     target:        'es2020',

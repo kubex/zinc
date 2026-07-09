@@ -18,6 +18,10 @@ let lucidePromise: Promise<void> | undefined;
 function loadLucideIcons(): Promise<void> {
   lucidePromise ??= import('lucide').then(m => {
     lucideIcons = m.icons as Record<string, IconNode>;
+  }).catch(() => {
+    // Failed chunk load: fall back to an empty set so icons render their
+    // "not found" state instead of rejecting updateComplete on every render
+    lucideIcons = {};
   });
   return lucidePromise;
 }

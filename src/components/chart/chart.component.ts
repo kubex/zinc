@@ -68,6 +68,7 @@ export default class ZnChart extends ZincElement {
 
   private chart?: ECharts;
   private echarts?: EChartsModule;
+  private initPromise?: Promise<void>;
   private liveTimer?: number;
 
   private readonly resizeObserver = new ResizeController(this, {
@@ -77,8 +78,15 @@ export default class ZnChart extends ZincElement {
   });
 
   protected firstUpdated(_changedProperties: PropertyValues) {
-    void this.initChart();
+    this.initPromise = this.initChart().catch(() => undefined);
     super.firstUpdated(_changedProperties);
+  }
+
+  // Make `await el.updateComplete` cover the lazy echarts load and chart init
+  protected override async getUpdateComplete(): Promise<boolean> {
+    const result = await super.getUpdateComplete();
+    await this.initPromise;
+    return result;
   }
 
   private getTheme(): 'light' | 'dark' {
@@ -162,7 +170,7 @@ export default class ZnChart extends ZincElement {
   private reinit() {
     this.chart?.dispose();
     this.chart = undefined;
-    void this.initChart();
+    this.initPromise = this.initChart().catch(() => undefined);
   }
 
   attributeChangedCallback(name: string, _old: string | null, value: string | null) {

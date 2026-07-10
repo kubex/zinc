@@ -4776,8 +4776,6 @@ declare module "components/table/table.component" {
         private readonly resizeObserver;
         resizing(): void;
         connectedCallback(): void;
-        _handleMenu(e: any): void;
-        menuClick(e: any): void;
         tableHead(): import("lit-html").TemplateResult<1> | undefined;
         tableBody(): import("lit-html").TemplateResult<1>;
         columnContent(col: any): any;

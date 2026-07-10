@@ -80,6 +80,9 @@ export default class ZnChatMessage extends ZincElement {
   /** Marks the message as initiated by an agent (affects styling and grouping). */
   @property({type: Boolean, reflect: true, attribute: 'agent-initiated'}) agentInitiated = false;
 
+  /** Hides the sender's name in the message header. */
+  @property({type: Boolean, reflect: true, attribute: 'hide-sender'}) hideSender = false;
+
   /** Whether any element is assigned to the `attachments` slot — drives the attachments row visibility. */
   @state() private hasAttachments = false;
 
@@ -199,7 +202,8 @@ export default class ZnChatMessage extends ZincElement {
   private renderHeader() {
     return html`
       <div part="header" class="message__header">
-        <span class="message__sender">${this.sender || (this.customerInitiated ? 'Customer' : 'You')}</span>
+        ${this.hideSender ? nothing : html`
+          <span class="message__sender">${this.sender || (this.customerInitiated ? 'Customer' : 'You')}</span>`}
         ${this.time ? html`<span class="message__time">${this.getSentTime()}</span>` : nothing}
         ${this.actionType === 'internal' ? html`
           <zn-chip type="info">Internal Note</zn-chip>` : nothing}

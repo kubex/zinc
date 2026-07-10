@@ -15,6 +15,7 @@ interface SettingsContainerFilter {
   checked: boolean;
   label: string;
   itemSelector?: string;
+  toggleAttribute?: string;
 }
 
 /**
@@ -56,7 +57,9 @@ export default class ZnSettingsContainer extends ZincElement {
     config: {childList: true, subtree: true, attributes: true},
     callback: mutations => {
       for (const mutation of mutations) {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'hidden') {
+        if (mutation.type === 'attributes' &&
+          (mutation.attributeName === 'hidden' ||
+            this.filters.some(f => f.toggleAttribute === mutation.attributeName))) {
           continue;
         }
         this.scheduleUpdateFilters();
@@ -159,7 +162,8 @@ export default class ZnSettingsContainer extends ZincElement {
       const checked = existingChecked.has(attribute) ? !!existingChecked.get(attribute) : defaultChecked;
       const label = filter.textContent || 'Unnamed Filter';
       const itemSelector = filter.getAttribute('item-selector') || '*';
-      nextFilters.push({attribute, checked, label, itemSelector});
+      const toggleAttribute = filter.getAttribute('toggle-attribute') || undefined;
+      nextFilters.push({attribute, checked, label, itemSelector, toggleAttribute});
     });
     this.filters = nextFilters;
   }
@@ -173,9 +177,18 @@ export default class ZnSettingsContainer extends ZincElement {
       items = this.querySelectorAll(filter.itemSelector + attrAppend);
     }
     items.forEach(item => {
+      if (filter.toggleAttribute) {
+        if (checked) {
+          item.removeAttribute(filter.toggleAttribute);
+        } else {
+          item.setAttribute(filter.toggleAttribute, 'true');
+        }
+        return;
+      }
+
       if (checked) {
         const shouldStayHidden = this.filters.some(f => {
-          if (f.attribute === filter.attribute || f.checked) return false;
+          if (f.attribute === filter.attribute || f.checked || f.toggleAttribute) return false;
           const fAttrAppend = f.attribute === "*" ? `` : `[${f.attribute}]`;
           let fItems;
           if (f.itemSelector && f.itemSelector.startsWith('>')) {

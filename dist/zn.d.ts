@@ -1563,6 +1563,8 @@ declare module "components/chat-message/chat-message.component" {
         customerInitiated: boolean;
         /** Marks the message as initiated by an agent (affects styling and grouping). */
         agentInitiated: boolean;
+        /** Hides the sender's name in the message header. */
+        hideSender: boolean;
         /** Whether any element is assigned to the `attachments` slot — drives the attachments row visibility. */
         private hasAttachments;
         connectedCallback(): void;
@@ -7711,6 +7713,7 @@ declare module "components/settings-container/settings-container.component" {
         checked: boolean;
         label: string;
         itemSelector?: string;
+        toggleAttribute?: string;
     }
     /**
      * @summary Short summary of the component's intended use.

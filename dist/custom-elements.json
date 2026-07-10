@@ -49,6 +49,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -219,79 +292,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -3689,6 +3689,17 @@
             },
             {
               "kind": "field",
+              "name": "hideSender",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the sender's name in the message header.",
+              "attribute": "hide-sender",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "hasAttachments",
               "type": {
                 "text": "boolean"
@@ -3808,6 +3819,15 @@
               "default": "false",
               "description": "Marks the message as initiated by an agent (affects styling and grouping).",
               "fieldName": "agentInitiated"
+            },
+            {
+              "name": "hide-sender",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the sender's name in the message header.",
+              "fieldName": "hideSender"
             }
           ],
           "superclass": {
@@ -32332,7 +32352,7 @@
               "name": "_mutationObserver",
               "privacy": "private",
               "readonly": true,
-              "default": "new MutationController(this, { target: null, config: {childList: true, subtree: true, attributes: true}, callback: mutations => { for (const mutation of mutations) { if (mutation.type === 'attributes' && mutation.attributeName === 'hidden') { continue; } this.scheduleUpdateFilters(); break; } }, })"
+              "default": "new MutationController(this, { target: null, config: {childList: true, subtree: true, attributes: true}, callback: mutations => { for (const mutation of mutations) { if (mutation.type === 'attributes' && (mutation.attributeName === 'hidden' || this.filters.some(f => f.toggleAttribute === mutation.attributeName))) { continue; } this.scheduleUpdateFilters(); break; } }, })"
             },
             {
               "kind": "field",
@@ -33847,227 +33867,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/stat/stat.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnStatsTile",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "caption"
-            },
-            {
-              "kind": "field",
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "description"
-            },
-            {
-              "kind": "field",
-              "name": "amount",
-              "type": {
-                "text": "string"
-              },
-              "default": "'0'",
-              "attribute": "amount"
-            },
-            {
-              "kind": "field",
-              "name": "type",
-              "type": {
-                "text": "string"
-              },
-              "default": "'number'",
-              "attribute": "type"
-            },
-            {
-              "kind": "field",
-              "name": "previous",
-              "type": {
-                "text": "string"
-              },
-              "default": "'0'",
-              "attribute": "previous"
-            },
-            {
-              "kind": "field",
-              "name": "currency",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "currency"
-            },
-            {
-              "kind": "field",
-              "name": "showDelta",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "show-delta"
-            },
-            {
-              "kind": "field",
-              "name": "color",
-              "type": {
-                "text": "'primary' | 'error' | 'info' | 'warning' | 'success' | 'neutral'"
-              },
-              "default": "'primary'",
-              "attribute": "color"
-            },
-            {
-              "kind": "method",
-              "name": "calcPercentageDifference"
-            },
-            {
-              "kind": "method",
-              "name": "getCurrentAmount"
-            },
-            {
-              "kind": "method",
-              "name": "getDisplayAmount",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "diffText"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "caption"
-            },
-            {
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "description"
-            },
-            {
-              "name": "amount",
-              "type": {
-                "text": "string"
-              },
-              "default": "'0'",
-              "fieldName": "amount"
-            },
-            {
-              "name": "type",
-              "type": {
-                "text": "string"
-              },
-              "default": "'number'",
-              "fieldName": "type"
-            },
-            {
-              "name": "previous",
-              "type": {
-                "text": "string"
-              },
-              "default": "'0'",
-              "fieldName": "previous"
-            },
-            {
-              "name": "currency",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "currency"
-            },
-            {
-              "name": "show-delta",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "showDelta"
-            },
-            {
-              "name": "color",
-              "type": {
-                "text": "'primary' | 'error' | 'info' | 'warning' | 'success' | 'neutral'"
-              },
-              "default": "'primary'",
-              "fieldName": "color"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "stat",
-          "tagName": "zn-stat",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/stats-tile\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/stats-tile",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnStatsTile",
-            "module": "components/stat/stat.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/split-pane/split-pane.js",
       "declarations": [
         {
@@ -34670,6 +34469,227 @@
           "declaration": {
             "name": "ZnSplitPane",
             "module": "components/split-pane/split-pane.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/stat/stat.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnStatsTile",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "description"
+            },
+            {
+              "kind": "field",
+              "name": "amount",
+              "type": {
+                "text": "string"
+              },
+              "default": "'0'",
+              "attribute": "amount"
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "string"
+              },
+              "default": "'number'",
+              "attribute": "type"
+            },
+            {
+              "kind": "field",
+              "name": "previous",
+              "type": {
+                "text": "string"
+              },
+              "default": "'0'",
+              "attribute": "previous"
+            },
+            {
+              "kind": "field",
+              "name": "currency",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "currency"
+            },
+            {
+              "kind": "field",
+              "name": "showDelta",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "show-delta"
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "'primary' | 'error' | 'info' | 'warning' | 'success' | 'neutral'"
+              },
+              "default": "'primary'",
+              "attribute": "color"
+            },
+            {
+              "kind": "method",
+              "name": "calcPercentageDifference"
+            },
+            {
+              "kind": "method",
+              "name": "getCurrentAmount"
+            },
+            {
+              "kind": "method",
+              "name": "getDisplayAmount",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "diffText"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "caption"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "description"
+            },
+            {
+              "name": "amount",
+              "type": {
+                "text": "string"
+              },
+              "default": "'0'",
+              "fieldName": "amount"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "string"
+              },
+              "default": "'number'",
+              "fieldName": "type"
+            },
+            {
+              "name": "previous",
+              "type": {
+                "text": "string"
+              },
+              "default": "'0'",
+              "fieldName": "previous"
+            },
+            {
+              "name": "currency",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "currency"
+            },
+            {
+              "name": "show-delta",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "showDelta"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "'primary' | 'error' | 'info' | 'warning' | 'success' | 'neutral'"
+              },
+              "default": "'primary'",
+              "fieldName": "color"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "stat",
+          "tagName": "zn-stat",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/stats-tile\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/stats-tile",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnStatsTile",
+            "module": "components/stat/stat.js"
           }
         }
       ]
@@ -39878,7 +39898,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.35",
+    "version": "1.1.36",
     "author": "",
     "license": "MIT"
   }

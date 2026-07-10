@@ -108,16 +108,6 @@ export default class ZnTable extends ZincElement {
     return super.connectedCallback();
   }
 
-  _handleMenu(e: any) {
-    e.target.closest('.actions').querySelector('zn-menu').toggleAttribute('hidden');
-  }
-
-  menuClick(e: any) {
-    const menu = e.target.closest('.actions').querySelector('zn-menu');
-    menu.style.top = (e.clientY - this.clientTop) + 'px';
-    menu.style.left = (e.clientX - this.clientLeft) + 'px';
-  }
-
   tableHead() {
     if (this.headless) return;
 

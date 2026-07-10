@@ -231,6 +231,33 @@ describe('<zn-select>', () => {
       const chip = el.shadowRoot!.querySelector<HTMLElement>('.select__tags zn-chip')!;
       expect(getComputedStyle(chip).cursor).to.equal('default');
     });
+
+    it('removes a value when the tag remove icon is clicked before any other interaction', async () => {
+      const el = await fixture<ZnSelect>(html`
+        <zn-select multiple value="a b c">
+          <zn-option value="a">Option 1</zn-option>
+          <zn-option value="b">Option 2</zn-option>
+          <zn-option value="c">Option 3</zn-option>
+        </zn-select>
+      `);
+      await el.updateComplete;
+      expect(el.value).to.deep.equal(['a', 'b', 'c']);
+
+      let changed = false;
+      el.addEventListener('zn-change', () => {
+        changed = true;
+      });
+
+      const removeIcon = el.shadowRoot!.querySelector<HTMLElement>('.select__tags zn-icon[slot="action"]')!;
+      removeIcon.click();
+      await el.updateComplete;
+      // handleValueChange runs as a @watch on the next update cycle; give it a beat
+      await el.updateComplete;
+
+      expect(el.value).to.deep.equal(['b', 'c']);
+      expect(el.shadowRoot!.querySelectorAll('.select__tags zn-chip').length).to.equal(2);
+      expect(changed).to.be.true;
+    });
   });
 
   describe('free-text', () => {

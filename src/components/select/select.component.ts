@@ -1079,6 +1079,10 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         } else {
           this.setSelectedOptions(initiallySelectedOptions[0]);
         }
+
+        if (!this.defaultValue || this.defaultValue.length === 0) {
+          this.defaultValue = this.value;
+        }
       }
     }
 
@@ -1096,6 +1100,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     event.stopImmediatePropagation();
 
     if (!this.disabled) {
+      this.valueHasChanged = true;
+
       // Deselecting drops the backing element for free-text values via selectionChanged's cleanup.
       this.toggleOptionSelection(option, false);
 

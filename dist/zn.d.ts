@@ -688,6 +688,8 @@ declare module "events/zn-select" {
     }
 }
 declare module "utilities/query" {
+    export function deepQuery<T extends Element = Element>(selector: string, root?: Document | ShadowRoot | Element): T | null;
+    export function deepQueryAll<T extends Element = Element>(selector: string, root?: Document | ShadowRoot | Element, out?: T[]): T[];
     export function deepQuerySelectorAll(selector: string, element: Element, stopSelector: string): Element[];
 }
 declare module "internal/offset" {
@@ -2787,6 +2789,196 @@ declare module "events/zn-change" {
         }
     }
 }
+declare module "components/datepicker/datepicker.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    import ZnTooltip from "components/tooltip/index";
+    import type { ZincFormControl } from "internal/zinc-element";
+    /**
+     * @summary A date picker component with calendar popup and input validation.
+     * @documentation https://zinc.style/components/datepicker
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     * @dependency zn-tooltip
+     *
+     * @event zn-change - Emitted when the date value changes.
+     * @event zn-input - Emitted when the input value changes.
+     * @event zn-blur - Emitted when the input loses focus.
+     * @event zn-focus - Emitted when the input gains focus.
+     *
+     * @slot label - The datepicker's label. Alternatively, you can use the `label` attribute.
+     * @slot label-tooltip - Tooltip content for the label. Alternatively, you can use the `label-tooltip` attribute.
+     * @slot context-note - Additional context text displayed above the input. Alternatively, you can use the `context-note` attribute.
+     * @slot help-text - Help text displayed below the input. Alternatively, you can use the `help-text` attribute.
+     * @slot prefix - Content to display before the input (in addition to the default calendar icon).
+     * @slot suffix - Content to display after the input.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart form-control - The form control wrapper.
+     * @csspart form-control-label - The label element.
+     * @csspart form-control-input - The input wrapper.
+     * @csspart form-control-help-text - The help text element.
+     *
+     * @property format - Date format using AirDatepicker tokens. Default: 'dd/MM/yyyy'
+     *   Supported formats:
+     *   - dd/MM/yyyy (31/12/2024) - Default
+     *   - MM/dd/yyyy (12/31/2024)
+     *   - yyyy-MM-dd (2024-12-31)
+     *   - dd-MM-yyyy (31-12-2024)
+     *   - yyyy/MM/dd (2024/12/31)
+     *
+     * @cssproperty --zn-input-* - Inherited input component CSS custom properties.
+     */
+    export default class ZnDatepicker extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+            'zn-tooltip': typeof ZnTooltip;
+        };
+        private readonly formControlController;
+        private readonly hasSlotController;
+        input: HTMLInputElement;
+        private hasFocus;
+        title: string;
+        /** The name of the input, submitted as a name/value pair with form data. */
+        name: string;
+        /** The current value of the input, submitted as a name/value pair with form data. */
+        value: any;
+        /** The default value of the form control. Primarily used for resetting the form control. */
+        defaultValue: string;
+        /** The inputs size **/
+        size: 'small' | 'medium' | 'large';
+        /** The inputs label. If you need to display HTML, use the `label` slot. **/
+        label: string;
+        /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the
+         * `label-tooltip` slot.
+         * **/
+        labelTooltip: string;
+        /**
+         * Text that appears above the input, on the right, to add additional context. If you need to display HTML
+         * in this text, use the `context-note` slot instead
+         */
+        contextNote: string;
+        /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
+        helpText: string;
+        /** Disables the input **/
+        disabled: boolean;
+        /** Placeholder text to show as a hint when the input is empty. */
+        placeholder: string;
+        /** Makes the input read-only **/
+        readonly: boolean;
+        /**
+         * By default, form-controls are associated with the nearest containing `<form>` element. This attribute allows you
+         * to place the form control outside a form and associate it with the form that has this `id`. The form must be
+         * in the same document or shadow root for this to work.
+         */
+        form: string;
+        flush: boolean;
+        /** Makes the input a required field. */
+        required: boolean;
+        /** Adds a clear button to the calendar for removing a selected date. **/
+        clearable: boolean;
+        /** Makes the input a range picker. **/
+        range: boolean;
+        /** Disallows selecting past dates. **/
+        disablePastDates: boolean;
+        /** Minimum date that can be selected. Overrides disable-past-dates if both are set. Accepts Date object or date string. **/
+        minDate?: string | Date;
+        /** Maximum date that can be selected. Accepts Date object or date string. **/
+        maxDate?: string | Date;
+        /**
+         * Date format for display and input. Uses AirDatepicker format tokens.
+         *
+         * Common formats:
+         * - 'dd/MM/yyyy' (31/12/2024) - Default, European style
+         * - 'MM/dd/yyyy' (12/31/2024) - US style
+         * - 'yyyy-MM-dd' (2024-12-31) - ISO style
+         * - 'dd-MM-yyyy' (31-12-2024) - Alternative European
+         * - 'yyyy/MM/dd' (2024/12/31) - Alternative ISO
+         *
+         * Format tokens:
+         * - dd: Day with leading zero (01-31)
+         * - MM: Month with leading zero (01-12)
+         * - yyyy: Full year (2024)
+         */
+        format: string;
+        /** Display time selector. **/
+        timePicker?: boolean;
+        /** Display only time selector, without date. **/
+        onlyTimepicker?: boolean;
+        /**
+         * Time format for display and input selector. Uses AirDatepicker format tokens.
+         * Default : hh:mm AA
+         *
+         * Possible symbols:
+         * h — hours in 12-hour mode
+         * hh — hours in 12-hour mode with leading zero
+         * H — hours in 24-hour mode
+         * HH — hours in 24-hour mode with leading zero
+         * m — minutes
+         * mm — minutes with leading zero
+         * aa — day period lower case
+         * AA — day period upper case
+         */
+        timeFormat?: string;
+        container?: string | HTMLElement;
+        private _instance;
+        get timestamp(): number;
+        /** Gets the validity state object */
+        get validity(): ValidityState;
+        /** Gets the validation message */
+        get validationMessage(): string;
+        handleDisabledChange(): void;
+        handleValueChange(): Promise<void>;
+        handleDatepickerOptionsChange(): void;
+        /** Sets focus on the input. */
+        focus(options?: FocusOptions): void;
+        /** Removes focus from the input. */
+        blur(): void;
+        /** Selects all the text in the input. */
+        select(): void;
+        /** Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
+        checkValidity(): boolean;
+        /** Gets the associated form, if one exists. */
+        getForm(): HTMLFormElement | null;
+        /** Checks for validity and shows the browser's validation message if the control is invalid. */
+        reportValidity(): boolean;
+        /** Sets a custom validation message. Pass an empty string to restore validity. */
+        setCustomValidity(message: string): void;
+        init(): void;
+        private handleInput;
+        private handleChange;
+        private handleInvalid;
+        private handleKeyDown;
+        private handlePaste;
+        private handleBlur;
+        private isValidDateString;
+        private parseDate;
+        private parseDateString;
+        private isDateInRange;
+        private clearInvalidDate;
+        private getFormatSeparator;
+        private escapeRegex;
+        private normalizeDate;
+        private autoFormatDate;
+        updated(_changedProperties: PropertyValues): void;
+        firstUpdated(): void;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/datepicker/index" {
+    import ZnDatepicker from "components/datepicker/datepicker.component";
+    export * from "components/datepicker/datepicker.component";
+    export default ZnDatepicker;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-datepicker': ZnDatepicker;
+        }
+    }
+}
 declare module "components/query-builder/query-builder.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -2802,9 +2994,21 @@ declare module "components/query-builder/query-builder.component" {
         type?: QueryBuilderType;
         options?: QueryBuilderOptions;
         operators: QueryBuilderOperators[];
+        dateSubmitFormat?: QueryBuilderDateSubmitFormat;
         maxOptionsVisible?: string;
     }
-    export type QueryBuilderType = 'bool' | 'boolean' | 'date' | 'number';
+    /**
+     * Controls how `date` and `dateTime` filter values are serialized when the
+     * query is submitted.
+     *
+     * - `'iso'` — RFC 3339 / ISO 8601 (e.g. `2026-06-09T16:05:00Z`).
+     * - `'timestamp'` — Unix timestamp in seconds since epoch.
+     * - `'legacy'` — whatever format the current system emits. Kept so existing
+     *                   backends keep working while consumers migrate to one of the
+     *                   formats above. - DEFAULT
+     */
+    export type QueryBuilderDateSubmitFormat = 'iso' | 'timestamp' | 'legacy';
+    export type QueryBuilderType = 'bool' | 'boolean' | 'date' | 'dateTime' | 'number';
     export interface QueryBuilderOptions {
         [key: string | number]: string | number;
     }
@@ -3134,7 +3338,8 @@ declare module "components/style/style.component" {
         static styles: CSSResultGroup;
         private readonly localize;
         color: string;
-        border: boolean;
+        border: string;
+        size: string;
         error: boolean;
         success: boolean;
         info: boolean;
@@ -3148,6 +3353,7 @@ declare module "components/style/style.component" {
         height: string;
         pad: string;
         margin: string;
+        muted: boolean;
         gutter: boolean;
         autoMargin: string;
         connectedCallback(): void;
@@ -3188,6 +3394,8 @@ declare module "components/data-table/data-table.component" {
         style?: string;
         iconSrc?: string;
         iconColor?: string;
+        iconSize?: number;
+        iconStyle?: string;
         hoverContent?: string;
         hoverPlacement?: string;
         chipColor?: string;
@@ -3243,7 +3451,11 @@ declare module "components/data-table/data-table.component" {
         hideHeader?: boolean;
         hideColumn?: boolean;
         secondary?: boolean;
+        type?: string;
+        cellTemplate?: Cell;
+        ifEmpty?: Cell;
     }
+    type DisplayTemplate = (cell: Cell, row: Row, header: HeaderConfig) => TemplateResult | string;
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/data-table
@@ -3294,7 +3506,7 @@ declare module "components/data-table/data-table.component" {
             'zn-data-table-search': typeof ZnDataTableSearch;
         };
         dataUri: string;
-        data: any;
+        data: Row[] | Row;
         sortColumn: string;
         sortDirection: string;
         localSort: boolean;
@@ -3303,6 +3515,7 @@ declare module "components/data-table/data-table.component" {
         wideColumn: string;
         key: string;
         headers: Record<string, HeaderConfig>;
+        displayTemplates: Record<string, DisplayTemplate>;
         hiddenHeaders: string;
         hiddenColumns: string;
         unsortableHeaders: string;
@@ -3318,11 +3531,11 @@ declare module "components/data-table/data-table.component" {
         noInitialLoad: boolean;
         groupBy: string;
         groups: string;
+        itemsPerPage: number;
         selectAllButton: ZnButton;
         private _initialLoad;
         private _lastTableContent;
         private readonly resizeObserver;
-        private itemsPerPage;
         private page;
         private totalPages;
         private _rows;
@@ -3335,10 +3548,12 @@ declare module "components/data-table/data-table.component" {
         private _expandedRows;
         private _hiddenCells;
         private _secondaryHeaders;
+        private _formatTemplates;
         requestParams: Record<string, any>;
         refresh(): void;
         render(): TemplateResult<1>;
         connectedCallback(): void;
+        private getTemplate;
         disconnectedCallback(): void;
         filterChangeListener: (e: ZnFilterChangeEvent) => void;
         searchChangeListener: (e: ZnSearchChangeEvent) => void;
@@ -3363,7 +3578,7 @@ declare module "components/data-table/data-table.component" {
         selectRow(e: Event): void;
         clearSelectedRows(event: Event): void;
         updateSort(key: string): () => void;
-        renderCell(data: Cell): TemplateResult;
+        renderCell(data: Cell, row?: Row, header?: HeaderConfig): TemplateResult | ZincElement;
         private updateActionKeys;
         private getTableSortIcon;
         private renderCellHeader;
@@ -6248,174 +6463,6 @@ declare module "components/checkbox/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-checkbox': ZnCheckbox;
-        }
-    }
-}
-declare module "components/datepicker/datepicker.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    import ZnIcon from "components/icon/index";
-    import ZnTooltip from "components/tooltip/index";
-    import type { ZincFormControl } from "internal/zinc-element";
-    /**
-     * @summary A date picker component with calendar popup and input validation.
-     * @documentation https://zinc.style/components/datepicker
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-icon
-     * @dependency zn-tooltip
-     *
-     * @event zn-change - Emitted when the date value changes.
-     * @event zn-input - Emitted when the input value changes.
-     * @event zn-blur - Emitted when the input loses focus.
-     * @event zn-focus - Emitted when the input gains focus.
-     *
-     * @slot label - The datepicker's label. Alternatively, you can use the `label` attribute.
-     * @slot label-tooltip - Tooltip content for the label. Alternatively, you can use the `label-tooltip` attribute.
-     * @slot context-note - Additional context text displayed above the input. Alternatively, you can use the `context-note` attribute.
-     * @slot help-text - Help text displayed below the input. Alternatively, you can use the `help-text` attribute.
-     * @slot prefix - Content to display before the input (in addition to the default calendar icon).
-     * @slot suffix - Content to display after the input.
-     *
-     * @csspart base - The component's base wrapper.
-     * @csspart form-control - The form control wrapper.
-     * @csspart form-control-label - The label element.
-     * @csspart form-control-input - The input wrapper.
-     * @csspart form-control-help-text - The help text element.
-     *
-     * @property format - Date format using AirDatepicker tokens. Default: 'dd/MM/yyyy'
-     *   Supported formats:
-     *   - dd/MM/yyyy (31/12/2024) - Default
-     *   - MM/dd/yyyy (12/31/2024)
-     *   - yyyy-MM-dd (2024-12-31)
-     *   - dd-MM-yyyy (31-12-2024)
-     *   - yyyy/MM/dd (2024/12/31)
-     *
-     * @cssproperty --zn-input-* - Inherited input component CSS custom properties.
-     */
-    export default class ZnDatepicker extends ZincElement implements ZincFormControl {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-icon': typeof ZnIcon;
-            'zn-tooltip': typeof ZnTooltip;
-        };
-        private readonly formControlController;
-        private readonly hasSlotController;
-        input: HTMLInputElement;
-        private hasFocus;
-        title: string;
-        /** The name of the input, submitted as a name/value pair with form data. */
-        name: string;
-        /** The current value of the input, submitted as a name/value pair with form data. */
-        value: any;
-        /** The default value of the form control. Primarily used for resetting the form control. */
-        defaultValue: string;
-        /** The inputs size **/
-        size: 'small' | 'medium' | 'large';
-        /** The inputs label. If you need to display HTML, use the `label` slot. **/
-        label: string;
-        /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the
-         * `label-tooltip` slot.
-         * **/
-        labelTooltip: string;
-        /**
-         * Text that appears above the input, on the right, to add additional context. If you need to display HTML
-         * in this text, use the `context-note` slot instead
-         */
-        contextNote: string;
-        /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
-        helpText: string;
-        /** Disables the input **/
-        disabled: boolean;
-        /** Placeholder text to show as a hint when the input is empty. */
-        placeholder: string;
-        /** Makes the input read-only **/
-        readonly: boolean;
-        /**
-         * By default, form-controls are associated with the nearest containing `<form>` element. This attribute allows you
-         * to place the form control outside a form and associate it with the form that has this `id`. The form must be
-         * in the same document or shadow root for this to work.
-         */
-        form: string;
-        flush: boolean;
-        /** Makes the input a required field. */
-        required: boolean;
-        /** Adds a clear button to the calendar for removing a selected date. **/
-        clearable: boolean;
-        /** Makes the input a range picker. **/
-        range: boolean;
-        /** Disallows selecting past dates. **/
-        disablePastDates: boolean;
-        /** Minimum date that can be selected. Overrides disable-past-dates if both are set. Accepts Date object or date string. **/
-        minDate?: string | Date;
-        /** Maximum date that can be selected. Accepts Date object or date string. **/
-        maxDate?: string | Date;
-        /**
-         * Date format for display and input. Uses AirDatepicker format tokens.
-         *
-         * Common formats:
-         * - 'dd/MM/yyyy' (31/12/2024) - Default, European style
-         * - 'MM/dd/yyyy' (12/31/2024) - US style
-         * - 'yyyy-MM-dd' (2024-12-31) - ISO style
-         * - 'dd-MM-yyyy' (31-12-2024) - Alternative European
-         * - 'yyyy/MM/dd' (2024/12/31) - Alternative ISO
-         *
-         * Format tokens:
-         * - dd: Day with leading zero (01-31)
-         * - MM: Month with leading zero (01-12)
-         * - yyyy: Full year (2024)
-         */
-        format: string;
-        private _instance;
-        /** Gets the validity state object */
-        get validity(): ValidityState;
-        /** Gets the validation message */
-        get validationMessage(): string;
-        handleDisabledChange(): void;
-        handleValueChange(): Promise<void>;
-        handleDatepickerOptionsChange(): void;
-        /** Sets focus on the input. */
-        focus(options?: FocusOptions): void;
-        /** Removes focus from the input. */
-        blur(): void;
-        /** Selects all the text in the input. */
-        select(): void;
-        /** Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
-        checkValidity(): boolean;
-        /** Gets the associated form, if one exists. */
-        getForm(): HTMLFormElement | null;
-        /** Checks for validity and shows the browser's validation message if the control is invalid. */
-        reportValidity(): boolean;
-        /** Sets a custom validation message. Pass an empty string to restore validity. */
-        setCustomValidity(message: string): void;
-        init(): void;
-        private handleInput;
-        private handleChange;
-        private handleInvalid;
-        private handleKeyDown;
-        private handlePaste;
-        private handleBlur;
-        private isValidDateString;
-        private parseDate;
-        private parseDateString;
-        private isDateInRange;
-        private clearInvalidDate;
-        private getFormatSeparator;
-        private escapeRegex;
-        private normalizeDate;
-        private autoFormatDate;
-        protected updated(_changedProperties: PropertyValues): void;
-        render(): import("lit-html").TemplateResult<1>;
-    }
-}
-declare module "components/datepicker/index" {
-    import ZnDatepicker from "components/datepicker/datepicker.component";
-    export * from "components/datepicker/datepicker.component";
-    export default ZnDatepicker;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-datepicker': ZnDatepicker;
         }
     }
 }

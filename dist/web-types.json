@@ -16,28 +16,6 @@
           "js": { "properties": [], "events": [] }
         },
         {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -92,6 +70,28 @@
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -2280,7 +2280,10 @@
           "doc-url": "",
           "attributes": [
             { "name": "data-uri", "value": { "type": "string" } },
-            { "name": "data", "value": { "type": "any" } },
+            {
+              "name": "data",
+              "value": { "type": "Row[] | Row", "default": "[]" }
+            },
             { "name": "sort-column", "value": { "type": "string" } },
             {
               "name": "sort-direction",
@@ -2348,7 +2351,14 @@
               "name": "group-by",
               "value": { "type": "string", "default": "''" }
             },
-            { "name": "groups", "value": { "type": "string", "default": "''" } }
+            {
+              "name": "groups",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "per-page-size",
+              "value": { "type": "number", "default": "DEFAULT_PER_PAGE" }
+            }
           ],
           "slots": [
             { "name": "", "description": "The default slot." },
@@ -2384,7 +2394,7 @@
           "js": {
             "properties": [
               { "name": "dataUri", "type": "string" },
-              { "name": "data", "type": "any" },
+              { "name": "data", "type": "Row[] | Row" },
               { "name": "sortColumn", "type": "string" },
               { "name": "sortDirection", "type": "string" },
               { "name": "localSort", "type": "boolean" },
@@ -2393,6 +2403,10 @@
               { "name": "wideColumn", "type": "string" },
               { "name": "key", "type": "string" },
               { "name": "headers", "type": "Record<string, HeaderConfig>" },
+              {
+                "name": "displayTemplates",
+                "type": "Record<string, DisplayTemplate>"
+              },
               { "name": "hiddenHeaders", "type": "string" },
               { "name": "hiddenColumns", "type": "string" },
               { "name": "unsortableHeaders", "type": "string" },
@@ -2408,6 +2422,7 @@
               { "name": "noInitialLoad", "type": "boolean" },
               { "name": "groupBy", "type": "string" },
               { "name": "groups", "type": "string" },
+              { "name": "itemsPerPage", "type": "number" },
               { "name": "selectAllButton", "type": "ZnButton" },
               { "name": "requestParams", "type": "Record<string, any>" },
               { "name": "filterChangeListener" },
@@ -2677,6 +2692,28 @@
               "name": "format",
               "description": "Date format using AirDatepicker tokens. Default: 'dd/MM/yyyy' Supported formats: - dd/MM/yyyy (31/12/2024) - Default - MM/dd/yyyy (12/31/2024) - yyyy-MM-dd (2024-12-31) - dd-MM-yyyy (31-12-2024) - yyyy/MM/dd (2024/12/31)",
               "value": { "type": "string", "default": "'MM/dd/yyyy'" }
+            },
+            {
+              "name": "time-picker",
+              "description": "Display time selector. *",
+              "value": { "type": "boolean | undefined", "default": "false" }
+            },
+            {
+              "name": "only-time",
+              "description": "Display only time selector, without date. *",
+              "value": { "type": "boolean | undefined", "default": "false" }
+            },
+            {
+              "name": "format-time",
+              "description": "Time format for display and input selector. Uses AirDatepicker format tokens.\nDefault : hh:mm AA\n\nPossible symbols:\nh — hours in 12-hour mode\nhh — hours in 12-hour mode with leading zero\nH — hours in 24-hour mode\nHH — hours in 24-hour mode with leading zero\nm — minutes\nmm — minutes with leading zero\naa — day period lower case\nAA — day period upper case",
+              "value": {
+                "type": "string | undefined",
+                "default": "\"hh:mm AA\""
+              }
+            },
+            {
+              "name": "container",
+              "value": { "type": "string | HTMLElement | undefined" }
             }
           ],
           "slots": [
@@ -2823,6 +2860,26 @@
                 "description": "Date format using AirDatepicker tokens. Default: 'dd/MM/yyyy' Supported formats: - dd/MM/yyyy (31/12/2024) - Default - MM/dd/yyyy (12/31/2024) - yyyy-MM-dd (2024-12-31) - dd-MM-yyyy (31-12-2024) - yyyy/MM/dd (2024/12/31)",
                 "type": "string"
               },
+              {
+                "name": "timePicker",
+                "description": "Display time selector. *",
+                "type": "boolean | undefined"
+              },
+              {
+                "name": "onlyTimepicker",
+                "description": "Display only time selector, without date. *",
+                "type": "boolean | undefined"
+              },
+              {
+                "name": "timeFormat",
+                "description": "Time format for display and input selector. Uses AirDatepicker format tokens.\nDefault : hh:mm AA\n\nPossible symbols:\nh — hours in 12-hour mode\nhh — hours in 12-hour mode with leading zero\nH — hours in 24-hour mode\nHH — hours in 24-hour mode with leading zero\nm — minutes\nmm — minutes with leading zero\naa — day period lower case\nAA — day period upper case",
+                "type": "string | undefined"
+              },
+              {
+                "name": "container",
+                "type": "string | HTMLElement | undefined"
+              },
+              { "name": "timestamp", "type": "number" },
               {
                 "name": "validity",
                 "description": "Gets the validity state object"
@@ -8534,8 +8591,9 @@
             { "name": "color", "value": { "type": "string", "default": "''" } },
             {
               "name": "border",
-              "value": { "type": "boolean", "default": "false" }
+              "value": { "type": "string", "default": "''" }
             },
+            { "name": "size", "value": { "type": "string", "default": "''" } },
             {
               "name": "error",
               "value": { "type": "boolean", "default": "false" }
@@ -8580,6 +8638,10 @@
               "value": { "type": "string", "default": "''" }
             },
             {
+              "name": "muted",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
               "name": "gutter",
               "value": { "type": "boolean", "default": "false" }
             },
@@ -8592,7 +8654,8 @@
           "js": {
             "properties": [
               { "name": "color", "type": "string" },
-              { "name": "border", "type": "boolean" },
+              { "name": "border", "type": "string" },
+              { "name": "size", "type": "string" },
               { "name": "error", "type": "boolean" },
               { "name": "success", "type": "boolean" },
               { "name": "info", "type": "boolean" },
@@ -8606,6 +8669,7 @@
               { "name": "height", "type": "string" },
               { "name": "pad", "type": "string" },
               { "name": "margin", "type": "string" },
+              { "name": "muted", "type": "boolean" },
               { "name": "gutter", "type": "boolean" },
               { "name": "autoMargin", "type": "string" }
             ],

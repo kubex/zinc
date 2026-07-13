@@ -14,17 +14,6 @@
       ]
     },
     {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
-        }
-      ]
-    },
-    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -60,6 +49,17 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
+        }
+      ]
+    },
+    {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -1028,7 +1028,7 @@
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **search** - Slot for search component.\n- **sort** - Slot for sort component.\n- **filter** - Slot for filter component.\n- **filter-top** - Slot for top-level filter component.\n- **delete-action** - Slot for delete action button.\n- **modify-action** - Slot for modify action button.\n- **create-action** - Slot for create action button.\n- **inputs** - Slot for additional input controls.\n- **empty-state** - Slot for custom empty state.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
         { "name": "data-uri", "values": [] },
-        { "name": "data", "values": [] },
+        { "name": "data", "values": [{ "name": "Row[]" }, { "name": "Row" }] },
         { "name": "sort-column", "values": [] },
         { "name": "sort-direction", "values": [] },
         { "name": "local-sort", "values": [] },
@@ -1054,7 +1054,8 @@
         { "name": "method", "values": [{ "name": "GET" }, { "name": "POST" }] },
         { "name": "no-initial-load", "values": [] },
         { "name": "group-by", "values": [] },
-        { "name": "groups", "values": [] }
+        { "name": "groups", "values": [] },
+        { "name": "per-page-size", "values": [] }
       ],
       "references": [
         {
@@ -1230,7 +1231,23 @@
           "name": "format",
           "description": "Date format using AirDatepicker tokens. Default: 'dd/MM/yyyy' Supported formats: - dd/MM/yyyy (31/12/2024) - Default - MM/dd/yyyy (12/31/2024) - yyyy-MM-dd (2024-12-31) - dd-MM-yyyy (31-12-2024) - yyyy/MM/dd (2024/12/31)",
           "values": []
-        }
+        },
+        {
+          "name": "time-picker",
+          "description": "Display time selector. *",
+          "values": []
+        },
+        {
+          "name": "only-time",
+          "description": "Display only time selector, without date. *",
+          "values": []
+        },
+        {
+          "name": "format-time",
+          "description": "Time format for display and input selector. Uses AirDatepicker format tokens.\nDefault : hh:mm AA\n\nPossible symbols:\nh — hours in 12-hour mode\nhh — hours in 12-hour mode with leading zero\nH — hours in 24-hour mode\nHH — hours in 24-hour mode with leading zero\nm — minutes\nmm — minutes with leading zero\naa — day period lower case\nAA — day period upper case",
+          "values": []
+        },
+        { "name": "container", "values": [{ "name": "HTMLElement" }] }
       ],
       "references": [
         {
@@ -3618,6 +3635,7 @@
       "attributes": [
         { "name": "color", "values": [] },
         { "name": "border", "values": [] },
+        { "name": "size", "values": [] },
         { "name": "error", "values": [] },
         { "name": "success", "values": [] },
         { "name": "info", "values": [] },
@@ -3631,6 +3649,7 @@
         { "name": "height", "values": [] },
         { "name": "pad", "values": [] },
         { "name": "margin", "values": [] },
+        { "name": "muted", "values": [] },
         { "name": "gutter", "values": [] },
         { "name": "a-margin", "values": [] }
       ],

@@ -565,6 +565,7 @@
             <li data-level="3"><a href="#events">Events</a></li>
             <li data-level="3"><a href="#programmatic-control">Programmatic Control</a></li>
             <li data-level="3"><a href="#customizing-label-position">Customizing Label Position</a></li>
+            <li data-level="3"><a href="#date-time">Date Time</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
             <li data-level="2"><a href="#properties">Properties</a></li>
@@ -2076,6 +2077,51 @@
               </button>
             </div>
           </div>
+          <h3 id="date-time" class="anchor-heading">
+            Date Time<a href="#date-time" aria-label='Direct link to "Date Time"'></a>
+          </h3>
+          <p>Displays time.</p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-datepicker time-picker="" label="Conference dates" help-text="Select date and time"> </zn-datepicker>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-370">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-470"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-datepicker</span>
+  <span class="token attr-name">time-picker</span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Conference dates<span class="token punctuation">"</span></span>
+  <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Select date and time<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-datepicker</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-470"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-370"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
 
           <h2 id="importing" class="anchor-heading">
             Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
@@ -2098,7 +2144,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-470"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.39/dist/components/datepicker/datepicker.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-470"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-471"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.39/dist/components/datepicker/datepicker.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-471"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -2113,12 +2159,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-471"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.39/dist/components/datepicker/datepicker.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-471"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-472"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.39/dist/components/datepicker/datepicker.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-472"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-472"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/datepicker/datepicker.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-472"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-473"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/datepicker/datepicker.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-473"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -2535,6 +2581,76 @@
                   </td>
                   <td>
                     <code>'MM/dd/yyyy'</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">timePicker</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> time-picker </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>Display time selector. *</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean | undefined</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">onlyTimepicker</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> only-time </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>Display only time selector, without date. *</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>boolean | undefined</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">timeFormat</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> format-time </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    Time format for display and input selector. Uses AirDatepicker format tokens. Default : hh:mm AA
+                    Possible symbols: h — hours in 12-hour mode hh — hours in 12-hour mode with leading zero H — hours
+                    in 24-hour mode HH — hours in 24-hour mode with leading zero m — minutes mm — minutes with leading
+                    zero aa — day period lower case AA — day period upper case
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string | undefined</code>
+                  </td>
+                  <td>
+                    <code>"hh:mm AA"</code>
                   </td>
                 </tr>
 

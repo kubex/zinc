@@ -49,79 +49,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -292,6 +219,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -7483,10 +7483,10 @@
               "kind": "field",
               "name": "data",
               "type": {
-                "text": "any"
+                "text": "Row[] | Row"
               },
-              "attribute": "data",
-              "reflects": true
+              "default": "[]",
+              "attribute": "data"
             },
             {
               "kind": "field",
@@ -7557,6 +7557,14 @@
               },
               "default": "{}",
               "attribute": "headers"
+            },
+            {
+              "kind": "field",
+              "name": "displayTemplates",
+              "type": {
+                "text": "Record<string, DisplayTemplate>"
+              },
+              "default": "{}"
             },
             {
               "kind": "field",
@@ -7691,6 +7699,15 @@
             },
             {
               "kind": "field",
+              "name": "itemsPerPage",
+              "type": {
+                "text": "number"
+              },
+              "default": "10",
+              "attribute": "per-page-size"
+            },
+            {
+              "kind": "field",
               "name": "selectAllButton",
               "type": {
                 "text": "ZnButton"
@@ -7720,15 +7737,6 @@
               "privacy": "private",
               "readonly": true,
               "default": "new ResizeController(this, { target: null, callback: () => { if (this.tableContainer) { this.tableContainer.scrollIntoView({behavior: 'smooth', block: 'nearest'}); } }, })"
-            },
-            {
-              "kind": "field",
-              "name": "itemsPerPage",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "10"
             },
             {
               "kind": "field",
@@ -7831,6 +7839,15 @@
             },
             {
               "kind": "field",
+              "name": "_formatTemplates",
+              "type": {
+                "text": "Record<string, DisplayTemplate>"
+              },
+              "privacy": "private",
+              "default": "{ dateTime: ((cell) => { const t = cell.text || ''; return html` <div class=\"table__collum--datetime\"> <span><strong>${t.slice(0, 10)}</strong></span> <zn-style size=\"s\" muted>${t.slice(11)}</zn-style> </div>` }) satisfies DisplayTemplate }"
+            },
+            {
+              "kind": "field",
               "name": "requestParams",
               "type": {
                 "text": "Record<string, any>"
@@ -7840,6 +7857,24 @@
             {
               "kind": "method",
               "name": "refresh"
+            },
+            {
+              "kind": "method",
+              "name": "getTemplate",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DisplayTemplate | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
             },
             {
               "kind": "field",
@@ -8016,11 +8051,30 @@
             {
               "kind": "method",
               "name": "renderCell",
+              "return": {
+                "type": {
+                  "text": "TemplateResult | ZincElement"
+                }
+              },
               "parameters": [
                 {
                   "name": "data",
                   "type": {
                     "text": "Cell"
+                  }
+                },
+                {
+                  "name": "row",
+                  "optional": true,
+                  "type": {
+                    "text": "Row"
+                  }
+                },
+                {
+                  "name": "header",
+                  "optional": true,
+                  "type": {
+                    "text": "HeaderConfig"
                   }
                 }
               ]
@@ -8079,6 +8133,12 @@
                   "name": "value",
                   "type": {
                     "text": "Cell"
+                  }
+                },
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "Row"
                   }
                 }
               ]
@@ -8295,8 +8355,9 @@
             {
               "name": "data",
               "type": {
-                "text": "any"
+                "text": "Row[] | Row"
               },
+              "default": "[]",
               "fieldName": "data"
             },
             {
@@ -8476,6 +8537,14 @@
               },
               "default": "''",
               "fieldName": "groups"
+            },
+            {
+              "name": "per-page-size",
+              "type": {
+                "text": "number"
+              },
+              "default": "DEFAULT_PER_PAGE",
+              "fieldName": "itemsPerPage"
             }
           ],
           "superclass": {
@@ -9361,11 +9430,58 @@
             },
             {
               "kind": "field",
+              "name": "timePicker",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "default": "false",
+              "description": "Display time selector. *",
+              "attribute": "time-picker",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "onlyTimepicker",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "default": "false",
+              "description": "Display only time selector, without date. *",
+              "attribute": "only-time"
+            },
+            {
+              "kind": "field",
+              "name": "timeFormat",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "\"hh:mm AA\"",
+              "description": "Time format for display and input selector. Uses AirDatepicker format tokens.\nDefault : hh:mm AA\n\nPossible symbols:\nh — hours in 12-hour mode\nhh — hours in 12-hour mode with leading zero\nH — hours in 24-hour mode\nHH — hours in 24-hour mode with leading zero\nm — minutes\nmm — minutes with leading zero\naa — day period lower case\nAA — day period upper case",
+              "attribute": "format-time"
+            },
+            {
+              "kind": "field",
+              "name": "container",
+              "type": {
+                "text": "string | HTMLElement | undefined"
+              },
+              "attribute": "container"
+            },
+            {
+              "kind": "field",
               "name": "_instance",
               "type": {
                 "text": "AirDatepicker<HTMLInputElement>"
               },
               "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "timestamp",
+              "type": {
+                "text": "number"
+              },
+              "readonly": true
             },
             {
               "kind": "field",
@@ -9861,6 +9977,40 @@
               "default": "'MM/dd/yyyy'",
               "description": "Date format using AirDatepicker tokens. Default: 'dd/MM/yyyy' Supported formats: - dd/MM/yyyy (31/12/2024) - Default - MM/dd/yyyy (12/31/2024) - yyyy-MM-dd (2024-12-31) - dd-MM-yyyy (31-12-2024) - yyyy/MM/dd (2024/12/31)",
               "fieldName": "format"
+            },
+            {
+              "name": "time-picker",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "default": "false",
+              "description": "Display time selector. *",
+              "fieldName": "timePicker"
+            },
+            {
+              "name": "only-time",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "default": "false",
+              "description": "Display only time selector, without date. *",
+              "fieldName": "onlyTimepicker"
+            },
+            {
+              "name": "format-time",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "\"hh:mm AA\"",
+              "description": "Time format for display and input selector. Uses AirDatepicker format tokens.\nDefault : hh:mm AA\n\nPossible symbols:\nh — hours in 12-hour mode\nhh — hours in 12-hour mode with leading zero\nH — hours in 24-hour mode\nHH — hours in 24-hour mode with leading zero\nm — minutes\nmm — minutes with leading zero\naa — day period lower case\nAA — day period upper case",
+              "fieldName": "timeFormat"
+            },
+            {
+              "name": "container",
+              "type": {
+                "text": "string | HTMLElement | undefined"
+              },
+              "fieldName": "container"
             }
           ],
           "superclass": {
@@ -28610,7 +28760,7 @@
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "ZnInput | null"
+                  "text": "ZnDatepicker | null"
                 }
               },
               "parameters": [
@@ -28618,6 +28768,19 @@
                   "name": "uniqueId",
                   "type": {
                     "text": "string"
+                  }
+                },
+                {
+                  "name": "hasTime",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "submitFormat",
+                  "default": "'legacy'",
+                  "type": {
+                    "text": "QueryBuilderDateSubmitFormat"
                   }
                 }
               ]
@@ -28703,7 +28866,14 @@
                 {
                   "name": "event",
                   "type": {
-                    "text": "Event | { target: ZnSelect | ZnInput | HTMLDivElement }"
+                    "text": "Event | { target: ZnDatepicker | HTMLDivElement }"
+                  }
+                },
+                {
+                  "name": "submitFormat",
+                  "default": "'legacy'",
+                  "type": {
+                    "text": "QueryBuilderDateSubmitFormat"
                   }
                 }
               ]
@@ -34989,10 +35159,19 @@
               "kind": "field",
               "name": "border",
               "type": {
-                "text": "boolean"
+                "text": "string"
               },
-              "default": "false",
+              "default": "''",
               "attribute": "border"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "size"
             },
             {
               "kind": "field",
@@ -35113,6 +35292,15 @@
             },
             {
               "kind": "field",
+              "name": "muted",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "muted"
+            },
+            {
+              "kind": "field",
               "name": "gutter",
               "type": {
                 "text": "boolean"
@@ -35142,10 +35330,18 @@
             {
               "name": "border",
               "type": {
-                "text": "boolean"
+                "text": "string"
               },
-              "default": "false",
+              "default": "''",
               "fieldName": "border"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "size"
             },
             {
               "name": "error",
@@ -35252,6 +35448,14 @@
               "fieldName": "margin"
             },
             {
+              "name": "muted",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "muted"
+            },
+            {
               "name": "gutter",
               "type": {
                 "text": "boolean"
@@ -35281,6 +35485,14 @@
         {
           "kind": "js",
           "name": "default",
+          "declaration": {
+            "name": "ZnStyle",
+            "module": "components/style/style.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "zn-style",
           "declaration": {
             "name": "ZnStyle",
             "module": "components/style/style.js"

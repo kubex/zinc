@@ -115,7 +115,7 @@ const defaultTemplates = {
   dateTime: ((cell) => {
     const t = cell.text || '';
     return html`
-      <div style="display:flex;flex-direction:column;align-items: flex-end;gap:2px;">
+      <div class="table__collum--datetime">
         <span><strong>${t.slice(0, 10)}</strong></span>
         <zn-style size="s" muted>${t.slice(11)}</zn-style>
       </div>`

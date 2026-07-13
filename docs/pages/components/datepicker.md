@@ -168,7 +168,6 @@ Combine `min-date` and `max-date` to constrain the selectable date range.
   help-text="Select dates within the conference period (March 1-15, 2026)">
 </zn-datepicker>
 ```
-
 ### Clearable
 
 Use the `clearable` attribute to add a "Clear" button to the calendar popup, allowing users to easily remove a selected date.
@@ -417,4 +416,14 @@ Use [CSS parts](#css-parts) to customize the way form controls are drawn. This e
 </style>
 ```
 
+### Date Time
 
+Displays time.
+
+```html:preview
+<zn-datepicker
+  time-picker
+  label="Conference dates"
+  help-text="Select date and time">
+</zn-datepicker>
+```

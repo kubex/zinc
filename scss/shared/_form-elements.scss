@@ -39,7 +39,7 @@ select {
   }
 
   @include mixins.media-query(sm) {
-    padding: mixins.spacing(sm);
+    padding: mixins.spacing(xs);
   }
 }
 
@@ -49,8 +49,8 @@ label {
   line-height: var(--zn-spacing-medium);
   color: rgb(var(--zn-text-heading));
   display: block;
-  margin-bottom: mixins.spacing(xs);
-  margin-top: mixins.spacing(md);
+  margin-bottom: mixins.spacing(xxs);
+  margin-top: mixins.spacing(sm);
 }
 
 input[type=checkbox], input[type=radio] {
@@ -65,7 +65,7 @@ input[type=range] {
   appearance: none;
   border-radius: 10px;
   background-color: rgb(var(--zn-border-color));
-  height: mixins.spacing(sm);
+  height: mixins.spacing(xs);
   accent-color: rgb(var(--zn-primary));
   width: 100%;
   max-width: mixins.container-width(md);
@@ -74,13 +74,13 @@ input[type=range] {
 fieldset {
   border-color: rgba(var(--zn-primary), 20%);
   border-width: 2px;
-  padding: 0 mixins.spacing(md) mixins.spacing(md);
+  padding: 0 mixins.spacing(sm) mixins.spacing(sm);
 }
 
 select {
 
   option {
-    padding: mixins.spacing(xs);
+    padding: mixins.spacing(xxs);
   }
 
   > option:checked {
@@ -90,7 +90,7 @@ select {
 }
 
 fieldset > legend {
-  padding: mixins.spacing(xs);
+  padding: mixins.spacing(xxs);
 }
 
 input[type=button],
@@ -105,22 +105,22 @@ button[type=button]:not(.button) {
 }
 
 div + button {
-  margin-top: mixins.spacing(md);
+  margin-top: mixins.spacing(sm);
 }
 
 input[type=file]::-webkit-file-upload-button {
   @include button.button;
 
-  margin-right: mixins.spacing(sm);
+  margin-right: mixins.spacing(xs);
 }
 
 input::-webkit-calendar-picker-indicator {
   cursor: pointer;
-  padding: mixins.spacing(sm);
+  padding: mixins.spacing(xs);
 }
 
 input[list]::-webkit-calendar-picker-indicator {
-  padding: mixins.spacing(sm) mixins.spacing(xs)
+  padding: mixins.spacing(xs) mixins.spacing(xxs)
 }
 
 .input--with-icon {
@@ -132,7 +132,7 @@ input[list]::-webkit-calendar-picker-indicator {
     top: 50%;
     pointer-events: none;
     transform: translateY(-50%);
-    left: mixins.spacing(sm);
+    left: mixins.spacing(xs);
     background-color: rgb(var(--zn-primary));
     color: rgb(var(--zn-text));
     border-radius: 50%;

@@ -1,5 +1,3 @@
-import * as echarts from 'echarts/core';
-import { BarChart, LineChart, SankeyChart } from 'echarts/charts';
 import {
   buildAreaOption,
   buildBarOption,
@@ -9,32 +7,13 @@ import {
   type ChartType,
   type SeriesItem,
 } from './builders';
-import { CanvasRenderer } from 'echarts/renderers';
 import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
-import { ResizeController } from '@lit-labs/observers/resize-controller.js';
-import {
-  DataZoomComponent,
-  GridComponent,
-  LegendComponent,
-  TitleComponent,
-  TooltipComponent,
-} from 'echarts/components';
+import { type EChartsModule, loadECharts } from './echarts-loader';
 import { property } from 'lit/decorators.js';
+import { ResizeController } from '@lit-labs/observers/resize-controller.js';
 import styles from './chart.scss';
 import ZincElement from '../../internal/zinc-element';
 import type { ECharts } from 'echarts/core';
-
-echarts.use([
-  BarChart,
-  LineChart,
-  SankeyChart,
-  GridComponent,
-  TooltipComponent,
-  LegendComponent,
-  TitleComponent,
-  DataZoomComponent,
-  CanvasRenderer,
-]);
 
 /**
  * @summary Chart component powered by Apache ECharts.
@@ -88,6 +67,8 @@ export default class ZnChart extends ZincElement {
   }) scale: boolean | number = false;
 
   private chart?: ECharts;
+  private echarts?: EChartsModule;
+  private initPromise?: Promise<void>;
   private liveTimer?: number;
 
   private readonly resizeObserver = new ResizeController(this, {
@@ -97,8 +78,15 @@ export default class ZnChart extends ZincElement {
   });
 
   protected firstUpdated(_changedProperties: PropertyValues) {
-    this.initChart();
+    this.initPromise = this.initChart().catch(() => undefined);
     super.firstUpdated(_changedProperties);
+  }
+
+  // Make `await el.updateComplete` cover the lazy echarts load and chart init
+  protected override async getUpdateComplete(): Promise<boolean> {
+    const result = await super.getUpdateComplete();
+    await this.initPromise;
+    return result;
   }
 
   private getTheme(): 'light' | 'dark' {
@@ -144,10 +132,15 @@ export default class ZnChart extends ZincElement {
     }
   }
 
-  private initChart() {
+  private async initChart() {
     const host = this.shadowRoot?.getElementById('chart') as HTMLElement | null;
     if (!host) return;
     host.style.height = `${this.height}px`;
+
+    const echarts = await loadECharts();
+    if (!this.isConnected || this.chart) return;
+    this.echarts = echarts;
+
     this.chart = echarts.init(host);
     this.chart.setOption(this.buildOption());
 
@@ -177,7 +170,7 @@ export default class ZnChart extends ZincElement {
   private reinit() {
     this.chart?.dispose();
     this.chart = undefined;
-    this.initChart();
+    this.initPromise = this.initChart().catch(() => undefined);
   }
 
   attributeChangedCallback(name: string, _old: string | null, value: string | null) {
@@ -195,7 +188,7 @@ export default class ZnChart extends ZincElement {
     if (name === 'sync-group') {
       if (value) {
         this.chart.group = value;
-        echarts.connect(value);
+        this.echarts?.connect(value);
       } else {
         this.chart.group = '';
       }

@@ -1,9 +1,9 @@
-import {property} from 'lit/decorators.js';
+import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './reveal.scss';
-import {classMap} from "lit/directives/class-map.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -39,10 +39,27 @@ export default class ZnReveal extends ZincElement {
 
   @property() revealed: string = '';
 
+  @property({type: Number, attribute: 'hide-delay'}) hideDelay: number = 150;
+
   private _isRevealed: boolean = false;
   private _isToggled: boolean = false;
+  private _hideTimer?: ReturnType<typeof setTimeout>;
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._clearHideTimer();
+  }
+
+  private _clearHideTimer() {
+    if (this._hideTimer) {
+      clearTimeout(this._hideTimer);
+      this._hideTimer = undefined;
+    }
+  }
 
   protected handleToggleReveal() {
+    this._clearHideTimer();
+
     if (this.duration) {
       this._isRevealed = true;
       this._isToggled = true;
@@ -63,16 +80,20 @@ export default class ZnReveal extends ZincElement {
 
   protected handleMouseEnter() {
     // handle hover only while hovered
+    this._clearHideTimer();
     this._isRevealed = true;
     this.requestUpdate();
   }
 
   protected handleMouseLeave() {
-    if (this._isToggled) {
-      return;
-    }
-    this._isRevealed = false;
-    this.requestUpdate();
+    if (this._isToggled) return;
+
+    this._clearHideTimer();
+    this._hideTimer = setTimeout(() => {
+      this._hideTimer = undefined;
+      this._isRevealed = false;
+      this.requestUpdate();
+    }, this.hideDelay);
   }
 
   render() {
@@ -85,7 +106,8 @@ export default class ZnReveal extends ZincElement {
            @click="${this.handleToggleReveal}"
            @mouseenter="${this.handleMouseEnter}"
            @mouseleave="${this.handleMouseLeave}">
-        ${this._isRevealed ? this.revealed : this.initial}
+        <span class="reveal__text reveal__text--initial">${this.initial}</span>
+        <span class="reveal__text reveal__text--revealed">${this.revealed}</span>
       </div>
     `;
   }

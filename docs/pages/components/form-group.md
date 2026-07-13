@@ -363,7 +363,7 @@ Form groups expose several CSS parts that can be styled to customize their appea
   .custom-form-group::part(form-control) {
     padding: var(--zn-spacing-large);
     border: 2px solid var(--zn-color-primary-300);
-    border-radius: var(--zn-border-radius-medium);
+    border-radius: var(--zn-border-radius);
     background-color: var(--zn-color-primary-50);
   }
 

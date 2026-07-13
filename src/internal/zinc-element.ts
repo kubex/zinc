@@ -10,8 +10,13 @@ import type {
   ValidEventTypeMap,
   ZincEventInit
 } from "./event";
+import type {SignalWatcherApi} from "@lit-labs/signals";
 
-export default class ZincElement extends SignalWatcher(LitElement) {
+type Constructor<T = NonNullable<unknown>> = new (...args: any[]) => T;
+
+const ZincElementBase: typeof LitElement & Constructor<SignalWatcherApi> = SignalWatcher(LitElement);
+
+export default class ZincElement extends ZincElementBase {
   @property() dir: string; // LTR or RTL direction
   @property() lang: string; // Language
   @property({reflect: true}) t: string; // Theme (light or dark)

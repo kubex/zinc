@@ -1,0 +1,44 @@
+@use "sass:map";
+
+/**************************************************************
+ * Spacing
+ *
+ * Uniform spacing tokens. The scale is built on iterations of
+ * the 8px base unit (--zn-spacing-unit); 3x-small and 2x-small
+ * are quarter/half steps for hairline gaps.
+ *
+ * Emits --zn-spacing-<name> for every step in $spacing-scale.
+ *************************************************************/
+
+$spacing-unit: 8px;
+
+$spacing-scale: (
+  "3x-small": 0.25, // 2px
+  "2x-small": 0.5, // 4px
+  "x-small": 1, // 8px
+  "small": 2, // 16px
+  "medium": 3, // 24px
+  "large": 4, // 32px
+  "x-large": 5, // 40px
+  "2x-large": 6, // 48px
+  "3x-large": 7, // 56px
+  "4x-large": 9, // 72px
+);
+
+:root {
+  --zn-spacing-unit: #{$spacing-unit};
+
+  @each $name, $multiplier in $spacing-scale {
+    --zn-spacing-#{$name}: #{$multiplier * $spacing-unit};
+  }
+
+  /* Fixed spaces */
+  --zn-spacing-narrow-bar: 45px;
+  --zn-spacing-bar: 60px;
+  --zn-spacing-tile: 80px;
+  --zn-spacing-sidenav: 320px;
+  --zn-spacing-small-panel: 200px;
+  --zn-spacing-medium-panel: 320px;
+  --zn-spacing-panel: 360px;
+  --zn-spacing-lside: 460px;
+}

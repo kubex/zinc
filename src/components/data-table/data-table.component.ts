@@ -651,12 +651,10 @@ export default class ZnDataTable extends ZincElement {
           </tr>
           </thead>
           <tbody>
-          ${(data as Row[]).map((row: Row, rowIndex: number) => html`
+          ${(data as Row[]).map((row: Row) => html`
             <tr class="${classMap({
               'table__row--selected': this.isRowSelected(row),
               'table__row--data': true,
-              'table__row--even': (rowIndex % 2) === 0,
-              'table__row--odd': (rowIndex % 2) === 1,
             })}" data-row-id="${row.id}">
               ${anyHidden ? this.renderExpanderCell(row) : nothing}
               ${(visibleRowCells.get(row.id) || row.cells).map((value: Cell, index: number) => this.renderCellBody(index, value, row))}
@@ -691,15 +689,17 @@ export default class ZnDataTable extends ZincElement {
   getTableFooter() {
     const rowSelected = this.getRowsSelected();
     const pagination = this.getPagination();
+    const rowsPerPage = this.getRowsPerPage();
 
-    if (rowSelected !== null || pagination !== null) {
+    if (rowSelected !== null || pagination !== null || rowsPerPage !== null) {
       return html`
         <div class="table__footer">
           <div class="table__footer__left">
+            ${pagination}
             ${rowSelected}
           </div>
           <div class="table__footer__right">
-            ${pagination}
+            ${rowsPerPage}
           </div>
         </div>`;
     }
@@ -714,7 +714,7 @@ export default class ZnDataTable extends ZincElement {
       <p>${this.numberOfRowsSelected} of ${this._rows.length} rows selected</p>`
   }
 
-  getPagination() {
+  getRowsPerPage() {
     if (this.hidePagination || (this.totalPages <= 1 && this._rows.length <= this.itemsPerPage)) return null;
 
     const optionsRowsPerPage = [10, 20, 30, 40, 50];
@@ -733,41 +733,64 @@ export default class ZnDataTable extends ZincElement {
             </zn-option>`
           )}
         </zn-select>
-      </div>
+      </div>`;
+  }
 
-      ${this.totalPages <= 1
-        ? html``
-        : html`
-          <div class="table__footer__pagination-count">
-            <p>Page ${this.page} of ${this.totalPages}</p>
-          </div>
+  private getPageRange(): (number | 'ellipsis')[] {
+    const total = this.totalPages;
+    const current = this.page;
 
-          <div class="table__footer__pagination-buttons">
-            <zn-button @click="${this.page !== 1 ? this.goToFirstPage : undefined}"
-                       ?disabled="${this.page === 1}"
-                       icon-size="16"
-                       icon="keyboard_double_arrow_left"
-                       outline>
-            </zn-button>
-            <zn-button @click="${this.page !== 1 ? this.goToPreviousPage : undefined}"
-                       ?disabled="${this.page === 1}"
-                       icon-size="16"
-                       icon="chevron_left"
-                       outline>
-            </zn-button>
-            <zn-button @click="${this.page !== this.totalPages ? this.goToNextPage : undefined}"
-                       ?disabled="${this.page === this.totalPages}"
-                       icon-size="16"
-                       icon="chevron_right"
-                       outline>
-            </zn-button>
-            <zn-button @click="${this.page !== this.totalPages ? this.goToLastPage : undefined}"
-                       ?disabled="${this.page === this.totalPages}"
-                       icon-size="16"
-                       icon="keyboard_double_arrow_right"
-                       outline>
-            </zn-button>
-          </div>`}`;
+    if (total <= 7) {
+      return Array.from({length: total}, (_, i) => i + 1);
+    }
+
+    const showLeftEllipsis = current > 4;
+    const showRightEllipsis = current < total - 3;
+
+    if (!showLeftEllipsis && showRightEllipsis) {
+      return [1, 2, 3, 4, 5, 'ellipsis', total];
+    }
+
+    if (showLeftEllipsis && !showRightEllipsis) {
+      return [1, 'ellipsis', total - 4, total - 3, total - 2, total - 1, total];
+    }
+
+    return [1, 'ellipsis', current - 1, current, current + 1, 'ellipsis', total];
+  }
+
+  getPagination() {
+    if (this.hidePagination || this.totalPages <= 1) return null;
+
+    return html`
+      <div class="table__footer__pagination-buttons">
+        <zn-button @click="${this.page !== 1 ? this.goToFirstPage : undefined}"
+                   ?disabled="${this.page === 1}"
+                   icon="arrow_left@lu"
+                   panel-bg>First
+        </zn-button>
+        <zn-button @click="${this.page !== 1 ? this.goToPreviousPage : undefined}"
+                   ?disabled="${this.page === 1}"
+                   panel-bg>Back
+        </zn-button>
+        ${this.getPageRange().map((p) => p === 'ellipsis'
+          ? html`<span class="table__footer__pagination-ellipsis">…</span>`
+          : html`
+            <zn-button @click="${p !== this.page ? () => this.goToPage(p) : undefined}"
+                       icon-button="small"
+                       class="${p === this.page ? 'table__footer__pagination-page--active' : ''}">${p}
+            </zn-button>`
+        )}
+        <zn-button @click="${this.page !== this.totalPages ? this.goToNextPage : undefined}"
+                   ?disabled="${this.page === this.totalPages}"
+                   panel-bg>Next
+        </zn-button>
+        <zn-button @click="${this.page !== this.totalPages ? this.goToLastPage : undefined}"
+                   ?disabled="${this.page === this.totalPages}"
+                   icon="arrow_right@lu"
+                   icon-position="right"
+                   panel-bg>Last
+        </zn-button>
+      </div>`;
   }
 
   getActions() {
@@ -1083,20 +1106,20 @@ export default class ZnDataTable extends ZincElement {
     if (this.sortColumn !== key) {
       return html`
         <div class="table__head__sort">
-          <zn-icon src="unfold_more" size="14"></zn-icon>
+          <zn-icon src="chevrons_up_down@lu" size="14"></zn-icon>
         </div>`;
     }
 
     if (this.sortDirection === 'asc') {
       return html`
         <div class="table__head__sort table__head__sort--active">
-          <zn-icon src="arrow_downward_alt" size="16"></zn-icon>
+          <zn-icon src="chevron_down@lu" size="16"></zn-icon>
         </div>`;
     }
 
     return html`
       <div class="table__head__sort table__head__sort--active">
-        <zn-icon src="arrow_upward_alt" size="16"></zn-icon>
+        <zn-icon src="chevron_up@lu" size="16"></zn-icon>
       </div>`;
   }
 
@@ -1164,7 +1187,7 @@ export default class ZnDataTable extends ZincElement {
       <td class="table__cell table__cell--expander"></td>`;
 
     const expanded = this._expandedRows.has(row.id);
-    const icon = expanded ? 'expand_more' : 'chevron_right';
+    const icon = expanded ? 'chevron_down@lu' : 'chevron_right';
 
     return html`
       <td class="table__cell table__cell--expander">
@@ -1399,9 +1422,9 @@ export default class ZnDataTable extends ZincElement {
       <td class="table__cell table__cell--actions">
         <zn-dropdown placement="bottom-end">
           <zn-button slot="trigger"
-                     icon="more_vert"
-                     color="transparent"
-                     icon-size="24"
+                     icon-button="small"
+                     icon="ellipsis@lu"
+                     plain
                      aria-label="Row actions">
           </zn-button>
           <zn-menu>

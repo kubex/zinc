@@ -110,10 +110,8 @@
   --zn-color-neutral-1000: hsl(0, 0%, 0%); // used: docs/assets/styles/docs.css:502 (+2 more)
 
   /* Border radii */
-  --zn-border-radius-small: 0.1875rem; // 3px
-  --zn-border-radius-medium: 0.325rem; // 5.2px
-  --zn-border-radius-large: 0.5rem; // 8px
-  --zn-border-radius-x-large: 1rem; // 16px
+  --zn-border-radius: 6px;
+  --zn-border-radius-small: 2px;
   --zn-border-radius-circle: 50%;
   --zn-border-radius-pill: 9999px;
 
@@ -122,27 +120,6 @@
   --zn-shadow-medium: 0 6px 18px rgba(0, 0, 0, 0.15);
   --zn-shadow-large: 0 6px 20px rgba(0, 0, 0, 0.15);
   --zn-shadow-x-large: 0 6px 20px rgba(0, 0, 0, 0.25);
-
-  --zn-spacing-3x-small: 0.125rem; // 2px
-  --zn-spacing-2x-small: 0.25rem; // 4px
-  --zn-spacing-x-small: 0.5rem; // 8px
-  --zn-spacing-small: 0.75rem; // 12px
-  --zn-spacing-medium: 1rem; // 16px
-  --zn-spacing-large: 1.25rem; // 20px
-  --zn-spacing-x-large: 1.75rem; // 28px
-  --zn-spacing-2x-large: 2.25rem; // 36px
-  --zn-spacing-3x-large: 3rem; // 48px
-  --zn-spacing-4x-large: 4.5rem; // 72px
-
-  /* Fixed Spaces */
-  --zn-spacing-narrow-bar: 45px;
-  --zn-spacing-bar: 60px;
-  --zn-spacing-tile: 80px;
-  --zn-spacing-sidenav: 320px;
-  --zn-spacing-small-panel: 200px;
-  --zn-spacing-medium-panel: 320px;
-  --zn-spacing-panel: 360px;
-  --zn-spacing-lside: 460px; // Not sure what this is @mressex figure it out. (I never did)
 
   /** Container Sizes */
   --zn-container: var(--zn-container-hd);
@@ -195,18 +172,15 @@
   --zn-font-weight-bold: 700;
 
   /* Letter spacings */
-  --zn-letter-spacing-denser: -0.03em;
-  --zn-letter-spacing-dense: -0.015em;
   --zn-letter-spacing-normal: normal;
-  --zn-letter-spacing-loose: 0.075em;
-  --zn-letter-spacing-looser: 0.15em;
+  --zn-letter-spacing-loose: 0.5px;
 
   /* Line heights */
-  --zn-line-height-denser: 1;
-  --zn-line-height-dense: 1.4;
-  --zn-line-height-normal: 1.8;
-  --zn-line-height-loose: 2.2;
-  --zn-line-height-looser: 2.6;
+  --zn-line-height-denser: 1; // 16px
+  --zn-line-height-dense: 1.5; // 24px
+  --zn-line-height-normal: 2; // 32px
+  --zn-line-height-loose: 2.5; // 40px
+  --zn-line-height-looser: 3; // 48px
 
   /* Focus rings */
   --zn-focus-ring-color: var(--zn-color-primary-600);
@@ -246,29 +220,30 @@
   --zn-input-required-content-color: var(--zn-input-label-color);
 
   /* Input border radii */
-  --zn-input-border-radius-x-small: var(--zn-border-radius-medium);
-  --zn-input-border-radius-small: var(--zn-border-radius-medium);
-  --zn-input-border-radius-medium: var(--zn-border-radius-medium);
-  --zn-input-border-radius-large: var(--zn-border-radius-medium);
+  --zn-input-border-radius-x-small: var(--zn-border-radius);
+  --zn-input-border-radius-small: var(--zn-border-radius);
+  --zn-input-border-radius-medium: var(--zn-border-radius);
+  --zn-input-border-radius-large: var(--zn-border-radius);
 
   /* Input fonts */
   --zn-input-font-family: var(--zn-font-sans);
-  --zn-input-font-weight: var(--zn-font-weight-normal);
+  --zn-input-font-weight: var(--zn-text-input-content-font-weight);
   --zn-input-font-size-x-small: var(--zn-font-size-x-small);
   --zn-input-font-size-small: var(--zn-font-size-small);
-  --zn-input-font-size-medium: var(--zn-font-size-medium);
+  --zn-input-font-size-medium: var(--zn-text-input-content-font-size);
   --zn-input-font-size-large: var(--zn-font-size-large);
+  --zn-input-line-height: var(--zn-text-input-content-line-height);
   --zn-input-letter-spacing: var(--zn-letter-spacing-normal);
 
   /* Input colors */
-  --zn-input-color: var(--zn-color-neutral-800);
+  --zn-input-color: var(--zn-text-input-content-color);
   --zn-input-color-hover: var(--zn-color-neutral-800);
   --zn-input-color-focus: var(--zn-color-neutral-700);
   --zn-input-color-disabled: var(--zn-color-neutral-800);
   --zn-input-icon-color: var(--zn-color-neutral-500);
   --zn-input-icon-color-hover: var(--zn-color-neutral-600);
   --zn-input-icon-color-focus: var(--zn-color-neutral-600);
-  --zn-input-placeholder-color: var(--zn-color-neutral-500);
+  --zn-input-placeholder-color: var(--zn-text-input-placeholder-color);
   --zn-input-placeholder-color-disabled: var(--zn-color-neutral-600);
 
   /* Input spacing */
@@ -281,9 +256,11 @@
   --zn-input-focus-ring-offset: 0;
 
   --zn-input-label-font-size-small: var(--zn-font-size-small);
-  --zn-input-label-font-size-medium: var(--zn-font-size-medium);
+  --zn-input-label-font-size-medium: var(--zn-text-input-label-font-size);
   --zn-input-label-font-size-large: var(--zn-font-size-large);
-  --zn-input-label-color: var(--zn-color-neutral-900);
+  --zn-input-label-font-weight: var(--zn-text-input-label-font-weight);
+  --zn-input-label-line-height: var(--zn-text-input-label-line-height);
+  --zn-input-label-color: var(--zn-text-input-label-color);
 
   /* Help text */
   --zn-input-help-text-font-size-small: var(--zn-font-size-x-small);
@@ -303,7 +280,7 @@
   --zn-panel-border-color: var(--zn-color-neutral-200);
   --zn-panel-border-width: 1px;
 
-  --zn-tooltip-border-radius: var(--zn-border-radius-medium);
+  --zn-tooltip-border-radius: var(--zn-border-radius);
   --zn-tooltip-background-color: var(--zn-color-neutral-900);
   --zn-tooltip-color: var(--zn-color-neutral-0);
   --zn-tooltip-font-family: var(--zn-font-sans);
@@ -321,4 +298,8 @@
   --zn-z-index-toast: 950;
   --zn-z-index-tooltip: 1000;
   --zn-z-index-editor-action: 1000000;
+
+
+  /* tables */
+  --zn-table-header-background-color: 252, 251, 254;
 }

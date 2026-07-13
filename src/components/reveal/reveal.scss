@@ -7,10 +7,40 @@
 
 
 .reveal {
+  display: inline-grid;
+  grid-template-areas: "stack";
+  align-items: center;
+  overflow: hidden;
 }
 
-.reveal--revealed{
-  // reveal is showing
+.reveal__text {
+  grid-area: stack;
+  line-height: inherit;
+  transition: opacity 0.2s ease,
+  transform 0.2s ease;
+  will-change: opacity, transform;
+}
+
+.reveal__text--initial {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal__text--revealed {
+  opacity: 0;
+  transform: translateY(0.5em);
+}
+
+.reveal--revealed {
+  .reveal__text--initial {
+    opacity: 0;
+    transform: translateY(-0.5em);
+  }
+
+  .reveal__text--revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .reveal--toggled {

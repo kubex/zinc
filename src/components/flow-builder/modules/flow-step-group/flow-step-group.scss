@@ -1,0 +1,28 @@
+@use "../../../../wc";
+
+:host {
+  display: block;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+zn-collapsible {
+  // 16px block padding on the header (inline stays the collapsible's 24px). The
+  // !important beats the collapsible's internal `.header` class specificity.
+  // align-items centres the caption with the chevron regardless of the header's
+  // internal column layout.
+  &::part(header) {
+    align-items: center !important;
+    padding-block: calc(var(--zn-base-px) * 2) !important;
+  }
+
+  // Caption type: Inter SemiBold 14 / 16 (Primary text).
+  &::part(caption) {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 16px;
+    color: rgb(var(--zn-text));
+  }
+}

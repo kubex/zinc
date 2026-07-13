@@ -7,6 +7,8 @@ export { default as Popup } from './components/popup';
 export { default as Collapsible } from './components/collapsible';
 export { default as Alert } from './components/alert';
 export { default as ButtonGroup } from './components/button-group';
+export { default as ChatMessage } from './components/chat-message';
+export { default as ChatMessageAttachment } from './components/chat-message-attachment';
 export { default as Chip } from './components/chip';
 export { default as Well } from './components/well';
 export { default as CopyButton } from './components/copy-button';
@@ -21,7 +23,9 @@ export { default as DefinedLabel } from './components/defined-label';
 export { default as EmptyState } from './components/empty-state';
 export { default as Note } from './components/note';
 export { default as Tile } from './components/tile';
+export { default as TileGroup } from './components/tile-group';
 export { default as TileProperty } from './components/tile-property';
+export { default as ChannelTile } from './components/channel-tile';
 export { default as Chart } from './components/chart';
 export { default as SimpleChart } from './components/simple-chart';
 export { default as Header } from './components/header';
@@ -96,6 +100,14 @@ export { default as TranslationGroup } from './components/translation-group';
 export { default as OptGroup } from './components/opt-group';
 export { default as PriorityList } from './components/priority-list';
 export { default as MarkdownEditor } from './components/markdown-editor';
+export { default as FlowBuilder } from './components/flow-builder';
+export { default as FlowSteps } from './components/flow-builder/modules/flow-steps';
+export { default as FlowStepGroup } from './components/flow-builder/modules/flow-step-group';
+export { default as FlowStep } from './components/flow-builder/modules/flow-step';
+export { default as FlowBranchConditions } from './components/flow-builder/modules/flow-branch-conditions';
+export { default as PageBuilder } from './components/page-builder';
+export { default as PagePaletteItem } from './components/page-builder/modules/page-palette-item';
+export { default as PageSectionCard } from './components/page-builder/modules/page-section-card';
 /* plop:component */
 
 // Base Component

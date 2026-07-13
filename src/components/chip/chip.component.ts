@@ -34,8 +34,6 @@ export default class ZnChip extends ZincElement {
   @property() type: 'info' | 'success' | 'warning' | 'error' | 'primary' |
     'transparent' | 'custom' | 'neutral' = 'neutral';
 
-  @property() size: 'small' | 'medium' | 'large'; // Defaults to base chip styling
-
   @property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
   @property({attribute: 'flush-x', type: Boolean, reflect: true}) flushX: boolean = false;
   @property({attribute: 'flush-y', type: Boolean, reflect: true}) flushY: boolean = false;
@@ -61,9 +59,6 @@ export default class ZnChip extends ZincElement {
         'chip--transparent': this.type === 'transparent',
         'chip--custom': this.type === 'custom',
         'chip--neutral': this.type === 'neutral',
-        'chip--small': this.size === 'small',
-        'chip--medium': this.size === 'medium',
-        'chip--large': this.size === 'large',
       })}">
         ${this.icon ? html`
           <zn-icon src="${this.icon}" size="${this.iconSize}"></zn-icon>` : ''}

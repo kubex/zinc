@@ -40,7 +40,7 @@ export default class ZnButtonMenu extends ZincElement {
   @property({type: Number, attribute: 'max-level'})
   public maxLevel: number = 2; // primary = 1, secondary = 2, transparent = 3
 
-  @property({type: Number, attribute: 'icon-size', reflect: true}) iconSize: number = 24;
+  @property({type: Number, attribute: 'icon-size', reflect: true}) iconSize: number = 20;
 
   @property({type: Boolean, attribute: 'no-gap'}) public noGap: boolean;
 
@@ -172,9 +172,6 @@ export default class ZnButtonMenu extends ZincElement {
       if (index < visibleButtons) {
         this.shadowRoot?.querySelector('.button-menu__container')?.appendChild(button.button);
 
-        if (!button.button.hasAttribute('color')) {
-          button.button.setAttribute('color', button.button.hasAttribute('primary') ? 'primary' : button.button.hasAttribute('secondary') ? 'secondary' : 'transparent');
-        }
         if (button.button.hasAttribute('primary') || button.button.hasAttribute('secondary')) {
           button.button.setAttribute('text', "");
         }
@@ -200,7 +197,7 @@ export default class ZnButtonMenu extends ZincElement {
         buttons.forEach((button: CustomButtonWidths, index: number) => {
           if (index >= visibleButtons) {
             const menuItem = document.createElement('zn-menu-item');
-            menuItem.innerText = this.getButtonLabel(button.button);
+            menuItem.textContent = this.getButtonLabel(button.button);
             menuItem.setAttribute('id', button.button.id || `zn-button-menu-item-${index}`);
             menuItem.setAttribute('role', 'menuitem');
             const attr = button.button.attributes;
@@ -215,6 +212,10 @@ export default class ZnButtonMenu extends ZincElement {
             if (icon) {
               const iconElement = document.createElement('zn-icon');
               iconElement.setAttribute('src', icon);
+              const iconLibrary = button.button.getAttribute('icon-library');
+              if (iconLibrary) {
+                iconElement.setAttribute('library', iconLibrary);
+              }
               iconElement.setAttribute('size', '18');
               iconElement.setAttribute('slot', 'prefix');
               menuItem.appendChild(iconElement);
@@ -236,7 +237,7 @@ export default class ZnButtonMenu extends ZincElement {
             menuItems[category].forEach((item: Element) => {
               menu.appendChild(item);
             });
-            // if only 1 catefory item
+            // if only 1 category item
           } else if (menuItems[category].length === 1) {
             const menuItem = menuItems[category][0] as ZnMenuItem;
             menu.appendChild(menuItem);
@@ -246,6 +247,7 @@ export default class ZnButtonMenu extends ZincElement {
             menuItem.innerText = category.charAt(0).toUpperCase() + category.slice(1);
             const submenu = document.createElement('zn-menu');
             submenu.setAttribute('slot', 'submenu');
+            submenu.setAttribute('variant', menu.variant);
 
             menuItems[category].forEach((item: Element) => {
               submenu.appendChild(item);
@@ -273,12 +275,19 @@ export default class ZnButtonMenu extends ZincElement {
       .join('')
       .trim() : '';
 
-    return slottedLabel ||
+    const label = slottedLabel ||
       button.content ||
       button.getAttribute('content') ||
       (button as ZnButton & { caption?: string }).caption ||
       button.getAttribute('caption') ||
-      button.button.innerText;
+      button.tooltip ||
+      button.getAttribute('tooltip') ||
+      button.getAttribute('aria-label') ||
+      button.button?.innerText ||
+      button.textContent ||
+      '';
+
+    return label.trim();
   }
 
   render() {
@@ -290,7 +299,11 @@ export default class ZnButtonMenu extends ZincElement {
       })}">
         <div class="button-menu__container"></div>
         <zn-dropdown placement="bottom-end">
-          <zn-button slot="trigger" icon="more_vert" icon-size="${this.iconSize}" color="transparent"></zn-button>
+          <zn-button slot="trigger"
+                     icon="ellipsis"
+                     icon-library="lucide"
+                     icon-size="${this.iconSize}"
+                     icon-button="small"></zn-button>
           <zn-menu></zn-menu>
         </zn-dropdown>
         <slot></slot>

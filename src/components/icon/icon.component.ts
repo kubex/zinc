@@ -1,7 +1,6 @@
 import {choose} from 'lit/directives/choose.js';
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, render, unsafeCSS} from 'lit';
-import {icons} from 'lucide';
+import {type CSSResultGroup, html, type PropertyValues, render, unsafeCSS} from 'lit';
 import {property} from 'lit/decorators.js';
 import {sha256} from '../../utilities/sha256';
 import {styleMap} from "lit/directives/style-map.js";
@@ -11,7 +10,23 @@ import type {IconNode, SVGProps} from 'lucide';
 
 import styles from './icon.scss';
 
-type IconLibrary = "src" | "material" | "material-outlined" | "material-round" | "material-sharp" |
+// The full lucide icon set is large, so it loads lazily into its own chunk the
+// first time a lucide icon is rendered.
+let lucideIcons: Record<string, IconNode> | undefined;
+let lucidePromise: Promise<void> | undefined;
+
+function loadLucideIcons(): Promise<void> {
+  lucidePromise ??= import('lucide').then(m => {
+    lucideIcons = m.icons as Record<string, IconNode>;
+  }).catch(() => {
+    // Failed chunk load: fall back to an empty set so icons render their
+    // "not found" state instead of rejecting updateComplete on every render
+    lucideIcons = {};
+  });
+  return lucidePromise;
+}
+
+export type IconLibrary = "src" | "material" | "material-outlined" | "material-round" | "material-sharp" |
   "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line" |
   "lucide";
 
@@ -65,14 +80,17 @@ export default class ZnIcon extends ZincElement {
   @property({type: Boolean, reflect: true}) round = false;
   @property({type: Boolean, reflect: true}) tile = false;
   @property({type: Boolean, reflect: true}) depth = false;
-  @property({type: Boolean}) padded: boolean = false;
-  @property({type: Boolean}) blink: boolean = false;
-  @property({type: Boolean}) squared: boolean = false;
 
   @property({reflect: true}) library: IconLibrary;
 
   @property({reflect: true}) color: IconColor;
 
+  @property({reflect: true}) fill: IconColor;
+
+  @property({type: Boolean}) padded: boolean = false;
+  @property({type: Boolean}) blink: boolean = false;
+
+  @property({type: Boolean}) squared: boolean = false;
 
   private static readonly presetColors = new Set([
     'default', 'primary', 'accent', 'info', 'warning', 'error', 'success',
@@ -87,7 +105,13 @@ export default class ZnIcon extends ZincElement {
   gravatarOptions = "";
   defaultLibrary: IconLibrary = "material-symbols-outlined";
 
+  private libraryAutoSet = false;
+
   convertToLibrary(input: string): IconLibrary {
+    return this.convertIndicatorToLibrary(input) ?? this.defaultLibrary
+  }
+
+  private convertIndicatorToLibrary(input: string): IconLibrary | undefined {
     switch (input) {
       case "material":
       case "mat":
@@ -127,11 +151,50 @@ export default class ZnIcon extends ZincElement {
         return "brands";
     }
 
-    return this.defaultLibrary
+    return undefined;
   }
 
   connectedCallback() {
     super.connectedCallback();
+
+    // load the material icons font if the library is set to material
+    render(html`
+      <link
+        href="https://cdn.jsdelivr.net/gh/kubex/icons@0.0.8/dist/kubex-icons.css"
+        rel="stylesheet">
+      <link
+        href="https://cdn.lineicons.com/5.0/lineicons.css"
+        rel="stylesheet">
+      <link
+        href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined|Material+Icons|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone|Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet">`, document.head);
+  }
+
+  protected override willUpdate(changedProperties: PropertyValues<this>) {
+    super.willUpdate(changedProperties);
+
+    if (changedProperties.has('src')) {
+      this.parseSrc();
+    }
+  }
+
+  // Make `await el.updateComplete` cover the lazy lucide load and the
+  // re-render it triggers.
+  protected override async getUpdateComplete(): Promise<boolean> {
+    const result = await super.getUpdateComplete();
+    if (this.library === 'lucide' && !lucideIcons) {
+      await loadLucideIcons();
+      this.requestUpdate();
+      await super.getUpdateComplete();
+    }
+    return result;
+  }
+
+  private parseSrc() {
+    if (this.libraryAutoSet) {
+      this.library = undefined as unknown as IconLibrary;
+      this.libraryAutoSet = false;
+    }
 
     let hashFragment = '';
 
@@ -145,11 +208,15 @@ export default class ZnIcon extends ZincElement {
       const atIndex = this.src.lastIndexOf('@');
       const libraryOrDomain = this.src.slice(atIndex + 1);
 
+      const indicatedLibrary = this.convertIndicatorToLibrary(libraryOrDomain);
+
       if (libraryOrDomain.includes('.')) {
         this.library = this.library ?? "gravatar";
-      } else if ((this.library === undefined) && libraryOrDomain !== "") {
-        // if split[1] is a valid library name, set it
-        this.library = this.convertToLibrary(libraryOrDomain);
+      } else if ((this.library === undefined) && indicatedLibrary !== undefined) {
+        this.library = indicatedLibrary;
+        this.libraryAutoSet = true;
+        this.src = this.src.slice(0, atIndex);
+      } else if (this.library !== undefined && indicatedLibrary === this.library) {
         this.src = this.src.slice(0, atIndex);
       }
 
@@ -162,21 +229,10 @@ export default class ZnIcon extends ZincElement {
     } else if (!this.library && this.src && !this.src.includes('/')) {
       this.applyHashFragment(hashFragment);
       this.library = this.defaultLibrary;
+      this.libraryAutoSet = true;
     } else {
       this.applyHashFragment(hashFragment);
     }
-
-    // load the material icons font if the library is set to material
-    render(html`
-      <link
-        href="https://cdn.jsdelivr.net/gh/kubex/icons@0.0.8/dist/kubex-icons.css"
-        rel="stylesheet">
-      <link
-        href="https://cdn.lineicons.com/5.0/lineicons.css"
-        rel="stylesheet">
-      <link
-        href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined|Material+Icons|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone|Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-        rel="stylesheet">`, document.head);
   }
 
   private applyHashFragment(hashFragment: string) {
@@ -243,9 +299,12 @@ export default class ZnIcon extends ZincElement {
           'icon--padded': this.padded,
           'icon--blink': this.blink,
           'icon--squared': this.squared,
+          'icon--filled': this.fill !== undefined && this.fill !== null,
+          [`icon--fill-${this.fill}`]: Boolean(this.fill) && this.isPresetColor(this.fill),
         })}" style="${styleMap({
           '--icon-size': this.size + "px",
           '--icon-color': (this.color && !this.isPresetColor(this.color)) ? this.color : null,
+          '--icon-fill': (this.fill && !this.isPresetColor(this.fill)) ? this.fill : null,
           '--avatar-color': this.color ? null : (this.library === 'avatar' ? this.getColorForAvatar(this.getAvatarInitials(this.src)) : null)
         })}">
           ${this.library && this.library !== "src" ? html`
@@ -293,6 +352,11 @@ export default class ZnIcon extends ZincElement {
   }
 
   private renderLucideIcon() {
+    if (!lucideIcons) {
+      void loadLucideIcons().then(() => this.requestUpdate());
+      return html``;
+    }
+
     const icon = this.getLucideIcon(this.src);
 
     if (!icon) {
@@ -308,7 +372,7 @@ export default class ZnIcon extends ZincElement {
     }
 
     const candidates = [src, this.toPascalCase(src)];
-    const iconSet = icons as Record<string, IconNode>;
+    const iconSet = lucideIcons ?? {};
 
     for (const candidate of candidates) {
       if (Object.prototype.hasOwnProperty.call(iconSet, candidate)) {
@@ -340,7 +404,7 @@ export default class ZnIcon extends ZincElement {
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        stroke-width="2"
+        stroke-width="2.1"
         stroke-linecap="round"
         stroke-linejoin="round"
         aria-hidden="true"

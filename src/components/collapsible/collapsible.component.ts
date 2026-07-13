@@ -20,6 +20,8 @@ import styles from './collapsible.scss';
  *
  * @slot header - Clicking will toggle the show state of the data
  *
+ * @csspart header - The header row (toggle).
+ * @csspart caption - The caption text.
  */
 export default class ZnCollapsible extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -51,7 +53,7 @@ export default class ZnCollapsible extends ZincElement {
 
   protected _store: Store;
 
-  private readonly hasSlotController = new HasSlotController(this, '[default]', 'header', 'caption', 'label');
+  private readonly hasSlotController = new HasSlotController(this, '[default]', 'header', 'caption', 'label', 'description');
 
   private readonly observer = new MutationController(this, {
     target: null,
@@ -137,14 +139,17 @@ export default class ZnCollapsible extends ZincElement {
 
     return html`
       <div @click="${() => (!this.expanded ? (this.expanded = true) : '')}">
-        <slot name="header" class="header" @click="${this.handleCollapse}">
+        <slot name="header" part="header" class="header" @click="${this.handleCollapse}">
           <div class="header__left">
-            <p class="caption">
+            <p part="caption" class="caption">
               <slot name="caption">${this.caption}</slot>
             </p>
-            <p class="description">
-              <slot name="description">${this.description}</slot>
-            </p>
+            ${this.description || this.hasSlotController.test('description')
+              ? html`
+                <p class="description">
+                  <slot name="description">${this.description}</slot>
+                </p>`
+              : ''}
           </div>
           <div class="header__right">
             <slot name="label"><p class="label">${this.label}</p></slot>

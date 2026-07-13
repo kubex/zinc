@@ -15,8 +15,8 @@
   }
 
   &__caption {
-    font-weight: var(--zn-font-weight-medium);
-    font-size: var(--zn-font-size-large);
+    font-weight: var(--zn-text-h1-font-weight);
+    font-size: var(--zn-text-h1-font-size);
     color: rgba(var(--zn-text-panel-title), 100%);
     line-height: var(--zn-icon-size, 20px);
     margin: 0;
@@ -127,7 +127,8 @@
   &__right {
     flex-grow: 1;
     flex-shrink: 1;
-    overflow: hidden;
+    overflow-x: clip;
+    overflow-y: visible;
     min-width: 20px;
   }
 
@@ -214,7 +215,7 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: var(--zn-spacing-x-small);
+    gap: var(--zn-spacing-small);
     word-break: break-word;
   }
 
@@ -225,6 +226,7 @@
   slot[name="actions"] {
     justify-content: end;
     flex-wrap: nowrap;
+    height: var(--zn-icon-size, 20px);
   }
 
   slot[name="actions"]::slotted(zn-button-menu) {

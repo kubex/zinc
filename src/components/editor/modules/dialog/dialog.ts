@@ -17,15 +17,19 @@ class Dialog {
   }
 
   private _initDialog() {
-    const existing = this._document.querySelector<DialogComponent>('zn-editor-dialog');
-    if (existing) {
-      this._component = existing;
-    } else {
-      this._component = this.createComponent()!;
-      this._document.body.appendChild(this._component);
-    }
-
+    this._component = this.createComponent()!;
+    this._mountPoint().appendChild(this._component);
     this._component.editorId = this._editorId;
+  }
+
+  public get component(): DialogComponent {
+    return this._component;
+  }
+
+  private _mountPoint(): HTMLElement {
+    const root = this._quill.container.getRootNode();
+    const host = root instanceof ShadowRoot ? (root.host as HTMLElement) : null;
+    return host?.parentElement ?? this._document.body;
   }
 
   private createComponent() {

@@ -3,12 +3,35 @@
 :host {
   display: block;
   position: relative;
-  border-width: 1px;
-  border-radius: 5px;
+  padding: 1px;
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: var(--zn-border-radius);
   width: fit-content;
-  min-width: var(--zn-spacing-small-panel);
+  min-width: var(--zn-size-spanel);
   overflow: auto;
   overscroll-behavior: none;
-  box-shadow: var(--zn-shadow-medium);
-  background-color: rgb(var(--zn-color-navigation, 255, 255, 255));
+  box-shadow: 0 4px 8px -4px rgba(33, 33, 33, 0.1);
+  background-color: rgb(var(--zn-panel));
+}
+
+// Dropdown vs shell hover/row styling lives on zn-menu-item, keyed by the
+// `variant` the menu sets on its items (see menu.component.ts).
+
+// Shell variant — the app-shell header dropdown look (as used by Rubix):
+// padded panel with floating rounded items, translucent blurred background
+:host([variant="shell"]) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-spacing-2x-small);
+  padding: var(--zn-spacing-2x-small);
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: var(--zn-border-radius);
+  min-width: 245px;
+  max-width: min(320px, calc(100vw - 16px));
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-shadow: none;
+  filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.04)) drop-shadow(0 4px 3px rgba(0, 0, 0, 0.1));
+  background-color: rgba(var(--zn-color-navigation, 255, 255, 255), 0.95);
+  backdrop-filter: blur(3px);
 }

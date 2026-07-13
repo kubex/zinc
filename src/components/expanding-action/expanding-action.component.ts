@@ -56,6 +56,7 @@ export default class ZnExpandingAction extends ZincElement {
   private _actions: HTMLElement[] = [];
   private _preload = true;
   private _metaObserved = false;
+  private _placementObserver?: MutationObserver;
 
   private readonly _countObserver = new MutationController(this, {
     target: null,
@@ -241,15 +242,52 @@ export default class ZnExpandingAction extends ZincElement {
     this.open = false;
   }
 
+  private _updateTriggerSide = () => {
+    const trigger = this.shadowRoot?.querySelector('.expanding-action__dropdown zn-button[slot="trigger"]');
+    const content = this.shadowRoot?.querySelector('#content');
+    if (!trigger || !content) return;
+
+    const triggerRect = trigger.getBoundingClientRect();
+    const contentRect = content.getBoundingClientRect();
+    if (contentRect.width === 0) return;
+
+    const triggerCenter = (triggerRect.left + triggerRect.right) / 2;
+    const contentCenter = (contentRect.left + contentRect.right) / 2;
+    this.setAttribute('data-trigger-side', triggerCenter > contentCenter ? 'right' : 'left');
+  }
+
+  private _observePlacement() {
+    const dropdown = this.shadowRoot?.querySelector('.expanding-action__dropdown');
+    const popup = dropdown?.shadowRoot?.querySelector('.dropdown');
+    if (!popup) {
+      requestAnimationFrame(() => this._observePlacement());
+      return;
+    }
+
+    this._updateTriggerSide();
+
+    if (this._placementObserver) return;
+
+    this._placementObserver = new MutationObserver(this._updateTriggerSide);
+    this._placementObserver.observe(popup, {attributes: true, attributeFilter: ['data-current-placement']});
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._placementObserver?.disconnect();
+    this._placementObserver = undefined;
+  }
+
   render() {
     return html`
       ${this.method === 'fill' ? html`
-        <zn-button color="transparent"
-                   class="expanding-action__button"
+        <zn-button class="expanding-action__button"
                    @click="${this.handleIconClicked}"
                    icon="${this.icon}"
                    icon-color="${this.color}"
-                   icon-size="20">
+                   icon-size="20"
+                   icon-button="small"
+                   plain>
         </zn-button>` : nothing}
       <div
         class="${classMap({
@@ -270,15 +308,22 @@ export default class ZnExpandingAction extends ZincElement {
   protected renderDropdown() {
     return html`
       <zn-dropdown class="expanding-action__dropdown"
-                   placement="bottom-end">
+                   placement="bottom-end"
+                   @zn-show="${() => {
+                     this.open = true;
+                     this._observePlacement();
+                   }}"
+                   @zn-hide="${() => {
+                     this.open = false;
+                   }}">
         <zn-button slot="trigger"
                    class="expanding-action__button"
-                   color="transparent"
                    icon="${this.icon}"
                    icon-color="${this.color}"
                    icon-size="20"
-                   notification="${this.count || nothing}"
-                   @click="${this.handleIconClicked}">
+                   icon-button="small"
+                   plain
+                   notification="${this.count || nothing}">
         </zn-button>
         <div id="content" class="expanding-action__content">
           <slot></slot>

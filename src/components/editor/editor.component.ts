@@ -3,7 +3,6 @@ import {deepQuerySelectorAll} from "../../utilities/query";
 import {FormControlController} from '../../internal/form';
 import {on} from "../../utilities/on";
 import {property, query} from 'lit/decorators.js';
-import {trim} from "lodash";
 import Attachment from "./modules/attachment/attachment";
 import ContextMenu from "./modules/context-menu/context-menu";
 import DatePicker from "./modules/date-picker/date-picker";
@@ -261,6 +260,13 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     this.quillElement = quill;
 
+    this.getForm()?.addEventListener('submit', () => {
+      setTimeout(() => {
+        const attachmentModule = this.quillElement.getModule('attachment') as Attachment;
+        attachmentModule?.reset();
+      }, 0);
+    });
+
     // @ts-expect-error getSelection is available it lies.
     const hasShadowRootSelection = !!(document.createElement('div').attachShadow({mode: 'open'}).getSelection);
     // Each browser engine has a different implementation for retrieving the Range
@@ -400,7 +406,10 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
           if (this.interactionType === 'chat') {
             const form = this.closest('form');
-            if (form && this.value && this.value.trim().length > 0 && !empty(this.value)) {
+            const hasText = !!this.value && this.value.trim().length > 0 && !empty(this.value);
+            const attachmentInput = form?.querySelector('input[name="attachments"]') as HTMLInputElement | null;
+            const hasAttachments = !!attachmentInput?.value && attachmentInput.value !== '[]';
+            if (form && (hasText || hasAttachments)) {
               this.emit('zn-submit', {detail: {value: this.value, element: this}});
               form.requestSubmit();
               this.quillElement.setText('');
@@ -423,7 +432,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     if (!target.hasAttribute('editor-mode')) return;
 
     const editorMode = target.getAttribute('editor-mode');
-    if (!editorMode) return;
+    if (editorMode !== 'replace' && editorMode !== 'insert') return;
+
+    e.preventDefault();
 
     const contentContainer = target.getAttribute('editor-content-id');
     if (!contentContainer) return;
@@ -444,7 +455,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     }
     if (!content || content === '') return;
 
-    this._content = trim(content);
+    this._content = content.trim();
 
     if (editorMode === 'replace') {
       this._replaceTextAtSelection();

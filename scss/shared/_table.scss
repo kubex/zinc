@@ -8,9 +8,14 @@ table:not(.remarkd-table) {
   max-width: 100%;
   table-layout: auto;
   text-align: left;
+  @include m.text-style(table-content);
 
   thead {
-    font-weight: 500;
+    font-weight: var(--zn-font-weight-medium);
+  }
+
+  thead tr th {
+    background-color: rgb(var(--zn-table-header-background-color));
   }
 
   tbody {
@@ -30,28 +35,10 @@ table:not(.remarkd-table) {
     border-top: 0 !important;
   }
 
-  tbody tr:nth-of-type(even) {
-    background-color: rgba(var(--zn-body));
-  }
-
-  thead tr th:first-of-type,
-  tbody tr td:first-of-type {
-    padding-left: 14px;
-  }
-
-  thead tr th:last-of-type,
-  tbody tr td:last-of-type {
-    padding-right: 14px;
-  }
-
   th, td {
-    padding: m.spacing(md);
+    padding: var(--zn-spacing-small) var(--zn-spacing-medium);
     min-width: 90px;
     white-space: nowrap;
-
-    &:first-child {
-      padding-left: 0;
-    }
   }
 
   td > span {
@@ -59,15 +46,12 @@ table:not(.remarkd-table) {
   }
 
   th {
-    padding-bottom: 0;
+    @include m.text-style(button-label);
+    text-transform: capitalize;
     border-bottom: 1px solid rgb(var(--zn-border-color));
   }
 }
 
 .zn-table-fixed {
   table-layout: fixed;
-}
-
-thead tr:last-of-type th {
-  border-bottom: 0;
 }

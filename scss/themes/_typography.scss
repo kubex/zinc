@@ -1,0 +1,63 @@
+@use "sass:map";
+
+/**************************************************************
+ * Text Styles
+ *
+ * Uniform, role-based typography tokens. Every role emits the
+ * same six custom properties:
+ *
+ *   --zn-text-<role>-font-size
+ *   --zn-text-<role>-line-height
+ *   --zn-text-<role>-spacing       (paragraph spacing — apply as margin-block-end)
+ *   --zn-text-<role>-font-weight
+ *   --zn-text-<role>-color
+ *   --zn-text-<role>-transform
+ *
+ * All roles use the sans family (--zn-font-sans). Apply a role
+ * in a component with the text-style() mixin from scss/mixins.
+ *************************************************************/
+
+$text-styles: (
+  "paragraph": ("size": 14px, "line": 21px, "spacing": 21px, "weight": normal, "color": default, "transform": none),
+  "table-content": ("size": 14px, "line": 16px, "spacing": 15px, "weight": normal, "color": default, "transform": none),
+  "chat": ("size": 16px, "line": 24px, "spacing": 15px, "weight": normal, "color": default, "transform": none),
+  "h1": ("size": 16px, "line": 16px, "spacing": 18px, "weight": semibold, "color": default, "transform": none),
+  "h2": ("size": 14px, "line": 16px, "spacing": 15px, "weight": semibold, "color": default, "transform": none),
+  "h3": ("size": 11px, "line": 16px, "spacing": 15px, "weight": semibold, "color": default, "transform": none),
+  "heading-section": ("size": 14px, "line": 16px, "spacing": 15px, "weight": semibold, "color": default, "transform": none),
+  "subheading": ("size": 14px, "line": 16px, "spacing": 15px, "weight": normal, "color": muted, "transform": none),
+  "subheading-small": ("size": 13px, "line": 16px, "spacing": 15px, "weight": normal, "color": muted, "transform": none),
+  "input-placeholder": ("size": 14px, "line": 24px, "spacing": 18px, "weight": normal, "color": muted, "transform": none),
+  "input-content": ("size": 14px, "line": 24px, "spacing": 18px, "weight": normal, "color": default, "transform": none),
+  "input-label": ("size": 14px, "line": 16px, "spacing": 15px, "weight": semibold, "color": default, "transform": none),
+  "chart-minor": ("size": 14px, "line": 16px, "spacing": 15px, "weight": semibold, "color": muted, "transform": none),
+  "chart-major": ("size": 21px, "line": 24px, "spacing": 18px, "weight": normal, "color": default, "transform": none),
+  "button-label": ("size": 13px, "line": 16px, "spacing": 18px, "weight": semibold, "color": default, "transform": uppercase),
+  "chip": ("size": 10px, "line": 16px, "spacing": 15px, "weight": semibold, "color": default, "transform": uppercase),
+  "navbar-link": ("size": 16px, "line": 16px, "spacing": 18px, "weight": semibold, "color": muted, "transform": none),
+  "tab-link": ("size": 14px, "line": 16px, "spacing": 15px, "weight": semibold, "color": muted, "transform": none),
+  "tab-link-active": ("size": 14px, "line": 16px, "spacing": 15px, "weight": semibold, "color": default, "transform": none),
+  "menu-link": ("size": 14px, "line": 16px, "spacing": 15px, "weight": normal, "color": muted, "transform": none),
+  "notification": ("size": 9px, "line": 11px, "spacing": 0, "weight": semibold, "color": white, "transform": none),
+);
+
+:root {
+  /* Text colors (themed via --zn-color-text / --zn-color-muted-text in _root.scss) */
+  --zn-text-color: rgb(var(--zn-color-text)); // light: rgba(33, 33, 33, 1)
+  --zn-text-color-muted: rgb(var(--zn-color-muted-text)); // light: rgba(125, 119, 146, 1)
+
+  @each $role, $style in $text-styles {
+    --zn-text-#{$role}-font-size: #{map.get($style, "size")};
+    --zn-text-#{$role}-line-height: #{map.get($style, "line")};
+    --zn-text-#{$role}-spacing: #{map.get($style, "spacing")};
+    --zn-text-#{$role}-font-weight: var(--zn-font-weight-#{map.get($style, "weight")});
+    @if map.get($style, "color") == muted {
+      --zn-text-#{$role}-color: var(--zn-text-color-muted);
+    } @else if map.get($style, "color") == white {
+      --zn-text-#{$role}-color: #fff;
+    } @else {
+      --zn-text-#{$role}-color: var(--zn-text-color);
+    }
+    --zn-text-#{$role}-transform: #{map.get($style, "transform")};
+  }
+}

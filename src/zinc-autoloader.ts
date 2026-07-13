@@ -45,8 +45,6 @@ function register(tagName: string): Promise<void> {
 
   // Register it
   return new Promise((resolve, reject) => {
-    // @ts-expect-error  Dynamic imports are only supported when the --module flag is set to es2020, es2022, esnext,
-    // commonjs, amd, system, umd, node16, or nodenext
     import(path).then(() => resolve()).catch(() => reject(new Error(`Unable to autoload <${tagName}> from ${path}`)));
   });
 }

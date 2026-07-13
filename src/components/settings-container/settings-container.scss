@@ -81,17 +81,92 @@
 }
 
 zn-button {
-  border-radius: var(--zn-border-radius-medium);
+  border-radius: var(--zn-border-radius);
+}
+
+.pull-tab {
+  position: absolute;
+  top: 0;
+  right: calc(var(--zn-base-gap) + var(--zn-gutter));
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  max-height: 100%;
+
+  &__panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    min-height: 0;
+    overflow: hidden;
+    background-color: rgb(var(--zn-panel));
+    border: 1px solid rgb(var(--zn-border-color));
+    border-top: none;
+    border-bottom-width: 0;
+    border-radius: 0 0 0 var(--zn-border-radius);
+    transition: grid-template-rows 0.22s ease, border-bottom-width 0s linear 0.22s;
+    will-change: grid-template-rows;
+  }
+
+  &--open &__panel {
+    grid-template-rows: 1fr;
+    border-bottom-width: 1px;
+    transition: grid-template-rows 0.22s ease, border-bottom-width 0s linear 0s;
+  }
+
+  &__panel-content {
+    min-height: 0;
+    overflow: hidden;
+
+    .settings-container__dropdown-content {
+      border: none;
+      box-shadow: none;
+      border-radius: 0;
+      margin-bottom: 0;
+      max-width: none;
+      width: auto;
+    }
+  }
+
+  &--expanded &__panel-content {
+    overflow-y: auto;
+  }
+
+  &__tab {
+    flex-shrink: 0;
+    background-color: rgb(var(--zn-panel));
+    color: rgb(var(--zn-text-heading));
+    border: 1px solid rgb(var(--zn-border-color));
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    padding: var(--zn-spacing-x-small);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--zn-spacing-x-small);
+    max-height: 36px;
+    overflow: hidden;
+    margin-top: -1px;
+
+    &:hover {
+      background-color: rgb(var(--zn-shadow));
+    }
+
+    &:focus-visible {
+      outline: 2px solid rgb(var(--zn-primary));
+      outline-offset: -2px;
+    }
+  }
 }
 
 .settings-container__dropdown-content {
   display: flex;
   flex-direction: column;
-  gap: var(--zn-spacing-large);
+  gap: var(--zn-spacing-small);
   background-color: rgb(var(--zn-panel));
-  padding: var(--zn-spacing-large);
+  padding: var(--zn-spacing-small);
   box-shadow: var(--zn-shadow-small);
-  border-radius: var(--zn-border-radius-medium);
+  border-radius: var(--zn-border-radius);
   max-width: var(--zn-size-mpanel);
   width: fit-content;
   z-index: 20;

@@ -30,6 +30,7 @@ interface TabDefinition {
  * @since 1.0
  *
  * @slot - Page content. Use zn-tab for named tabs and header-action/header-actions for header actions.
+ * @slot description - Rich subtitle/description content. Falls back to the `summary` attribute when empty.
  * @slot bottom - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.
  */
 export default class ZnPage extends ZnTabs {
@@ -100,6 +101,35 @@ export default class ZnPage extends ZnTabs {
 
   private handleAltUp = () => {
     this.classList.toggle('alt-pressed', false);
+  };
+
+  // Inject a real chevron icon between breadcrumb links (idempotent: only mutates when needed)
+  private handleBreadcrumbSlotChange = (e: Event) => {
+    const slot = e.target as HTMLSlotElement;
+    const assigned = slot.assignedElements();
+    const anchors = assigned.filter(el => el.tagName === 'A');
+
+    // Remove separators that are no longer between two links
+    assigned.forEach(el => {
+      if (!el.hasAttribute('data-breadcrumb-separator')) return;
+      const prev = el.previousElementSibling;
+      const valid = prev?.tagName === 'A' && anchors.indexOf(prev) < anchors.length - 1;
+      if (!valid) el.remove();
+    });
+
+    // Ensure each link except the last is followed by a separator icon
+    anchors.forEach((anchor, index) => {
+      if (index === anchors.length - 1) return;
+      const next = anchor.nextElementSibling;
+      if (next?.hasAttribute('data-breadcrumb-separator')) return;
+
+      const icon = document.createElement('zn-icon');
+      icon.setAttribute('src', 'arrow-right@lu');
+      icon.setAttribute('size', '16');
+      icon.setAttribute('slot', 'breadcrumb');
+      icon.setAttribute('data-breadcrumb-separator', '');
+      anchor.after(icon);
+    });
   };
 
   _registerTabs = () => {
@@ -385,17 +415,19 @@ export default class ZnPage extends ZnTabs {
               ${hasPreviousPath ? html`
                 <a href="${this.previousPath}" class="caption__back"
                    data-target="${this.previousTarget ? this.previousTarget : ''}">
-                  <zn-button icon="arrow_back" icon-size="24" color="transparent"></zn-button>
+                  <zn-button icon="arrow-left@lu" icon-size="24" icon-button="small" plain></zn-button>
                 </a>` : null}
 
               <div class="caption">
                 <div class="header__left">
                   <span class="header__caption">
                     ${hasBreadcrumb ? html`
-                      <slot name="breadcrumb" class="breadcrumb"></slot>` : null}
+                      <slot name="breadcrumb" class="breadcrumb"
+                            @slotchange="${this.handleBreadcrumbSlotChange}"></slot>
+                      <zn-icon class="breadcrumb__separator" src="arrow-right@lu" size="16"></zn-icon>` : null}
                     <slot name="caption">${this.caption}</slot>
                   </span>
-                  <span class="header__description">${this.summary}</span>
+                  <span class="header__description"><slot name="description">${this.summary}</slot></span>
                 </div>
 
                 <div class="header__right">

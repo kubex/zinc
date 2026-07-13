@@ -228,7 +228,7 @@ If the server returns fewer results than `max-results`, further refinements of t
     help-text="Try typing 'a' then narrowing to 'al' — the second query filters locally."
   ></zn-select>
 
-  <div id="remote-search-log" style="margin-top: 1rem; padding: 0.75rem 1rem; background: var(--zn-color-neutral-100); border-radius: var(--zn-border-radius-medium); font-family: var(--zn-font-mono); font-size: var(--zn-font-size-small); max-height: 8rem; overflow-y: auto;">
+  <div id="remote-search-log" style="margin-top: 1rem; padding: 0.75rem 1rem; background: var(--zn-color-neutral-100); border-radius: var(--zn-border-radius); font-family: var(--zn-font-mono); font-size: var(--zn-font-size-small); max-height: 8rem; overflow-y: auto;">
     <strong>Request log:</strong>
   </div>
 </div>
@@ -421,7 +421,7 @@ Use `search-only` with `search` and `data-uri` to defer all fetching until the u
     placeholder="Start typing a city name..."
   ></zn-select>
 
-  <div id="search-only-log" style="margin-top: 1rem; padding: 0.75rem 1rem; background: var(--zn-color-neutral-100); border-radius: var(--zn-border-radius-medium); font-family: var(--zn-font-mono); font-size: var(--zn-font-size-small); max-height: 8rem; overflow-y: auto;">
+  <div id="search-only-log" style="margin-top: 1rem; padding: 0.75rem 1rem; background: var(--zn-color-neutral-100); border-radius: var(--zn-border-radius); font-family: var(--zn-font-mono); font-size: var(--zn-font-size-small); max-height: 8rem; overflow-y: auto;">
     <strong>Request log:</strong>
   </div>
 </div>

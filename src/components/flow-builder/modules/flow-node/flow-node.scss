@@ -1,0 +1,180 @@
+@use "../../../../wc";
+
+:host {
+  --node-accent: rgb(var(--zn-color-primary));
+  --port-size: 11px;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  user-select: none;
+  touch-action: none;
+}
+
+:host([dragging]) .card {
+  cursor: grabbing;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0 10px;
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(var(--zn-shadow), 0.4);
+  cursor: grab;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+
+  &:hover {
+    border-color: rgb(var(--zn-color-border-active));
+  }
+
+  &.selected {
+    border-color: var(--node-accent);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--node-accent) 35%, transparent);
+  }
+
+  // A stray branch is snapped here — glow as the drop target.
+  &.link-target {
+    border-color: rgb(var(--zn-color-primary));
+    box-shadow: 0 0 0 3px color-mix(in srgb, rgb(var(--zn-color-primary)) 30%, transparent);
+  }
+
+  &.error {
+    border-color: rgb(var(--zn-color-error));
+    background: color-mix(in srgb, rgb(var(--zn-color-error)) 6%, rgb(var(--zn-panel)));
+  }
+}
+
+.body {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  color: var(--node-accent);
+  background: color-mix(in srgb, var(--node-accent) 14%, transparent);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1 1 auto;
+
+  .title {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: rgb(var(--zn-text));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .subtitle {
+    font-size: 0.75rem;
+    color: rgb(var(--zn-color-muted-text));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+// Sits flush with the body padding, mirroring the icon tile's edge gap.
+.menu {
+  flex: 0 0 auto;
+}
+
+zn-menu-item.danger {
+  color: rgb(var(--zn-color-error));
+}
+
+.ports {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 0;
+
+  &--in {
+    top: 0;
+  }
+
+  &--out {
+    bottom: 0;
+  }
+}
+
+.port {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%); // centre the dot on both the edge and the port x
+  width: var(--port-size);
+  height: var(--port-size);
+  border-radius: 50%;
+  background: rgb(var(--zn-panel));
+  border: 2px solid var(--node-accent);
+  box-sizing: border-box;
+  pointer-events: none;
+
+  // Input ports ease in and out of the snap highlight with the same timing as
+  // the output ports' hover effect.
+  &--in {
+    transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+
+    // The snapped arrow lands on the input — light the port up while targeted.
+    :host([link-target]) & {
+      transform: translate(-50%, -50%) scale(1.4);
+      background: rgb(var(--zn-color-primary));
+      border-color: rgb(var(--zn-color-primary));
+      box-shadow: 0 0 0 4px color-mix(in srgb, rgb(var(--zn-color-primary)) 25%, transparent);
+    }
+  }
+
+  // Output ports are the branch spawn points: hover to highlight, click to start
+  // a branch that follows the cursor to its target node.
+  &--out {
+    pointer-events: auto;
+    cursor: pointer;
+    transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+
+    &:hover {
+      transform: translate(-50%, -50%) scale(1.4);
+      background: var(--node-accent);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--node-accent) 25%, transparent);
+    }
+  }
+
+  // Anchored at the card edge, at its horizontal position (set inline as left:%).
+  &-wrap {
+    position: absolute;
+  }
+
+  // Output labels (e.g. TRUE / FALSE) sit just below the card edge, beside the
+  // outgoing arrow — never overlapping the card content.
+  &-label {
+    position: absolute;
+    top: calc(var(--port-size) / 2 + 3px);
+    left: 8px;
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: rgb(var(--zn-color-muted-text));
+    white-space: nowrap;
+    pointer-events: none;
+  }
+}

@@ -9,17 +9,18 @@
 }
 
 .switch__input-wrapper {
+  box-sizing: border-box;
   text-align: left;
   position: relative;
   display: inline-flex;
-  width: 50px;
-  height: 25px;
+  width: 42px;
+  height: 24px;
   flex-shrink: 0;
   cursor: pointer;
-  border-radius: 20px;
+  border-radius: 12px;
   align-items: center;
-  background: rgba(0, 0, 0, 0.15);
-  border-width: 1px !important;
+  background-color: rgba(0, 0, 0, 0.15);
+  border: 0.92px solid transparent;
   margin: var(--zn-toggle-margin);
   transition: color .2s ease-in-out, background-color .4s ease-in-out, border-color .2s ease-in-out;
 }
@@ -29,12 +30,11 @@
 }
 
 :host([checked]) .switch__input-wrapper {
-  background: rgba(var(--zn-primary), 0.8);
+  background-color: rgb(var(--zn-color-primary));
+  border-color: rgb(var(--zn-color-primary));
 
   .switch__control {
-    transform: translateX(calc(100% - 1px)) scale(0.8);
-    background: rgba(255, 255, 255, 1);
-    width: 25px;
+    transform: translate(16px, -50%);
   }
 }
 
@@ -52,19 +52,18 @@
 
 .switch__control {
   pointer-events: none;
-  display: inline-block;
-  width: 100%;
-  height: 25px;
-  border-radius: 100px;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: rgb(255, 255, 255) 0 0 0 0, rgba(59, 130, 246, 0.5) 0 0 0 0, rgba(0, 0, 0, 0.1) 0 1px 3px 0, rgba(0, 0, 0, 0.1) 0 1px 2px -1px;
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 1px 3px 0, rgba(0, 0, 0, 0.1) 0 1px 2px -1px;
 
-  position: relative;
-  top: 0;
-  transform: scale(0.8);
-  transition: transform .3s ease-in-out, background-color .4s ease-in-out, opacity .2s ease-in-out, max-width .2s, width .4s;
+  transform: translateY(-50%);
+  transition: transform .3s ease-in-out, background-color .4s ease-in-out;
   outline: none;
-  max-width: 25px;
 }
 
 .switch__input {
@@ -81,15 +80,15 @@
   width: 35px;
 }
 
-:host([checked]) .switch__wrapper--small .switch__input-wrapper {
-  .switch__control {
-    transform: translateX(calc(100% - 7px)) scale(0.8);
-  }
+.switch__wrapper--small .switch__control {
+  width: 14px;
+  height: 14px;
 }
 
-.switch__wrapper--small .switch__control {
-  max-width: 20px;
-  height: 20px;
+:host([checked]) .switch__wrapper--small .switch__input-wrapper {
+  .switch__control {
+    transform: translate(13px, -50%);
+  }
 }
 
 // Support inline label

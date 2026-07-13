@@ -1,6 +1,27 @@
 @use "../../wc";
 @use "./lni";
 
+$icon-colors: (
+  default: --zn-text,
+  primary: --zn-primary,
+  accent: --zn-accent,
+  info: --zn-color-info,
+  warning: --zn-color-warning,
+  error: --zn-color-error,
+  success: --zn-color-success,
+  white: --zn-body,
+  disabled: --zn-color-disabled,
+  red: --zn-red,
+  blue: --zn-blue,
+  green: --zn-green,
+  orange: --zn-orange,
+  yellow: --zn-yellow,
+  indigo: --zn-indigo,
+  violet: --zn-violet,
+  pink: --zn-pink,
+  grey: --zn-grey,
+);
+
 :host {
   display: inline-block;
   box-sizing: content-box !important;
@@ -113,6 +134,17 @@
 
   &--grey {
     --icon-color: rgb(var(--zn-grey));
+  }
+
+  &--filled .lucide {
+    fill: var(--icon-fill, currentColor);
+  }
+
+  @each $name, $token in $icon-colors {
+    $display-name: "" + $name;
+    &--fill-#{$display-name} {
+      --icon-fill: rgb(var(#{$token}));
+    }
   }
 
   &--round {

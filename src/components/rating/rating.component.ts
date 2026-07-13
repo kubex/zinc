@@ -1,4 +1,3 @@
-import {clamp} from "lodash";
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {FormControlController, validValidityState} from "../../internal/form";
@@ -98,7 +97,7 @@ export default class ZnRating extends ZincElement implements ZincFormControl {
     const {left, width} = this.rating.getBoundingClientRect();
     const value = this._roundToPrecision(((coordinate - left) / width) * this.max, this.precision);
 
-    return clamp(value, 0, this.max);
+    return Math.min(Math.max(value, 0), this.max);
   }
 
   private _getValueFromMousePosition(event: MouseEvent): number {

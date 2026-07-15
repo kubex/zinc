@@ -6245,6 +6245,7 @@ declare module "components/editor/modules/time-tracking/time-tracking" {
 }
 declare module "components/editor/editor.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import { Store } from "internal/storage";
     import ZincElement from "internal/zinc-element";
     import type { ZincFormControl } from "internal/zinc-element";
     export interface EditorFeatureConfig {
@@ -6297,6 +6298,17 @@ declare module "components/editor/editor.component" {
         codeEnabled: boolean;
         aiEnabled: boolean;
         aiPath: string;
+        /**
+         * Caches unsent content while typing and restores it when the editor next loads,
+         * so agent replies in tickets/chats survive reloads and navigation. Use a key
+         * unique to the conversation (e.g. the ticket ID). The cache is cleared on submit.
+         */
+        storeKey: string;
+        /** Cached-content expiry in seconds. Defaults to 1 day. */
+        storeTtl: number;
+        /** Cache to localStorage instead of sessionStorage, persisting across tabs and browser restarts. */
+        localStorage: boolean;
+        protected _store: Store;
         private quillElement;
         private _content;
         private _selectionRange;
@@ -6306,8 +6318,12 @@ declare module "components/editor/editor.component" {
         getForm(): HTMLFormElement | null;
         reportValidity(): boolean;
         setCustomValidity(message: string): void;
+        connectedCallback(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         private _handleTextChange;
+        private _isEmpty;
+        private _cacheContent;
+        private _clearCachedContent;
         private _getQuillKeyboardBindings;
         private _handleEditorChange;
         private _replaceTextAtSelection;

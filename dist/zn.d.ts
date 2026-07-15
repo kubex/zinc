@@ -1627,7 +1627,12 @@ declare module "components/chat-message-attachment/chat-message-attachment.compo
         name: string;
         /** The leading icon name. */
         icon: string;
-        /** Where to open the link. Defaults to a new tab. */
+        /**
+         * Where to open the link. Defaults to a new tab. Reflected so the console's
+         * pagelet link interception (`[href]:not([target])`) skips the host and the
+         * browser handles the click natively (download / new tab) instead of
+         * loading the file URL as a pagelet.
+         */
         target: string;
         /** Prompt a download rather than navigating to the link. */
         download: boolean;

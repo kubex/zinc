@@ -37,8 +37,13 @@ export default class ZnChatMessageAttachment extends ZincElement {
   /** The leading icon name. */
   @property() icon: string = 'paperclip@lu';
 
-  /** Where to open the link. Defaults to a new tab. */
-  @property() target: string = '_blank';
+  /**
+   * Where to open the link. Defaults to a new tab. Reflected so the console's
+   * pagelet link interception (`[href]:not([target])`) skips the host and the
+   * browser handles the click natively (download / new tab) instead of
+   * loading the file URL as a pagelet.
+   */
+  @property({reflect: true}) target: string = '_blank';
 
   /** Prompt a download rather than navigating to the link. */
   @property({type: Boolean}) download = false;

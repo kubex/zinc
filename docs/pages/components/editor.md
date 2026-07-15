@@ -119,6 +119,23 @@ In ticket mode (default), Enter creates new lines. Forms must be submitted using
 </script>
 ```
 
+### Caching Unsent Content
+
+Set a `store-key` to cache what the agent has typed, so an unsent reply survives page reloads and navigation. Content is saved as it is typed, restored when an editor with the same key next loads, and cleared when the form is submitted or the editor is emptied.
+
+Use a key unique to the conversation — for example the ticket or chat ID. Add the `local-storage` attribute to persist across tabs and browser restarts (otherwise `sessionStorage` is used, scoped to the current tab). Cached content expires after a day by default; tune with `store-ttl` (seconds).
+
+```html:preview
+<zn-editor
+  name="reply"
+  interaction-type="ticket"
+  store-key="ticket-12345"
+  local-storage
+  style="height: 250px">
+</zn-editor>
+<p><small>Type something, then reload the page — your draft is restored.</small></p>
+```
+
 ### Enabling Features
 
 The editor has many optional features that can be enabled with boolean attributes.

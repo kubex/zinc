@@ -3,6 +3,7 @@ import {deepQuerySelectorAll} from "../../utilities/query";
 import {FormControlController} from '../../internal/form';
 import {on} from "../../utilities/on";
 import {property, query} from 'lit/decorators.js';
+import {Store} from "../../internal/storage";
 import Attachment from "./modules/attachment/attachment";
 import ContextMenu from "./modules/context-menu/context-menu";
 import DatePicker from "./modules/date-picker/date-picker";
@@ -90,6 +91,21 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   @property({attribute: 'ai', type: Boolean}) aiEnabled: boolean = false;
   @property({attribute: 'ai-path'}) aiPath: string = '';
 
+  /**
+   * Caches unsent content while typing and restores it when the editor next loads,
+   * so agent replies in tickets/chats survive reloads and navigation. Use a key
+   * unique to the conversation (e.g. the ticket ID). The cache is cleared on submit.
+   */
+  @property({attribute: 'store-key', reflect: true}) storeKey: string = "";
+
+  /** Cached-content expiry in seconds. Defaults to 1 day. */
+  @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 86400;
+
+  /** Cache to localStorage instead of sessionStorage, persisting across tabs and browser restarts. */
+  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
+
+  protected _store: Store;
+
   private quillElement: Quill;
   private _content: string = '';
   private _selectionRange: Range = {index: 0, length: 0};
@@ -117,6 +133,11 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   setCustomValidity(message: string): void {
     this.editorHtml.setCustomValidity(message);
     this.formControlController.updateValidity();
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "zned:", this.storeTtl);
   }
 
   protected firstUpdated(_changedProperties: PropertyValues) {
@@ -261,6 +282,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this.quillElement = quill;
 
     this.getForm()?.addEventListener('submit', () => {
+      this._clearCachedContent();
       setTimeout(() => {
         const attachmentModule = this.quillElement.getModule('attachment') as Attachment;
         attachmentModule?.reset();
@@ -372,6 +394,14 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       this._selectionRange = range ?? oldRange;
     });
 
+    if (this.storeKey && this._isEmpty(this.value ?? '')) {
+      const cached = this._store.get(this.storeKey);
+      if (cached) {
+        this.value = cached;
+        this.editorHtml.value = cached;
+      }
+    }
+
     const delta = quill.clipboard.convert({html: this.value});
     quill.setContents(delta, Quill.sources.SILENT);
 
@@ -382,15 +412,30 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   private _handleTextChange() {
     this.value = this.quillElement.getSemanticHTML();
     this.editorHtml.value = this.value;
+    this._cacheContent();
     this.emit('zn-change');
   }
 
-  private _getQuillKeyboardBindings() {
-    const empty = (value: string) => {
-      const match = value.match(/[^<pbr\s>/]/);
-      return match === null;
-    };
+  private _isEmpty(value: string) {
+    return value.match(/[^<pbr\s>/]/) === null;
+  }
 
+  private _cacheContent() {
+    if (!this.storeKey || !this._store) return;
+    if (this._isEmpty(this.value)) {
+      this._store.remove(this.storeKey);
+    } else {
+      this._store.set(this.storeKey, this.value);
+    }
+  }
+
+  private _clearCachedContent() {
+    if (this.storeKey && this._store) {
+      this._store.remove(this.storeKey);
+    }
+  }
+
+  private _getQuillKeyboardBindings() {
     // Always add an Enter binding to support emoji selection in all interaction types
     return {
       'enter': {
@@ -406,7 +451,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
           if (this.interactionType === 'chat') {
             const form = this.closest('form');
-            const hasText = !!this.value && this.value.trim().length > 0 && !empty(this.value);
+            const hasText = !!this.value && this.value.trim().length > 0 && !this._isEmpty(this.value);
             const attachmentInput = form?.querySelector('input[name="attachments"]') as HTMLInputElement | null;
             const hasAttachments = !!attachmentInput?.value && attachmentInput.value !== '[]';
             if (form && (hasText || hasAttachments)) {

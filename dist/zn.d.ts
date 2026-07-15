@@ -5639,6 +5639,8 @@ declare module "components/editor/modules/toolbar/tool/tool.component" {
         key: string;
         icon: string;
         handler: string;
+        contextMenu: boolean;
+        order?: number | null;
         render(): import("lit-html").TemplateResult<1>;
     }
 }
@@ -5700,6 +5702,10 @@ declare module "components/editor/modules/dialog/dialog.component" {
     export default class DialogComponent extends ZincElement {
         static styles: CSSResultGroup;
         private hasFocus;
+        /** Set when loaded content declares it renders its own header (including a
+         * [dialog-closer] control) via a composed zn-dialog-header event, replacing
+         * the floating chrome close button. */
+        private hasContentHeader;
         dialogEl: HTMLDialogElement;
         open: boolean;
         uri: string;
@@ -5708,6 +5714,7 @@ declare module "components/editor/modules/dialog/dialog.component" {
         set editorId(value: string);
         connectedCallback(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
+        private handleContentCloserClick;
         setContent(content: string): void;
         handleOpenChange(): void;
         private addOpenListeners;
@@ -5785,6 +5792,7 @@ declare module "components/editor/modules/toolbar/toolbar" {
         });
         callFormat(key: string, value?: string | boolean | undefined): void;
         trigger(key: string): void;
+        private _slottedToolButton;
         private _attachToolbarHandlers;
         private _onToolbarClick;
         private _syncToolbarState;
@@ -6248,6 +6256,18 @@ declare module "components/editor/modules/time-tracking/time-tracking" {
         private _updateStartTime;
     }
 }
+declare module "components/editor/modules/events/zn-editor-insert" {
+    export type ZnEditorInsertEvent = CustomEvent<{
+        mode: 'insert' | 'replace';
+        text?: string;
+        html?: string;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-editor-insert': ZnEditorInsertEvent;
+        }
+    }
+}
 declare module "components/editor/editor.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import { Store } from "internal/storage";
@@ -6331,6 +6351,8 @@ declare module "components/editor/editor.component" {
         private _clearCachedContent;
         private _getQuillKeyboardBindings;
         private _handleEditorChange;
+        private _handleEditorInsert;
+        private _insertHtml;
         private _replaceTextAtSelection;
         private _insertTextAtSelection;
         private _closePopups;
@@ -10307,6 +10329,20 @@ declare module "components/editor/modules/events/zn-command-select" {
     global {
         interface GlobalEventHandlersEventMap {
             'zn-command-select': ZnCommandSelectEvent;
+        }
+    }
+}
+declare module "components/editor/modules/events/zn-dialog-header" {
+    /**
+     * Dispatched (composed, bubbling) by editor-dialog content that renders its
+     * own header row, including a [dialog-closer] control. The dialog responds by
+     * removing its floating chrome close button so content doesn't need to
+     * reserve space for it.
+     */
+    export type ZnDialogHeaderEvent = CustomEvent<void>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-dialog-header': ZnDialogHeaderEvent;
         }
     }
 }

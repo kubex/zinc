@@ -331,7 +331,7 @@ class Toolbar extends QuillToolbar {
     if (!dialog) return;
 
     dialog.dialogEl.showModal();
-    dialog.setContent(`<app-space id="app-editor-modal" allow-scripts auto-load loading-text="Loading, please wait..." uri="${uri}"></app-space>`);
+    dialog.setContent(`<app-space id="app-editor-modal" fetch-style="app-space-inline" allow-scripts auto-load loading-text="Loading, please wait..." uri="${uri}"></app-space>`);
   }
 
   private _handleOverflowUpdate = () => {

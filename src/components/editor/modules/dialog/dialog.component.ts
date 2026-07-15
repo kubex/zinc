@@ -96,8 +96,9 @@ export default class DialogComponent extends ZincElement {
               context-data=${JSON.stringify({'editor-id': this._editorId})}>
         <zn-button
           class="editor-dialog__close"
-          icon="close"
-          icon-size="24"
+          icon="x@lu"
+          icon-button="small"
+          icon-size="20"
           type="button"
           color="transparent"
           @click="${() => this.dialogEl.close()}"

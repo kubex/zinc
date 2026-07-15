@@ -11,6 +11,11 @@ export default class DialogComponent extends ZincElement {
 
   @state() private hasFocus = false;
 
+  /** Set when loaded content declares it renders its own header (including a
+   * [dialog-closer] control) via a composed zn-dialog-header event, replacing
+   * the floating chrome close button. */
+  @state() private hasContentHeader = false;
+
   @query('dialog') dialogEl!: HTMLDialogElement;
 
   @property({type: Boolean, reflect: true}) open = false;
@@ -33,8 +38,28 @@ export default class DialogComponent extends ZincElement {
     this.dialogEl.addEventListener("close", () => {
       this.open = false;
       this.innerHTML = '';
+      this.hasContentHeader = false;
+    });
+
+    // Content is nested inside the app-space's shadow tree, so both contracts
+    // are composed: clicks on [dialog-closer] close the dialog (same contract
+    // as zn-dialog), and zn-dialog-header swaps the chrome closer for one the
+    // content lays out itself.
+    this.addEventListener('click', this.handleContentCloserClick);
+    this.addEventListener('zn-dialog-header', () => {
+      this.hasContentHeader = true;
     });
   }
+
+  private handleContentCloserClick = (e: Event) => {
+    for (const node of e.composedPath()) {
+      if (node === this) return;
+      if (node instanceof HTMLElement && node.hasAttribute('dialog-closer')) {
+        this.dialogEl.close();
+        return;
+      }
+    }
+  };
 
   setContent(content: string) {
     this.innerHTML = content;
@@ -94,15 +119,14 @@ export default class DialogComponent extends ZincElement {
                 'editor-dialog--has-focus': this.hasFocus,
               })}"
               context-data=${JSON.stringify({'editor-id': this._editorId})}>
-        <zn-button
-          class="editor-dialog__close"
-          icon="x@lu"
-          icon-button="small"
-          icon-size="20"
-          type="button"
-          color="transparent"
-          @click="${() => this.dialogEl.close()}"
-        ></zn-button>
+        ${this.hasContentHeader ? nothing : html`
+          <zn-button
+            class="editor-dialog__close"
+            icon="x@lu"
+            icon-button="small"
+            icon-size="20"
+            @click="${() => this.dialogEl.close()}"
+          ></zn-button>`}
         <div class="editor-dialog__content">
           <slot>${this._getLoadingState()}</slot>
         </div>

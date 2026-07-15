@@ -21,6 +21,7 @@ import ZnTextarea from "../textarea";
 import type {OnEvent} from "../../utilities/on";
 import type {Range} from "quill";
 import type {ZincFormControl} from '../../internal/zinc-element';
+import type {ZnEditorInsertEvent} from "./modules/events/zn-editor-insert";
 import type ToolbarComponent from "./modules/toolbar/toolbar.component";
 
 import styles from './editor.scss';
@@ -281,6 +282,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     this.quillElement = quill;
 
+    const dialogModule = quill.getModule('dialog') as Dialog | undefined;
+    dialogModule?.component?.addEventListener('zn-editor-insert', this._handleEditorInsert);
+
     this.getForm()?.addEventListener('submit', () => {
       this._clearCachedContent();
       setTimeout(() => {
@@ -507,6 +511,52 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     } else if (editorMode === 'insert') {
       this._insertTextAtSelection();
     }
+  }
+
+  private _handleEditorInsert = (e: ZnEditorInsertEvent) => {
+    const detail: Partial<ZnEditorInsertEvent['detail']> = e.detail ?? {};
+    const mode = detail.mode;
+    if (mode !== 'insert' && mode !== 'replace') return;
+
+    e.stopPropagation();
+
+    if (detail.html) {
+      this._insertHtml(mode, detail.html);
+      return;
+    }
+
+    if (detail.text) {
+      this._content = detail.text.trim();
+      if (mode === 'replace') {
+        this._replaceTextAtSelection();
+      } else {
+        this._insertTextAtSelection();
+      }
+    }
+  };
+
+  private _insertHtml(mode: 'insert' | 'replace', content: string) {
+    const quill = this.quillElement;
+    const range = quill.getSelection();
+
+    let index: number;
+    if (mode === 'replace') {
+      if (range && range.length > 0) {
+        quill.deleteText(range.index, range.length);
+        index = range.index;
+      } else {
+        quill.setText('');
+        index = 0;
+      }
+    } else {
+      index = range ? range.index : this._selectionRange.index;
+    }
+
+    const lengthBefore = quill.getLength();
+    quill.clipboard.dangerouslyPasteHTML(index, content, Quill.sources.USER);
+    quill.setSelection(index + Math.max(0, quill.getLength() - lengthBefore), 0);
+
+    this._closePopups();
   }
 
   private _replaceTextAtSelection() {

@@ -2,9 +2,10 @@ import './context-menu-component';
 import {html} from "lit";
 import {litToHTML} from "../../../../utilities/lit-to-html";
 import {type ResultItem} from "./context-menu-component";
-import Quill from "quill";
 import Delta from "quill-delta";
+import Quill from "quill";
 import ZnEditorQuickAction from "./quick-action";
+import ZnEditorTool from "../toolbar/tool";
 import type {EditorFeatureConfig} from "../../editor.component";
 import type ContextMenuComponent from "./context-menu-component";
 import type Toolbar from "../toolbar/toolbar";
@@ -257,6 +258,18 @@ class ContextMenu {
             options.push({icon, label, format: 'insert', value: content, order});
           }
         }
+      });
+
+      const toolSlot = root.querySelector('slot[name="tools"]') as HTMLSlotElement | null;
+      const tools = toolSlot ? toolSlot.assignedElements({flatten: true}) : [];
+      tools.forEach((tool: Element) => {
+        if (!(tool instanceof ZnEditorTool) || !tool.contextMenu) return;
+
+        const {label, icon, key} = tool;
+        if (!label || !icon || !key) return;
+
+        const order = typeof tool.order === 'number' ? tool.order : orderCounter++;
+        options.push({icon, label, format: 'toolbar', key: key, order});
       });
     }
 

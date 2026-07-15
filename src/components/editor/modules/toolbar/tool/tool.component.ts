@@ -9,12 +9,15 @@ export default class ZnEditorTool extends ZincElement {
   @property() icon: string;
   @property() handler: string = 'dialog';
 
+  @property({type: Boolean, attribute: 'context-menu', reflect: true}) contextMenu = false;
+  @property({type: Number}) order?: number | null;
+
   render() {
     return html`
       <zn-button class="tool-action"
                  color="transparent"
                  icon="${this.icon}"
-                 icon-size="18"
+                 icon-size="20"
                  data-format="${this.handler}"
                  data-format-type="${this.uri}"
                  data-toolbar-key="${this.key}"

@@ -98,8 +98,20 @@ class Toolbar extends QuillToolbar {
       formatter => formatter.getAttribute('data-toolbar-key') === key && formatter.tagName === 'ZN-BUTTON'
     );
 
-    const tool = (matches?.length ? (matches[0] as HTMLElement) : null);
+    // _formatters is collected once at init, before slotted zn-editor-tool
+    // elements have necessarily rendered their shadow roots — resolve slotted
+    // tools again at trigger time so context-menu activation finds them.
+    const tool = (matches?.length ? (matches[0] as HTMLElement) : null)
+      ?? this._slottedToolButton(key);
     if (tool) {
+      // Tool buttons live in the tool's own shadow root; a synthetic click
+      // doesn't propagate across the slot boundary to the toolbar's click
+      // listener, so invoke the format directly.
+      const format = tool.getAttribute('data-format');
+      if (format) {
+        this.callFormat(format, tool.getAttribute('data-format-type') ?? undefined);
+        return;
+      }
       tool.click();
       return;
     }
@@ -113,6 +125,18 @@ class Toolbar extends QuillToolbar {
         this.callFormat(format, type);
       }
     }
+  }
+
+  private _slottedToolButton(key: string): HTMLElement | null {
+    const slot = this._component.shadowRoot?.querySelector('slot');
+    const assigned = slot ? slot.assignedElements({flatten: true}) : [];
+    for (const element of assigned) {
+      const button = element.shadowRoot?.querySelector(`[data-toolbar-key="${key}"]`);
+      if (button instanceof HTMLElement) {
+        return button;
+      }
+    }
+    return null;
   }
 
   private _attachToolbarHandlers() {

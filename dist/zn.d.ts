@@ -3539,6 +3539,7 @@ declare module "components/data-table/data-table.component" {
         itemsPerPage: number;
         selectAllButton: ZnButton;
         private _initialLoad;
+        private _hasLoadedData;
         private _lastTableContent;
         private readonly resizeObserver;
         private page;

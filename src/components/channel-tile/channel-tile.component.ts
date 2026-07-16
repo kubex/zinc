@@ -176,6 +176,13 @@ export default class ZnChannelTile extends ZincElement {
     return Math.min(100, Math.max(0, (elapsed / total) * 100));
   }
 
+  private _remainingSeconds(): number | null {
+    // Only surfaced for auto-accept countdowns, not plain reservation windows.
+    const until = this._reservedUntilMs();
+    if (!until || !this.autoAcceptDelay) return null;
+    return Math.max(0, Math.ceil((until - Date.now()) / 1000));
+  }
+
   private _handleReject = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -193,6 +200,7 @@ export default class ZnChannelTile extends ZincElement {
   protected render(): unknown {
     const title = this.title || (this.available ? 'Available' : '');
     const countdown = this._isCountingDown() ? this._countdownPercent() : null;
+    const remaining = this._isCountingDown() ? this._remainingSeconds() : null;
 
     return html`
       <div
@@ -215,8 +223,12 @@ export default class ZnChannelTile extends ZincElement {
         <div class="channel-tile__body">
           ${this._renderLeading()}
           <div class="channel-tile__content">
-            <h3 class="channel-tile__title"><slot name="title">${title}</slot></h3>
-            <p class="channel-tile__subtitle"><slot name="subtitle">${this.subtitle}</slot></p>
+            ${remaining !== null
+              ? html`
+                <h3 class="channel-tile__title">${this.subtitle} (${remaining}s)</h3>`
+              : html`
+                <h3 class="channel-tile__title"><slot name="title">${title}</slot></h3>
+                <p class="channel-tile__subtitle"><slot name="subtitle">${this.subtitle}</slot></p>`}
           </div>
           <slot name="footer" class="channel-tile__footer"></slot>
         </div>

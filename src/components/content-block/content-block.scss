@@ -69,6 +69,16 @@
   display: none;
 }
 
+.content-block-header__attachments {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--zn-spacing-2x-small);
+  font-size: var(--zn-font-size-small);
+  color: rgb(var(--zn-text-muted));
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
 .content-block-header__actions {
   display: flex;
   align-items: center;
@@ -77,8 +87,25 @@
   flex-shrink: 0;
 }
 
+.content-block__attachments {
+  display: none;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--zn-spacing-small);
+  padding-block-end: var(--zn-spacing-small);
+
+  &--visible {
+    display: flex;
+  }
+
+  ::slotted(zn-chat-message-attachment) {
+    min-width: 0;
+  }
+}
+
 .content-block--short {
-  zn-sp {
+  zn-sp, .content-block__attachments {
     display: none;
   }
 

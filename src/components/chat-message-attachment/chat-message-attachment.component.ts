@@ -6,10 +6,10 @@ import ZnIcon from "../icon";
 import styles from './chat-message-attachment.scss';
 
 /**
- * @summary A single file or link attachment for a `zn-chat-message`. Renders an
- * icon and a label as a link, styled to match the message's attachments row. It is
- * intended to be used only inside a `zn-chat-message` and is automatically placed in
- * that component's `attachments` slot.
+ * @summary A single file or link attachment for a `zn-chat-message` or `zn-content-block`.
+ * Renders an icon and a label as a link, styled to match the message's attachments row. It is
+ * intended to be used only inside a `zn-chat-message` or `zn-content-block` and is automatically
+ * placed in that component's `attachments` slot.
  * @documentation https://zinc.style/components/chat-message-attachment
  * @status experimental
  * @since 1.0
@@ -51,12 +51,12 @@ export default class ZnChatMessageAttachment extends ZincElement {
   connectedCallback() {
     super.connectedCallback();
 
-    if (this.closest('zn-chat-message')) {
+    if (this.closest('zn-chat-message, zn-content-block')) {
       if (!this.slot) {
         this.slot = 'attachments';
       }
     } else {
-      console.warn('<zn-chat-message-attachment> can only be used inside a <zn-chat-message>.', this);
+      console.warn('<zn-chat-message-attachment> can only be used inside a <zn-chat-message> or <zn-content-block>.', this);
     }
   }
 

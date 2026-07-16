@@ -3,7 +3,7 @@ import {deepQuerySelectorAll} from "../../utilities/query";
 import {HasSlotController} from "../../internal/slot";
 import {html, unsafeCSS} from 'lit';
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
-import {property, queryAssignedNodes, queryAsync} from 'lit/decorators.js';
+import {property, queryAssignedNodes, queryAsync, state} from 'lit/decorators.js';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import ZincElement from "../../internal/zinc-element";
 import type {PropertyValues} from 'lit';
@@ -21,6 +21,12 @@ interface TextRow {
  * @documentation https://zinc.style/components/content-block
  * @status experimental
  * @since 1.0
+ *
+ * @slot attachments - Attachments displayed at the bottom of the content when the block is
+ * expanded. Use `zn-chat-message-attachment`, which auto-assigns itself to this slot.
+ *
+ * @csspart attachments - The attachments row at the bottom of the content.
+ * @csspart header-attachments - The attachment count indicator in the header.
  */
 export default class ContentBlock extends ZincElement {
   static styles = unsafeCSS(styles);
@@ -42,6 +48,8 @@ export default class ContentBlock extends ZincElement {
   @queryAsync('iframe') iframe!: Promise<HTMLIFrameElement>;
 
   private readonly hasSlotController = new HasSlotController(this, 'text', 'html');
+
+  @state() private attachmentCount = 0;
 
   private _textRows: TextRow[] = [];
 
@@ -163,8 +171,20 @@ export default class ContentBlock extends ZincElement {
     }
   }
 
+  private handleAttachmentsSlotChange() {
+    this.syncAttachmentCount();
+  }
+
+  private syncAttachmentCount() {
+    const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="attachments"]');
+    this.attachmentCount = slot?.assignedElements().length ?? 0;
+  }
+
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
+
+    this.syncAttachmentCount();
+    Promise.resolve().then(() => this.syncAttachmentCount());
 
     const textContent = this.shadowRoot?.querySelectorAll('.text-section');
     if (textContent && textContent.length > 0) {
@@ -206,6 +226,10 @@ export default class ContentBlock extends ZincElement {
               <slot name="caption">${this.sender}</slot>
             </span>
             <span class="content-block-header__description">${this.truncateText()}</span>
+            ${this.attachmentCount > 0 ? html`
+              <span class="content-block-header__attachments" part="header-attachments">
+                <zn-icon src="paperclip@lu" size="14"></zn-icon>${this.attachmentCount}
+              </span>` : ''}
           </div>
 
           <div class="content-block-header__actions">
@@ -245,6 +269,13 @@ export default class ContentBlock extends ZincElement {
             `)}
           </div>
         </zn-sp>
+
+        <slot
+          name="attachments"
+          part="attachments"
+          class="content-block__attachments ${this.attachmentCount > 0 ? 'content-block__attachments--visible' : ''}"
+          @slotchange=${this.handleAttachmentsSlotChange}
+        ></slot>
 
         ${hasFooter ? html`
           <slot slot="footer" name="footer" @slotchange="${this._handleSlotChange}"></slot>` : ''}

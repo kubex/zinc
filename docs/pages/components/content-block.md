@@ -52,6 +52,26 @@ layout: component
 </zn-content-block>
 ```
 
+### Attachments
+
+Attachments render in a row at the bottom of the content and are only visible while the block
+is expanded. Use `zn-chat-message-attachment`, which assigns itself to the `attachments` slot.
+When a block has attachments, a paperclip icon and count are shown in the header after the
+preview text.
+
+```html:preview
+
+<zn-content-block
+  time="16 Jun 2025, 13:00"
+  sender="John Smith"
+  avatar="JS"
+>
+  <div slot="text">Text formatted message goes here.</div>
+  <zn-chat-message-attachment href="/" name="filename1.txt" download></zn-chat-message-attachment>
+  <zn-chat-message-attachment href="/" name="filename2.png" download></zn-chat-message-attachment>
+</zn-content-block>
+```
+
 ### Content Footer
 
 Basic Footer

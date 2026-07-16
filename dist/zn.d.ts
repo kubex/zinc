@@ -3980,6 +3980,7 @@ declare module "components/channel-tile/channel-tile.component" {
         private _accept;
         private _reservedUntilMs;
         private _countdownPercent;
+        private _remainingSeconds;
         private _handleReject;
         private _handleClick;
         protected render(): unknown;

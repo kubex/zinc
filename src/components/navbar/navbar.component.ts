@@ -62,8 +62,8 @@ export default class ZnNavbar extends ZincElement {
   @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
 
-  private _preItems: NodeListOf<Element>;
-  private _postItems: NodeListOf<Element>;
+  private _preItems: HTMLElement[] = [];
+  private _postItems: HTMLElement[] = [];
   @property()
   private _appended: Element[];
   private _expanding: Element[] = [];
@@ -79,6 +79,7 @@ export default class ZnNavbar extends ZincElement {
   private _expandable: HTMLElement | null = null;
   private _extendedMenu: HTMLElement | null = null;
   private readonly _cloneSources = new WeakMap<HTMLElement, HTMLElement>();
+  private readonly _lightDomClones = new WeakMap<HTMLElement, HTMLElement>();
   private _navItemsGap: number = 0;
   private _expandableMargin: number = 0;
   private _totalItemWidth: number = 0;
@@ -89,6 +90,40 @@ export default class ZnNavbar extends ZincElement {
 
   appendItem(item: Element) {
     this._appended = [...(this._appended || []), item];
+  }
+
+  private _cloneLightItem(item: HTMLElement): HTMLElement {
+    const existing = this._lightDomClones.get(item);
+    if (existing) {
+      return existing;
+    }
+
+    const clone = item.cloneNode(true) as HTMLElement;
+    this._cloneSources.set(clone, item);
+    this._lightDomClones.set(item, clone);
+    clone.addEventListener('click', () => item.click());
+    return clone;
+  }
+
+  private _syncLightDomItems() {
+    const preItems: HTMLElement[] = [];
+    const postItems: HTMLElement[] = [];
+
+    Array.from(this.children).forEach(child => {
+      if (!(child instanceof HTMLElement) || child.tagName !== 'LI') {
+        return;
+      }
+
+      const clone = this._cloneLightItem(child);
+      if (child.hasAttribute('suffix')) {
+        postItems.push(clone);
+      } else {
+        preItems.push(clone);
+      }
+    });
+
+    this._preItems = preItems;
+    this._postItems = postItems;
   }
 
   addExpandingAction(action: Element) {
@@ -141,31 +176,26 @@ export default class ZnNavbar extends ZincElement {
   }
 
   private _adoptNewLightItems(mutations: MutationRecord[]) {
-    const ul = this.shadowRoot?.querySelector('ul');
-    if (!ul) return;
-    const moreItem = ul.querySelector('li.more');
     for (const m of mutations) {
       for (const node of Array.from(m.addedNodes)) {
         if (node instanceof Element && node.tagName === 'ZN-EXPANDING-ACTION') {
           this.addExpandingAction(node);
-          continue;
-        }
-
-        if (!(node instanceof HTMLLIElement)) continue;
-        if (node.hasAttribute('suffix')) continue;
-        if (moreItem) {
-          ul.insertBefore(node, moreItem);
-        } else {
-          ul.appendChild(node);
         }
       }
+    }
+
+    if (mutations.some(mutation =>
+      Array.from(mutation.addedNodes).some(node => node instanceof HTMLLIElement) ||
+      Array.from(mutation.removedNodes).some(node => node instanceof HTMLLIElement)
+    )) {
+      this._syncLightDomItems();
+      this.requestUpdate();
     }
   }
 
   connectedCallback() {
     super.connectedCallback();
-    this._preItems = this.querySelectorAll('li:not([suffix])');
-    this._postItems = this.querySelectorAll('li[suffix]');
+    this._syncLightDomItems();
     this._expanding = Array.from(this.querySelectorAll('zn-expanding-action'));
 
     if (!this.masterId) {

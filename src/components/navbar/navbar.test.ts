@@ -1,5 +1,6 @@
 import '../../../dist/zn.min.js';
 import {aTimeout, expect, fixture, html, waitUntil} from '@open-wc/testing';
+import {render} from 'lit';
 import type ZnNavbar from './navbar.component';
 
 describe('<zn-navbar>', () => {
@@ -7,6 +8,40 @@ describe('<zn-navbar>', () => {
     const el = await fixture(html` <zn-navbar></zn-navbar> `);
 
     expect(el).to.exist;
+  });
+
+  it('does not move Lit-owned light DOM items when the parent rerenders', async () => {
+    const host = document.createElement('div');
+    document.body.append(host);
+
+    try {
+      render(html`
+        <zn-navbar>
+          <li tab="one">One</li>
+        </zn-navbar>
+      `, host);
+      await aTimeout(20);
+
+      render(html`
+        <zn-navbar>
+          <li tab="one">One</li>
+          <li tab="two">Two</li>
+        </zn-navbar>
+      `, host);
+      await aTimeout(20);
+
+      const navbar = host.querySelector<ZnNavbar>('zn-navbar')!;
+      const shadowItems = navbar.shadowRoot!.querySelectorAll('li[tab]');
+      const lightItems = navbar.querySelectorAll('li[tab]');
+
+      expect(lightItems.length).to.equal(2);
+      expect(shadowItems.length).to.equal(2);
+      expect(shadowItems[0]).to.not.equal(lightItems[0]);
+      expect(shadowItems[1].textContent?.trim()).to.equal('Two');
+    } finally {
+      render(html``, host);
+      host.remove();
+    }
   });
 
   it('reserves at least 200px for visible nav items when expandables need space', async () => {

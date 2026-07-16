@@ -35,6 +35,16 @@ export default class ContentBlock extends ZincElement {
   @property() sender = '';
   @property() avatar = '';
 
+  /** The message subject, shown in the header after the sender. */
+  @property() subject = '';
+
+  /**
+   * Placeholder shown dimmed in place of the subject when `subject` is empty
+   * (e.g. "This message has no subject."). Omit both for content without a
+   * subject line (e.g. notes).
+   */
+  @property({attribute: 'subject-placeholder'}) subjectPlaceholder = '';
+
   @property({type: Boolean, reflect: true}) outbound = false;
 
   @property({type: Boolean, attribute: "no-collapse"}) noCollapse = false;
@@ -225,7 +235,12 @@ export default class ContentBlock extends ZincElement {
             <span class="content-block-header__caption">
               <slot name="caption">${this.sender}</slot>
             </span>
-            <span class="content-block-header__description">${this.truncateText()}</span>
+            ${this.subject || this.subjectPlaceholder ? html`
+              <span class="${classMap({
+                'content-block-header__subject': true,
+                'content-block-header__subject--empty': !this.subject
+              })}">${this.subject || this.subjectPlaceholder}</span>` : html`
+              <span class="content-block-header__description">${this.truncateText()}</span>`}
             ${this.attachmentCount > 0 ? html`
               <span class="content-block-header__attachments" part="header-attachments">
                 <zn-icon src="paperclip@lu" size="14"></zn-icon>${this.attachmentCount}

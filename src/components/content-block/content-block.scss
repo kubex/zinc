@@ -6,6 +6,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+  background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
+  border-bottom: 1px solid rgb(var(--zn-border-color));
+
   padding-inline: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
 
   *, *::before, *::after {
@@ -56,6 +59,19 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.content-block-header__subject {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--zn-font-size-medium);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  &--empty {
+    opacity: 0.5;
+  }
 }
 
 .content-block-header__description {

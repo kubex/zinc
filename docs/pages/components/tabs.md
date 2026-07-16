@@ -174,7 +174,10 @@ and only load content when clicked.
 
 ### Default Active Tab
 
-Use the `active` attribute to specify which tab should be active by default.
+Use the `active` attribute to specify which tab should be active by default. The stored selection takes precedence when
+`store-key` is configured. If there is no stored selection or configured default, the first tab is selected.
+
+For URI-backed tabs, use `default-uri` to select the tab whose `tab-uri` matches it.
 
 ```html:preview
 <zn-tabs flush active="settings">

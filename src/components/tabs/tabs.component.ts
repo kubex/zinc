@@ -179,16 +179,23 @@ export default class ZnTabs extends ZincElement {
         return;
       }
 
-      const defaultTab = this._current || '';
-      if (!this._panels.has(defaultTab) && this._tabs.length > 0) {
-        const tabUri = this._tabs[0].getAttribute('tab-uri');
-        if (tabUri) {
-          this.clickTab(this._tabs[0], false);
-          return;
-        }
+      if (this.hasAttribute('active') && this._panels.has(this._current)) {
+        this.setActiveTab(this._current, false, false);
+        return;
       }
 
-      this.setActiveTab(defaultTab, false, false);
+      const defaultUriTab = this.defaultUri
+        ? this._tabs.find(tab => tab.getAttribute('tab-uri') === this.defaultUri)
+        : undefined;
+      if (defaultUriTab) {
+        this.clickTab(defaultUriTab, false);
+        return;
+      }
+
+      const firstTab = this._tabs[0];
+      if (firstTab) {
+        this.clickTab(firstTab, false);
+      }
     }, 10);
 
     this.addEventListener('zn-menu-select', () => {

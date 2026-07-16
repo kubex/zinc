@@ -1600,10 +1600,10 @@ declare module "components/chat-message-attachment/chat-message-attachment.compo
     import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
     /**
-     * @summary A single file or link attachment for a `zn-chat-message`. Renders an
-     * icon and a label as a link, styled to match the message's attachments row. It is
-     * intended to be used only inside a `zn-chat-message` and is automatically placed in
-     * that component's `attachments` slot.
+     * @summary A single file or link attachment for a `zn-chat-message` or `zn-content-block`.
+     * Renders an icon and a label as a link, styled to match the message's attachments row. It is
+     * intended to be used only inside a `zn-chat-message` or `zn-content-block` and is automatically
+     * placed in that component's `attachments` slot.
      * @documentation https://zinc.style/components/chat-message-attachment
      * @status experimental
      * @since 1.0
@@ -7714,6 +7714,12 @@ declare module "components/content-block/content-block.component" {
      * @documentation https://zinc.style/components/content-block
      * @status experimental
      * @since 1.0
+     *
+     * @slot attachments - Attachments displayed at the bottom of the content when the block is
+     * expanded. Use `zn-chat-message-attachment`, which auto-assigns itself to this slot.
+     *
+     * @csspart attachments - The attachments row at the bottom of the content.
+     * @csspart header-attachments - The attachment count indicator in the header.
      */
     export default class ContentBlock extends ZincElement {
         static styles: import("lit").CSSResult;
@@ -7727,6 +7733,7 @@ declare module "components/content-block/content-block.component" {
         htmlNodes: Node[];
         iframe: Promise<HTMLIFrameElement>;
         private readonly hasSlotController;
+        private attachmentCount;
         private _textRows;
         private readonly _footerObserver;
         private _replaceDebounce;
@@ -7736,6 +7743,8 @@ declare module "components/content-block/content-block.component" {
         private _toggleText;
         private _toggleHtml;
         private _resizeIframe;
+        private handleAttachmentsSlotChange;
+        private syncAttachmentCount;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         protected render(): import("lit-html").TemplateResult<1>;
         protected truncateText(): string;

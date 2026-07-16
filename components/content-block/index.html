@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.45">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.46">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -73,7 +73,7 @@
         <a href="/">
           <img src="/assets/images/watermark.svg" alt="zinc" />
         </a>
-        <div class="sidebar-version">1.1.45</div>
+        <div class="sidebar-version">1.1.46</div>
       </header>
 
       <div class="sidebar-buttons">
@@ -539,8 +539,11 @@
             <li data-level="2"><a href="#examples">Examples</a></li>
             <li data-level="3"><a href="#basic-text">Basic Text</a></li>
             <li data-level="3"><a href="#toggle-text-and-html">Toggle Text &amp; HTML</a></li>
+            <li data-level="3"><a href="#attachments">Attachments</a></li>
             <li data-level="3"><a href="#content-footer">Content Footer</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
+            <li data-level="2"><a href="#slots">Slots</a></li>
+            <li data-level="2"><a href="#parts">Parts</a></li>
           </ul>
         </div>
 
@@ -727,6 +730,64 @@
               </button>
             </div>
           </div>
+          <h3 id="attachments" class="anchor-heading">
+            Attachments<a href="#attachments" aria-label='Direct link to "Attachments"'></a>
+          </h3>
+          <p>
+            Attachments render in a row at the bottom of the content and are only visible while the block is expanded.
+            Use <code>zn-chat-message-attachment</code>, which assigns itself to the <code>attachments</code> slot. When
+            a block has attachments, a paperclip icon and count are shown in the header after the preview text.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-content-block time="16 Jun 2025, 13:00" sender="John Smith" avatar="JS">
+                <div slot="text">Text formatted message goes here.</div>
+                <zn-chat-message-attachment href="/" name="filename1.txt" download=""></zn-chat-message-attachment>
+                <zn-chat-message-attachment href="/" name="filename2.png" download=""></zn-chat-message-attachment>
+              </zn-content-block>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-256">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-331">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-content-block</span>
+  <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>16 Jun 2025, 13:00<span class="token punctuation">"</span></span>
+  <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>John Smith<span class="token punctuation">"</span></span>
+  <span class="token attr-name">avatar</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>JS<span class="token punctuation">"</span></span>
+<span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Text formatted message goes here.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message-attachment</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>filename1.txt<span class="token punctuation">"</span></span> <span class="token attr-name">download</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message-attachment</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message-attachment</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>filename2.png<span class="token punctuation">"</span></span> <span class="token attr-name">download</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message-attachment</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-content-block</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-331"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-256"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
           <h3 id="content-footer" class="anchor-heading">
             Content Footer<a href="#content-footer" aria-label='Direct link to "Content Footer"'></a>
           </h3>
@@ -745,9 +806,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-256">
+            <div class="code-preview__source-group" id="code-preview-source-group-257">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-331">
+                <pre><code class="language-html" id="code-block-332">
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-content-block</span>
   <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>16 Jun 2025, 13:00<span class="token punctuation">"</span></span>
   <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>John Smith<span class="token punctuation">"</span></span>
@@ -760,7 +821,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>small</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-content-block</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-331"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-332"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -769,7 +830,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-256"
+                aria-controls="code-preview-source-group-257"
               >
                 Source
                 <svg
@@ -813,9 +874,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-257">
+            <div class="code-preview__source-group" id="code-preview-source-group-258">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-332">
+                <pre><code class="language-html" id="code-block-333">
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-content-block</span>
   <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>16 Jun 2025, 13:00<span class="token punctuation">"</span></span>
   <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>John Smith<span class="token punctuation">"</span></span>
@@ -843,7 +904,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-collapsible</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-content-block</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-332"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-333"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -852,7 +913,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-257"
+                aria-controls="code-preview-source-group-258"
               >
                 Source
                 <svg
@@ -890,7 +951,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-333"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.45/dist/components/content-block/content-block.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-333"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-334"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.46/dist/components/content-block/content-block.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-334"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -905,13 +966,69 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-334"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.45/dist/components/content-block/content-block.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-334"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-335"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.46/dist/components/content-block/content-block.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-335"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-335"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/content-block/content-block.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-335"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-336"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/content-block/content-block.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-336"></zn-copy-button></pre>
           </zn-collapsible>
+
+          <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap">
+                    <code>attachments</code>
+                  </td>
+                  <td>
+                    Attachments displayed at the bottom of the content when the block is expanded. Use
+                    <code>zn-chat-message-attachment</code>, which auto-assigns itself to this slot.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/usage#slots">using slots</a>.</em>
+          </p>
+
+          <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap"><code>attachments</code></td>
+                  <td>The attachments row at the bottom of the content.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>header-attachments</code></td>
+                  <td>The attachment count indicator in the header.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/customizing/#css-parts">customizing CSS parts</a>.</em>
+          </p>
         </div>
       </article>
     </main>

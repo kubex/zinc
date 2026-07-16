@@ -1,10 +1,10 @@
 @use "../../wc";
 
-:host {
+.menu {
   display: block;
   position: relative;
   padding: 1px;
-  border: 1px solid rgb(var(--zn-border-color));
+  border: 1px solid rgb(var(--zn-border-color)) !important;
   border-radius: var(--zn-border-radius);
   width: fit-content;
   min-width: var(--zn-size-spanel);
@@ -19,7 +19,7 @@
 
 // Shell variant — the app-shell header dropdown look (as used by Rubix):
 // padded panel with floating rounded items, translucent blurred background
-:host([variant="shell"]) {
+.menu--shell {
   display: flex;
   flex-direction: column;
   gap: var(--zn-spacing-2x-small);
@@ -34,4 +34,9 @@
   filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.04)) drop-shadow(0 4px 3px rgba(0, 0, 0, 0.1));
   background-color: rgba(var(--zn-color-navigation, 255, 255, 255), 0.95);
   backdrop-filter: blur(3px);
+}
+
+
+::slotted(zn-menu-item + zn-menu-item) {
+  border-top: 1px solid rgb(var(--zn-border-color));
 }

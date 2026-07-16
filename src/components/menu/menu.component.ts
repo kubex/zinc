@@ -1,6 +1,6 @@
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
-import {ifDefined} from "lit/directives/if-defined.js";
-import {property, query} from 'lit/decorators.js';
+import { type CSSResultGroup, html, unsafeCSS } from 'lit';
+import { ifDefined } from "lit/directives/if-defined.js";
+import { property, query } from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnConfirm from "../confirm";
 import ZnDropdown from "../dropdown";
@@ -9,6 +9,7 @@ import ZnMenuItem from "../menu-item";
 import ZnTooltip from "../tooltip";
 
 import styles from './menu.scss';
+import { classMap } from "lit/directives/class-map.js";
 
 interface NavItem {
   title: string;
@@ -56,12 +57,12 @@ export default class ZnMenu extends ZincElement {
 
   @query('slot') defaultSlot: HTMLSlotElement;
 
-  @property({attribute: 'actions', type: Array}) actions = [];
+  @property({ attribute: 'actions', type: Array }) actions = [];
 
   /** The menu's visual style. `shell` renders the app-shell header dropdown
    * look: a padded panel with floating rounded items. Propagated to the
    * menu's items. */
-  @property({reflect: true}) variant: 'default' | 'shell' = 'default';
+  @property({ reflect: true }) variant: 'default' | 'shell' = 'default';
 
   connectedCallback() {
     super.connectedCallback();
@@ -70,7 +71,7 @@ export default class ZnMenu extends ZincElement {
 
   /** @internal Gets all slotted menu items, ignoring dividers, headers, and other elements. */
   getAllItems() {
-    return [...this.defaultSlot.assignedElements({flatten: true})].filter((el: HTMLElement) => {
+    return [...this.defaultSlot.assignedElements({ flatten: true })].filter((el: HTMLElement) => {
       return !(el.inert || !this.isMenuItem(el));
 
     }) as ZnMenuItem[];
@@ -100,15 +101,19 @@ export default class ZnMenu extends ZincElement {
   render() {
     return html`
       <div
+        class="${classMap({
+          'menu': true,
+          'menu--shell': this.variant === 'shell',
+        })}"
         @slotchange=${this.handleSlotChange}
         @keydown=${this.handleKeyDown}
         @mousedown=${this.handleMouseDown}>
         <slot></slot>
         ${this.actions.map((item: NavItem) => {
-          if( item === null || item === undefined) {
+          if (item === null || item === undefined) {
             return html``; // Skip null or undefined items
           }
-          if ( item?.confirm) {
+          if (item?.confirm) {
             return html`
               <zn-confirm trigger="${ifDefined(item.confirm?.trigger)}"
                           type="${ifDefined(item.confirm?.type)}"
@@ -177,7 +182,7 @@ export default class ZnMenu extends ZincElement {
     // get the parent dropdown and close it
     (closestMenu?.closest('zn-dropdown') as ZnDropdown | null)?.hide();
 
-    this.emit('zn-select', {detail: {item}});
+    this.emit('zn-select', { detail: { item } });
   }
 
   private handleKeyDown(event: KeyboardEvent) {

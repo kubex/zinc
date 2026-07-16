@@ -196,6 +196,7 @@ export default class ContentBlock extends ZincElement {
             <slot name="icon">
               <zn-icon src="${this.avatar}"
                        library="avatar"
+                       size="36"
                        round></zn-icon>
             </slot>
           </div>

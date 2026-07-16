@@ -4198,6 +4198,7 @@ declare module "components/navbar/navbar.component" {
         private _expandable;
         private _extendedMenu;
         private readonly _cloneSources;
+        private readonly _lightDomClones;
         private _navItemsGap;
         private _expandableMargin;
         private _totalItemWidth;
@@ -4205,6 +4206,8 @@ declare module "components/navbar/navbar.component" {
         private _resizeController;
         protected _store: Store;
         appendItem(item: Element): void;
+        private _cloneLightItem;
+        private _syncLightDomItems;
         addExpandingAction(action: Element): void;
         constructor();
         private readonly _expandingActionObserver;

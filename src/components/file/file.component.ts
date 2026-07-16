@@ -421,18 +421,26 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
     // Use the transferred file list from the drag drop interface
     const hasTrigger = this.hasSlotController.test('trigger');
     if (!hasTrigger) {
-      const disappearAnimation = getAnimation(this.inputChosen, 'file.text.disappear', {dir: this.localize.dir()});
-      const appearAnimation = getAnimation(this.inputChosen, 'file.text.appear', {dir: this.localize.dir()});
+      const inputChosen = this.inputChosen;
+      const dropareaIcon = this.dropareaIcon;
 
-      if (this.droparea) {
-        const dropIconAnimation = getAnimation(this.dropareaIcon, 'file.iconDrop', {dir: this.localize.dir()});
+      if (this.droparea && dropareaIcon) {
+        const dropIconAnimation = getAnimation(dropareaIcon, 'file.iconDrop', {dir: this.localize.dir()});
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        animateTo(this.dropareaIcon, dropIconAnimation.keyframes, dropIconAnimation.options);
+        animateTo(dropareaIcon, dropIconAnimation.keyframes, dropIconAnimation.options);
       }
-      // eslint-disable-next-line max-len
-      await animateTo(this.inputChosen, disappearAnimation.keyframes, disappearAnimation.options);
+
+      if (inputChosen) {
+        const disappearAnimation = getAnimation(inputChosen, 'file.text.disappear', {dir: this.localize.dir()});
+        await animateTo(inputChosen, disappearAnimation.keyframes, disappearAnimation.options);
+      }
+
       this.handleFiles(files);
-      await animateTo(this.inputChosen, appearAnimation.keyframes, appearAnimation.options);
+
+      if (inputChosen) {
+        const appearAnimation = getAnimation(inputChosen, 'file.text.appear', {dir: this.localize.dir()});
+        await animateTo(inputChosen, appearAnimation.keyframes, appearAnimation.options);
+      }
     } else {
       this.handleFiles(files);
     }

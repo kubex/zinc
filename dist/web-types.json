@@ -3501,6 +3501,33 @@
           }
         },
         {
+          "name": "zn-filter-container",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "attr",
+              "value": { "type": "string", "default": "'filter'" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [{ "name": "attr", "type": "string" }],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-file",
           "description": "File controls allow selecting an arbitrary number of files for uploading.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the control loses focus.\n- **zn-change** - Emitted when an alteration to the control's value is committed by the user.\n- **zn-clear** - Emitted when the user confirms clearing the selected file or `src`.\n- **zn-error** - Emitted when multiple files are selected via drag and drop, without the `multiple` property being set.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-input** - Emitted when the control receives input.\n\n### **Methods:**\n - **checkValidity()** - Checks for validity but does not show a validation message.\nReturns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n- **focus(options: _FocusOptions_)** - Sets focus on the button or droparea.\n- **blur()** - Removes focus from the button or droparea.\n\n### **Slots:**\n - **label** - The file control's label. Alternatively, you can use the `label` attribute.\n- **help-text** - Text that describes how to use the file control. Alternatively, you can use the `help-text` attribute.\n- **trigger** - Optional content to be used as trigger instead of the default content. Opening the file dialog on click and as well as drag and drop will work for this content. Following attributes will no longer work: *label*, *droparea*, *help-text*, *size*, *hide-value*. Also if using the disabled attribute, the disabled styling will not be applied and must be taken care of yourself.\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **button-wrapper** - The wrapper around the button and text value.\n- **button** - The zn-button acting as a file input.\n- **button__base** - The zn-button's exported `base` part.\n- **value** - The chosen files or placeholder text for the file input.\n- **droparea** - The element wrapping the drop zone.\n- **droparea-background** - The background of the drop zone.\n- **upload** - The upload button shown in the droparea when no file is selected.\n- **preview** - The image preview rendered in the droparea for previewable files.\n- **filename** - The filename label rendered in the droparea for non-previewable files.\n- **clear** - The clear button rendered in the droparea when a file is present.\n- **clear-confirm** - The confirmation dialog shown before clearing the file.\n- **link** - The current link anchor rendered when `show-link` is enabled.\n- **trigger** - The container that wraps the trigger.",
           "doc-url": "",
@@ -3791,33 +3818,6 @@
               {
                 "name": "zn-input",
                 "description": "Emitted when the control receives input."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-filter-container",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "attr",
-              "value": { "type": "string", "default": "'filter'" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [{ "name": "attr", "type": "string" }],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
               }
             ]
           }

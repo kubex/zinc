@@ -245,6 +245,7 @@ export default class ZnDataTable extends ZincElement {
 
   // Data Table Properties
   private _initialLoad = true;
+  private _hasLoadedData = false;
   private _lastTableContent: TemplateResult = html``;
 
   private readonly resizeObserver = new ResizeController(this, {
@@ -363,7 +364,9 @@ export default class ZnDataTable extends ZincElement {
     } else if (this.dataUri) {
       tableBody = this._dataTask.render({
         pending: () => {
-          if (this._initialLoad) {
+          // Show the skeleton until data has rendered at least once, so the
+          // first fetch on a no-initial-load table doesn't render blank space
+          if (this._initialLoad || !this._hasLoadedData) {
             return html`
               <div>${this.loadingTable()}</div>`;
           }
@@ -372,6 +375,7 @@ export default class ZnDataTable extends ZincElement {
         },
         complete: (data) => {
           this._initialLoad = false;
+          this._hasLoadedData = true;
           this._lastTableContent = html`
             <div>${this.renderTable(data as Response)}</div>`;
           return this._lastTableContent;
@@ -401,6 +405,7 @@ export default class ZnDataTable extends ZincElement {
         page: 1,
       };
       this._initialLoad = false;
+      this._hasLoadedData = true;
       this._lastTableContent = html`
             <div>${this.renderTable(response)}</div>`;
       tableBody = this._lastTableContent;

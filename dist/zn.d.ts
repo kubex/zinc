@@ -7726,6 +7726,14 @@ declare module "components/content-block/content-block.component" {
         time: string;
         sender: string;
         avatar: string;
+        /** The message subject, shown in the header after the sender. */
+        subject: string;
+        /**
+         * Placeholder shown dimmed in place of the subject when `subject` is empty
+         * (e.g. "This message has no subject."). Omit both for content without a
+         * subject line (e.g. notes).
+         */
+        subjectPlaceholder: string;
         outbound: boolean;
         noCollapse: boolean;
         short: boolean;

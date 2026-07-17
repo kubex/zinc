@@ -73,6 +73,7 @@ export { default as File } from './components/file';
 export { default as CheckboxGroup } from './components/checkbox-group';
 export { default as Item } from './components/item';
 export { default as DataSelect } from './components/data-select';
+export { default as ColorSelect } from './components/color-select';
 export { default as ButtonMenu } from './components/button-menu';
 export { default as HoverContainer } from './components/hover-container';
 export { default as Slideout } from './components/slideout';

@@ -1,0 +1,78 @@
+@use "../../wc";
+
+// Same palette as data-select's color provider
+$colors: (
+  red: var(--zn-color-red-500),
+  blue: var(--zn-color-blue-500),
+  orange: var(--zn-color-orange-500),
+  yellow: var(--zn-color-yellow-400),
+  indigo: var(--zn-color-indigo-500),
+  violet: var(--zn-color-violet-500),
+  green: var(--zn-color-green-500),
+  pink: var(--zn-color-pink-500),
+  gray: var(--zn-color-gray-500)
+);
+
+// Only wide enough for the swatch and the expand icon
+:host {
+  display: inline-block;
+}
+
+.color-swatch {
+  width: var(--zn-spacing-small);
+  height: var(--zn-spacing-small);
+  display: block;
+  border-radius: var(--zn-border-radius-circle);
+  flex-shrink: 0;
+
+  @each $name, $color in $colors {
+    &--#{"" + $name} {
+      background-color: #{$color};
+    }
+  }
+
+  &--empty {
+    border: 1px dashed var(--zn-color-neutral-400);
+  }
+}
+
+// Never stretch to label/help-text width — only fit the swatch and controls
+zn-select::part(combobox) {
+  width: fit-content;
+  padding-inline-end: var(--zn-spacing-2x-small);
+}
+
+// Preview shows only the swatch — collapse the text input entirely
+zn-select::part(display-input) {
+  width: 0;
+  min-width: 0;
+  color: transparent;
+  caret-color: transparent;
+}
+
+// Let the dropdown grow to fit swatch + name instead of matching the control's width
+zn-select::part(listbox) {
+  min-width: max-content;
+  max-height: 300px;
+  padding-block: 0;
+}
+
+// Tighten the combobox: small, even gaps between swatch, clear button and chevron
+.color-swatch[part="swatch"] {
+  margin-inline-start: var(--zn-spacing-x-small);
+  margin-inline-end: 0;
+}
+
+// Gap between swatch and name in the dropdown list
+zn-option .color-swatch {
+  margin-inline-end: var(--zn-spacing-x-small);
+}
+
+zn-select::part(clear-button),
+zn-select::part(expand-icon) {
+  margin-inline-start: var(--zn-spacing-2x-small);
+}
+
+zn-select::part(clear-button) {
+  margin-inline-start: var(--zn-spacing-x-small);
+}

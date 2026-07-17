@@ -5686,6 +5686,305 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/color-select/color-select.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnColorSelect",
+          "cssParts": [
+            {
+              "description": "The color swatch shown in the closed control.",
+              "name": "swatch"
+            },
+            {
+              "description": "The container that wraps the swatch and expand button (forwarded from zn-select).",
+              "name": "combobox"
+            },
+            {
+              "description": "The help text's wrapper (forwarded from zn-select).",
+              "name": "form-control-help-text"
+            },
+            {
+              "description": "The select's wrapper (forwarded from zn-select).",
+              "name": "form-control-input"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-select': ZnSelect, 'zn-option': ZnOption, }"
+            },
+            {
+              "kind": "field",
+              "name": "select",
+              "type": {
+                "text": "ZnSelect"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "The name of the select. Used for form submission.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The selected color (lowercase name, e.g. \"red\"). Used for form submission.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The select's label.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The select's help text.",
+              "attribute": "help-text"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the select.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the select a required field.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "clearable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a clear button when a color is selected.",
+              "attribute": "clearable"
+            },
+            {
+              "kind": "field",
+              "name": "formControlController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new FormControlController(this)"
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleValueChange"
+            },
+            {
+              "kind": "field",
+              "name": "handleInput",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleClear",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the selected color changes.",
+              "name": "zn-input"
+            },
+            {
+              "description": "Emitted when the clear button is activated.",
+              "name": "zn-clear"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "The name of the select. Used for form submission.",
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The selected color (lowercase name, e.g. \"red\"). Used for form submission.",
+              "fieldName": "value"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The select's label.",
+              "fieldName": "label"
+            },
+            {
+              "name": "help-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The select's help text.",
+              "fieldName": "helpText"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the select.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the select a required field.",
+              "fieldName": "required"
+            },
+            {
+              "name": "clearable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a clear button when a color is selected.",
+              "fieldName": "clearable"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A simple color picker. The dropdown lists color swatches with names; the closed control shows only the selected color's swatch.",
+          "tagNameWithoutPrefix": "color-select",
+          "tagName": "zn-color-select",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A simple color picker. The dropdown lists color swatches with names; the closed control shows only the selected color's swatch.\n * @documentation https://zinc.style/components/color-select\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-select\n * @dependency zn-option\n *\n * @event zn-input - Emitted when the selected color changes.\n * @event zn-clear - Emitted when the clear button is activated.\n *\n * @csspart swatch - The color swatch shown in the closed control.\n * @csspart combobox - The container that wraps the swatch and expand button (forwarded from zn-select).\n * @csspart form-control-help-text - The help text's wrapper (forwarded from zn-select).\n * @csspart form-control-input - The select's wrapper (forwarded from zn-select).\n */",
+          "documentation": "https://zinc.style/components/color-select",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-select",
+            "zn-option"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnColorSelect",
+            "module": "components/color-select/color-select.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/cols/cols.js",
       "declarations": [
         {

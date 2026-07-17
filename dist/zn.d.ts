@@ -7353,6 +7353,73 @@ declare module "components/item/index" {
         }
     }
 }
+declare module "components/color-select/color-select.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnOption from "components/option/index";
+    import ZnSelect from "components/select/index";
+    import type { ZincFormControl } from "internal/zinc-element";
+    /**
+     * @summary A simple color picker. The dropdown lists color swatches with names; the closed control shows only the selected color's swatch.
+     * @documentation https://zinc.style/components/color-select
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-select
+     * @dependency zn-option
+     *
+     * @event zn-input - Emitted when the selected color changes.
+     * @event zn-clear - Emitted when the clear button is activated.
+     *
+     * @csspart swatch - The color swatch shown in the closed control.
+     * @csspart combobox - The container that wraps the swatch and expand button (forwarded from zn-select).
+     * @csspart form-control-help-text - The help text's wrapper (forwarded from zn-select).
+     * @csspart form-control-input - The select's wrapper (forwarded from zn-select).
+     */
+    export default class ZnColorSelect extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-select': typeof ZnSelect;
+            'zn-option': typeof ZnOption;
+        };
+        select: ZnSelect;
+        /** The name of the select. Used for form submission. */
+        name: string;
+        /** The selected color (lowercase name, e.g. "red"). Used for form submission. */
+        value: string;
+        /** The select's label. */
+        label: string;
+        /** The select's help text. */
+        helpText: string;
+        /** Disables the select. */
+        disabled: boolean;
+        /** Makes the select a required field. */
+        required: boolean;
+        /** Shows a clear button when a color is selected. */
+        clearable: boolean;
+        private readonly formControlController;
+        get validity(): ValidityState;
+        get validationMessage(): string;
+        checkValidity(): boolean;
+        getForm(): HTMLFormElement | null;
+        reportValidity(): boolean;
+        setCustomValidity(message: string): void;
+        handleValueChange(): void;
+        private handleInput;
+        private handleClear;
+        protected render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/color-select/index" {
+    import ZnColorSelect from "components/color-select/color-select.component";
+    export * from "components/color-select/color-select.component";
+    export default ZnColorSelect;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-color-select': ZnColorSelect;
+        }
+    }
+}
 declare module "components/button-menu/button-menu.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -10302,6 +10369,7 @@ declare module "zinc" {
     export { default as CheckboxGroup } from "components/checkbox-group/index";
     export { default as Item } from "components/item/index";
     export { default as DataSelect } from "components/data-select/index";
+    export { default as ColorSelect } from "components/color-select/index";
     export { default as ButtonMenu } from "components/button-menu/index";
     export { default as HoverContainer } from "components/hover-container/index";
     export { default as Slideout } from "components/slideout/index";

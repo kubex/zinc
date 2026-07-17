@@ -216,6 +216,7 @@ export default class ContentBlock extends ZincElement {
 
     return html`
       <div class="${classMap({
+        'content-block': true,
         'content-block--outbound': this.outbound,
         'content-block--short': this.short,
         'content-block--collapsible': !this.noCollapse

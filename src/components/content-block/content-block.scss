@@ -1,19 +1,9 @@
 @use "../../wc";
 
-:host {
-  display: block;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
+.content-block {
+  background-color: var(--zn-note-background, rgba(var(--zn-panel), var(--zn-panel-opacity)));
   border-bottom: 1px solid rgb(var(--zn-border-color));
-
   padding-inline: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
-
-  *, *::before, *::after {
-    box-sizing: border-box;
-  }
 }
 
 .content-block-header {

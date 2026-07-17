@@ -224,8 +224,12 @@ export default class ZnChannelTile extends ZincElement {
           ${this._renderLeading()}
           <div class="channel-tile__content">
             ${remaining !== null
-              ? html`
-                <h3 class="channel-tile__title">${this.subtitle} (${remaining}s)</h3>`
+              ? this.title
+                ? html`
+                  <h3 class="channel-tile__title"><slot name="title">${this.title}</slot></h3>
+                  <p class="channel-tile__subtitle">${this.subtitle} (${remaining}s)</p>`
+                : html`
+                  <h3 class="channel-tile__title">${this.subtitle} (${remaining}s)</h3>`
               : html`
                 <h3 class="channel-tile__title"><slot name="title">${title}</slot></h3>
                 <p class="channel-tile__subtitle"><slot name="subtitle">${this.subtitle}</slot></p>`}

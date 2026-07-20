@@ -49,79 +49,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -292,6 +219,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -16954,757 +16954,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/inline-edit/inline-edit.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnInlineEdit",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "Default slot. When `input-type` is `select`, accepts `zn-option` elements to define select options. If provided, takes precedence over the `options` property.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            },
-            {
-              "description": "Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.",
-              "name": "help-text"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "formControlController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new FormControlController(this, { defaultValue: (control: ZnInlineEdit) => control.defaultValue, value: (control: ZnInlineEdit) => { if (control.multiple) { const val = typeof control.value === 'string' ? control.value.split(' ').filter(v => v !== '') : control.value; return val.length > 0 ? val : ''; } return control.value; }, })"
-            },
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, 'help-text', '[default]')"
-            },
-            {
-              "kind": "field",
-              "name": "conditionalController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new ConditionalController(this)"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string | string[]"
-              },
-              "default": "''",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "name"
-            },
-            {
-              "kind": "field",
-              "name": "placeholder",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "placeholder",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "editText",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "edit-text"
-            },
-            {
-              "kind": "field",
-              "name": "conditional",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "conditional"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "disabled"
-            },
-            {
-              "kind": "field",
-              "name": "inline",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "inline"
-            },
-            {
-              "kind": "field",
-              "name": "padded",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "padded"
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "default": "'medium'",
-              "attribute": "size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "required"
-            },
-            {
-              "kind": "field",
-              "name": "pattern",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "pattern"
-            },
-            {
-              "kind": "field",
-              "name": "multiple",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "multiple",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "clearable",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "clearable"
-            },
-            {
-              "kind": "field",
-              "name": "min",
-              "type": {
-                "text": "string | number"
-              },
-              "attribute": "min"
-            },
-            {
-              "kind": "field",
-              "name": "max",
-              "type": {
-                "text": "string | number"
-              },
-              "attribute": "max"
-            },
-            {
-              "kind": "field",
-              "name": "step",
-              "type": {
-                "text": "number | 'any'"
-              },
-              "attribute": "step"
-            },
-            {
-              "kind": "field",
-              "name": "inputType",
-              "type": {
-                "text": "'select' | 'text' | 'data-select' | 'number' | 'textarea'"
-              },
-              "default": "'text'",
-              "attribute": "input-type"
-            },
-            {
-              "kind": "field",
-              "name": "textareaRows",
-              "type": {
-                "text": "1"
-              },
-              "attribute": "textarea-rows"
-            },
-            {
-              "kind": "field",
-              "name": "options",
-              "type": {
-                "text": "{ [key: string]: string }"
-              },
-              "default": "{}",
-              "attribute": "options"
-            },
-            {
-              "kind": "field",
-              "name": "selectProvider",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "provider"
-            },
-            {
-              "kind": "field",
-              "name": "iconPosition",
-              "type": {
-                "text": "'start' | 'end' | 'none'"
-              },
-              "default": "'none'",
-              "attribute": "icon-position"
-            },
-            {
-              "kind": "field",
-              "name": "dataUri",
-              "type": {
-                "text": "string"
-              },
-              "description": "The URL to fetch options from. When set , the component fetches JSON from this URL and renders the results as\noptions. The expected format is an array of objects with `key` and `value` properties:\n`[{\"key\": \"us\", \"value\": \"United States\"}, ...]`\nWhen not set, the component works exactly as before using slotted `<zn-option>` elements.\nOnly works with type select.",
-              "attribute": "data-uri"
-            },
-            {
-              "kind": "field",
-              "name": "contextData",
-              "type": {
-                "text": "string"
-              },
-              "description": "Context data to send as a header when fetching options from the URL specified by the `src` property.",
-              "attribute": "context-data"
-            },
-            {
-              "kind": "field",
-              "name": "search",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Enables search/filtering on select inputs.",
-              "attribute": "search"
-            },
-            {
-              "kind": "field",
-              "name": "freeText",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Allows entering values that aren't in the options list on select inputs (\"free text\"). Setting this implies\n`input-type=\"select\"` (unless a data `provider` is used) and forwards the behavior to the inner `<zn-select>`.",
-              "attribute": "free-text"
-            },
-            {
-              "kind": "field",
-              "name": "helpText",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The input's help text. If you need to display HTML, use the `help-text` slot instead. *",
-              "attribute": "help-text"
-            },
-            {
-              "kind": "field",
-              "name": "dir",
-              "type": {
-                "text": "'ltr' | 'rtl' | 'auto'"
-              },
-              "default": "'auto'",
-              "description": "The text direction for the input (ltr or rtl) *",
-              "attribute": "dir"
-            },
-            {
-              "kind": "field",
-              "name": "autocomplete",
-              "type": {
-                "text": "string"
-              },
-              "description": "Specifies what permission the browser has to provide assistance in filling out form field values. Refer to\n[this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.",
-              "attribute": "autocomplete"
-            },
-            {
-              "kind": "field",
-              "name": "hasFocus",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "isEditing",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_valueBeforeEdit",
-              "type": {
-                "text": "string | string[]"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "input",
-              "type": {
-                "text": "ZnInput | ZnSelect"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "defaultValue",
-              "type": {
-                "text": "string | string[]"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "validity",
-              "type": {
-                "text": "ValidityState"
-              },
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "validationMessage",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "checkValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getForm",
-              "return": {
-                "type": {
-                  "text": "HTMLFormElement | null"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "reportValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "setCustomValidity",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "message",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "handleValueChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleIsEditingChange"
-            },
-            {
-              "kind": "field",
-              "name": "mouseEventHandler"
-            },
-            {
-              "kind": "field",
-              "name": "escKeyHandler"
-            },
-            {
-              "kind": "field",
-              "name": "submitKeyHandler"
-            },
-            {
-              "kind": "field",
-              "name": "captureMouseDown"
-            },
-            {
-              "kind": "field",
-              "name": "captureKeyDown"
-            },
-            {
-              "kind": "field",
-              "name": "handleEditClick"
-            },
-            {
-              "kind": "field",
-              "name": "handleSubmitClick"
-            },
-            {
-              "kind": "field",
-              "name": "handleCancelClick"
-            },
-            {
-              "kind": "field",
-              "name": "handleBlur"
-            },
-            {
-              "kind": "field",
-              "name": "handleInput"
-            },
-            {
-              "kind": "method",
-              "name": "moveSlottedOptionsToSelect",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleSlotChange"
-            },
-            {
-              "kind": "method",
-              "name": "_getTextAreaInput",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "HTMLTemplateResult"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_getTextInput",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "HTMLTemplateResult"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_getNumberInput",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "HTMLTemplateResult"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_getSelectInput",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "HTMLTemplateResult"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_getDataSelectInput",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "HTMLTemplateResult"
-                }
-              }
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "value",
-              "type": {
-                "text": "string | string[]"
-              },
-              "default": "''",
-              "fieldName": "value"
-            },
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "name"
-            },
-            {
-              "name": "placeholder",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "placeholder"
-            },
-            {
-              "name": "edit-text",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "editText"
-            },
-            {
-              "name": "conditional",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "conditional"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "disabled"
-            },
-            {
-              "name": "inline",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "inline"
-            },
-            {
-              "name": "padded",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "padded"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "default": "'medium'",
-              "fieldName": "size"
-            },
-            {
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "required"
-            },
-            {
-              "name": "pattern",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "pattern"
-            },
-            {
-              "name": "multiple",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "multiple"
-            },
-            {
-              "name": "clearable",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "clearable"
-            },
-            {
-              "name": "min",
-              "type": {
-                "text": "string | number"
-              },
-              "fieldName": "min"
-            },
-            {
-              "name": "max",
-              "type": {
-                "text": "string | number"
-              },
-              "fieldName": "max"
-            },
-            {
-              "name": "step",
-              "type": {
-                "text": "number | 'any'"
-              },
-              "fieldName": "step"
-            },
-            {
-              "name": "input-type",
-              "type": {
-                "text": "'select' | 'text' | 'data-select' | 'number' | 'textarea'"
-              },
-              "default": "'text'",
-              "fieldName": "inputType"
-            },
-            {
-              "name": "textarea-rows",
-              "type": {
-                "text": "1"
-              },
-              "fieldName": "textareaRows"
-            },
-            {
-              "name": "options",
-              "type": {
-                "text": "{ [key: string]: string }"
-              },
-              "default": "{}",
-              "fieldName": "options"
-            },
-            {
-              "name": "provider",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "selectProvider"
-            },
-            {
-              "name": "icon-position",
-              "type": {
-                "text": "'start' | 'end' | 'none'"
-              },
-              "default": "'none'",
-              "fieldName": "iconPosition"
-            },
-            {
-              "name": "data-uri",
-              "type": {
-                "text": "string"
-              },
-              "description": "The URL to fetch options from. When set , the component fetches JSON from this URL and renders the results as\noptions. The expected format is an array of objects with `key` and `value` properties:\n`[{\"key\": \"us\", \"value\": \"United States\"}, ...]`\nWhen not set, the component works exactly as before using slotted `<zn-option>` elements.\nOnly works with type select.",
-              "fieldName": "dataUri"
-            },
-            {
-              "name": "context-data",
-              "type": {
-                "text": "string"
-              },
-              "description": "Context data to send as a header when fetching options from the URL specified by the `src` property.",
-              "fieldName": "contextData"
-            },
-            {
-              "name": "search",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Enables search/filtering on select inputs.",
-              "fieldName": "search"
-            },
-            {
-              "name": "free-text",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Allows entering values that aren't in the options list on select inputs (\"free text\"). Setting this implies\n`input-type=\"select\"` (unless a data `provider` is used) and forwards the behavior to the inner `<zn-select>`.",
-              "fieldName": "freeText"
-            },
-            {
-              "name": "help-text",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The input's help text. If you need to display HTML, use the `help-text` slot instead. *",
-              "fieldName": "helpText"
-            },
-            {
-              "name": "dir",
-              "type": {
-                "text": "'ltr' | 'rtl' | 'auto'"
-              },
-              "default": "'auto'",
-              "description": "The text direction for the input (ltr or rtl) *",
-              "fieldName": "dir"
-            },
-            {
-              "name": "autocomplete",
-              "type": {
-                "text": "string"
-              },
-              "description": "Specifies what permission the browser has to provide assistance in filling out form field values. Refer to\n[this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.",
-              "fieldName": "autocomplete"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "inline-edit",
-          "tagName": "zn-inline-edit",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/inline-edit\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - Default slot. When `input-type` is `select`, accepts `zn-option` elements to define select options. If provided, takes precedence over the `options` property.\n * @slot example - An example slot.\n * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/inline-edit",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnInlineEdit",
-            "module": "components/inline-edit/inline-edit.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/input/input.js",
       "declarations": [
         {
@@ -18989,6 +18238,757 @@
           "declaration": {
             "name": "ZnInput",
             "module": "components/input/input.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/inline-edit/inline-edit.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnInlineEdit",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Default slot. When `input-type` is `select`, accepts `zn-option` elements to define select options. If provided, takes precedence over the `options` property.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            },
+            {
+              "description": "Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.",
+              "name": "help-text"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "formControlController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new FormControlController(this, { defaultValue: (control: ZnInlineEdit) => control.defaultValue, value: (control: ZnInlineEdit) => { if (control.multiple) { const val = typeof control.value === 'string' ? control.value.split(' ').filter(v => v !== '') : control.value; return val.length > 0 ? val : ''; } return control.value; }, })"
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'help-text', '[default]')"
+            },
+            {
+              "kind": "field",
+              "name": "conditionalController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ConditionalController(this)"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | string[]"
+              },
+              "default": "''",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "placeholder",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "editText",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "edit-text"
+            },
+            {
+              "kind": "field",
+              "name": "conditional",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "conditional"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "inline",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "inline"
+            },
+            {
+              "kind": "field",
+              "name": "padded",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "padded"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "required"
+            },
+            {
+              "kind": "field",
+              "name": "pattern",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "pattern"
+            },
+            {
+              "kind": "field",
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "multiple",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "clearable",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "clearable"
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "type": {
+                "text": "string | number"
+              },
+              "attribute": "min"
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "string | number"
+              },
+              "attribute": "max"
+            },
+            {
+              "kind": "field",
+              "name": "step",
+              "type": {
+                "text": "number | 'any'"
+              },
+              "attribute": "step"
+            },
+            {
+              "kind": "field",
+              "name": "inputType",
+              "type": {
+                "text": "'select' | 'text' | 'data-select' | 'number' | 'textarea'"
+              },
+              "default": "'text'",
+              "attribute": "input-type"
+            },
+            {
+              "kind": "field",
+              "name": "textareaRows",
+              "type": {
+                "text": "1"
+              },
+              "attribute": "textarea-rows"
+            },
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "{ [key: string]: string }"
+              },
+              "default": "{}",
+              "attribute": "options"
+            },
+            {
+              "kind": "field",
+              "name": "selectProvider",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "provider"
+            },
+            {
+              "kind": "field",
+              "name": "iconPosition",
+              "type": {
+                "text": "'start' | 'end' | 'none'"
+              },
+              "default": "'none'",
+              "attribute": "icon-position"
+            },
+            {
+              "kind": "field",
+              "name": "dataUri",
+              "type": {
+                "text": "string"
+              },
+              "description": "The URL to fetch options from. When set , the component fetches JSON from this URL and renders the results as\noptions. The expected format is an array of objects with `key` and `value` properties:\n`[{\"key\": \"us\", \"value\": \"United States\"}, ...]`\nWhen not set, the component works exactly as before using slotted `<zn-option>` elements.\nOnly works with type select.",
+              "attribute": "data-uri"
+            },
+            {
+              "kind": "field",
+              "name": "contextData",
+              "type": {
+                "text": "string"
+              },
+              "description": "Context data to send as a header when fetching options from the URL specified by the `src` property.",
+              "attribute": "context-data"
+            },
+            {
+              "kind": "field",
+              "name": "search",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Enables search/filtering on select inputs.",
+              "attribute": "search"
+            },
+            {
+              "kind": "field",
+              "name": "freeText",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Allows entering values that aren't in the options list on select inputs (\"free text\"). Setting this implies\n`input-type=\"select\"` (unless a data `provider` is used) and forwards the behavior to the inner `<zn-select>`.",
+              "attribute": "free-text"
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The input's help text. If you need to display HTML, use the `help-text` slot instead. *",
+              "attribute": "help-text"
+            },
+            {
+              "kind": "field",
+              "name": "dir",
+              "type": {
+                "text": "'ltr' | 'rtl' | 'auto'"
+              },
+              "default": "'auto'",
+              "description": "The text direction for the input (ltr or rtl) *",
+              "attribute": "dir"
+            },
+            {
+              "kind": "field",
+              "name": "autocomplete",
+              "type": {
+                "text": "string"
+              },
+              "description": "Specifies what permission the browser has to provide assistance in filling out form field values. Refer to\n[this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.",
+              "attribute": "autocomplete"
+            },
+            {
+              "kind": "field",
+              "name": "hasFocus",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "isEditing",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_valueBeforeEdit",
+              "type": {
+                "text": "string | string[]"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "input",
+              "type": {
+                "text": "ZnInput | ZnSelect"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string | string[]"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleValueChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleIsEditingChange"
+            },
+            {
+              "kind": "field",
+              "name": "mouseEventHandler"
+            },
+            {
+              "kind": "field",
+              "name": "escKeyHandler"
+            },
+            {
+              "kind": "field",
+              "name": "submitKeyHandler"
+            },
+            {
+              "kind": "field",
+              "name": "captureMouseDown"
+            },
+            {
+              "kind": "field",
+              "name": "captureKeyDown"
+            },
+            {
+              "kind": "field",
+              "name": "handleEditClick"
+            },
+            {
+              "kind": "field",
+              "name": "handleSubmitClick"
+            },
+            {
+              "kind": "field",
+              "name": "handleCancelClick"
+            },
+            {
+              "kind": "field",
+              "name": "handleBlur"
+            },
+            {
+              "kind": "field",
+              "name": "handleInput"
+            },
+            {
+              "kind": "method",
+              "name": "moveSlottedOptionsToSelect",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleSlotChange"
+            },
+            {
+              "kind": "method",
+              "name": "_getTextAreaInput",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLTemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_getTextInput",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLTemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_getNumberInput",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLTemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_getSelectInput",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLTemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_getDataSelectInput",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLTemplateResult"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string | string[]"
+              },
+              "default": "''",
+              "fieldName": "value"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "name"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "edit-text",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "editText"
+            },
+            {
+              "name": "conditional",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "conditional"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "disabled"
+            },
+            {
+              "name": "inline",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "inline"
+            },
+            {
+              "name": "padded",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "padded"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "fieldName": "size"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "required"
+            },
+            {
+              "name": "pattern",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "pattern"
+            },
+            {
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "multiple"
+            },
+            {
+              "name": "clearable",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "clearable"
+            },
+            {
+              "name": "min",
+              "type": {
+                "text": "string | number"
+              },
+              "fieldName": "min"
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "string | number"
+              },
+              "fieldName": "max"
+            },
+            {
+              "name": "step",
+              "type": {
+                "text": "number | 'any'"
+              },
+              "fieldName": "step"
+            },
+            {
+              "name": "input-type",
+              "type": {
+                "text": "'select' | 'text' | 'data-select' | 'number' | 'textarea'"
+              },
+              "default": "'text'",
+              "fieldName": "inputType"
+            },
+            {
+              "name": "textarea-rows",
+              "type": {
+                "text": "1"
+              },
+              "fieldName": "textareaRows"
+            },
+            {
+              "name": "options",
+              "type": {
+                "text": "{ [key: string]: string }"
+              },
+              "default": "{}",
+              "fieldName": "options"
+            },
+            {
+              "name": "provider",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "selectProvider"
+            },
+            {
+              "name": "icon-position",
+              "type": {
+                "text": "'start' | 'end' | 'none'"
+              },
+              "default": "'none'",
+              "fieldName": "iconPosition"
+            },
+            {
+              "name": "data-uri",
+              "type": {
+                "text": "string"
+              },
+              "description": "The URL to fetch options from. When set , the component fetches JSON from this URL and renders the results as\noptions. The expected format is an array of objects with `key` and `value` properties:\n`[{\"key\": \"us\", \"value\": \"United States\"}, ...]`\nWhen not set, the component works exactly as before using slotted `<zn-option>` elements.\nOnly works with type select.",
+              "fieldName": "dataUri"
+            },
+            {
+              "name": "context-data",
+              "type": {
+                "text": "string"
+              },
+              "description": "Context data to send as a header when fetching options from the URL specified by the `src` property.",
+              "fieldName": "contextData"
+            },
+            {
+              "name": "search",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Enables search/filtering on select inputs.",
+              "fieldName": "search"
+            },
+            {
+              "name": "free-text",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Allows entering values that aren't in the options list on select inputs (\"free text\"). Setting this implies\n`input-type=\"select\"` (unless a data `provider` is used) and forwards the behavior to the inner `<zn-select>`.",
+              "fieldName": "freeText"
+            },
+            {
+              "name": "help-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The input's help text. If you need to display HTML, use the `help-text` slot instead. *",
+              "fieldName": "helpText"
+            },
+            {
+              "name": "dir",
+              "type": {
+                "text": "'ltr' | 'rtl' | 'auto'"
+              },
+              "default": "'auto'",
+              "description": "The text direction for the input (ltr or rtl) *",
+              "fieldName": "dir"
+            },
+            {
+              "name": "autocomplete",
+              "type": {
+                "text": "string"
+              },
+              "description": "Specifies what permission the browser has to provide assistance in filling out form field values. Refer to\n[this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.",
+              "fieldName": "autocomplete"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "inline-edit",
+          "tagName": "zn-inline-edit",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/inline-edit\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - Default slot. When `input-type` is `select`, accepts `zn-option` elements to define select options. If provided, takes precedence over the `options` property.\n * @slot example - An example slot.\n * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/inline-edit",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnInlineEdit",
+            "module": "components/inline-edit/inline-edit.js"
           }
         }
       ]
@@ -40623,7 +40623,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.50",
+    "version": "1.1.51",
     "author": "",
     "license": "MIT"
   }

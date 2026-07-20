@@ -4710,6 +4710,16 @@ declare module "components/inline-edit/inline-edit.component" {
         name: string;
         placeholder: string;
         editText: string;
+        /**
+         * A masked value (e.g. `j***@example.com`) shown in place of the input when not editing. Hovering reveals the
+         * real value via an embedded `zn-reveal`. The real `value` is still what gets edited and submitted.
+         */
+        displayValue: string;
+        /**
+         * When set, the edit input starts empty instead of pre-filled with the current value. Cancelling restores the
+         * original value. Useful with `display-value` when the real value shouldn't be pre-filled into the input.
+         */
+        clearOnEdit: boolean;
         conditional: string;
         disabled: boolean;
         inline: boolean;
@@ -4760,6 +4770,7 @@ declare module "components/inline-edit/inline-edit.component" {
         private hasFocus;
         private isEditing;
         private _valueBeforeEdit;
+        private _editStartValue;
         input: ZnInput | ZnSelect;
         defaultValue: string | string[];
         get validity(): ValidityState;
@@ -8024,6 +8035,8 @@ declare module "components/reveal/reveal.component" {
         initial: string;
         revealed: string;
         hideDelay: number;
+        /** Disables click-to-toggle so the value is only revealed on hover. Clicks still bubble to the parent. */
+        noToggle: boolean;
         private _isRevealed;
         private _isToggled;
         private _hideTimer?;

@@ -54,6 +54,47 @@ Use the `edit-text` attribute to customize the edit button text instead of showi
 </div>
 ```
 
+### Masked Values
+
+Use the `display-value` attribute to mask sensitive data at rest. The masked value is shown in place of the input and
+the real value is revealed on hover (via [`zn-reveal`](/components/reveal)). Clicking the field or the edit button
+switches to the normal inline edit flow, and the real `value` — never the mask — is what gets edited and submitted.
+
+```html:preview
+<div class="form-spacing">
+  <zn-inline-edit name="email"
+                  value="john.doe@example.com"
+                  display-value="j***@example.com">
+  </zn-inline-edit>
+
+  <zn-inline-edit name="phone"
+                  value="555-123-1234"
+                  display-value="•••-•••-1234">
+  </zn-inline-edit>
+</div>
+```
+
+:::tip
+Show enough context in the mask (e.g. the email domain or last 4 digits) so users know what they're looking at before
+revealing. The component doesn't re-mask automatically after a save — update `display-value` in your `zn-submit`
+handler once the server confirms the change.
+:::
+
+### Clear on Edit
+
+Add the `clear-on-edit` attribute to start editing with an empty input instead of the current value — useful for
+secrets where the real value shouldn't be pre-filled. Cancelling (or clicking outside without typing) restores the
+original value.
+
+```html:preview
+<zn-inline-edit name="api-key"
+                value="sk_live_1234567890abcdef"
+                display-value="sk_live_••••••••••••••••"
+                clear-on-edit
+                style="font-family: monospace;">
+</zn-inline-edit>
+```
+
 ### Textarea Input Type
 
 Use `input-type="textarea"` for multi-line text content.

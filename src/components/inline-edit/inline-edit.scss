@@ -127,6 +127,26 @@
     width: 100%;
   }
 
+  &--masked:not(.ai--editing) {
+    .ai__input {
+      display: none;
+    }
+  }
+
+  &__reveal {
+    line-height: var(--zn-line-height-looser);
+    color: rgb(var(--zn-text));
+
+    // Fill the row so hovering anywhere over the field reveals the value
+    &::part(base) {
+      width: 100%;
+      text-decoration: underline;
+      text-decoration-style: dashed;
+      text-decoration-color: rgb(var(--zn-primary), 0.5);
+      text-underline-offset: 3px;
+    }
+  }
+
   &:not(.ai--disabled) {
     .ai__left {
       cursor: pointer;
@@ -160,6 +180,10 @@
       text-decoration: none;
       caret-color: transparent;
       border-radius: 0;
+    }
+
+    .ai__reveal::part(base) {
+      text-decoration: none;
     }
 
     .ai__input::part(display-input) {

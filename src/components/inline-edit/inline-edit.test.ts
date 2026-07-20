@@ -370,4 +370,117 @@ describe('<zn-inline-edit>', () => {
 
     expect(el.value).to.equal('a b');
   });
+
+  // -- Masked display value --
+
+  it('should render a zn-reveal with the masked and real values when display-value is set', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit value="real@example.com" display-value="*****@example.com"></zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    const reveal = el.shadowRoot!.querySelector('zn-reveal')!;
+    expect(reveal).to.exist;
+    expect(reveal.getAttribute('initial')).to.equal('*****@example.com');
+    expect(reveal.getAttribute('revealed')).to.equal('real@example.com');
+  });
+
+  it('should not render a zn-reveal when display-value is not set', async () => {
+    const el = await fixture<ZnInlineEdit>(
+      html`<zn-inline-edit value="hello"></zn-inline-edit>`
+    );
+    await el.updateComplete;
+
+    expect(el.shadowRoot!.querySelector('zn-reveal')).to.not.exist;
+  });
+
+  it('should enter edit mode and hide the zn-reveal when the masked display is clicked', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit value="real@example.com" display-value="*****@example.com"></zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    const reveal = el.shadowRoot!.querySelector('zn-reveal')!;
+    reveal.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+    await el.updateComplete;
+
+    expect(el.shadowRoot!.querySelector('.ai--editing')).to.exist;
+    expect(el.shadowRoot!.querySelector('zn-reveal')).to.not.exist;
+  });
+
+  it('should not enter edit mode from the masked display when disabled', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit value="real@example.com" display-value="*****@example.com" disabled></zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    const reveal = el.shadowRoot!.querySelector('zn-reveal')!;
+    reveal.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+    await el.updateComplete;
+
+    expect(el.shadowRoot!.querySelector('.ai--editing')).to.not.exist;
+  });
+
+  it('should submit the real value, not the display-value, in form data', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <zn-inline-edit name="email" value="real@example.com" display-value="*****@example.com"></zn-inline-edit>
+      </form>
+    `);
+    const el = form.querySelector<ZnInlineEdit>('zn-inline-edit')!;
+    await el.updateComplete;
+
+    const formData = new FormData(form);
+    expect(formData.get('email')).to.equal('real@example.com');
+  });
+
+  // -- clear-on-edit --
+
+  it('should start with an empty input when clear-on-edit is set', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit value="real@example.com" clear-on-edit></zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    const editBtn = el.shadowRoot!.querySelector<HTMLElement>('.button--edit')!;
+    editBtn.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+    await el.updateComplete;
+
+    expect(el.value).to.equal('');
+  });
+
+  it('should restore the original value on cancel when clear-on-edit is set', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit value="real@example.com" clear-on-edit></zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    const editBtn = el.shadowRoot!.querySelector<HTMLElement>('.button--edit')!;
+    editBtn.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+    await el.updateComplete;
+
+    const cancelBtn = el.shadowRoot!.querySelector<HTMLElement>('zn-button[icon="close"]')!;
+    cancelBtn.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+    await el.updateComplete;
+
+    expect(el.shadowRoot!.querySelector('.ai--editing')).to.not.exist;
+    expect(el.value).to.equal('real@example.com');
+  });
+
+  it('should auto-cancel and restore the value on outside click when clear-on-edit is set and nothing was typed', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit value="real@example.com" clear-on-edit></zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    const editBtn = el.shadowRoot!.querySelector<HTMLElement>('.button--edit')!;
+    editBtn.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+    await el.updateComplete;
+
+    document.dispatchEvent(new MouseEvent('click', {bubbles: true}));
+    await el.updateComplete;
+
+    expect(el.shadowRoot!.querySelector('.ai--editing')).to.not.exist;
+    expect(el.value).to.equal('real@example.com');
+  });
 });

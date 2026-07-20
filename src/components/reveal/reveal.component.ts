@@ -41,6 +41,9 @@ export default class ZnReveal extends ZincElement {
 
   @property({type: Number, attribute: 'hide-delay'}) hideDelay: number = 150;
 
+  /** Disables click-to-toggle so the value is only revealed on hover. Clicks still bubble to the parent. */
+  @property({type: Boolean, attribute: 'no-toggle'}) noToggle: boolean = false;
+
   private _isRevealed: boolean = false;
   private _isToggled: boolean = false;
   private _hideTimer?: ReturnType<typeof setTimeout>;
@@ -58,6 +61,8 @@ export default class ZnReveal extends ZincElement {
   }
 
   protected handleToggleReveal() {
+    if (this.noToggle) return;
+
     this._clearHideTimer();
 
     if (this.duration) {
@@ -98,7 +103,8 @@ export default class ZnReveal extends ZincElement {
 
   render() {
     return html`
-      <div class=${classMap({
+      <div part="base"
+           class=${classMap({
         'reveal': true,
         'reveal--revealed': this._isRevealed,
         'reveal--toggled': this._isToggled,

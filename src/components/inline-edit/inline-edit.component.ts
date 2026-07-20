@@ -58,6 +58,18 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   @property({ attribute: 'edit-text' }) editText: string;
 
+  /**
+   * A masked value (e.g. `j***@example.com`) shown in place of the input when not editing. Hovering reveals the
+   * real value via an embedded `zn-reveal`. The real `value` is still what gets edited and submitted.
+   */
+  @property({ attribute: 'display-value' }) displayValue: string = '';
+
+  /**
+   * When set, the edit input starts empty instead of pre-filled with the current value. Cancelling restores the
+   * original value. Useful with `display-value` when the real value shouldn't be pre-filled into the input.
+   */
+  @property({ type: Boolean, attribute: 'clear-on-edit' }) clearOnEdit: boolean = false;
+
   @property() conditional = '';
 
   @property({ type: Boolean }) disabled: boolean
@@ -131,6 +143,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   @state() private isEditing: boolean;
 
   private _valueBeforeEdit: string | string[];
+  private _editStartValue: string | string[];
 
   @query('.ai__input') input: ZnInput | ZnSelect;
 
@@ -212,11 +225,12 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   mouseEventHandler = (e: MouseEvent) => {
     if (this.isEditing && !this.contains(e.target as Node)) {
       const hasChanged = Array.isArray(this.value)
-        ? JSON.stringify(this.value) !== JSON.stringify(this._valueBeforeEdit)
-        : this.value !== this._valueBeforeEdit;
+        ? JSON.stringify(this.value) !== JSON.stringify(this._editStartValue)
+        : this.value !== this._editStartValue;
 
       if (!hasChanged) {
         this.isEditing = false;
+        this.value = this._valueBeforeEdit;
         this.input.blur();
       }
     }
@@ -260,6 +274,10 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     }
     if (!this.isEditing) {
       this._valueBeforeEdit = this.value;
+      if (this.clearOnEdit) {
+        this.value = this.multiple ? [] : '';
+      }
+      this._editStartValue = this.value;
     }
     this.isEditing = true;
   }
@@ -352,9 +370,15 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
         'ai--disabled': this.disabled,
         'ai--inline': this.inline,
         'ai--padded': this.padded,
+        'ai--masked': !!this.displayValue,
       })}" dir="ltr">
 
         <div class="ai__left" @click="${this.disabled ? undefined : this.handleEditClick}">
+          ${this.displayValue && !this.isEditing ? html`
+            <zn-reveal class="ai__reveal"
+                       initial="${this.displayValue}"
+                       revealed="${Array.isArray(this.value) ? this.value.join(' ') : this.value}"
+                       no-toggle></zn-reveal>` : ''}
           ${input}
         </div>
 

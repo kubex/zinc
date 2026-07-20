@@ -102,13 +102,15 @@ export default class ZnTile extends ZincElement {
           <div
             class="tile__link">
             <div class="tile__left">
-              ${hasImage ? html`<slot name="image" part="image" class="tile__image"></slot>` : html``}
+              ${hasImage ? html`
+                <slot name="image" part="image" class="tile__image"></slot>` : html``}
               <div class="tile__content">
                 <p part="caption" class="tile__caption">
                   <slot name="caption">${this.caption}</slot>
                 </p>
                 ${hasDescription ? html`
-                  <p part="description" class="tile__description">${this.description}</p>` : ''}
+                  <p part="description" class="tile__description">
+                    ${this.description}</p>` : html`<slot name="description" class="tile__description"></slot>`}
               </div>
             </div>
           </div>
@@ -117,7 +119,8 @@ export default class ZnTile extends ZincElement {
             ${hasProperties ? html`
               <slot name="properties" part="properties" class="tile__properties"></slot>` : ''}
             ${hasActions ? html`
-              <slot name="actions" part="actions" class="tile__actions" @click=${this._handleActionsClick}></slot>` : ''}
+              <slot name="actions" part="actions" class="tile__actions"
+                    @click=${this._handleActionsClick}></slot>` : ''}
           </div>`}
       </${tag}>`;
   }

@@ -1,0 +1,35 @@
+// Aura — a soft, light-based theme with a pastel violet identity.
+// It inherits the light theme primitives (defined on :root) and only
+// re-points the primary ramp to a softer, more pastel violet so the
+// whole UI takes on the "aura" glow without redefining every token.
+[t="aura"],
+.theme-aura {
+  color-scheme: light;
+
+  /**************************************************************
+   * Theme Tokens — soft violet primary
+   *************************************************************/
+
+  --zn-color-primary-50: hsl(258, 100%, 97%);
+  --zn-color-primary-100: hsl(256, 95%, 94%);
+  --zn-color-primary-200: hsl(255, 90%, 90%);
+  --zn-color-primary-300: hsl(255, 88%, 83%);
+  --zn-color-primary-400: hsl(256, 85%, 75%);
+  --zn-color-primary-500: hsl(255, 82%, 68%);
+  --zn-color-primary-600: hsl(256, 78%, 62%);
+  --zn-color-primary-700: hsl(257, 70%, 54%);
+  --zn-color-primary-800: hsl(258, 68%, 46%);
+  --zn-color-primary-900: hsl(259, 66%, 38%);
+
+  /* Soft, faintly violet-tinted elevations */
+  --zn-shadow-x-small: 0 1px 4px rgba(60, 44, 110, 0.08);
+  --zn-shadow-small: 0 3px 9px rgba(60, 44, 110, 0.12);
+  --zn-shadow-medium: 0 6px 18px rgba(60, 44, 110, 0.12);
+  --zn-shadow-large: 0 6px 20px rgba(60, 44, 110, 0.14);
+  --zn-shadow-x-large: 0 6px 20px rgba(60, 44, 110, 0.22);
+
+  --zn-border-color: 218, 212, 246;
+
+  /* Focus ring follows the softer primary */
+  --zn-input-focus-ring-color: hsl(255 82% 68% / 40%);
+}

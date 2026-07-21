@@ -305,3 +305,55 @@ ul.disc {
 ul.square {
   list-style-type: square;
 }
+
+// Aura — soft, light-based theme with a pastel violet identity.
+// Appended last so it wins source-order over the :root/light defaults on the
+// document element (which carries the `t="aura"` attribute *and* matches :root).
+// Only the source colour tokens and the theme-specific leaf tokens are set;
+// derived tokens (--zn-body, --zn-text, --zn-panel ...) reference these via
+// var() and follow automatically.
+[t="aura"], .theme-aura {
+  --zn-backdrop-color: rgba(30, 27, 60, 0.45);
+
+  --zn-color-text: 42, 32, 89;
+  --zn-color-muted-text: 128, 118, 158;
+
+  --zn-color-base: 255, 255, 255;
+  --zn-color-body: 250, 248, 255;
+  --zn-color-navigation: var(--zn-color-base);
+  --zn-color-navigation-hightlight: 245, 242, 255;
+  --zn-color-border: 228, 222, 246;
+  --zn-color-border-active: 214, 206, 240;
+  --zn-color-tab: 240, 235, 252;
+  --zn-color-panel: 255, 255, 255;
+
+  --zn-color-primary: 139, 110, 245;
+  --zn-color-info: 53, 104, 195;
+  --zn-color-success: 98, 177, 121;
+  --zn-color-warning: 241, 168, 80;
+  --zn-color-error: 236, 68, 91;
+  --zn-color-disabled: 181, 181, 181;
+
+  // Theme-specific leaf tokens (light/dark declare these in their own blocks,
+  // so aura must supply its own — they are not inherited from :root).
+  --zn-panel-opacity: 1;
+  --zn-shadow: 232, 226, 250;
+  --zn-panel-secondary: 248 246 255;
+  --zn-panel-highlight: 245, 242, 255;
+  --zn-panel-highlight-opacity: 1;
+  --zn-input-bg-accent: 240, 236, 252;
+  --zn-bright-bg: 255, 255, 255;
+  --zn-light-text: 130, 120, 160;
+  --zn-dark-text: 60, 44, 110;
+  --zn-purple-text: 124, 92, 246;
+  --zn-accent: 200, 130, 230;
+
+  // Frosted-glass inactive tabs for the zn-page tab navbar (consumed in
+  // components/navbar/navbar.scss, scoped there to :host-context(zn-page)).
+  --navbar-page-inactive-tab-background: rgba(255, 255, 255, 0.3);
+  --navbar-page-inactive-tab-filter: blur(2px);
+
+  .zn-primary {
+    color: rgb(var(--zn-color-primary));
+  }
+}

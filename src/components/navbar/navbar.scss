@@ -107,6 +107,15 @@ ul.navbar {
   }
 }
 
+// Inactive tab surface for the tab navbar rendered inside zn-page. Driven by
+// custom properties (defaulting to no-op) so a theme can opt in to a translucent
+// "glass" treatment — Aura sets these to a frosted white; :host-context(zn-page)
+// keeps it scoped to the page tab bar and off every other navbar usage.
+:host-context(zn-page) ul.navbar li:not(.active):not(.zn-tb-active):not(.more) {
+  background: var(--navbar-page-inactive-tab-background, transparent);
+  backdrop-filter: var(--navbar-page-inactive-tab-filter, none);
+}
+
 :host([baseless]) {
   .navbar__container {
     border-bottom: none;

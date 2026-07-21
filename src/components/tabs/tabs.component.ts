@@ -5,6 +5,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { md5 } from "../../utilities/md5";
 import { MutationController } from '@lit-labs/observers/mutation-controller.js';
 import { property } from 'lit/decorators.js';
+import { shouldRestoreTabSelection } from './tabs-navigation';
 import { Store } from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 
@@ -129,6 +130,12 @@ export default class ZnTabs extends ZincElement {
     const defaultID = this.defaultUri ? this._uriToId(this.defaultUri) : '';
 
     this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "zntab:", this.storeTtl);
+    if (!this.localStorage && !shouldRestoreTabSelection()) {
+      // Session storage survives navigating away and returning. Discard that
+      // stale selection on a fresh navigation, while retaining it for reloads
+      // and browser back/forward navigation.
+      this._store.remove(this.storeKey);
+    }
     Array.from(this.children).forEach((element) => {
       if (element.slot === '') {
         this._panels.set(element.getAttribute('id') || defaultID, [element]);

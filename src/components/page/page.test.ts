@@ -85,6 +85,42 @@ describe('<zn-page>', () => {
     expect(getComputedStyle(selectedTab).display).to.not.equal('none');
   });
 
+  it('restores the active tab for the current history entry only', async () => {
+    const originalState = window.history.state as unknown;
+    window.history.replaceState({}, '');
+
+    try {
+      const renderPage = () => fixture<ZnPage>(html`
+        <zn-page caption="History Page">
+          <zn-tab caption="Overview">Overview Content</zn-tab>
+          <zn-tab caption="Details">Details Content</zn-tab>
+        </zn-page>
+      `);
+
+      const firstPage = await renderPage();
+      await aTimeout(40);
+      const firstNavbar = firstPage.shadowRoot!.querySelector('zn-navbar')!;
+      const detailsItem = firstNavbar.shadowRoot!.querySelectorAll<HTMLElement>('li:not(.more)')[1];
+
+      detailsItem.click();
+      await aTimeout(40);
+      firstPage.remove();
+
+      const restoredPage = await renderPage();
+      await aTimeout(40);
+      expect(restoredPage.getAttribute('active')).to.equal('details');
+      restoredPage.remove();
+
+      // A new history entry has no zn-page tab state, so it starts at the default.
+      window.history.replaceState({}, '');
+      const freshPage = await renderPage();
+      await aTimeout(40);
+      expect(freshPage.getAttribute('active')).to.equal('');
+    } finally {
+      window.history.replaceState(originalState, '');
+    }
+  });
+
   it('creates uri tab panels from page navigation items', async () => {
     const el = await fixture<ZnPage>(html`
       <zn-page caption="Page Title">
@@ -140,6 +176,45 @@ describe('<zn-page>', () => {
     expect(middleDynamicPanel).to.equal(null);
     expect(innerDynamicPanel).to.exist;
     expect(innerDynamicPanel.hasAttribute('selected')).to.equal(true);
+  });
+
+  it('keeps nested page tab selections scoped to the nested page', async () => {
+    const outerPage = await fixture<ZnPage>(html`
+      <zn-page caption="Outer Page">
+        <zn-tab caption="Outer One">
+          <zn-page caption="Inner Page" nested>
+            <zn-tab caption="Inner One">Inner One Content</zn-tab>
+            <zn-tab caption="Inner Two">Inner Two Content</zn-tab>
+          </zn-page>
+        </zn-tab>
+        <zn-tab caption="Outer Two">Outer Two Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(80);
+
+    const innerPage = outerPage.querySelector<ZnPage>('zn-page')!;
+    const outerNavbar = outerPage.shadowRoot!.querySelector('zn-navbar')!;
+    const innerNavbar = innerPage.shadowRoot!.querySelector('zn-navbar')!;
+    const innerSecondItem = innerNavbar.shadowRoot!.querySelectorAll<HTMLElement>('li:not(.more)')[1];
+
+    innerSecondItem.click();
+    await aTimeout(40);
+
+    expect(innerPage.getAttribute('active')).to.equal('inner-two');
+    expect(outerPage.getAttribute('active')).to.equal('outer-one');
+    expect(outerPage.shadowRoot!.querySelector('#outer-one')!.hasAttribute('selected')).to.equal(true);
+    expect(outerPage.shadowRoot!.querySelector('#outer-two')!.hasAttribute('selected')).to.equal(false);
+
+    // Even if a composed selection is delivered to an ancestor navbar, the
+    // ancestor page must ignore an item owned by the nested page.
+    outerNavbar.dispatchEvent(new CustomEvent('zn-select', {
+      bubbles: true,
+      composed: true,
+      detail: {item: innerSecondItem}
+    }));
+    await aTimeout(20);
+
+    expect(outerPage.getAttribute('active')).to.equal('outer-one');
   });
 
   it('uses an explicit zn-tab for overview content', async () => {

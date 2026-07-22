@@ -1,6 +1,6 @@
-import {classMap} from 'lit/directives/class-map.js';
-import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
-import {property} from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
+import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
+import { property } from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './channel-tile.scss';
@@ -38,13 +38,13 @@ export default class ZnChannelTile extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   /** Renders the empty/available face instead of the active face. */
-  @property({type: Boolean, reflect: true}) available: boolean = false;
+  @property({ type: Boolean, reflect: true }) available: boolean = false;
 
   /** (Available only) the tile is reserving an incoming item awaiting acceptance. */
-  @property({type: Boolean, reflect: true}) incoming: boolean = false;
+  @property({ type: Boolean, reflect: true }) incoming: boolean = false;
 
   /** Free-form grouping/theming key (reflected so consumers can query/style by it). */
-  @property({reflect: true}) variant: string = '';
+  @property({ reflect: true }) variant: string = '';
 
   /** Top-bar text (e.g. brand). */
   @property() header: string = '';
@@ -53,7 +53,7 @@ export default class ZnChannelTile extends ZincElement {
   @property() icon: string = '';
 
   /** Accent color driving the leading icon and `--channel-tile-color`. */
-  @property({reflect: true}) color: ChannelTileColor = 'default';
+  @property({ reflect: true }) color: ChannelTileColor = 'default';
 
   /** Primary line. Defaults to "Available" in the available state when unset. */
   @property() title: string = '';
@@ -62,37 +62,37 @@ export default class ZnChannelTile extends ZincElement {
   @property() subtitle: string = '';
 
   /** (Active only) progress bar fill, 0–100. */
-  @property({type: Number}) progress: number = 0;
+  @property({ type: Number }) progress: number = 0;
 
   /** (Active only) CSS color for the progress bar fill. */
-  @property({attribute: 'progress-color'}) progressColor: string = '';
+  @property({ attribute: 'progress-color' }) progressColor: string = '';
 
   /** Identifier carried in `zn-accept` / `zn-reject` event details. */
-  @property({attribute: 'item-id'}) itemId: string = '';
+  @property({ attribute: 'item-id' }) itemId: string = '';
 
   /** (Available only) when set, accepting fetches this URI unless `zn-accept` is canceled. */
-  @property({attribute: 'accept-uri'}) acceptUri: string = '';
+  @property({ attribute: 'accept-uri' }) acceptUri: string = '';
 
   /** (Available/incoming) epoch (seconds or millis) at which the reservation window ends. */
-  @property({type: Number, attribute: 'reserved-until'}) reservedUntil: number = 0;
+  @property({ type: Number, attribute: 'reserved-until' }) reservedUntil: number = 0;
 
   /** (Available/incoming) auto-accept window length in milliseconds. */
-  @property({type: Number, attribute: 'auto-accept-delay'}) autoAcceptDelay: number = 0;
+  @property({ type: Number, attribute: 'auto-accept-delay' }) autoAcceptDelay: number = 0;
 
   /** (Available/incoming) whether a reject control is offered. */
-  @property({type: Boolean, reflect: true}) rejectable: boolean = false;
+  @property({ type: Boolean, reflect: true }) rejectable: boolean = false;
 
   /** Icon for the built-in accept button. */
-  @property({attribute: 'accept-icon'}) acceptIcon: string = 'plus@lu';
+  @property({ attribute: 'accept-icon' }) acceptIcon: string = 'plus@lu';
 
   /** Optional analytics id forwarded to the built-in accept button. */
-  @property({attribute: 'accept-gaid'}) acceptGaid: string = '';
+  @property({ attribute: 'accept-gaid' }) acceptGaid: string = '';
 
   /** Icon for the reject control. */
-  @property({attribute: 'reject-icon'}) rejectIcon: string = 'call_end';
+  @property({ attribute: 'reject-icon' }) rejectIcon: string = 'close';
 
   /** Accessible label for the reject control. */
-  @property({attribute: 'reject-label'}) rejectLabel: string = 'Reject';
+  @property({ attribute: 'reject-label' }) rejectLabel: string = 'Reject';
 
   private _tickInterval: number | undefined;
   private _autoAcceptFired: string = '';
@@ -152,10 +152,10 @@ export default class ZnChannelTile extends ZincElement {
   private _accept(): void {
     const event = this.emit('zn-accept', {
       cancelable: true,
-      detail: {itemId: this.itemId, acceptUri: this.acceptUri},
+      detail: { itemId: this.itemId, acceptUri: this.acceptUri },
     });
     if (event.defaultPrevented || !this.acceptUri) return;
-    fetch(this.acceptUri, {credentials: 'same-origin'}).catch((err) => {
+    fetch(this.acceptUri, { credentials: 'same-origin' }).catch((err) => {
       console.error('Error accepting interaction', err);
     });
   }
@@ -186,7 +186,7 @@ export default class ZnChannelTile extends ZincElement {
   private _handleReject = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    this.emit('zn-reject', {detail: {itemId: this.itemId, variant: this.variant}});
+    this.emit('zn-reject', { detail: { itemId: this.itemId, variant: this.variant } });
   };
 
   private _handleClick = (e: MouseEvent) => {
@@ -226,13 +226,19 @@ export default class ZnChannelTile extends ZincElement {
             ${remaining !== null
               ? this.title
                 ? html`
-                  <h3 class="channel-tile__title"><slot name="title">${this.title}</slot></h3>
+                  <h3 class="channel-tile__title">
+                    <slot name="title">${this.title}</slot>
+                  </h3>
                   <p class="channel-tile__subtitle">${this.subtitle} (${remaining}s)</p>`
                 : html`
                   <h3 class="channel-tile__title">${this.subtitle} (${remaining}s)</h3>`
               : html`
-                <h3 class="channel-tile__title"><slot name="title">${title}</slot></h3>
-                <p class="channel-tile__subtitle"><slot name="subtitle">${this.subtitle}</slot></p>`}
+                <h3 class="channel-tile__title">
+                  <slot name="title">${title}</slot>
+                </h3>
+                <p class="channel-tile__subtitle">
+                  <slot name="subtitle">${this.subtitle}</slot>
+                </p>`}
           </div>
           <slot name="footer" class="channel-tile__footer"></slot>
         </div>

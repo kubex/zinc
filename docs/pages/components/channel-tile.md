@@ -89,6 +89,7 @@ countdown overlay. When the window elapses the tile auto-accepts via `accept-uri
     available
     incoming
     rejectable
+    accept-icon="phone_callback"
     item-id="chat-5500"
     title="Incoming chat"
     subtitle="Auto-accepting…"

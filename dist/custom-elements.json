@@ -49,79 +49,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -292,6 +219,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -9857,6 +9857,7 @@
               "type": {
                 "text": "string | HTMLElement | undefined"
               },
+              "description": "Overrides where the calendar popup is mounted. By default it renders at the document level\n(or inside the containing dialog/popover) so it can't be clipped by ancestor shadow roots\nor overflow containers — you rarely need to set this.",
               "attribute": "container"
             },
             {
@@ -9964,6 +9965,28 @@
             {
               "kind": "method",
               "name": "init"
+            },
+            {
+              "kind": "method",
+              "name": "getCalendarContainer",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Resolves where the calendar should be mounted. By default AirDatepicker mounts it in a global\ncontainer on `document.body`, so ancestor shadow roots and overflow containers can't clip it.\nHowever, when the datepicker is inside a top-layer element (a modal `<dialog>` or a popover),\na document-level calendar would render behind it and be inert, so we mount inside that element."
+            },
+            {
+              "kind": "method",
+              "name": "findTopLayerAncestor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "description": "Finds the closest `<dialog>` or popover ancestor, crossing shadow DOM boundaries."
             },
             {
               "kind": "method",
@@ -10402,6 +10425,7 @@
               "type": {
                 "text": "string | HTMLElement | undefined"
               },
+              "description": "Overrides where the calendar popup is mounted. By default it renders at the document level\n(or inside the containing dialog/popover) so it can't be clipped by ancestor shadow roots\nor overflow containers — you rarely need to set this.",
               "fieldName": "container"
             }
           ],
@@ -38586,124 +38610,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/timer/timer.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnTimer",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "timestamp",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "default": "''",
-              "attribute": "timestamp"
-            },
-            {
-              "kind": "field",
-              "name": "_timerId",
-              "type": {
-                "text": "number | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "_getLastMessage",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_getTimes",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "diff",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "timestamp",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "timestamp"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "timer",
-          "tagName": "zn-timer",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/timer\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/timer",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnTimer",
-            "module": "components/timer/timer.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/toggle/toggle.js",
       "declarations": [
         {
@@ -39463,6 +39369,124 @@
           "declaration": {
             "name": "ZnTooltip",
             "module": "components/tooltip/tooltip.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/timer/timer.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnTimer",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "timestamp",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''",
+              "attribute": "timestamp"
+            },
+            {
+              "kind": "field",
+              "name": "_timerId",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "_getLastMessage",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_getTimes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "diff",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "timestamp",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "timestamp"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "timer",
+          "tagName": "zn-timer",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/timer\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/timer",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnTimer",
+            "module": "components/timer/timer.js"
           }
         }
       ]

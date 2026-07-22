@@ -570,6 +570,7 @@
             <li data-level="3"><a href="#programmatic-control">Programmatic Control</a></li>
             <li data-level="3"><a href="#customizing-label-position">Customizing Label Position</a></li>
             <li data-level="3"><a href="#date-time">Date Time</a></li>
+            <li data-level="3"><a href="#dialogs-and-shadow-dom">Dialogs &amp; Shadow DOM</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
             <li data-level="2"><a href="#properties">Properties</a></li>
@@ -2126,6 +2127,73 @@
               </button>
             </div>
           </div>
+          <h3 id="dialogs-and-shadow-dom" class="anchor-heading">
+            Dialogs &amp; Shadow DOM<a
+              href="#dialogs-and-shadow-dom"
+              aria-label='Direct link to "Dialogs &amp; Shadow DOM"'
+            ></a>
+          </h3>
+          <p>
+            The calendar popup renders at the document level, so it is never clipped by ancestor shadow roots or
+            <code>overflow</code> containers. When the datepicker sits inside a modal dialog or popover, the calendar
+            mounts inside that element instead so it stays visible and interactive above the top layer.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-button id="datepicker-dialog-opener">Open Dialog</zn-button>
+              <zn-dialog id="datepicker-dialog" label="Book a meeting">
+                <zn-datepicker label="Meeting date"></zn-datepicker>
+              </zn-dialog>
+
+              <script>
+                (() => {
+                  const dialog = document.querySelector('#datepicker-dialog');
+                  document.querySelector('#datepicker-dialog-opener').addEventListener('click', () => dialog.show());
+                })();
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-377">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-480"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>datepicker-dialog-opener<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Open Dialog<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-dialog</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>datepicker-dialog<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Book a meeting<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-datepicker</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Meeting date<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-datepicker</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-dialog</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> dialog <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#datepicker-dialog'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#datepicker-dialog-opener'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> dialog<span class="token punctuation">.</span><span class="token function">show</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-480"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-377"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <p>Use the <code>container</code> attribute only if you need to mount the calendar somewhere specific.</p>
 
           <h2 id="importing" class="anchor-heading">
             Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
@@ -2148,7 +2216,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-480"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.54/dist/components/datepicker/datepicker.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-480"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-481"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.54/dist/components/datepicker/datepicker.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-481"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -2163,12 +2231,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-481"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.54/dist/components/datepicker/datepicker.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-481"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-482"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.54/dist/components/datepicker/datepicker.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-482"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-482"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/datepicker/datepicker.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-482"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-483"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/datepicker/datepicker.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-483"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -2656,6 +2724,22 @@
                   <td>
                     <code>"hh:mm AA"</code>
                   </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">container</code>
+                  </td>
+                  <td>
+                    Overrides where the calendar popup is mounted. By default it renders at the document level (or
+                    inside the containing dialog/popover) so it can’t be clipped by ancestor shadow roots or overflow
+                    containers — you rarely need to set this.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string | HTMLElement | undefined</code>
+                  </td>
+                  <td>-</td>
                 </tr>
 
                 <tr>

@@ -2929,6 +2929,11 @@ declare module "components/datepicker/datepicker.component" {
          * AA — day period upper case
          */
         timeFormat?: string;
+        /**
+         * Overrides where the calendar popup is mounted. By default it renders at the document level
+         * (or inside the containing dialog/popover) so it can't be clipped by ancestor shadow roots
+         * or overflow containers — you rarely need to set this.
+         */
         container?: string | HTMLElement;
         private _instance;
         get timestamp(): number;
@@ -2954,6 +2959,15 @@ declare module "components/datepicker/datepicker.component" {
         /** Sets a custom validation message. Pass an empty string to restore validity. */
         setCustomValidity(message: string): void;
         init(): void;
+        /**
+         * Resolves where the calendar should be mounted. By default AirDatepicker mounts it in a global
+         * container on `document.body`, so ancestor shadow roots and overflow containers can't clip it.
+         * However, when the datepicker is inside a top-layer element (a modal `<dialog>` or a popover),
+         * a document-level calendar would render behind it and be inert, so we mount inside that element.
+         */
+        private getCalendarContainer;
+        /** Finds the closest `<dialog>` or popover ancestor, crossing shadow DOM boundaries. */
+        private findTopLayerAncestor;
         private handleInput;
         private handleChange;
         private handleInvalid;

@@ -16,28 +16,6 @@
           "js": { "properties": [], "events": [] }
         },
         {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -92,6 +70,28 @@
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -2843,6 +2843,7 @@
             },
             {
               "name": "container",
+              "description": "Overrides where the calendar popup is mounted. By default it renders at the document level\n(or inside the containing dialog/popover) so it can't be clipped by ancestor shadow roots\nor overflow containers — you rarely need to set this.",
               "value": { "type": "string | HTMLElement | undefined" }
             }
           ],
@@ -3007,6 +3008,7 @@
               },
               {
                 "name": "container",
+                "description": "Overrides where the calendar popup is mounted. By default it renders at the document level\n(or inside the containing dialog/popover) so it can't be clipped by ancestor shadow roots\nor overflow containers — you rarely need to set this.",
                 "type": "string | HTMLElement | undefined"
               },
               { "name": "timestamp", "type": "number" },
@@ -9515,33 +9517,6 @@
           }
         },
         {
-          "name": "zn-timer",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "timestamp",
-              "value": { "type": "string", "default": "''" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-toggle",
           "description": "Toggles allow the user to switch an option on or off.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted when the toggle receives input.\n\n### **Slots:**\n - _default_ - The toggle's label.\n\n### **CSS Properties:**\n - **--zn-toggle-margin** - The margin around the toggle switch. Defaults to `8px 0`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper containing the toggle switch.\n- **control** - The toggle switch control (the circular button that slides).",
           "doc-url": "",
@@ -9738,6 +9713,33 @@
               {
                 "name": "zn-after-hide",
                 "description": "Emitted after the tooltip is hidden."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-timer",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "timestamp",
+              "value": { "type": "string", "default": "''" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
               }
             ]
           }

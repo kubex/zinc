@@ -202,7 +202,6 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
             </zn-option>`)}
         </zn-select>
         <input id="main-input" name="${this.name}" value="${this.value}" hidden>
-        <div id="air-datepicker-query-builder-container" class="air-datepicker-global-container"></div>
       </div>
     `;
   }
@@ -399,7 +398,6 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
       <zn-datepicker
         name="${uniqueId}"
         format-time="HH:mm"
-        .container=${this.container.querySelector('#air-datepicker-query-builder-container')}
         time-picker="${hasTime}"
         class="query-builder__value"
         @zn-change="${(e: ZnChangeEvent) => this._updateDateValue(uniqueId, e, submitFormat)}"

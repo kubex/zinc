@@ -13,6 +13,7 @@ import ZnIcon from "../icon";
 import ZnTooltip from "../tooltip";
 import type {ZincFormControl} from '../../internal/zinc-element';
 
+import airDatepickerStyles from '../../../scss/air-datapicker.scss';
 import styles from './datepicker.scss';
 
 /**
@@ -174,9 +175,13 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
    * AA — day period upper case
    */
   @property({attribute: 'format-time'}) timeFormat?: string = "hh:mm AA";
+
+  /**
+   * Overrides where the calendar popup is mounted. By default it renders at the document level
+   * (or inside the containing dialog/popover) so it can't be clipped by ancestor shadow roots
+   * or overflow containers — you rarely need to set this.
+   */
   @property({attribute: 'container'}) container?: string | HTMLElement;
-
-
 
   private _instance: AirDatepicker<HTMLInputElement>;
 
@@ -285,7 +290,7 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
         timepicker: this.timePicker,
         onlyTimepicker: this.onlyTimepicker,
         timeFormat: this.timeFormat,
-        container: this.container,
+        container: this.container ?? this.getCalendarContainer(),
         altField: timestampField,
         onSelect: ({date}) => {
         // Blur the input after selection to prevent invisible keyboard navigation
@@ -329,6 +334,49 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
 
       this._instance = new AirDatepicker(inputElement, options);
     }
+  }
+
+  /**
+   * Resolves where the calendar should be mounted. By default AirDatepicker mounts it in a global
+   * container on `document.body`, so ancestor shadow roots and overflow containers can't clip it.
+   * However, when the datepicker is inside a top-layer element (a modal `<dialog>` or a popover),
+   * a document-level calendar would render behind it and be inert, so we mount inside that element.
+   */
+  private getCalendarContainer(): HTMLElement | undefined {
+    const topLayer = this.findTopLayerAncestor();
+    if (!topLayer) {
+      return undefined;
+    }
+
+    let container = topLayer.querySelector<HTMLElement>(':scope > .zn-datepicker-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'air-datepicker-global-container zn-datepicker-container';
+      // Fixed positioning escapes the top-layer element's overflow clipping; AirDatepicker
+      // positions the calendar relative to this container's actual rect, so the math holds
+      container.style.cssText = 'position: fixed; top: 0; left: 0;';
+      topLayer.appendChild(container);
+    }
+
+    // Document-level calendar styles can't pierce a shadow root, so adopt them where needed
+    const root = container.getRootNode();
+    if (root instanceof ShadowRoot && !root.adoptedStyleSheets.includes(getAirDatepickerSheet())) {
+      root.adoptedStyleSheets = [...root.adoptedStyleSheets, getAirDatepickerSheet()];
+    }
+
+    return container;
+  }
+
+  /** Finds the closest `<dialog>` or popover ancestor, crossing shadow DOM boundaries. */
+  private findTopLayerAncestor(): HTMLElement | null {
+    let node: Node | null = this.assignedSlot ?? this.parentNode;
+    while (node) {
+      if (node instanceof HTMLElement && (node.tagName === 'DIALOG' || node.hasAttribute('popover'))) {
+        return node;
+      }
+      node = (node as Element).assignedSlot ?? (node instanceof ShadowRoot ? node.host : node.parentNode);
+    }
+    return null;
   }
 
   private handleInput(event?: InputEvent) {
@@ -693,6 +741,16 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
         </div>
       </div>`
   }
+}
+
+let airDatepickerSheet: CSSStyleSheet | undefined;
+
+function getAirDatepickerSheet(): CSSStyleSheet {
+  if (!airDatepickerSheet) {
+    airDatepickerSheet = new CSSStyleSheet();
+    airDatepickerSheet.replaceSync(String(airDatepickerStyles));
+  }
+  return airDatepickerSheet;
 }
 
 const enLocale: Partial<AirDatepickerLocale> = {

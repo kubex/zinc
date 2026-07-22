@@ -427,3 +427,23 @@ Displays time.
   help-text="Select date and time">
 </zn-datepicker>
 ```
+
+### Dialogs & Shadow DOM
+
+The calendar popup renders at the document level, so it is never clipped by ancestor shadow roots or
+`overflow` containers. When the datepicker sits inside a modal dialog or popover, the calendar mounts
+inside that element instead so it stays visible and interactive above the top layer.
+
+```html:preview
+<zn-button id="datepicker-dialog-opener">Open Dialog</zn-button>
+<zn-dialog id="datepicker-dialog" label="Book a meeting">
+  <zn-datepicker label="Meeting date"></zn-datepicker>
+</zn-dialog>
+
+<script>
+  const dialog = document.querySelector('#datepicker-dialog');
+  document.querySelector('#datepicker-dialog-opener').addEventListener('click', () => dialog.show());
+</script>
+```
+
+Use the `container` attribute only if you need to mount the calendar somewhere specific.

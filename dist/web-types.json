@@ -44,6 +44,10 @@
               }
             },
             {
+              "name": "center",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
               "name": "size",
               "value": {
                 "type": "'small' | 'medium' | 'large'",
@@ -68,6 +72,7 @@
                 "name": "level",
                 "type": "'primary' | 'error' | 'info' | 'success' | 'warning' | 'note' | 'cosmic'"
               },
+              { "name": "center", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
             "events": [
@@ -8150,87 +8155,6 @@
           }
         },
         {
-          "name": "zn-simple-chart",
-          "description": "A simple, pre-styled bar chart.\n---\n",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "datasets",
-              "value": { "type": "{ data: number[] }[] | undefined" }
-            },
-            { "name": "labels", "value": { "type": "string[] | undefined" } },
-            {
-              "name": "enable-animations",
-              "value": { "type": "boolean | number", "default": "false" }
-            }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              {
-                "name": "datasets",
-                "type": "{ data: number[] }[] | undefined"
-              },
-              { "name": "labels", "type": "string[] | undefined" },
-              { "name": "enableAnimations", "type": "boolean | number" }
-            ],
-            "events": []
-          }
-        },
-        {
-          "name": "zn-skeleton",
-          "description": "Skeleton loaders provide visual placeholders while content is loading, improving perceived performance and user experience.\n---\n",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "speed",
-              "description": "Animation speed for the shimmer effect. Default: \"3s\"",
-              "value": { "type": "string", "default": "'3s'" }
-            },
-            {
-              "name": "width",
-              "description": "Width of the skeleton element. Default: \"100%\"",
-              "value": { "type": "string", "default": "'100%'" }
-            },
-            {
-              "name": "height",
-              "description": "Height of the skeleton element. Default: \"20px\"",
-              "value": { "type": "string", "default": "'20px'" }
-            },
-            {
-              "name": "radius",
-              "description": "Border radius of the skeleton element. Default: \"4px\"",
-              "value": { "type": "string", "default": "'4px'" }
-            }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              {
-                "name": "speed",
-                "description": "Animation speed for the shimmer effect. Default: \"3s\"",
-                "type": "string"
-              },
-              {
-                "name": "width",
-                "description": "Width of the skeleton element. Default: \"100%\"",
-                "type": "string"
-              },
-              {
-                "name": "height",
-                "description": "Height of the skeleton element. Default: \"20px\"",
-                "type": "string"
-              },
-              {
-                "name": "radius",
-                "description": "Border radius of the skeleton element. Default: \"4px\"",
-                "type": "string"
-              }
-            ],
-            "events": []
-          }
-        },
-        {
           "name": "zn-slideout",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the slideout is opens.\n- **zn-close** - Emitted when the slideout is closed.\n- **zn-request-close** - Emitted when the user attempts to close the slideout by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the slideout open. Avoid using this unless closing the slideout will result in destructive behavior such as data loss.\n\n### **Methods:**\n - **show()** - Shows the slideout.\n- **hide()** - Hides the slideout.\n\n### **Slots:**\n - _default_ - The default slot.\n- **label** - The slideout's label. Alternatively you can use the `label` attribute.\n\n### **CSS Properties:**\n - **--width** - The preferred width of the slideout. Note the slideout will shrink to accommodate smaller screens. _(default: undefined)_\n- **--header-spacing** - The amount of padding to use for the header. _(default: undefined)_\n- **--body-spacing** - The amount of padding to use for the body. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The slideout's header. This element wraps the title and header actions.\n- **close-button** - The slideout's close button.\n- **close-button__base** - The close buttons exported `base` part.\n- **body** - The slideout's body.",
           "doc-url": "",
@@ -8309,6 +8233,87 @@
                 "description": "Emitted when the user attempts to close the slideout by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the slideout open. Avoid using this unless closing the slideout will result in destructive behavior such as data loss."
               }
             ]
+          }
+        },
+        {
+          "name": "zn-simple-chart",
+          "description": "A simple, pre-styled bar chart.\n---\n",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "datasets",
+              "value": { "type": "{ data: number[] }[] | undefined" }
+            },
+            { "name": "labels", "value": { "type": "string[] | undefined" } },
+            {
+              "name": "enable-animations",
+              "value": { "type": "boolean | number", "default": "false" }
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              {
+                "name": "datasets",
+                "type": "{ data: number[] }[] | undefined"
+              },
+              { "name": "labels", "type": "string[] | undefined" },
+              { "name": "enableAnimations", "type": "boolean | number" }
+            ],
+            "events": []
+          }
+        },
+        {
+          "name": "zn-skeleton",
+          "description": "Skeleton loaders provide visual placeholders while content is loading, improving perceived performance and user experience.\n---\n",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "speed",
+              "description": "Animation speed for the shimmer effect. Default: \"3s\"",
+              "value": { "type": "string", "default": "'3s'" }
+            },
+            {
+              "name": "width",
+              "description": "Width of the skeleton element. Default: \"100%\"",
+              "value": { "type": "string", "default": "'100%'" }
+            },
+            {
+              "name": "height",
+              "description": "Height of the skeleton element. Default: \"20px\"",
+              "value": { "type": "string", "default": "'20px'" }
+            },
+            {
+              "name": "radius",
+              "description": "Border radius of the skeleton element. Default: \"4px\"",
+              "value": { "type": "string", "default": "'4px'" }
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              {
+                "name": "speed",
+                "description": "Animation speed for the shimmer effect. Default: \"3s\"",
+                "type": "string"
+              },
+              {
+                "name": "width",
+                "description": "Width of the skeleton element. Default: \"100%\"",
+                "type": "string"
+              },
+              {
+                "name": "height",
+                "description": "Height of the skeleton element. Default: \"20px\"",
+                "type": "string"
+              },
+              {
+                "name": "radius",
+                "description": "Border radius of the skeleton element. Default: \"4px\"",
+                "type": "string"
+              }
+            ],
+            "events": []
           }
         },
         {

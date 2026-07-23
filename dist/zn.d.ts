@@ -1446,6 +1446,7 @@ declare module "components/alert/alert.component" {
         collapse: boolean;
         appearance: 'transparent' | 'solid';
         level: 'primary' | 'error' | 'info' | 'success' | 'warning' | 'note' | 'cosmic';
+        center: boolean;
         size: 'small' | 'medium' | 'large';
         render(): import("lit-html").TemplateResult<1>;
         hideAlert(): void;
@@ -3394,6 +3395,7 @@ declare module "components/data-table/data-table.component" {
     import { type ZnFilterChangeEvent } from "events/zn-filter-change";
     import { type ZnSearchChangeEvent } from "events/zn-search-change";
     import ZincElement from "internal/zinc-element";
+    import ZnAlert from "components/alert/index";
     import ZnButton from "components/button/index";
     import ZnButtonGroup from "components/button-group/index";
     import ZnChip from "components/chip/index";
@@ -3431,11 +3433,17 @@ declare module "components/data-table/data-table.component" {
         actions?: ActionConfig[];
         cells: Cell[];
     }
+    interface ResponseError {
+        text: string;
+        icon?: string;
+        level?: 'primary' | 'error' | 'info' | 'success' | 'warning' | 'note';
+    }
     interface Response {
         rows: Row[];
         perPage: number;
         total: number;
         page: number;
+        error?: ResponseError;
     }
     export enum ActionSlots {
         delete = "delete-action",
@@ -3481,6 +3489,7 @@ declare module "components/data-table/data-table.component" {
      * @status experimental
      * @since 1.0
      *
+     * @dependency zn-alert
      * @dependency zn-button
      * @dependency zn-empty-state
      * @dependency zn-chip
@@ -3511,6 +3520,7 @@ declare module "components/data-table/data-table.component" {
     export default class ZnDataTable extends ZincElement {
         static styles: CSSResultGroup;
         static dependencies: {
+            'zn-alert': typeof ZnAlert;
             'zn-button': typeof ZnButton;
             'zn-empty-state': typeof ZnEmptyState;
             'zn-chip': typeof ZnChip;
@@ -3579,8 +3589,9 @@ declare module "components/data-table/data-table.component" {
         searchChangeListener: (e: ZnSearchChangeEvent) => void;
         emptyState(): TemplateResult<1>;
         renderTable(data: Response): TemplateResult<1>;
+        private renderErrorAlert;
         humanize(str: string): string;
-        renderTableData(data: any): TemplateResult<1>;
+        renderTableData(data: any, error?: ResponseError): TemplateResult<1>;
         getTableHeader(): TemplateResult<1>;
         getTableFooter(): TemplateResult<1>;
         getRowsSelected(): TemplateResult<1> | null;

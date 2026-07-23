@@ -18329,6 +18329,16 @@
             },
             {
               "kind": "field",
+              "name": "triggerSubmit",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "When enabled, pressing enter will always submit the surrounding form, even when the form uses\nenter-navigation to move between fields.",
+              "attribute": "trigger-submit"
+            },
+            {
+              "kind": "field",
               "name": "valueAsDate",
               "description": "Gets or sets the current value as `date` object. Returns `null` if the value can't be converted. This will use\nthe native `<input type=\"{{type}}\">` implementation and may result in an error."
             },
@@ -19071,6 +19081,15 @@
               },
               "description": "Tells the browser what type of data will be entered by the user, allowing it to display the appropriate virtual\nkeyboard on supportive devices.",
               "fieldName": "inputmode"
+            },
+            {
+              "name": "trigger-submit",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "When enabled, pressing enter will always submit the surrounding form, even when the form uses\nenter-navigation to move between fields.",
+              "fieldName": "triggerSubmit"
             }
           ],
           "superclass": {
@@ -38787,12 +38806,20 @@
             {
               "description": "The toggle switch control (the circular button that slides).",
               "name": "control"
+            },
+            {
+              "description": "The container that wraps the toggle's description.",
+              "name": "description"
             }
           ],
           "slots": [
             {
               "description": "The toggle's label.",
               "name": ""
+            },
+            {
+              "description": "A description of the toggle's label. Alternatively, you can use the `description` attribute.",
+              "name": "description"
             },
             {
               "description": "Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute.",
@@ -38805,7 +38832,7 @@
               "name": "hasSlotController",
               "privacy": "private",
               "readonly": true,
-              "default": "new HasSlotController(this, 'help-text')"
+              "default": "new HasSlotController(this, 'help-text', 'description')"
             },
             {
               "kind": "field",
@@ -38966,6 +38993,16 @@
               },
               "default": "''",
               "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The toggle's description, displayed under the label. If you need to display HTML, use the `description` slot instead.",
+              "attribute": "description"
             },
             {
               "kind": "field",
@@ -39212,6 +39249,15 @@
               "fieldName": "label"
             },
             {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The toggle's description, displayed under the label. If you need to display HTML, use the `description` slot instead.",
+              "fieldName": "description"
+            },
+            {
               "name": "label-position",
               "type": {
                 "text": "'top' | 'left' | 'right'"
@@ -39236,7 +39282,7 @@
           "tagNameWithoutPrefix": "toggle",
           "tagName": "zn-toggle",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Toggles allow the user to switch an option on or off.\n * @documentation https://zinc.style/components/toggle\n * @status stable\n * @since 1.0\n *\n * @dependency zn-tooltip\n *\n * @event zn-input - Emitted when the toggle receives input.\n *\n * @slot - The toggle's label.\n * @slot help-text - Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute.\n *\n * @csspart base - The component's base wrapper containing the toggle switch.\n * @csspart control - The toggle switch control (the circular button that slides).\n *\n * @cssproperty --zn-toggle-margin - The margin around the toggle switch. Defaults to `8px 0`.\n */",
+          "jsDoc": "/**\n * @summary Toggles allow the user to switch an option on or off.\n * @documentation https://zinc.style/components/toggle\n * @status stable\n * @since 1.0\n *\n * @dependency zn-tooltip\n *\n * @event zn-input - Emitted when the toggle receives input.\n *\n * @slot - The toggle's label.\n * @slot description - A description of the toggle's label. Alternatively, you can use the `description` attribute.\n * @slot help-text - Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute.\n *\n * @csspart base - The component's base wrapper containing the toggle switch.\n * @csspart control - The toggle switch control (the circular button that slides).\n * @csspart description - The container that wraps the toggle's description.\n *\n * @cssproperty --zn-toggle-margin - The margin around the toggle switch. Defaults to `8px 0`.\n */",
           "documentation": "https://zinc.style/components/toggle",
           "status": "stable",
           "since": "1.0",
@@ -40780,7 +40826,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.59",
+    "version": "1.1.60",
     "author": "",
     "license": "MIT"
   }

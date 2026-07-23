@@ -1309,10 +1309,12 @@ declare module "components/toggle/toggle.component" {
      * @event zn-input - Emitted when the toggle receives input.
      *
      * @slot - The toggle's label.
+     * @slot description - A description of the toggle's label. Alternatively, you can use the `description` attribute.
      * @slot help-text - Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute.
      *
      * @csspart base - The component's base wrapper containing the toggle switch.
      * @csspart control - The toggle switch control (the circular button that slides).
+     * @csspart description - The container that wraps the toggle's description.
      *
      * @cssproperty --zn-toggle-margin - The margin around the toggle switch. Defaults to `8px 0`.
      */
@@ -1337,6 +1339,8 @@ declare module "components/toggle/toggle.component" {
         onText: string;
         offText: string;
         label: string;
+        /** The toggle's description, displayed under the label. If you need to display HTML, use the `description` slot instead. */
+        description: string;
         labelPosition: 'top' | 'left' | 'right';
         inline: boolean;
         get validity(): ValidityState;
@@ -2002,6 +2006,11 @@ declare module "components/input/input.component" {
          * keyboard on supportive devices.
          */
         inputmode: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url';
+        /**
+         * When enabled, pressing enter will always submit the surrounding form, even when the form uses
+         * enter-navigation to move between fields.
+         */
+        triggerSubmit: boolean;
         /**
          * Gets or sets the current value as `date` object. Returns `null` if the value can't be converted. This will use
          * the native `<input type="{{type}}">` implementation and may result in an error.

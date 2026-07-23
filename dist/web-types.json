@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.1.59",
+  "version": "1.1.60",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -4822,6 +4822,11 @@
               "value": {
                 "type": "'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'"
               }
+            },
+            {
+              "name": "trigger-submit",
+              "description": "When enabled, pressing enter will always submit the surrounding form, even when the form uses\nenter-navigation to move between fields.",
+              "value": { "type": "boolean", "default": "false" }
             }
           ],
           "slots": [
@@ -5067,6 +5072,11 @@
                 "name": "inputmode",
                 "description": "Tells the browser what type of data will be entered by the user, allowing it to display the appropriate virtual\nkeyboard on supportive devices.",
                 "type": "'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'"
+              },
+              {
+                "name": "triggerSubmit",
+                "description": "When enabled, pressing enter will always submit the surrounding form, even when the form uses\nenter-navigation to move between fields.",
+                "type": "boolean"
               },
               {
                 "name": "valueAsDate",
@@ -9550,7 +9560,7 @@
         },
         {
           "name": "zn-toggle",
-          "description": "Toggles allow the user to switch an option on or off.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted when the toggle receives input.\n\n### **Slots:**\n - _default_ - The toggle's label.\n- **help-text** - Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--zn-toggle-margin** - The margin around the toggle switch. Defaults to `8px 0`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper containing the toggle switch.\n- **control** - The toggle switch control (the circular button that slides).",
+          "description": "Toggles allow the user to switch an option on or off.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted when the toggle receives input.\n\n### **Slots:**\n - _default_ - The toggle's label.\n- **description** - A description of the toggle's label. Alternatively, you can use the `description` attribute.\n- **help-text** - Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--zn-toggle-margin** - The margin around the toggle switch. Defaults to `8px 0`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper containing the toggle switch.\n- **control** - The toggle switch control (the circular button that slides).\n- **description** - The container that wraps the toggle's description.",
           "doc-url": "",
           "attributes": [
             {
@@ -9604,6 +9614,11 @@
             },
             { "name": "label", "value": { "type": "string", "default": "''" } },
             {
+              "name": "description",
+              "description": "The toggle's description, displayed under the label. If you need to display HTML, use the `description` slot instead.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
               "name": "label-position",
               "value": {
                 "type": "'top' | 'left' | 'right'",
@@ -9617,6 +9632,10 @@
           ],
           "slots": [
             { "name": "", "description": "The toggle's label." },
+            {
+              "name": "description",
+              "description": "A description of the toggle's label. Alternatively, you can use the `description` attribute."
+            },
             {
               "name": "help-text",
               "description": "Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute."
@@ -9647,6 +9666,11 @@
               { "name": "onText", "type": "string" },
               { "name": "offText", "type": "string" },
               { "name": "label", "type": "string" },
+              {
+                "name": "description",
+                "description": "The toggle's description, displayed under the label. If you need to display HTML, use the `description` slot instead.",
+                "type": "string"
+              },
               { "name": "labelPosition", "type": "'top' | 'left' | 'right'" },
               { "name": "inline", "type": "boolean" },
               { "name": "validity" },

@@ -18,10 +18,12 @@ let lucidePromise: Promise<void> | undefined;
 function loadLucideIcons(): Promise<void> {
   lucidePromise ??= import('lucide').then(m => {
     lucideIcons = m.icons as Record<string, IconNode>;
-  }).catch(() => {
-    // Failed chunk load: fall back to an empty set so icons render their
-    // "not found" state instead of rejecting updateComplete on every render
-    lucideIcons = {};
+  }).catch((error: unknown) => {
+    // Failed chunk load (e.g. transient 404 mid-rebuild/deploy): clear the
+    // memoised promise so a later render retries instead of blanking every
+    // icon for the rest of the page session
+    lucidePromise = undefined;
+    console.warn('<zn-icon> failed to load the lucide icon chunk', error);
   });
   return lucidePromise;
 }
@@ -184,8 +186,10 @@ export default class ZnIcon extends ZincElement {
     const result = await super.getUpdateComplete();
     if (this.library === 'lucide' && !lucideIcons) {
       await loadLucideIcons();
-      this.requestUpdate();
-      await super.getUpdateComplete();
+      if (lucideIcons) {
+        this.requestUpdate();
+        await super.getUpdateComplete();
+      }
     }
     return result;
   }
@@ -353,7 +357,13 @@ export default class ZnIcon extends ZincElement {
 
   private renderLucideIcon() {
     if (!lucideIcons) {
-      void loadLucideIcons().then(() => this.requestUpdate());
+      // Only re-render on success; a failed load retries on the next natural
+      // render rather than looping requestUpdate -> load -> fail
+      void loadLucideIcons().then(() => {
+        if (lucideIcons) {
+          this.requestUpdate();
+        }
+      });
       return html``;
     }
 

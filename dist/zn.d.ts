@@ -1309,6 +1309,7 @@ declare module "components/toggle/toggle.component" {
      * @event zn-input - Emitted when the toggle receives input.
      *
      * @slot - The toggle's label.
+     * @slot help-text - Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute.
      *
      * @csspart base - The component's base wrapper containing the toggle switch.
      * @csspart control - The toggle switch control (the circular button that slides).
@@ -1317,6 +1318,7 @@ declare module "components/toggle/toggle.component" {
      */
     export default class ZnToggle extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
+        private readonly hasSlotController;
         private readonly formControlController;
         input: HTMLInputElement;
         hasFocus: boolean;
@@ -1335,6 +1337,7 @@ declare module "components/toggle/toggle.component" {
         onText: string;
         offText: string;
         label: string;
+        labelPosition: 'top' | 'left' | 'right';
         inline: boolean;
         get validity(): ValidityState;
         get validationMessage(): string;

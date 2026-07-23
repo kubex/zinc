@@ -513,7 +513,7 @@ export default class ZnDataTable extends ZincElement {
   }
 
   renderTable(data: Response) {
-    this.itemsPerPage = Math.max(1, data.perPage ?? DEFAULT_PER_PAGE);
+    this.itemsPerPage = Math.max(DEFAULT_PER_PAGE, data.perPage ?? DEFAULT_PER_PAGE);
     this.page = Math.max(1, data.page ?? DEFAULT_PAGE);
     this.totalPages = Math.ceil(Math.max(1, data.total) / this.itemsPerPage);
 

@@ -74,7 +74,7 @@ export default class ZnCols extends ZincElement {
     });
 
     return html`
-      <div class="${classMap({
+      <div part="base" class="${classMap({
         'cols': true,
         'cols--no-gap': this.noGap,
         'cols--border': this.border,

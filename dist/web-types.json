@@ -16,6 +16,28 @@
           "js": { "properties": [], "events": [] }
         },
         {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -75,28 +97,6 @@
               { "name": "center", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -2410,47 +2410,6 @@
           }
         },
         {
-          "name": "zn-data-table-filter",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "filters",
-              "value": { "type": "string", "default": "\"\"" }
-            },
-            {
-              "name": "name",
-              "value": { "type": "string", "default": "\"data-table-filter\"" }
-            },
-            { "name": "value", "value": { "type": "string" } }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "filters", "type": "string" },
-              { "name": "name", "type": "string" },
-              { "name": "value", "type": "string" },
-              { "name": "validationMessage", "type": "string" },
-              { "name": "validity", "type": "ValidityState" },
-              { "name": "handleQBClear" },
-              { "name": "handleQBReset" },
-              { "name": "handleQBUpdate" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-data-table",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **search** - Slot for search component.\n- **sort** - Slot for sort component.\n- **filter** - Slot for filter component.\n- **filter-top** - Slot for top-level filter component.\n- **delete-action** - Slot for delete action button.\n- **modify-action** - Slot for modify action button.\n- **create-action** - Slot for create action button.\n- **inputs** - Slot for additional input controls.\n- **empty-state** - Slot for custom empty state.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -2605,6 +2564,47 @@
               { "name": "searchChangeListener" }
             ],
             "events": []
+          }
+        },
+        {
+          "name": "zn-data-table-filter",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "filters",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            {
+              "name": "name",
+              "value": { "type": "string", "default": "\"data-table-filter\"" }
+            },
+            { "name": "value", "value": { "type": "string" } }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "filters", "type": "string" },
+              { "name": "name", "type": "string" },
+              { "name": "value", "type": "string" },
+              { "name": "validationMessage", "type": "string" },
+              { "name": "validity", "type": "ValidityState" },
+              { "name": "handleQBClear" },
+              { "name": "handleQBReset" },
+              { "name": "handleQBUpdate" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
           }
         },
         {
@@ -8042,6 +8042,47 @@
           }
         },
         {
+          "name": "zn-sidebar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "caption", "value": { "type": "string" } },
+            {
+              "name": "open",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "start-scrolled",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "wide",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "caption", "type": "string" },
+              { "name": "open", "type": "boolean" },
+              { "name": "startScrolled", "type": "boolean" },
+              { "name": "wide", "type": "boolean" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-settings-container",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the pull tab panel opens.\n- **zn-hide** - Emitted when the pull tab panel closes.\n\n### **Slots:**\n - _default_ - The default slot.\n- **filter** - Filter definitions used to toggle visibility of content.\n- **dropdown-content** - Custom content for the settings panel.\n- **tab** - Extra content rendered inside the pull tab next to the chevron.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -8109,47 +8150,6 @@
               {
                 "name": "zn-hide",
                 "description": "Emitted when the pull tab panel closes."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-sidebar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "caption", "value": { "type": "string" } },
-            {
-              "name": "open",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "start-scrolled",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "wide",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "caption", "type": "string" },
-              { "name": "open", "type": "boolean" },
-              { "name": "startScrolled", "type": "boolean" },
-              { "name": "wide", "type": "boolean" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
               }
             ]
           }

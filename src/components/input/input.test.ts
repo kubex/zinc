@@ -42,6 +42,61 @@ describe('<zn-input>', () => {
     });
   });
 
+  describe('trigger-submit', () => {
+    const pressEnter = (el: ZnInput) => {
+      el.input.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'Enter',
+        bubbles: true,
+        composed: true,
+        cancelable: true
+      }));
+    };
+
+    it('submits an enter-navigation form on enter when trigger-submit is set', async () => {
+      const form = await fixture<HTMLFormElement>(html`
+        <form data-enter-navigation>
+          <zn-input name="a" trigger-submit></zn-input>
+          <zn-input name="b"></zn-input>
+        </form>
+      `);
+      const el = form.querySelector('zn-input')!;
+      await el.updateComplete;
+
+      let submitted = false;
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        submitted = true;
+      });
+
+      el.focus();
+      pressEnter(el);
+
+      expect(submitted).to.be.true;
+    });
+
+    it('does not submit an enter-navigation form on enter without trigger-submit', async () => {
+      const form = await fixture<HTMLFormElement>(html`
+        <form data-enter-navigation>
+          <zn-input name="a"></zn-input>
+          <zn-input name="b"></zn-input>
+        </form>
+      `);
+      const el = form.querySelector('zn-input')!;
+      await el.updateComplete;
+
+      let submitted = false;
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        submitted = true;
+      });
+
+      el.focus();
+      pressEnter(el);
+
+      expect(submitted).to.be.false;
+    });
+  });
+
   describe('persisted state', () => {
     const formStoreKey = 'input-test-form-state';
     const elementStoreKey = 'input-test-element-state';

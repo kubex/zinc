@@ -416,6 +416,36 @@ Form navigation works with all Zinc form controls including selects, radios, che
 **Note:** While you can navigate TO textareas and search inputs using Enter, pressing Enter while inside these controls uses the Enter key for their own functionality (new lines and search triggers, respectively). Use Tab to navigate away from these controls.
 :::
 
+### Trigger Submit
+
+Add the `trigger-submit` attribute to make pressing Enter in the input always submit the surrounding form. Inputs already submit on Enter by default, so this is only needed on forms using `data-enter-navigation`, where Enter would otherwise move focus to the next field.
+
+```html:preview
+<form class="trigger-submit-form" data-enter-navigation>
+  <zn-input name="firstName" label="First Name" required></zn-input>
+  <br />
+  <zn-input name="search" label="Quick Search (Enter submits)" trigger-submit></zn-input>
+  <br />
+  <zn-button type="submit" variant="primary">Submit</zn-button>
+</form>
+
+<script type="module">
+  const form = document.querySelector('.trigger-submit-form');
+
+  await Promise.all([
+    customElements.whenDefined('zn-button'),
+    customElements.whenDefined('zn-input')
+  ]).then(() => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData);
+      alert('Form submitted!\n\n' + JSON.stringify(data, null, 2));
+    });
+  });
+</script>
+```
+
 ### Customizing Label Position
 
 Use [CSS parts](#css-parts) to customize the way form controls are drawn. This example uses CSS grid to position the

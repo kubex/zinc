@@ -21,17 +21,19 @@ import styles from './toggle.scss';
  * @event zn-input - Emitted when the toggle receives input.
  *
  * @slot - The toggle's label.
+ * @slot description - A description of the toggle's label. Alternatively, you can use the `description` attribute.
  * @slot help-text - Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute.
  *
  * @csspart base - The component's base wrapper containing the toggle switch.
  * @csspart control - The toggle switch control (the circular button that slides).
+ * @csspart description - The container that wraps the toggle's description.
  *
  * @cssproperty --zn-toggle-margin - The margin around the toggle switch. Defaults to `8px 0`.
  */
 export default class ZnToggle extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  private readonly hasSlotController = new HasSlotController(this, 'help-text');
+  private readonly hasSlotController = new HasSlotController(this, 'help-text', 'description');
 
   private readonly formControlController = new FormControlController(this, {
     value: (control: ZnToggle) => (control.checked ? control.value || 'on' : undefined),
@@ -72,6 +74,9 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
   @property({ attribute: "off-text" }) offText: string = '';
 
   @property() label: string = '';
+
+  /** The toggle's description, displayed under the label. If you need to display HTML, use the `description` slot instead. */
+  @property() description: string = '';
 
   @property({ attribute: 'label-position', reflect: true }) labelPosition: 'top' | 'left' | 'right' = 'top';
 
@@ -174,6 +179,7 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
     const tooltipContent = this.checked ? this.onText : this.offText;
     const showTooltip = !!tooltipContent;
     const hasHelpText = this.helpText ? true : this.hasSlotController.test('help-text');
+    const hasDescription = this.description ? true : this.hasSlotController.test('description');
 
     const toggle = html`
       <div class="switch__input-wrapper" part="base">
@@ -189,7 +195,7 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
           .required=${this.required}
           role="switch"
           aria-checked=${this.checked ? 'true' : 'false'}
-          aria-describedby="help-text"
+          aria-describedby="description help-text"
           @click=${this.handleClick}
           @input=${this.handleInput}
           @invalid=${this.handleInvalid}
@@ -208,6 +214,7 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
         'form-control--large': this.size === 'large',
         'form-control--has-help-text': hasHelpText,
         'switch__wrapper': true,
+        'switch__wrapper--has-description': hasDescription,
         'switch__wrapper--disabled': this.disabled,
         'switch__wrapper--has-focus': this.hasFocus,
         'switch__wrapper--small': this.size === 'small',
@@ -218,7 +225,16 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
         'switch__wrapper--label-right': this.labelPosition === 'right'
       })}">
         <label>
-          ${this.label ? html`<p class="switch-label">${this.label}</p>` : ''}
+          ${this.label || hasDescription ? html`
+            <div class="switch__label-wrapper">
+              ${this.label ? html`<p class="switch-label">${this.label}</p>` : ''}
+              <div part="description"
+                   id="description"
+                   class="switch__description"
+                   aria-hidden=${hasDescription ? 'false' : 'true'}>
+                <slot name="description">${this.description}</slot>
+              </div>
+            </div>` : ''}
           ${!showTooltip ? html`
             ${toggle}` : html`
             <zn-tooltip content="${tooltipContent}">

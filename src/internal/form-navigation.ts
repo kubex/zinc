@@ -46,6 +46,11 @@ export class FormNavigationController {
         return;
       }
 
+      // Controls with trigger-submit handle submitting the form themselves
+      if (target.hasAttribute('trigger-submit')) {
+        return;
+      }
+
       // Check if we're in a group (radio-group or checkbox-group)
       const group = this.findParentGroup(target);
       if (group) {

@@ -212,6 +212,12 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
    */
   @property() inputmode: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url';
 
+  /**
+   * When enabled, pressing enter will always submit the surrounding form, even when the form uses
+   * enter-navigation to move between fields.
+   */
+  @property({type: Boolean, attribute: 'trigger-submit'}) triggerSubmit = false;
+
   //
   // NOTE: We use an in-memory input for these getters/setters instead of the one in the template because the properties
   // can be set before the component is rendered.
@@ -561,9 +567,10 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
       // When using a Input Method Editor (IME), pressing enter will cause the form to submit unexpectedly. One way
       // to check for this is to look at event.isComposing, which will be true when the IME is open.
       if (!event.defaultPrevented && !event.isComposing) {
-        // Check if form has navigation enabled - if so, let FormNavigationController handle it
+        // Check if form has navigation enabled - if so, let FormNavigationController handle it,
+        // unless trigger-submit is set which always submits on enter
         const form = this.formControlController.getForm();
-        if (form?.hasAttribute('enter-navigation') || form?.hasAttribute('data-enter-navigation')) {
+        if (!this.triggerSubmit && (form?.hasAttribute('enter-navigation') || form?.hasAttribute('data-enter-navigation'))) {
           return; // Let FormNavigationController handle it
         }
 

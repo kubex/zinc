@@ -62,6 +62,35 @@ Use the `label` attribute to add a form control label above the toggle.
 <zn-toggle label="User Preferences">Enable email notifications</zn-toggle>
 ```
 
+### Description
+
+Use the `description` attribute to add a description under the label. If you need to display HTML, use the `description` slot instead.
+
+```html:preview
+<zn-toggle label="Email notifications" description="Receive an email whenever someone mentions you."></zn-toggle>
+```
+
+The description stays under the label at every `label-position`, and can be combined with `help-text`, which always appears below the toggle.
+
+```html:preview
+<zn-toggle
+  label="Top label (default)"
+  description="Receive an email whenever someone mentions you."
+  help-text="You can change this at any time"></zn-toggle>
+<br />
+<zn-toggle
+  label="Left label"
+  label-position="left"
+  description="Receive an email whenever someone mentions you."
+  help-text="You can change this at any time"></zn-toggle>
+<br />
+<zn-toggle
+  label="Right label"
+  label-position="right"
+  description="Receive an email whenever someone mentions you."
+  help-text="You can change this at any time"></zn-toggle>
+```
+
 ### Label Position
 
 Use the `label-position` attribute to control where the label sits relative to the toggle. Available positions are `top` (default), `left`, and `right`.

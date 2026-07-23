@@ -2,6 +2,7 @@ import { classMap } from "lit/directives/class-map.js";
 import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
 import { defaultValue } from "../../internal/default-value";
 import { FormControlController } from "../../internal/form";
+import { HasSlotController } from "../../internal/slot";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { live } from "lit/directives/live.js";
 import { property, query, state } from 'lit/decorators.js';
@@ -20,6 +21,7 @@ import styles from './toggle.scss';
  * @event zn-input - Emitted when the toggle receives input.
  *
  * @slot - The toggle's label.
+ * @slot help-text - Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute.
  *
  * @csspart base - The component's base wrapper containing the toggle switch.
  * @csspart control - The toggle switch control (the circular button that slides).
@@ -28,6 +30,8 @@ import styles from './toggle.scss';
  */
 export default class ZnToggle extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
+
+  private readonly hasSlotController = new HasSlotController(this, 'help-text');
 
   private readonly formControlController = new FormControlController(this, {
     value: (control: ZnToggle) => (control.checked ? control.value || 'on' : undefined),
@@ -68,6 +72,8 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
   @property({ attribute: "off-text" }) offText: string = '';
 
   @property() label: string = '';
+
+  @property({ attribute: 'label-position', reflect: true }) labelPosition: 'top' | 'left' | 'right' = 'top';
 
   @property({ type: Boolean }) inline: boolean = false;
 
@@ -167,6 +173,7 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
 
     const tooltipContent = this.checked ? this.onText : this.offText;
     const showTooltip = !!tooltipContent;
+    const hasHelpText = this.helpText ? true : this.hasSlotController.test('help-text');
 
     const toggle = html`
       <div class="switch__input-wrapper" part="base">
@@ -195,13 +202,20 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
 
     return html`
       <div class="${classMap({
+        'form-control': true,
+        'form-control--small': this.size === 'small',
+        'form-control--medium': this.size === 'medium',
+        'form-control--large': this.size === 'large',
+        'form-control--has-help-text': hasHelpText,
         'switch__wrapper': true,
         'switch__wrapper--disabled': this.disabled,
         'switch__wrapper--has-focus': this.hasFocus,
         'switch__wrapper--small': this.size === 'small',
         'switch__wrapper--medium': this.size === 'medium',
         'switch__wrapper--large': this.size === 'large',
-        'switch__wrapper--inline': this.inline
+        'switch__wrapper--inline': this.inline,
+        'switch__wrapper--label-left': this.labelPosition === 'left',
+        'switch__wrapper--label-right': this.labelPosition === 'right'
       })}">
         <label>
           ${this.label ? html`<p class="switch-label">${this.label}</p>` : ''}
@@ -211,6 +225,12 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
               ${toggle}
             </zn-tooltip>`}
         </label>
+        <div part="form-control-help-text"
+             id="help-text"
+             class="form-control__help-text"
+             aria-hidden=${hasHelpText ? 'false' : 'true'}>
+          <slot name="help-text">${this.helpText}</slot>
+        </div>
       </div>`;
   }
 }

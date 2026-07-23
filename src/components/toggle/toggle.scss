@@ -1,11 +1,22 @@
 @use "../../wc";
+@use "../../form-control";
 
 :host {
   --zn-toggle-margin: 8px 0;
+  display: block;
 }
 
 .switch__wrapper {
-  display: inline-flex;
+  display: flex;
+  flex-direction: column;
+
+  label {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    cursor: pointer;
+  }
 }
 
 .switch__input-wrapper {
@@ -47,7 +58,19 @@
 }
 
 .switch-label {
-  font-size: 90%;
+  margin: 0;
+  color: var(--zn-input-label-color);
+  font-size: var(--zn-input-label-font-size-medium);
+  font-weight: var(--zn-input-label-font-weight);
+  line-height: var(--zn-input-label-line-height);
+}
+
+.switch__wrapper--small .switch-label {
+  font-size: var(--zn-input-label-font-size-small);
+}
+
+.switch__wrapper--large .switch-label {
+  font-size: var(--zn-input-label-font-size-large);
 }
 
 .switch__control {
@@ -91,14 +114,40 @@
   }
 }
 
-// Support inline label
-.switch__wrapper--inline label {
+// Label position
+.switch__wrapper--label-left label,
+.switch__wrapper--label-right label {
   align-items: center;
-  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.switch__wrapper--label-left label {
+  flex-direction: row;
+}
+
+.switch__wrapper--label-right label {
+  flex-direction: row-reverse;
+}
+
+// Support inline label
+:host([inline]) {
+  display: inline-block;
+}
+
+.switch__wrapper--inline label {
+  flex: none;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
   gap: 8px;
 
   .switch__input {
     margin-inline: 1px;
     margin-inline-end: 1px;
   }
+}
+
+.switch__wrapper--inline.switch__wrapper--label-right label {
+  flex-direction: row-reverse;
 }

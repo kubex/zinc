@@ -62,6 +62,39 @@ Use the `label` attribute to add a form control label above the toggle.
 <zn-toggle label="User Preferences">Enable email notifications</zn-toggle>
 ```
 
+### Label Position
+
+Use the `label-position` attribute to control where the label sits relative to the toggle. Available positions are `top` (default), `left`, and `right`.
+
+With `left`, the label sits at the start of the row and the toggle is pushed to the far right — useful for settings lists. With `right`, the layout is mirrored.
+
+```html:preview
+<zn-toggle label="Top label (default)"></zn-toggle>
+<br />
+<zn-toggle label="Left label" label-position="left"></zn-toggle>
+<br />
+<zn-toggle label="Right label" label-position="right"></zn-toggle>
+```
+
+Combine `label-position` with the `inline` attribute to keep the label and toggle adjacent instead of spread across the full width.
+
+```html:preview
+<zn-toggle label="Inline left" label-position="left" inline></zn-toggle>
+<br />
+<zn-toggle label="Inline right" label-position="right" inline></zn-toggle>
+```
+
+A settings list using `label-position="left"`:
+
+```html:preview
+<div style="max-width: 320px;">
+  <zn-toggle label="Apple" label-position="left"></zn-toggle>
+  <zn-toggle label="Windows" label-position="left"></zn-toggle>
+  <zn-toggle label="Android" label-position="left"></zn-toggle>
+  <zn-toggle label="Blackberry" label-position="left" checked></zn-toggle>
+</div>
+```
+
 ### On/Off Text with Tooltip
 
 Use the `on-text` and `off-text` attributes to display tooltips that show when the toggle is in the on or off state. This provides additional context for the toggle's current state.

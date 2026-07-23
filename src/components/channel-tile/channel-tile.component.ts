@@ -265,6 +265,9 @@ export default class ZnChannelTile extends ZincElement {
                        icon-size="20"
                        icon-button="round"
                        color=${this.color}
+                       class="${classMap({
+                         [`channel-tile--${this.color}`]: true,
+                       })}"
                        no-hover></zn-button>`
           : ''}
       </slot>`;

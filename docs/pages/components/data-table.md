@@ -624,6 +624,39 @@ This preview uses GET against a static file. In production, POST requests send p
 </zn-data-table>
 ```
 
+### Response Errors
+
+Include an `error` object in the response to display a message inside the table, between the column headers and the first record, using the alert component. The error can be returned alongside row data — useful when results are valid but limited, or when a filter is invalid. The object supports `text`, an optional `icon`, and an optional `level` to control the alert level (defaults to `error`).
+
+```html:preview
+<zn-data-table
+  data-uri="/data/data-table-error.json"
+  method="GET"
+  headers='[
+    {"key":"id","label":"ID"},
+    {"key":"name","label":"Name"},
+    {"key":"email","label":"Email"},
+    {"key":"status","label":"Status"}
+  ]'>
+</zn-data-table>
+```
+
+```json
+{
+  "rows": [...],
+  "page": 1,
+  "perPage": 10,
+  "total": 2,
+  "error": {
+    "text": "Results have been limited to 10 rows, please filter for more accuracy",
+    "icon": "warning",
+    "level": "warning"
+  }
+}
+```
+
+If the response contains an error and no rows, the error is shown above the empty state.
+
 ### Cell Styling
 
 Cells support various styling options through the data response format. Each cell can have colors, icons, links, chips, and hover content.
@@ -771,9 +804,19 @@ The data table expects responses in the following format:
   ],
   "page": 1,
   "perPage": 10,
-  "total": 100
+  "total": 100,
+  "error": {
+    "text": "Optional message displayed below the column headers",
+    "icon": "warning",
+    "level": "warning"
+  }
 }
 ```
+
+- `error`: Optional object displayed as an alert row below the column headers, alongside any returned rows
+  - `text`: The message to display
+  - `icon`: Optional icon shown in the alert
+  - `level`: Optional alert level (`primary`, `error`, `info`, `success`, `warning`, `note`), defaults to `error`
 
 ## Request Format
 

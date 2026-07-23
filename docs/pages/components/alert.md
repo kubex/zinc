@@ -113,6 +113,14 @@ Use the `size` attribute to control the alert's size. Available sizes are `small
 <zn-alert caption="Large Alert" size="large" level="warning">This is a large-sized alert.</zn-alert>
 ```
 
+### Centered Text
+
+Use the `center` attribute to center the alert's text content.
+
+```html:preview
+<zn-alert level="warning" center>This alert's text is centered.</zn-alert>
+```
+
 ### Complex Content
 
 Alerts can contain rich HTML content including lists, links, and formatted text.

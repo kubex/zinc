@@ -30,6 +30,7 @@ export default class ZnAlert extends ZincElement {
   @property({type: Boolean}) collapse: boolean = false;
   @property({type: String, reflect: true}) appearance: 'transparent' | 'solid' = 'transparent';
   @property({type: String}) level: 'primary' | 'error' | 'info' | 'success' | 'warning' | 'note' | 'cosmic' = 'info';
+  @property({type: Boolean, reflect: true}) center: boolean = false;
   @property({type: String}) size: 'small' | 'medium' | 'large' = 'medium';
 
   render() {

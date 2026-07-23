@@ -10,6 +10,7 @@ import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import {type ZnFilterChangeEvent} from "../../events/zn-filter-change";
 import {type ZnSearchChangeEvent} from "../../events/zn-search-change";
 import ZincElement from '../../internal/zinc-element';
+import ZnAlert from "../alert";
 import ZnButton from "../button";
 import ZnButtonGroup from "../button-group";
 import ZnChip from "../chip";
@@ -60,11 +61,18 @@ interface Row {
   cells: Cell[];
 }
 
+interface ResponseError {
+  text: string;
+  icon?: string;
+  level?: 'primary' | 'error' | 'info' | 'success' | 'warning' | 'note';
+}
+
 interface Response {
   rows: Row[];
   perPage: number;
   total: number;
   page: number;
+  error?: ResponseError;
 }
 
 export enum ActionSlots {
@@ -147,6 +155,7 @@ type AllowedInputElement =
  * @status experimental
  * @since 1.0
  *
+ * @dependency zn-alert
  * @dependency zn-button
  * @dependency zn-empty-state
  * @dependency zn-chip
@@ -177,6 +186,7 @@ type AllowedInputElement =
 export default class ZnDataTable extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
   static dependencies = {
+    'zn-alert': ZnAlert,
     'zn-button': ZnButton,
     'zn-empty-state': ZnEmptyState,
     'zn-chip': ZnChip,
@@ -507,8 +517,11 @@ export default class ZnDataTable extends ZincElement {
     this.page = Math.max(1, data.page ?? DEFAULT_PAGE);
     this.totalPages = Math.ceil(Math.max(1, data.total) / this.itemsPerPage);
 
+    const error = data?.error?.text ? data.error : undefined;
+
     if (!data?.rows || data.rows.length === 0) {
-      return this.emptyState();
+      return html`${error ? html`
+        <div class="table__error">${this.renderErrorAlert(error)}</div>` : nothing}${this.emptyState()}`;
     }
 
     this._rows = this.getRows(data);
@@ -573,10 +586,10 @@ export default class ZnDataTable extends ZincElement {
       // render a table for each group
       return html`
         <zn-sp flush>
-          ${Object.keys(groupedRows).map((groupKey) => html`
+          ${Object.keys(groupedRows).map((groupKey, index) => html`
             <div class="table-group">
               <h3 class="table-group__title">${(groupKey === "Ungrouped" || groupKey === "*") ? "" : groupKey}</h3>
-              ${this.renderTableData(groupedRows[groupKey])}
+              ${this.renderTableData(groupedRows[groupKey], index === 0 ? error : undefined)}
             </div>`
           )}
         </zn-sp>
@@ -584,14 +597,22 @@ export default class ZnDataTable extends ZincElement {
     }
 
 
-    return this.renderTableData(this._rows);
+    return this.renderTableData(this._rows, error);
+  }
+
+  private renderErrorAlert(error: ResponseError) {
+    return html`
+      <zn-alert level="${error.level ?? 'error'}"
+                icon="${ifDefined(error.icon)}"
+                size="small"
+                center>${error.text}</zn-alert>`;
   }
 
   public humanize(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  public renderTableData(data: any) {
+  public renderTableData(data: any, error?: ResponseError) {
     // Primary (visible) headers exclude those explicitly hidden and those marked as secondary
     const filteredHeaders = Object.values(this.headers).filter((header: HeaderConfig) => {
       if (header.hideHeader || header.hideColumn) return false;
@@ -656,6 +677,10 @@ export default class ZnDataTable extends ZincElement {
           </tr>
           </thead>
           <tbody>
+          ${error ? html`
+            <tr class="table__row--error">
+              <td colspan="${colCount}">${this.renderErrorAlert(error)}</td>
+            </tr>` : nothing}
           ${(data as Row[]).map((row: Row) => html`
             <tr class="${classMap({
               'table__row--selected': this.isRowSelected(row),
@@ -924,7 +949,7 @@ export default class ZnDataTable extends ZincElement {
       return;
     }
 
-    const rows = Array.from(this.renderRoot.querySelectorAll('tbody tr:not([data-details="true"])'));
+    const rows = Array.from(this.renderRoot.querySelectorAll('tbody tr.table__row--data'));
     const index = rows.indexOf(parent as HTMLTableRowElement);
     if (index === -1) return;
 

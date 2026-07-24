@@ -398,7 +398,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
       <zn-datepicker
         name="${uniqueId}"
         format-time="HH:mm"
-        time-picker="${hasTime}"
+        ?time-picker="${hasTime}"
         class="query-builder__value"
         @zn-change="${(e: ZnChangeEvent) => this._updateDateValue(uniqueId, e, submitFormat)}"
         >

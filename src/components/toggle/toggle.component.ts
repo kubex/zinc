@@ -36,7 +36,7 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
   private readonly hasSlotController = new HasSlotController(this, 'help-text', 'description');
 
   private readonly formControlController = new FormControlController(this, {
-    value: (control: ZnToggle) => (control.checked ? control.value || 'on' : undefined),
+    value: (control: ZnToggle) => (control.checked ? control.value || 'on' : control.fallbackValue),
     defaultValue: (control: ZnToggle) => control.defaultChecked,
     setValue: (control: ZnToggle, checked: boolean) => (control.checked = checked)
   });
@@ -51,7 +51,8 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
 
   @property() value: string;
 
-  @property({ attribute: 'fallback' }) fallbackValue: string = '';
+  /** The value submitted when the toggle is unchecked, so the toggle always submits a value. */
+  @property({ attribute: 'fallback' }) fallbackValue: string = 'off';
 
   @property({ reflect: true }) size: 'small' | 'medium' | 'large' = 'medium';
 
@@ -167,15 +168,6 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
   // End Public API methods
 
   render() {
-    let fallback = html``;
-    if (this.fallbackValue !== '') {
-      fallback = html`
-        <input type="hidden"
-               name=${this.name}
-               value=${this.fallbackValue}
-        />`;
-    }
-
     const tooltipContent = this.checked ? this.onText : this.offText;
     const showTooltip = !!tooltipContent;
     const hasHelpText = this.helpText ? true : this.hasSlotController.test('help-text');
@@ -183,7 +175,6 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
 
     const toggle = html`
       <div class="switch__input-wrapper" part="base">
-        ${fallback}
         <input
           class="switch__input"
           type="checkbox"

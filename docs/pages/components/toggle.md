@@ -170,7 +170,7 @@ Toggles support keyboard navigation using arrow keys. Press the left arrow to tu
 
 ### Form Integration
 
-Toggles work seamlessly with forms and will be submitted with form data.
+Toggles work seamlessly with forms and always submit a value: the toggle's `value` (or `on`) when checked, and `off` when unchecked. Use the `fallback` attribute to customize the unchecked value.
 
 ```html:preview
 <form id="toggle-form">
@@ -197,7 +197,7 @@ Toggles work seamlessly with forms and will be submitted with form data.
 
 ### Fallback Value
 
-Use the `fallback` attribute to submit a specific value when the toggle is unchecked. This is useful when you need to ensure a value is always submitted for the field.
+The toggle always submits a value, even when unchecked — `off` by default. Use the `fallback` attribute to submit a specific value instead when the toggle is unchecked.
 
 ```html:preview
 <form id="fallback-form">

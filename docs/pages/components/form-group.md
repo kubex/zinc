@@ -48,6 +48,18 @@ Add descriptive help text to a form group with the `help-text` attribute. For he
 </zn-form-group>
 ```
 
+### Chip
+
+Use the `chip` slot to display a chip under the form group's help text.
+
+```html:preview
+<zn-form-group label="Team Members" help-text="Manage who has access to this project">
+  <zn-chip slot="chip" type="success">Pro Plan</zn-chip>
+  <zn-input label="Name" placeholder="Team member name"></zn-input>
+  <zn-input label="Email" type="email" placeholder="email@example.com"></zn-input>
+</zn-form-group>
+```
+
 ### Label with Tooltip
 
 Use the `label-tooltip` attribute to add text that appears in a tooltip triggered by an info icon next to the label.

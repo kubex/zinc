@@ -1,0 +1,138 @@
+---
+meta:
+  title: Preview Frame — Demo Embed
+  description: A demo embed page implementing the hp-preview postMessage protocol, for iframing into zn-preview-frame examples.
+layout: full-page
+toc: false
+eleventyExcludeFromCollections: true
+permalink: /components/preview-frame-demo/index.html
+---
+{% raw %}
+<div class="shell">
+  <p id="waiting">Waiting for hp-preview:config…</p>
+
+  <div class="card" id="card" hidden>
+    <div class="card__accent"></div>
+    <h2 id="merchant"></h2>
+    <p class="card__amount" id="amount"></p>
+    <label>Card number
+      <input type="text" placeholder="4242 4242 4242 4242" disabled>
+    </label>
+    <div class="card__row">
+      <label>Expiry
+        <input type="text" placeholder="12/28" disabled>
+      </label>
+      <label>CVC
+        <input type="text" placeholder="123" disabled>
+      </label>
+    </div>
+    <button id="pay" type="button"></button>
+  </div>
+</div>
+
+<style>
+  .shell {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #waiting {
+    color: rgb(var(--zn-color-muted-text));
+  }
+
+  .card {
+    --accent: #6936f5;
+    width: 320px;
+    padding: 24px;
+    border: 1px solid rgb(var(--zn-border-color));
+    border-radius: 12px;
+    background: rgb(var(--zn-panel));
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .card__accent {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--accent);
+  }
+
+  .card h2 {
+    margin: 0;
+    font-size: 1.125rem;
+  }
+
+  .card__amount {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+
+  .card label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .card input {
+    padding: 8px 10px;
+    border: 1px solid rgb(var(--zn-border-color));
+    border-radius: 6px;
+    font: inherit;
+  }
+
+  .card__row {
+    display: flex;
+    gap: 12px;
+  }
+
+  .card__row label {
+    flex: 1;
+  }
+
+  /* id selector: zn.min.css targets native buttons at higher specificity */
+  .card #pay {
+    padding: 10px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--accent);
+    color: #fff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  // The embed side of the hp-preview protocol: announce readiness, wait for the
+  // config payload, render it, then report rendered (or error). A real embed
+  // should use the host's origin instead of '*'.
+  const post = message => window.parent.postMessage(message, '*');
+
+  window.addEventListener('message', e => {
+    const data = e.data;
+    if (data?.type !== 'hp-preview:config') return;
+
+    if (data.fail) {
+      post({type: 'hp-preview:error', message: data.message || 'Preview failed to render'});
+      return;
+    }
+
+    document.getElementById('waiting').hidden = true;
+    const card = document.getElementById('card');
+    card.hidden = false;
+    card.style.setProperty('--accent', data.accent || '#6936f5');
+    document.getElementById('merchant').textContent = data.merchant || 'Merchant';
+    document.getElementById('amount').textContent = data.amount || '';
+    document.getElementById('pay').textContent = data.buttonLabel || 'Pay now';
+    post({type: 'hp-preview:rendered'});
+  });
+
+  post({type: 'hp-preview:ready'});
+</script>
+{% endraw %}

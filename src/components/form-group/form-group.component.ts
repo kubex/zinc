@@ -1,7 +1,7 @@
-import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
-import {HasSlotController} from "../../internal/slot";
-import {property} from 'lit/decorators.js';
+import { classMap } from "lit/directives/class-map.js";
+import { type CSSResultGroup, html, unsafeCSS } from 'lit';
+import { HasSlotController } from "../../internal/slot";
+import { property } from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './form-group.scss';
@@ -13,12 +13,13 @@ import styles from './form-group.scss';
  * @since 1.0
  *
  * @slot - The default slot.
+ * @slot chip - A chip displayed under the form group's help text.
  *
  */
 export default class ZnFormGroup extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  private readonly hasSlotController = new HasSlotController(this, 'help-text', 'label');
+  private readonly hasSlotController = new HasSlotController(this, 'help-text', 'label', 'chip');
 
   /**
    * The form group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot
@@ -30,12 +31,14 @@ export default class ZnFormGroup extends ZincElement {
    * Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the
    * `label-tooltip` slot instead.
    */
-  @property({attribute: 'label-tooltip'}) labelTooltip = '';
+  @property({ attribute: 'label-tooltip' }) labelTooltip = '';
 
   /** The form groups help text. If you need to display HTML, use the `help-text` slot instead. */
-  @property({attribute: 'help-text'}) helpText = '';
-  @property({attribute: 'cols', type: Boolean}) forceCols = false;
-  @property({attribute: 'layout', type: String}) layout = "1,2";
+  @property({ attribute: 'help-text' }) helpText = '';
+  @property({ attribute: 'cols', type: Boolean }) forceCols = false;
+  @property({ attribute: 'layout', type: String }) layout = "1,2";
+
+  @property({ attribute: 'pad', type: Boolean }) pad: boolean = false;
 
   render() {
     const hasLabelSlot = this.hasSlotController.test('label');
@@ -44,6 +47,7 @@ export default class ZnFormGroup extends ZincElement {
     const hasLabel = this.label ? true : hasLabelSlot;
     const hasLabelTooltip = this.labelTooltip ? true : hasLabelTooltipSlot;
     const hasHelpText = this.helpText ? true : hasHelpTextSlot;
+    const hasChip = this.hasSlotController.test('chip');
 
     return html`
       <fieldset
@@ -52,14 +56,15 @@ export default class ZnFormGroup extends ZincElement {
           'form-control': true,
           'form-control--has-label': hasLabel,
           'form-control--has-label-tooltip': hasLabelTooltip,
-          'form-control--has-help-text': hasHelpText
+          'form-control--has-help-text': hasHelpText,
+          'form-control--pad': this.pad
         })}"
         aria-labelledby="label"
         aria-describedby="help-text">
 
         <zn-cols layout="${this.layout}" part="form-control-container" class="form-control__container">
-          ${hasLabel || hasHelpText || this.forceCols ? html`
-            <div>
+          ${hasLabel || hasHelpText || hasChip || this.forceCols ? html`
+            <div class="form-control__text">
 
               ${hasLabel ? html`
                 <label
@@ -85,6 +90,13 @@ export default class ZnFormGroup extends ZincElement {
                   id="help-text"
                   class="form-control__help-text">
                   <slot name="help-text">${this.helpText}</slot>
+                </div>` : html``}
+
+              ${hasChip ? html`
+                <div
+                  part="form-control-chip"
+                  class="form-control__chip">
+                  <slot name="chip"></slot>
                 </div>` : html``}
 
             </div>` : html``}

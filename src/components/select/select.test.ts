@@ -260,6 +260,35 @@ describe('<zn-select>', () => {
     });
   });
 
+  describe('trigger-submit', () => {
+    it('submits the form when a tag is removed', async () => {
+      const form = await fixture<HTMLFormElement>(html`
+        <form>
+          <zn-select multiple trigger-submit value="a b">
+            <zn-option value="a">Option 1</zn-option>
+            <zn-option value="b">Option 2</zn-option>
+          </zn-select>
+        </form>
+      `);
+      const el = form.querySelector<ZnSelect>('zn-select')!;
+      await el.updateComplete;
+
+      let submitted = false;
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        submitted = true;
+      });
+
+      const removeIcon = el.shadowRoot!.querySelector<HTMLElement>('.select__tags zn-icon[slot="action"]')!;
+      removeIcon.click();
+      await el.updateComplete;
+      await el.updateComplete;
+
+      expect(el.value).to.deep.equal(['b']);
+      expect(submitted).to.be.true;
+    });
+  });
+
   describe('free-text', () => {
     const type = (el: ZnSelect, text: string) => {
       const displayInput = el.shadowRoot!.querySelector<HTMLInputElement>('.select__display-input')!;

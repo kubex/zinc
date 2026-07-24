@@ -1109,6 +1109,10 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       this.updateComplete.then(() => {
         this.emit('zn-input');
         this.emit('zn-change');
+
+        if (this.triggerSubmit) {
+          this.formControlController.submit();
+        }
       });
     }
   }

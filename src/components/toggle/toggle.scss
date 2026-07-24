@@ -58,11 +58,9 @@
 }
 
 .switch-label {
+  @include wc.text-style(input-label);
+
   margin: 0;
-  color: var(--zn-input-label-color);
-  font-size: var(--zn-input-label-font-size-medium);
-  font-weight: var(--zn-input-label-font-weight);
-  line-height: var(--zn-input-label-line-height);
 }
 
 .switch__wrapper--small .switch-label {
@@ -71,12 +69,14 @@
 
 .switch__description {
   display: none;
+  margin-top: var(--zn-spacing-2x-small);
 }
 
 .switch__wrapper--has-description .switch__description {
+  @include wc.text-style(paragraph);
+
   display: block;
-  color: var(--zn-input-help-text-color);
-  font-size: var(--zn-input-font-size-small);
+  color: rgb(var(--zn-color-muted-text));
 }
 
 .switch__wrapper--small .switch__description {

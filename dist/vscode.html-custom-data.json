@@ -14,17 +14,6 @@
       ]
     },
     {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
-        }
-      ]
-    },
-    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -61,6 +50,17 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
+        }
+      ]
+    },
+    {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -2939,13 +2939,13 @@
           "values": []
         },
         {
-          "name": "view-width",
-          "description": "The virtual viewport width (in CSS pixels) the previewed page is laid\nout at. The iframe always renders at view-width × view-height and is\nscaled (up or down) with a CSS transform to fill the container's width,\nso the visible preview always keeps the view-width : view-height aspect\nratio (16:9 by default).",
+          "name": "zoom",
+          "description": "Zooms the previewed page out (0–1]. The frame always fills the panel;\nzoom shrinks the content browser-style, so 0.4 shows the page at 40%\nsize with correspondingly more of it visible. 1 = natural size.",
           "values": []
         },
         {
-          "name": "view-height",
-          "description": "The virtual viewport height (in CSS pixels) of the previewed page area.\nThe visible panel height is view-height multiplied by the current scale.\nHeights are derived from this constant rather than measured, because a\nmeasured container height would feed back into the scaled iframe's\nlayout box and grow unbounded.",
+          "name": "min-height",
+          "description": "The visible height (in CSS pixels) of the preview panel. Fixed rather\nthan measured, because a measured height would feed back into the\nscaled iframe's layout box and grow unbounded.",
           "values": []
         }
       ],

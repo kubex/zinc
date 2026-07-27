@@ -49,79 +49,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -310,6 +237,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -28198,23 +28198,23 @@
             },
             {
               "kind": "field",
-              "name": "viewWidth",
+              "name": "zoom",
               "type": {
                 "text": "number"
               },
-              "default": "1280",
-              "description": "The virtual viewport width (in CSS pixels) the previewed page is laid\nout at. The iframe always renders at view-width × view-height and is\nscaled (up or down) with a CSS transform to fill the container's width,\nso the visible preview always keeps the view-width : view-height aspect\nratio (16:9 by default).",
-              "attribute": "view-width"
+              "default": "1",
+              "description": "Zooms the previewed page out (0–1]. The frame always fills the panel;\nzoom shrinks the content browser-style, so 0.4 shows the page at 40%\nsize with correspondingly more of it visible. 1 = natural size.",
+              "attribute": "zoom"
             },
             {
               "kind": "field",
-              "name": "viewHeight",
+              "name": "minHeight",
               "type": {
                 "text": "number"
               },
-              "default": "720",
-              "description": "The virtual viewport height (in CSS pixels) of the previewed page area.\nThe visible panel height is view-height multiplied by the current scale.\nHeights are derived from this constant rather than measured, because a\nmeasured container height would feed back into the scaled iframe's\nlayout box and grow unbounded.",
-              "attribute": "view-height"
+              "default": "480",
+              "description": "The visible height (in CSS pixels) of the preview panel. Fixed rather\nthan measured, because a measured height would feed back into the\nscaled iframe's layout box and grow unbounded.",
+              "attribute": "min-height"
             },
             {
               "kind": "field",
@@ -28225,29 +28225,12 @@
             },
             {
               "kind": "field",
-              "name": "previewContainer",
-              "type": {
-                "text": "HTMLDivElement"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
               "name": "error",
               "type": {
                 "text": "string"
               },
               "privacy": "private",
               "default": "''"
-            },
-            {
-              "kind": "field",
-              "name": "_scale",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "1"
             },
             {
               "kind": "field",
@@ -28278,18 +28261,6 @@
               "privacy": "private",
               "readonly": true,
               "default": "new MutationController(this, { target: null, config: {subtree: true, childList: true}, callback: () => this._attachForms(), })"
-            },
-            {
-              "kind": "field",
-              "name": "_resizeObserver",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new ResizeController(this, { target: null, callback: () => this._onResize(), })"
-            },
-            {
-              "kind": "method",
-              "name": "_onResize",
-              "privacy": "private"
             },
             {
               "kind": "field",
@@ -28417,22 +28388,22 @@
               "fieldName": "debounce"
             },
             {
-              "name": "view-width",
+              "name": "zoom",
               "type": {
                 "text": "number"
               },
-              "default": "1280",
-              "description": "The virtual viewport width (in CSS pixels) the previewed page is laid\nout at. The iframe always renders at view-width × view-height and is\nscaled (up or down) with a CSS transform to fill the container's width,\nso the visible preview always keeps the view-width : view-height aspect\nratio (16:9 by default).",
-              "fieldName": "viewWidth"
+              "default": "1",
+              "description": "Zooms the previewed page out (0–1]. The frame always fills the panel;\nzoom shrinks the content browser-style, so 0.4 shows the page at 40%\nsize with correspondingly more of it visible. 1 = natural size.",
+              "fieldName": "zoom"
             },
             {
-              "name": "view-height",
+              "name": "min-height",
               "type": {
                 "text": "number"
               },
-              "default": "720",
-              "description": "The virtual viewport height (in CSS pixels) of the previewed page area.\nThe visible panel height is view-height multiplied by the current scale.\nHeights are derived from this constant rather than measured, because a\nmeasured container height would feed back into the scaled iframe's\nlayout box and grow unbounded.",
-              "fieldName": "viewHeight"
+              "default": "480",
+              "description": "The visible height (in CSS pixels) of the preview panel. Fixed rather\nthan measured, because a measured height would feed back into the\nscaled iframe's layout box and grow unbounded.",
+              "fieldName": "minHeight"
             }
           ],
           "superclass": {

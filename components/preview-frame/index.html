@@ -657,11 +657,10 @@
             </p>
           </div>
           <p>
-            The previewed page is laid out desktop-first, so the frame renders the iframe at a virtual desktop width
-            (<code>view-width</code>, default <code>1280</code>) and scales it down with a CSS transform to fit the
-            panel whenever the panel is narrower than that. It’s never scaled up — if the container is wider than
-            <code>view-width</code>, the iframe just fills it at 100% as usual. The scale tracks the container’s size,
-            so resizing the surrounding panel rescales the preview without a reload.
+            The frame always fills the panel; <code>zoom</code> (0–1, default <code>1</code>) zooms the previewed page
+            out browser-style — e.g. <code>zoom="0.4"</code> renders the content at 40% size with correspondingly more
+            of the page visible. <code>min-height</code> (default <code>480</code>) sets the visible panel height in
+            pixels.
           </p>
           <h2 id="live-form-updates" class="anchor-heading">
             Live Form Updates<a href="#live-form-updates" aria-label='Direct link to "Live Form Updates"'></a>
@@ -1038,53 +1037,43 @@
 
                 <tr>
                   <td>
-                    <code class="nowrap">viewWidth</code>
-
-                    <br />
-                    <zn-tooltip content="This attribute is different from its property">
-                      <small>
-                        <code class="nowrap"> view-width </code>
-                      </small>
-                    </zn-tooltip>
+                    <code class="nowrap">zoom</code>
                   </td>
                   <td>
-                    The virtual viewport width (in CSS pixels) the previewed page is laid out at. The iframe always
-                    renders at view-width × view-height and is scaled (up or down) with a CSS transform to fill the
-                    container’s width, so the visible preview always keeps the view-width : view-height aspect ratio
-                    (16:9 by default).
+                    Zooms the previewed page out (0–1]. The frame always fills the panel; zoom shrinks the content
+                    browser-style, so 0.4 shows the page at 40% size with correspondingly more of it visible. 1 =
+                    natural size.
                   </td>
                   <td style="text-align: center"></td>
                   <td>
                     <code>number</code>
                   </td>
                   <td>
-                    <code>1280</code>
+                    <code>1</code>
                   </td>
                 </tr>
 
                 <tr>
                   <td>
-                    <code class="nowrap">viewHeight</code>
+                    <code class="nowrap">minHeight</code>
 
                     <br />
                     <zn-tooltip content="This attribute is different from its property">
                       <small>
-                        <code class="nowrap"> view-height </code>
+                        <code class="nowrap"> min-height </code>
                       </small>
                     </zn-tooltip>
                   </td>
                   <td>
-                    The virtual viewport height (in CSS pixels) of the previewed page area. The visible panel height is
-                    view-height multiplied by the current scale. Heights are derived from this constant rather than
-                    measured, because a measured container height would feed back into the scaled iframe’s layout box
-                    and grow unbounded.
+                    The visible height (in CSS pixels) of the preview panel. Fixed rather than measured, because a
+                    measured height would feed back into the scaled iframe’s layout box and grow unbounded.
                   </td>
                   <td style="text-align: center"></td>
                   <td>
                     <code>number</code>
                   </td>
                   <td>
-                    <code>720</code>
+                    <code>480</code>
                   </td>
                 </tr>
 

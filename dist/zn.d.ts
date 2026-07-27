@@ -10161,7 +10161,7 @@ declare module "components/page-builder/index" {
     }
 }
 declare module "components/preview-frame/preview-frame.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
      * @summary Embeds a live preview iframe and drives the hp-preview postMessage
@@ -10196,33 +10196,24 @@ declare module "components/preview-frame/preview-frame.component" {
         /** Debounce in ms between a form change and its auto-save. */
         debounce: number;
         /**
-         * The virtual viewport width (in CSS pixels) the previewed page is laid
-         * out at. The iframe always renders at view-width × view-height and is
-         * scaled (up or down) with a CSS transform to fill the container's width,
-         * so the visible preview always keeps the view-width : view-height aspect
-         * ratio (16:9 by default).
+         * Zooms the previewed page out (0–1]. The frame always fills the panel;
+         * zoom shrinks the content browser-style, so 0.4 shows the page at 40%
+         * size with correspondingly more of it visible. 1 = natural size.
          */
-        viewWidth: number;
+        zoom: number;
         /**
-         * The virtual viewport height (in CSS pixels) of the previewed page area.
-         * The visible panel height is view-height multiplied by the current scale.
-         * Heights are derived from this constant rather than measured, because a
-         * measured container height would feed back into the scaled iframe's
-         * layout box and grow unbounded.
+         * The visible height (in CSS pixels) of the preview panel. Fixed rather
+         * than measured, because a measured height would feed back into the
+         * scaled iframe's layout box and grow unbounded.
          */
-        viewHeight: number;
+        minHeight: number;
         frame: HTMLIFrameElement;
-        private previewContainer;
         private error;
-        private _scale;
         private _generation;
         private readonly _watchedForms;
         private readonly _debounceTimers;
         private readonly _formObserver;
-        private readonly _resizeObserver;
         connectedCallback(): void;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        private _onResize;
         disconnectedCallback(): void;
         private readonly _onMessage;
         /** Re-fetches the payload and pushes a fresh config to the preview. */

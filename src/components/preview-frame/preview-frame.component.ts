@@ -1,7 +1,6 @@
-import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property, query, state} from 'lit/decorators.js';
-import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import {styleMap} from 'lit/directives/style-map.js';
 import ZincElement from '../../internal/zinc-element';
 
@@ -46,30 +45,22 @@ export default class ZnPreviewFrame extends ZincElement {
   @property({type: Number}) debounce = 400;
 
   /**
-   * The virtual viewport width (in CSS pixels) the previewed page is laid
-   * out at. The iframe always renders at view-width × view-height and is
-   * scaled (up or down) with a CSS transform to fill the container's width,
-   * so the visible preview always keeps the view-width : view-height aspect
-   * ratio (16:9 by default).
+   * Zooms the previewed page out (0–1]. The frame always fills the panel;
+   * zoom shrinks the content browser-style, so 0.4 shows the page at 40%
+   * size with correspondingly more of it visible. 1 = natural size.
    */
-  @property({type: Number, attribute: 'view-width'}) viewWidth = 1280;
+  @property({type: Number}) zoom = 1;
 
   /**
-   * The virtual viewport height (in CSS pixels) of the previewed page area.
-   * The visible panel height is view-height multiplied by the current scale.
-   * Heights are derived from this constant rather than measured, because a
-   * measured container height would feed back into the scaled iframe's
-   * layout box and grow unbounded.
+   * The visible height (in CSS pixels) of the preview panel. Fixed rather
+   * than measured, because a measured height would feed back into the
+   * scaled iframe's layout box and grow unbounded.
    */
-  @property({type: Number, attribute: 'view-height'}) viewHeight = 720;
+  @property({type: Number, attribute: 'min-height'}) minHeight = 480;
 
   @query('iframe') frame: HTMLIFrameElement;
 
-  @query('.preview') private previewContainer: HTMLDivElement;
-
   @state() private error = '';
-
-  @state() private _scale = 1;
 
   private _generation = 0;
 
@@ -85,14 +76,6 @@ export default class ZnPreviewFrame extends ZincElement {
     callback: () => this._attachForms(),
   });
 
-  // The container is measured (rather than the host) so the scale reacts to
-  // layout-driven resizes of the panel around the component.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private readonly _resizeObserver = new ResizeController(this, {
-    target: null,
-    callback: () => this._onResize(),
-  });
-
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('message', this._onMessage);
@@ -105,20 +88,6 @@ export default class ZnPreviewFrame extends ZincElement {
       // accepts any Node at runtime, including a ShadowRoot.
       this._formObserver.observe(root as unknown as Element);
     }
-  }
-
-  protected firstUpdated(_changedProperties: PropertyValues) {
-    super.firstUpdated(_changedProperties);
-    if (this.previewContainer) {
-      this._resizeObserver.observe(this.previewContainer);
-    }
-  }
-
-  private _onResize() {
-    const container = this.previewContainer;
-    if (!container) return;
-    const rect = container.getBoundingClientRect();
-    this._scale = rect.width > 0 ? rect.width / this.viewWidth : 1;
   }
 
   disconnectedCallback() {
@@ -250,15 +219,18 @@ export default class ZnPreviewFrame extends ZincElement {
   }
 
   render() {
+    const zoom = this.zoom > 0 && this.zoom <= 1 ? this.zoom : 1;
+    // Browser-style zoom-out: the iframe lays out oversized (1/zoom) and is
+    // transformed back down, so the frame fills the panel while the content
+    // renders smaller and more of the page is visible. Percentage width means
+    // nothing is measured — no layout feedback loop.
     const iframeStyles = {
-      width: `${this.viewWidth}px`,
-      height: `${this.viewHeight}px`,
-      transform: `scale(${this._scale})`,
+      width: `${100 / zoom}%`,
+      height: `${this.minHeight / zoom}px`,
+      transform: `scale(${zoom})`,
       transformOrigin: '0 0',
     };
-    // The visible box is the scaled virtual viewport, never a measurement,
-    // so it always keeps the view-width : view-height aspect ratio.
-    const containerStyles = {height: `${this.viewHeight * this._scale}px`};
+    const containerStyles = {height: `${this.minHeight}px`};
 
     return html`
       <div part="base" class="preview" style="${styleMap(containerStyles)}">

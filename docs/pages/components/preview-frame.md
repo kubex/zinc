@@ -25,7 +25,7 @@ The example below embeds the [demo embed page](/components/preview-frame-demo/),
 `watch` defaults to `form[data-auto-save]`, so only forms explicitly opted in via a `data-auto-save` attribute are watched — unmarked forms keep normal submit behavior and are never intercepted. Override `watch` with your own selector to widen or change the scope — the examples here point it at a form that doesn't exist. Watched forms are auto-saved via a POST to their `action` on change, which needs a real endpoint, so it isn't demonstrated here.
 :::
 
-The previewed page is laid out desktop-first, so the frame renders the iframe at a virtual desktop width (`view-width`, default `1280`) and scales it down with a CSS transform to fit the panel whenever the panel is narrower than that. It's never scaled up — if the container is wider than `view-width`, the iframe just fills it at 100% as usual. The scale tracks the container's size, so resizing the surrounding panel rescales the preview without a reload.
+The frame always fills the panel; `zoom` (0–1, default `1`) zooms the previewed page out browser-style — e.g. `zoom="0.4"` renders the content at 40% size with correspondingly more of the page visible. `min-height` (default `480`) sets the visible panel height in pixels.
 
 ## Live Form Updates
 

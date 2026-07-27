@@ -237,44 +237,32 @@ describe('<zn-preview-frame>', () => {
     expect(el.shadowRoot!.querySelector('[part="error"]')!.textContent).to.contain('payload exploded');
   });
 
-  it('scales the iframe down to fit a narrow container', async () => {
-    const wrapper = await fixture(html`
-      <div style="width: 640px;">
-        <zn-preview-frame
-          src="about:blank"
-          frame-origin="https://site.example"
-          data-uri="/payload"
-          view-width="1280"></zn-preview-frame>
-      </div>`);
+  it('zooms the content out: oversized layout scaled back into the frame', async () => {
+    const el = await fixture(html`
+      <zn-preview-frame
+        src="about:blank"
+        frame-origin="https://site.example"
+        data-uri="/payload"
+        zoom="0.4"
+        min-height="600"></zn-preview-frame>`);
 
-    const el = wrapper.querySelector('zn-preview-frame')!;
     const iframe = el.shadowRoot!.querySelector('iframe')!;
-    await waitUntil(() => iframe.style.transform.includes('scale(0.5)'));
-    expect(iframe.style.width).to.equal('1280px');
-    // Heights derive from view-height (default 720), never from measurement:
-    // iframe keeps its virtual layout height, the container shows it scaled.
-    expect(iframe.style.height).to.equal('720px');
+    await waitUntil(() => iframe.style.transform === 'scale(0.4)');
+    // 1/zoom oversize, transformed back down — the frame itself fills the
+    // panel while the page renders at 40%.
+    expect(iframe.style.width).to.equal('250%');
+    expect(iframe.style.height).to.equal('1500px');
     const container = el.shadowRoot!.querySelector<HTMLDivElement>('.preview')!;
-    await waitUntil(() => container.style.height === '360px');
+    expect(container.style.height).to.equal('600px');
   });
 
-  it('scales up to fill a wider container, keeping the aspect ratio', async () => {
-    const wrapper = await fixture(html`
-      <div style="width: 800px;">
-        <zn-preview-frame
-          src="about:blank"
-          frame-origin="https://site.example"
-          data-uri="/payload"
-          view-width="400"
-          view-height="225"></zn-preview-frame>
-      </div>`);
-
-    const el = wrapper.querySelector('zn-preview-frame')!;
+  it('renders at natural size by default', async () => {
+    const el = await fixture(FIXTURE);
     const iframe = el.shadowRoot!.querySelector('iframe')!;
-    await waitUntil(() => iframe.style.transform.includes('scale(2)'));
-    expect(iframe.style.width).to.equal('400px');
+    await waitUntil(() => iframe.style.transform === 'scale(1)');
+    expect(iframe.style.width).to.equal('100%');
+    expect(iframe.style.height).to.equal('480px');
     const container = el.shadowRoot!.querySelector<HTMLDivElement>('.preview')!;
-    // 225 * 2 — the visible box stays 16:9 (800 × 450).
-    await waitUntil(() => container.style.height === '450px');
+    expect(container.style.height).to.equal('480px');
   });
 });

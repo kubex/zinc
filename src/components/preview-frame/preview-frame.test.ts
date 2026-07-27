@@ -7,7 +7,7 @@ describe('<zn-preview-frame>', () => {
       <zn-preview-frame
         src="https://site.example/embed/preview?t=x"
         frame-origin="https://site.example"
-        payload-uri="/payload"></zn-preview-frame>`);
+        data-uri="/payload"></zn-preview-frame>`);
 
     const iframe = el.shadowRoot!.querySelector('iframe');
     expect(iframe).to.exist;
@@ -18,7 +18,7 @@ describe('<zn-preview-frame>', () => {
     <zn-preview-frame
       src="about:blank"
       frame-origin="https://site.example"
-      payload-uri="/payload"></zn-preview-frame>`;
+      data-uri="/payload"></zn-preview-frame>`;
 
   const PAYLOAD = {pageType: 'payment.subscribe', page: {Name: 'Page'}, config: {BaseProduct: 'prod'}};
 
@@ -61,6 +61,7 @@ describe('<zn-preview-frame>', () => {
 
     await waitUntil(() => posted.length === 1);
     expect(fetchCalls[0].uri).to.equal('/payload');
+    expect((fetchCalls[0].init?.headers as Record<string, string>)['x-kx-fetch-style']).to.equal('download');
     expect(posted[0].origin).to.equal('https://site.example');
     expect(posted[0].msg['type']).to.equal('hp-preview:config');
     expect(posted[0].msg['pageType']).to.equal('payment.subscribe');
@@ -89,7 +90,7 @@ describe('<zn-preview-frame>', () => {
 
   it('rejects all messages when frame-origin is unset', async () => {
     const el = await fixture(html`
-      <zn-preview-frame src="about:blank" payload-uri="/payload"></zn-preview-frame>`);
+      <zn-preview-frame src="about:blank" data-uri="/payload"></zn-preview-frame>`);
     ready(el, 'https://site.example');
 
     await new Promise(resolve => setTimeout(resolve, 50));
@@ -105,7 +106,7 @@ describe('<zn-preview-frame>', () => {
         <zn-preview-frame
           src="about:blank"
           frame-origin="https://site.example"
-          payload-uri="/payload"
+          data-uri="/payload"
           debounce="10"></zn-preview-frame>
       </div>`);
 
@@ -135,7 +136,7 @@ describe('<zn-preview-frame>', () => {
         <zn-preview-frame
           src="about:blank"
           frame-origin="https://site.example"
-          payload-uri="/payload"></zn-preview-frame>
+          data-uri="/payload"></zn-preview-frame>
       </div>`);
 
     let bubbled = false;
@@ -155,7 +156,7 @@ describe('<zn-preview-frame>', () => {
         <zn-preview-frame
           src="about:blank"
           frame-origin="https://site.example"
-          payload-uri="/payload"
+          data-uri="/payload"
           debounce="10"></zn-preview-frame>
       </div>`);
 

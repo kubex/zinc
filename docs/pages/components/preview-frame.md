@@ -5,7 +5,7 @@ meta:
 layout: component
 ---
 
-The frame loads the embed page from `src`, waits for it to post `hp-preview:ready`, fetches the JSON payload from `payload-uri` and posts it back into the frame as `hp-preview:config`. The embed then reports `hp-preview:rendered` or `hp-preview:error`.
+The frame loads the embed page from `src`, waits for it to post `hp-preview:ready`, fetches the JSON payload from `data-uri` and posts it back into the frame as `hp-preview:config`. The embed then reports `hp-preview:rendered` or `hp-preview:error`.
 
 The example below embeds the [demo embed page](/components/preview-frame-demo/), which implements the embed side of the protocol. `frame-origin` must match the embed's origin exactly — messages from any other origin are ignored — so the example sets it at runtime since the docs demo is same-origin.
 
@@ -13,7 +13,7 @@ The example below embeds the [demo embed page](/components/preview-frame-demo/),
 <zn-preview-frame
   id="preview-frame-demo"
   src="/components/preview-frame-demo/"
-  payload-uri="/data/preview-frame-payload.json"
+  data-uri="/data/preview-frame-payload.json"
   watch="#preview-frame-demo-form"></zn-preview-frame>
 
 <script>
@@ -52,7 +52,7 @@ In a real deployment, editing a watched form auto-saves it and the preview refre
 
     const update = () => {
       const payload = Object.fromEntries(new FormData(form));
-      frame.payloadUri = 'data:application/json,' + encodeURIComponent(JSON.stringify(payload));
+      frame.dataUri = 'data:application/json,' + encodeURIComponent(JSON.stringify(payload));
       frame.refresh();
     };
 
@@ -94,7 +94,7 @@ When the embed reports `hp-preview:error` (or fetching the payload fails), the m
 <zn-preview-frame
   id="preview-frame-demo-error"
   src="/components/preview-frame-demo/"
-  payload-uri="/data/preview-frame-payload-error.json"
+  data-uri="/data/preview-frame-payload-error.json"
   watch="#preview-frame-demo-error-form"></zn-preview-frame>
 
 <script>

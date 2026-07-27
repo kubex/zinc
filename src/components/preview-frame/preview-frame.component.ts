@@ -8,7 +8,7 @@ import styles from './preview-frame.scss';
 /**
  * @summary Embeds a live preview iframe and drives the hp-preview postMessage
  * protocol: answers the frame's ready handshake with a config payload fetched
- * from payload-uri, auto-saves watched forms on change, and refreshes the
+ * from data-uri, auto-saves watched forms on change, and refreshes the
  * preview after each save.
  * @documentation https://zinc.style/components/preview-frame
  * @status experimental
@@ -29,8 +29,8 @@ export default class ZnPreviewFrame extends ZincElement {
   /** Expected origin of the iframe; all postMessage traffic is checked against it. */
   @property({attribute: 'frame-origin'}) frameOrigin = '';
 
-  /** Endpoint returning the hp-preview:config payload JSON. */
-  @property({attribute: 'payload-uri'}) payloadUri = '';
+  /** Endpoint returning the hp-preview:config payload JSON. The console proxy rewrites this attribute to an app-prefixed path for proper fetch resolution. */
+  @property({attribute: 'data-uri'}) dataUri = '';
 
   /** Selector (resolved against the component's root node) for the forms to watch. */
   @property() watch = 'form';
@@ -104,7 +104,12 @@ export default class ZnPreviewFrame extends ZincElement {
   private async _sendConfig() {
     const generation = ++this._generation;
     try {
-      const response = await fetch(this.payloadUri, {credentials: 'same-origin'});
+      const response = await fetch(this.dataUri, {
+        credentials: 'same-origin',
+        // The console proxy pagelet-wraps app responses; 'download' streams
+        // the endpoint's raw JSON through verbatim.
+        headers: {'x-kx-fetch-style': 'download'},
+      });
       if (!response.ok) {
         throw new Error(await response.text() || response.statusText);
       }

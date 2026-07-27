@@ -649,12 +649,20 @@
           </div>
           <div role="alert" class="callout callout--tip">
             <p>
-              <code>watch</code> defaults to <code>form</code>, which watches every form in the component’s root node.
-              On a page with unrelated forms (like this docs site), scope it with a selector — the examples here point
-              it at a form that doesn’t exist. Watched forms are auto-saved via a POST to their <code>action</code> on
-              change, which needs a real endpoint, so it isn’t demonstrated here.
+              <code>watch</code> defaults to <code>form[data-auto-save]</code>, so only forms explicitly opted in via a
+              <code>data-auto-save</code> attribute are watched — unmarked forms keep normal submit behavior and are
+              never intercepted. Override <code>watch</code> with your own selector to widen or change the scope — the
+              examples here point it at a form that doesn’t exist. Watched forms are auto-saved via a POST to their
+              <code>action</code> on change, which needs a real endpoint, so it isn’t demonstrated here.
             </p>
           </div>
+          <p>
+            The previewed page is laid out desktop-first, so the frame renders the iframe at a virtual desktop width
+            (<code>view-width</code>, default <code>1280</code>) and scales it down with a CSS transform to fit the
+            panel whenever the panel is narrower than that. It’s never scaled up — if the container is wider than
+            <code>view-width</code>, the iframe just fills it at 100% as usual. The scale tracks the container’s size,
+            so resizing the surrounding panel rescales the preview without a reload.
+          </p>
           <h2 id="live-form-updates" class="anchor-heading">
             Live Form Updates<a href="#live-form-updates" aria-label='Direct link to "Live Form Updates"'></a>
           </h2>
@@ -999,13 +1007,18 @@
                   <td>
                     <code class="nowrap">watch</code>
                   </td>
-                  <td>Selector (resolved against the component’s root node) for the forms to watch.</td>
+                  <td>
+                    Selector (resolved against the component’s root node) for the forms to watch. Defaults to only forms
+                    explicitly opted in via a <code>data-auto-save</code> attribute — unmarked forms keep normal submit
+                    behavior and are never intercepted, auto-saved, or used to trigger a preview refresh. Override to
+                    widen the scope.
+                  </td>
                   <td style="text-align: center"></td>
                   <td>
                     <code>string</code>
                   </td>
                   <td>
-                    <code>'form'</code>
+                    <code>'form[data-auto-save]'</code>
                   </td>
                 </tr>
 
@@ -1020,6 +1033,58 @@
                   </td>
                   <td>
                     <code>400</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">viewWidth</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> view-width </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    The virtual viewport width (in CSS pixels) the previewed page is laid out at. The iframe always
+                    renders at view-width × view-height and is scaled (up or down) with a CSS transform to fill the
+                    container’s width, so the visible preview always keeps the view-width : view-height aspect ratio
+                    (16:9 by default).
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>number</code>
+                  </td>
+                  <td>
+                    <code>1280</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">viewHeight</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> view-height </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    The virtual viewport height (in CSS pixels) of the previewed page area. The visible panel height is
+                    view-height multiplied by the current scale. Heights are derived from this constant rather than
+                    measured, because a measured container height would feed back into the scaled iframe’s layout box
+                    and grow unbounded.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>number</code>
+                  </td>
+                  <td>
+                    <code>720</code>
                   </td>
                 </tr>
 

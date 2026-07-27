@@ -10161,7 +10161,7 @@ declare module "components/page-builder/index" {
     }
 }
 declare module "components/preview-frame/preview-frame.component" {
-    import { type CSSResultGroup } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
      * @summary Embeds a live preview iframe and drives the hp-preview postMessage
@@ -10186,17 +10186,43 @@ declare module "components/preview-frame/preview-frame.component" {
         frameOrigin: string;
         /** Endpoint returning the hp-preview:config payload JSON. The console proxy rewrites this attribute to an app-prefixed path for proper fetch resolution. */
         dataUri: string;
-        /** Selector (resolved against the component's root node) for the forms to watch. */
+        /**
+         * Selector (resolved against the component's root node) for the forms to watch.
+         * Defaults to only forms explicitly opted in via a `data-auto-save` attribute —
+         * unmarked forms keep normal submit behavior and are never intercepted,
+         * auto-saved, or used to trigger a preview refresh. Override to widen the scope.
+         */
         watch: string;
         /** Debounce in ms between a form change and its auto-save. */
         debounce: number;
+        /**
+         * The virtual viewport width (in CSS pixels) the previewed page is laid
+         * out at. The iframe always renders at view-width × view-height and is
+         * scaled (up or down) with a CSS transform to fill the container's width,
+         * so the visible preview always keeps the view-width : view-height aspect
+         * ratio (16:9 by default).
+         */
+        viewWidth: number;
+        /**
+         * The virtual viewport height (in CSS pixels) of the previewed page area.
+         * The visible panel height is view-height multiplied by the current scale.
+         * Heights are derived from this constant rather than measured, because a
+         * measured container height would feed back into the scaled iframe's
+         * layout box and grow unbounded.
+         */
+        viewHeight: number;
         frame: HTMLIFrameElement;
+        private previewContainer;
         private error;
+        private _scale;
         private _generation;
         private readonly _watchedForms;
         private readonly _debounceTimers;
         private readonly _formObserver;
+        private readonly _resizeObserver;
         connectedCallback(): void;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        private _onResize;
         disconnectedCallback(): void;
         private readonly _onMessage;
         /** Re-fetches the payload and pushes a fresh config to the preview. */

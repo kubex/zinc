@@ -22,8 +22,10 @@ The example below embeds the [demo embed page](/components/preview-frame-demo/),
 ```
 
 :::tip
-`watch` defaults to `form`, which watches every form in the component's root node. On a page with unrelated forms (like this docs site), scope it with a selector — the examples here point it at a form that doesn't exist. Watched forms are auto-saved via a POST to their `action` on change, which needs a real endpoint, so it isn't demonstrated here.
+`watch` defaults to `form[data-auto-save]`, so only forms explicitly opted in via a `data-auto-save` attribute are watched — unmarked forms keep normal submit behavior and are never intercepted. Override `watch` with your own selector to widen or change the scope — the examples here point it at a form that doesn't exist. Watched forms are auto-saved via a POST to their `action` on change, which needs a real endpoint, so it isn't demonstrated here.
 :::
+
+The previewed page is laid out desktop-first, so the frame renders the iframe at a virtual desktop width (`view-width`, default `1280`) and scales it down with a CSS transform to fit the panel whenever the panel is narrower than that. It's never scaled up — if the container is wider than `view-width`, the iframe just fills it at 100% as usual. The scale tracks the container's size, so resizing the surrounding panel rescales the preview without a reload.
 
 ## Live Form Updates
 

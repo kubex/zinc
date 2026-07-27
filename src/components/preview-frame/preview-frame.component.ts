@@ -1,6 +1,8 @@
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property, query, state} from 'lit/decorators.js';
+import {ResizeController} from '@lit-labs/observers/resize-controller.js';
+import {styleMap} from 'lit/directives/style-map.js';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './preview-frame.scss';
@@ -32,15 +34,42 @@ export default class ZnPreviewFrame extends ZincElement {
   /** Endpoint returning the hp-preview:config payload JSON. The console proxy rewrites this attribute to an app-prefixed path for proper fetch resolution. */
   @property({attribute: 'data-uri'}) dataUri = '';
 
-  /** Selector (resolved against the component's root node) for the forms to watch. */
-  @property() watch = 'form';
+  /**
+   * Selector (resolved against the component's root node) for the forms to watch.
+   * Defaults to only forms explicitly opted in via a `data-auto-save` attribute —
+   * unmarked forms keep normal submit behavior and are never intercepted,
+   * auto-saved, or used to trigger a preview refresh. Override to widen the scope.
+   */
+  @property() watch = 'form[data-auto-save]';
 
   /** Debounce in ms between a form change and its auto-save. */
   @property({type: Number}) debounce = 400;
 
+  /**
+   * The virtual viewport width (in CSS pixels) the previewed page is laid
+   * out at. The iframe always renders at view-width × view-height and is
+   * scaled (up or down) with a CSS transform to fill the container's width,
+   * so the visible preview always keeps the view-width : view-height aspect
+   * ratio (16:9 by default).
+   */
+  @property({type: Number, attribute: 'view-width'}) viewWidth = 1280;
+
+  /**
+   * The virtual viewport height (in CSS pixels) of the previewed page area.
+   * The visible panel height is view-height multiplied by the current scale.
+   * Heights are derived from this constant rather than measured, because a
+   * measured container height would feed back into the scaled iframe's
+   * layout box and grow unbounded.
+   */
+  @property({type: Number, attribute: 'view-height'}) viewHeight = 720;
+
   @query('iframe') frame: HTMLIFrameElement;
 
+  @query('.preview') private previewContainer: HTMLDivElement;
+
   @state() private error = '';
+
+  @state() private _scale = 1;
 
   private _generation = 0;
 
@@ -56,6 +85,14 @@ export default class ZnPreviewFrame extends ZincElement {
     callback: () => this._attachForms(),
   });
 
+  // The container is measured (rather than the host) so the scale reacts to
+  // layout-driven resizes of the panel around the component.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private readonly _resizeObserver = new ResizeController(this, {
+    target: null,
+    callback: () => this._onResize(),
+  });
+
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('message', this._onMessage);
@@ -68,6 +105,20 @@ export default class ZnPreviewFrame extends ZincElement {
       // accepts any Node at runtime, including a ShadowRoot.
       this._formObserver.observe(root as unknown as Element);
     }
+  }
+
+  protected firstUpdated(_changedProperties: PropertyValues) {
+    super.firstUpdated(_changedProperties);
+    if (this.previewContainer) {
+      this._resizeObserver.observe(this.previewContainer);
+    }
+  }
+
+  private _onResize() {
+    const container = this.previewContainer;
+    if (!container) return;
+    const rect = container.getBoundingClientRect();
+    this._scale = rect.width > 0 ? rect.width / this.viewWidth : 1;
   }
 
   disconnectedCallback() {
@@ -199,9 +250,23 @@ export default class ZnPreviewFrame extends ZincElement {
   }
 
   render() {
+    const iframeStyles = {
+      width: `${this.viewWidth}px`,
+      height: `${this.viewHeight}px`,
+      transform: `scale(${this._scale})`,
+      transformOrigin: '0 0',
+    };
+    // The visible box is the scaled virtual viewport, never a measurement,
+    // so it always keeps the view-width : view-height aspect ratio.
+    const containerStyles = {height: `${this.viewHeight * this._scale}px`};
+
     return html`
-      <div part="base" class="preview">
-        <iframe part="iframe" src="${this.src}" title="Payment form preview"></iframe>
+      <div part="base" class="preview" style="${styleMap(containerStyles)}">
+        <iframe part="iframe"
+                src="${this.src}"
+                title="Payment form preview"
+                allow="local-network-access"
+                style="${styleMap(iframeStyles)}"></iframe>
         ${this.error ? html`
           <div part="error" class="preview__error">${this.error}</div>` : ''}
       </div>`;

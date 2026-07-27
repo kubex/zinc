@@ -1,6 +1,17 @@
 import '../../../dist/zn.min.js';
 import {expect, fixture, html, waitUntil} from '@open-wc/testing';
 
+// The container's ResizeObserver can emit a benign "loop completed with undelivered
+// notifications" warning when the panel resizes during layout-measuring tests. It's
+// not a real error — ignore it so the test runner doesn't treat it as an uncaught
+// exception (capture phase runs before the runner's).
+window.addEventListener('error', (e: ErrorEvent) => {
+  if (typeof e.message === 'string' && e.message.includes('ResizeObserver loop')) {
+    e.stopImmediatePropagation();
+    e.preventDefault();
+  }
+}, true);
+
 describe('<zn-preview-frame>', () => {
   it('renders an iframe pointing at src', async () => {
     const el = await fixture(html`
@@ -100,7 +111,7 @@ describe('<zn-preview-frame>', () => {
   it('auto-saves a watched form on change, then refreshes the preview', async () => {
     const wrapper = await fixture(html`
       <div>
-        <form action="/save" method="post">
+        <form action="/save" method="post" data-auto-save>
           <input name="caption" value="hello">
         </form>
         <zn-preview-frame
@@ -132,7 +143,7 @@ describe('<zn-preview-frame>', () => {
   it('intercepts watched form submits so they never bubble to the shell', async () => {
     const wrapper = await fixture(html`
       <div>
-        <form action="/save" method="post"><input name="a" value="1"></form>
+        <form action="/save" method="post" data-auto-save><input name="a" value="1"></form>
         <zn-preview-frame
           src="about:blank"
           frame-origin="https://site.example"
@@ -152,7 +163,7 @@ describe('<zn-preview-frame>', () => {
   it('does not save a form removed from the DOM mid-debounce', async () => {
     const wrapper = await fixture(html`
       <div>
-        <form action="/save" method="post"><input name="a" value="1"></form>
+        <form action="/save" method="post" data-auto-save><input name="a" value="1"></form>
         <zn-preview-frame
           src="about:blank"
           frame-origin="https://site.example"
@@ -166,6 +177,29 @@ describe('<zn-preview-frame>', () => {
 
     await new Promise(resolve => setTimeout(resolve, 100));
     expect(fetchCalls.length).to.equal(0);
+  });
+
+  it('leaves forms without data-auto-save alone', async () => {
+    const wrapper = await fixture(html`
+      <div>
+        <form action="/save" method="post"><input name="a" value="1"></form>
+        <zn-preview-frame
+          src="about:blank"
+          frame-origin="https://site.example"
+          data-uri="/payload"
+          debounce="10"></zn-preview-frame>
+      </div>`);
+
+    let bubbled = false;
+    wrapper.addEventListener('submit', e => { bubbled = true; e.preventDefault(); });
+
+    const form = wrapper.querySelector('form')!;
+    form.querySelector('input')!.dispatchEvent(new Event('change', {bubbles: true}));
+    await new Promise(resolve => setTimeout(resolve, 100));
+    expect(fetchCalls.length).to.equal(0);
+
+    form.requestSubmit();
+    expect(bubbled).to.equal(true);
   });
 
   it('shows hp-preview:error messages in the overlay and clears on rendered', async () => {
@@ -201,5 +235,46 @@ describe('<zn-preview-frame>', () => {
 
     await waitUntil(() => el.shadowRoot!.querySelector('[part="error"]'));
     expect(el.shadowRoot!.querySelector('[part="error"]')!.textContent).to.contain('payload exploded');
+  });
+
+  it('scales the iframe down to fit a narrow container', async () => {
+    const wrapper = await fixture(html`
+      <div style="width: 640px;">
+        <zn-preview-frame
+          src="about:blank"
+          frame-origin="https://site.example"
+          data-uri="/payload"
+          view-width="1280"></zn-preview-frame>
+      </div>`);
+
+    const el = wrapper.querySelector('zn-preview-frame')!;
+    const iframe = el.shadowRoot!.querySelector('iframe')!;
+    await waitUntil(() => iframe.style.transform.includes('scale(0.5)'));
+    expect(iframe.style.width).to.equal('1280px');
+    // Heights derive from view-height (default 720), never from measurement:
+    // iframe keeps its virtual layout height, the container shows it scaled.
+    expect(iframe.style.height).to.equal('720px');
+    const container = el.shadowRoot!.querySelector<HTMLDivElement>('.preview')!;
+    await waitUntil(() => container.style.height === '360px');
+  });
+
+  it('scales up to fill a wider container, keeping the aspect ratio', async () => {
+    const wrapper = await fixture(html`
+      <div style="width: 800px;">
+        <zn-preview-frame
+          src="about:blank"
+          frame-origin="https://site.example"
+          data-uri="/payload"
+          view-width="400"
+          view-height="225"></zn-preview-frame>
+      </div>`);
+
+    const el = wrapper.querySelector('zn-preview-frame')!;
+    const iframe = el.shadowRoot!.querySelector('iframe')!;
+    await waitUntil(() => iframe.style.transform.includes('scale(2)'));
+    expect(iframe.style.width).to.equal('400px');
+    const container = el.shadowRoot!.querySelector<HTMLDivElement>('.preview')!;
+    // 225 * 2 — the visible box stays 16:9 (800 × 450).
+    await waitUntil(() => container.style.height === '450px');
   });
 });

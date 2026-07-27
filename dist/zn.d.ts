@@ -1327,6 +1327,7 @@ declare module "components/toggle/toggle.component" {
         title: string;
         name: string;
         value: string;
+        /** The value submitted when the toggle is unchecked, so the toggle always submits a value. */
         fallbackValue: string;
         size: 'small' | 'medium' | 'large';
         disabled: boolean;
@@ -6572,6 +6573,7 @@ declare module "components/form-group/form-group.component" {
      * @since 1.0
      *
      * @slot - The default slot.
+     * @slot chip - A chip displayed under the form group's help text.
      *
      */
     export default class ZnFormGroup extends ZincElement {
@@ -6591,6 +6593,7 @@ declare module "components/form-group/form-group.component" {
         helpText: string;
         forceCols: boolean;
         layout: string;
+        pad: boolean;
         render(): import("lit-html").TemplateResult<1>;
     }
 }
@@ -10157,6 +10160,67 @@ declare module "components/page-builder/index" {
         }
     }
 }
+declare module "components/preview-frame/preview-frame.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Embeds a live preview iframe and drives the hp-preview postMessage
+     * protocol: answers the frame's ready handshake with a config payload fetched
+     * from data-uri, auto-saves watched forms on change, and refreshes the
+     * preview after each save.
+     * @documentation https://zinc.style/components/preview-frame
+     * @status experimental
+     * @since 1.0
+     *
+     * @event zn-error - Emitted when the preview reports a render error or a save fails.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart iframe - The preview iframe.
+     * @csspart error - The error overlay.
+     */
+    export default class ZnPreviewFrame extends ZincElement {
+        static styles: CSSResultGroup;
+        /** URL of the preview shell page (tokened embed URL). */
+        src: string;
+        /** Expected origin of the iframe; all postMessage traffic is checked against it. */
+        frameOrigin: string;
+        /** Endpoint returning the hp-preview:config payload JSON. The console proxy rewrites this attribute to an app-prefixed path for proper fetch resolution. */
+        dataUri: string;
+        /** Selector (resolved against the component's root node) for the forms to watch. */
+        watch: string;
+        /** Debounce in ms between a form change and its auto-save. */
+        debounce: number;
+        frame: HTMLIFrameElement;
+        private error;
+        private _generation;
+        private readonly _watchedForms;
+        private readonly _debounceTimers;
+        private readonly _formObserver;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        private readonly _onMessage;
+        /** Re-fetches the payload and pushes a fresh config to the preview. */
+        refresh(): Promise<void>;
+        private _sendConfig;
+        private _attachForms;
+        private _detachForm;
+        private readonly _onChange;
+        private readonly _onSubmit;
+        private _save;
+        private _fail;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/preview-frame/index" {
+    import ZnPreviewFrame from "components/preview-frame/preview-frame.component";
+    export * from "components/preview-frame/preview-frame.component";
+    export default ZnPreviewFrame;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-preview-frame': ZnPreviewFrame;
+        }
+    }
+}
 declare module "utilities/form" {
     export { clearFormStoreValues } from "internal/form";
 }
@@ -10455,6 +10519,7 @@ declare module "zinc" {
     export { default as PageBuilder } from "components/page-builder/index";
     export { default as PagePaletteItem } from "components/page-builder/modules/page-palette-item/index";
     export { default as PageSectionCard } from "components/page-builder/modules/page-section-card/index";
+    export { default as PreviewFrame } from "components/preview-frame/index";
     export { default as ZincElement } from "internal/zinc-element";
     export * from "utilities/on";
     export * from "utilities/query";
@@ -10570,6 +10635,7 @@ declare module "events/zn-element-added" {
 declare module "events/zn-error" {
     export type ZnErrorEvent = CustomEvent<{
         status?: number;
+        message?: string;
     }>;
     global {
         interface GlobalEventHandlersEventMap {

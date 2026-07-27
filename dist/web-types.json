@@ -16,28 +16,6 @@
           "js": { "properties": [], "events": [] }
         },
         {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -97,6 +75,28 @@
               { "name": "center", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -4084,7 +4084,7 @@
         },
         {
           "name": "zn-form-group",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **chip** - A chip displayed under the form group's help text.",
           "doc-url": "",
           "attributes": [
             {
@@ -4109,9 +4109,19 @@
             {
               "name": "layout",
               "value": { "type": "string", "default": "\"1,2\"" }
+            },
+            {
+              "name": "pad",
+              "value": { "type": "boolean", "default": "false" }
             }
           ],
-          "slots": [{ "name": "", "description": "The default slot." }],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            {
+              "name": "chip",
+              "description": "A chip displayed under the form group's help text."
+            }
+          ],
           "events": [],
           "js": {
             "properties": [
@@ -4131,7 +4141,8 @@
                 "type": "string"
               },
               { "name": "forceCols", "type": "boolean" },
-              { "name": "layout", "type": "string" }
+              { "name": "layout", "type": "string" },
+              { "name": "pad", "type": "boolean" }
             ],
             "events": []
           }
@@ -6785,6 +6796,80 @@
               {
                 "name": "zn-event-name",
                 "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-preview-frame",
+          "description": "Embeds a live preview iframe and drives the hp-preview postMessage\nprotocol: answers the frame's ready handshake with a config payload fetched\nfrom data-uri, auto-saves watched forms on change, and refreshes the\npreview after each save.\n---\n\n\n### **Events:**\n - **zn-error** - Emitted when the preview reports a render error or a save fails.\n\n### **Methods:**\n - **refresh()** - Re-fetches the payload and pushes a fresh config to the preview.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **iframe** - The preview iframe.\n- **error** - The error overlay.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "src",
+              "description": "URL of the preview shell page (tokened embed URL).",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "frame-origin",
+              "description": "Expected origin of the iframe; all postMessage traffic is checked against it.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "data-uri",
+              "description": "Endpoint returning the hp-preview:config payload JSON. The console proxy rewrites this attribute to an app-prefixed path for proper fetch resolution.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "watch",
+              "description": "Selector (resolved against the component's root node) for the forms to watch.",
+              "value": { "type": "string", "default": "'form'" }
+            },
+            {
+              "name": "debounce",
+              "description": "Debounce in ms between a form change and its auto-save.",
+              "value": { "type": "number", "default": "400" }
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-error",
+              "description": "Emitted when the preview reports a render error or a save fails."
+            }
+          ],
+          "js": {
+            "properties": [
+              {
+                "name": "src",
+                "description": "URL of the preview shell page (tokened embed URL).",
+                "type": "string"
+              },
+              {
+                "name": "frameOrigin",
+                "description": "Expected origin of the iframe; all postMessage traffic is checked against it.",
+                "type": "string"
+              },
+              {
+                "name": "dataUri",
+                "description": "Endpoint returning the hp-preview:config payload JSON. The console proxy rewrites this attribute to an app-prefixed path for proper fetch resolution.",
+                "type": "string"
+              },
+              {
+                "name": "watch",
+                "description": "Selector (resolved against the component's root node) for the forms to watch.",
+                "type": "string"
+              },
+              {
+                "name": "debounce",
+                "description": "Debounce in ms between a form change and its auto-save.",
+                "type": "number"
+              },
+              { "name": "frame", "type": "HTMLIFrameElement" }
+            ],
+            "events": [
+              {
+                "name": "zn-error",
+                "description": "Emitted when the preview reports a render error or a save fails."
               }
             ]
           }
@@ -9574,7 +9659,8 @@
             { "name": "value", "value": { "type": "string" } },
             {
               "name": "fallback",
-              "value": { "type": "string", "default": "''" }
+              "description": "The value submitted when the toggle is unchecked, so the toggle always submits a value.",
+              "value": { "type": "string", "default": "'off'" }
             },
             {
               "name": "size",
@@ -9654,7 +9740,11 @@
               { "name": "title", "type": "string" },
               { "name": "name", "type": "string" },
               { "name": "value", "type": "string" },
-              { "name": "fallbackValue", "type": "string" },
+              {
+                "name": "fallbackValue",
+                "description": "The value submitted when the toggle is unchecked, so the toggle always submits a value.",
+                "type": "string"
+              },
               { "name": "size", "type": "'small' | 'medium' | 'large'" },
               { "name": "disabled", "type": "boolean" },
               { "name": "checked", "type": "boolean" },

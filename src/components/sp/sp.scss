@@ -36,6 +36,10 @@
   height: 100%;
   margin: var(--zn-default-margin, 0 auto);
 
+  &--divide {
+    gap: calc(var(--zn-sp-gap) * 2);
+  }
+
   &--divide.sp--no-gap {
     ::slotted(*:not(:last-child)) {
       border-bottom: 1px solid rgb(var(--zn-border-color)) !important;
@@ -54,7 +58,7 @@
         left: 0;
         width: 100%;
         max-width: 100%;
-        bottom: calc((var(--zn-sp-gap) / 2) * -1);
+        bottom: calc((var(--zn-sp-gap) / 1) * -1);
         background-color: rgb(var(--zn-border-color));
       }
     }

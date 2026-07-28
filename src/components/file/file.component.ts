@@ -76,8 +76,16 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
 
   private readonly formControlController = new FormControlController(this, {
     assumeInteractionOn: ['zn-change'],
-    value: (el: ZnFile) => el.files
+    // An explicitly cleared control submits an empty value so the server can
+    // remove the stored upload; an untouched empty control submits nothing.
+    value: (el: ZnFile) => {
+      if (el.files?.length) return el.files;
+      return el.clearedByUser ? '' : undefined;
+    }
   })
+
+  /** Set when the user clears the control; reset when a file is chosen. */
+  private clearedByUser = false;
 
   private readonly hasSlotController = new HasSlotController(this, 'help-text', 'label');
 
@@ -110,6 +118,9 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
   set files(v: FileList | null) {
     if (this.input) {
       this.input.files = v;
+      if (v?.length) {
+        this.clearedByUser = false;
+      }
       this.updatePreview();
     }
   }
@@ -481,6 +492,9 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
     const dataTransfer = new DataTransfer();
     files.forEach(f => dataTransfer.items.add(f));
     this.files = dataTransfer.files;
+    if (!dataTransfer.files.length) {
+      this.clearedByUser = true;
+    }
     this.input.dispatchEvent(new Event('change'));
   }
 
@@ -501,6 +515,7 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
     if (!hadLocalFile) {
       this.src = '';
     }
+    this.clearedByUser = true;
     this.clearConfirmDialog?.hide();
     this.input.dispatchEvent(new Event('change'));
     this.emit('zn-clear');

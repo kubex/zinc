@@ -12949,7 +12949,17 @@
               "name": "formControlController",
               "privacy": "private",
               "readonly": true,
-              "default": "new FormControlController(this, { assumeInteractionOn: ['zn-change'], value: (el: ZnFile) => el.files })"
+              "default": "new FormControlController(this, { assumeInteractionOn: ['zn-change'], // An explicitly cleared control submits an empty value so the server can // remove the stored upload; an untouched empty control submits nothing. value: (el: ZnFile) => { if (el.files?.length) return el.files; return el.clearedByUser ? '' : undefined; } })"
+            },
+            {
+              "kind": "field",
+              "name": "clearedByUser",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Set when the user clears the control; reset when a file is chosen."
             },
             {
               "kind": "field",

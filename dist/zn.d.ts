@@ -7057,6 +7057,8 @@ declare module "components/file/file.component" {
             'zn-dialog': typeof ZnDialog;
         };
         private readonly formControlController;
+        /** Set when the user clears the control; reset when a file is chosen. */
+        private clearedByUser;
         private readonly hasSlotController;
         private readonly localize;
         private userIsDragging;

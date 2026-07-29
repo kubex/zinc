@@ -10,6 +10,11 @@ import ZincElement from '../../internal/zinc-element';
 
 import styles from './tabs.scss';
 
+// Every element that manages its own tabs (ZnTabs and its subclasses). Tab
+// registration must stop at these so an outer container never claims a nested
+// container's tabs.
+const tabContainerSelector = 'zn-tabs, zn-page, zn-page-nav';
+
 /**
  * @summary Short summary of the component's intended use.
  * @documentation https://zinc.style/components/tabs
@@ -228,7 +233,7 @@ export default class ZnTabs extends ZincElement {
       }
     }
 
-    for (const uriTab of deepQuerySelectorAll("[tab-uri]", this, '')) {
+    for (const uriTab of deepQuerySelectorAll("[tab-uri]", this, tabContainerSelector)) {
       const uri: string = uriTab.getAttribute("tab-uri")!;
       const eleTabId = this._uriToId(uri);
       if (eleTabId === tabId) {
@@ -459,11 +464,11 @@ export default class ZnTabs extends ZincElement {
   }
 
   _registerTabs = () => {
-    deepQuerySelectorAll('[tab]', this, 'zn-tabs').forEach(ele => {
+    deepQuerySelectorAll('[tab]', this, tabContainerSelector).forEach(ele => {
       this._addTab(ele as HTMLElement);
     });
 
-    deepQuerySelectorAll('[tab-uri]', this, 'zn-tabs').forEach(ele => {
+    deepQuerySelectorAll('[tab-uri]', this, tabContainerSelector).forEach(ele => {
       if (ele.getAttribute('tab-uri') === "") {
         ele.setAttribute('tab', "");
         ele.removeAttribute('tab-uri');
@@ -471,7 +476,7 @@ export default class ZnTabs extends ZincElement {
       this._addTab(ele as HTMLElement);
     });
 
-    deepQuerySelectorAll('[ref-tab-uri]', this, 'zn-tabs').forEach(ele => {
+    deepQuerySelectorAll('[ref-tab-uri]', this, tabContainerSelector).forEach(ele => {
       if (!ele.hasAttribute('ref-tab')) {
         ele.setAttribute('ref-tab', this._uriToId(ele.getAttribute('ref-tab-uri')!));
         ele.removeAttribute('ref-tab-uri');

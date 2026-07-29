@@ -8697,6 +8697,154 @@ declare module "components/markdown-editor/index" {
         }
     }
 }
+declare module "components/remarkd-editor/remarkd-editor.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import type { ZincFormControl } from "internal/zinc-element";
+    /**
+     * @summary A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.
+     * @documentation https://zinc.style/components/remarkd-editor
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-button
+     * @dependency zn-button-group
+     * @dependency zn-icon
+     * @dependency zn-dialog
+     * @dependency zn-file
+     * @dependency zn-input
+     *
+     * @event zn-input - Emitted on each keystroke while editing a block.
+     * @event zn-change - Emitted when a block edit is committed and the value changes.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart toolbar - The always-visible block-insert toolbar.
+     * @csspart block - A rendered block wrapper.
+     * @csspart rendered - The rendered remarkd output of a block.
+     * @csspart input - The textarea shown while editing a block.
+     * @csspart slash-menu - The context menu opened by typing "/" in a block.
+     */
+    export default class ZnRemarkdEditor extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        private readonly formControlController;
+        private editingDraft;
+        private suppressValueSync;
+        private suppressBlurCommit;
+        private validationInput;
+        private blocks;
+        private editingIndex;
+        private slashMenuOpen;
+        private slashQuery;
+        private slashActiveIndex;
+        private imageDialogOpen;
+        private dropIndicator;
+        private dragIndex;
+        private editShell;
+        private imageInsertIndex;
+        private pendingDragHandle;
+        private dragStartX;
+        private dragStartY;
+        private dragGhost;
+        /** The name of the control, submitted as part of form data. */
+        name: string;
+        /** The current remarkd source. */
+        value: string;
+        /** The default value — used when resetting the form. */
+        defaultValue: string;
+        /** Placeholder shown when the document is empty. */
+        placeholder: string;
+        /**
+         * Endpoint for image uploads. Posting the file metadata here must return
+         * `{uploadPath, uploadUrl}`; the file is then PUT to `uploadUrl` and
+         * `uploadPath` is inserted into the document. When unset, adding an image
+         * prompts for a URL instead.
+         */
+        attachmentUrl: string;
+        /** Makes the editor required for form submission. */
+        required: boolean;
+        /** Makes the editor read-only. */
+        readonly: boolean;
+        /** Disables the editor. */
+        disabled: boolean;
+        get validity(): ValidityState;
+        get validationMessage(): string;
+        checkValidity(): boolean;
+        getForm(): HTMLFormElement | null;
+        reportValidity(): boolean;
+        setCustomValidity(message: string): void;
+        /** Starts editing the first block, or a new block if the document is empty. */
+        focus(): void;
+        /** Commits any in-progress block edit. */
+        blur(): void;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        disconnectedCallback(): void;
+        handleValueChange(): void;
+        /**
+         * Splits remarkd source into blocks on blank lines, keeping fenced /
+         * delimited containers (``` ==== !!!! .... ----) as single blocks.
+         */
+        private splitBlocks;
+        private fenceMarker;
+        private closesFence;
+        private updateBlocks;
+        private handleRenderedClick;
+        private toggleCheckbox;
+        private startEdit;
+        /**
+         * The remarkd chrome the editing block should keep, derived from its first
+         * line — so a NOTE still looks like a note while its source is edited.
+         */
+        private computeEditShell;
+        private focusInput;
+        private addBlockAt;
+        /** Inserts a draft block — committed (or dropped, if left empty) on blur. */
+        private insertDraftBlock;
+        /**
+         * Blur handler for the editing textarea. Re-renders that replace the
+         * focused textarea (e.g. Shift+Enter committing and opening the next
+         * block) fire blur mid-transition — `suppressBlurCommit` masks those.
+         */
+        private handleEditBlur;
+        /** Commits the in-progress edit; returns the index after the committed parts. */
+        private commitEdit;
+        private get filteredSlashItems();
+        private handleDraftInput;
+        private handleEditKeydown;
+        private applySlashItem;
+        private handleEditPaste;
+        private handleDragOver;
+        private handleDrop;
+        /** The insertion index a drop at `y` maps to, from the rendered block positions. */
+        private insertionIndexFromY;
+        private handleHandlePointerDown;
+        private handleDragPointerMove;
+        private handleDragPointerUp;
+        private cancelDrag;
+        private createDragGhost;
+        private moveDragGhost;
+        private pickImage;
+        private handleImageDialogClose;
+        private handleImageInsert;
+        private insertImage;
+        private uploadImage;
+        private autosize;
+        private handleToolbarInsert;
+        private renderSlashMenu;
+        private renderBlock;
+        render(): import("lit-html").TemplateResult<1>;
+        private renderImageDialog;
+    }
+}
+declare module "components/remarkd-editor/index" {
+    import ZnRemarkdEditor from "components/remarkd-editor/remarkd-editor.component";
+    export * from "components/remarkd-editor/remarkd-editor.component";
+    export default ZnRemarkdEditor;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-remarkd-editor': ZnRemarkdEditor;
+        }
+    }
+}
 declare module "components/flow-builder/flow.types" {
     import type { TemplateResult } from 'lit';
     /** Which steps-panel tab a node type appears under. */
@@ -10530,6 +10678,7 @@ declare module "zinc" {
     export { default as OptGroup } from "components/opt-group/index";
     export { default as PriorityList } from "components/priority-list/index";
     export { default as MarkdownEditor } from "components/markdown-editor/index";
+    export { default as RemarkdEditor } from "components/remarkd-editor/index";
     export { default as FlowBuilder } from "components/flow-builder/index";
     export { default as FlowSteps } from "components/flow-builder/modules/flow-steps/index";
     export { default as FlowStepGroup } from "components/flow-builder/modules/flow-step-group/index";

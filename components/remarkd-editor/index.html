@@ -3,8 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="A file or link attachment for a chat message, rendered as an icon and label." />
-    <title>Chat Message Attachment</title>
+    <meta
+      name="description"
+      content="A Notion-style block editor for remarkd content — blocks render inline and are edited in place."
+    />
+    <title>Remarkd Editor</title>
 
     <meta name="turbo-cache-control" />
 
@@ -12,11 +15,11 @@
     <meta name="twitter:creator" content="kubex" />
     <meta name="twitter:image" content="https://zinc.style/assets" />
 
-    <meta property="og:url" content="https://zinc.style/components/chat-message-attachment" />
-    <meta property="og:title" content="Chat Message Attachment" />
+    <meta property="og:url" content="https://zinc.style/components/remarkd-editor" />
+    <meta property="og:title" content="Remarkd Editor" />
     <meta
       property="og:description"
-      content="A file or link attachment for a chat message, rendered as an icon and label."
+      content="A Notion-style block editor for remarkd content — blocks render inline and are edited in place."
     />
     <meta property="og:image" content="https://zinc.style/assets" />
 
@@ -181,7 +184,7 @@
               </li>
 
               <li>
-                <a href="/components/chat-message-attachment" class="active-link"> Chat Message Attachment </a>
+                <a href="/components/chat-message-attachment"> Chat Message Attachment </a>
               </li>
 
               <li>
@@ -421,7 +424,7 @@
               </li>
 
               <li>
-                <a href="/components/remarkd-editor"> Remarkd Editor </a>
+                <a href="/components/remarkd-editor" class="active-link"> Remarkd Editor </a>
               </li>
 
               <li>
@@ -550,14 +553,16 @@
       <article id="content" class="content content--with-toc">
         <div class="content__toc">
           <ul>
-            <li class="top"><a href="#">Chat Message Attachment</a></li>
+            <li class="top"><a href="#">Remarkd Editor</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
-            <li data-level="3"><a href="#custom-icon">Custom Icon</a></li>
-            <li data-level="3"><a href="#download">Download</a></li>
-            <li data-level="3"><a href="#custom-label">Custom Label</a></li>
+            <li data-level="3"><a href="#adding-and-moving-blocks">Adding and Moving Blocks</a></li>
+            <li data-level="3"><a href="#images">Images</a></li>
+            <li data-level="3"><a href="#remarkd-blocks">Remarkd Blocks</a></li>
+            <li data-level="3"><a href="#form-integration">Form Integration</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
-            <li data-level="2"><a href="#slots">Slots</a></li>
             <li data-level="2"><a href="#properties">Properties</a></li>
+            <li data-level="2"><a href="#events">Events</a></li>
+            <li data-level="2"><a href="#methods">Methods</a></li>
             <li data-level="2"><a href="#parts">Parts</a></li>
             <li data-level="2"><a href="#dependencies">Dependencies</a></li>
           </ul>
@@ -565,10 +570,10 @@
 
         <div class="content__body">
           <header class="component-header">
-            <h1>Chat Message Attachment</h1>
+            <h1>Remarkd Editor</h1>
 
             <div class="component-header__tag">
-              <code>&lt;zn-chat-message-attachment&gt; | ZnChatMessageAttachment</code>
+              <code>&lt;zn-remarkd-editor&gt; | ZnRemarkdEditor</code>
             </div>
 
             <div class="component-header__info">
@@ -578,39 +583,55 @@
           </header>
 
           <p class="component-summary">
-            A single file or link attachment for a <code>zn-chat-message</code> or <code>zn-content-block</code>.
-            Renders an icon and a label as a link, styled to match the message’s attachments row. It is intended to be
-            used only inside a <code>zn-chat-message</code> or <code>zn-content-block</code> and is automatically placed
-            in that component’s <code>attachments</code> slot.
+            A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.
           </p>
 
           <p>
-            <code>zn-chat-message-attachment</code> represents a single file or link beneath a message. It is intended
-            to be used only inside a <a href="/components/chat-message"><code>zn-chat-message</code></a> — it
-            automatically assigns itself to that component’s <code>attachments</code> slot, so you can drop it straight
-            into the message.
+            <code>zn-remarkd-editor</code> is a Notion-style editor for
+            <a
+              href="https://github.com/packaged/remarkd"
+              class="external-link"
+              rel="noopener noreferrer"
+              target="_blank"
+              >remarkd</a
+            >
+            content. The document is a list of blocks rendered inline with remarkd — there is no separate preview. Click
+            a block to edit its raw remarkd source in place; it re-renders when you click away (or press Escape /
+            Ctrl+Enter). The <code>value</code> is always plain remarkd source, submitted with the surrounding form.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-chat-message sender="Agent Name" time="1718193420">
-                Here are the documents you requested.
-                <zn-chat-message-attachment href="#" name="invoice.pdf"></zn-chat-message-attachment>
-                <zn-chat-message-attachment href="#" name="statement.pdf"></zn-chat-message-attachment>
-              </zn-chat-message>
+              <zn-remarkd-editor
+                name="content"
+                value="# Product Guide
+
+This is a paragraph with **strong text**, __emphasis__, and a [link](https://example.com).
+
+- [ ] Draft the guide
+- [x] Review the output
+
+NOTE: Click any block to edit its source."
+              ></zn-remarkd-editor>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-144">
+            <div class="code-preview__source-group" id="code-preview-source-group-931">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-196"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message</span> <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Agent Name<span class="token punctuation">"</span></span> <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1718193420<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-  Here are the documents you requested.
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message-attachment</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>invoice.pdf<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message-attachment</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message-attachment</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>statement.pdf<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message-attachment</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-196"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-1186"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span>
+  <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span># Product Guide
+
+This is a paragraph with **strong text**, __emphasis__, and a [link](https://example.com).
+
+- [ ] Draft the guide
+- [x] Review the output
+
+NOTE: Click any block to edit its source.<span class="token punctuation">"</span></span>
+<span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1186"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -619,7 +640,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-144"
+                aria-controls="code-preview-source-group-931"
               >
                 Source
                 <svg
@@ -638,31 +659,33 @@
           <h2 id="examples" class="anchor-heading">
             Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
           </h2>
-          <h3 id="custom-icon" class="anchor-heading">
-            Custom Icon<a href="#custom-icon" aria-label='Direct link to "Custom Icon"'></a>
+          <h3 id="adding-and-moving-blocks" class="anchor-heading">
+            Adding and Moving Blocks<a
+              href="#adding-and-moving-blocks"
+              aria-label='Direct link to "Adding and Moving Blocks"'
+            ></a>
           </h3>
-          <p>Use the <code>icon</code> attribute to change the leading icon (any <code>zn-icon</code> name).</p>
+          <p>
+            Hover a block to reveal its gutter actions: add a block below it, or grab the handle to drag the block
+            somewhere else in the document. Clicking the empty area at the end of the document starts a new block. A
+            block committed empty is removed.
+          </p>
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-chat-message sender="Agent Name" time="1718193420">
-                A couple of links for you.
-                <zn-chat-message-attachment href="#" name="View dashboard" icon="link"></zn-chat-message-attachment>
-                <zn-chat-message-attachment href="#" name="screenshot.png" icon="image"></zn-chat-message-attachment>
-              </zn-chat-message>
+              <zn-remarkd-editor name="content" value="Hover me to see the block actions."></zn-remarkd-editor>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-145">
+            <div class="code-preview__source-group" id="code-preview-source-group-932">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-197"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message</span> <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Agent Name<span class="token punctuation">"</span></span> <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1718193420<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-  A couple of links for you.
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message-attachment</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>View dashboard<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>link<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message-attachment</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message-attachment</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>screenshot.png<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>image<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message-attachment</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-197"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-1187"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span>
+  <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Hover me to see the block actions.<span class="token punctuation">"</span></span>
+<span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1187"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -671,7 +694,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-145"
+                aria-controls="code-preview-source-group-932"
               >
                 Source
                 <svg
@@ -687,29 +710,60 @@
               </button>
             </div>
           </div>
-          <h3 id="download" class="anchor-heading">
-            Download<a href="#download" aria-label='Direct link to "Download"'></a>
+          <h3 id="images" class="anchor-heading">Images<a href="#images" aria-label='Direct link to "Images"'></a></h3>
+          <p>
+            Adding an image opens a dialog. With <code>attachment-url</code> set it contains a <code>zn-file</code> drop
+            area; the file’s metadata is POSTed to the endpoint, which must respond with
+            <code>{uploadPath, uploadUrl}</code>; the file is then PUT to <code>uploadUrl</code> and
+            <code>uploadPath</code> is inserted as an image block. Without <code>attachment-url</code> the dialog asks
+            for an image URL instead. Dropping an image file straight onto the editor uploads it directly.
+          </p>
+          <pre><code class="language-html" id="code-block-1188"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span> <span class="token attr-name">attachment-url</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/upload<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1188"></zn-copy-button></pre>
+          <h3 id="remarkd-blocks" class="anchor-heading">
+            Remarkd Blocks<a href="#remarkd-blocks" aria-label='Direct link to "Remarkd Blocks"'></a>
           </h3>
-          <p>Set <code>download</code> to prompt a download rather than navigating to the link.</p>
+          <p>
+            Remarkd’s block syntax — hints, containers, code fences — renders with the official remarkd styles. Fenced
+            content stays a single block, blank lines and all.
+          </p>
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-chat-message sender="Agent Name" time="1718193420">
-                Your export is ready.
-                <zn-chat-message-attachment href="#" name="export.csv" download=""></zn-chat-message-attachment>
-              </zn-chat-message>
+              <zn-remarkd-editor
+                name="content"
+                value="TIP: Hint blocks are remarkd-specific.
+
+====
+An example **container** block.
+====
+
+```
+a code fence
+
+with a blank line inside
+```"
+              ></zn-remarkd-editor>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-146">
+            <div class="code-preview__source-group" id="code-preview-source-group-933">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-198"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message</span> <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Agent Name<span class="token punctuation">"</span></span> <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1718193420<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-  Your export is ready.
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message-attachment</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>export.csv<span class="token punctuation">"</span></span> <span class="token attr-name">download</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message-attachment</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-198"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-1189"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>TIP: Hint blocks are remarkd-specific.
+
+====
+An example **container** block.
+====
+
+```
+a code fence
+
+with a blank line inside
+```<span class="token punctuation">"</span></span>
+<span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1189"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -718,7 +772,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-146"
+                aria-controls="code-preview-source-group-933"
               >
                 Source
                 <svg
@@ -734,29 +788,60 @@
               </button>
             </div>
           </div>
-          <h3 id="custom-label" class="anchor-heading">
-            Custom Label<a href="#custom-label" aria-label='Direct link to "Custom Label"'></a>
+          <h3 id="form-integration" class="anchor-heading">
+            Form Integration<a href="#form-integration" aria-label='Direct link to "Form Integration"'></a>
           </h3>
-          <p>The default slot overrides the <code>name</code> attribute when you need richer label content.</p>
+          <p>
+            <code>zn-remarkd-editor</code> is a <a href="/getting-started/form-controls">form control</a>; its remarkd
+            source is submitted under <code>name</code>, and <code>required</code> is supported.
+          </p>
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-chat-message sender="Agent Name" time="1718193420">
-                See attached.
-                <zn-chat-message-attachment href="#">contract_<strong>final</strong>.pdf</zn-chat-message-attachment>
-              </zn-chat-message>
+              <form class="remarkd-editor-form">
+                <zn-remarkd-editor name="content" required="" value="Edit me, then submit."></zn-remarkd-editor>
+                <br />
+                <zn-button type="submit" color="success">Submit</zn-button>
+              </form>
+
+              <script type="module">
+                const form = document.querySelector('.remarkd-editor-form');
+
+                await customElements.whenDefined('zn-button');
+                await customElements.whenDefined('zn-remarkd-editor');
+
+                form.addEventListener('submit', e => {
+                  e.preventDefault();
+                  const data = Object.fromEntries(new FormData(form));
+                  alert('Submitted!\n\n' + JSON.stringify(data, null, 2));
+                });
+              </script>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-147">
+            <div class="code-preview__source-group" id="code-preview-source-group-934">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-199"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message</span> <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Agent Name<span class="token punctuation">"</span></span> <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1718193420<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-  See attached.
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message-attachment</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>contract_<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>final<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>.pdf<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message-attachment</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-199"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-1190"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>remarkd-editor-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span> <span class="token attr-name">required</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Edit me, then submit.<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>success<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Submit<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.remarkd-editor-form'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">await</span> customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-button'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">await</span> customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-remarkd-editor'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'submit'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    e<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> data <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">fromEntries</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">FormData</span><span class="token punctuation">(</span>form<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Submitted!\n\n'</span> <span class="token operator">+</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1190"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -765,7 +850,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-147"
+                aria-controls="code-preview-source-group-934"
               >
                 Source
                 <svg
@@ -803,7 +888,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-200"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.63/dist/components/chat-message-attachment/chat-message-attachment.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-200"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-1191"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.63/dist/components/remarkd-editor/remarkd-editor.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1191"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -818,36 +903,13 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-201"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.63/dist/components/chat-message-attachment/chat-message-attachment.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-201"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1192"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.63/dist/components/remarkd-editor/remarkd-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1192"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-202"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/chat-message-attachment/chat-message-attachment.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-202"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1193"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/remarkd-editor/remarkd-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1193"></zn-copy-button></pre>
           </zn-collapsible>
-
-          <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name">Name</th>
-                  <th class="table-description">Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="nowrap">(default)</td>
-                  <td>The attachment label. Falls back to the <code>name</code> attribute when empty.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em>Learn more about <a href="/getting-started/usage#slots">using slots</a>.</em>
-          </p>
 
           <h2 id="properties" class="anchor-heading">
             Properties<a href="#properties" aria-label='Direct link to "Properties"'></a>
@@ -867,23 +929,9 @@
               <tbody>
                 <tr>
                   <td>
-                    <code class="nowrap">href</code>
-                  </td>
-                  <td>The URL the attachment links to.</td>
-                  <td style="text-align: center"></td>
-                  <td>
-                    <code>string</code>
-                  </td>
-                  <td>
-                    <code>''</code>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td>
                     <code class="nowrap">name</code>
                   </td>
-                  <td>The attachment label (e.g. the file name). Used when the default slot is empty.</td>
+                  <td>The name of the control, submitted as part of form data.</td>
                   <td style="text-align: center"></td>
                   <td>
                     <code>string</code>
@@ -895,44 +943,112 @@
 
                 <tr>
                   <td>
-                    <code class="nowrap">icon</code>
+                    <code class="nowrap">value</code>
                   </td>
-                  <td>The leading icon name.</td>
+                  <td>The current remarkd source.</td>
                   <td style="text-align: center"></td>
                   <td>
                     <code>string</code>
                   </td>
                   <td>
-                    <code>'paperclip@lu'</code>
+                    <code>''</code>
                   </td>
                 </tr>
 
                 <tr>
                   <td>
-                    <code class="nowrap">target</code>
+                    <code class="nowrap">defaultValue</code>
+                  </td>
+                  <td>The default value — used when resetting the form.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
                   </td>
                   <td>
-                    Where to open the link. Defaults to a new tab. Reflected so the console’s pagelet link interception
-                    (<code>[href]:not([target])</code>) skips the host and the browser handles the click natively
-                    (download / new tab) instead of loading the file URL as a pagelet.
+                    <code>''</code>
                   </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">placeholder</code>
+                  </td>
+                  <td>Placeholder shown when the document is empty.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>'Type something…'</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">attachmentUrl</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> attachment-url </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    Endpoint for image uploads. Posting the file metadata here must return
+                    <code>{uploadPath, uploadUrl}</code>; the file is then PUT to <code>uploadUrl</code> and
+                    <code>uploadPath</code> is inserted into the document. When unset, adding an image prompts for a URL
+                    instead.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">required</code>
+                  </td>
+                  <td>Makes the editor required for form submission.</td>
                   <td style="text-align: center">
                     <zn-icon label="yes" src="check"></zn-icon>
                   </td>
                   <td>
-                    <code>string</code>
+                    <code>boolean</code>
                   </td>
                   <td>
-                    <code>'_blank'</code>
+                    <code>false</code>
                   </td>
                 </tr>
 
                 <tr>
                   <td>
-                    <code class="nowrap">download</code>
+                    <code class="nowrap">readonly</code>
                   </td>
-                  <td>Prompt a download rather than navigating to the link.</td>
-                  <td style="text-align: center"></td>
+                  <td>Makes the editor read-only.</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">disabled</code>
+                  </td>
+                  <td>Disables the editor.</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
                   <td>
                     <code>boolean</code>
                   </td>
@@ -962,6 +1078,73 @@
             >
           </p>
 
+          <h2 id="events" class="anchor-heading">Events<a href="#events" aria-label='Direct link to "Events"'></a></h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name" data-flavor="html">Name</th>
+                  <th class="table-name" data-flavor="react">React Event</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-event-detail">Event Detail</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-input</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted on each keystroke while editing a block.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-change</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted when a block edit is committed and the value changes.</td>
+                  <td>-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/usage#events">events</a>.</em>
+          </p>
+
+          <h2 id="methods" class="anchor-heading">
+            Methods<a href="#methods" aria-label='Direct link to "Methods"'></a>
+          </h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-arguments">Arguments</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap"><code>focus()</code></td>
+                  <td>Starts editing the first block, or a new block if the document is empty.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>blur()</code></td>
+                  <td>Commits any in-progress block edit.</td>
+                  <td>-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/usage#methods">methods</a>.</em>
+          </p>
+
           <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>
 
           <div class="table-scroll">
@@ -975,17 +1158,32 @@
               <tbody>
                 <tr>
                   <td class="nowrap"><code>base</code></td>
-                  <td>The attachment link.</td>
+                  <td>The component’s base wrapper.</td>
                 </tr>
 
                 <tr>
-                  <td class="nowrap"><code>icon</code></td>
-                  <td>The leading icon.</td>
+                  <td class="nowrap"><code>toolbar</code></td>
+                  <td>The always-visible block-insert toolbar.</td>
                 </tr>
 
                 <tr>
-                  <td class="nowrap"><code>label</code></td>
-                  <td>The attachment label.</td>
+                  <td class="nowrap"><code>block</code></td>
+                  <td>A rendered block wrapper.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>rendered</code></td>
+                  <td>The rendered remarkd output of a block.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>input</code></td>
+                  <td>The textarea shown while editing a block.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>slash-menu</code></td>
+                  <td>The context menu opened by typing ”/” in a block.</td>
                 </tr>
               </tbody>
             </table>
@@ -1002,9 +1200,21 @@
           <p>This component automatically imports the following dependencies.</p>
 
           <ul>
+            <li><code>&lt;zn-button&gt;</code></li>
+
+            <li><code>&lt;zn-button-group&gt;</code></li>
+
+            <li><code>&lt;zn-dialog&gt;</code></li>
+
             <li><code>&lt;zn-example&gt;</code></li>
 
+            <li><code>&lt;zn-file&gt;</code></li>
+
             <li><code>&lt;zn-icon&gt;</code></li>
+
+            <li><code>&lt;zn-input&gt;</code></li>
+
+            <li><code>&lt;zn-tooltip&gt;</code></li>
           </ul>
         </div>
       </article>

@@ -16,6 +16,28 @@
           "js": { "properties": [], "events": [] }
         },
         {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -75,28 +97,6 @@
               { "name": "center", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -7585,6 +7585,114 @@
               {
                 "name": "zn-event-name",
                 "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-remarkd-editor",
+          "description": "A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted on each keystroke while editing a block.\n- **zn-change** - Emitted when a block edit is committed and the value changes.\n\n### **Methods:**\n - **focus()** - Starts editing the first block, or a new block if the document is empty.\n- **blur()** - Commits any in-progress block edit.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The always-visible block-insert toolbar.\n- **block** - A rendered block wrapper.\n- **rendered** - The rendered remarkd output of a block.\n- **input** - The textarea shown while editing a block.\n- **slash-menu** - The context menu opened by typing \"/\" in a block.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "name",
+              "description": "The name of the control, submitted as part of form data.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "value",
+              "description": "The current remarkd source.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "placeholder",
+              "description": "Placeholder shown when the document is empty.",
+              "value": { "type": "string", "default": "'Type something…'" }
+            },
+            {
+              "name": "attachment-url",
+              "description": "Endpoint for image uploads. Posting the file metadata here must return\n`{uploadPath, uploadUrl}`; the file is then PUT to `uploadUrl` and\n`uploadPath` is inserted into the document. When unset, adding an image\nprompts for a URL instead.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "required",
+              "description": "Makes the editor required for form submission.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "readonly",
+              "description": "Makes the editor read-only.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "disabled",
+              "description": "Disables the editor.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-input",
+              "description": "Emitted on each keystroke while editing a block."
+            },
+            {
+              "name": "zn-change",
+              "description": "Emitted when a block edit is committed and the value changes."
+            }
+          ],
+          "js": {
+            "properties": [
+              {
+                "name": "name",
+                "description": "The name of the control, submitted as part of form data.",
+                "type": "string"
+              },
+              {
+                "name": "value",
+                "description": "The current remarkd source.",
+                "type": "string"
+              },
+              {
+                "name": "defaultValue",
+                "description": "The default value — used when resetting the form.",
+                "type": "string"
+              },
+              {
+                "name": "placeholder",
+                "description": "Placeholder shown when the document is empty.",
+                "type": "string"
+              },
+              {
+                "name": "attachmentUrl",
+                "description": "Endpoint for image uploads. Posting the file metadata here must return\n`{uploadPath, uploadUrl}`; the file is then PUT to `uploadUrl` and\n`uploadPath` is inserted into the document. When unset, adding an image\nprompts for a URL instead.",
+                "type": "string"
+              },
+              {
+                "name": "required",
+                "description": "Makes the editor required for form submission.",
+                "type": "boolean"
+              },
+              {
+                "name": "readonly",
+                "description": "Makes the editor read-only.",
+                "type": "boolean"
+              },
+              {
+                "name": "disabled",
+                "description": "Disables the editor.",
+                "type": "boolean"
+              },
+              { "name": "validity", "type": "ValidityState" },
+              { "name": "validationMessage", "type": "string" }
+            ],
+            "events": [
+              {
+                "name": "zn-input",
+                "description": "Emitted on each keystroke while editing a block."
+              },
+              {
+                "name": "zn-change",
+                "description": "Emitted when a block edit is committed and the value changes."
               }
             ]
           }

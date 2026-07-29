@@ -3120,6 +3120,7 @@ declare module "components/query-builder/query-builder.component" {
         name: string;
         value: PropertyKey;
         showValues: string[];
+        private get _usedFilterIds();
         get validationMessage(): string;
         get validity(): ValidityState;
         protected firstUpdated(_changedProperties: PropertyValues): void;

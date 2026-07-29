@@ -100,18 +100,16 @@ Second"></zn-remarkd-editor>`);
     expect(draft.value).to.equal('');
   });
 
-  it('should open the image dialog from the toolbar', async () => {
+  it('should show an inline zn-file picker from the toolbar image button', async () => {
     const el = await fixture<ZnRemarkdEditor>(html`
-      <zn-remarkd-editor></zn-remarkd-editor>`);
+      <zn-remarkd-editor attachment-url="/upload"></zn-remarkd-editor>`);
     const buttons = el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar zn-button');
     const imageButton = buttons[buttons.length - 1];
     imageButton.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
     await el.updateComplete;
 
-    const dialog = el.shadowRoot!.querySelector('.remarkd-editor__image-dialog')!;
-    expect(dialog).to.exist;
-    // No attachment-url configured — the dialog falls back to a URL input.
-    expect(el.shadowRoot!.querySelector('.remarkd-editor__image-url')).to.exist;
+    expect(el.shadowRoot!.querySelector('.remarkd-editor__body .remarkd-editor__image-picker')).to.exist;
+    expect(el.shadowRoot!.querySelector('.remarkd-editor__image-file')).to.exist;
   });
 
   it('should toggle a checkbox in the source instead of opening the editor', async () => {

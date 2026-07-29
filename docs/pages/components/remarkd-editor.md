@@ -44,12 +44,13 @@ is removed.
 
 ### Images
 
-Adding an image opens a dialog. With `attachment-url` set it contains a
-`zn-file` drop area; the file's metadata is POSTed to the endpoint, which must
+Adding an image shows a `zn-file` drop area inline, at the point in the
+document where the image will go. Choosing a file uploads it straight away:
+the file's metadata is POSTed to the `attachment-url` endpoint, which must
 respond with `{uploadPath, uploadUrl}`; the file is then PUT to `uploadUrl`
-and `uploadPath` is inserted as an image block. Without `attachment-url` the
-dialog asks for an image URL instead. Dropping an image file straight onto the
-editor uploads it directly.
+and the returned `uploadPath` is embedded as the image URL. Dropping an image
+file straight onto the editor uploads it directly. `attachment-url` is
+required for image support.
 
 ```html
 <zn-remarkd-editor name="content" attachment-url="/upload"></zn-remarkd-editor>

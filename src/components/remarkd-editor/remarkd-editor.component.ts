@@ -8,9 +8,7 @@ import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
 import type {ZincFormControl} from '../../internal/zinc-element';
-import type ZnDialog from "../dialog";
 import type ZnFile from "../file";
-import type ZnInput from "../input";
 
 import styles from './remarkd-editor.scss';
 
@@ -48,9 +46,7 @@ const BLOCK_TYPES: BlockType[] = [
  * @dependency zn-button
  * @dependency zn-button-group
  * @dependency zn-icon
- * @dependency zn-dialog
  * @dependency zn-file
- * @dependency zn-input
  *
  * @event zn-input - Emitted on each keystroke while editing a block.
  * @event zn-change - Emitted when a block edit is committed and the value changes.
@@ -80,12 +76,11 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   @state() private slashMenuOpen = false;
   @state() private slashQuery = '';
   @state() private slashActiveIndex = 0;
-  @state() private imageDialogOpen = false;
+  @state() private imagePickerIndex: number | null = null;
   @state() private dropIndicator: number | null = null;
   @state() private dragIndex: number | null = null;
   @state() private editShell = '';
 
-  private imageInsertIndex = 0;
   private pendingDragHandle: HTMLElement | null = null;
   private dragStartX = 0;
   private dragStartY = 0;
@@ -104,10 +99,9 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   @property() placeholder = 'Type something…';
 
   /**
-   * Endpoint for image uploads. Posting the file metadata here must return
-   * `{uploadPath, uploadUrl}`; the file is then PUT to `uploadUrl` and
-   * `uploadPath` is inserted into the document. When unset, adding an image
-   * prompts for a URL instead.
+   * Endpoint for image uploads — required for image support. Posting the file
+   * metadata here must return `{uploadPath, uploadUrl}`; the file is then PUT
+   * to `uploadUrl` and the returned `uploadPath` is embedded as the image URL.
    */
   @property({attribute: 'attachment-url'}) attachmentUrl = '';
 
@@ -562,28 +556,19 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
 
   private pickImage(index: number) {
     if (this.disabled || this.readonly) return;
-    this.imageInsertIndex = index;
-    this.imageDialogOpen = true;
+    this.imagePickerIndex = index;
   }
 
-  private handleImageDialogClose = () => {
-    this.imageDialogOpen = false;
+  private closeImagePicker = () => {
+    this.imagePickerIndex = null;
   };
 
-  private handleImageInsert = () => {
-    const index = this.imageInsertIndex;
-    if (this.attachmentUrl) {
-      const fileEl = this.shadowRoot?.querySelector<ZnFile>('.remarkd-editor__image-file');
-      const file = fileEl?.files?.[0];
-      if (!file) return;
-      void this.insertImage(file, index);
-    } else {
-      const input = this.shadowRoot?.querySelector<ZnInput>('.remarkd-editor__image-url');
-      const url = String(input?.value ?? '').trim();
-      if (!url) return;
-      this.addBlockAt(index, `![](${url})`);
-    }
-    this.shadowRoot?.querySelector<ZnDialog>('.remarkd-editor__image-dialog')?.hide();
+  private handleImagePicked = (e: Event) => {
+    const file = (e.target as ZnFile).files?.[0];
+    if (!file) return;
+    const index = this.imagePickerIndex ?? this.blocks.length;
+    this.imagePickerIndex = null;
+    void this.insertImage(file, index);
   };
 
   private async insertImage(file: File, index: number) {
@@ -716,7 +701,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                          @click=${() => this.handleToolbarInsert(item)}></zn-button>`)}
           </div>` : ''}
         <div class="remarkd-editor__body">
-          ${this.blocks.map((block, index) => this.renderBlock(block, index))}
+          ${this.renderBody()}
           <div class="remarkd-editor__add" @click=${() => this.insertDraftBlock(this.blocks.length)}>
             ${this.blocks.length === 0 && this.editingIndex === null ? this.placeholder : ''}
           </div>
@@ -726,27 +711,29 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                   ?required=${this.required}
                   tabindex="-1"
                   aria-hidden="true"></textarea>
-        ${this.imageDialogOpen ? this.renderImageDialog() : ''}
       </div>`;
   }
 
-  private renderImageDialog() {
+  /** The block views, with the inline image picker spliced in when active. */
+  private renderBody() {
+    const views = this.blocks.map((block, index) => this.renderBlock(block, index));
+    if (this.imagePickerIndex !== null) {
+      views.splice(this.imagePickerIndex, 0, this.renderImagePicker());
+    }
+    return views;
+  }
+
+  private renderImagePicker() {
     return html`
-      <zn-dialog class="remarkd-editor__image-dialog"
-                 label="Add image"
-                 size="small"
-                 open
-                 @zn-close=${this.handleImageDialogClose}>
-        ${this.attachmentUrl ? html`
-          <zn-file class="remarkd-editor__image-file"
-                   label="Image"
-                   accept="image/*"
-                   droparea></zn-file>` : html`
-          <zn-input class="remarkd-editor__image-url"
-                    label="Image URL"
-                    placeholder="https://example.com/image.png"></zn-input>`}
-        <zn-button slot="footer" color="secondary" @click=${this.handleImageDialogClose}>Cancel</zn-button>
-        <zn-button slot="footer" color="primary" @click=${this.handleImageInsert}>Insert</zn-button>
-      </zn-dialog>`;
+      <div class="remarkd-editor__image-picker">
+        <zn-file class="remarkd-editor__image-file"
+                 label="Image"
+                 accept="image/*"
+                 droparea
+                 @zn-change=${this.handleImagePicked}></zn-file>
+        <zn-button type="button" icon-button="small" plain icon="x@lu"
+                   tooltip="Cancel"
+                   @click=${this.closeImagePicker}></zn-button>
+      </div>`;
   }
 }

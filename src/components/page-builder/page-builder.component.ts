@@ -1,4 +1,4 @@
-import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
 import {
   emptyPageState,
   generateSectionId,
@@ -10,11 +10,12 @@ import {
   sectionChildren,
   sectionSummary,
 } from './page.types';
-import {HasSlotController} from '../../internal/slot';
-import {ifDefined} from 'lit/directives/if-defined.js';
-import {PageSectionRegistry} from './page-registry';
-import {property, state} from 'lit/decorators.js';
-import {watch} from '../../internal/watch';
+import { FormControlController, validValidityState } from '../../internal/form';
+import { HasSlotController } from '../../internal/slot';
+import { ifDefined } from 'lit/directives/if-defined.js';
+import { PageSectionRegistry } from './page-registry';
+import { property, state } from 'lit/decorators.js';
+import { watch } from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
 import ZnCollapsible from '../collapsible';
 import ZnIcon from '../icon';
@@ -88,20 +89,28 @@ export default class ZnPageBuilder extends ZincElement {
     'zn-page-section-card': ZnPageSectionCard,
   };
 
+  private readonly formControlController = new FormControlController(this);
+
+  /** The name of the control, submitted as a name/value pair with form data. */
+  @property() name = '';
+
+  /** Associates the control with a form by id. The form must be in the same document or shadow root. */
+  @property({ reflect: true }) form = '';
+
   /** The page state as a JSON string. Parsed on set; invalid JSON is ignored with a warning. */
   @property() config = '';
 
-  @property({reflect: true}) heading = '';
-  @property({reflect: true}) subheading = '';
+  @property({ reflect: true }) heading = '';
+  @property({ reflect: true }) subheading = '';
 
   /** Section types to make available, registered into the internal registry. */
-  @property({attribute: false}) sectionTypes: PageSectionType[] = [];
+  @property({ attribute: false }) sectionTypes: PageSectionType[] = [];
 
   /** Collapses the left palette. Auto-set when the builder becomes narrow. */
-  @property({type: Boolean, reflect: true, attribute: 'palette-collapsed'}) paletteCollapsed = false;
+  @property({ type: Boolean, reflect: true, attribute: 'palette-collapsed' }) paletteCollapsed = false;
 
   /** Collapses the inspector while a section is selected. */
-  @property({type: Boolean, reflect: true, attribute: 'inspector-collapsed'}) inspectorCollapsed = false;
+  @property({ type: Boolean, reflect: true, attribute: 'inspector-collapsed' }) inspectorCollapsed = false;
 
   /**
    * Auto-save the page to localStorage (1-day TTL). Omit to disable. A bare
@@ -129,9 +138,9 @@ export default class ZnPageBuilder extends ZincElement {
   @state() private _pickerIndex: number | null = null;
   @state() private _dragOverIndex: number | null = null;
   /** The container slot a drag is currently over, if any. */
-  @state() private _slotDragOver: {containerId: string; index: number} | null = null;
+  @state() private _slotDragOver: { containerId: string; index: number } | null = null;
   /** The container slot whose "+" type picker is open, if any. */
-  @state() private _slotPicker: {containerId: string; index: number} | null = null;
+  @state() private _slotPicker: { containerId: string; index: number } | null = null;
   /** The stamped config form for the selected section; rebuilt on selection change. */
   @state() private _form: HTMLDivElement | null = null;
 
@@ -152,6 +161,55 @@ export default class ZnPageBuilder extends ZincElement {
     } catch {
       console.warn('<zn-page-builder> invalid state');
     }
+  }
+
+  /** The page state as a JSON string — the value submitted with form data. */
+  get value(): string {
+    return JSON.stringify(this._state);
+  }
+
+  /** Replaces the page state from a JSON string (does not emit zn-page-change). */
+  set value(next: string) {
+    if (!next) return;
+    try {
+      this._applyExternalState(JSON.parse(next) as PageState);
+    } catch {
+      console.warn('<zn-page-builder> invalid value JSON');
+    }
+  }
+
+  /** The serialised state of the last externally loaded page — restored on form reset. */
+  defaultValue = JSON.stringify(emptyPageState());
+
+  /** Gets the validity state object. */
+  get validity(): ValidityState {
+    return validValidityState;
+  }
+
+  /** Gets the validation message. */
+  get validationMessage(): string {
+    return '';
+  }
+
+  /** Checks for validity but does not show a validation message. */
+  checkValidity(): boolean {
+    return true;
+  }
+
+  /** Gets the associated form, if one exists. */
+  getForm(): HTMLFormElement | null {
+    return this.formControlController.getForm();
+  }
+
+  /** Checks for validity and shows the browser's validation message if the control is invalid. */
+  reportValidity(): boolean {
+    return true;
+  }
+
+  /** Sets a custom validation message. Pass an empty string to restore validity. */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  setCustomValidity(_message = '') {
+    // Always valid.
   }
 
   @watch('config')
@@ -227,7 +285,7 @@ export default class ZnPageBuilder extends ZincElement {
   /** Re-render clock for the "last saved Xm ago" label. */
   @state() private _statusNow = Date.now();
   /** A fresh auto-save differing from the loaded page — offer to restore it. */
-  @state() private _restorePrompt: {savedAt: number} | null = null;
+  @state() private _restorePrompt: { savedAt: number } | null = null;
 
   /** localStorage key for this builder's auto-saves — its id, else its heading. */
   private get _autoSaveKey(): string {
@@ -262,7 +320,7 @@ export default class ZnPageBuilder extends ZincElement {
   private _autoSaveTick = () => {
     if (!this._state.sections.length || this._restorePrompt) return;
     try {
-      localStorage.setItem(this._autoSaveKey, JSON.stringify({savedAt: Date.now(), state: this._state}));
+      localStorage.setItem(this._autoSaveKey, JSON.stringify({ savedAt: Date.now(), state: this._state }));
       this._lastSavedAt = Date.now();
       this._justSaved = true;
       if (this._justSavedTimer !== null) clearTimeout(this._justSavedTimer);
@@ -273,11 +331,11 @@ export default class ZnPageBuilder extends ZincElement {
   };
 
   /** The stored auto-save, purging it when past its TTL (or unreadable). */
-  private _readAutoSave(): {savedAt: number; state: PageState} | null {
+  private _readAutoSave(): { savedAt: number; state: PageState } | null {
     try {
       const raw = localStorage.getItem(this._autoSaveKey);
       if (!raw) return null;
-      const saved = JSON.parse(raw) as {savedAt: number; state: PageState};
+      const saved = JSON.parse(raw) as { savedAt: number; state: PageState };
       if (!saved.state || Date.now() - saved.savedAt > AUTO_SAVE_TTL_MS) {
         localStorage.removeItem(this._autoSaveKey);
         return null;
@@ -310,7 +368,7 @@ export default class ZnPageBuilder extends ZincElement {
     if (this.autoSave === null || this._restoring) return;
     const saved = this._readAutoSave();
     this._restorePrompt = saved && JSON.stringify(saved.state) !== JSON.stringify(this._state)
-      ? {savedAt: saved.savedAt}
+      ? { savedAt: saved.savedAt }
       : null;
   }
 
@@ -318,6 +376,11 @@ export default class ZnPageBuilder extends ZincElement {
     super.willUpdate(changed);
     if (changed.has('_selectedId')) this._buildInspectorForm();
     if (changed.has('autoSave')) this._restartAutoSave();
+  }
+
+  protected firstUpdated(changed: PropertyValues) {
+    super.firstUpdated(changed);
+    this.formControlController.updateValidity();
   }
 
   // --- Slotted templates define section types --------------------------------
@@ -371,7 +434,7 @@ export default class ZnPageBuilder extends ZincElement {
         label: s.label,
         data: structuredClone(s.data ?? {}),
         ...(s.children && depth === 0
-          ? {children: s.children.slice(0, MAX_CHILDREN).map(c => (c && typeof c.type === 'string' ? normalise(c, depth + 1) : null))}
+          ? { children: s.children.slice(0, MAX_CHILDREN).map(c => (c && typeof c.type === 'string' ? normalise(c, depth + 1) : null)) }
           : {}),
       };
     };
@@ -385,7 +448,8 @@ export default class ZnPageBuilder extends ZincElement {
     }
     this._history = [];
     this._redoStack = [];
-    this._state = {sections};
+    this._state = { sections };
+    this.defaultValue = JSON.stringify(this._state);
     this._selectedId = null;
     this._pickerIndex = null;
     this._offerRestoreIfNewer();
@@ -407,7 +471,7 @@ export default class ZnPageBuilder extends ZincElement {
     return this._state.sections.map(s => {
       if (s.id === id) return patch(s);
       if (s.children?.some(c => c?.id === id)) {
-        return {...s, children: s.children.map(c => (c?.id === id ? patch(c) : c))};
+        return { ...s, children: s.children.map(c => (c?.id === id ? patch(c) : c)) };
       }
       return s;
     });
@@ -425,7 +489,7 @@ export default class ZnPageBuilder extends ZincElement {
       const slot = s.children?.findIndex(c => c?.id === id) ?? -1;
       if (slot !== -1) {
         removed = s.children![slot] ?? undefined;
-        sections.push({...s, children: s.children!.map((c, i) => (i === slot ? null : c))});
+        sections.push({ ...s, children: s.children!.map((c, i) => (i === slot ? null : c)) });
       } else {
         sections.push(s);
       }
@@ -436,7 +500,7 @@ export default class ZnPageBuilder extends ZincElement {
   /** Installs a new state from a user edit and notifies listeners. */
   private _commit(next: PageState) {
     this._state = next;
-    this.emit('zn-page-change', {detail: {state: this.state}});
+    this.emit('zn-page-change', { detail: { state: this.state } });
   }
 
   private _selectedSection(): PageSection | undefined {
@@ -448,7 +512,7 @@ export default class ZnPageBuilder extends ZincElement {
     this._selectedId = id;
     this._pickerIndex = null;
     this._slotPicker = null;
-    this.emit('zn-page-selection-change', {detail: {sectionId: id}});
+    this.emit('zn-page-selection-change', { detail: { sectionId: id } });
   }
 
   // --- History ----------------------------------------------------------------
@@ -483,10 +547,10 @@ export default class ZnPageBuilder extends ZincElement {
   addSection(type: string, index?: number): PageSection | null {
     if (!this.registry.has(type)) return null;
     this._pushHistory();
-    const section: PageSection = {id: generateSectionId(), type, data: {}};
+    const section: PageSection = { id: generateSectionId(), type, data: {} };
     const sections = [...this._state.sections];
     sections.splice(index ?? sections.length, 0, section);
-    this._commit({sections});
+    this._commit({ sections });
     this._select(section.id);
     return section;
   }
@@ -501,10 +565,10 @@ export default class ZnPageBuilder extends ZincElement {
     if (containerType.accepts && !containerType.accepts.includes(type)) return null;
     const children = sectionChildren(container, containerType);
     if (children[slotIndex]) return null;
-    const section: PageSection = {id: generateSectionId(), type, data: {}};
+    const section: PageSection = { id: generateSectionId(), type, data: {} };
     children[slotIndex] = section;
     this._pushHistory();
-    this._commit({sections: this._patchSection(containerId, s => ({...s, children}))});
+    this._commit({ sections: this._patchSection(containerId, s => ({ ...s, children })) });
     this._select(section.id);
     return section;
   }
@@ -517,7 +581,7 @@ export default class ZnPageBuilder extends ZincElement {
     if (this._selectedId === id || removed.children?.some(c => c?.id === this._selectedId)) {
       this._select(null);
     }
-    this._commit({sections});
+    this._commit({ sections });
   }
 
   private _duplicateSection(id: string) {
@@ -526,10 +590,10 @@ export default class ZnPageBuilder extends ZincElement {
       this._pushHistory();
       const copy = structuredClone(this._state.sections[index]);
       copy.id = generateSectionId();
-      copy.children = copy.children?.map(c => (c ? {...c, id: generateSectionId()} : null));
+      copy.children = copy.children?.map(c => (c ? { ...c, id: generateSectionId() } : null));
       const sections = [...this._state.sections];
       sections.splice(index + 1, 0, copy);
-      this._commit({sections});
+      this._commit({ sections });
       this._select(copy.id);
       return;
     }
@@ -546,7 +610,7 @@ export default class ZnPageBuilder extends ZincElement {
       copy.id = generateSectionId();
       children[empty] = copy;
       this._pushHistory();
-      this._commit({sections: this._patchSection(s.id, x => ({...x, children}))});
+      this._commit({ sections: this._patchSection(s.id, x => ({ ...x, children })) });
       this._select(copy.id);
       return;
     }
@@ -562,14 +626,14 @@ export default class ZnPageBuilder extends ZincElement {
       const sections = [...this._state.sections];
       const [moved] = sections.splice(from, 1);
       sections.splice(to, 0, moved);
-      this._commit({sections});
+      this._commit({ sections });
       return;
     }
     const [moved, sections] = this._extract(id);
     if (!moved) return;
     this._pushHistory();
     sections.splice(index, 0, moved);
-    this._commit({sections});
+    this._commit({ sections });
   }
 
   /**
@@ -594,7 +658,7 @@ export default class ZnPageBuilder extends ZincElement {
     this._pushHistory();
     const sections = structuredClone(this._state.sections);
     const containerRef = sections.find(s => s.id === containerId)!;
-    containerRef.children = Array.from({length: containerType.slots}, (_, i) => containerRef.children?.[i] ?? null);
+    containerRef.children = Array.from({ length: containerType.slots }, (_, i) => containerRef.children?.[i] ?? null);
     const movedCopy = structuredClone(moved);
 
     if (fromTop) {
@@ -610,7 +674,7 @@ export default class ZnPageBuilder extends ZincElement {
       }
     }
     containerRef.children[slotIndex] = movedCopy;
-    this._commit({sections});
+    this._commit({ sections });
   }
 
   // --- Canvas drag & drop -----------------------------------------------------
@@ -633,7 +697,7 @@ export default class ZnPageBuilder extends ZincElement {
     e.preventDefault();
     e.stopPropagation();
     this._dragOverIndex = null;
-    this._slotDragOver = {containerId, index};
+    this._slotDragOver = { containerId, index };
   }
 
   private _onSlotDrop(e: DragEvent, containerId: string, index: number) {
@@ -689,7 +753,7 @@ export default class ZnPageBuilder extends ZincElement {
     const query = this._search.trim().toLowerCase();
     const categories = new Map<string, PageSectionType[]>();
     for (const [category, types] of this.registry.categories()) {
-      const matches = query ? types.filter(t=>t.label.toLowerCase().includes(query)) : types;
+      const matches = query ? types.filter(t => t.label.toLowerCase().includes(query)) : types;
       if (matches.length) categories.set(category, matches);
     }
 
@@ -708,7 +772,7 @@ export default class ZnPageBuilder extends ZincElement {
           placeholder="Search sections"
           clearable
           .value="${this._search}"
-          @zn-input="${(e: Event)=>(this._search = String((e.target as ZnInput).value ?? ''))}"></zn-input>
+          @zn-input="${(e: Event) => (this._search = String((e.target as ZnInput).value ?? ''))}"></zn-input>
         <div class="palette__scroll">
           ${[...categories.entries()].map(([category, types]) => category
             ? html`
@@ -795,14 +859,14 @@ export default class ZnPageBuilder extends ZincElement {
           @click="${() => this._select(null)}"
           @dragover="${this._onCanvasDragOver}"
           @drop="${this._onCanvasDrop}">
-        ${sections.length === 0 ? html`
-          <div class="canvas__empty" ?hidden="${this._dragOverIndex !== null}">
-            Drag sections here to build your page
-          </div>` : ''}
-        ${sections.map((section, i) => html`
-          ${this._renderDropZone(i)}
-          ${this._renderCard(section, i)}
-        `)}
+          ${sections.length === 0 ? html`
+            <div class="canvas__empty" ?hidden="${this._dragOverIndex !== null}">
+              Drag sections here to build your page
+            </div>` : ''}
+          ${sections.map((section, i) => html`
+            ${this._renderDropZone(i)}
+            ${this._renderCard(section, i)}
+          `)}
           ${this._renderDropZone(sections.length)}
         </main>
       </div>`;
@@ -811,7 +875,7 @@ export default class ZnPageBuilder extends ZincElement {
   /** The one card template both the page list and slot cells render. */
   private _renderSectionCard(
     section: PageSection,
-    drop: {over: (e: DragEvent) => void; drop: (e: DragEvent) => void},
+    drop: { over: (e: DragEvent) => void; drop: (e: DragEvent) => void },
     extraClass = ''
   ) {
     const type = this.registry.get(section.type);
@@ -876,7 +940,7 @@ export default class ZnPageBuilder extends ZincElement {
         @drop="${(e: DragEvent) => this._onSlotDrop(e, container.id, index)}"
         @click="${(e: Event) => {
           e.stopPropagation();
-          this._slotPicker = pickerOpen ? null : {containerId: container.id, index};
+          this._slotPicker = pickerOpen ? null : { containerId: container.id, index };
         }}">
         <zn-icon src="add" size="16"></zn-icon>
         ${pickerOpen
@@ -960,7 +1024,7 @@ export default class ZnPageBuilder extends ZincElement {
         (control as HTMLInputElement).checked = Boolean(value);
       } else if (Array.isArray(value)) {
         // Multi-value controls (e.g. zn-select[multiple]) take the array as-is.
-        (control as unknown as {value: unknown}).value = value;
+        (control as unknown as { value: unknown }).value = value;
       } else if (value !== undefined && value !== null) {
         (control as HTMLInputElement).value = String(value);
       }
@@ -977,7 +1041,7 @@ export default class ZnPageBuilder extends ZincElement {
   private _onInspectorInput = (e: Event) => {
     const section = this._selectedSection();
     if (!section) return;
-    const control = e.target as HTMLElement & {value?: unknown; checked?: boolean};
+    const control = e.target as HTMLElement & { value?: unknown; checked?: boolean };
     const name = control.getAttribute?.('name');
     if (!name) return;
     let value: unknown = this._isBooleanControl(control, section.data[name])
@@ -988,17 +1052,17 @@ export default class ZnPageBuilder extends ZincElement {
     }
     if (typeof value === 'number' && Number.isNaN(value)) return;
     if (section.data[name] === value) return;
-    this._updateSectionData(section.id, {[name]: value});
+    this._updateSectionData(section.id, { [name]: value });
   };
 
   private _updateSectionData(id: string, patch: Record<string, unknown>) {
     this._pushHistory();
-    this._commit({sections: this._patchSection(id, s => ({...s, data: {...s.data, ...patch}}))});
+    this._commit({ sections: this._patchSection(id, s => ({ ...s, data: { ...s.data, ...patch } })) });
   }
 
   private _renameSection(id: string, label: string) {
     this._pushHistory();
-    this._commit({sections: this._patchSection(id, s => ({...s, label: label || undefined}))});
+    this._commit({ sections: this._patchSection(id, s => ({ ...s, label: label || undefined })) });
   }
 
   private _renderInspector() {

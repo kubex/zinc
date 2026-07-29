@@ -1,0 +1,241 @@
+@use "../../wc";
+// Remarkd's official output styles, scoped under .remarkd-rendered.
+@use "../../../node_modules/remarkd-js/docs/assets/remarkd-output";
+
+:host {
+  display: block;
+}
+
+.remarkd-editor {
+  position: relative;
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: var(--zn-border-radius);
+  background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
+}
+
+.remarkd-editor__toolbar {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+  padding: var(--zn-spacing-x-small);
+  border-bottom: 1px solid rgb(var(--zn-border-color));
+}
+
+.remarkd-editor__body {
+  padding: var(--zn-spacing-large) var(--zn-spacing-large) var(--zn-spacing-large) 88px;
+  min-height: 10rem;
+}
+
+.remarkd-editor--disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.remarkd-editor__block {
+  position: relative;
+  border-radius: var(--zn-border-radius);
+}
+
+.remarkd-editor__actions {
+  position: absolute;
+  left: -80px;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.remarkd-editor__block:hover .remarkd-editor__actions,
+.remarkd-editor__actions:focus-within {
+  opacity: 1;
+}
+
+.remarkd-editor__drag-handle {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px;
+  color: var(--zn-color-neutral-400, #9aa4b2);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.remarkd-editor__ghost {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0.9;
+  background: var(--zn-color-neutral-0, white);
+  border-radius: var(--zn-border-radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  max-width: 50%;
+  max-height: 160px;
+  overflow: hidden;
+}
+
+.remarkd-editor__block--dragging {
+  opacity: 0.4;
+}
+
+.remarkd-editor__block--drop-before::before,
+.remarkd-editor__block--drop-after::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(var(--zn-primary), 0.6);
+  pointer-events: none;
+}
+
+.remarkd-editor__block--drop-before::before {
+  top: -4px;
+}
+
+.remarkd-editor__block--drop-after::after {
+  bottom: -4px;
+}
+
+.remarkd-editor__rendered {
+  padding: var(--zn-spacing-x-small);
+  border-radius: var(--zn-border-radius);
+  cursor: text;
+
+  &:hover {
+    background: var(--zn-color-neutral-100);
+  }
+}
+
+// The shell keeps the block's rendered chrome while its source is edited —
+// remarkd hint classes (hint-note, hint-tip, …) apply their own styling here.
+.remarkd-editor__edit-shell {
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: var(--zn-border-radius);
+  background: var(--zn-color-neutral-0, white);
+  padding: var(--zn-spacing-x-small);
+
+  // Hint shells keep their own left accent — only tint the other edges.
+  &:focus-within {
+    border-top-color: rgb(var(--zn-primary));
+    border-right-color: rgb(var(--zn-primary));
+    border-bottom-color: rgb(var(--zn-primary));
+  }
+
+  &:not([class*="hint-"]):focus-within {
+    border-left-color: rgb(var(--zn-primary));
+  }
+}
+
+.remarkd-editor__input {
+  display: block;
+  width: 100%;
+  resize: none;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  padding: 0;
+  outline: none;
+}
+
+// Hints edit in the rendered font so they read as the same block.
+.remarkd-editor__edit-shell[class*="hint-"] .remarkd-editor__input {
+  font: inherit;
+}
+
+.remarkd-editor__edit-shell--h1 .remarkd-editor__input,
+.remarkd-editor__edit-shell--h2 .remarkd-editor__input,
+.remarkd-editor__edit-shell--h3 .remarkd-editor__input {
+  font-family: inherit;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.remarkd-editor__edit-shell--h1 .remarkd-editor__input {
+  font-size: 26px;
+}
+
+.remarkd-editor__edit-shell--h2 .remarkd-editor__input {
+  font-size: 21px;
+}
+
+.remarkd-editor__edit-shell--h3 .remarkd-editor__input {
+  font-size: 17px;
+}
+
+.remarkd-editor__edit-shell--code {
+  background: var(--rmd-code-bg, #0f1626);
+
+  .remarkd-editor__input {
+    color: var(--rmd-code-text, #f5f8ff);
+  }
+}
+
+.remarkd-editor__add {
+  padding: var(--zn-spacing-x-small);
+  min-height: 1.8em;
+  color: var(--zn-color-neutral-400, #9aa4b2);
+  cursor: text;
+}
+
+.remarkd-editor__edit-wrap {
+  position: relative;
+}
+
+.remarkd-editor__slash-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 10;
+  min-width: 12rem;
+  margin-top: 4px;
+  padding: 4px;
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: var(--zn-border-radius);
+  background: var(--zn-color-neutral-0, white);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+}
+
+.remarkd-editor__slash-item {
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-x-small);
+  padding: 6px 8px;
+  border: 0;
+  border-radius: var(--zn-border-radius);
+  background: none;
+  color: var(--zn-color-text, #222);
+  font: inherit;
+  font-size: 0.875rem;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover,
+  &--active {
+    background: var(--zn-color-neutral-100);
+  }
+}
+
+.remarkd-editor__validation {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  border: 0;
+  padding: 0;
+}

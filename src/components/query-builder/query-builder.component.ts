@@ -167,6 +167,10 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
   }) showValues: string[] = [];
 
 
+  private get _usedFilterIds(): Set<string> {
+    return new Set([...this._selectedRules.values()].map(rule => rule.id));
+  }
+
   get validationMessage(): string {
     return '';
   }
@@ -196,7 +200,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
                    size="medium"
                    placeholder="Select Filter"
                    @zn-change="${this._addRule}">
-          ${this.filters && this.filters.map(item => html`
+          ${this.filters && this.filters.filter(item => !this._usedFilterIds.has(item.id)).map(item => html`
             <zn-option value="${item.id}">
               ${item.name.charAt(0).toUpperCase() + item.name.slice(1)}
             </zn-option>`)}
@@ -227,6 +231,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
 
     const filter: QueryBuilderItem | undefined = this.filters.find(item => item.id === id);
     if (filter === undefined) return;
+    if (this._usedFilterIds.has(filter.id)) return;
 
     const uniqueId = Math.random().toString(36).substring(7);
 
@@ -237,11 +242,12 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
       value: ''
     });
 
+    const availableFilters = this.filters.filter(item => item.id === filter.id || !this._usedFilterIds.has(item.id));
     const select = html`
       <zn-select class="query-builder__key"
                  @zn-change="${(e: ZnChangeEvent) => this._changeRule(uniqueId, e)}"
                  value="${filter?.id}">
-        ${this.filters.map((item: QueryBuilderItem) => {
+        ${availableFilters.map((item: QueryBuilderItem) => {
           return html`
             <zn-option value="${item.id}">
               ${item.name.charAt(0).toUpperCase() + item.name.slice(1)}
@@ -338,7 +344,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
         break;
       }
       case 'dateTime': {
-        input = this._createDateInput(uniqueId, true , filter.dateSubmitFormat);
+        input = this._createDateInput(uniqueId, true, filter.dateSubmitFormat);
         break;
       }
       default: {
@@ -401,9 +407,9 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
         ?time-picker="${hasTime}"
         class="query-builder__value"
         @zn-change="${(e: ZnChangeEvent) => this._updateDateValue(uniqueId, e, submitFormat)}"
-        >
+      >
       </zn-datepicker>
-      `;
+    `;
     return litToHTML<ZnDatepicker>(input);
   }
 
@@ -451,7 +457,9 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     this._handleChange();
   }
 
-  private _updateDateValue(id: string, event: Event | { target: ZnDatepicker | HTMLDivElement }, submitFormat: QueryBuilderDateSubmitFormat = 'legacy') {
+  private _updateDateValue(id: string, event: Event | {
+    target: ZnDatepicker | HTMLDivElement
+  }, submitFormat: QueryBuilderDateSubmitFormat = 'legacy') {
     const filter = this._selectedRules.get(id);
     if (!filter) return;
 

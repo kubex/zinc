@@ -712,11 +712,12 @@ NOTE: Click any block to edit its source.<span class="token punctuation">"</span
           </div>
           <h3 id="images" class="anchor-heading">Images<a href="#images" aria-label='Direct link to "Images"'></a></h3>
           <p>
-            Adding an image opens a dialog. With <code>attachment-url</code> set it contains a <code>zn-file</code> drop
-            area; the file’s metadata is POSTed to the endpoint, which must respond with
-            <code>{uploadPath, uploadUrl}</code>; the file is then PUT to <code>uploadUrl</code> and
-            <code>uploadPath</code> is inserted as an image block. Without <code>attachment-url</code> the dialog asks
-            for an image URL instead. Dropping an image file straight onto the editor uploads it directly.
+            Adding an image shows a <code>zn-file</code> drop area inline, at the point in the document where the image
+            will go. Choosing a file uploads it straight away: the file’s metadata is POSTed to the
+            <code>attachment-url</code> endpoint, which must respond with <code>{uploadPath, uploadUrl}</code>; the file
+            is then PUT to <code>uploadUrl</code> and the returned <code>uploadPath</code> is embedded as the image URL.
+            Dropping an image file straight onto the editor uploads it directly. <code>attachment-url</code> is required
+            for image support.
           </p>
           <pre><code class="language-html" id="code-block-1188"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span> <span class="token attr-name">attachment-url</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/upload<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-1188"></zn-copy-button></pre>
@@ -995,10 +996,9 @@ with a blank line inside
                     </zn-tooltip>
                   </td>
                   <td>
-                    Endpoint for image uploads. Posting the file metadata here must return
-                    <code>{uploadPath, uploadUrl}</code>; the file is then PUT to <code>uploadUrl</code> and
-                    <code>uploadPath</code> is inserted into the document. When unset, adding an image prompts for a URL
-                    instead.
+                    Endpoint for image uploads — required for image support. Posting the file metadata here must return
+                    <code>{uploadPath, uploadUrl}</code>; the file is then PUT to <code>uploadUrl</code> and the
+                    returned <code>uploadPath</code> is embedded as the image URL.
                   </td>
                   <td style="text-align: center"></td>
                   <td>
@@ -1211,8 +1211,6 @@ with a blank line inside
             <li><code>&lt;zn-file&gt;</code></li>
 
             <li><code>&lt;zn-icon&gt;</code></li>
-
-            <li><code>&lt;zn-input&gt;</code></li>
 
             <li><code>&lt;zn-tooltip&gt;</code></li>
           </ul>

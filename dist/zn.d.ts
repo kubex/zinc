@@ -8711,9 +8711,7 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
      * @dependency zn-button
      * @dependency zn-button-group
      * @dependency zn-icon
-     * @dependency zn-dialog
      * @dependency zn-file
-     * @dependency zn-input
      *
      * @event zn-input - Emitted on each keystroke while editing a block.
      * @event zn-change - Emitted when a block edit is committed and the value changes.
@@ -8737,11 +8735,10 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private slashMenuOpen;
         private slashQuery;
         private slashActiveIndex;
-        private imageDialogOpen;
+        private imagePickerIndex;
         private dropIndicator;
         private dragIndex;
         private editShell;
-        private imageInsertIndex;
         private pendingDragHandle;
         private dragStartX;
         private dragStartY;
@@ -8755,10 +8752,9 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         /** Placeholder shown when the document is empty. */
         placeholder: string;
         /**
-         * Endpoint for image uploads. Posting the file metadata here must return
-         * `{uploadPath, uploadUrl}`; the file is then PUT to `uploadUrl` and
-         * `uploadPath` is inserted into the document. When unset, adding an image
-         * prompts for a URL instead.
+         * Endpoint for image uploads — required for image support. Posting the file
+         * metadata here must return `{uploadPath, uploadUrl}`; the file is then PUT
+         * to `uploadUrl` and the returned `uploadPath` is embedded as the image URL.
          */
         attachmentUrl: string;
         /** Makes the editor required for form submission. */
@@ -8824,8 +8820,8 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private createDragGhost;
         private moveDragGhost;
         private pickImage;
-        private handleImageDialogClose;
-        private handleImageInsert;
+        private closeImagePicker;
+        private handleImagePicked;
         private insertImage;
         private uploadImage;
         private autosize;
@@ -8833,7 +8829,9 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private renderSlashMenu;
         private renderBlock;
         render(): import("lit-html").TemplateResult<1>;
-        private renderImageDialog;
+        /** The block views, with the inline image picker spliced in when active. */
+        private renderBody;
+        private renderImagePicker;
     }
 }
 declare module "components/remarkd-editor/index" {
@@ -10152,6 +10150,11 @@ declare module "components/page-builder/page-builder.component" {
             'zn-page-palette-item': typeof ZnPagePaletteItem;
             'zn-page-section-card': typeof ZnPageSectionCard;
         };
+        private readonly formControlController;
+        /** The name of the control, submitted as a name/value pair with form data. */
+        name: string;
+        /** Associates the control with a form by id. The form must be in the same document or shadow root. */
+        form: string;
         /** The page state as a JSON string. Parsed on set; invalid JSON is ignored with a warning. */
         config: string;
         heading: string;
@@ -10188,6 +10191,24 @@ declare module "components/page-builder/page-builder.component" {
         get state(): PageState;
         /** Replaces the page state wholesale (does not emit zn-page-change). */
         set state(next: PageState);
+        /** The page state as a JSON string — the value submitted with form data. */
+        get value(): string;
+        /** Replaces the page state from a JSON string (does not emit zn-page-change). */
+        set value(next: string);
+        /** The serialised state of the last externally loaded page — restored on form reset. */
+        defaultValue: string;
+        /** Gets the validity state object. */
+        get validity(): ValidityState;
+        /** Gets the validation message. */
+        get validationMessage(): string;
+        /** Checks for validity but does not show a validation message. */
+        checkValidity(): boolean;
+        /** Gets the associated form, if one exists. */
+        getForm(): HTMLFormElement | null;
+        /** Checks for validity and shows the browser's validation message if the control is invalid. */
+        reportValidity(): boolean;
+        /** Sets a custom validation message. Pass an empty string to restore validity. */
+        setCustomValidity(_message?: string): void;
         handleConfigChange(): void;
         handleSectionTypesChange(): void;
         registerSectionType(type: PageSectionType): this;
@@ -10229,6 +10250,7 @@ declare module "components/page-builder/page-builder.component" {
          */
         private _offerRestoreIfNewer;
         protected willUpdate(changed: PropertyValues): void;
+        protected firstUpdated(changed: PropertyValues): void;
         private _typeFromTemplate;
         private _registerSlottedTemplates;
         /** Normalises and installs an externally provided state; resets selection. */

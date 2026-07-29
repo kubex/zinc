@@ -24849,6 +24849,34 @@
             },
             {
               "kind": "field",
+              "name": "formControlController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new FormControlController(this)"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The name of the control, submitted as a name/value pair with form data.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Associates the control with a form by id. The form must be in the same document or shadow root.",
+              "attribute": "form",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "config",
               "type": {
                 "text": "string"
@@ -24973,7 +25001,7 @@
               "kind": "field",
               "name": "_slotDragOver",
               "type": {
-                "text": "{containerId: string; index: number} | null"
+                "text": "{ containerId: string; index: number } | null"
               },
               "privacy": "private",
               "default": "null",
@@ -24983,7 +25011,7 @@
               "kind": "field",
               "name": "_slotPicker",
               "type": {
-                "text": "{containerId: string; index: number} | null"
+                "text": "{ containerId: string; index: number } | null"
               },
               "privacy": "private",
               "default": "null",
@@ -25031,6 +25059,78 @@
                 "text": "PageState"
               },
               "description": "Replaces the page state wholesale (does not emit zn-page-change)."
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Replaces the page state from a JSON string (does not emit zn-page-change)."
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "description": "The serialised state of the last externally loaded page — restored on form reset."
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "description": "Gets the validity state object.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "Gets the validation message.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Checks for validity but does not show a validation message."
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              },
+              "description": "Gets the associated form, if one exists."
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Checks for validity and shows the browser's validation message if the control is invalid."
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "parameters": [
+                {
+                  "name": "_message",
+                  "default": "''"
+                }
+              ],
+              "description": "Sets a custom validation message. Pass an empty string to restore validity."
             },
             {
               "kind": "method",
@@ -25157,7 +25257,7 @@
               "kind": "field",
               "name": "_restorePrompt",
               "type": {
-                "text": "{savedAt: number} | null"
+                "text": "{ savedAt: number } | null"
               },
               "privacy": "private",
               "default": "null",
@@ -25195,7 +25295,7 @@
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "{savedAt: number; state: PageState} | null"
+                  "text": "{ savedAt: number; state: PageState } | null"
                 }
               },
               "description": "The stored auto-save, purging it when past its TTL (or unreadable)."
@@ -25690,7 +25790,7 @@
                 {
                   "name": "drop",
                   "type": {
-                    "text": "{over: (e: DragEvent) => void; drop: (e: DragEvent) => void}"
+                    "text": "{ over: (e: DragEvent) => void; drop: (e: DragEvent) => void }"
                   }
                 },
                 {
@@ -25887,6 +25987,24 @@
             }
           ],
           "attributes": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The name of the control, submitted as a name/value pair with form data.",
+              "fieldName": "name"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Associates the control with a form by id. The form must be in the same document or shadow root.",
+              "fieldName": "form"
+            },
             {
               "name": "config",
               "type": {
@@ -31674,12 +31792,12 @@
             },
             {
               "kind": "field",
-              "name": "imageDialogOpen",
+              "name": "imagePickerIndex",
               "type": {
-                "text": "boolean"
+                "text": "number | null"
               },
               "privacy": "private",
-              "default": "false"
+              "default": "null"
             },
             {
               "kind": "field",
@@ -31707,15 +31825,6 @@
               },
               "privacy": "private",
               "default": "''"
-            },
-            {
-              "kind": "field",
-              "name": "imageInsertIndex",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0"
             },
             {
               "kind": "field",
@@ -31799,7 +31908,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Endpoint for image uploads. Posting the file metadata here must return\n`{uploadPath, uploadUrl}`; the file is then PUT to `uploadUrl` and\n`uploadPath` is inserted into the document. When unset, adding an image\nprompts for a URL instead.",
+              "description": "Endpoint for image uploads — required for image support. Posting the file\nmetadata here must return `{uploadPath, uploadUrl}`; the file is then PUT\nto `uploadUrl` and the returned `uploadPath` is embedded as the image URL.",
               "attribute": "attachment-url"
             },
             {
@@ -32247,12 +32356,12 @@
             },
             {
               "kind": "field",
-              "name": "handleImageDialogClose",
+              "name": "closeImagePicker",
               "privacy": "private"
             },
             {
               "kind": "field",
-              "name": "handleImageInsert",
+              "name": "handleImagePicked",
               "privacy": "private"
             },
             {
@@ -32344,7 +32453,13 @@
             },
             {
               "kind": "method",
-              "name": "renderImageDialog",
+              "name": "renderBody",
+              "privacy": "private",
+              "description": "The block views, with the inline image picker spliced in when active."
+            },
+            {
+              "kind": "method",
+              "name": "renderImagePicker",
               "privacy": "private"
             }
           ],
@@ -32392,7 +32507,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Endpoint for image uploads. Posting the file metadata here must return\n`{uploadPath, uploadUrl}`; the file is then PUT to `uploadUrl` and\n`uploadPath` is inserted into the document. When unset, adding an image\nprompts for a URL instead.",
+              "description": "Endpoint for image uploads — required for image support. Posting the file\nmetadata here must return `{uploadPath, uploadUrl}`; the file is then PUT\nto `uploadUrl` and the returned `uploadPath` is embedded as the image URL.",
               "fieldName": "attachmentUrl"
             },
             {
@@ -32431,7 +32546,7 @@
           "tagNameWithoutPrefix": "remarkd-editor",
           "tagName": "zn-remarkd-editor",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n * @documentation https://zinc.style/components/remarkd-editor\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-button-group\n * @dependency zn-icon\n * @dependency zn-dialog\n * @dependency zn-file\n * @dependency zn-input\n *\n * @event zn-input - Emitted on each keystroke while editing a block.\n * @event zn-change - Emitted when a block edit is committed and the value changes.\n *\n * @csspart base - The component's base wrapper.\n * @csspart toolbar - The always-visible block-insert toolbar.\n * @csspart block - A rendered block wrapper.\n * @csspart rendered - The rendered remarkd output of a block.\n * @csspart input - The textarea shown while editing a block.\n * @csspart slash-menu - The context menu opened by typing \"/\" in a block.\n */",
+          "jsDoc": "/**\n * @summary A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n * @documentation https://zinc.style/components/remarkd-editor\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-button-group\n * @dependency zn-icon\n * @dependency zn-file\n *\n * @event zn-input - Emitted on each keystroke while editing a block.\n * @event zn-change - Emitted when a block edit is committed and the value changes.\n *\n * @csspart base - The component's base wrapper.\n * @csspart toolbar - The always-visible block-insert toolbar.\n * @csspart block - A rendered block wrapper.\n * @csspart rendered - The rendered remarkd output of a block.\n * @csspart input - The textarea shown while editing a block.\n * @csspart slash-menu - The context menu opened by typing \"/\" in a block.\n */",
           "documentation": "https://zinc.style/components/remarkd-editor",
           "status": "experimental",
           "since": "1.0",
@@ -32439,9 +32554,7 @@
             "zn-button",
             "zn-button-group",
             "zn-icon",
-            "zn-dialog",
-            "zn-file",
-            "zn-input"
+            "zn-file"
           ]
         }
       ],
@@ -32773,304 +32886,6 @@
           "declaration": {
             "name": "ZnScrollContainer",
             "module": "components/scroll-container/scroll-container.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/settings-container/settings-container.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnSettingsContainer",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "Filter definitions used to toggle visibility of content.",
-              "name": "filter"
-            },
-            {
-              "description": "Custom content for the settings panel.",
-              "name": "dropdown-content"
-            },
-            {
-              "description": "Extra content rendered inside the pull tab next to the chevron.",
-              "name": "tab"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "filters",
-              "type": {
-                "text": "SettingsContainerFilter[]"
-              },
-              "default": "[]"
-            },
-            {
-              "kind": "field",
-              "name": "position",
-              "type": {
-                "text": "'top-end' | 'top-start' | 'bottom-end' | 'bottom-start'"
-              },
-              "default": "'bottom-start'",
-              "attribute": "position"
-            },
-            {
-              "kind": "field",
-              "name": "storeKey",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "store-key"
-            },
-            {
-              "kind": "field",
-              "name": "noScroll",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "no-scroll"
-            },
-            {
-              "kind": "field",
-              "name": "pullTab",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "pull-tab",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "open",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "panelExpanded",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_mutationObserver",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new MutationController(this, { target: null, config: {childList: true, subtree: true, attributes: true}, callback: mutations => { for (const mutation of mutations) { if (mutation.type === 'attributes' && (mutation.attributeName === 'hidden' || this.filters.some(f => f.toggleAttribute === mutation.attributeName))) { continue; } this.scheduleUpdateFilters(); break; } }, })"
-            },
-            {
-              "kind": "field",
-              "name": "_updateFiltersScheduled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_store",
-              "type": {
-                "text": "Store"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_hiddenElements",
-              "type": {
-                "text": "Set<Element>"
-              },
-              "privacy": "private",
-              "default": "new Set()"
-            },
-            {
-              "kind": "field",
-              "name": "handleDocumentMouseDown",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "togglePullTab",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "hidePullTab",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handlePanelTransitionEnd",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "scheduleUpdateFilters",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleContentSlotChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleFiltersSlotChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "recomputeFiltersFromSlot",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "updateSingleFilter",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "filter",
-                  "type": {
-                    "text": "SettingsContainerFilter"
-                  }
-                },
-                {
-                  "name": "checked",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "updateFilters"
-            },
-            {
-              "kind": "method",
-              "name": "updateFilter",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "ZnChangeEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "renderPullTab",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "getDropdownContent",
-              "privacy": "private"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted when the pull tab panel opens.",
-              "name": "zn-show"
-            },
-            {
-              "description": "Emitted when the pull tab panel closes.",
-              "name": "zn-hide"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "position",
-              "type": {
-                "text": "'top-end' | 'top-start' | 'bottom-end' | 'bottom-start'"
-              },
-              "default": "'bottom-start'",
-              "fieldName": "position"
-            },
-            {
-              "name": "store-key",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "storeKey"
-            },
-            {
-              "name": "no-scroll",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "noScroll"
-            },
-            {
-              "name": "pull-tab",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "pullTab"
-            },
-            {
-              "name": "open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "open"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "settings-container",
-          "tagName": "zn-settings-container",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/settings-container\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-show - Emitted when the pull tab panel opens.\n * @event zn-hide - Emitted when the pull tab panel closes.\n *\n * @slot - The default slot.\n * @slot filter - Filter definitions used to toggle visibility of content.\n * @slot dropdown-content - Custom content for the settings panel.\n * @slot tab - Extra content rendered inside the pull tab next to the chevron.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/settings-container",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnSettingsContainer",
-            "module": "components/settings-container/settings-container.js"
           }
         }
       ]
@@ -34648,6 +34463,304 @@
           "declaration": {
             "name": "ZnSelect",
             "module": "components/select/select.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/settings-container/settings-container.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnSettingsContainer",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "Filter definitions used to toggle visibility of content.",
+              "name": "filter"
+            },
+            {
+              "description": "Custom content for the settings panel.",
+              "name": "dropdown-content"
+            },
+            {
+              "description": "Extra content rendered inside the pull tab next to the chevron.",
+              "name": "tab"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "filters",
+              "type": {
+                "text": "SettingsContainerFilter[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "position",
+              "type": {
+                "text": "'top-end' | 'top-start' | 'bottom-end' | 'bottom-start'"
+              },
+              "default": "'bottom-start'",
+              "attribute": "position"
+            },
+            {
+              "kind": "field",
+              "name": "storeKey",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "store-key"
+            },
+            {
+              "kind": "field",
+              "name": "noScroll",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "no-scroll"
+            },
+            {
+              "kind": "field",
+              "name": "pullTab",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "pull-tab",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "panelExpanded",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_mutationObserver",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new MutationController(this, { target: null, config: {childList: true, subtree: true, attributes: true}, callback: mutations => { for (const mutation of mutations) { if (mutation.type === 'attributes' && (mutation.attributeName === 'hidden' || this.filters.some(f => f.toggleAttribute === mutation.attributeName))) { continue; } this.scheduleUpdateFilters(); break; } }, })"
+            },
+            {
+              "kind": "field",
+              "name": "_updateFiltersScheduled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_store",
+              "type": {
+                "text": "Store"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_hiddenElements",
+              "type": {
+                "text": "Set<Element>"
+              },
+              "privacy": "private",
+              "default": "new Set()"
+            },
+            {
+              "kind": "field",
+              "name": "handleDocumentMouseDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "togglePullTab",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "hidePullTab",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handlePanelTransitionEnd",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "scheduleUpdateFilters",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleContentSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleFiltersSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "recomputeFiltersFromSlot",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "updateSingleFilter",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "filter",
+                  "type": {
+                    "text": "SettingsContainerFilter"
+                  }
+                },
+                {
+                  "name": "checked",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "updateFilters"
+            },
+            {
+              "kind": "method",
+              "name": "updateFilter",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "ZnChangeEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderPullTab",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "getDropdownContent",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the pull tab panel opens.",
+              "name": "zn-show"
+            },
+            {
+              "description": "Emitted when the pull tab panel closes.",
+              "name": "zn-hide"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "position",
+              "type": {
+                "text": "'top-end' | 'top-start' | 'bottom-end' | 'bottom-start'"
+              },
+              "default": "'bottom-start'",
+              "fieldName": "position"
+            },
+            {
+              "name": "store-key",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "storeKey"
+            },
+            {
+              "name": "no-scroll",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "noScroll"
+            },
+            {
+              "name": "pull-tab",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "pullTab"
+            },
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "open"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "settings-container",
+          "tagName": "zn-settings-container",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/settings-container\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-show - Emitted when the pull tab panel opens.\n * @event zn-hide - Emitted when the pull tab panel closes.\n *\n * @slot - The default slot.\n * @slot filter - Filter definitions used to toggle visibility of content.\n * @slot dropdown-content - Custom content for the settings panel.\n * @slot tab - Extra content rendered inside the pull tab next to the chevron.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/settings-container",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnSettingsContainer",
+            "module": "components/settings-container/settings-container.js"
           }
         }
       ]

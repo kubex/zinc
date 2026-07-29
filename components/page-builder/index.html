@@ -1059,6 +1059,38 @@
               <tbody>
                 <tr>
                   <td>
+                    <code class="nowrap">name</code>
+                  </td>
+                  <td>The name of the control, submitted as a name/value pair with form data.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">form</code>
+                  </td>
+                  <td>
+                    Associates the control with a form by id. The form must be in the same document or shadow root.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
                     <code class="nowrap">config</code>
                   </td>
                   <td>The page state as a JSON string. Parsed on set; invalid JSON is ignored with a warning.</td>
@@ -1170,6 +1202,52 @@
 
                 <tr>
                   <td>
+                    <code class="nowrap">value</code>
+                  </td>
+                  <td>Replaces the page state from a JSON string (does not emit zn-page-change).</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">defaultValue</code>
+                  </td>
+                  <td>The serialised state of the last externally loaded page — restored on form reset.</td>
+                  <td style="text-align: center"></td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">validity</code>
+                  </td>
+                  <td>Gets the validity state object.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>ValidityState</code>
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">validationMessage</code>
+                  </td>
+                  <td>Gets the validation message.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>
                     <code class="nowrap">restoreAutoSave</code>
                   </td>
                   <td>Load the auto-saved page, if one exists within the 1-day TTL.</td>
@@ -1249,6 +1327,32 @@
                 </tr>
               </thead>
               <tbody>
+                <tr>
+                  <td class="nowrap"><code>checkValidity()</code></td>
+                  <td>Checks for validity but does not show a validation message.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>getForm()</code></td>
+                  <td>Gets the associated form, if one exists.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>reportValidity()</code></td>
+                  <td>Checks for validity and shows the browser’s validation message if the control is invalid.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>setCustomValidity()</code></td>
+                  <td>Sets a custom validation message. Pass an empty string to restore validity.</td>
+                  <td>
+                    <code> _message: </code>
+                  </td>
+                </tr>
+
                 <tr>
                   <td class="nowrap"><code>addSection()</code></td>
                   <td>

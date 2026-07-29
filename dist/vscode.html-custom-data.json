@@ -2646,8 +2646,18 @@
     },
     {
       "name": "zn-page-builder",
-      "description": "A config-driven page composer: a palette of predefined section types, a linear\ncanvas of section cards, and an inspector for editing each section's content.\n---\n\n\n### **Events:**\n - **zn-page-change** - Emitted whenever the page state changes. `event.detail.state` is the new PageState.\n- **zn-page-selection-change** - Emitted when the selected section changes. `event.detail.sectionId`.\n\n### **Methods:**\n - **addSection(type: _string_, index: _number_): _PageSection | null_** - Adds a section of a registered type at `index` (default: end). Returns null for unknown types.\n- **addSectionToSlot(type: _string_, containerId: _string_, slotIndex: _number_): _PageSection | null_** - Adds a new section of a registered type into a container's slot. Returns null if not allowed.\n\n### **Slots:**\n - **config** - `<template type=\"…\">` declarations; never displayed. Each template's attributes (type, label, icon, icon-library, color, category, description, slots, accepts) declare a palette entry and its content declares the inspector form for that type. `slots` makes the section a container with that many child slots; `accepts` is a comma-separated list of the type keys its slots allow.\n- **header-left** - Actions shown on the left of the header bar.\n- **header-right** - Actions shown on the right of the header bar.\n\n### **CSS Parts:**\n - **base** - The grid wrapper.\n- **header** - The full-width header action bar (only rendered when header slots are filled).\n- **palette** - The left palette panel.\n- **canvas** - The centre section-card canvas.\n- **inspector** - The right panel while a section is selected.",
+      "description": "A config-driven page composer: a palette of predefined section types, a linear\ncanvas of section cards, and an inspector for editing each section's content.\n---\n\n\n### **Events:**\n - **zn-page-change** - Emitted whenever the page state changes. `event.detail.state` is the new PageState.\n- **zn-page-selection-change** - Emitted when the selected section changes. `event.detail.sectionId`.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks for validity but does not show a validation message.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(_message)** - Sets a custom validation message. Pass an empty string to restore validity.\n- **addSection(type: _string_, index: _number_): _PageSection | null_** - Adds a section of a registered type at `index` (default: end). Returns null for unknown types.\n- **addSectionToSlot(type: _string_, containerId: _string_, slotIndex: _number_): _PageSection | null_** - Adds a new section of a registered type into a container's slot. Returns null if not allowed.\n\n### **Slots:**\n - **config** - `<template type=\"…\">` declarations; never displayed. Each template's attributes (type, label, icon, icon-library, color, category, description, slots, accepts) declare a palette entry and its content declares the inspector form for that type. `slots` makes the section a container with that many child slots; `accepts` is a comma-separated list of the type keys its slots allow.\n- **header-left** - Actions shown on the left of the header bar.\n- **header-right** - Actions shown on the right of the header bar.\n\n### **CSS Parts:**\n - **base** - The grid wrapper.\n- **header** - The full-width header action bar (only rendered when header slots are filled).\n- **palette** - The left palette panel.\n- **canvas** - The centre section-card canvas.\n- **inspector** - The right panel while a section is selected.",
       "attributes": [
+        {
+          "name": "name",
+          "description": "The name of the control, submitted as a name/value pair with form data.",
+          "values": []
+        },
+        {
+          "name": "form",
+          "description": "Associates the control with a form by id. The form must be in the same document or shadow root.",
+          "values": []
+        },
         {
           "name": "config",
           "description": "The page state as a JSON string. Parsed on set; invalid JSON is ignored with a warning.",
@@ -3274,7 +3284,7 @@
         },
         {
           "name": "attachment-url",
-          "description": "Endpoint for image uploads. Posting the file metadata here must return\n`{uploadPath, uploadUrl}`; the file is then PUT to `uploadUrl` and\n`uploadPath` is inserted into the document. When unset, adding an image\nprompts for a URL instead.",
+          "description": "Endpoint for image uploads — required for image support. Posting the file\nmetadata here must return `{uploadPath, uploadUrl}`; the file is then PUT\nto `uploadUrl` and the returned `uploadPath` is embedded as the image URL.",
           "values": []
         },
         {
@@ -3329,31 +3339,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/scroll-container"
-        }
-      ]
-    },
-    {
-      "name": "zn-settings-container",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the pull tab panel opens.\n- **zn-hide** - Emitted when the pull tab panel closes.\n\n### **Slots:**\n - _default_ - The default slot.\n- **filter** - Filter definitions used to toggle visibility of content.\n- **dropdown-content** - Custom content for the settings panel.\n- **tab** - Extra content rendered inside the pull tab next to the chevron.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        {
-          "name": "position",
-          "values": [
-            { "name": "top-end" },
-            { "name": "top-start" },
-            { "name": "bottom-end" },
-            { "name": "bottom-start" }
-          ]
-        },
-        { "name": "store-key", "values": [] },
-        { "name": "no-scroll", "values": [] },
-        { "name": "pull-tab", "values": [] },
-        { "name": "open", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/settings-container"
         }
       ]
     },
@@ -3523,6 +3508,31 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/select"
+        }
+      ]
+    },
+    {
+      "name": "zn-settings-container",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the pull tab panel opens.\n- **zn-hide** - Emitted when the pull tab panel closes.\n\n### **Slots:**\n - _default_ - The default slot.\n- **filter** - Filter definitions used to toggle visibility of content.\n- **dropdown-content** - Custom content for the settings panel.\n- **tab** - Extra content rendered inside the pull tab next to the chevron.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        {
+          "name": "position",
+          "values": [
+            { "name": "top-end" },
+            { "name": "top-start" },
+            { "name": "bottom-end" },
+            { "name": "bottom-start" }
+          ]
+        },
+        { "name": "store-key", "values": [] },
+        { "name": "no-scroll", "values": [] },
+        { "name": "pull-tab", "values": [] },
+        { "name": "open", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/settings-container"
         }
       ]
     },

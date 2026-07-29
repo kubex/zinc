@@ -1,6 +1,6 @@
-import {removeViteLogging, vitePlugin} from '@remcovaes/web-test-runner-vite-plugin';
-import {playwrightLauncher} from '@web/test-runner-playwright';
 import {globbySync} from 'globby';
+import {playwrightLauncher} from '@web/test-runner-playwright';
+import {removeViteLogging, vitePlugin} from '@remcovaes/web-test-runner-vite-plugin';
 
 export default {
   rootDir: './',

@@ -25,6 +25,15 @@ interface BlockType {
   image?: boolean;
 }
 
+interface ImageBlockData {
+  caption: string;
+  align: '' | 'center' | 'right';
+  src: string;
+  alt: string;
+  width: string;
+  height: string;
+}
+
 const BLOCK_TYPES: BlockType[] = [
   {label: 'Text', icon: 'text@lu', prefix: ''},
   {label: 'Heading 1', icon: 'heading-1@lu', prefix: '# '},
@@ -57,6 +66,7 @@ const BLOCK_TYPES: BlockType[] = [
  * @csspart rendered - The rendered remarkd output of a block.
  * @csspart input - The textarea shown while editing a block.
  * @csspart slash-menu - The context menu opened by typing "/" in a block.
+ * @csspart image-controls - The caption / alignment / size panel shown when an image block is clicked.
  */
 export default class ZnRemarkdEditor extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -77,6 +87,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   @state() private slashQuery = '';
   @state() private slashActiveIndex = 0;
   @state() private imagePickerIndex: number | null = null;
+  @state() private imageEdit: ImageBlockData | null = null;
   @state() private dropIndicator: number | null = null;
   @state() private dragIndex: number | null = null;
   @state() private editShell = '';
@@ -246,7 +257,60 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       return;
     }
 
+    // Image blocks get a controls panel instead of source editing.
+    const image = this.parseImageBlock(this.blocks[index]);
+    if (image) {
+      this.editingIndex = index;
+      this.imageEdit = image;
+      this.slashMenuOpen = false;
+      return;
+    }
+
     this.startEdit(index);
+  }
+
+  /** Parses a block that is purely an image (with optional caption/align lines). */
+  private parseImageBlock(block: string): ImageBlockData | null {
+    const data: ImageBlockData = {caption: '', align: '', src: '', alt: '', width: '', height: ''};
+    let found = false;
+    for (const raw of (block ?? '').split('\n')) {
+      const line = raw.trim();
+      if (!line) continue;
+      const macro = /^image::([^[]+)\[([^\]]*)]$/.exec(line);
+      const markdown = /^!\[([^\]]*)]\(([^)\s]+)\s*(?:"[^"]*")?\)$/.exec(line);
+      const align = /^\[\.align-(center|right)]$/.exec(line);
+      if (macro || markdown) {
+        if (found) return null;
+        found = true;
+        if (macro) {
+          data.src = macro[1].trim();
+          const parts = macro[2].split(',').map(part => part.trim());
+          data.alt = parts[0] ?? '';
+          data.width = parts[1] ?? '';
+          data.height = parts[2] ?? '';
+        } else if (markdown) {
+          data.alt = markdown[1];
+          data.src = markdown[2];
+        }
+      } else if (align) {
+        data.align = align[1] as ImageBlockData['align'];
+      } else if (line.startsWith('.') && !line.startsWith('..')) {
+        data.caption = line.slice(1);
+      } else {
+        return null;
+      }
+    }
+    return found ? data : null;
+  }
+
+  private serializeImageBlock(data: ImageBlockData): string {
+    const lines: string[] = [];
+    if (data.caption.trim()) lines.push(`.${data.caption.trim()}`);
+    if (data.align) lines.push(`[.align-${data.align}]`);
+    const attrs = [data.alt, data.width, data.height].map(attr => attr.trim());
+    while (attrs.length && !attrs[attrs.length - 1]) attrs.pop();
+    lines.push(`image::${data.src}[${attrs.join(',')}]`);
+    return lines.join('\n');
   }
 
   private toggleCheckbox(index: number, checkbox: HTMLInputElement) {
@@ -273,10 +337,53 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     if (this.disabled || this.readonly) return;
     this.editingDraft = draft ?? this.blocks[index] ?? '';
     this.editingIndex = index;
+    this.imageEdit = null;
     this.editShell = this.computeEditShell(this.editingDraft);
     this.slashMenuOpen = false;
     void this.focusInput();
   }
+
+  private updateImageEdit(patch: Partial<ImageBlockData>) {
+    if (this.imageEdit) this.imageEdit = {...this.imageEdit, ...patch};
+  }
+
+  private saveImageEdit = () => {
+    if (this.editingIndex === null || !this.imageEdit) return;
+    const blocks = [...this.blocks];
+    blocks[this.editingIndex] = this.serializeImageBlock(this.imageEdit);
+    this.closeImageEdit();
+    this.updateBlocks(blocks);
+  };
+
+  private closeImageEdit = () => {
+    this.editingIndex = null;
+    this.imageEdit = null;
+  };
+
+  private deleteImageBlock = () => {
+    if (this.editingIndex === null) return;
+    const blocks = [...this.blocks];
+    blocks.splice(this.editingIndex, 1);
+    this.closeImageEdit();
+    this.updateBlocks(blocks);
+  };
+
+  private editImageSource = () => {
+    if (this.editingIndex === null) return;
+    const index = this.editingIndex;
+    this.imageEdit = null;
+    this.startEdit(index);
+  };
+
+  private handleImageControlsKeydown = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      this.closeImageEdit();
+    } else if (e.key === 'Enter' && (e.target as HTMLElement).tagName === 'INPUT') {
+      e.preventDefault();
+      this.saveImageEdit();
+    }
+  };
 
   /**
    * The remarkd chrome the editing block should keep, derived from its first
@@ -311,6 +418,13 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     this.updateBlocks(blocks);
   }
 
+  private deleteBlock(index: number) {
+    if (this.disabled || this.readonly) return;
+    const blocks = [...this.blocks];
+    blocks.splice(index, 1);
+    this.updateBlocks(blocks);
+  }
+
   /** Inserts a draft block — committed (or dropped, if left empty) on blur. */
   private insertDraftBlock(index: number, prefill = '') {
     if (this.disabled || this.readonly) return;
@@ -332,6 +446,12 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
 
   /** Commits the in-progress edit; returns the index after the committed parts. */
   private commitEdit = (): number => {
+    if (this.imageEdit) {
+      // The image panel saves explicitly — just close it.
+      const index = this.editingIndex ?? this.blocks.length;
+      this.closeImageEdit();
+      return index + 1;
+    }
     this.slashMenuOpen = false;
     if (this.editingIndex === null) return this.blocks.length;
     const index = this.editingIndex;
@@ -574,7 +694,8 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   private async insertImage(file: File, index: number) {
     try {
       const path = await this.uploadImage(file);
-      this.addBlockAt(index, `![${file.name}](${path})`);
+      const alt = file.name.replace(/[[\],]/g, '');
+      this.addBlockAt(index, `image::${path}[${alt}]`);
     } catch (error) {
       console.error('[zn-remarkd-editor] image upload failed', error);
     }
@@ -591,7 +712,11 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     if (!res.ok) throw new Error(`Upload request failed: ${res.status}`);
     const data = await res.json() as UploadResponse;
 
-    const put = await fetch(data.uploadUrl, {
+    // resolve relative upload targets against the attachment url so both keep
+    // the same base path when the host page rewrites attachment-url (e.g. the
+    // kubex console proxying apps under an app base); absolute urls pass through
+    const target = new URL(data.uploadUrl, new URL(this.attachmentUrl, window.location.href)).toString();
+    const put = await fetch(target, {
       method: 'PUT',
       headers: {'Content-Type': file.type},
       body: file,
@@ -636,8 +761,77 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       </div>`;
   }
 
+  private renderImageControls() {
+    const data = this.imageEdit;
+    if (!data) return '';
+    const aligns: {value: ImageBlockData['align']; icon: string; label: string}[] = [
+      {value: '', icon: 'align-left@lu', label: 'Align left'},
+      {value: 'center', icon: 'align-center@lu', label: 'Align center'},
+      {value: 'right', icon: 'align-right@lu', label: 'Align right'},
+    ];
+    return html`
+      <div part="image-controls" class="remarkd-editor__image-controls"
+           @keydown=${this.handleImageControlsKeydown}>
+        ${data.src ? html`
+          <div class=${classMap({
+            'remarkd-editor__image-controls-preview': true,
+            [`remarkd-editor__image-controls-preview--${data.align}`]: !!data.align,
+          })}>
+            <img src=${data.src}
+                 alt=${data.alt}
+                 width=${data.width || ''}
+                 height=${data.height || ''}>
+          </div>` : ''}
+        <label class="remarkd-editor__image-field">
+          <span>Caption</span>
+          <input .value=${data.caption}
+                 placeholder="Optional caption"
+                 @input=${(e: Event) => this.updateImageEdit({caption: (e.target as HTMLInputElement).value})}>
+        </label>
+        <div class="remarkd-editor__image-row">
+          <div class="remarkd-editor__image-field">
+            <span>Alignment</span>
+            <zn-button-group>
+              ${aligns.map(align => html`
+                <zn-button type="button" icon-button="small" icon=${align.icon}
+                           ?plain=${data.align !== align.value}
+                           tooltip=${align.label}
+                           @click=${() => this.updateImageEdit({align: align.value})}></zn-button>`)}
+            </zn-button-group>
+          </div>
+          <label class="remarkd-editor__image-field">
+            <span>Width</span>
+            <input .value=${data.width} placeholder="auto" size="6"
+                   @input=${(e: Event) => this.updateImageEdit({width: (e.target as HTMLInputElement).value})}>
+          </label>
+          <label class="remarkd-editor__image-field">
+            <span>Height</span>
+            <input .value=${data.height} placeholder="auto" size="6"
+                   @input=${(e: Event) => this.updateImageEdit({height: (e.target as HTMLInputElement).value})}>
+          </label>
+          <label class="remarkd-editor__image-field">
+            <span>Alt text</span>
+            <input .value=${data.alt}
+                   @input=${(e: Event) => this.updateImageEdit({alt: (e.target as HTMLInputElement).value})}>
+          </label>
+        </div>
+        <div class="remarkd-editor__image-buttons">
+          <zn-button type="button" color="primary" size="small" @click=${this.saveImageEdit}>Save</zn-button>
+          <zn-button type="button" color="secondary" size="small" @click=${this.closeImageEdit}>Cancel</zn-button>
+          <span class="remarkd-editor__image-buttons-spacer"></span>
+          <zn-button type="button" icon-button="small" plain icon="code@lu"
+                     tooltip="Edit source" @click=${this.editImageSource}></zn-button>
+          <zn-button type="button" icon-button="small" plain icon="trash-2@lu" color="error"
+                     tooltip="Delete image" @click=${this.deleteImageBlock}></zn-button>
+        </div>
+      </div>`;
+  }
+
   private renderBlock(block: string, index: number) {
     if (this.editingIndex === index) {
+      if (this.imageEdit) {
+        return this.renderImageControls();
+      }
       return html`
         <div class="remarkd-editor__edit-wrap remarkd-rendered">
           <div class=${classMap({
@@ -667,15 +861,19 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
            })}>
         ${this.disabled || this.readonly ? '' : html`
           <div class="remarkd-editor__actions">
-            <zn-button type="button" icon-button="small" plain icon="plus@lu"
-                       tooltip="Add block below"
-                       @click=${() => this.insertDraftBlock(index + 1)}></zn-button>
             <span class="remarkd-editor__drag-handle"
                   title="Drag to move"
                   @pointerdown=${this.handleHandlePointerDown}>
-              <zn-icon src="grip-vertical@lu" size="18"></zn-icon>
+              <zn-icon src="grip-vertical@lu" size="16"></zn-icon>
             </span>
-          </div>`}
+            <zn-button type="button" icon-button="small" plain icon="plus@lu" icon-size="16"
+                       tooltip="Add block below"
+                       @click=${() => this.insertDraftBlock(index + 1)}></zn-button>
+          </div>
+          <zn-button class="remarkd-editor__delete"
+                     type="button" icon-button="small" plain icon="x@lu" icon-size="16" color="error"
+                     tooltip="Delete block"
+                     @click=${() => this.deleteBlock(index)}></zn-button>`}
         <div part="rendered" class="remarkd-editor__rendered remarkd-rendered"
              @click=${(e: MouseEvent) => this.handleRenderedClick(e, index)}>${unsafeHTML(remarkdParse(block))}
         </div>
@@ -696,7 +894,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
         ${editable ? html`
           <div part="toolbar" class="remarkd-editor__toolbar">
             ${BLOCK_TYPES.map(item => html`
-              <zn-button type="button" icon-button plain icon=${item.icon}
+              <zn-button type="button" icon-button plain icon=${item.icon} icon-size="18"
                          tooltip=${item.label}
                          @click=${() => this.handleToolbarInsert(item)}></zn-button>`)}
           </div>` : ''}

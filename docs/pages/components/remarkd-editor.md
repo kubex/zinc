@@ -30,10 +30,10 @@ NOTE: Click any block to edit its source."
 
 ### Adding and Moving Blocks
 
-Hover a block to reveal its gutter actions: add a block below it, or grab the
-handle to drag the block somewhere else in the document. Clicking the empty
-area at the end of the document starts a new block. A block committed empty
-is removed.
+Hover a block to reveal its actions: a drag handle with an add-block button
+below it in the left gutter, and a delete button in its top-right corner.
+Clicking the empty area at the end of the document starts a new block. A
+block committed empty is removed.
 
 ```html:preview
 <zn-remarkd-editor
@@ -51,6 +51,21 @@ respond with `{uploadPath, uploadUrl}`; the file is then PUT to `uploadUrl`
 and the returned `uploadPath` is embedded as the image URL. Dropping an image
 file straight onto the editor uploads it directly. `attachment-url` is
 required for image support.
+
+Clicking an image block opens its controls: caption, alignment
+(left / center / right), width, height, and alt text — plus edit-source and
+delete actions. These write standard remarkd syntax back to the value: the
+caption as a `.Caption` title line, alignment as an `[.align-center]` /
+`[.align-right]` class, and size as `image::src[alt,width,height]`.
+
+```html:preview
+<zn-remarkd-editor
+  name="content"
+  value=".The Zinc logo
+[.align-center]
+image::/assets/images/watermark.svg[Zinc,220]"
+></zn-remarkd-editor>
+```
 
 ```html
 <zn-remarkd-editor name="content" attachment-url="/upload"></zn-remarkd-editor>

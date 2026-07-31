@@ -124,6 +124,42 @@ Second"></zn-remarkd-editor>`);
     expect(el.shadowRoot!.querySelector('.remarkd-editor__input')).to.not.exist;
   });
 
+  it('should open image controls for an image block and save caption/align/size', async () => {
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="image::photo.png[Alt,640,480]"></zn-remarkd-editor>`);
+    el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
+    await el.updateComplete;
+
+    const panel = el.shadowRoot!.querySelector('.remarkd-editor__image-controls')!;
+    expect(panel).to.exist;
+    expect(el.shadowRoot!.querySelector('.remarkd-editor__input')).to.not.exist;
+
+    const caption = panel.querySelector<HTMLInputElement>('.remarkd-editor__image-field input')!;
+    caption.value = 'A caption';
+    caption.dispatchEvent(new Event('input', {bubbles: true}));
+    await el.updateComplete;
+
+    const buttons = el.shadowRoot!.querySelectorAll('.remarkd-editor__image-buttons zn-button');
+    buttons[0].dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+    await el.updateComplete;
+
+    expect(el.value).to.equal('.A caption\nimage::photo.png[Alt,640,480]');
+    expect(el.shadowRoot!.querySelector('.remarkd-editor__rendered')!.innerHTML).to.contain('A caption');
+  });
+
+  it('should delete a block from its hover delete button', async () => {
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="# Title
+
+Second"></zn-remarkd-editor>`);
+    const deleteButton = el.shadowRoot!.querySelectorAll('.remarkd-editor__delete')[0];
+    deleteButton.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+    await el.updateComplete;
+
+    expect(el.value).to.equal('Second');
+    expect(el.shadowRoot!.querySelectorAll('.remarkd-editor__block').length).to.equal(1);
+  });
+
   it('should emit zn-change when a block edit changes the value', async () => {
     const el = await fixture<ZnRemarkdEditor>(html`
       <zn-remarkd-editor value="Hello"></zn-remarkd-editor>`);

@@ -78,7 +78,13 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
     assumeInteractionOn: ['zn-change'],
     // An explicitly cleared control submits an empty value so the server can
     // remove the stored upload; an untouched empty control submits nothing.
+    // In upload-url mode the control submits the uploaded file's URL string
+    // instead of the file bytes.
     value: (el: ZnFile) => {
+      if (el.uploadUrl) {
+        if (el.src) return el.src;
+        return el.clearedByUser ? '' : undefined;
+      }
       if (el.files?.length) return el.files;
       return el.clearedByUser ? '' : undefined;
     }
@@ -148,12 +154,21 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
    */
   @property({type: String})
   set value(v: string) {
+    // In upload-url mode the value is the uploaded file's URL, held in `src`
+    // (a native file input only accepts an empty string as value).
+    if (this.uploadUrl) {
+      this.src = v ?? '';
+      return;
+    }
     if (this.input) {
       this.input.value = v;
     }
   }
 
   get value() {
+    if (this.uploadUrl) {
+      return this.src ?? '';
+    }
     return this.input?.value;
   }
 
@@ -253,6 +268,16 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
    * Useful for showing the existing CDN link alongside the preview.
    */
   @property({type: Boolean, attribute: 'show-link'}) showLink = false;
+
+  /**
+   * When set, a chosen file is immediately POSTed (multipart, field `file`) to this URL.
+   * The endpoint must respond with JSON `{"url": "..."}`; that URL becomes the control's
+   * value (and `src` preview) in place of the file bytes, so the control works inside
+   * JSON-serialising hosts such as `zn-page-builder`. Emits `zn-error` when the upload fails.
+   */
+  @property({attribute: 'upload-url'}) uploadUrl = '';
+
+  @state() private uploading = false;
 
   /** Gets the validity state object */
   get validity() {
@@ -387,11 +412,55 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
     e.stopPropagation();
 
     this.updatePreview();
+
+    const file = this.files?.[0];
+    if (this.uploadUrl && file) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      this.uploadFile(file);
+      return;
+    }
+
     this.emit('zn-input');
     this.emit('zn-change');
 
     if (this.triggerSubmit) {
       this.formControlController.submit();
+    }
+  }
+
+  /**
+   * Uploads the chosen file to `uploadUrl` and adopts the returned URL as the
+   * control's value. The local file preview stays visible while the upload runs.
+   */
+  private async uploadFile(file: File) {
+    this.uploading = true;
+    try {
+      const body = new FormData();
+      body.append('file', file, file.name);
+      const response = await fetch(this.uploadUrl, {method: 'POST', body, credentials: 'same-origin'});
+      if (!response.ok) {
+        throw new Error(`upload failed with status ${response.status}`);
+      }
+      const data = await response.json() as { url?: string };
+      if (!data.url) {
+        throw new Error('upload response missing url');
+      }
+      this.src = data.url;
+      this.input.value = '';
+      this.files = null;
+      this.clearedByUser = false;
+      this.emit('zn-input');
+      this.emit('zn-change');
+      if (this.triggerSubmit) {
+        this.formControlController.submit();
+      }
+    } catch (error) {
+      console.warn('<zn-file> upload failed', error);
+      this.input.value = '';
+      this.files = null;
+      this.emit('zn-error');
+    } finally {
+      this.uploading = false;
     }
   }
 
@@ -698,6 +767,7 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
           'form-control--large': this.size === 'large',
           'form-control--medium': this.size === 'medium',
           'form-control--small': this.size === 'small',
+          'form-control--uploading': this.uploading,
           'form-control--user-dragging': this.userIsDragging,
         })}"
         @dragenter="${this.handleDragOver}"

@@ -7182,6 +7182,14 @@ declare module "components/file/file.component" {
          * Useful for showing the existing CDN link alongside the preview.
          */
         showLink: boolean;
+        /**
+         * When set, a chosen file is immediately POSTed (multipart, field `file`) to this URL.
+         * The endpoint must respond with JSON `{"url": "..."}`; that URL becomes the control's
+         * value (and `src` preview) in place of the file bytes, so the control works inside
+         * JSON-serialising hosts such as `zn-page-builder`. Emits `zn-error` when the upload fails.
+         */
+        uploadUrl: string;
+        private uploading;
         /** Gets the validity state object */
         get validity(): ValidityState;
         /** Gets the validation message */
@@ -7210,6 +7218,11 @@ declare module "components/file/file.component" {
         private handleClick;
         /** Handles the change event of the native input */
         private handleChange;
+        /**
+         * Uploads the chosen file to `uploadUrl` and adopts the returned URL as the
+         * control's value. The local file preview stays visible while the upload runs.
+         */
+        private uploadFile;
         private handleDragOver;
         private handleDragLeave;
         private handleDrop;

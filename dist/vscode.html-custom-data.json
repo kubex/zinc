@@ -1665,6 +1665,11 @@
           "name": "show-link",
           "description": "When enabled, render the current link (`previewSrc`) as a clickable URL below the control.\nUseful for showing the existing CDN link alongside the preview.",
           "values": []
+        },
+        {
+          "name": "upload-url",
+          "description": "When set, a chosen file is immediately POSTed (multipart, field `file`) to this URL.\nThe endpoint must respond with JSON `{\"url\": \"...\"}`; that URL becomes the control's\nvalue (and `src` preview) in place of the file bytes, so the control works inside\nJSON-serialising hosts such as `zn-page-builder`. Emits `zn-error` when the upload fails.",
+          "values": []
         }
       ],
       "references": [

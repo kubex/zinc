@@ -12962,7 +12962,7 @@
               "name": "formControlController",
               "privacy": "private",
               "readonly": true,
-              "default": "new FormControlController(this, { assumeInteractionOn: ['zn-change'], // An explicitly cleared control submits an empty value so the server can // remove the stored upload; an untouched empty control submits nothing. value: (el: ZnFile) => { if (el.files?.length) return el.files; return el.clearedByUser ? '' : undefined; } })"
+              "default": "new FormControlController(this, { assumeInteractionOn: ['zn-change'], // An explicitly cleared control submits an empty value so the server can // remove the stored upload; an untouched empty control submits nothing. // In upload-url mode the control submits the uploaded file's URL string // instead of the file bytes. value: (el: ZnFile) => { if (el.uploadUrl) { if (el.src) return el.src; return el.clearedByUser ? '' : undefined; } if (el.files?.length) return el.files; return el.clearedByUser ? '' : undefined; } })"
             },
             {
               "kind": "field",
@@ -13246,6 +13246,25 @@
             },
             {
               "kind": "field",
+              "name": "uploadUrl",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "When set, a chosen file is immediately POSTed (multipart, field `file`) to this URL.\nThe endpoint must respond with JSON `{\"url\": \"...\"}`; that URL becomes the control's\nvalue (and `src` preview) in place of the file bytes, so the control works inside\nJSON-serialising hosts such as `zn-page-builder`. Emits `zn-error` when the upload fails.",
+              "attribute": "upload-url"
+            },
+            {
+              "kind": "field",
+              "name": "uploading",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "description": "Gets the validity state object",
               "readonly": true
@@ -13396,6 +13415,20 @@
                 }
               ],
               "description": "Handles the change event of the native input"
+            },
+            {
+              "kind": "method",
+              "name": "uploadFile",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "file",
+                  "type": {
+                    "text": "File"
+                  }
+                }
+              ],
+              "description": "Uploads the chosen file to `uploadUrl` and adopts the returned URL as the\ncontrol's value. The local file preview stays visible while the upload runs."
             },
             {
               "kind": "field",
@@ -13675,6 +13708,15 @@
               "default": "false",
               "description": "When enabled, render the current link (`previewSrc`) as a clickable URL below the control.\nUseful for showing the existing CDN link alongside the preview.",
               "fieldName": "showLink"
+            },
+            {
+              "name": "upload-url",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "When set, a chosen file is immediately POSTed (multipart, field `file`) to this URL.\nThe endpoint must respond with JSON `{\"url\": \"...\"}`; that URL becomes the control's\nvalue (and `src` preview) in place of the file bytes, so the control works inside\nJSON-serialising hosts such as `zn-page-builder`. Emits `zn-error` when the upload fails.",
+              "fieldName": "uploadUrl"
             }
           ],
           "superclass": {

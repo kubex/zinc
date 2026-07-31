@@ -2867,6 +2867,33 @@
 
                 <tr>
                   <td>
+                    <code class="nowrap">uploadUrl</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> upload-url </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    When set, a chosen file is immediately POSTed (multipart, field <code>file</code>) to this URL. The
+                    endpoint must respond with JSON <code>{"url": "..."}</code>; that URL becomes the control’s value
+                    (and <code>src</code> preview) in place of the file bytes, so the control works inside
+                    JSON-serialising hosts such as <code>zn-page-builder</code>. Emits <code>zn-error</code> when the
+                    upload fails.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
                     <code class="nowrap">validity</code>
                   </td>
                   <td>Gets the validity state object</td>

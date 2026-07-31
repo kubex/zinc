@@ -666,9 +666,9 @@ NOTE: Click any block to edit its source.<span class="token punctuation">"</span
             ></a>
           </h3>
           <p>
-            Hover a block to reveal its gutter actions: add a block below it, or grab the handle to drag the block
-            somewhere else in the document. Clicking the empty area at the end of the document starts a new block. A
-            block committed empty is removed.
+            Hover a block to reveal its actions: a drag handle with an add-block button below it in the left gutter, and
+            a delete button in its top-right corner. Clicking the empty area at the end of the document starts a new
+            block. A block committed empty is removed.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -719,8 +719,60 @@ NOTE: Click any block to edit its source.<span class="token punctuation">"</span
             Dropping an image file straight onto the editor uploads it directly. <code>attachment-url</code> is required
             for image support.
           </p>
-          <pre><code class="language-html" id="code-block-1188"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span> <span class="token attr-name">attachment-url</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/upload<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
+          <p>
+            Clicking an image block opens its controls: caption, alignment (left / center / right), width, height, and
+            alt text — plus edit-source and delete actions. These write standard remarkd syntax back to the value: the
+            caption as a <code>.Caption</code> title line, alignment as an <code>[.align-center]</code> /
+            <code>[.align-right]</code> class, and size as <code>image::src[alt,width,height]</code>.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-remarkd-editor
+                name="content"
+                value=".The Zinc logo
+[.align-center]
+image::/assets/images/watermark.svg[Zinc,220]"
+              ></zn-remarkd-editor>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-933">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1188"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span>
+  <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>.The Zinc logo
+[.align-center]
+image::/assets/images/watermark.svg[Zinc,220]<span class="token punctuation">"</span></span>
+<span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-1188"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-933"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
           <h3 id="remarkd-blocks" class="anchor-heading">
             Remarkd Blocks<a href="#remarkd-blocks" aria-label='Direct link to "Remarkd Blocks"'></a>
           </h3>
@@ -750,7 +802,7 @@ with a blank line inside
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-933">
+            <div class="code-preview__source-group" id="code-preview-source-group-934">
               <div class="code-preview__source code-preview__source--html">
                 <pre><code class="language-html" id="code-block-1189"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>TIP: Hint blocks are remarkd-specific.
 
@@ -773,7 +825,7 @@ with a blank line inside
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-933"
+                aria-controls="code-preview-source-group-934"
               >
                 Source
                 <svg
@@ -822,7 +874,7 @@ with a blank line inside
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-934">
+            <div class="code-preview__source-group" id="code-preview-source-group-935">
               <div class="code-preview__source code-preview__source--html">
                 <pre><code class="language-html" id="code-block-1190"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>remarkd-editor-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span> <span class="token attr-name">required</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Edit me, then submit.<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
@@ -851,7 +903,7 @@ with a blank line inside
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-934"
+                aria-controls="code-preview-source-group-935"
               >
                 Source
                 <svg
@@ -1184,6 +1236,11 @@ with a blank line inside
                 <tr>
                   <td class="nowrap"><code>slash-menu</code></td>
                   <td>The context menu opened by typing ”/” in a block.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>image-controls</code></td>
+                  <td>The caption / alignment / size panel shown when an image block is clicked.</td>
                 </tr>
               </tbody>
             </table>

@@ -49,6 +49,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -237,79 +310,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -31700,6 +31700,10 @@
             {
               "description": "The context menu opened by typing \"/\" in a block.",
               "name": "slash-menu"
+            },
+            {
+              "description": "The caption / alignment / size panel shown when an image block is clicked.",
+              "name": "image-controls"
             }
           ],
           "members": [
@@ -31795,6 +31799,15 @@
               "name": "imagePickerIndex",
               "type": {
                 "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "imageEdit",
+              "type": {
+                "text": "ImageBlockData | null"
               },
               "privacy": "private",
               "default": "null"
@@ -32113,6 +32126,43 @@
             },
             {
               "kind": "method",
+              "name": "parseImageBlock",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ImageBlockData | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "block",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Parses a block that is purely an image (with optional caption/align lines)."
+            },
+            {
+              "kind": "method",
+              "name": "serializeImageBlock",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "data",
+                  "type": {
+                    "text": "ImageBlockData"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "toggleCheckbox",
               "privacy": "private",
               "parameters": [
@@ -32149,6 +32199,44 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "updateImageEdit",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "patch",
+                  "type": {
+                    "text": "Partial<ImageBlockData>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "saveImageEdit",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "closeImageEdit",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "deleteImageBlock",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "editImageSource",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleImageControlsKeydown",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -32189,6 +32277,19 @@
                   "name": "content",
                   "type": {
                     "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "deleteBlock",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
                   }
                 }
               ]
@@ -32434,6 +32535,11 @@
             },
             {
               "kind": "method",
+              "name": "renderImageControls",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
               "name": "renderBlock",
               "privacy": "private",
               "parameters": [
@@ -32546,7 +32652,7 @@
           "tagNameWithoutPrefix": "remarkd-editor",
           "tagName": "zn-remarkd-editor",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n * @documentation https://zinc.style/components/remarkd-editor\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-button-group\n * @dependency zn-icon\n * @dependency zn-file\n *\n * @event zn-input - Emitted on each keystroke while editing a block.\n * @event zn-change - Emitted when a block edit is committed and the value changes.\n *\n * @csspart base - The component's base wrapper.\n * @csspart toolbar - The always-visible block-insert toolbar.\n * @csspart block - A rendered block wrapper.\n * @csspart rendered - The rendered remarkd output of a block.\n * @csspart input - The textarea shown while editing a block.\n * @csspart slash-menu - The context menu opened by typing \"/\" in a block.\n */",
+          "jsDoc": "/**\n * @summary A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n * @documentation https://zinc.style/components/remarkd-editor\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-button-group\n * @dependency zn-icon\n * @dependency zn-file\n *\n * @event zn-input - Emitted on each keystroke while editing a block.\n * @event zn-change - Emitted when a block edit is committed and the value changes.\n *\n * @csspart base - The component's base wrapper.\n * @csspart toolbar - The always-visible block-insert toolbar.\n * @csspart block - A rendered block wrapper.\n * @csspart rendered - The rendered remarkd output of a block.\n * @csspart input - The textarea shown while editing a block.\n * @csspart slash-menu - The context menu opened by typing \"/\" in a block.\n * @csspart image-controls - The caption / alignment / size panel shown when an image block is clicked.\n */",
           "documentation": "https://zinc.style/components/remarkd-editor",
           "status": "experimental",
           "since": "1.0",

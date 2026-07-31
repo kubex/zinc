@@ -8722,6 +8722,7 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
      * @csspart rendered - The rendered remarkd output of a block.
      * @csspart input - The textarea shown while editing a block.
      * @csspart slash-menu - The context menu opened by typing "/" in a block.
+     * @csspart image-controls - The caption / alignment / size panel shown when an image block is clicked.
      */
     export default class ZnRemarkdEditor extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
@@ -8736,6 +8737,7 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private slashQuery;
         private slashActiveIndex;
         private imagePickerIndex;
+        private imageEdit;
         private dropIndicator;
         private dragIndex;
         private editShell;
@@ -8785,8 +8787,17 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private closesFence;
         private updateBlocks;
         private handleRenderedClick;
+        /** Parses a block that is purely an image (with optional caption/align lines). */
+        private parseImageBlock;
+        private serializeImageBlock;
         private toggleCheckbox;
         private startEdit;
+        private updateImageEdit;
+        private saveImageEdit;
+        private closeImageEdit;
+        private deleteImageBlock;
+        private editImageSource;
+        private handleImageControlsKeydown;
         /**
          * The remarkd chrome the editing block should keep, derived from its first
          * line — so a NOTE still looks like a note while its source is edited.
@@ -8794,6 +8805,7 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private computeEditShell;
         private focusInput;
         private addBlockAt;
+        private deleteBlock;
         /** Inserts a draft block — committed (or dropped, if left empty) on blur. */
         private insertDraftBlock;
         /**
@@ -8827,6 +8839,7 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private autosize;
         private handleToolbarInsert;
         private renderSlashMenu;
+        private renderImageControls;
         private renderBlock;
         render(): import("lit-html").TemplateResult<1>;
         /** The block views, with the inline image picker spliced in when active. */

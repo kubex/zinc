@@ -178,6 +178,7 @@ type AllowedInputElement =
  * @slot create-action - Slot for create action button.
  * @slot inputs - Slot for additional input controls.
  * @slot empty-state - Slot for custom empty state.
+ * @slot no-results - Slot for a custom no-results state, shown when a search on a no-initial-load table returns no rows.
  *
  * @csspart base - The component's base wrapper.
  *
@@ -288,7 +289,8 @@ export default class ZnDataTable extends ZincElement {
     ActionSlots.filter.valueOf(),
     ActionSlots.sort.valueOf(),
     ActionSlots.inputs.valueOf(),
-    'empty-state'
+    'empty-state',
+    'no-results'
   );
 
   private _dataTask = new Task(this, {
@@ -501,6 +503,22 @@ export default class ZnDataTable extends ZincElement {
   }
 
   emptyState() {
+    if (this.noInitialLoad && !this._initialLoad) {
+      if (this.hasSlotController.test('no-results')) {
+        return html`
+          <div class="table--empty">
+            <slot name="no-results"></slot>
+          </div>`;
+      }
+
+      return html`
+        <div class="table--empty">
+          <zn-empty-state caption="No Results Found" icon="search">
+            <p>Nothing matched your search. Try adjusting your filters.</p>
+          </zn-empty-state>
+        </div>`;
+    }
+
     if (this.hasSlotController.test('empty-state')) {
       return html`
         <div class="table--empty">

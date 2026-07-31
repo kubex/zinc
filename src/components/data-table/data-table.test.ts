@@ -73,6 +73,52 @@ describe('<zn-data-table>', () => {
     }
   });
 
+  it('shows the empty-state slot before any load on a no-initial-load table, then a no-results state after an empty search', async () => {
+    const originalFetch = window.fetch;
+    window.fetch = () => Promise.resolve(new Response(JSON.stringify({rows: [], page: 1, perPage: 10, total: 0}),
+      {status: 200, headers: {'Content-Type': 'application/json'}}));
+
+    try {
+      const el = await fixture<ZnDataTable>(html`
+        <zn-data-table data-uri="/test-data" no-initial-load headers='{"name": {"key": "name", "label": "Name"}}'>
+          <div slot="empty-state" id="filters-prompt">No Filters Selected</div>
+        </zn-data-table>`);
+
+      expect(el.shadowRoot!.querySelector('slot[name="empty-state"]')).to.exist;
+
+      el.refresh();
+      await waitUntil(() => el.shadowRoot?.querySelector('zn-empty-state'));
+
+      expect(el.shadowRoot!.querySelector('slot[name="empty-state"]')).to.not.exist;
+      const emptyState = el.shadowRoot!.querySelector('zn-empty-state')!;
+      expect(emptyState.getAttribute('caption')).to.equal('No Results Found');
+    } finally {
+      window.fetch = originalFetch;
+    }
+  });
+
+  it('prefers the no-results slot after an empty search on a no-initial-load table', async () => {
+    const originalFetch = window.fetch;
+    window.fetch = () => Promise.resolve(new Response(JSON.stringify({rows: [], page: 1, perPage: 10, total: 0}),
+      {status: 200, headers: {'Content-Type': 'application/json'}}));
+
+    try {
+      const el = await fixture<ZnDataTable>(html`
+        <zn-data-table data-uri="/test-data" no-initial-load headers='{"name": {"key": "name", "label": "Name"}}'>
+          <div slot="empty-state">No Filters Selected</div>
+          <div slot="no-results">No Customers Found</div>
+        </zn-data-table>`);
+
+      el.refresh();
+      await waitUntil(() => el.shadowRoot?.querySelector('slot[name="no-results"]'));
+
+      expect(el.shadowRoot!.querySelector('slot[name="no-results"]')).to.exist;
+      expect(el.shadowRoot!.querySelector('slot[name="empty-state"]')).to.not.exist;
+    } finally {
+      window.fetch = originalFetch;
+    }
+  });
+
   it('exposes displayTemplates as an object property', async () => {
     const el = await fixture<ZnDataTable>(html` <zn-data-table></zn-data-table> `);
     const templates = (el as unknown as {displayTemplates: Record<string, unknown>}).displayTemplates;

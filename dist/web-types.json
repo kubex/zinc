@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.1.66",
+  "version": "1.1.67",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -2411,7 +2411,7 @@
         },
         {
           "name": "zn-data-table",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **search** - Slot for search component.\n- **sort** - Slot for sort component.\n- **filter** - Slot for filter component.\n- **filter-top** - Slot for top-level filter component.\n- **delete-action** - Slot for delete action button.\n- **modify-action** - Slot for modify action button.\n- **create-action** - Slot for create action button.\n- **inputs** - Slot for additional input controls.\n- **empty-state** - Slot for custom empty state.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **search** - Slot for search component.\n- **sort** - Slot for sort component.\n- **filter** - Slot for filter component.\n- **filter-top** - Slot for top-level filter component.\n- **delete-action** - Slot for delete action button.\n- **modify-action** - Slot for modify action button.\n- **create-action** - Slot for create action button.\n- **inputs** - Slot for additional input controls.\n- **empty-state** - Slot for custom empty state.\n- **no-results** - Slot for a custom no-results state, shown when a search on a no-initial-load table returns no rows.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
           "attributes": [
             { "name": "data-uri", "value": { "type": "string" } },
@@ -2523,6 +2523,10 @@
             {
               "name": "empty-state",
               "description": "Slot for custom empty state."
+            },
+            {
+              "name": "no-results",
+              "description": "Slot for a custom no-results state, shown when a search on a no-initial-load table returns no rows."
             }
           ],
           "events": [],

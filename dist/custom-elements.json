@@ -7860,6 +7860,10 @@
             {
               "description": "Slot for custom empty state.",
               "name": "empty-state"
+            },
+            {
+              "description": "Slot for a custom no-results state, shown when a search on a no-initial-load table returns no rows.",
+              "name": "no-results"
             }
           ],
           "members": [
@@ -8213,7 +8217,7 @@
               "kind": "field",
               "name": "hasSlotController",
               "privacy": "private",
-              "default": "new HasSlotController( this, '[default]', ActionSlots.search.valueOf(), ActionSlots.delete.valueOf(), ActionSlots.modify.valueOf(), ActionSlots.create.valueOf(), ActionSlots.filter.valueOf(), ActionSlots.sort.valueOf(), ActionSlots.inputs.valueOf(), 'empty-state' )"
+              "default": "new HasSlotController( this, '[default]', ActionSlots.search.valueOf(), ActionSlots.delete.valueOf(), ActionSlots.modify.valueOf(), ActionSlots.create.valueOf(), ActionSlots.filter.valueOf(), ActionSlots.sort.valueOf(), ActionSlots.inputs.valueOf(), 'empty-state', 'no-results' )"
             },
             {
               "kind": "field",
@@ -8994,7 +8998,7 @@
           "tagNameWithoutPrefix": "data-table",
           "tagName": "zn-data-table",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/data-table\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-alert\n * @dependency zn-button\n * @dependency zn-empty-state\n * @dependency zn-chip\n * @dependency zn-hover-container\n * @dependency zn-dropdown\n * @dependency zn-menu\n * @dependency zn-menu-item\n * @dependency zn-button-group\n * @dependency zn-confirm\n * @dependency zn-skeleton\n * @dependency zn-data-table-search\n *\n * @slot - The default slot.\n * @slot search - Slot for search component.\n * @slot sort - Slot for sort component.\n * @slot filter - Slot for filter component.\n * @slot filter-top - Slot for top-level filter component.\n * @slot delete-action - Slot for delete action button.\n * @slot modify-action - Slot for modify action button.\n * @slot create-action - Slot for create action button.\n * @slot inputs - Slot for additional input controls.\n * @slot empty-state - Slot for custom empty state.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/data-table\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-alert\n * @dependency zn-button\n * @dependency zn-empty-state\n * @dependency zn-chip\n * @dependency zn-hover-container\n * @dependency zn-dropdown\n * @dependency zn-menu\n * @dependency zn-menu-item\n * @dependency zn-button-group\n * @dependency zn-confirm\n * @dependency zn-skeleton\n * @dependency zn-data-table-search\n *\n * @slot - The default slot.\n * @slot search - Slot for search component.\n * @slot sort - Slot for sort component.\n * @slot filter - Slot for filter component.\n * @slot filter-top - Slot for top-level filter component.\n * @slot delete-action - Slot for delete action button.\n * @slot modify-action - Slot for modify action button.\n * @slot create-action - Slot for create action button.\n * @slot inputs - Slot for additional input controls.\n * @slot empty-state - Slot for custom empty state.\n * @slot no-results - Slot for a custom no-results state, shown when a search on a no-initial-load table returns no rows.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
           "documentation": "https://zinc.style/components/data-table",
           "status": "experimental",
           "since": "1.0",
@@ -42310,7 +42314,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.66",
+    "version": "1.1.67",
     "author": "",
     "license": "MIT"
   }

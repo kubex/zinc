@@ -3526,6 +3526,7 @@ declare module "components/data-table/data-table.component" {
      * @slot create-action - Slot for create action button.
      * @slot inputs - Slot for additional input controls.
      * @slot empty-state - Slot for custom empty state.
+     * @slot no-results - Slot for a custom no-results state, shown when a search on a no-initial-load table returns no rows.
      *
      * @csspart base - The component's base wrapper.
      *

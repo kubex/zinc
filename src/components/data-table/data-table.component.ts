@@ -111,8 +111,8 @@ interface HeaderConfig {
   hideColumn?: boolean;
   secondary?: boolean;
   type?: string;
-  cellTemplate ?: Cell;
-  ifEmpty ?:Cell;
+  cellTemplate?: Cell;
+  ifEmpty?: Cell;
 }
 
 type DisplayTemplate = (cell: Cell, row: Row, header: HeaderConfig) =>
@@ -250,12 +250,13 @@ export default class ZnDataTable extends ZincElement {
 
   @property() groups = '';
 
-  @property({attribute: 'per-page-size', type:Number}) itemsPerPage:number = DEFAULT_PER_PAGE;
+  @property({attribute: 'per-page-size', type: Number}) itemsPerPage: number = DEFAULT_PER_PAGE;
   @query('#select-all-rows') selectAllButton: ZnButton;
 
   // Data Table Properties
   private _initialLoad = true;
   private _hasLoadedData = false;
+  private _lastLoadHadRows = false;
   private _lastTableContent: TemplateResult = html``;
 
   private readonly resizeObserver = new ResizeController(this, {
@@ -375,8 +376,10 @@ export default class ZnDataTable extends ZincElement {
       tableBody = this._dataTask.render({
         pending: () => {
           // Show the skeleton until data has rendered at least once, so the
-          // first fetch on a no-initial-load table doesn't render blank space
-          if (this._initialLoad || !this._hasLoadedData) {
+          // first fetch on a no-initial-load table doesn't render blank space.
+          // Also show it when the last load had no rows - a reduced-opacity
+          // empty state gives no visible indication that a search is running
+          if (this._initialLoad || !this._hasLoadedData || !this._lastLoadHadRows) {
             return html`
               <div>${this.loadingTable()}</div>`;
           }
@@ -386,6 +389,7 @@ export default class ZnDataTable extends ZincElement {
         complete: (data) => {
           this._initialLoad = false;
           this._hasLoadedData = true;
+          this._lastLoadHadRows = ((data as Response)?.rows?.length ?? 0) > 0;
           this._lastTableContent = html`
             <div>${this.renderTable(data as Response)}</div>`;
           return this._lastTableContent;
@@ -416,8 +420,9 @@ export default class ZnDataTable extends ZincElement {
       };
       this._initialLoad = false;
       this._hasLoadedData = true;
+      this._lastLoadHadRows = rows.length > 0;
       this._lastTableContent = html`
-            <div>${this.renderTable(response)}</div>`;
+        <div>${this.renderTable(response)}</div>`;
       tableBody = this._lastTableContent;
     }
 
@@ -605,7 +610,8 @@ export default class ZnDataTable extends ZincElement {
       <zn-alert level="${error.level ?? 'error'}"
                 icon="${ifDefined(error.icon)}"
                 size="small"
-                center>${error.text}</zn-alert>`;
+                center>${error.text}
+      </zn-alert>`;
   }
 
   public humanize(str: string) {
@@ -996,7 +1002,7 @@ export default class ZnDataTable extends ZincElement {
   renderCell(data: Cell, row?: Row, header?: HeaderConfig): TemplateResult | ZincElement {
     const fn = (header?.type ? this.getTemplate(header.type) : undefined);
 
-    if((!data.text && !data.iconSrc) && header?.ifEmpty !== undefined) {
+    if ((!data.text && !data.iconSrc) && header?.ifEmpty !== undefined) {
       const header2 = {...header, type: undefined, render: undefined, renderTemplate: undefined};
       return this.renderCell({...data, ...header.ifEmpty}, row, header2)
     }
@@ -1006,11 +1012,11 @@ export default class ZnDataTable extends ZincElement {
       return typeof out === 'string' ? html`${unsafeHTML(out)}` : out;
     }
 
-    if(!data || typeof data !== 'object') {
+    if (!data || typeof data !== 'object') {
       return data;
     }
 
-    if(header?.cellTemplate !== undefined) {
+    if (header?.cellTemplate !== undefined) {
       data = {...header.cellTemplate, ...data}
     }
 

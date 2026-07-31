@@ -49,6 +49,30 @@ describe('<zn-data-table>', () => {
     }
   });
 
+  it('shows the loading skeleton on reload when the previous load returned no rows', async () => {
+    const originalFetch = window.fetch;
+    const emptyResponse = () => new Response(JSON.stringify({rows: [], page: 1, perPage: 10, total: 0}),
+      {status: 200, headers: {'Content-Type': 'application/json'}});
+    window.fetch = () => Promise.resolve(emptyResponse());
+
+    try {
+      const el = await fixture<ZnDataTable>(html`
+        <zn-data-table data-uri="/test-data" headers='{"name": {"key": "name", "label": "Name"}}'></zn-data-table>`);
+      await waitUntil(() => el.shadowRoot?.querySelector('zn-empty-state'));
+
+      let release: (value: Response) => void;
+      window.fetch = () => new Promise<Response>(resolve => (release = resolve));
+      el.refresh();
+      await waitUntil(() => el.shadowRoot?.querySelector('zn-skeleton'));
+      expect(el.shadowRoot!.querySelector('zn-skeleton')).to.exist;
+
+      release!(emptyResponse());
+      await waitUntil(() => el.shadowRoot?.querySelector('zn-empty-state'));
+    } finally {
+      window.fetch = originalFetch;
+    }
+  });
+
   it('exposes displayTemplates as an object property', async () => {
     const el = await fixture<ZnDataTable>(html` <zn-data-table></zn-data-table> `);
     const templates = (el as unknown as {displayTemplates: Record<string, unknown>}).displayTemplates;

@@ -426,7 +426,8 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
                  multiple=${multiSelect || nothing}
                  clearable=${multiSelect || nothing}
                  max-options-visible=${filter.maxOptionsVisible || nothing}
-                 selectedItems=${(multiSelect ? JSON.stringify(options) : undefined) || nothing}>
+                 selectedItems=${(multiSelect ? JSON.stringify(options) : undefined) || nothing}
+                 search>
         ${Object.keys(options).map(key => html`
           <zn-option value="${key}">
             ${options[key]}

@@ -3424,6 +3424,7 @@ declare module "components/data-table/data-table.component" {
     import ZnStyle from "components/style/index";
     interface Cell {
         text: string;
+        subText?: string;
         column: string;
         color?: string;
         style?: string;
@@ -3439,6 +3440,7 @@ declare module "components/data-table/data-table.component" {
         uri?: string;
         target?: string;
         copyable?: boolean;
+        title?: string;
     }
     interface Row {
         id: string;

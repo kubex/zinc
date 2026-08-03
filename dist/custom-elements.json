@@ -8267,7 +8267,7 @@
                 "text": "Record<string, DisplayTemplate>"
               },
               "privacy": "private",
-              "default": "{ dateTime: ((cell) => { const t = cell.text || ''; return html` <div class=\"table__collum--datetime\"> <span><strong>${t.slice(0, 10)}</strong></span> <zn-style size=\"s\" muted>${t.slice(11)}</zn-style> </div>` }) satisfies DisplayTemplate }"
+              "default": "{ dateTime: ((cell) => { const t = cell.text || ''; return html` <div class=\"table__collum--datetime\" title=\"${ifDefined(cell.title)}\"> <span><strong>${t.slice(0, 10)}</strong></span> <zn-style size=\"s\" muted>${t.slice(11)}</zn-style> </div>` }) satisfies DisplayTemplate }"
             },
             {
               "kind": "field",

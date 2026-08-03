@@ -36,6 +36,7 @@ const DEFAULT_PER_PAGE = 10;
 
 interface Cell {
   text: string;
+  subText?: string;
   column: string;
   color?: string;
   style?: string;
@@ -51,6 +52,7 @@ interface Cell {
   uri?: string;
   target?: string;
   copyable?: boolean;
+  title?: string;
 }
 
 interface Row {
@@ -123,7 +125,7 @@ const defaultTemplates = {
   dateTime: ((cell) => {
     const t = cell.text || '';
     return html`
-      <div class="table__collum--datetime">
+      <div class="table__collum--datetime" title="${ifDefined(cell.title)}">
         <span><strong>${t.slice(0, 10)}</strong></span>
         <zn-style size="s" muted>${t.slice(11)}</zn-style>
       </div>`
@@ -1037,7 +1039,7 @@ export default class ZnDataTable extends ZincElement {
     if (header?.cellTemplate !== undefined) {
       data = {...header.cellTemplate, ...data}
     }
-
+    
     let content: TemplateResult | ZincElement = html`${data.text}`;
 
     if (data.style || data.color) {
@@ -1063,55 +1065,25 @@ export default class ZnDataTable extends ZincElement {
           border="${isBorder || nothing}"
           center="${isCenter || nothing}"
           muted="${isMuted || nothing}"
-          color="${ifDefined(data.color)}">${content}
+          color="${ifDefined(data.color)}"
+          title="${ifDefined(data.title)}"
+        >${content}
         </zn-style>`;
     }
 
     if (data.uri) {
       content = html`
         <a href="${data.uri}"
+           title="${ifDefined(data.title)}"
            data-target="${ifDefined(data.target || nothing)}"
            gaid="${ifDefined(data.gaid || nothing)}">${content}</a>`;
     }
 
     if (data.chipColor) {
-      return html`
-        <zn-chip type="${data.chipColor}">${content}</zn-chip>`;
+      content = html`
+        <zn-chip type="${data.chipColor}" title="${ifDefined(data.title)}">${content}</zn-chip>`;
     }
 
-    if (data.hoverContent) {
-      const placement = data.hoverPlacement ?? 'top';
-
-      if (data.iconSrc) {
-        const src = data.iconSrc;
-        const color = data.iconColor;
-        const size = data.iconSize;
-        const tokens = (data.iconStyle ?? '').split(',').map(s => s.trim()).filter(Boolean);
-
-        return html`
-          ${content}
-          <zn-hover-container placement="${placement}" flip>
-            <zn-icon
-              src="${src}"
-              size="${ifDefined(size)}"
-              color="${ifDefined(color)}"
-              ${ref(el => {
-                if (!el) return;
-                tokens.forEach(t => el.setAttribute(t, ''));
-              })}
-            ></zn-icon>
-            <div slot="content">
-              ${unsafeHTML(data.hoverContent)}
-            </div>
-          </zn-hover-container>`;
-      }
-
-      return html`
-        <zn-hover-container placement="${placement}" flip>
-          <div slot="anchor">${content}</div>
-          ${unsafeHTML(data.hoverContent)}
-        </zn-hover-container>`;
-    }
 
     if (data.iconSrc) {
       const src = data.iconSrc;
@@ -1119,23 +1091,56 @@ export default class ZnDataTable extends ZincElement {
       const size = data.iconSize;
       const tokens = (data.iconStyle ?? '').split(',').map(s => s.trim()).filter(Boolean);
 
-      return html`
+      content = html`
         <zn-icon
           src="${src}"
           size="${ifDefined(size)}"
           color="${ifDefined(color)}"
           ${ref(el => {
-            if (!el) return;
-            tokens.forEach(t => el.setAttribute(t, ''));
-          })}
+        if (!el) return;
+        tokens.forEach(t => el.setAttribute(t, ''));
+      })}
+          title="${ifDefined(data.title)}"
         ></zn-icon> ${content}`;
     }
 
+    if (data.hoverContent) {
+      const placement = data.hoverPlacement ?? 'top';
+      if (data.iconSrc) {
+        content = html`
+          <zn-hover-container placement="${placement}" flip>
+            ${content}
+            <div slot="content">
+              ${unsafeHTML(data.hoverContent)}
+            </div>
+          </zn-hover-container>`;
+      } else {
+        content = html`
+          <zn-hover-container placement="${placement}" flip>
+            ${content}
+            <div slot="content">
+                ${unsafeHTML(data.hoverContent)}
+            </div>
+          </zn-hover-container>`;
+      }
+    }
+
     if (data.copyable) {
-      return html`
+      content = html`
         ${content}
         <zn-copy-button value="${data.text}"></zn-copy-button>`;
     }
+
+
+    if (data.subText) {
+      content = html`
+        <div>
+          <div>${content}</div>
+          <span class="table__cell--subtext">${data.subText}</span>
+        </div>
+      `
+    }
+
 
     return content;
 
@@ -1217,7 +1222,7 @@ export default class ZnDataTable extends ZincElement {
       return !header.secondary;
     });
     const header: HeaderConfig | undefined = filteredHeaders[index];
-    const headerKey: string = header?.key;
+    const headerKey: string | undefined = header?.key;
 
     return html`
       <td

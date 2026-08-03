@@ -1,5 +1,6 @@
 import '../../../dist/zn.min.js';
 import { expect, fixture, html, waitUntil } from '@open-wc/testing';
+import { render } from 'lit';
 import type ZnDataTable from './data-table.component';
 
 describe('<zn-data-table>', () => {
@@ -123,5 +124,46 @@ describe('<zn-data-table>', () => {
     const el = await fixture<ZnDataTable>(html` <zn-data-table></zn-data-table> `);
     const templates = (el as unknown as {displayTemplates: Record<string, unknown>}).displayTemplates;
     expect(templates).to.be.an('object');
+  });
+
+  it('renders subText as muted secondary text', async () => {
+    const el = await fixture<ZnDataTable>(html` <zn-data-table></zn-data-table> `);
+    const container = document.createElement('div');
+    render(el.renderCell({text: 'Main', column: 'name', subText: 'Secondary'}), container);
+
+    const subtext = container.querySelector('.table__cell--subtext');
+    expect(subtext).to.exist;
+    expect(subtext?.textContent).to.contain('Secondary');
+    expect(container.textContent).to.contain('Main');
+  });
+
+  it('applies title as a tooltip on link cells', async () => {
+    const el = await fixture<ZnDataTable>(html` <zn-data-table></zn-data-table> `);
+    const container = document.createElement('div');
+    render(el.renderCell({text: 'Go', column: 'name', uri: 'https://example.com', title: 'Tip'}), container);
+
+    const link = container.querySelector('a');
+    expect(link).to.exist;
+    expect(link?.getAttribute('title')).to.equal('Tip');
+  });
+
+  it('applies title as a tooltip on styled cells', async () => {
+    const el = await fixture<ZnDataTable>(html` <zn-data-table></zn-data-table> `);
+    const container = document.createElement('div');
+    render(el.renderCell({text: 'Val', column: 'name', style: 'bold', title: 'Info'}), container);
+
+    const styled = container.querySelector('zn-style');
+    expect(styled).to.exist;
+    expect(styled?.getAttribute('title')).to.equal('Info');
+  });
+
+  it('omits the title attribute when no title is provided', async () => {
+    const el = await fixture<ZnDataTable>(html` <zn-data-table></zn-data-table> `);
+    const container = document.createElement('div');
+    render(el.renderCell({text: 'Plain', column: 'name', uri: 'https://example.com'}), container);
+
+    const link = container.querySelector('a');
+    expect(link).to.exist;
+    expect(link?.hasAttribute('title')).to.be.false;
   });
 });

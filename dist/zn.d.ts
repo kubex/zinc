@@ -10388,11 +10388,18 @@ declare module "components/page-builder/index" {
 declare module "components/preview-frame/preview-frame.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
+    const DEVICE_WIDTHS: {
+        readonly desktop: "100%";
+        readonly tablet: "768px";
+        readonly mobile: "390px";
+    };
+    export type PreviewFrameDevice = keyof typeof DEVICE_WIDTHS;
     /**
      * @summary Embeds a live preview iframe and drives the hp-preview postMessage
      * protocol: answers the frame's ready handshake with a config payload fetched
-     * from data-uri, auto-saves watched forms on change, and refreshes the
-     * preview after each save.
+     * from data-uri, auto-saves watched forms on change, refreshes the preview
+     * after each save, and accepts a theme payload via setTheme() that is
+     * retained and replayed after every ready handshake.
      * @documentation https://zinc.style/components/preview-frame
      * @status experimental
      * @since 1.0
@@ -10400,8 +10407,12 @@ declare module "components/preview-frame/preview-frame.component" {
      * @event zn-error - Emitted when the preview reports a render error or a save fails.
      *
      * @csspart base - The component's base wrapper.
+     * @csspart stage - The device-width wrapper around the iframe.
      * @csspart iframe - The preview iframe.
      * @csspart error - The error overlay.
+     *
+     * @cssproperty --zn-preview-frame-dot-spacing - Spacing of the backdrop dot grid (`backdrop="dots"`). Defaults to 20px.
+     * @cssproperty --zn-preview-frame-dot-opacity - Opacity of the backdrop dots (`backdrop="dots"`). Defaults to 0.08.
      */
     export default class ZnPreviewFrame extends ZincElement {
         static styles: CSSResultGroup;
@@ -10424,17 +10435,36 @@ declare module "components/preview-frame/preview-frame.component" {
          * Zooms the previewed page out (0–1]. The frame always fills the panel;
          * zoom shrinks the content browser-style, so 0.4 shows the page at 40%
          * size with correspondingly more of it visible. 1 = natural size.
+         * Ignored when `fill` is set.
          */
         zoom: number;
         /**
          * The visible height (in CSS pixels) of the preview panel. Fixed rather
          * than measured, because a measured height would feed back into the
-         * scaled iframe's layout box and grow unbounded.
+         * scaled iframe's layout box and grow unbounded. With `fill` set, this
+         * becomes a `min-height` floor instead of the height.
          */
         minHeight: number;
+        /**
+         * Fills the panel's own column height instead of using a fixed
+         * `min-height` pixel height — for hosts (like zn-theme-editor) whose
+         * layout already stretches the column to match a taller sibling.
+         * `zoom` is ignored when set: its oversize maths depends on a known
+         * pixel height, which `fill` deliberately doesn't have.
+         */
+        fill: boolean;
+        /**
+         * Constrains and centres the preview to a device width: `desktop` (100%),
+         * `tablet` (768px) or `mobile` (390px). The iframe element itself is
+         * narrowed, so the embedded page's own media queries fire.
+         */
+        device: PreviewFrameDevice;
+        /** Backdrop behind the stage: `dots` (default) is the canvas dot grid; `panel` is a plain `rgb(var(--zn-panel))` fill. */
+        backdrop: 'dots' | 'panel';
         frame: HTMLIFrameElement;
         private error;
         private _generation;
+        private _theme;
         private readonly _watchedForms;
         private readonly _debounceTimers;
         private readonly _formObserver;
@@ -10443,6 +10473,13 @@ declare module "components/preview-frame/preview-frame.component" {
         private readonly _onMessage;
         /** Re-fetches the payload and pushes a fresh config to the preview. */
         refresh(): Promise<void>;
+        /**
+         * Pushes a theme payload into the preview. The payload is retained and
+         * re-posted after every ready handshake, so a frame reload doesn't drop an
+         * in-progress theme.
+         */
+        setTheme(theme: Record<string, unknown>): void;
+        private _postTheme;
         private _sendConfig;
         private _attachForms;
         private _detachForm;
@@ -10460,6 +10497,212 @@ declare module "components/preview-frame/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-preview-frame': ZnPreviewFrame;
+        }
+    }
+}
+declare module "events/zn-error" {
+    export type ZnErrorEvent = CustomEvent<{
+        status?: number;
+        message?: string;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-error': ZnErrorEvent;
+        }
+    }
+}
+declare module "components/theme-editor/theme-editor.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    import ZnCollapsible from "components/collapsible/index";
+    import ZnIcon from "components/icon/index";
+    import ZnPreviewFrame from "components/preview-frame/index";
+    export type ThemeEditorMode = 'light' | 'dark';
+    export type ThemeEditorDevice = 'desktop' | 'tablet' | 'mobile';
+    export interface ThemeEditorSection {
+        /** The slot name controls are assigned to with `slot="<name>"`. */
+        name: string;
+        caption: string;
+        description?: string;
+        /** Renders the section expanded initially. */
+        open?: boolean;
+    }
+    /**
+     * @summary A theme editor: slotted form controls drive a live preview frame,
+     * with a toolbar for the preview's light/dark mode and device width.
+     * @documentation https://zinc.style/components/theme-editor
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-collapsible
+     * @dependency zn-preview-frame
+     * @dependency zn-icon
+     * @dependency zn-button
+     *
+     * @event zn-theme-change - Emitted when the values, mode or device change.
+     * @event zn-theme-submit - Emitted on submit (button click), carrying the
+     * current values. With `action` set, only fires after a successful save.
+     * @event zn-error - Emitted when a save fails. Also seen for preview render
+     * failures: the frame's zn-error is composed and not stopped, so it bubbles
+     * out through the editor too.
+     *
+     * @slot - Ungrouped theme controls, rendered above any sections. Controls
+     * assigned `slot="<name>"` matching a `sections` entry render inside that
+     * section instead. Harvesting and change detection walk every slot's full
+     * assigned subtree, not just direct children.
+     * @slot toolbar - Actions in the toolbar, right-aligned beside the device and
+     * mode controls. Where a save button belongs.
+     * @slot footer - Actions pinned beneath the controls. The built-in submit button
+     * lives in the toolbar, not here.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart toolbar - The device and mode switcher, spanning the full width.
+     * @csspart controls - The left-hand controls column.
+     * @csspart section - A rendered section's collapsible (`section-layout="collapsible"`).
+     * @csspart tablist-wrap - Non-scrolling wrapper around the tablist; carries the border and right-edge overflow fade.
+     * @csspart tablist - The section tab strip (`section-layout="tabs"`), a single-row horizontal scroller.
+     * @csspart tab - A section's tab button.
+     * @csspart tabpanel - A section's tab panel.
+     * @csspart footer - The footer wrapper beneath the controls.
+     * @csspart preview - The preview column.
+     * @csspart error - The inline error strip.
+     * @csspart preview__base - The frame's base wrapper (forwarded from zn-preview-frame).
+     * @csspart preview__stage - The frame's device-width wrapper (forwarded from zn-preview-frame).
+     * @csspart preview__iframe - The frame's iframe (forwarded from zn-preview-frame).
+     * @csspart preview__error - The frame's own error overlay (forwarded from zn-preview-frame).
+     *
+     * @cssproperty --zn-theme-editor-controls-width - Width of the controls column.
+     */
+    export default class ZnThemeEditor extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-collapsible': typeof ZnCollapsible;
+            'zn-preview-frame': typeof ZnPreviewFrame;
+            'zn-icon': typeof ZnIcon;
+            'zn-button': typeof ZnButton;
+        };
+        /** URL of the preview shell page; forwarded to the frame. */
+        src: string;
+        /** Expected origin of the iframe; forwarded to the frame. */
+        frameOrigin: string;
+        /** Optional endpoint returning the base hp-preview:config payload. */
+        dataUri: string;
+        /** Which mode the preview renders in. Travels in the theme payload. */
+        mode: ThemeEditorMode;
+        /** Preview viewport width. Resizes the frame only; not part of the payload. */
+        device: ThemeEditorDevice;
+        /** Minimum height of the preview row, in pixels; forwarded to the frame as its own floor. */
+        minHeight: number;
+        /** Debounce in ms between a control change and the push to the preview. */
+        debounce: number;
+        /** Optional endpoint the values are POSTed to. Empty = no persistence. */
+        action: string;
+        /** Debounce in ms between a control change and the save POST. */
+        saveDebounce: number;
+        /** Groups controls into named, collapsible sections. Empty/unset renders one ungrouped column. */
+        sections: ThemeEditorSection[];
+        /**
+         * Presentation for `sections`: stacked `zn-collapsible`s (default) or a tab
+         * strip. Reuses `sections` and its named slots verbatim; `description` and
+         * `open` are ignored in `tabs`.
+         */
+        sectionLayout: 'collapsible' | 'tabs';
+        /** Collapses the controls column. */
+        controlsCollapsed: boolean;
+        /** Presents the editor as its own bordered, rounded panel with a plain preview backdrop, rather than embedded in a dotted canvas. */
+        standalone: boolean;
+        /** Label for the built-in submit button. Empty (default) renders no button. */
+        submitLabel: string;
+        /** Disables the debounced auto-save; saving then happens only via submit. Preview pushes are unaffected. */
+        manual: boolean;
+        frame: ZnPreviewFrame;
+        private controlsSlot;
+        private sectionSlots;
+        protected error: string;
+        private _submitting;
+        private _activeTab;
+        private readonly hasSlotController;
+        private _pushTimer?;
+        private _saveTimer?;
+        private _saving;
+        private _saveQueued;
+        private _saveWaiters;
+        private readonly _narrowQuery;
+        private _wasNarrow;
+        private _mounted;
+        private _lastControls;
+        private readonly _controlsObserverConfig;
+        private readonly _controlsObserver;
+        private _modeValues;
+        private _suppressDepth;
+        /** The current per-mode value sets. Returns copies. */
+        get values(): {
+            light: Record<string, unknown>;
+            dark: Record<string, unknown>;
+        };
+        /** The active mode's values - what gets pushed to the preview frame. */
+        get activeValues(): Record<string, unknown>;
+        /** The default slot plus every rendered section slot. */
+        private _controlSlots;
+        /** Walks every control slot (default and sections) for every enabled, named control. */
+        private _harvestNamed;
+        /** Whether a direct child is assigned to the named slot — an empty section renders no chrome. */
+        private _hasAssignedControls;
+        private _isBooleanControl;
+        private _readControlValue;
+        /** Seeds light/dark entries for any control name not already present. */
+        private _seed;
+        /** Writes a mode's value set back into the controls so they display it. */
+        private _writeBack;
+        /** Harvests the controls' current displayed values into a mode's set. */
+        private _harvestInto;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        private readonly _onNarrowChange;
+        protected firstUpdated(): void;
+        /** Pushes the active mode's values into the preview and announces it. */
+        private _push;
+        private _queueSave;
+        private _save;
+        /** Resolves once a save actually carrying the current values has settled. */
+        private _awaitSave;
+        /**
+         * Pushes only if the deep set of named controls (the same set harvesting
+         * walks, so it includes controls nested inside sections) has changed since
+         * the last push. Comparison is by element identity only, never by value.
+         */
+        private _pushIfControlsChanged;
+        /** Harvests and queues a save for a pending debounced edit, then cancels its timer. */
+        private _flushPendingEdit;
+        private readonly _onSubmit;
+        private _announce;
+        private _fail;
+        private readonly _onControlChange;
+        private readonly _onSlotChange;
+        private readonly _setDevice;
+        private readonly _toggleMode;
+        private readonly _onFrameError;
+        /** Configured sections that have an assigned control - shared by both section-layout presentations. */
+        private _visibleSections;
+        private _renderSections;
+        /** The active tab, falling back to the first visible section if the tracked name no longer matches one. */
+        private _activeTabName;
+        private readonly _setActiveTab;
+        /** Keeps a tab reachable in the single-row scroller when it becomes active. */
+        private _scrollTabIntoView;
+        private readonly _onTabKeydown;
+        private _renderTabs;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/theme-editor/index" {
+    import ZnThemeEditor from "components/theme-editor/theme-editor.component";
+    export * from "components/theme-editor/theme-editor.component";
+    export default ZnThemeEditor;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-theme-editor': ZnThemeEditor;
         }
     }
 }
@@ -10629,6 +10872,35 @@ declare module "events/zn-page-selection-change" {
         }
     }
 }
+declare module "events/zn-theme-change" {
+    import type { ThemeEditorDevice, ThemeEditorMode } from "components/theme-editor/theme-editor.component";
+    export type ZnThemeChangeEvent = CustomEvent<{
+        values: {
+            light: Record<string, unknown>;
+            dark: Record<string, unknown>;
+        };
+        mode: ThemeEditorMode;
+        device: ThemeEditorDevice;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-theme-change': ZnThemeChangeEvent;
+        }
+    }
+}
+declare module "events/zn-theme-submit" {
+    export type ZnThemeSubmitEvent = CustomEvent<{
+        values: {
+            light: Record<string, unknown>;
+            dark: Record<string, unknown>;
+        };
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-theme-submit': ZnThemeSubmitEvent;
+        }
+    }
+}
 declare module "events/events" {
     export type { ZnAfterHideEvent } from "events/zn-after-hide";
     export type { ZnAfterShowEvent } from "events/zn-after-show";
@@ -10649,6 +10921,8 @@ declare module "events/events" {
     export type { ZnFlowConnectEvent } from "events/zn-flow-connect";
     export type { ZnPageChangeEvent } from "events/zn-page-change";
     export type { ZnPageSelectionChangeEvent } from "events/zn-page-selection-change";
+    export type { ZnThemeChangeEvent } from "events/zn-theme-change";
+    export type { ZnThemeSubmitEvent } from "events/zn-theme-submit";
 }
 declare module "zinc" {
     export { default as Button } from "components/button/index";
@@ -10763,6 +11037,7 @@ declare module "zinc" {
     export { default as PagePaletteItem } from "components/page-builder/modules/page-palette-item/index";
     export { default as PageSectionCard } from "components/page-builder/modules/page-section-card/index";
     export { default as PreviewFrame } from "components/preview-frame/index";
+    export { default as ThemeEditor } from "components/theme-editor/index";
     export { default as ZincElement } from "internal/zinc-element";
     export * from "utilities/on";
     export * from "utilities/query";
@@ -10872,17 +11147,6 @@ declare module "events/zn-element-added" {
     global {
         interface GlobalEventHandlersEventMap {
             'zn-element-added': ZnElementAddedEvent;
-        }
-    }
-}
-declare module "events/zn-error" {
-    export type ZnErrorEvent = CustomEvent<{
-        status?: number;
-        message?: string;
-    }>;
-    global {
-        interface GlobalEventHandlersEventMap {
-            'zn-error': ZnErrorEvent;
         }
     }
 }

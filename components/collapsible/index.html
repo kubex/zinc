@@ -504,6 +504,10 @@
               </li>
 
               <li>
+                <a href="/components/theme-editor"> Theme Editor </a>
+              </li>
+
+              <li>
                 <a href="/components/tile"> Tile </a>
               </li>
 
@@ -1001,12 +1005,20 @@
             Flush Content<a href="#flush-content" aria-label='Direct link to "Flush Content"'></a>
           </h3>
           <p>
-            Use the <code>flush</code> attribute to remove the left padding/margin from the content area, making it
-            align with the edges.
+            Use the <code>flush</code> attribute to remove the horizontal padding from both the content area and the
+            header, so the caption and the content align with the container’s edges. This matches <code>flush</code> on
+            <a href="/components/pane/"><code>zn-pane</code></a
+            >, <a href="/components/panel/"><code>zn-panel</code></a> and
+            <a href="/components/tabs/"><code>zn-tabs</code></a
+            >, and suits a narrow column where an indent wastes width.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-collapsible caption="Flush Content" description="No left padding on content" flush="">
+              <zn-collapsible
+                caption="Flush Content"
+                description="No horizontal padding on the header or content"
+                flush=""
+              >
                 <zn-button>This button aligns with the left edge</zn-button>
                 <p>Content starts at the container edge</p>
               </zn-collapsible>
@@ -1019,7 +1031,7 @@
             <div class="code-preview__source-group" id="code-preview-source-group-215">
               <div class="code-preview__source code-preview__source--html">
                 <pre><code class="language-html" id="code-block-281"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-collapsible</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Flush Content<span class="token punctuation">"</span></span>
-                <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>No left padding on content<span class="token punctuation">"</span></span>
+                <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>No horizontal padding on the header or content<span class="token punctuation">"</span></span>
                 <span class="token attr-name">flush</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span><span class="token punctuation">&gt;</span></span>This button aligns with the left edge<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Content starts at the container edge<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>

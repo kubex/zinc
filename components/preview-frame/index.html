@@ -504,6 +504,10 @@
               </li>
 
               <li>
+                <a href="/components/theme-editor"> Theme Editor </a>
+              </li>
+
+              <li>
                 <a href="/components/tile"> Tile </a>
               </li>
 
@@ -560,6 +564,7 @@
             <li data-level="2"><a href="#properties">Properties</a></li>
             <li data-level="2"><a href="#events">Events</a></li>
             <li data-level="2"><a href="#methods">Methods</a></li>
+            <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
             <li data-level="2"><a href="#parts">Parts</a></li>
           </ul>
         </div>
@@ -580,8 +585,9 @@
 
           <p class="component-summary">
             Embeds a live preview iframe and drives the hp-preview postMessage protocol: answers the frame’s ready
-            handshake with a config payload fetched from data-uri, auto-saves watched forms on change, and refreshes the
-            preview after each save.
+            handshake with a config payload fetched from data-uri, auto-saves watched forms on change, refreshes the
+            preview after each save, and accepts a theme payload via setTheme() that is retained and replayed after
+            every ready handshake.
           </p>
 
           <p>
@@ -665,6 +671,34 @@
             out browser-style — e.g. <code>zoom="0.4"</code> renders the content at 40% size with correspondingly more
             of the page visible. <code>min-height</code> (default <code>480</code>) sets the visible panel height in
             pixels.
+          </p>
+          <p>
+            Set <code>fill</code> to make the panel fill its container’s height instead — <code>min-height</code> then
+            becomes a floor rather than the height, for hosts (like
+            <a href="/components/theme-editor/"><code>zn-theme-editor</code></a
+            >) whose layout already stretches the panel to match a taller sibling. <code>zoom</code> is ignored when
+            <code>fill</code> is set, since its oversize maths needs a known pixel height to scale against, which
+            <code>fill</code> deliberately doesn’t have.
+          </p>
+          <p>
+            <code>device</code> constrains and centres the preview to <code>desktop</code> (full width),
+            <code>tablet</code> (768px) or <code>mobile</code> (390px), resizing the iframe itself so the embedded
+            page’s media queries fire. <code>setTheme({mode, values})</code> posts an
+            <code>hp-preview:theme</code> message and replays it after each ready handshake, which is how
+            <a href="/components/theme-editor/"><code>zn-theme-editor</code></a> drives a live preview.
+          </p>
+          <p>
+            The panel behind the preview is a dot grid, so the frame’s bounds stay visible instead of blending into the
+            page — at <code>tablet</code> or <code>mobile</code> the dots fill the gutters either side of the narrowed
+            iframe. Tune it with <code>--zn-preview-frame-dot-spacing</code> (default <code>20px</code>) and
+            <code>--zn-preview-frame-dot-opacity</code> (default <code>0.08</code>). The iframe itself is given an
+            opaque background, so the dots never show through the previewed page.
+          </p>
+          <p>
+            Set <code>backdrop="panel"</code> to swap the dot grid for a plain <code>rgb(var(--zn-panel))</code> fill —
+            used by <a href="/components/theme-editor/"><code>zn-theme-editor</code></a
+            >’s <code>standalone</code> mode, where the frame is already inside its own bordered panel.
+            <code>backdrop="dots"</code> is the default.
           </p>
           <h2 id="live-form-updates" class="anchor-heading">
             Live Form Updates<a href="#live-form-updates" aria-label='Direct link to "Live Form Updates"'></a>
@@ -1046,7 +1080,7 @@
                   <td>
                     Zooms the previewed page out (0–1]. The frame always fills the panel; zoom shrinks the content
                     browser-style, so 0.4 shows the page at 40% size with correspondingly more of it visible. 1 =
-                    natural size.
+                    natural size. Ignored when <code>fill</code> is set.
                   </td>
                   <td style="text-align: center"></td>
                   <td>
@@ -1070,7 +1104,8 @@
                   </td>
                   <td>
                     The visible height (in CSS pixels) of the preview panel. Fixed rather than measured, because a
-                    measured height would feed back into the scaled iframe’s layout box and grow unbounded.
+                    measured height would feed back into the scaled iframe’s layout box and grow unbounded. With
+                    <code>fill</code> set, this becomes a <code>min-height</code> floor instead of the height.
                   </td>
                   <td style="text-align: center"></td>
                   <td>
@@ -1078,6 +1113,64 @@
                   </td>
                   <td>
                     <code>480</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">fill</code>
+                  </td>
+                  <td>
+                    Fills the panel’s own column height instead of using a fixed
+                    <code>min-height</code> pixel height — for hosts (like zn-theme-editor) whose layout already
+                    stretches the column to match a taller sibling. <code>zoom</code> is ignored when set: its oversize
+                    maths depends on a known pixel height, which <code>fill</code> deliberately doesn’t have.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">device</code>
+                  </td>
+                  <td>
+                    Constrains and centres the preview to a device width: <code>desktop</code> (100%),
+                    <code>tablet</code> (768px) or <code>mobile</code> (390px). The iframe element itself is narrowed,
+                    so the embedded page’s own media queries fire.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>PreviewFrameDevice</code>
+                  </td>
+                  <td>
+                    <code>'desktop'</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">backdrop</code>
+                  </td>
+                  <td>
+                    Backdrop behind the stage: <code>dots</code> (default) is the canvas dot grid; <code>panel</code> is
+                    a plain <code>rgb(var(--zn-panel))</code> fill.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>'dots' | 'panel'</code>
+                  </td>
+                  <td>
+                    <code>'dots'</code>
                   </td>
                 </tr>
 
@@ -1148,12 +1241,59 @@
                   <td>Re-fetches the payload and pushes a fresh config to the preview.</td>
                   <td>-</td>
                 </tr>
+
+                <tr>
+                  <td class="nowrap"><code>setTheme()</code></td>
+                  <td>
+                    Pushes a theme payload into the preview. The payload is retained and re-posted after every ready
+                    handshake, so a frame reload doesn’t drop an in-progress theme.
+                  </td>
+                  <td>
+                    <code> theme: Record&lt;string, unknown&gt; </code>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
 
           <p>
             <em>Learn more about <a href="/getting-started/usage#methods">methods</a>.</em>
+          </p>
+
+          <h2 id="custom-properties" class="anchor-heading">
+            Custom Properties<a href="#custom-properties" aria-label='Direct link to "Custom Properties"'></a>
+          </h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-default">Default</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap"><code>--zn-preview-frame-dot-spacing</code></td>
+                  <td>Spacing of the backdrop dot grid (<code>backdrop="dots"</code>). Defaults to 20px.</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--zn-preview-frame-dot-opacity</code></td>
+                  <td>Opacity of the backdrop dots (<code>backdrop="dots"</code>). Defaults to 0.08.</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em
+              >Learn more about
+              <a href="/getting-started/customizing#custom-properties">customizing CSS custom properties</a>.</em
+            >
           </p>
 
           <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>
@@ -1170,6 +1310,11 @@
                 <tr>
                   <td class="nowrap"><code>base</code></td>
                   <td>The component’s base wrapper.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>stage</code></td>
+                  <td>The device-width wrapper around the iframe.</td>
                 </tr>
 
                 <tr>

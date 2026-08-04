@@ -16,28 +16,6 @@
           "js": { "properties": [], "events": [] }
         },
         {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -97,6 +75,28 @@
               { "name": "center", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -6901,7 +6901,7 @@
         },
         {
           "name": "zn-preview-frame",
-          "description": "Embeds a live preview iframe and drives the hp-preview postMessage\nprotocol: answers the frame's ready handshake with a config payload fetched\nfrom data-uri, auto-saves watched forms on change, and refreshes the\npreview after each save.\n---\n\n\n### **Events:**\n - **zn-error** - Emitted when the preview reports a render error or a save fails.\n\n### **Methods:**\n - **refresh()** - Re-fetches the payload and pushes a fresh config to the preview.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **iframe** - The preview iframe.\n- **error** - The error overlay.",
+          "description": "Embeds a live preview iframe and drives the hp-preview postMessage\nprotocol: answers the frame's ready handshake with a config payload fetched\nfrom data-uri, auto-saves watched forms on change, refreshes the preview\nafter each save, and accepts a theme payload via setTheme() that is\nretained and replayed after every ready handshake.\n---\n\n\n### **Events:**\n - **zn-error** - Emitted when the preview reports a render error or a save fails.\n\n### **Methods:**\n - **refresh()** - Re-fetches the payload and pushes a fresh config to the preview.\n- **setTheme(theme: _Record<string, unknown>_)** - Pushes a theme payload into the preview. The payload is retained and\nre-posted after every ready handshake, so a frame reload doesn't drop an\nin-progress theme.\n\n### **CSS Properties:**\n - **--zn-preview-frame-dot-spacing** - Spacing of the backdrop dot grid (`backdrop=\"dots\"`). Defaults to 20px. _(default: undefined)_\n- **--zn-preview-frame-dot-opacity** - Opacity of the backdrop dots (`backdrop=\"dots\"`). Defaults to 0.08. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **stage** - The device-width wrapper around the iframe.\n- **iframe** - The preview iframe.\n- **error** - The error overlay.",
           "doc-url": "",
           "attributes": [
             {
@@ -6931,13 +6931,28 @@
             },
             {
               "name": "zoom",
-              "description": "Zooms the previewed page out (0–1]. The frame always fills the panel;\nzoom shrinks the content browser-style, so 0.4 shows the page at 40%\nsize with correspondingly more of it visible. 1 = natural size.",
+              "description": "Zooms the previewed page out (0–1]. The frame always fills the panel;\nzoom shrinks the content browser-style, so 0.4 shows the page at 40%\nsize with correspondingly more of it visible. 1 = natural size.\nIgnored when `fill` is set.",
               "value": { "type": "number", "default": "1" }
             },
             {
               "name": "min-height",
-              "description": "The visible height (in CSS pixels) of the preview panel. Fixed rather\nthan measured, because a measured height would feed back into the\nscaled iframe's layout box and grow unbounded.",
+              "description": "The visible height (in CSS pixels) of the preview panel. Fixed rather\nthan measured, because a measured height would feed back into the\nscaled iframe's layout box and grow unbounded. With `fill` set, this\nbecomes a `min-height` floor instead of the height.",
               "value": { "type": "number", "default": "480" }
+            },
+            {
+              "name": "fill",
+              "description": "Fills the panel's own column height instead of using a fixed\n`min-height` pixel height — for hosts (like zn-theme-editor) whose\nlayout already stretches the column to match a taller sibling.\n`zoom` is ignored when set: its oversize maths depends on a known\npixel height, which `fill` deliberately doesn't have.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "device",
+              "description": "Constrains and centres the preview to a device width: `desktop` (100%),\n`tablet` (768px) or `mobile` (390px). The iframe element itself is\nnarrowed, so the embedded page's own media queries fire.",
+              "value": { "type": "PreviewFrameDevice", "default": "'desktop'" }
+            },
+            {
+              "name": "backdrop",
+              "description": "Backdrop behind the stage: `dots` (default) is the canvas dot grid; `panel` is a plain `rgb(var(--zn-panel))` fill.",
+              "value": { "type": "'dots' | 'panel'", "default": "'dots'" }
             }
           ],
           "events": [
@@ -6975,13 +6990,28 @@
               },
               {
                 "name": "zoom",
-                "description": "Zooms the previewed page out (0–1]. The frame always fills the panel;\nzoom shrinks the content browser-style, so 0.4 shows the page at 40%\nsize with correspondingly more of it visible. 1 = natural size.",
+                "description": "Zooms the previewed page out (0–1]. The frame always fills the panel;\nzoom shrinks the content browser-style, so 0.4 shows the page at 40%\nsize with correspondingly more of it visible. 1 = natural size.\nIgnored when `fill` is set.",
                 "type": "number"
               },
               {
                 "name": "minHeight",
-                "description": "The visible height (in CSS pixels) of the preview panel. Fixed rather\nthan measured, because a measured height would feed back into the\nscaled iframe's layout box and grow unbounded.",
+                "description": "The visible height (in CSS pixels) of the preview panel. Fixed rather\nthan measured, because a measured height would feed back into the\nscaled iframe's layout box and grow unbounded. With `fill` set, this\nbecomes a `min-height` floor instead of the height.",
                 "type": "number"
+              },
+              {
+                "name": "fill",
+                "description": "Fills the panel's own column height instead of using a fixed\n`min-height` pixel height — for hosts (like zn-theme-editor) whose\nlayout already stretches the column to match a taller sibling.\n`zoom` is ignored when set: its oversize maths depends on a known\npixel height, which `fill` deliberately doesn't have.",
+                "type": "boolean"
+              },
+              {
+                "name": "device",
+                "description": "Constrains and centres the preview to a device width: `desktop` (100%),\n`tablet` (768px) or `mobile` (390px). The iframe element itself is\nnarrowed, so the embedded page's own media queries fire.",
+                "type": "PreviewFrameDevice"
+              },
+              {
+                "name": "backdrop",
+                "description": "Backdrop behind the stage: `dots` (default) is the canvas dot grid; `panel` is a plain `rgb(var(--zn-panel))` fill.",
+                "type": "'dots' | 'panel'"
               },
               { "name": "frame", "type": "HTMLIFrameElement" }
             ],
@@ -9719,6 +9749,223 @@
               {
                 "name": "zn-invalid",
                 "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-theme-editor",
+          "description": "A theme editor: slotted form controls drive a live preview frame,\nwith a toolbar for the preview's light/dark mode and device width.\n---\n\n\n### **Events:**\n - **zn-theme-change** - Emitted when the values, mode or device change.\n- **zn-theme-submit** - Emitted on submit (button click), carrying the current values. With `action` set, only fires after a successful save.\n- **zn-error** - Emitted when a save fails. Also seen for preview render failures: the frame's zn-error is composed and not stopped, so it bubbles out through the editor too.\n\n### **Slots:**\n - _default_ - Ungrouped theme controls, rendered above any sections. Controls assigned `slot=\"<name>\"` matching a `sections` entry render inside that section instead. Harvesting and change detection walk every slot's full assigned subtree, not just direct children.\n- **toolbar** - Actions in the toolbar, right-aligned beside the device and mode controls. Where a save button belongs.\n- **footer** - Actions pinned beneath the controls. The built-in submit button lives in the toolbar, not here.\n\n### **CSS Properties:**\n - **--zn-theme-editor-controls-width** - Width of the controls column. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The device and mode switcher, spanning the full width.\n- **controls** - The left-hand controls column.\n- **section** - A rendered section's collapsible (`section-layout=\"collapsible\"`).\n- **tablist-wrap** - Non-scrolling wrapper around the tablist; carries the border and right-edge overflow fade.\n- **tablist** - The section tab strip (`section-layout=\"tabs\"`), a single-row horizontal scroller.\n- **tab** - A section's tab button.\n- **tabpanel** - A section's tab panel.\n- **footer** - The footer wrapper beneath the controls.\n- **preview** - The preview column.\n- **error** - The inline error strip.\n- **preview__base** - The frame's base wrapper (forwarded from zn-preview-frame).\n- **preview__stage** - The frame's device-width wrapper (forwarded from zn-preview-frame).\n- **preview__iframe** - The frame's iframe (forwarded from zn-preview-frame).\n- **preview__error** - The frame's own error overlay (forwarded from zn-preview-frame).",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "src",
+              "description": "URL of the preview shell page; forwarded to the frame.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "frame-origin",
+              "description": "Expected origin of the iframe; forwarded to the frame.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "data-uri",
+              "description": "Optional endpoint returning the base hp-preview:config payload.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "mode",
+              "description": "Which mode the preview renders in. Travels in the theme payload.",
+              "value": { "type": "ThemeEditorMode", "default": "'light'" }
+            },
+            {
+              "name": "device",
+              "description": "Preview viewport width. Resizes the frame only; not part of the payload.",
+              "value": { "type": "ThemeEditorDevice", "default": "'desktop'" }
+            },
+            {
+              "name": "min-height",
+              "description": "Minimum height of the preview row, in pixels; forwarded to the frame as its own floor.",
+              "value": { "type": "number", "default": "480" }
+            },
+            {
+              "name": "debounce",
+              "description": "Debounce in ms between a control change and the push to the preview.",
+              "value": { "type": "number", "default": "150" }
+            },
+            {
+              "name": "action",
+              "description": "Optional endpoint the values are POSTed to. Empty = no persistence.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "save-debounce",
+              "description": "Debounce in ms between a control change and the save POST.",
+              "value": { "type": "number", "default": "1000" }
+            },
+            {
+              "name": "sections",
+              "description": "Groups controls into named, collapsible sections. Empty/unset renders one ungrouped column.",
+              "value": { "type": "ThemeEditorSection[]", "default": "[]" }
+            },
+            {
+              "name": "section-layout",
+              "description": "Presentation for `sections`: stacked `zn-collapsible`s (default) or a tab\nstrip. Reuses `sections` and its named slots verbatim; `description` and\n`open` are ignored in `tabs`.",
+              "value": {
+                "type": "'collapsible' | 'tabs'",
+                "default": "'collapsible'"
+              }
+            },
+            {
+              "name": "controls-collapsed",
+              "description": "Collapses the controls column.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "standalone",
+              "description": "Presents the editor as its own bordered, rounded panel with a plain preview backdrop, rather than embedded in a dotted canvas.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "submit-label",
+              "description": "Label for the built-in submit button. Empty (default) renders no button.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "manual",
+              "description": "Disables the debounced auto-save; saving then happens only via submit. Preview pushes are unaffected.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Ungrouped theme controls, rendered above any sections. Controls assigned `slot=\"<name>\"` matching a `sections` entry render inside that section instead. Harvesting and change detection walk every slot's full assigned subtree, not just direct children."
+            },
+            {
+              "name": "toolbar",
+              "description": "Actions in the toolbar, right-aligned beside the device and mode controls. Where a save button belongs."
+            },
+            {
+              "name": "footer",
+              "description": "Actions pinned beneath the controls. The built-in submit button lives in the toolbar, not here."
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-theme-change",
+              "description": "Emitted when the values, mode or device change."
+            },
+            {
+              "name": "zn-theme-submit",
+              "description": "Emitted on submit (button click), carrying the current values. With `action` set, only fires after a successful save."
+            },
+            {
+              "name": "zn-error",
+              "description": "Emitted when a save fails. Also seen for preview render failures: the frame's zn-error is composed and not stopped, so it bubbles out through the editor too."
+            }
+          ],
+          "js": {
+            "properties": [
+              {
+                "name": "src",
+                "description": "URL of the preview shell page; forwarded to the frame.",
+                "type": "string"
+              },
+              {
+                "name": "frameOrigin",
+                "description": "Expected origin of the iframe; forwarded to the frame.",
+                "type": "string"
+              },
+              {
+                "name": "dataUri",
+                "description": "Optional endpoint returning the base hp-preview:config payload.",
+                "type": "string"
+              },
+              {
+                "name": "mode",
+                "description": "Which mode the preview renders in. Travels in the theme payload.",
+                "type": "ThemeEditorMode"
+              },
+              {
+                "name": "device",
+                "description": "Preview viewport width. Resizes the frame only; not part of the payload.",
+                "type": "ThemeEditorDevice"
+              },
+              {
+                "name": "minHeight",
+                "description": "Minimum height of the preview row, in pixels; forwarded to the frame as its own floor.",
+                "type": "number"
+              },
+              {
+                "name": "debounce",
+                "description": "Debounce in ms between a control change and the push to the preview.",
+                "type": "number"
+              },
+              {
+                "name": "action",
+                "description": "Optional endpoint the values are POSTed to. Empty = no persistence.",
+                "type": "string"
+              },
+              {
+                "name": "saveDebounce",
+                "description": "Debounce in ms between a control change and the save POST.",
+                "type": "number"
+              },
+              {
+                "name": "sections",
+                "description": "Groups controls into named, collapsible sections. Empty/unset renders one ungrouped column.",
+                "type": "ThemeEditorSection[]"
+              },
+              {
+                "name": "sectionLayout",
+                "description": "Presentation for `sections`: stacked `zn-collapsible`s (default) or a tab\nstrip. Reuses `sections` and its named slots verbatim; `description` and\n`open` are ignored in `tabs`.",
+                "type": "'collapsible' | 'tabs'"
+              },
+              {
+                "name": "controlsCollapsed",
+                "description": "Collapses the controls column.",
+                "type": "boolean"
+              },
+              {
+                "name": "standalone",
+                "description": "Presents the editor as its own bordered, rounded panel with a plain preview backdrop, rather than embedded in a dotted canvas.",
+                "type": "boolean"
+              },
+              {
+                "name": "submitLabel",
+                "description": "Label for the built-in submit button. Empty (default) renders no button.",
+                "type": "string"
+              },
+              {
+                "name": "manual",
+                "description": "Disables the debounced auto-save; saving then happens only via submit. Preview pushes are unaffected.",
+                "type": "boolean"
+              },
+              { "name": "frame", "type": "ZnPreviewFrame" },
+              {
+                "name": "values",
+                "description": "The current per-mode value sets. Returns copies.",
+                "type": "{light: Record<string, unknown>; dark: Record<string, unknown>}"
+              },
+              {
+                "name": "activeValues",
+                "description": "The active mode's values - what gets pushed to the preview frame.",
+                "type": "Record<string, unknown>"
+              }
+            ],
+            "events": [
+              {
+                "name": "zn-theme-change",
+                "description": "Emitted when the values, mode or device change."
+              },
+              {
+                "name": "zn-theme-submit",
+                "description": "Emitted on submit (button click), carrying the current values. With `action` set, only fires after a successful save."
+              },
+              {
+                "name": "zn-error",
+                "description": "Emitted when a save fails. Also seen for preview render failures: the frame's zn-error is composed and not stopped, so it bubbles out through the editor too."
               }
             ]
           }

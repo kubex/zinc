@@ -49,6 +49,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -237,79 +310,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -10531,6 +10531,15 @@
           "members": [
             {
               "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-button': ZnButton, 'zn-dropdown': ZnDropdown, 'zn-input': ZnInput, 'zn-option': ZnOption, 'zn-select': ZnSelect }"
+            },
+            {
+              "kind": "field",
               "name": "formControlController",
               "privacy": "private",
               "readonly": true,
@@ -10557,6 +10566,7 @@
                 "text": "string"
               },
               "default": "''",
+              "description": "The selected label key. Also acts as the filter while typing.",
               "attribute": "value"
             },
             {
@@ -10566,6 +10576,7 @@
                 "text": "string"
               },
               "default": "''",
+              "description": "The value entered for the selected label. Submitted as `label:value` when present.",
               "attribute": "inputValue"
             },
             {
@@ -10575,6 +10586,7 @@
                 "text": "'x-small' | 'small' | 'medium' | 'large'"
               },
               "default": "'medium'",
+              "description": "The size of the main input.",
               "attribute": "input-size",
               "reflects": true
             },
@@ -10585,6 +10597,7 @@
                 "text": "string"
               },
               "default": "'label'",
+              "description": "The name of the control. Used for form submission.",
               "attribute": "name"
             },
             {
@@ -10593,6 +10606,7 @@
               "type": {
                 "text": "string"
               },
+              "description": "The title of the main input.",
               "attribute": "title"
             },
             {
@@ -10602,6 +10616,7 @@
                 "text": "boolean"
               },
               "default": "false",
+              "description": "Disables the control.",
               "attribute": "disabled"
             },
             {
@@ -10611,15 +10626,17 @@
                 "text": "boolean"
               },
               "default": "false",
+              "description": "Allows labels that aren't in the predefined list.",
               "attribute": "allow-custom"
             },
             {
               "kind": "field",
               "name": "predefinedLabels",
               "type": {
-                "text": "array"
+                "text": "(PredefinedLabel | string)[]"
               },
               "default": "[]",
+              "description": "The predefined labels. Entries are either a string or `{name, options}`.",
               "attribute": "predefined-labels"
             },
             {
@@ -10682,6 +10699,16 @@
             },
             {
               "kind": "method",
+              "name": "getFilteredLabels",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "PredefinedLabel[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
               "name": "handleChange",
               "privacy": "private"
             },
@@ -10718,7 +10745,7 @@
             },
             {
               "kind": "method",
-              "name": "handleInputValueInput",
+              "name": "handleFormSubmit",
               "privacy": "private",
               "parameters": [
                 {
@@ -10726,13 +10753,64 @@
                   "type": {
                     "text": "Event"
                   }
+                },
+                {
+                  "name": "label",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
                 }
               ]
             },
             {
               "kind": "method",
-              "name": "handleFormSubmit",
-              "privacy": "private"
+              "name": "renderValueControl",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "label",
+                  "type": {
+                    "text": "PredefinedLabel"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderRow",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "control",
+                  "type": {
+                    "text": "TemplateResult"
+                  }
+                },
+                {
+                  "name": "label",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
             }
           ],
           "attributes": [
@@ -10742,6 +10820,7 @@
                 "text": "string"
               },
               "default": "''",
+              "description": "The selected label key. Also acts as the filter while typing.",
               "fieldName": "value"
             },
             {
@@ -10750,6 +10829,7 @@
                 "text": "string"
               },
               "default": "''",
+              "description": "The value entered for the selected label. Submitted as `label:value` when present.",
               "fieldName": "inputValue"
             },
             {
@@ -10758,6 +10838,7 @@
                 "text": "'x-small' | 'small' | 'medium' | 'large'"
               },
               "default": "'medium'",
+              "description": "The size of the main input.",
               "fieldName": "inputSize"
             },
             {
@@ -10766,6 +10847,7 @@
                 "text": "string"
               },
               "default": "'label'",
+              "description": "The name of the control. Used for form submission.",
               "fieldName": "name"
             },
             {
@@ -10773,6 +10855,7 @@
               "type": {
                 "text": "string"
               },
+              "description": "The title of the main input.",
               "fieldName": "title"
             },
             {
@@ -10781,6 +10864,7 @@
                 "text": "boolean"
               },
               "default": "false",
+              "description": "Disables the control.",
               "fieldName": "disabled"
             },
             {
@@ -10789,14 +10873,16 @@
                 "text": "boolean"
               },
               "default": "false",
+              "description": "Allows labels that aren't in the predefined list.",
               "fieldName": "allowCustom"
             },
             {
               "name": "predefined-labels",
               "type": {
-                "text": "array"
+                "text": "(PredefinedLabel | string)[]"
               },
               "default": "[]",
+              "description": "The predefined labels. Entries are either a string or `{name, options}`.",
               "fieldName": "predefinedLabels"
             }
           ],
@@ -10808,7 +10894,7 @@
           "tagNameWithoutPrefix": "defined-label",
           "tagName": "zn-defined-label",
           "customElement": true,
-          "jsDoc": "/**\n * @summary This component provides a labeled input with support for predefined and custom labels,\n * allowing users to select or enter label-value pairs within a dropdown interface.\n * @documentation https://zinc.style/components/defined-label\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-dropdown\n * @dependency zn-input\n * @dependency zn-option\n * @dependency zn-panel\n * @dependency zn-select\n * @dependency zn-sp\n *\n * @csspart input - The component's main input.\n * @csspart input-value - The label's value inputs.\n */",
+          "jsDoc": "/**\n * @summary This component provides a labeled input with support for predefined and custom labels,\n * allowing users to select or enter label-value pairs within a dropdown interface.\n * @documentation https://zinc.style/components/defined-label\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-dropdown\n * @dependency zn-input\n * @dependency zn-option\n * @dependency zn-select\n *\n * @csspart input - The component's main input.\n * @csspart input-value - The label's value inputs.\n */",
           "documentation": "https://zinc.style/components/defined-label",
           "status": "experimental",
           "since": "1.0",
@@ -10817,9 +10903,7 @@
             "zn-dropdown",
             "zn-input",
             "zn-option",
-            "zn-panel",
-            "zn-select",
-            "zn-sp"
+            "zn-select"
           ]
         }
       ],
@@ -42356,7 +42440,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.67",
+    "version": "1.1.68",
     "author": "",
     "license": "MIT"
   }

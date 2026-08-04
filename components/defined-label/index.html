@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.67">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.68">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -79,7 +79,7 @@
         <a href="/">
           <img src="/assets/images/watermark.svg" alt="zinc" />
         </a>
-        <div class="sidebar-version">1.1.67</div>
+        <div class="sidebar-version">1.1.68</div>
       </header>
 
       <div class="sidebar-buttons">
@@ -566,6 +566,7 @@
             <li data-level="3"><a href="#content-tagging">Content Tagging</a></li>
             <li data-level="3"><a href="#e-commerce-product-labels">E-commerce Product Labels</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
+            <li data-level="2"><a href="#properties">Properties</a></li>
             <li data-level="2"><a href="#parts">Parts</a></li>
             <li data-level="2"><a href="#dependencies">Dependencies</a></li>
           </ul>
@@ -1170,7 +1171,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-497"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.67/dist/components/defined-label/defined-label.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-497"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-497"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.68/dist/components/defined-label/defined-label.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-497"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1185,13 +1186,183 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-498"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.67/dist/components/defined-label/defined-label.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-498"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-498"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.68/dist/components/defined-label/defined-label.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-498"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
             <pre><code class="language-js" id="code-block-499"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/defined-label/defined-label.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-499"></zn-copy-button></pre>
           </zn-collapsible>
+
+          <h2 id="properties" class="anchor-heading">
+            Properties<a href="#properties" aria-label='Direct link to "Properties"'></a>
+          </h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-reflects">Reflects</th>
+                  <th class="table-type">Type</th>
+                  <th class="table-default">Default</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <code class="nowrap">value</code>
+                  </td>
+                  <td>The selected label key. Also acts as the filter while typing.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">inputValue</code>
+                  </td>
+                  <td>The value entered for the selected label. Submitted as <code>label:value</code> when present.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">inputSize</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> input-size </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>The size of the main input.</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>'x-small' | 'small' | 'medium' | 'large'</code>
+                  </td>
+                  <td>
+                    <code>'medium'</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">name</code>
+                  </td>
+                  <td>The name of the control. Used for form submission.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>'label'</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">title</code>
+                  </td>
+                  <td>The title of the main input.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">disabled</code>
+                  </td>
+                  <td>Disables the control.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">allowCustom</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> allow-custom </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>Allows labels that aren’t in the predefined list.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">predefinedLabels</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> predefined-labels </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>The predefined labels. Entries are either a string or <code>{name, options}</code>.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>(PredefinedLabel | string)[]</code>
+                  </td>
+                  <td>
+                    <code>[]</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>updateComplete</code></td>
+                  <td>
+                    A read-only promise that resolves when the component has
+                    <a href="/getting-started/usage?#component-rendering-and-updating">finished updating</a>.
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em
+              >Learn more about
+              <a href="/getting-started/usage#attributes-and-properties">attributes and properties</a>.</em
+            >
+          </p>
 
           <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>
 
@@ -1242,13 +1413,9 @@
 
             <li><code>&lt;zn-option&gt;</code></li>
 
-            <li><code>&lt;zn-panel&gt;</code></li>
-
             <li><code>&lt;zn-popup&gt;</code></li>
 
             <li><code>&lt;zn-select&gt;</code></li>
-
-            <li><code>&lt;zn-sp&gt;</code></li>
 
             <li><code>&lt;zn-tag&gt;</code></li>
 

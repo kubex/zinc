@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.1.67",
+  "version": "1.1.68",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -14,6 +14,28 @@
           "slots": [{ "name": "", "description": "The default slot" }],
           "events": [],
           "js": { "properties": [], "events": [] }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
         },
         {
           "name": "zn-alert",
@@ -75,28 +97,6 @@
               { "name": "center", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -3055,13 +3055,19 @@
           "description": "This component provides a labeled input with support for predefined and custom labels,\nallowing users to select or enter label-value pairs within a dropdown interface.\n---\n\n\n### **CSS Parts:**\n - **input** - The component's main input.\n- **input-value** - The label's value inputs.",
           "doc-url": "",
           "attributes": [
-            { "name": "value", "value": { "type": "string", "default": "''" } },
+            {
+              "name": "value",
+              "description": "The selected label key. Also acts as the filter while typing.",
+              "value": { "type": "string", "default": "''" }
+            },
             {
               "name": "inputValue",
+              "description": "The value entered for the selected label. Submitted as `label:value` when present.",
               "value": { "type": "string", "default": "''" }
             },
             {
               "name": "input-size",
+              "description": "The size of the main input.",
               "value": {
                 "type": "'x-small' | 'small' | 'medium' | 'large'",
                 "default": "'medium'"
@@ -3069,20 +3075,31 @@
             },
             {
               "name": "name",
+              "description": "The name of the control. Used for form submission.",
               "value": { "type": "string", "default": "'label'" }
             },
-            { "name": "title", "value": { "type": "string" } },
+            {
+              "name": "title",
+              "description": "The title of the main input.",
+              "value": { "type": "string" }
+            },
             {
               "name": "disabled",
+              "description": "Disables the control.",
               "value": { "type": "boolean", "default": "false" }
             },
             {
               "name": "allow-custom",
+              "description": "Allows labels that aren't in the predefined list.",
               "value": { "type": "boolean", "default": "false" }
             },
             {
               "name": "predefined-labels",
-              "value": { "type": "array", "default": "[]" }
+              "description": "The predefined labels. Entries are either a string or `{name, options}`.",
+              "value": {
+                "type": "(PredefinedLabel | string)[]",
+                "default": "[]"
+              }
             }
           ],
           "events": [],
@@ -3090,17 +3107,46 @@
             "properties": [
               { "name": "input", "type": "ZnInput" },
               { "name": "dropdown", "type": "ZnDropdown" },
-              { "name": "value", "type": "string" },
-              { "name": "inputValue", "type": "string" },
+              {
+                "name": "value",
+                "description": "The selected label key. Also acts as the filter while typing.",
+                "type": "string"
+              },
+              {
+                "name": "inputValue",
+                "description": "The value entered for the selected label. Submitted as `label:value` when present.",
+                "type": "string"
+              },
               {
                 "name": "inputSize",
+                "description": "The size of the main input.",
                 "type": "'x-small' | 'small' | 'medium' | 'large'"
               },
-              { "name": "name", "type": "string" },
-              { "name": "title", "type": "string" },
-              { "name": "disabled", "type": "boolean" },
-              { "name": "allowCustom", "type": "boolean" },
-              { "name": "predefinedLabels", "type": "array" },
+              {
+                "name": "name",
+                "description": "The name of the control. Used for form submission.",
+                "type": "string"
+              },
+              {
+                "name": "title",
+                "description": "The title of the main input.",
+                "type": "string"
+              },
+              {
+                "name": "disabled",
+                "description": "Disables the control.",
+                "type": "boolean"
+              },
+              {
+                "name": "allowCustom",
+                "description": "Allows labels that aren't in the predefined list.",
+                "type": "boolean"
+              },
+              {
+                "name": "predefinedLabels",
+                "description": "The predefined labels. Entries are either a string or `{name, options}`.",
+                "type": "(PredefinedLabel | string)[]"
+              },
               { "name": "validationMessage" },
               { "name": "validity" }
             ],

@@ -3706,9 +3706,16 @@ declare module "components/cols/index" {
 declare module "components/defined-label/defined-label.component" {
     import { type CSSResultGroup, type PropertyValues, type TemplateResult } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    import ZnDropdown from "components/dropdown/index";
+    import ZnInput from "components/input/index";
+    import ZnOption from "components/option/index";
+    import ZnSelect from "components/select/index";
     import type { ZincFormControl } from "internal/zinc-element";
-    import type ZnDropdown from "components/dropdown/index";
-    import type ZnInput from "components/input/index";
+    interface PredefinedLabel {
+        name: string;
+        options?: string[];
+    }
     /**
      * @summary This component provides a labeled input with support for predefined and custom labels,
      * allowing users to select or enter label-value pairs within a dropdown interface.
@@ -3720,26 +3727,39 @@ declare module "components/defined-label/defined-label.component" {
      * @dependency zn-dropdown
      * @dependency zn-input
      * @dependency zn-option
-     * @dependency zn-panel
      * @dependency zn-select
-     * @dependency zn-sp
      *
      * @csspart input - The component's main input.
      * @csspart input-value - The label's value inputs.
      */
     export default class ZnDefinedLabel extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-button': typeof ZnButton;
+            'zn-dropdown': typeof ZnDropdown;
+            'zn-input': typeof ZnInput;
+            'zn-option': typeof ZnOption;
+            'zn-select': typeof ZnSelect;
+        };
         private readonly formControlController;
         input: ZnInput;
         dropdown: ZnDropdown;
+        /** The selected label key. Also acts as the filter while typing. */
         value: string;
+        /** The value entered for the selected label. Submitted as `label:value` when present. */
         inputValue: string;
+        /** The size of the main input. */
         inputSize: 'x-small' | 'small' | 'medium' | 'large';
+        /** The name of the control. Used for form submission. */
         name: string;
+        /** The title of the main input. */
         title: string;
+        /** Disables the control. */
         disabled: boolean;
+        /** Allows labels that aren't in the predefined list. */
         allowCustom: boolean;
-        predefinedLabels: never[];
+        /** The predefined labels. Entries are either a string or `{name, options}`. */
+        predefinedLabels: (PredefinedLabel | string)[];
         get validationMessage(): string;
         get validity(): ValidityState;
         checkValidity(): boolean;
@@ -3748,12 +3768,14 @@ declare module "components/defined-label/defined-label.component" {
         setCustomValidity(message: string): void;
         handleValueChange(): Promise<void>;
         protected firstUpdated(changedProperties: PropertyValues): void;
+        private getFilteredLabels;
         private handleChange;
         private handleInput;
         private handleClick;
         private handleInputValueChange;
-        private handleInputValueInput;
         private handleFormSubmit;
+        private renderValueControl;
+        private renderRow;
         render(): TemplateResult<1>;
     }
 }

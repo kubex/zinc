@@ -60,6 +60,13 @@
   }
 }
 
+// flush means flush on every edge, matching zn-pane/zn-panel/zn-tabs; without
+// this the caption stays indented while the content sits at the edge.
+:host([flush]) .header {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 :host([error-label]) {
   .header {
     .caption {

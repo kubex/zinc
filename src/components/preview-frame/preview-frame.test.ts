@@ -256,6 +256,45 @@ describe('<zn-preview-frame>', () => {
     expect(container.style.height).to.equal('600px');
   });
 
+  describe('fill', () => {
+    it('fills the container instead of a fixed pixel height, with no zoom transform', async () => {
+      const el = await fixture(html`
+        <zn-preview-frame
+          src="about:blank"
+          frame-origin="https://site.example"
+          data-uri="/payload"
+          min-height="480"
+          fill></zn-preview-frame>`);
+
+      const container = el.shadowRoot!.querySelector<HTMLDivElement>('.preview')!;
+      expect(container.style.height).to.equal('100%');
+      expect(container.style.minHeight).to.equal('480px');
+      const iframe = el.shadowRoot!.querySelector('iframe')!;
+      expect(iframe.style.width).to.equal('100%');
+      expect(iframe.style.height).to.equal('100%');
+      expect(iframe.style.transform).to.equal('');
+    });
+
+    it('ignores zoom when fill is set', async () => {
+      const el = await fixture(html`
+        <zn-preview-frame
+          src="about:blank"
+          frame-origin="https://site.example"
+          data-uri="/payload"
+          zoom="0.4"
+          min-height="600"
+          fill></zn-preview-frame>`);
+
+      const iframe = el.shadowRoot!.querySelector('iframe')!;
+      expect(iframe.style.transform).to.equal('');
+      expect(iframe.style.width).to.equal('100%');
+      expect(iframe.style.height).to.equal('100%');
+      const container = el.shadowRoot!.querySelector<HTMLDivElement>('.preview')!;
+      expect(container.style.height).to.equal('100%');
+      expect(container.style.minHeight).to.equal('600px');
+    });
+  });
+
   it('renders at natural size by default', async () => {
     const el = await fixture(FIXTURE);
     const iframe = el.shadowRoot!.querySelector('iframe')!;
@@ -264,5 +303,138 @@ describe('<zn-preview-frame>', () => {
     expect(iframe.style.height).to.equal('480px');
     const container = el.shadowRoot!.querySelector<HTMLDivElement>('.preview')!;
     expect(container.style.height).to.equal('480px');
+  });
+
+  it('defaults to a full-width desktop stage', async () => {
+    const el = await fixture(FIXTURE);
+    const stage = el.shadowRoot!.querySelector<HTMLDivElement>('.preview__stage')!;
+    expect(stage.style.width).to.equal('100%');
+  });
+
+  it('constrains the stage to the tablet width', async () => {
+    const el = await fixture(html`
+      <zn-preview-frame
+        src="about:blank"
+        frame-origin="https://site.example"
+        data-uri="/payload"
+        device="tablet"></zn-preview-frame>`);
+
+    const stage = el.shadowRoot!.querySelector<HTMLDivElement>('.preview__stage')!;
+    expect(stage.style.width).to.equal('768px');
+    // the iframe still sizes off the stage, so zoom maths is unaffected
+    const iframe = el.shadowRoot!.querySelector('iframe')!;
+    expect(iframe.style.width).to.equal('100%');
+  });
+
+  it('constrains the stage to the mobile width', async () => {
+    const el = await fixture(html`
+      <zn-preview-frame
+        src="about:blank"
+        frame-origin="https://site.example"
+        data-uri="/payload"
+        device="mobile"></zn-preview-frame>`);
+
+    const stage = el.shadowRoot!.querySelector<HTMLDivElement>('.preview__stage')!;
+    expect(stage.style.width).to.equal('390px');
+  });
+
+  it('setTheme() posts an hp-preview:theme message', async () => {
+    const el = await fixture(FIXTURE);
+    const iframe = el.shadowRoot!.querySelector('iframe')!;
+    const posted: {msg: Record<string, unknown>; origin: string}[] = [];
+    (iframe.contentWindow as {postMessage: (msg: Record<string, unknown>, origin: string) => void}).postMessage =
+      (msg: Record<string, unknown>, origin: string) => posted.push({msg, origin});
+
+    (el as HTMLElement & {setTheme: (t: Record<string, unknown>) => void})
+      .setTheme({mode: 'dark', values: {background: '#101014'}});
+
+    await waitUntil(() => posted.length === 1);
+    expect(posted[0].origin).to.equal('https://site.example');
+    expect(posted[0].msg['type']).to.equal('hp-preview:theme');
+    expect(posted[0].msg['mode']).to.equal('dark');
+    expect(posted[0].msg['values']).to.deep.equal({background: '#101014'});
+  });
+
+  it('replays the stored theme after a ready handshake', async () => {
+    const el = await fixture(FIXTURE);
+    const iframe = el.shadowRoot!.querySelector('iframe')!;
+    const posted: Record<string, unknown>[] = [];
+    (iframe.contentWindow as {postMessage: (msg: Record<string, unknown>) => void}).postMessage =
+      (msg: Record<string, unknown>) => posted.push(msg);
+
+    (el as HTMLElement & {setTheme: (t: Record<string, unknown>) => void})
+      .setTheme({mode: 'light', values: {background: '#ffffff'}});
+    await waitUntil(() => posted.length === 1);
+
+    // a frame reload re-announces readiness; the theme must survive it
+    ready(el);
+
+    await waitUntil(() => posted.length === 3);
+    expect(posted[1]['type']).to.equal('hp-preview:config');
+    expect(posted[2]['type']).to.equal('hp-preview:theme');
+    expect(posted[2]['values']).to.deep.equal({background: '#ffffff'});
+  });
+
+  it('setTheme() does not throw and posts nothing when frame-origin is unset', async () => {
+    const el = await fixture(html`
+      <zn-preview-frame src="about:blank" data-uri="/payload"></zn-preview-frame>`);
+    const iframe = el.shadowRoot!.querySelector('iframe')!;
+    // Forward to the real postMessage (not mocked) so an unguarded '' target
+    // origin actually throws its SyntaxError, same as it would in production.
+    const realPostMessage = iframe.contentWindow!.postMessage.bind(iframe.contentWindow);
+    let calls = 0;
+    (iframe.contentWindow as {postMessage: (...args: unknown[]) => void}).postMessage =
+      (...args: unknown[]) => { calls++; return (realPostMessage as (...a: unknown[]) => void)(...args); };
+
+    expect(() => (el as HTMLElement & {setTheme: (t: Record<string, unknown>) => void})
+      .setTheme({mode: 'light', values: {}})).to.not.throw();
+
+    await new Promise(resolve => setTimeout(resolve, 50));
+    expect(calls).to.equal(0);
+  });
+
+  // The docs site's theme stylesheet (--zn-text/--zn-body/--zn-panel) isn't
+  // loaded in this test shell, so an undefined var() makes the whole
+  // declaration invalid - set them inline to get a real computed background.
+  it('renders a dot grid backdrop by default', async () => {
+    const el = await fixture(FIXTURE) as HTMLElement;
+    el.style.setProperty('--zn-text', '0, 0, 0');
+    el.style.setProperty('--zn-body', '255, 255, 255');
+
+    expect(el.getAttribute('backdrop')).to.equal('dots');
+    const preview = el.shadowRoot!.querySelector<HTMLDivElement>('.preview')!;
+    expect(getComputedStyle(preview).backgroundImage).to.not.equal('none');
+  });
+
+  it('renders a plain panel backdrop when backdrop="panel"', async () => {
+    const el = await fixture(html`
+      <zn-preview-frame
+        src="about:blank"
+        frame-origin="https://site.example"
+        data-uri="/payload"
+        backdrop="panel"></zn-preview-frame>`) as HTMLElement;
+    el.style.setProperty('--zn-panel', '240, 240, 240');
+
+    expect(el.getAttribute('backdrop')).to.equal('panel');
+    const preview = el.shadowRoot!.querySelector<HTMLDivElement>('.preview')!;
+    expect(getComputedStyle(preview).backgroundImage).to.equal('none');
+  });
+
+  it('skips the config fetch when data-uri is empty', async () => {
+    const el = await fixture(html`
+      <zn-preview-frame src="about:blank" frame-origin="https://site.example"></zn-preview-frame>`);
+    const iframe = el.shadowRoot!.querySelector('iframe')!;
+    const posted: Record<string, unknown>[] = [];
+    (iframe.contentWindow as {postMessage: (msg: Record<string, unknown>) => void}).postMessage =
+      (msg: Record<string, unknown>) => posted.push(msg);
+
+    (el as HTMLElement & {setTheme: (t: Record<string, unknown>) => void}).setTheme({mode: 'light', values: {}});
+    ready(el);
+
+    await new Promise(resolve => setTimeout(resolve, 100));
+    expect(fetchCalls.length).to.equal(0);
+    expect(el.shadowRoot!.querySelector('[part="error"]')).to.not.exist;
+    // theme still replays even with no config to send
+    expect(posted.filter(m => m['type'] === 'hp-preview:theme').length).to.equal(2);
   });
 });

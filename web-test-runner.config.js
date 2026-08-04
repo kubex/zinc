@@ -1,6 +1,7 @@
 import {globbySync} from 'globby';
 import {playwrightLauncher} from '@web/test-runner-playwright';
 import {removeViteLogging, vitePlugin} from '@remcovaes/web-test-runner-vite-plugin';
+import {setViewportPlugin} from '@web/test-runner-commands/plugins';
 
 export default {
   rootDir: './',
@@ -12,7 +13,8 @@ export default {
       // import to a relative path the plugin's externaliser can't match — keep the
       // packages that import it out of pre-bundling.
       optimizeDeps: {exclude: ['@open-wc/testing', '@web/test-runner-commands']}
-    })
+    }),
+    setViewportPlugin()
   ],
   filterBrowserLogs: removeViteLogging,
   browsers: [

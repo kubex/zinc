@@ -247,28 +247,27 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
             onFileUploaded: () => {
               window.onbeforeunload = () => null;
             },
-            upload: (file: File) => {
+            upload: async (file: File) => {
               window.onbeforeunload = () => 'You have unsaved changes. Are you sure you want to leave?';
-              return new Promise((resolve) => {
-                const fd = new FormData();
-                fd.append('filename', file.name);
-                fd.append('size', file.size.toString());
-                fd.append('mimeType', file.type);
 
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', this.uploadAttachmentUrl, true);
-                xhr.onload = () => {
-                  if (xhr.status === 200) {
-                    const response = JSON.parse(xhr.responseText) as {
-                      uploadPath: string;
-                      uploadUrl: string;
-                      originalFilename: string;
-                    };
-                    resolve({path: response.uploadPath, url: response.uploadUrl, filename: response.originalFilename});
-                  }
-                };
-                xhr.send(fd);
-              });
+              const fd = new FormData();
+              fd.append('filename', file.name);
+              fd.append('size', file.size.toString());
+              fd.append('mimeType', file.type);
+
+              const res = await fetch(this.uploadAttachmentUrl, {method: 'POST', body: fd});
+              if (!res.ok) throw new Error(`Upload request failed: ${res.status}`);
+              const response = await res.json() as {
+                uploadPath: string;
+                uploadUrl: string;
+                originalFilename: string;
+              };
+
+              // resolve relative upload targets against the attachment url so both keep
+              // the same base path when the host page rewrites upload-attachment-url (e.g. the
+              // kubex console proxying apps under an app base); absolute urls pass through
+              const url = new URL(response.uploadUrl, new URL(this.uploadAttachmentUrl, window.location.href)).toString();
+              return {path: response.uploadPath, url, filename: response.originalFilename};
             },
           },
         }),

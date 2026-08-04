@@ -27,6 +27,26 @@ The example below embeds the [demo embed page](/components/preview-frame-demo/),
 
 The frame always fills the panel; `zoom` (0–1, default `1`) zooms the previewed page out browser-style — e.g. `zoom="0.4"` renders the content at 40% size with correspondingly more of the page visible. `min-height` (default `480`) sets the visible panel height in pixels.
 
+Set `fill` to make the panel fill its container's height instead — `min-height` then becomes a floor rather than the height, for hosts (like [`zn-theme-editor`](/components/theme-editor/)) whose layout already stretches the panel to match a taller sibling. `zoom` is ignored when `fill` is set, since its oversize maths needs a known pixel height to scale against, which `fill` deliberately doesn't have.
+
+`device` constrains and centres the preview to `desktop` (full width), `tablet`
+(768px) or `mobile` (390px), resizing the iframe itself so the embedded page's
+media queries fire. `setTheme({mode, values})` posts an `hp-preview:theme` message and
+replays it after each ready handshake, which is how
+[`zn-theme-editor`](/components/theme-editor/) drives a live preview.
+
+The panel behind the preview is a dot grid, so the frame's bounds stay visible
+instead of blending into the page — at `tablet` or `mobile` the dots fill the
+gutters either side of the narrowed iframe. Tune it with
+`--zn-preview-frame-dot-spacing` (default `20px`) and
+`--zn-preview-frame-dot-opacity` (default `0.08`). The iframe itself is given an
+opaque background, so the dots never show through the previewed page.
+
+Set `backdrop="panel"` to swap the dot grid for a plain `rgb(var(--zn-panel))`
+fill — used by [`zn-theme-editor`](/components/theme-editor/)'s `standalone`
+mode, where the frame is already inside its own bordered panel. `backdrop="dots"`
+is the default.
+
 ## Live Form Updates
 
 In a real deployment, editing a watched form auto-saves it and the preview refreshes with the newly saved config. This docs site is static, so the example simulates the save: form changes are encoded into a `data:` payload URI and `refresh()` re-runs the fetch → `hp-preview:config` cycle — the same path a real save triggers.

@@ -2,9 +2,33 @@
   display: block;
 }
 
+// So `fill` works without the consumer also having to grow the host.
+:host([fill]) {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
 .preview {
   position: relative;
   width: 100%;
+  overflow: hidden;
+
+  // Matches page-builder's canvas.
+  background:
+    radial-gradient(circle, rgba(var(--zn-text), var(--zn-preview-frame-dot-opacity, 0.08)) 1px, transparent 1px)
+    0 0 / var(--zn-preview-frame-dot-spacing, 20px) var(--zn-preview-frame-dot-spacing, 20px),
+    rgb(var(--zn-body));
+}
+
+// Higher specificity than .preview alone, so it wins without !important.
+:host([backdrop="panel"]) .preview {
+  background: rgb(var(--zn-panel));
+}
+
+.preview__stage {
+  height: 100%;
+  max-width: 100%;
+  margin: 0 auto;
   overflow: hidden;
 }
 
@@ -12,6 +36,9 @@ iframe {
   display: block;
   width: 100%;
   border: 0;
+  // Iframes are transparent by default, so without this the dot grid would show
+  // through any embed that doesn't set its own background.
+  background: rgb(var(--zn-body));
 }
 
 .preview__error {

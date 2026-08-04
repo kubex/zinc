@@ -111,6 +111,7 @@ export { default as PageBuilder } from './components/page-builder';
 export { default as PagePaletteItem } from './components/page-builder/modules/page-palette-item';
 export { default as PageSectionCard } from './components/page-builder/modules/page-section-card';
 export { default as PreviewFrame } from './components/preview-frame';
+export { default as ThemeEditor } from './components/theme-editor';
 /* plop:component */
 
 // Base Component

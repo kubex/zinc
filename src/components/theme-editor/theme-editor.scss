@@ -1,0 +1,301 @@
+@use "../../wc";
+
+:host {
+  display: block;
+  // Matches page-builder's --palette-col.
+  --zn-theme-editor-controls-width: 343px;
+}
+
+.editor {
+  --controls-col: var(--zn-theme-editor-controls-width);
+
+  display: flex;
+  flex-direction: column;
+
+  &--controls-collapsed {
+    --controls-col: 0px;
+
+    .editor__controls {
+      border-right: none;
+      padding: 0;
+    }
+  }
+}
+
+// Clips the toolbar border and the controls divider to the panel's own corners.
+:host([standalone]) .editor {
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.editor__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--zn-spacing-small);
+  padding: var(--zn-spacing-small) var(--zn-spacing-medium);
+  border-bottom: 1px solid rgb(var(--zn-border-color));
+}
+
+.editor__row {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+.editor__controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-spacing-medium);
+  flex: 0 0 var(--controls-col);
+  min-width: 0;
+  max-width: 100%;
+  background: rgb(var(--zn-panel));
+  padding: var(--zn-spacing-medium);
+  border-right: 1px solid rgb(var(--zn-border-color));
+  overflow: hidden;
+  transition: flex-basis 0.2s ease;
+}
+
+.editor__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-spacing-medium);
+}
+
+// Supports an author hand-slotting a bare zn-collapsible into the default slot.
+::slotted(zn-collapsible) {
+  width: 100%;
+}
+
+// Nothing above the first section, so its divider would double the toolbar's.
+.editor__fields--sections-only .editor__section:first-of-type {
+  border-top: none;
+}
+
+.editor__section {
+  display: block;
+  border-top: 1px solid rgb(var(--zn-border-color));
+
+  // The !important beats zn-collapsible's internal .header class specificity.
+  &::part(header) {
+    align-items: center !important;
+    padding-block: calc(var(--zn-base-px) * 2) !important;
+  }
+
+  &::part(caption) {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 16px;
+    color: rgb(var(--zn-text));
+  }
+}
+
+.editor__section-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-spacing-medium);
+}
+
+// Non-scrolling: carries the border and fade so neither scrolls with the tabs.
+.editor__tablist-wrap {
+  position: relative;
+  border-bottom: 1px solid rgb(var(--zn-border-color));
+
+  // Overlays the right edge regardless of scroll position; over empty flex
+  // space (few tabs) it blends into the matching panel background instead.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: 32px;
+    pointer-events: none;
+    background: linear-gradient(to right, transparent, rgb(var(--zn-panel)));
+  }
+}
+
+.editor__tablist {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: var(--zn-spacing-small);
+}
+
+.editor__tab {
+  // Zero inline padding so the first tab aligns with the field labels below it.
+  padding: calc(var(--zn-base-px) * 2) 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgb(var(--zn-color-muted-text));
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover {
+    color: rgb(var(--zn-text));
+  }
+
+  &--active {
+    color: rgb(var(--zn-text));
+    border-bottom-color: rgb(var(--zn-primary));
+  }
+}
+
+.editor__tabpanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-spacing-medium);
+  padding-top: var(--zn-spacing-medium);
+
+  // Wins over the display:flex above regardless of rule order (higher specificity).
+  &[hidden] {
+    display: none;
+  }
+}
+
+.editor__footer {
+  display: flex;
+  gap: var(--zn-spacing-small);
+  padding-top: var(--zn-spacing-small);
+  border-top: 1px solid rgb(var(--zn-border-color));
+  margin-top: auto;
+}
+
+.editor__preview {
+  position: relative;
+  overflow: visible;
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+// A pull tab flush against the controls/preview seam, rather than a dot floating
+// over it. Collapsed there is no seam to attach to, so it becomes a small pill.
+.panel-toggle {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 6;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid rgb(var(--zn-border-color));
+  border-left: 0;
+  border-radius: 0 6px 6px 0;
+  color: rgb(var(--zn-color-muted-text));
+  background: rgb(var(--zn-panel));
+  cursor: pointer;
+  transition: left 0.2s ease, color 0.12s ease, border-color 0.12s ease;
+
+  &:hover {
+    color: rgb(var(--zn-text));
+    background: rgba(var(--zn-border-color), 0.4);
+  }
+
+  &--tucked {
+    left: var(--zn-spacing-small);
+    border-left: 1px solid rgb(var(--zn-border-color));
+    border-radius: 6px;
+  }
+}
+
+.editor__devices {
+  display: flex;
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.editor__device,
+.editor__mode {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgb(var(--zn-text));
+  cursor: pointer;
+}
+
+.editor__device + .editor__device {
+  border-left: 1px solid rgb(var(--zn-border-color));
+}
+
+.editor__device:hover,
+.editor__mode:hover {
+  background: rgba(var(--zn-border-color), 0.5);
+}
+
+.editor__device[aria-pressed="true"] {
+  background: rgb(var(--zn-primary));
+  color: white;
+}
+
+.editor__mode {
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 4px;
+}
+
+.editor__error {
+  padding: var(--zn-spacing-small);
+  margin-bottom: var(--zn-spacing-small);
+  border-radius: 4px;
+  background: rgba(var(--zn-color-error), 0.1);
+  border: 1px solid rgb(var(--zn-color-error));
+  color: rgb(var(--zn-color-error));
+  font-size: 0.8125rem;
+}
+
+// 768 must match STACKED_QUERY in theme-editor.component.ts.
+@media (max-width: 768px) {
+  .editor__row {
+    flex-direction: column;
+  }
+
+  .editor__controls {
+    flex-basis: auto;
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid rgb(var(--zn-border-color));
+  }
+
+  .editor--controls-collapsed .editor__controls {
+    display: none;
+  }
+
+  .editor__preview {
+    width: 100%;
+    padding-top: var(--zn-spacing-medium);
+  }
+
+  // Stacked: the seam is horizontal, so the tab attaches to the top edge instead.
+  .panel-toggle {
+    top: 0;
+    left: 50%;
+    width: 44px;
+    height: 18px;
+    border: 1px solid rgb(var(--zn-border-color));
+    border-top: 0;
+    border-radius: 0 0 6px 6px;
+    transform: translateX(-50%);
+  }
+
+  .panel-toggle--tucked {
+    top: var(--zn-spacing-small);
+    left: 50%;
+    border-top: 1px solid rgb(var(--zn-border-color));
+    border-radius: 6px;
+  }
+}

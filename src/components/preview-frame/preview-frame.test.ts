@@ -160,6 +160,41 @@ describe('<zn-preview-frame>', () => {
     expect(fetchCalls[0].uri).to.contain('/save');
   });
 
+  it('treats a 204 carrying an alert-danger header as a failed save', async () => {
+    window.fetch = (uri: RequestInfo | URL, init?: RequestInit) => {
+      fetchCalls.push({uri: String(uri), init});
+      if (String(uri).includes('/save')) {
+        return Promise.resolve(new Response(null, {
+          status: 204,
+          headers: {'x-kubex-alert-danger': 'Unable to update page'}
+        }));
+      }
+      return Promise.resolve(new Response(JSON.stringify(PAYLOAD), {
+        status: 200,
+        headers: {'Content-Type': 'application/json'}
+      }));
+    };
+
+    const wrapper = await fixture(html`
+      <div>
+        <form action="/save" method="post" data-auto-save><input name="a" value="1"></form>
+        <zn-preview-frame
+          src="about:blank"
+          frame-origin="https://site.example"
+          data-uri="/payload"></zn-preview-frame>
+      </div>`);
+
+    const el = wrapper.querySelector('zn-preview-frame')!;
+    wrapper.querySelector('form')!.requestSubmit();
+
+    await waitUntil(() => el.shadowRoot!.querySelector('[part="error"]'));
+    expect(el.shadowRoot!.querySelector('[part="error"]')!.textContent)
+      .to.contain('Unable to update page');
+    // the preview must not be refreshed as though the save succeeded
+    expect(fetchCalls.filter(c => c.uri === '/payload').length).to.equal(0);
+    expect(fetchCalls[0].init?.headers).to.deep.equal({'x-kx-fetch-style': 'download'});
+  });
+
   it('does not save a form removed from the DOM mid-debounce', async () => {
     const wrapper = await fixture(html`
       <div>
@@ -176,6 +211,52 @@ describe('<zn-preview-frame>', () => {
     form.remove();
 
     await new Promise(resolve => setTimeout(resolve, 100));
+    expect(fetchCalls.length).to.equal(0);
+  });
+
+  it('refreshes the preview when the shell reports a form save complete', async () => {
+    const wrapper = await fixture(html`
+      <div>
+        <form action="/save" method="post"><input name="a" value="1"></form>
+        <zn-preview-frame
+          src="about:blank"
+          frame-origin="https://site.example"
+          data-uri="/payload"></zn-preview-frame>
+      </div>`);
+
+    const el = wrapper.querySelector('zn-preview-frame')!;
+    const iframe = el.shadowRoot!.querySelector('iframe')!;
+    const posted: Record<string, unknown>[] = [];
+    (iframe.contentWindow as {postMessage: (msg: Record<string, unknown>) => void}).postMessage = (msg: Record<string, unknown>) => posted.push(msg);
+
+    // the shell submitted the form itself and fires 'complete' on it
+    wrapper.querySelector('form')!.dispatchEvent(
+      new CustomEvent('complete', {bubbles: true, detail: {}}));
+
+    await waitUntil(() => fetchCalls.length === 1);
+    expect(fetchCalls[0].uri).to.equal('/payload');
+    // the save itself stays with the shell — the component must not post it
+    expect(fetchCalls.some(c => c.uri.includes('/save'))).to.equal(false);
+    await waitUntil(() => posted.length === 1);
+    expect(posted[0]['type']).to.equal('hp-preview:config');
+  });
+
+  it('does not intercept the submit of a refresh-on form', async () => {
+    const wrapper = await fixture(html`
+      <div>
+        <form action="/save" method="post"><input name="a" value="1"></form>
+        <zn-preview-frame
+          src="about:blank"
+          frame-origin="https://site.example"
+          data-uri="/payload"></zn-preview-frame>
+      </div>`);
+
+    let bubbled = false;
+    wrapper.addEventListener('submit', e => { bubbled = true; e.preventDefault(); });
+
+    wrapper.querySelector('form')!.requestSubmit();
+
+    expect(bubbled).to.equal(true);
     expect(fetchCalls.length).to.equal(0);
   });
 

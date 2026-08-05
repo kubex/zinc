@@ -18,8 +18,9 @@ export type PreviewFrameDevice = keyof typeof DEVICE_WIDTHS;
  * @summary Embeds a live preview iframe and drives the hp-preview postMessage
  * protocol: answers the frame's ready handshake with a config payload fetched
  * from data-uri, auto-saves watched forms on change, refreshes the preview
- * after each save, and accepts a theme payload via setTheme() that is
- * retained and replayed after every ready handshake.
+ * after each save (its own, or a shell-driven save of a `refresh-on` form),
+ * and accepts a theme payload via setTheme() that is retained and replayed
+ * after every ready handshake.
  * @documentation https://zinc.style/components/preview-frame
  * @status experimental
  * @since 1.0
@@ -53,6 +54,15 @@ export default class ZnPreviewFrame extends ZincElement {
    * auto-saved, or used to trigger a preview refresh. Override to widen the scope.
    */
   @property() watch = 'form[data-auto-save]';
+
+  /**
+   * Selector for forms whose saves are left to the shell but should still
+   * refresh the preview. These are never intercepted: the shell submits them
+   * (so its own response handling — alerts, refreshes — runs as normal) and the
+   * preview re-fetches its config once the shell reports the save complete.
+   * Set empty to disable.
+   */
+  @property({attribute: 'refresh-on'}) refreshOn = 'form';
 
   /** Debounce in ms between a form change and its auto-save. */
   @property({type: Number}) debounce = 400;
@@ -100,6 +110,7 @@ export default class ZnPreviewFrame extends ZincElement {
   private _theme: Record<string, unknown> | undefined;
 
   private readonly _watchedForms = new Set<HTMLFormElement>();
+  private readonly _refreshForms = new Set<HTMLFormElement>();
   private readonly _debounceTimers = new Map<HTMLFormElement, number>();
 
   // Forms are siblings in light DOM and get replaced when other content
@@ -130,6 +141,8 @@ export default class ZnPreviewFrame extends ZincElement {
     window.removeEventListener('message', this._onMessage);
     this._watchedForms.forEach(form => this._detachForm(form));
     this._watchedForms.clear();
+    this._refreshForms.forEach(form => form.removeEventListener('complete', this._onShellSave));
+    this._refreshForms.clear();
   }
 
   private readonly _onMessage = (e: MessageEvent) => {
@@ -226,7 +239,32 @@ export default class ZnPreviewFrame extends ZincElement {
       form.addEventListener('zn-input', this._onChange);
       form.addEventListener('change', this._onChange);
     });
+
+    // Shell-saved forms: the shell fires 'complete' on the form it submitted.
+    const refreshMatched = new Set<HTMLFormElement>();
+    if (this.refreshOn) {
+      root.querySelectorAll(this.refreshOn).forEach(node => {
+        if (node instanceof HTMLFormElement && !matched.has(node)) refreshMatched.add(node);
+      });
+    }
+
+    this._refreshForms.forEach(form => {
+      if (!refreshMatched.has(form)) {
+        form.removeEventListener('complete', this._onShellSave);
+        this._refreshForms.delete(form);
+      }
+    });
+
+    refreshMatched.forEach(form => {
+      if (this._refreshForms.has(form)) return;
+      this._refreshForms.add(form);
+      form.addEventListener('complete', this._onShellSave);
+    });
   }
+
+  private readonly _onShellSave = () => {
+    void this._sendConfig();
+  };
 
   private _detachForm(form: HTMLFormElement) {
     form.removeEventListener('submit', this._onSubmit, {capture: true});
@@ -260,8 +298,15 @@ export default class ZnPreviewFrame extends ZincElement {
       const response = await fetch(form.getAttribute('action') || '', {
         method: 'POST',
         credentials: 'same-origin',
+        // 'download' streams the app's own status and headers through verbatim;
+        // without it the console proxy pagelet-wraps the response and a failed
+        // save is indistinguishable from a successful one.
+        headers: {'x-kx-fetch-style': 'download'},
         body: new FormData(form),
       });
+      // Apps report a failed save as 204 plus an alert header, which is `ok`.
+      const alert = response.headers.get('x-kubex-alert-danger');
+      if (alert) throw new Error(alert);
       if (!response.ok) {
         throw new Error(await response.text() || response.statusText);
       }

@@ -39988,7 +39988,7 @@
           ],
           "slots": [
             {
-              "description": "Ungrouped theme controls, rendered above any sections. Controls assigned `slot=\"<name>\"` matching a `sections` entry (or, when nested, a `groups` entry) render inside that section/group instead. Harvesting and change detection walk every slot's full assigned subtree, not just direct children.",
+              "description": "Ungrouped theme controls, rendered above any sections. Controls assigned `slot=\"<name>\"` matching a `sections` entry (or, when nested, a `groups` entry) render inside that section/group instead. Harvesting and change detection walk every slot's full assigned subtree, not just direct children. With `sections` left unset, the structure is instead derived from the controls' own attributes: `group=\"<label>\"` becomes a tab and `category=\"<label>\"` a collapsible within it, and the control is slotted into that collapsible automatically. Either attribute works alone - a control with only `group` sits directly in its tab, and one with only `category` becomes its own top-level section. Setting `sections` explicitly disables the derivation entirely.",
               "name": ""
             },
             {
@@ -40109,7 +40109,7 @@
                 "text": "ThemeEditorSection[]"
               },
               "default": "[]",
-              "description": "Groups controls into named sections. Empty/unset renders one ungrouped\ncolumn. A section with a non-empty `groups` nests a collapsible per\ngroup inside a `zn-tabs` tab for that section - see `groups` on\n`ThemeEditorSection`.",
+              "description": "Groups controls into named sections. Empty/unset falls back to deriving the\nstructure from the controls' own `group`/`category` attributes, and renders\none ungrouped column when they carry neither. A section with a non-empty\n`groups` nests a collapsible per group inside a `zn-tabs` tab for that\nsection - see `groups` on `ThemeEditorSection`.",
               "attribute": "sections"
             },
             {
@@ -40647,6 +40647,55 @@
             },
             {
               "kind": "method",
+              "name": "_hasStructureAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Whether any direct child carries the `group`/`category` structure attributes."
+            },
+            {
+              "kind": "method",
+              "name": "_usesDerivedSections",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Attribute-derived structure applies only when `sections` is left unset."
+            },
+            {
+              "kind": "method",
+              "name": "_derive",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DerivedStructure"
+                }
+              },
+              "description": "Builds the tab/collapsible tree from the controls' own `group` (tab) and\n`category` (collapsible) attributes, alongside the slot name each control\nneeds assigning to. Only direct children are considered, since `slot` only\nworks one level deep. Slot names are slugged from the labels and made\nunique across the whole tree, so two tabs can each hold a \"Colors\"\ncategory without their slots colliding."
+            },
+            {
+              "kind": "method",
+              "name": "_effectiveSections",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ThemeEditorSection[]"
+                }
+              },
+              "description": "Explicit `sections` when set, otherwise the attribute-derived tree."
+            },
+            {
+              "kind": "method",
+              "name": "_assignDerivedSlots",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
               "name": "_hasNestedGroups",
               "privacy": "private",
               "return": {
@@ -40819,7 +40868,7 @@
                 "text": "ThemeEditorSection[]"
               },
               "default": "[]",
-              "description": "Groups controls into named sections. Empty/unset renders one ungrouped\ncolumn. A section with a non-empty `groups` nests a collapsible per\ngroup inside a `zn-tabs` tab for that section - see `groups` on\n`ThemeEditorSection`.",
+              "description": "Groups controls into named sections. Empty/unset falls back to deriving the\nstructure from the controls' own `group`/`category` attributes, and renders\none ungrouped column when they carry neither. A section with a non-empty\n`groups` nests a collapsible per group inside a `zn-tabs` tab for that\nsection - see `groups` on `ThemeEditorSection`.",
               "fieldName": "sections"
             },
             {
@@ -40903,7 +40952,7 @@
           "tagNameWithoutPrefix": "theme-editor",
           "tagName": "zn-theme-editor",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A theme editor: slotted form controls drive a live preview frame,\n * with a toolbar for the preview's light/dark mode and device width.\n * @documentation https://zinc.style/components/theme-editor\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-collapsible\n * @dependency zn-preview-frame\n * @dependency zn-icon\n * @dependency zn-button\n * @dependency zn-tabs\n * @dependency zn-navbar\n * @dependency zn-select\n *\n * @event zn-theme-change - Emitted when the values, mode or device change.\n * @event zn-theme-submit - Emitted on submit (button click), carrying the\n * current values. With `action` set, only fires after a successful save.\n * @event zn-error - Emitted when a save fails. Also seen for preview render\n * failures: the frame's zn-error is composed and not stopped, so it bubbles\n * out through the editor too.\n *\n * @slot - Ungrouped theme controls, rendered above any sections. Controls\n * assigned `slot=\"<name>\"` matching a `sections` entry (or, when nested, a\n * `groups` entry) render inside that section/group instead. Harvesting and\n * change detection walk every slot's full assigned subtree, not just direct\n * children.\n * @slot toolbar - Actions in the toolbar, right-aligned beside the device\n * controls. Where a save button belongs.\n * @slot footer - Actions pinned beneath the controls. The built-in submit button\n * lives in the toolbar, not here.\n *\n * @csspart base - The component's base wrapper.\n * @csspart controls - The left-hand controls column, full height.\n * @csspart controls-header - The controls column's header row: `controls-caption` on the left, the light/dark mode toggle on the right.\n * @csspart toolbar - The preview column's header row: `preview-caption` on the left, the device switcher (and sources/submit) on the right. Spans the preview column only.\n * @csspart section - A rendered section's or group's collapsible (`section-layout=\"collapsible\"`, or any nested group).\n * @csspart footer - The footer wrapper beneath the controls.\n * @csspart preview - The preview column.\n * @csspart error - The inline error strip.\n * @csspart preview__base - The frame's base wrapper (forwarded from zn-preview-frame).\n * @csspart preview__stage - The frame's device-width wrapper (forwarded from zn-preview-frame).\n * @csspart preview__iframe - The frame's iframe (forwarded from zn-preview-frame).\n * @csspart preview__error - The frame's own error overlay (forwarded from zn-preview-frame).\n *\n * @cssproperty --zn-theme-editor-controls-width - Width of the controls column.\n */",
+          "jsDoc": "/**\n * @summary A theme editor: slotted form controls drive a live preview frame,\n * with a toolbar for the preview's light/dark mode and device width.\n * @documentation https://zinc.style/components/theme-editor\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-collapsible\n * @dependency zn-preview-frame\n * @dependency zn-icon\n * @dependency zn-button\n * @dependency zn-tabs\n * @dependency zn-navbar\n * @dependency zn-select\n *\n * @event zn-theme-change - Emitted when the values, mode or device change.\n * @event zn-theme-submit - Emitted on submit (button click), carrying the\n * current values. With `action` set, only fires after a successful save.\n * @event zn-error - Emitted when a save fails. Also seen for preview render\n * failures: the frame's zn-error is composed and not stopped, so it bubbles\n * out through the editor too.\n *\n * @slot - Ungrouped theme controls, rendered above any sections. Controls\n * assigned `slot=\"<name>\"` matching a `sections` entry (or, when nested, a\n * `groups` entry) render inside that section/group instead. Harvesting and\n * change detection walk every slot's full assigned subtree, not just direct\n * children.\n *\n * With `sections` left unset, the structure is instead derived from the\n * controls' own attributes: `group=\"<label>\"` becomes a tab and\n * `category=\"<label>\"` a collapsible within it, and the control is slotted\n * into that collapsible automatically. Either attribute works alone - a\n * control with only `group` sits directly in its tab, and one with only\n * `category` becomes its own top-level section. Setting `sections`\n * explicitly disables the derivation entirely.\n * @slot toolbar - Actions in the toolbar, right-aligned beside the device\n * controls. Where a save button belongs.\n * @slot footer - Actions pinned beneath the controls. The built-in submit button\n * lives in the toolbar, not here.\n *\n * @csspart base - The component's base wrapper.\n * @csspart controls - The left-hand controls column, full height.\n * @csspart controls-header - The controls column's header row: `controls-caption` on the left, the light/dark mode toggle on the right.\n * @csspart toolbar - The preview column's header row: `preview-caption` on the left, the device switcher (and sources/submit) on the right. Spans the preview column only.\n * @csspart section - A rendered section's or group's collapsible (`section-layout=\"collapsible\"`, or any nested group).\n * @csspart footer - The footer wrapper beneath the controls.\n * @csspart preview - The preview column.\n * @csspart error - The inline error strip.\n * @csspart preview__base - The frame's base wrapper (forwarded from zn-preview-frame).\n * @csspart preview__stage - The frame's device-width wrapper (forwarded from zn-preview-frame).\n * @csspart preview__iframe - The frame's iframe (forwarded from zn-preview-frame).\n * @csspart preview__error - The frame's own error overlay (forwarded from zn-preview-frame).\n *\n * @cssproperty --zn-theme-editor-controls-width - Width of the controls column.\n */",
           "documentation": "https://zinc.style/components/theme-editor",
           "status": "experimental",
           "since": "1.0",

@@ -10524,7 +10524,7 @@ declare module "events/zn-error" {
     }
 }
 declare module "components/theme-editor/theme-editor.component" {
-    import { type CSSResultGroup } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     import ZnButton from "components/button/index";
     import ZnCollapsible from "components/collapsible/index";
@@ -10583,6 +10583,14 @@ declare module "components/theme-editor/theme-editor.component" {
      * `groups` entry) render inside that section/group instead. Harvesting and
      * change detection walk every slot's full assigned subtree, not just direct
      * children.
+     *
+     * With `sections` left unset, the structure is instead derived from the
+     * controls' own attributes: `group="<label>"` becomes a tab and
+     * `category="<label>"` a collapsible within it, and the control is slotted
+     * into that collapsible automatically. Either attribute works alone - a
+     * control with only `group` sits directly in its tab, and one with only
+     * `category` becomes its own top-level section. Setting `sections`
+     * explicitly disables the derivation entirely.
      * @slot toolbar - Actions in the toolbar, right-aligned beside the device
      * controls. Where a save button belongs.
      * @slot footer - Actions pinned beneath the controls. The built-in submit button
@@ -10634,10 +10642,11 @@ declare module "components/theme-editor/theme-editor.component" {
         /** Debounce in ms between a control change and the save POST. */
         saveDebounce: number;
         /**
-         * Groups controls into named sections. Empty/unset renders one ungrouped
-         * column. A section with a non-empty `groups` nests a collapsible per
-         * group inside a `zn-tabs` tab for that section - see `groups` on
-         * `ThemeEditorSection`.
+         * Groups controls into named sections. Empty/unset falls back to deriving the
+         * structure from the controls' own `group`/`category` attributes, and renders
+         * one ungrouped column when they carry neither. A section with a non-empty
+         * `groups` nests a collapsible per group inside a `zn-tabs` tab for that
+         * section - see `groups` on `ThemeEditorSection`.
          */
         sections: ThemeEditorSection[];
         /**
@@ -10732,6 +10741,23 @@ declare module "components/theme-editor/theme-editor.component" {
         private readonly _onSourceChange;
         private _sectionsSafe;
         private _groupsFor;
+        /** Whether any direct child carries the `group`/`category` structure attributes. */
+        private _hasStructureAttributes;
+        /** Attribute-derived structure applies only when `sections` is left unset. */
+        private _usesDerivedSections;
+        /**
+         * Builds the tab/collapsible tree from the controls' own `group` (tab) and
+         * `category` (collapsible) attributes, alongside the slot name each control
+         * needs assigning to. Only direct children are considered, since `slot` only
+         * works one level deep. Slot names are slugged from the labels and made
+         * unique across the whole tree, so two tabs can each hold a "Colors"
+         * category without their slots colliding.
+         */
+        private _derive;
+        /** Explicit `sections` when set, otherwise the attribute-derived tree. */
+        private _effectiveSections;
+        private _assignDerivedSlots;
+        protected willUpdate(changed: PropertyValues): void;
         /** Whether any section has a populated `groups` - the switch to nested tabs+collapsibles. */
         private _hasNestedGroups;
         private _visibleGroups;

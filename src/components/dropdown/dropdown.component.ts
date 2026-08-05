@@ -335,6 +335,15 @@ export default class ZnDropdown extends ZincElement {
       this.emit('zn-hide');
       topLayerManager.unregisterDropdown(this);
       this.removeOpenListeners();
+
+      // Move focus out of the panel before it becomes aria-hidden/inert,
+      // otherwise the browser blocks aria-hidden on the focused item and warns
+      const active = (this.getRootNode() as Document | ShadowRoot).activeElement as HTMLElement | null;
+      if (active && this.panel.assignedElements({flatten: true}).some(el => el.contains(active))) {
+        this.focusOnTrigger();
+        active.blur();
+      }
+
       this.panel.blur();
       this.panel.hidden = true;
       this.popup.active = false;

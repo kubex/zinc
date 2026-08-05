@@ -159,6 +159,24 @@ Use the `color-format` attribute to specify the format: `hex` (default), `rgb`, 
 <br />
 ```
 
+#### Range Input
+
+The range input type renders as a bare track with no field chrome. The current value is displayed above the track, on
+the right, and updates as the thumb is dragged. Use `value-suffix` to append a unit to that value, and `min`, `max` and
+`step` to control the range.
+
+```html:preview
+<zn-input type="range" label="Base radius" min="0" max="2" step="0.125" value="0.5" value-suffix="rem"></zn-input>
+<br />
+<zn-input type="range" label="Volume" min="0" max="100" value="70" value-suffix="%">
+  <div slot="help-text">Set <code>context-note</code> to replace the value readout with your own text.</div>
+</zn-input>
+<br />
+<zn-input type="range" label="Small" size="small" min="0" max="10" value="4"></zn-input>
+<br />
+<zn-input type="range" label="Disabled" min="0" max="10" value="4" disabled></zn-input>
+```
+
 #### Other Input Types
 
 ```html:preview

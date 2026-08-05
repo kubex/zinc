@@ -172,4 +172,49 @@ describe('<zn-input>', () => {
       expect(secondInput.value).to.equal('');
     });
   });
+
+  describe('type="range"', () => {
+    const contextNote = (el: ZnInput) =>
+      el.shadowRoot!.querySelector('.form-control__label-context-note')!.textContent!.trim();
+
+    it('adopts the native midpoint when no value is set', async () => {
+      const el = await fixture<ZnInput>(html`<zn-input type="range" min="0" max="10"></zn-input>`);
+      await el.updateComplete;
+
+      expect(el.value).to.equal('5');
+    });
+
+    it('displays the value with its suffix in the context note', async () => {
+      const el = await fixture<ZnInput>(
+        html`<zn-input type="range" label="Radius" min="0" max="2" step="0.5" value="0.5" value-suffix="rem"></zn-input>`
+      );
+      await el.updateComplete;
+
+      expect(contextNote(el)).to.equal('0.5rem');
+    });
+
+    it('updates the context note as the value changes', async () => {
+      const el = await fixture<ZnInput>(
+        html`<zn-input type="range" label="Radius" min="0" max="10" value="4" value-suffix="px"></zn-input>`
+      );
+      await el.updateComplete;
+
+      const input = el.shadowRoot!.querySelector('.input__control') as HTMLInputElement;
+      input.value = '7';
+      input.dispatchEvent(new Event('input'));
+      await el.updateComplete;
+
+      expect(el.value).to.equal('7');
+      expect(contextNote(el)).to.equal('7px');
+    });
+
+    it('prefers an explicit context-note over the value', async () => {
+      const el = await fixture<ZnInput>(
+        html`<zn-input type="range" label="Radius" context-note="Custom" value="4"></zn-input>`
+      );
+      await el.updateComplete;
+
+      expect(contextNote(el)).to.equal('Custom');
+    });
+  });
 });

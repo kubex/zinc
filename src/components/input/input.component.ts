@@ -33,7 +33,7 @@ import styles from './input.scss';
  *
  * @slot label - The input's label. Alternatively, you can use the `label` attribute.
  * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.
- * @slot context-note - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute.
+ * @slot context-note - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute. Range inputs display their live value here unless this is set.
  * @slot prefix - Used to prepend a presentational icon or similar element to the input.
  * @slot suffix - Used to append a presentational icon or similar element to the input.
  * @slot clear-icon - An icon to use in lieu of the default clear icon.
@@ -51,6 +51,12 @@ import styles from './input.scss';
  * @csspart clear-button - The clear button.
  * @csspart password-toggle-button - The password toggle button.
  * @csspart suffix - The container that wraps the suffix.
+ *
+ * @cssproperty --zn-range-track-height - The height of a range input's track.
+ * @cssproperty --zn-range-track-color - The color of a range input's track.
+ * @cssproperty --zn-range-thumb-size - The diameter of a range input's thumb.
+ * @cssproperty --zn-range-thumb-color - The color of a range input's thumb.
+ * @cssproperty --zn-range-thumb-ring-width - The width of the ring drawn around a range input's thumb.
  */
 export default class ZnInput extends ZincElement implements ZincFormControl {
   static styles = unsafeCSS(styles);
@@ -80,7 +86,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
    * to `text`
    */
   @property({reflect: true}) type: 'color' | 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' |
-    'search' | 'tel' | 'text' | 'time' | 'url' = 'text';
+    'range' | 'search' | 'tel' | 'text' | 'time' | 'url' = 'text';
 
   /** The name of the input, submitted as a name/value pair with form data. */
   @property() name: string = "";
@@ -145,6 +151,12 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
 
   /** The color format to display for color inputs. Only applies when type is 'color'. **/
   @property({attribute: 'color-format'}) colorFormat: 'hex' | 'rgb' | 'hsl' | 'oklch' = 'hex';
+
+  /**
+   * Appended to the value that range inputs display above the track, on the right, e.g. `rem`. Only applies when type
+   * is 'range' and no `context-note` is set.
+   */
+  @property({attribute: 'value-suffix'}) valueSuffix: string = '';
 
   /**
    * By default, form-controls are associated with the nearest containing `<form>` element. This attribute allows you
@@ -615,6 +627,13 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     }
   }
 
+  protected firstUpdated() {
+    // A range input with no value resolves to the midpoint of min/max natively, so adopt it as our value
+    if (this.type === 'range' && this.value === '') {
+      this.value = this.input.value;
+    }
+  }
+
   @watch('disabled', {waitUntilFirstUpdate: true})
   handleDisabledChange() {
     // Disabled form controls are always valid
@@ -763,9 +782,10 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     const hasLabelTooltipSlot = this.hasSlotController.test('label-tooltip');
     const hasContextNoteSlot = this.hasSlotController.test('context-note');
     const hasHelpTextSlot = this.hasSlotController.test('help-text');
+    const isRange = this.type === 'range';
     const hasLabel = this.label ? true : hasLabelSlot;
     const hasLabelTooltip = this.labelTooltip ? true : hasLabelTooltipSlot;
-    const hasContextNote = this.contextNote ? true : hasContextNoteSlot;
+    const hasContextNote = this.contextNote || isRange ? true : hasContextNoteSlot;
     const hasHelpText = this.helpText ? true : hasHelpTextSlot;
     const hasClearIcon = this.clearable && !this.disabled && !this.readonly;
     const hasOptionalIcon = this.optionalIcon;
@@ -803,7 +823,8 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
 
         ${hasContextNote
           ? html`
-            <span class="form-control__label-context-note"><slot name="context-note">${this.contextNote}</slot></span>`
+            <span class="form-control__label-context-note"><slot name="context-note">${this.contextNote ||
+            (isRange ? `${this.value ?? ''}${this.valueSuffix}` : '')}</slot></span>`
           : ''}
 
         <div part="form-control-input"
@@ -822,6 +843,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
                  'input--filled': this.filled,
                  'input--focused': this.hasFocus,
                  'input--empty': !this.value,
+                 'input--range': isRange,
                  'input--no-spin-buttons': this.noSpinButtons && this.type !== 'currency',
                })}>
 

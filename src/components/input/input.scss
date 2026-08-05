@@ -427,6 +427,122 @@ input[type='date']::-webkit-calendar-picker-indicator {
   width: calc(var(--zn-input-height-large) * 1.2);
 }
 
+/* Range inputs render as a bare track, with the value shown in the context note above */
+/* The thumb already leaves clear space above the track, so drop the label/field gap */
+:host([type='range']) .form-control--has-label .form-control__label,
+:host([type='range']) .form-control__label-context-note {
+  margin-bottom: 0;
+}
+
+:host([type='range']) .form-control-input {
+  margin-top: 0;
+}
+
+.input--standard.input--range {
+  --zn-range-track-height: 6px;
+  --zn-range-track-color: var(--zn-color-neutral-200);
+  --zn-range-thumb-size: 18px;
+  --zn-range-thumb-color: var(--zn-color-primary-600);
+  --zn-range-thumb-ring-width: 4px;
+
+  align-items: center;
+  height: var(--zn-range-thumb-size);
+  padding: 0;
+  overflow: visible;
+  cursor: pointer;
+}
+
+/* Matches the specificity of the hover/focus/disabled chrome rules above so the track stays bare */
+.input--standard.input--range,
+.input--standard.input--range:hover,
+.input--standard.input--range.input--focused,
+.input--standard.input--range.input--disabled {
+  border: none;
+  background: none;
+  box-shadow: none;
+}
+
+.input--standard.input--range.input--x-small {
+  --zn-range-track-height: 4px;
+  --zn-range-thumb-size: 14px;
+  --zn-range-thumb-ring-width: 3px;
+}
+
+.input--standard.input--range.input--small {
+  --zn-range-track-height: 5px;
+  --zn-range-thumb-size: 16px;
+  --zn-range-thumb-ring-width: 3px;
+}
+
+.input--standard.input--range.input--large {
+  --zn-range-track-height: 7px;
+  --zn-range-thumb-size: 20px;
+}
+
+.input--range .input__control {
+  -webkit-appearance: none;
+  appearance: none;
+  height: var(--zn-range-thumb-size);
+  padding: 0;
+  margin: 0;
+  background: none;
+  cursor: inherit;
+}
+
+.input--range .input__control::-webkit-slider-runnable-track {
+  height: var(--zn-range-track-height);
+  border-radius: calc(var(--zn-range-track-height) / 2);
+  background-color: var(--zn-range-track-color);
+}
+
+.input--range .input__control::-moz-range-track {
+  height: var(--zn-range-track-height);
+  border-radius: calc(var(--zn-range-track-height) / 2);
+  background-color: var(--zn-range-track-color);
+}
+
+.input--range .input__control::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: var(--zn-range-thumb-size);
+  height: var(--zn-range-thumb-size);
+  margin-top: calc((var(--zn-range-track-height) - var(--zn-range-thumb-size)) / 2);
+  border: var(--zn-range-thumb-ring-width) solid var(--zn-color-neutral-0);
+  border-radius: 50%;
+  background-color: var(--zn-range-thumb-color);
+  box-shadow: 0 0 0 1px var(--zn-input-border-color);
+  transition: var(--zn-transition-fast) box-shadow, var(--zn-transition-fast) background-color;
+}
+
+.input--range .input__control::-moz-range-thumb {
+  width: var(--zn-range-thumb-size);
+  height: var(--zn-range-thumb-size);
+  box-sizing: border-box;
+  border: var(--zn-range-thumb-ring-width) solid var(--zn-color-neutral-0);
+  border-radius: 50%;
+  background-color: var(--zn-range-thumb-color);
+  box-shadow: 0 0 0 1px var(--zn-input-border-color);
+  transition: var(--zn-transition-fast) box-shadow, var(--zn-transition-fast) background-color;
+}
+
+.input--range:hover:not(.input--disabled) .input__control::-webkit-slider-thumb {
+  background-color: var(--zn-color-primary-500);
+  box-shadow: 0 0 0 1px var(--zn-input-border-color-hover);
+}
+
+.input--range:hover:not(.input--disabled) .input__control::-moz-range-thumb {
+  background-color: var(--zn-color-primary-500);
+  box-shadow: 0 0 0 1px var(--zn-input-border-color-hover);
+}
+
+.input--range .input__control:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color);
+}
+
+.input--range .input__control:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color);
+}
+
 /* Hide the native color input but keep it functional */
 .input__color-picker {
   position: absolute;

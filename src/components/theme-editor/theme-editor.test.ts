@@ -59,14 +59,18 @@ describe('<zn-theme-editor>', () => {
     await new Promise(resolve => setTimeout(resolve, 50)); // let layout settle
 
     const controls = el.shadowRoot!.querySelector('[part="controls"]')!;
+    const previewColumn = el.shadowRoot!.querySelector('[part="preview"]')!;
     const frame = el.shadowRoot!.querySelector('zn-preview-frame')!;
     const preview = frame.shadowRoot!.querySelector('.preview')!;
 
     const controlsHeight = controls.getBoundingClientRect().height;
+    const previewColumnHeight = previewColumn.getBoundingClientRect().height;
     const previewHeight = preview.getBoundingClientRect().height;
 
     expect(controlsHeight).to.be.greaterThan(200); // taller than the min-height floor
-    expect(previewHeight).to.be.closeTo(controlsHeight, 2);
+    // The sidebar is now full height and independent of the preview column's
+    // own height, so fill's target is the preview column, not the sidebar.
+    expect(previewHeight).to.be.closeTo(previewColumnHeight, 2);
   });
 
   it('pushes the authored control defaults on first render', async () => {
@@ -678,6 +682,55 @@ describe('<zn-theme-editor>', () => {
     });
   });
 
+  describe('column layout', () => {
+    it('the controls column spans the full height of the component, not just a shared row', async () => {
+      const el = await fixture(FIXTURE);
+      await (el as HTMLElement & {updateComplete: Promise<unknown>}).updateComplete;
+
+      const controls = el.shadowRoot!.querySelector('[part="controls"]')!;
+      const controlsHeight = controls.getBoundingClientRect().height;
+      const hostHeight = el.getBoundingClientRect().height;
+
+      expect(controlsHeight).to.be.closeTo(hostHeight, 2);
+    });
+
+    it("the toolbar starts at the controls column's right edge, not the component's left edge", async () => {
+      const el = await fixture(FIXTURE);
+      await (el as HTMLElement & {updateComplete: Promise<unknown>}).updateComplete;
+
+      const controls = el.shadowRoot!.querySelector('[part="controls"]')!;
+      const toolbar = el.shadowRoot!.querySelector('[part="toolbar"]')!;
+      const hostLeft = el.getBoundingClientRect().left;
+      const controlsRight = controls.getBoundingClientRect().right;
+      const toolbarLeft = toolbar.getBoundingClientRect().left;
+
+      expect(toolbarLeft).to.be.closeTo(controlsRight, 2);
+      expect(toolbarLeft).to.be.greaterThan(hostLeft + 1);
+    });
+
+    it('renders both captions when set', async () => {
+      const el = await fixture(html`
+        <zn-theme-editor
+          src="about:blank" frame-origin="https://site.example"
+          controls-caption="Theme Builder" preview-caption="Live Preview">
+          <zn-input name="radius" label="Radius" value="8"></zn-input>
+        </zn-theme-editor>`);
+
+      const controlsHeader = el.shadowRoot!.querySelector('[part="controls-header"]')!;
+      const toolbar = el.shadowRoot!.querySelector('[part="toolbar"]')!;
+      expect(controlsHeader.textContent).to.contain('Theme Builder');
+      expect(toolbar.textContent).to.contain('Live Preview');
+    });
+
+    it('still renders the controls header row when controls-caption is empty', async () => {
+      const el = await fixture(FIXTURE);
+
+      const controlsHeader = el.shadowRoot!.querySelector('[part="controls-header"]');
+      expect(controlsHeader).to.exist;
+      expect(controlsHeader!.textContent?.trim()).to.equal('');
+    });
+  });
+
   describe('tabbed sections (section-layout="tabs")', () => {
     const TABBED_FIXTURE = html`
       <zn-theme-editor
@@ -695,12 +748,12 @@ describe('<zn-theme-editor>', () => {
 
     it('renders a tab per visible section with the first active', async () => {
       const el = await fixture(TABBED_FIXTURE);
-      const tabs = Array.from(el.shadowRoot!.querySelectorAll('[role="tab"]'));
+      const tabs = Array.from(el.shadowRoot!.querySelectorAll('li[tab]'));
+      const panels = Array.from(el.shadowRoot!.querySelectorAll('.editor__tab-panel'));
       expect(tabs.length).to.equal(2);
-      expect(tabs[0].getAttribute('aria-selected')).to.equal('true');
-      expect(tabs[1].getAttribute('aria-selected')).to.equal('false');
-      expect(tabs[0].getAttribute('tabindex')).to.equal('0');
-      expect(tabs[1].getAttribute('tabindex')).to.equal('-1');
+      // zn-tabs applies its initial selection after its own 10ms settle timer.
+      await waitUntil(() => panels[0].hasAttribute('selected'));
+      expect(panels[1].hasAttribute('selected')).to.be.false;
     });
 
     it('keeps a control in a non-active tab pane present, harvested and POSTed', async () => {
@@ -721,10 +774,10 @@ describe('<zn-theme-editor>', () => {
             <zn-input slot="layout" name="radius" type="number" value="4"></zn-input>
           </zn-theme-editor>`);
 
-        // "colors" is the active tab by default; "layout" is hidden.
-        const layoutPanel = Array.from(el.shadowRoot!.querySelectorAll('[role="tabpanel"]'))[1];
-        expect((layoutPanel as HTMLElement).hasAttribute('hidden')).to.be.true;
-        // the slot inside the hidden pane must still exist for harvesting to find
+        // "colors" is the active tab by default; "layout" stays present but unselected.
+        const layoutPanel = Array.from(el.shadowRoot!.querySelectorAll('.editor__tab-panel'))[1];
+        expect((layoutPanel as HTMLElement).hasAttribute('selected')).to.be.false;
+        // the slot inside the unselected pane must still exist for harvesting to find
         expect(layoutPanel!.querySelector('slot[name="layout"]')).to.exist;
 
         const values = (el as HTMLElement & {values: {light: Record<string, unknown>}}).values;
@@ -743,43 +796,19 @@ describe('<zn-theme-editor>', () => {
       }
     });
 
-    it('clicking a tab switches aria-selected and hidden state without pushing or harvesting a new value', async () => {
+    it('clicking a tab switches the selected panel without pushing or harvesting a new value', async () => {
       const el = await fixture(TABBED_FIXTURE);
+      await waitUntil(() => el.shadowRoot!.querySelector('.editor__tab-panel[selected]'));
       const calls = spyOnFrame(el);
-      const tabs = el.shadowRoot!.querySelectorAll<HTMLButtonElement>('[role="tab"]');
-      const panels = el.shadowRoot!.querySelectorAll('[role="tabpanel"]');
+      const tabs = el.shadowRoot!.querySelectorAll<HTMLElement>('li[tab]');
+      const panels = el.shadowRoot!.querySelectorAll('.editor__tab-panel');
 
       tabs[1].click();
-      await (el as HTMLElement & {updateComplete: Promise<unknown>}).updateComplete;
+      // clickTab() re-selects via its own 10ms settle timer too.
+      await waitUntil(() => (panels[1] as HTMLElement).hasAttribute('selected'));
 
-      expect(tabs[0].getAttribute('aria-selected')).to.equal('false');
-      expect(tabs[1].getAttribute('aria-selected')).to.equal('true');
-      expect((panels[0] as HTMLElement).hasAttribute('hidden')).to.be.true;
-      expect((panels[1] as HTMLElement).hasAttribute('hidden')).to.be.false;
+      expect((panels[0] as HTMLElement).hasAttribute('selected')).to.be.false;
       expect(calls.length).to.equal(0);
-    });
-
-    it('ArrowRight moves the active tab and focus to the next tab', async () => {
-      const el = await fixture(TABBED_FIXTURE);
-      const tabs = el.shadowRoot!.querySelectorAll<HTMLButtonElement>('[role="tab"]');
-
-      tabs[0].focus();
-      tabs[0].dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true, composed: true}));
-      await (el as HTMLElement & {updateComplete: Promise<unknown>}).updateComplete;
-
-      expect(tabs[1].getAttribute('aria-selected')).to.equal('true');
-      expect(el.shadowRoot!.activeElement).to.equal(tabs[1]);
-    });
-
-    it('ArrowLeft from the first tab wraps to the last', async () => {
-      const el = await fixture(TABBED_FIXTURE);
-      const tabs = el.shadowRoot!.querySelectorAll<HTMLButtonElement>('[role="tab"]');
-
-      tabs[0].focus();
-      tabs[0].dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowLeft', bubbles: true, composed: true}));
-      await (el as HTMLElement & {updateComplete: Promise<unknown>}).updateComplete;
-
-      expect(tabs[1].getAttribute('aria-selected')).to.equal('true');
     });
 
     it('with section-layout unset, renders collapsibles exactly as before', async () => {
@@ -791,51 +820,218 @@ describe('<zn-theme-editor>', () => {
         </zn-theme-editor>`);
 
       expect(el.shadowRoot!.querySelectorAll('.editor__section').length).to.equal(1);
-      expect(el.shadowRoot!.querySelectorAll('[role="tablist"]').length).to.equal(0);
+      expect(el.shadowRoot!.querySelector('zn-tabs')).to.not.exist;
+    });
+  });
+
+  describe('author-slotted collapsibles nested inside tabbed sections', () => {
+    const NESTED_FIXTURE = () => fixture(html`
+      <zn-theme-editor
+        src="about:blank" frame-origin="https://site.example"
+        section-layout="tabs" debounce="10"
+        .sections="${[{name: 'colors', caption: 'Colors'}, {name: 'layout', caption: 'Layout'}]}">
+        <zn-collapsible slot="colors" caption="Group A">
+          <zn-input name="a" label="A" value="1"></zn-input>
+        </zn-collapsible>
+        <zn-collapsible slot="colors" caption="Group B">
+          <zn-input name="b" label="B" value="2"></zn-input>
+        </zn-collapsible>
+        <zn-input slot="colors" name="c" label="C" value="3"></zn-input>
+        <zn-input slot="layout" name="d" label="D" value="4"></zn-input>
+      </zn-theme-editor>`);
+
+    it('harvests controls nested inside slotted collapsibles, in both modes', async () => {
+      const el = await NESTED_FIXTURE();
+      const values = (el as HTMLElement & {values: {light: Record<string, unknown>; dark: Record<string, unknown>}}).values;
+      expect(values.light).to.deep.equal({a: '1', b: '2', c: '3', d: '4'});
+      expect(values.dark).to.deep.equal({a: '1', b: '2', c: '3', d: '4'});
     });
 
-    describe('tab overflow (many sections)', () => {
-      const MANY_SECTIONS = Array.from({length: 13}, (_, i) => ({name: `s${i}`, caption: `Section ${i + 1}`}));
-      const manyFixture = () => fixture(html`
+    it('nested harvesting keeps the inactive-pane guarantee intact', async () => {
+      const el = await NESTED_FIXTURE();
+      const layoutPanel = Array.from(el.shadowRoot!.querySelectorAll('.editor__tab-panel'))[1];
+      expect((layoutPanel as HTMLElement).hasAttribute('selected')).to.be.false;
+      expect(layoutPanel!.querySelector('slot[name="layout"]')).to.exist;
+    });
+
+  });
+
+  describe('nested groups (sections + groups)', () => {
+    const NESTED_GROUPS_FIXTURE = () => fixture(html`
+      <zn-theme-editor
+        src="about:blank" frame-origin="https://site.example" debounce="10"
+        .sections="${[
+          {name: 'colors', caption: 'Colors', groups: [
+            {name: 'brand', caption: 'Brand'},
+            {name: 'semantic', caption: 'Semantic', open: true},
+          ]},
+          {name: 'shapes', caption: 'Shapes', groups: [
+            {name: 'radius', caption: 'Radius'},
+          ]},
+        ]}">
+        <zn-input slot="brand" name="brand" value="1"></zn-input>
+        <zn-input slot="semantic" name="semantic" value="2"></zn-input>
+        <zn-input slot="radius" name="radius" value="4"></zn-input>
+      </zn-theme-editor>`);
+
+    it('renders and is accessible', async () => {
+      const el = await NESTED_GROUPS_FIXTURE();
+      await expect(el).to.be.accessible();
+    });
+
+    it('renders zn-tabs with one collapsible per populated group', async () => {
+      const el = await NESTED_GROUPS_FIXTURE();
+      expect(el.shadowRoot!.querySelector('zn-tabs')).to.exist;
+      expect(el.shadowRoot!.querySelectorAll('li[tab]').length).to.equal(2);
+      expect(el.shadowRoot!.querySelectorAll('.editor__section').length).to.equal(3);
+    });
+
+    it("a control inside a non-active tab's group is still harvested, seeded into both modes, and POSTed", async () => {
+      const fetchCalls: {uri: string; init?: RequestInit}[] = [];
+      const realFetch = window.fetch;
+      window.fetch = (uri: RequestInfo | URL, init?: RequestInit) => {
+        fetchCalls.push({uri: String(uri), init});
+        return Promise.resolve(new Response('', {status: 200}));
+      };
+
+      try {
+        const el = await fixture(html`
+          <zn-theme-editor
+            src="about:blank" frame-origin="https://site.example"
+            action="/theme/save" debounce="10" save-debounce="10"
+            .sections="${[
+              {name: 'colors', caption: 'Colors', groups: [{name: 'brand', caption: 'Brand'}]},
+              {name: 'shapes', caption: 'Shapes', groups: [{name: 'radius', caption: 'Radius'}]},
+            ]}">
+            <zn-input slot="brand" name="brand" value="1"></zn-input>
+            <zn-input slot="radius" name="radius" value="4"></zn-input>
+          </zn-theme-editor>`);
+
+        // "colors" (and its "brand" group) is the first, active tab; "shapes"
+        // and its "radius" group's control are not.
+        const values = (el as HTMLElement & {values: {light: Record<string, unknown>; dark: Record<string, unknown>}}).values;
+        expect(values.light).to.deep.equal({brand: '1', radius: '4'});
+        expect(values.dark).to.deep.equal({brand: '1', radius: '4'});
+
+        const input = el.querySelector('zn-input[name="brand"]')! as HTMLElement & {value: string};
+        input.value = '9';
+        input.dispatchEvent(new CustomEvent('zn-input', {bubbles: true, composed: true}));
+
+        await waitUntil(() => fetchCalls.length === 1);
+        const body = fetchCalls[0].init!.body as FormData;
+        expect(body.get('light[brand]')).to.equal('9');
+        expect(body.get('light[radius]')).to.equal('4');
+        expect(body.get('dark[radius]')).to.equal('4');
+      } finally {
+        window.fetch = realFetch;
+      }
+    });
+
+    it('a group with no assigned controls renders no collapsible', async () => {
+      const el = await fixture(html`
         <zn-theme-editor
           src="about:blank" frame-origin="https://site.example"
-          section-layout="tabs" debounce="10"
-          .sections="${MANY_SECTIONS}">
-          ${MANY_SECTIONS.map(s => html`<zn-input slot="${s.name}" name="${s.name}-field" value="x"></zn-input>`)}
+          .sections="${[{name: 'colors', caption: 'Colors', groups: [
+            {name: 'brand', caption: 'Brand'},
+            {name: 'empty', caption: 'Empty'},
+          ]}]}">
+          <zn-input slot="brand" name="brand" value="1"></zn-input>
         </zn-theme-editor>`);
 
-      it('stays a single row instead of wrapping', async () => {
-        const el = await manyFixture();
-        const tablist = el.shadowRoot!.querySelector<HTMLElement>('.editor__tablist')!;
-        const firstTab = el.shadowRoot!.querySelector<HTMLElement>('.editor__tab')!;
+      const captions = Array.from(el.shadowRoot!.querySelectorAll('.editor__section'))
+        .map(section => section.getAttribute('caption'));
+      expect(captions).to.deep.equal(['Brand']);
+    });
 
-        // proves 13 tabs actually don't fit the 343px controls column - otherwise
-        // a single row would be true trivially, not because of the overflow fix
-        expect(tablist.scrollWidth).to.be.greaterThan(tablist.clientWidth);
-        expect(tablist.getBoundingClientRect().height).to.be.closeTo(firstTab.getBoundingClientRect().height, 2);
-      });
+    it('a section with no populated groups renders no tab', async () => {
+      const el = await fixture(html`
+        <zn-theme-editor
+          src="about:blank" frame-origin="https://site.example"
+          .sections="${[
+            {name: 'colors', caption: 'Colors', groups: [{name: 'brand', caption: 'Brand'}]},
+            {name: 'empty-section', caption: 'Empty section', groups: [{name: 'empty-group', caption: 'Empty group'}]},
+          ]}">
+          <zn-input slot="brand" name="brand" value="1"></zn-input>
+        </zn-theme-editor>`);
 
-      it('activating a section scrolls its tab into view', async () => {
-        const el = await manyFixture();
-        const tabs = el.shadowRoot!.querySelectorAll<HTMLButtonElement>('[role="tab"]');
-        const tablist = el.shadowRoot!.querySelector<HTMLElement>('.editor__tablist')!;
-        expect(tablist.scrollLeft).to.equal(0);
+      expect(el.shadowRoot!.querySelectorAll('li[tab]').length).to.equal(1);
+    });
 
-        tabs[tabs.length - 1].click();
-        await waitUntil(() => tablist.scrollLeft > 0);
-      });
+    it('flat sections with no groups still honour section-layout="tabs"', async () => {
+      const el = await fixture(html`
+        <zn-theme-editor
+          src="about:blank" frame-origin="https://site.example" section-layout="tabs"
+          .sections="${[{name: 'colors', caption: 'Colors'}, {name: 'layout', caption: 'Layout'}]}">
+          <zn-input slot="colors" name="accent" value="1"></zn-input>
+          <zn-input slot="layout" name="radius" value="4"></zn-input>
+        </zn-theme-editor>`);
 
-      it('arrow-key navigation scrolls the newly focused tab into view', async () => {
-        const el = await manyFixture();
-        const tabs = el.shadowRoot!.querySelectorAll<HTMLButtonElement>('[role="tab"]');
-        const tablist = el.shadowRoot!.querySelector<HTMLElement>('.editor__tablist')!;
+      expect(el.shadowRoot!.querySelector('zn-tabs')).to.exist;
+      expect(el.shadowRoot!.querySelectorAll('.editor__section').length).to.equal(0);
+    });
 
-        tabs[0].focus();
-        tabs[0].dispatchEvent(new KeyboardEvent('keydown', {key: 'End', bubbles: true, composed: true}));
+    it('does not crash render when groups is malformed', async () => {
+      const el = await fixture(html`
+        <zn-theme-editor
+          src="about:blank" frame-origin="https://site.example"
+          .sections="${[{name: 'colors', caption: 'Colors', groups: 'not-an-array'}]}">
+          <zn-input slot="colors" name="accent" value="1"></zn-input>
+        </zn-theme-editor>`);
 
-        await waitUntil(() => tablist.scrollLeft > 0);
-        expect(el.shadowRoot!.activeElement).to.equal(tabs[tabs.length - 1]);
-      });
+      expect(el.shadowRoot!.querySelectorAll('.editor__section').length).to.equal(1);
+      expect(el.shadowRoot!.querySelector('zn-tabs')).to.not.exist;
+    });
+  });
+
+  describe('preview sources', () => {
+    it('with sources unset, renders no dropdown and leaves src alone', async () => {
+      const el = await fixture(html`
+        <zn-theme-editor src="/embed/a" frame-origin="https://site.example"></zn-theme-editor>`);
+
+      expect(el.shadowRoot!.querySelector('zn-select.editor__sources')).to.not.exist;
+      const frame = el.shadowRoot!.querySelector('zn-preview-frame')! as HTMLElement & {src: string};
+      expect(frame.src).to.equal('/embed/a');
+    });
+
+    it('renders a dropdown, the first source winning over an explicit src, and switches the frame src on change', async () => {
+      const el = await fixture(html`
+        <zn-theme-editor
+          src="/embed/explicit" frame-origin="https://site.example"
+          .sources="${[{label: 'Storefront', src: '/embed/a'}, {label: 'Checkout', src: '/embed/b'}]}">
+        </zn-theme-editor>`);
+
+      const select = el.shadowRoot!.querySelector('zn-select.editor__sources')! as HTMLElement & {value: string};
+      expect(select).to.exist;
+      const frame = el.shadowRoot!.querySelector('zn-preview-frame')! as HTMLElement & {src: string};
+      expect(frame.src).to.equal('/embed/a'); // first source wins over the explicit src
+
+      select.value = '1';
+      select.dispatchEvent(new CustomEvent('zn-change', {bubbles: true, composed: true}));
+      await (el as HTMLElement & {updateComplete: Promise<unknown>}).updateComplete;
+
+      expect(frame.src).to.equal('/embed/b');
+    });
+
+    it('keeps the same frame instance across a source switch, so its retained theme survives the reload', async () => {
+      const el = await fixture(html`
+        <zn-theme-editor
+          src="about:blank" frame-origin="https://site.example"
+          .sources="${[{label: 'A', src: 'about:blank'}, {label: 'B', src: 'about:blank?b'}]}">
+          <zn-input name="radius" label="Radius" value="8"></zn-input>
+        </zn-theme-editor>`);
+
+      const frameBefore = el.shadowRoot!.querySelector('zn-preview-frame')!;
+      const select = el.shadowRoot!.querySelector('zn-select.editor__sources')! as HTMLElement & {value: string};
+
+      select.value = '1';
+      select.dispatchEvent(new CustomEvent('zn-change', {bubbles: true, composed: true}));
+      await (el as HTMLElement & {updateComplete: Promise<unknown>}).updateComplete;
+
+      const frameAfter = el.shadowRoot!.querySelector('zn-preview-frame')! as HTMLElement & {src: string};
+      // Same instance, not recreated - setTheme()'s retained payload (tested in
+      // preview-frame's own suite) replays on this instance's next ready handshake.
+      expect(frameAfter).to.equal(frameBefore);
+      expect(frameAfter.src).to.equal('about:blank?b');
     });
   });
 

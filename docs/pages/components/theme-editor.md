@@ -7,29 +7,50 @@ fullWidth: true
 ---
 
 Put form controls in the default slot and give each a `name`. Every control is
-per-mode: it holds a light value and a dark value, and the toolbar's mode
+per-mode: it holds a light value and a dark value, and the sidebar's mode
 toggle swaps which one the control displays. Changing a control harvests every
 named control's *currently displayed* value and pushes the active mode's set
 into the embedded [preview frame](/components/preview-frame/) as an
 `hp-preview:theme` message — no save, no fetch, no page reload.
 
-The toolbar above the preview switches the mode the preview renders in and the
-width it renders at: desktop (full width), tablet (768px) or mobile (390px).
+The controls column runs the full height of the component, with its own
+header row on top holding the light/dark mode toggle beside its caption. The
+toolbar sits opposite it, above the preview only, and switches the width the
+preview renders at: desktop (full width), tablet (768px) or mobile (390px).
 Because the iframe itself is resized, the embedded page's own media queries
 fire.
 
-The preview always fills its column, matching the controls column's height
-rather than leaving dead space beneath it. `min-height` (default `480`) is a
-floor for that row, not a fixed height — it's still forwarded to the
-[preview frame](/components/preview-frame/), which uses it the same way.
+Set `controls-caption` and `preview-caption` to label each column's header
+row — both are empty by default, rendering no text (the controls column's
+header row still renders either way, so the two columns stay aligned).
+
+The preview always fills its column, leaving no dead space beneath it.
+`min-height` (default `480`) is a floor for that column, not a fixed height —
+it's still forwarded to the [preview frame](/components/preview-frame/), which
+uses it the same way.
+
+Controls can be organized into tabs with collapsible groups inside each —
+`sections` with `groups` below is the canonical arrangement:
 
 ```html:preview
 <zn-theme-editor
   id="theme-editor-demo"
   src="/components/preview-frame-demo/"
-  min-height="420">
-  <zn-color-select name="accent" label="Accent" value="#6936f5" dark-value="#f5c542"></zn-color-select>
-  <zn-input name="radius" label="Corner radius" type="number" value="4"></zn-input>
+  min-height="420"
+  controls-caption="Theme Builder"
+  preview-caption="Live Preview"
+  sections='[
+    {"name":"colors","caption":"Colors","groups":[
+      {"name":"brand","caption":"Brand","open":true},
+      {"name":"background","caption":"Background"}
+    ]},
+    {"name":"shapes","caption":"Shapes","groups":[
+      {"name":"radius","caption":"Radius"}
+    ]}
+  ]'>
+  <zn-input slot="brand" name="accent" label="Accent" value="#6936f5" dark-value="#f5c542" type="color"></zn-input>
+  <zn-input slot="background" name="background" label="Background" value="#ffffff" dark-value="#18181b" type="color"></zn-input>
+  <zn-input slot="radius" name="radius" label="Corner radius" type="number" value="4"></zn-input>
 </zn-theme-editor>
 
 <script>
@@ -46,8 +67,9 @@ same-origin.
 ## Dark values
 
 Give a control a `dark-value` attribute alongside `value` to author its dark
-variant. A control with no `dark-value` falls back to its `value` in dark
-mode, so adding dark support to an existing editor is additive:
+variant, as `accent` and `background` do above. A control with no
+`dark-value` falls back to its `value` in dark mode, so adding dark support to
+an existing editor is additive:
 
 ```html
 <zn-color-select name="accent" label="Accent" value="#6936f5" dark-value="#f5c542"></zn-color-select>
@@ -91,26 +113,19 @@ further save runs afterwards with the latest values.
 ### Manual saving with a submit button
 
 Set `submit-label` to render a built-in save button at the right of the toolbar,
-opposite the device and mode controls —
+opposite the device controls —
 empty (the default) renders no button. Add `manual` to disable the debounced
 auto-save entirely, so persistence only happens when the button is clicked;
 the live preview keeps updating on every change either way, only saving
 becomes explicit:
 
-```html:preview
+```html
 <zn-theme-editor
-  id="theme-editor-manual"
-  src="/components/preview-frame-demo/"
-  min-height="420"
+  src="/embed?t=..." frame-origin="https://pay.example"
   manual
   submit-label="Save theme">
   <zn-color-select name="accent" label="Accent" value="#6936f5" dark-value="#f5c542"></zn-color-select>
-  <zn-input name="radius" label="Corner radius" type="number" value="4"></zn-input>
 </zn-theme-editor>
-
-<script>
-  document.getElementById('theme-editor-manual').frameOrigin = location.origin;
-</script>
 ```
 
 Clicking the button flushes any pending edit, then saves immediately through
@@ -157,65 +172,78 @@ Set the controls column width with `--zn-theme-editor-controls-width`
 (default `343px`, matching page-builder's palette). Below 768px the columns
 stack.
 
-## Grouping controls into sections
+## Grouping controls into tabs and collapsibles
 
-Set `sections` to a JSON array of `{name, caption, description?, open?}` and
-assign controls to a section with `slot="<name>"`. The editor renders each
-section as a collapsible itself — no `zn-collapsible` markup needed on the
-author's side. A control with no `slot` renders ungrouped, above the sections.
-Harvesting and change detection walk every section's slot exactly like the
-default one, so a control nested in a section is read, seeded and pushed just
-like a bare one, including one added into an already-rendered section after
-the page has loaded. A section with no assigned controls renders no chrome.
+Set `sections` to a JSON array of `{name, caption, groups}`. Each section
+becomes a `zn-tabs` tab; each entry in its `groups` — `{name, caption,
+description?, open?}` — becomes a collapsible inside that tab, and a control
+is assigned to a group with `slot="<group-name>"`:
 
-```html:preview
+```html
 <zn-theme-editor
-  id="theme-editor-grouped"
-  src="/components/preview-frame-demo/"
-  min-height="420"
-  sections='[{"name":"colors","caption":"Colors","open":true},{"name":"layout","caption":"Layout","description":"Advanced"}]'>
-  <zn-color-select slot="colors" name="accent" label="Accent" value="#6936f5" dark-value="#f5c542"></zn-color-select>
-  <zn-color-select slot="colors" name="background" label="Background" value="#ffffff" dark-value="#0b0b0f"></zn-color-select>
-  <zn-input slot="layout" name="radius" label="Corner radius" type="number" value="4"></zn-input>
+  src="/embed?t=..." frame-origin="https://pay.example"
+  sections='[
+    {"name":"colors","caption":"Colors","groups":[
+      {"name":"brand","caption":"Brand","open":true},
+      {"name":"semantic","caption":"Semantic"}
+    ]},
+    {"name":"shapes","caption":"Shapes","groups":[{"name":"radius","caption":"Radius"}]}
+  ]'>
+  <zn-color-select slot="brand" name="accent" label="Accent" value="#6936f5"></zn-color-select>
+  <zn-input slot="radius" name="radius" label="Corner radius" type="number" value="4"></zn-input>
 </zn-theme-editor>
-
-<script>
-  document.getElementById('theme-editor-grouped').frameOrigin = location.origin;
-</script>
 ```
 
-The `colors` section above opens by default (`"open":true`); `layout` starts
-closed.
+A group with no assigned controls renders no collapsible, and a section none
+of whose groups are populated renders no tab — the same "no chrome for empty
+config" rule flat sections already followed. Every tab's panel stays mounted
+while hidden (`zn-tabs` toggles visibility, never removes a panel), so
+switching tabs never drops a value out of the theme, a preview push or a save.
 
-## Tabbed sections
+### Flat sections (no groups)
 
-Set `section-layout="tabs"` to present the same `sections`/named-slot config
-as a tab strip instead of stacked collapsibles. `description` and `open` are
-meaningless for tabs and are ignored. Every tab's slot stays mounted while
-hidden, so switching tabs never drops a value out of the theme, a preview
-push or a save — only the active pane's visibility changes.
+A section can omit `groups` and just take controls directly via
+`slot="<section-name>"`, exactly as before nesting existed. `section-layout`
+then decides the presentation — stacked `zn-collapsible`s (`"collapsible"`,
+the default) or a `zn-tabs` strip (`"tabs"`) — and is otherwise ignored: once
+*any* section has a populated `groups`, every section renders as a nested tab
+regardless of `section-layout`.
 
-The strip is always a single row: with more tabs than fit the controls
-column, it scrolls horizontally rather than wrapping, and a fade at the
-right edge signals there's more to scroll rather than letting a tab's
-caption read as clipped text. Activating a tab — by click or with the
-arrow keys — scrolls it into view if it isn't already visible.
-
-```html:preview
+```html
 <zn-theme-editor
-  id="theme-editor-tabs"
-  src="/components/preview-frame-demo/"
-  min-height="420"
+  src="/embed?t=..." frame-origin="https://pay.example"
   section-layout="tabs"
   sections='[{"name":"colors","caption":"Colors"},{"name":"layout","caption":"Layout"}]'>
-  <zn-color-select slot="colors" name="accent" label="Accent" value="#6936f5" dark-value="#f5c542"></zn-color-select>
+  <zn-color-select slot="colors" name="accent" label="Accent" value="#6936f5"></zn-color-select>
   <zn-input slot="layout" name="radius" label="Corner radius" type="number" value="4"></zn-input>
 </zn-theme-editor>
-
-<script>
-  document.getElementById('theme-editor-tabs').frameOrigin = location.origin;
-</script>
 ```
+
+An author can also slot their own `zn-collapsible` into any named slot (or the
+default slot) instead of relying on `groups` — its presentation is then
+entirely its own; add `flush` yourself if you want it to run the full width of
+the column.
+
+## Preview sources
+
+Set `sources` to a JSON array of `{label, src}` to render a dropdown in the
+toolbar, beside the device buttons, for switching which page the preview
+loads:
+
+```html
+<zn-theme-editor
+  src="/embed?t=..." frame-origin="https://pay.example"
+  sources='[{"label":"Checkout","src":"/embed/checkout"},{"label":"Storefront","src":"/embed/storefront"}]'>
+  <zn-color-select name="accent" label="Accent" value="#6936f5"></zn-color-select>
+</zn-theme-editor>
+```
+
+The first entry is the initial selection — it wins over an explicit `src` when
+`sources` is non-empty. Selecting a different entry reloads the iframe; nothing
+further is needed to keep the theme, since the frame retains the last pushed
+payload and replays it once the reloaded page re-announces itself ready. Leave
+`sources` unset (the default) and `src` behaves exactly as it always has, with
+no dropdown rendered.
 
 ## Collapsing the controls column
 
@@ -234,18 +262,8 @@ useful when it isn't already embedded in a page shell that provides that
 chrome. It also switches the preview's [backdrop](/components/preview-frame/)
 from the dot grid to a plain panel to match.
 
-```html:preview
-<zn-theme-editor
-  id="theme-editor-standalone"
-  src="/components/preview-frame-demo/"
-  min-height="420"
-  standalone>
+```html
+<zn-theme-editor src="/embed?t=..." frame-origin="https://pay.example" standalone>
   <zn-color-select name="accent" label="Accent" value="#6936f5" dark-value="#f5c542"></zn-color-select>
-  <zn-input name="radius" label="Corner radius" type="number" value="4"></zn-input>
 </zn-theme-editor>
-
-<script>
-  document.getElementById('theme-editor-standalone').frameOrigin = location.origin;
-</script>
 ```
-

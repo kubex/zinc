@@ -1,27 +1,45 @@
-import {type CSSResultGroup, html, nothing, unsafeCSS} from 'lit';
-import {HasSlotController} from '../../internal/slot';
-import {ifDefined} from 'lit/directives/if-defined.js';
-import {MutationController} from '@lit-labs/observers/mutation-controller.js';
-import {property, query, queryAll, state} from 'lit/decorators.js';
+import { type CSSResultGroup, html, nothing, unsafeCSS } from 'lit';
+import { HasSlotController } from '../../internal/slot';
+import { ifDefined } from 'lit/directives/if-defined.js';
+import { MutationController } from '@lit-labs/observers/mutation-controller.js';
+import { property, query, queryAll, state } from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from '../button';
 import ZnCollapsible from '../collapsible';
 import ZnIcon from '../icon';
+import ZnNavbar from '../navbar';
+import ZnOption from '../option';
 import ZnPreviewFrame from '../preview-frame';
-import type {ZnErrorEvent} from '../../events/zn-error';
+import ZnSelect from '../select';
+import ZnTabs from '../tabs';
+import type { ZnErrorEvent } from '../../events/zn-error';
 
 import styles from './theme-editor.scss';
 
 export type ThemeEditorMode = 'light' | 'dark';
 export type ThemeEditorDevice = 'desktop' | 'tablet' | 'mobile';
 
-export interface ThemeEditorSection {
+export interface ThemeEditorGroup {
   /** The slot name controls are assigned to with `slot="<name>"`. */
   name: string;
   caption: string;
   description?: string;
-  /** Renders the section expanded initially. */
+  /** Renders expanded initially. */
   open?: boolean;
+}
+
+export interface ThemeEditorSection extends ThemeEditorGroup {
+  /**
+   * Nests a collapsible per group inside this section's tab instead of the
+   * section's own controls directly. A non-empty `groups` on ANY section
+   * switches every section to `zn-tabs`, regardless of `section-layout`.
+   */
+  groups?: ThemeEditorGroup[];
+}
+
+export interface ThemeEditorSource {
+  label: string;
+  src: string;
 }
 
 // Controls whose state lives on `checked` rather than `value`.
@@ -30,10 +48,10 @@ const BOOLEAN_CONTROLS = new Set(['zn-checkbox', 'zn-toggle']);
 // Matches theme-editor.scss's stacked breakpoint - keep both in sync.
 const STACKED_QUERY = '(max-width: 768px)';
 
-const DEVICES: {id: ThemeEditorDevice; icon: string; label: string}[] = [
-  {id: 'desktop', icon: 'monitor', label: 'Desktop'},
-  {id: 'tablet', icon: 'tablet', label: 'Tablet'},
-  {id: 'mobile', icon: 'smartphone', label: 'Mobile'},
+const DEVICES: { id: ThemeEditorDevice; icon: string; label: string }[] = [
+  { id: 'desktop', icon: 'monitor', label: 'Desktop' },
+  { id: 'tablet', icon: 'tablet', label: 'Tablet' },
+  { id: 'mobile', icon: 'smartphone', label: 'Mobile' },
 ];
 
 interface HarvestableControl extends HTMLElement {
@@ -55,6 +73,9 @@ interface HarvestableControl extends HTMLElement {
  * @dependency zn-preview-frame
  * @dependency zn-icon
  * @dependency zn-button
+ * @dependency zn-tabs
+ * @dependency zn-navbar
+ * @dependency zn-select
  *
  * @event zn-theme-change - Emitted when the values, mode or device change.
  * @event zn-theme-submit - Emitted on submit (button click), carrying the
@@ -64,22 +85,20 @@ interface HarvestableControl extends HTMLElement {
  * out through the editor too.
  *
  * @slot - Ungrouped theme controls, rendered above any sections. Controls
- * assigned `slot="<name>"` matching a `sections` entry render inside that
- * section instead. Harvesting and change detection walk every slot's full
- * assigned subtree, not just direct children.
- * @slot toolbar - Actions in the toolbar, right-aligned beside the device and
- * mode controls. Where a save button belongs.
+ * assigned `slot="<name>"` matching a `sections` entry (or, when nested, a
+ * `groups` entry) render inside that section/group instead. Harvesting and
+ * change detection walk every slot's full assigned subtree, not just direct
+ * children.
+ * @slot toolbar - Actions in the toolbar, right-aligned beside the device
+ * controls. Where a save button belongs.
  * @slot footer - Actions pinned beneath the controls. The built-in submit button
  * lives in the toolbar, not here.
  *
  * @csspart base - The component's base wrapper.
- * @csspart toolbar - The device and mode switcher, spanning the full width.
- * @csspart controls - The left-hand controls column.
- * @csspart section - A rendered section's collapsible (`section-layout="collapsible"`).
- * @csspart tablist-wrap - Non-scrolling wrapper around the tablist; carries the border and right-edge overflow fade.
- * @csspart tablist - The section tab strip (`section-layout="tabs"`), a single-row horizontal scroller.
- * @csspart tab - A section's tab button.
- * @csspart tabpanel - A section's tab panel.
+ * @csspart controls - The left-hand controls column, full height.
+ * @csspart controls-header - The controls column's header row: `controls-caption` on the left, the light/dark mode toggle on the right.
+ * @csspart toolbar - The preview column's header row: `preview-caption` on the left, the device switcher (and sources/submit) on the right. Spans the preview column only.
+ * @csspart section - A rendered section's or group's collapsible (`section-layout="collapsible"`, or any nested group).
  * @csspart footer - The footer wrapper beneath the controls.
  * @csspart preview - The preview column.
  * @csspart error - The inline error strip.
@@ -97,56 +116,74 @@ export default class ZnThemeEditor extends ZincElement {
     'zn-preview-frame': ZnPreviewFrame,
     'zn-icon': ZnIcon,
     'zn-button': ZnButton,
+    'zn-tabs': ZnTabs,
+    'zn-navbar': ZnNavbar,
+    'zn-select': ZnSelect,
+    'zn-option': ZnOption,
   };
 
   /** URL of the preview shell page; forwarded to the frame. */
   @property() src = '';
 
   /** Expected origin of the iframe; forwarded to the frame. */
-  @property({attribute: 'frame-origin'}) frameOrigin = '';
+  @property({ attribute: 'frame-origin' }) frameOrigin = '';
 
   /** Optional endpoint returning the base hp-preview:config payload. */
-  @property({attribute: 'data-uri'}) dataUri = '';
+  @property({ attribute: 'data-uri' }) dataUri = '';
 
   /** Which mode the preview renders in. Travels in the theme payload. */
-  @property({reflect: true}) mode: ThemeEditorMode = 'light';
+  @property({ reflect: true }) mode: ThemeEditorMode = 'light';
 
   /** Preview viewport width. Resizes the frame only; not part of the payload. */
-  @property({reflect: true}) device: ThemeEditorDevice = 'desktop';
+  @property({ reflect: true }) device: ThemeEditorDevice = 'desktop';
 
   /** Minimum height of the preview row, in pixels; forwarded to the frame as its own floor. */
-  @property({type: Number, attribute: 'min-height'}) minHeight = 480;
+  @property({ type: Number, attribute: 'min-height' }) minHeight = 480;
 
   /** Debounce in ms between a control change and the push to the preview. */
-  @property({type: Number}) debounce = 150;
+  @property({ type: Number }) debounce = 150;
 
   /** Optional endpoint the values are POSTed to. Empty = no persistence. */
   @property() action = '';
 
   /** Debounce in ms between a control change and the save POST. */
-  @property({type: Number, attribute: 'save-debounce'}) saveDebounce = 1000;
-
-  /** Groups controls into named, collapsible sections. Empty/unset renders one ungrouped column. */
-  @property({type: Array}) sections: ThemeEditorSection[] = [];
+  @property({ type: Number, attribute: 'save-debounce' }) saveDebounce = 1000;
 
   /**
-   * Presentation for `sections`: stacked `zn-collapsible`s (default) or a tab
-   * strip. Reuses `sections` and its named slots verbatim; `description` and
-   * `open` are ignored in `tabs`.
+   * Groups controls into named sections. Empty/unset renders one ungrouped
+   * column. A section with a non-empty `groups` nests a collapsible per
+   * group inside a `zn-tabs` tab for that section - see `groups` on
+   * `ThemeEditorSection`.
    */
-  @property({attribute: 'section-layout'}) sectionLayout: 'collapsible' | 'tabs' = 'collapsible';
+  @property({ type: Array }) sections: ThemeEditorSection[] = [];
+
+  /**
+   * Presentation for flat, group-less `sections`: stacked `zn-collapsible`s
+   * (default) or a `zn-tabs` strip. Ignored once any section has `groups` -
+   * nested sections always render as tabs.
+   */
+  @property({ attribute: 'section-layout' }) sectionLayout: 'collapsible' | 'tabs' = 'collapsible';
+
+  /** Dropdown of preview sources, `{label, src}`, rendered in the toolbar. Empty/unset renders no dropdown; the first entry wins over an explicit `src` when non-empty. */
+  @property({ type: Array }) sources: ThemeEditorSource[] = [];
 
   /** Collapses the controls column. */
-  @property({type: Boolean, reflect: true, attribute: 'controls-collapsed'}) controlsCollapsed = false;
+  @property({ type: Boolean, reflect: true, attribute: 'controls-collapsed' }) controlsCollapsed = false;
 
   /** Presents the editor as its own bordered, rounded panel with a plain preview backdrop, rather than embedded in a dotted canvas. */
-  @property({type: Boolean, reflect: true}) standalone = false;
+  @property({ type: Boolean, reflect: true }) standalone = false;
+
+  /** Caption in the controls column's header row. Empty (default) renders no text; the row itself always renders. */
+  @property({ attribute: 'controls-caption' }) controlsCaption = '';
+
+  /** Caption at the left of the toolbar, opposite the device and mode controls. Empty (default) renders no text. */
+  @property({ attribute: 'preview-caption' }) previewCaption = '';
 
   /** Label for the built-in submit button. Empty (default) renders no button. */
-  @property({attribute: 'submit-label'}) submitLabel = '';
+  @property({ attribute: 'submit-label' }) submitLabel = '';
 
   /** Disables the debounced auto-save; saving then happens only via submit. Preview pushes are unaffected. */
-  @property({type: Boolean}) manual = false;
+  @property({ type: Boolean }) manual = false;
 
   @query('zn-preview-frame') frame: ZnPreviewFrame;
 
@@ -158,9 +195,9 @@ export default class ZnThemeEditor extends ZincElement {
 
   @state() private _submitting = false;
 
-  // Which section's tab is active in section-layout="tabs". Purely a view
-  // toggle - never read by harvesting, seeding or the push/save pipeline.
-  @state() private _activeTab = '';
+  // Which `sources` entry drives the frame's src. Purely a view toggle -
+  // never read by harvesting, seeding or the push/save pipeline.
+  @state() private _sourceIndex = 0;
 
   private readonly hasSlotController = new HasSlotController(this, 'footer', '[default]');
 
@@ -186,7 +223,7 @@ export default class ZnThemeEditor extends ZincElement {
   // to an attribute, and write-back assigns .checked on mode toggle, which
   // would otherwise feed straight back into this guard. Exposed as a field
   // (rather than inlined) so a test can pin the config directly.
-  private readonly _controlsObserverConfig: MutationObserverInit = {childList: true, subtree: true};
+  private readonly _controlsObserverConfig: MutationObserverInit = { childList: true, subtree: true };
 
   private readonly _controlsObserver = new MutationController(this, {
     target: null,
@@ -197,7 +234,7 @@ export default class ZnThemeEditor extends ZincElement {
   // Per-mode value sets. Seeded once per control name (never re-seeded, so a
   // user's edits survive later controls being added) and otherwise updated by
   // harvesting the DOM into the active mode only.
-  private _modeValues: Record<ThemeEditorMode, Record<string, unknown>> = {light: {}, dark: {}};
+  private _modeValues: Record<ThemeEditorMode, Record<string, unknown>> = { light: {}, dark: {} };
 
   // Suppresses _onControlChange while write-back assigns .value/.checked
   // programmatically. This IS load-bearing: zn-input's color-format watcher
@@ -210,13 +247,13 @@ export default class ZnThemeEditor extends ZincElement {
   private _suppressDepth = 0;
 
   /** The current per-mode value sets. Returns copies. */
-  get values(): {light: Record<string, unknown>; dark: Record<string, unknown>} {
-    return {light: {...this._modeValues.light}, dark: {...this._modeValues.dark}};
+  get values(): { light: Record<string, unknown>; dark: Record<string, unknown> } {
+    return { light: { ...this._modeValues.light }, dark: { ...this._modeValues.dark } };
   }
 
   /** The active mode's values - what gets pushed to the preview frame. */
   get activeValues(): Record<string, unknown> {
-    return {...this._modeValues[this.mode]};
+    return { ...this._modeValues[this.mode] };
   }
 
   /** The default slot plus every rendered section slot. */
@@ -226,17 +263,17 @@ export default class ZnThemeEditor extends ZincElement {
   }
 
   /** Walks every control slot (default and sections) for every enabled, named control. */
-  private _harvestNamed(): {name: string; control: HarvestableControl}[] {
-    const found: {name: string; control: HarvestableControl}[] = [];
+  private _harvestNamed(): { name: string; control: HarvestableControl }[] {
+    const found: { name: string; control: HarvestableControl }[] = [];
 
     for (const slot of this._controlSlots()) {
-      const roots = slot.assignedElements({flatten: true});
+      const roots = slot.assignedElements({ flatten: true });
       for (const root of roots) {
         const candidates = [root, ...Array.from(root.querySelectorAll('[name]'))];
         for (const candidate of candidates) {
           const control = candidate as HarvestableControl;
           if (!control.getAttribute?.('name') || control.disabled) continue;
-          found.push({name: control.getAttribute('name')!, control});
+          found.push({ name: control.getAttribute('name')!, control });
         }
       }
     }
@@ -259,7 +296,7 @@ export default class ZnThemeEditor extends ZincElement {
 
   /** Seeds light/dark entries for any control name not already present. */
   private _seed() {
-    for (const {name, control} of this._harvestNamed()) {
+    for (const { name, control } of this._harvestNamed()) {
       if (name in this._modeValues.light) continue;
 
       const light = this._readControlValue(control);
@@ -283,7 +320,7 @@ export default class ZnThemeEditor extends ZincElement {
     // there is nothing to suppress and no window during which an unrelated,
     // genuinely new edit to that same control could be wrongly swallowed.
     let wrote = false;
-    for (const {name, control} of this._harvestNamed()) {
+    for (const { name, control } of this._harvestNamed()) {
       if (!(name in this._modeValues[mode])) continue;
       const value = this._modeValues[mode][name];
       const isBoolean = this._isBooleanControl(control);
@@ -314,7 +351,7 @@ export default class ZnThemeEditor extends ZincElement {
 
   /** Harvests the controls' current displayed values into a mode's set. */
   private _harvestInto(mode: ThemeEditorMode) {
-    for (const {name, control} of this._harvestNamed()) {
+    for (const { name, control } of this._harvestNamed()) {
       this._modeValues[mode][name] = this._readControlValue(control);
     }
   }
@@ -354,7 +391,7 @@ export default class ZnThemeEditor extends ZincElement {
     // overlay on hp-preview:rendered, and a failing save re-sets this on its
     // own (longer) debounce.
     this.error = '';
-    this.frame?.setTheme({mode: this.mode, values: this.activeValues});
+    this.frame?.setTheme({ mode: this.mode, values: this.activeValues });
     this._announce();
   }
 
@@ -429,7 +466,7 @@ export default class ZnThemeEditor extends ZincElement {
     // A section's rendered chrome depends on live slot assignment - recompute every time.
     this.requestUpdate();
 
-    const current = this._harvestNamed().map(({control}) => control);
+    const current = this._harvestNamed().map(({ control }) => control);
     const changed = !this._mounted
       || current.length !== this._lastControls.length
       || current.some((el, i) => el !== this._lastControls[i]);
@@ -467,14 +504,14 @@ export default class ZnThemeEditor extends ZincElement {
     }
 
     if (!this.action) {
-      this.emit('zn-theme-submit', {detail: {values: this.values}});
+      this.emit('zn-theme-submit', { detail: { values: this.values } });
       return;
     }
 
     this._submitting = true;
     void this._awaitSave()
       .then(ok => {
-        if (ok) this.emit('zn-theme-submit', {detail: {values: this.values}});
+        if (ok) this.emit('zn-theme-submit', { detail: { values: this.values } });
       })
       .finally(() => {
         this._submitting = false;
@@ -482,12 +519,12 @@ export default class ZnThemeEditor extends ZincElement {
   };
 
   private _announce() {
-    this.emit('zn-theme-change', {detail: {values: this.values, mode: this.mode, device: this.device}});
+    this.emit('zn-theme-change', { detail: { values: this.values, mode: this.mode, device: this.device } });
   }
 
   private _fail(message: string) {
     this.error = message;
-    this.emit('zn-error', {detail: {message}});
+    this.emit('zn-error', { detail: { message } });
   }
 
   private readonly _onControlChange = () => {
@@ -531,12 +568,48 @@ export default class ZnThemeEditor extends ZincElement {
     this.error = e.detail.message ?? 'Preview failed to render';
   };
 
-  /** Configured sections that have an assigned control - shared by both section-layout presentations. */
-  private _visibleSections(): ThemeEditorSection[] {
+  private _sourcesSafe(): ThemeEditorSource[] {
+    return Array.isArray(this.sources) ? this.sources : [];
+  }
+
+  // The first source wins over an explicit `src` when sources is non-empty.
+  // The frame reloads on switch; setTheme()'s retained payload replays after
+  // its next hp-preview:ready, so nothing further is needed here.
+  private _frameSrc(): string {
+    const sources = this._sourcesSafe();
+    return sources.length > 0 ? (sources[this._sourceIndex] ?? sources[0]).src : this.src;
+  }
+
+  private readonly _onSourceChange = (e: Event) => {
+    const index = Number((e.target as HTMLElement & { value: string }).value);
+    if (!Number.isNaN(index)) this._sourceIndex = index;
+  };
+
+  private _sectionsSafe(): ThemeEditorSection[] {
     // Lit's default converter falls back to null on bad JSON, and does nothing
     // to coerce valid-but-non-array JSON - both would otherwise crash render().
-    const sections = Array.isArray(this.sections) ? this.sections : [];
-    return sections.filter(section => this._hasAssignedControls(section.name));
+    return Array.isArray(this.sections) ? this.sections : [];
+  }
+
+  private _groupsFor(section: ThemeEditorSection): ThemeEditorGroup[] {
+    return Array.isArray(section?.groups) ? section.groups : [];
+  }
+
+  /** Whether any section has a populated `groups` - the switch to nested tabs+collapsibles. */
+  private _hasNestedGroups(): boolean {
+    return this._sectionsSafe().some(section => this._groupsFor(section).length > 0);
+  }
+
+  private _visibleGroups(section: ThemeEditorSection): ThemeEditorGroup[] {
+    return this._groupsFor(section).filter(group => this._hasAssignedControls(group.name));
+  }
+
+  /** Configured sections that have an assigned control, or (nested) a populated group - shared by every presentation. */
+  private _visibleSections(): ThemeEditorSection[] {
+    const sections = this._sectionsSafe();
+    return this._hasNestedGroups()
+      ? sections.filter(section => this._visibleGroups(section).length > 0)
+      : sections.filter(section => this._hasAssignedControls(section.name));
   }
 
   private _renderSections() {
@@ -546,145 +619,133 @@ export default class ZnThemeEditor extends ZincElement {
         part="section"
         caption="${section.caption}"
         description="${ifDefined(section.description)}"
-        default="${section.open ? 'open' : 'closed'}"
-        flush>
+        default="${section.open ? 'open' : 'closed'}">
         <div class="editor__section-fields">
           <slot name="${section.name}" class="editor__section-slot" @slotchange="${this._onSlotChange}"></slot>
         </div>
       </zn-collapsible>`);
   }
 
-  /** The active tab, falling back to the first visible section if the tracked name no longer matches one. */
-  private _activeTabName(sections: ThemeEditorSection[]): string {
-    return sections.some(section => section.name === this._activeTab) ? this._activeTab : (sections[0]?.name ?? '');
+  private _renderGroups(section: ThemeEditorSection) {
+    return this._visibleGroups(section).map(group => html`
+      <zn-collapsible
+        class="editor__section"
+        part="section"
+        caption="${group.caption}"
+        description="${ifDefined(group.description)}"
+        default="${group.open ? 'open' : 'closed'}">
+        <div class="editor__section-fields">
+          <slot name="${group.name}" class="editor__section-slot" @slotchange="${this._onSlotChange}"></slot>
+        </div>
+      </zn-collapsible>`);
   }
 
-  private readonly _setActiveTab = (name: string) => {
-    this._activeTab = name;
-    void this.updateComplete.then(() => this._scrollTabIntoView(name));
-  };
-
-  /** Keeps a tab reachable in the single-row scroller when it becomes active. */
-  private _scrollTabIntoView(name: string) {
-    this.shadowRoot?.getElementById(`tab-${name}`)?.scrollIntoView({block: 'nearest', inline: 'nearest'});
-  }
-
-  private readonly _onTabKeydown = (e: KeyboardEvent) => {
-    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
-
-    const sections = this._visibleSections();
-    if (sections.length === 0) return;
-    const index = sections.findIndex(section => section.name === this._activeTabName(sections));
-
-    let next = index;
-    if (e.key === 'ArrowRight') next = (index + 1) % sections.length;
-    else if (e.key === 'ArrowLeft') next = (index - 1 + sections.length) % sections.length;
-    else if (e.key === 'Home') next = 0;
-    else if (e.key === 'End') next = sections.length - 1;
-
-    e.preventDefault();
-    this._setActiveTab(sections[next].name);
-    void this.updateComplete.then(() => {
-      this.shadowRoot?.getElementById(`tab-${sections[next].name}`)?.focus();
-    });
-  };
-
-  // Every pane renders regardless of which tab is active - only visibility is
-  // toggled (via the `hidden` attribute, not removal) - so a section's slot
-  // always exists for _harvestNamed() to walk, and switching tabs can never
-  // drop a control's value from the theme.
-  private _renderTabs() {
+  // zn-tabs never removes a panel - it toggles `selected` on it and hides the
+  // rest via its own shadow stylesheet - so every section's slot(s) stay
+  // assigned and switching tabs can never drop a control's value from the
+  // theme. The first visible section is the initial `active` tab; once set,
+  // Lit only re-touches the attribute (resetting zn-tabs' own tracked
+  // selection) if that name actually changes between renders.
+  private _renderTabs(panel: (section: ThemeEditorSection) => unknown) {
     const sections = this._visibleSections();
     if (sections.length === 0) return nothing;
-    const active = this._activeTabName(sections);
 
     return html`
-      <div class="editor__tabs">
-        <div class="editor__tablist-wrap" part="tablist-wrap">
-          <div class="editor__tablist" part="tablist" role="tablist" aria-label="Sections" @keydown="${this._onTabKeydown}">
-            ${sections.map(section => html`
-              <button type="button" role="tab"
-                      id="tab-${section.name}"
-                      part="tab"
-                      class="editor__tab ${section.name === active ? 'editor__tab--active' : ''}"
-                      aria-selected="${section.name === active ? 'true' : 'false'}"
-                      aria-controls="tabpanel-${section.name}"
-                      tabindex="${section.name === active ? '0' : '-1'}"
-                      @click="${() => this._setActiveTab(section.name)}">
-                ${section.caption}
-              </button>`)}
-          </div>
-        </div>
+      <zn-tabs class="editor__tabs" flush active="${sections[0].name}">
+        <zn-navbar slot="top" border>
+          ${sections.map(section => html`<li tab="${section.name}">${section.caption}</li>`)}
+        </zn-navbar>
         ${sections.map(section => html`
-          <div id="tabpanel-${section.name}"
-               part="tabpanel"
-               class="editor__tabpanel"
-               role="tabpanel"
-               aria-labelledby="tab-${section.name}"
-               ?hidden="${section.name !== active}">
-            <slot name="${section.name}" class="editor__section-slot" @slotchange="${this._onSlotChange}"></slot>
-          </div>`)}
-      </div>`;
+          <div id="${section.name}" class="editor__tab-panel">${panel(section)}</div>`)}
+      </zn-tabs>`;
   }
 
   render() {
     return html`
-      <div part="base" class="editor ${this.controlsCollapsed ? 'editor--controls-collapsed' : ''}">
-        <div part="toolbar" class="editor__toolbar">
-          <div class="editor__devices" role="group" aria-label="Preview width">
-            ${DEVICES.map(d => html`
-              <button type="button"
-                      class="editor__device"
-                      data-device="${d.id}"
-                      aria-label="${d.label}"
-                      aria-pressed="${this.device === d.id ? 'true' : 'false'}"
-                      @click="${() => this._setDevice(d.id)}">
-                <zn-icon src="${d.icon}" library="lucide" size="16"></zn-icon>
-              </button>`)}
+      <div part="base" class="editor ${this.controlsCollapsed ? 'editor--controls-collapsed' : ''}"
+           style="min-height: ${this.minHeight}px">
+        <div part="controls" class="editor__controls">
+          <div part="controls-header" class="editor__controls-header">
+            ${this.controlsCaption ? html`<span class="editor__caption">${this.controlsCaption}</span>` : nothing}
+            <button type="button"
+                    class="editor__mode"
+                    data-mode-toggle
+                    aria-label="${this.mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}"
+                    @click="${this._toggleMode}">
+              <zn-icon src="${this.mode === 'dark' ? 'sun' : 'moon'}" library="lucide" size="16"></zn-icon>
+            </button>
           </div>
-          <button type="button"
-                  class="editor__mode"
-                  data-mode-toggle
-                  aria-label="${this.mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}"
-                  @click="${this._toggleMode}">
-            <zn-icon src="${this.mode === 'dark' ? 'sun' : 'moon'}" library="lucide" size="16"></zn-icon>
-          </button>
-          <slot name="toolbar"></slot>
-          ${this.submitLabel ? html`
-            <zn-button class="editor__submit"
-                       color="primary"
-                       @click="${this._onSubmit}"
-                       ?loading="${this._submitting}">${this.submitLabel}</zn-button>` : nothing}
-        </div>
-
-        <div class="editor__row" style="min-height: ${this.minHeight}px">
-          <div part="controls" class="editor__controls">
-            <div class="editor__fields ${this.hasSlotController.test('[default]') ? '' : 'editor__fields--sections-only'}"
-                 @zn-change="${this._onControlChange}"
-                 @zn-input="${this._onControlChange}"
-                 @change="${this._onControlChange}"
-                 @input="${this._onControlChange}">
+          <div class="editor__controls-body">
+            <div
+              class="editor__fields ${this.hasSlotController.test('[default]') ? '' : 'editor__fields--sections-only'}"
+              @zn-change="${this._onControlChange}"
+              @zn-input="${this._onControlChange}"
+              @change="${this._onControlChange}"
+              @input="${this._onControlChange}">
               <slot @slotchange="${this._onSlotChange}"></slot>
-              ${this.sectionLayout === 'tabs' ? this._renderTabs() : this._renderSections()}
+              ${this._hasNestedGroups()
+                ? this._renderTabs(section => this._renderGroups(section))
+                : this.sectionLayout === 'tabs'
+                  ? this._renderTabs(section => html`
+                      <slot name="${section.name}" class="editor__section-slot" @slotchange="${this._onSlotChange}"></slot>`)
+                  : this._renderSections()}
             </div>
             ${this.hasSlotController.test('footer') ? html`
               <div part="footer" class="editor__footer">
                 <slot name="footer"></slot>
               </div>` : nothing}
           </div>
+        </div>
+
+        <div class="editor__main">
+          <button type="button"
+                  class="panel-toggle panel-toggle--left ${this.controlsCollapsed ? 'panel-toggle--tucked' : ''}"
+                  title="${this.controlsCollapsed ? 'Show controls' : 'Hide controls'}"
+                  aria-label="${this.controlsCollapsed ? 'Show controls' : 'Hide controls'}"
+                  @click="${() => (this.controlsCollapsed = !this.controlsCollapsed)}">
+            <zn-icon src="${this.controlsCollapsed ? 'chevron-right@lu' : 'chevron-left@lu'}" size="16"></zn-icon>
+          </button>
+
+          <div part="toolbar" class="editor__toolbar">
+            ${this.previewCaption ? html`<span class="editor__caption">${this.previewCaption}</span>` : nothing}
+            <div class="editor__toolbar-actions">
+              <div class="editor__devices" role="group" aria-label="Preview width">
+                ${DEVICES.map(d => html`
+                  <button type="button"
+                          class="editor__device"
+                          data-device="${d.id}"
+                          aria-label="${d.label}"
+                          aria-pressed="${this.device === d.id ? 'true' : 'false'}"
+                          @click="${() => this._setDevice(d.id)}">
+                    <zn-icon src="${d.icon}" library="lucide" size="16"></zn-icon>
+                  </button>`)}
+              </div>
+              ${this._sourcesSafe().length > 0 ? html`
+                <zn-select
+                  class="editor__sources"
+                  size="small"
+                  label="Preview source"
+                  hoist
+                  .value="${String(this._sourceIndex)}"
+                  @zn-change="${this._onSourceChange}">
+                  ${this._sourcesSafe().map((source, i) => html`
+                    <zn-option value="${i}">${source.label}</zn-option>`)}
+                </zn-select>` : nothing}
+              <slot name="toolbar"></slot>
+              ${this.submitLabel ? html`
+                <zn-button class="editor__submit"
+                           color="primary"
+                           @click="${this._onSubmit}"
+                           ?loading="${this._submitting}">${this.submitLabel}
+                </zn-button>` : nothing}
+            </div>
+          </div>
 
           <div part="preview" class="editor__preview">
-            <button type="button"
-                    class="panel-toggle panel-toggle--left ${this.controlsCollapsed ? 'panel-toggle--tucked' : ''}"
-                    title="${this.controlsCollapsed ? 'Show controls' : 'Hide controls'}"
-                    aria-label="${this.controlsCollapsed ? 'Show controls' : 'Hide controls'}"
-                    @click="${() => (this.controlsCollapsed = !this.controlsCollapsed)}">
-              <zn-icon src="${this.controlsCollapsed ? 'chevron-right@lu' : 'chevron-left@lu'}" size="16"></zn-icon>
-            </button>
             ${this.error ? html`
               <div part="error" class="editor__error">${this.error}</div>` : nothing}
             <zn-preview-frame
-              src="${this.src}"
+              src="${this._frameSrc()}"
               frame-origin="${this.frameOrigin}"
               data-uri="${this.dataUri}"
               device="${this.device}"

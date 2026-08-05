@@ -10,19 +10,23 @@
   --controls-col: var(--zn-theme-editor-controls-width);
 
   display: flex;
-  flex-direction: column;
+  align-items: stretch;
 
   &--controls-collapsed {
     --controls-col: 0px;
 
     .editor__controls {
       border-right: none;
+    }
+
+    .editor__controls-header,
+    .editor__controls-body {
       padding: 0;
     }
   }
 }
 
-// Clips the toolbar border and the controls divider to the panel's own corners.
+// Clips the sidebar's left corners and the toolbar's top-right corner to the panel's own radius.
 :host([standalone]) .editor {
   background: rgb(var(--zn-panel));
   border: 1px solid rgb(var(--zn-border-color));
@@ -30,33 +34,62 @@
   overflow: hidden;
 }
 
+// Same box model as .editor__controls-header so the tab strip lines up with the preview's top edge.
 .editor__toolbar {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  min-height: 44px;
   gap: var(--zn-spacing-small);
   padding: var(--zn-spacing-small) var(--zn-spacing-medium);
   border-bottom: 1px solid rgb(var(--zn-border-color));
 }
 
-.editor__row {
+.editor__toolbar-actions {
   display: flex;
-  align-items: stretch;
-  gap: 0;
+  align-items: center;
+  gap: var(--zn-spacing-small);
+  margin-left: auto;
+}
+
+.editor__caption {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16px;
+  color: rgb(var(--zn-text));
 }
 
 .editor__controls {
   display: flex;
   flex-direction: column;
-  gap: var(--zn-spacing-medium);
   flex: 0 0 var(--controls-col);
   min-width: 0;
   max-width: 100%;
   background: rgb(var(--zn-panel));
-  padding: var(--zn-spacing-medium);
   border-right: 1px solid rgb(var(--zn-border-color));
   overflow: hidden;
   transition: flex-basis 0.2s ease;
+}
+
+.editor__controls-header {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: var(--zn-spacing-small) var(--zn-spacing-medium);
+}
+
+.editor__controls-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-spacing-medium);
+  flex: 1 1 auto;
+}
+
+.editor__main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .editor__fields {
@@ -77,7 +110,7 @@
 
 .editor__section {
   display: block;
-  border-top: 1px solid rgb(var(--zn-border-color));
+  border-top: 1px solid rgba(var(--zn-border-color), .5);
 
   // The !important beats zn-collapsible's internal .header class specificity.
   &::part(header) {
@@ -99,62 +132,18 @@
   gap: var(--zn-spacing-medium);
 }
 
-// Non-scrolling: carries the border and fade so neither scrolls with the tabs.
-.editor__tablist-wrap {
-  position: relative;
-  border-bottom: 1px solid rgb(var(--zn-border-color));
-
-  // Overlays the right edge regardless of scroll position; over empty flex
-  // space (few tabs) it blends into the matching panel background instead.
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0 0 0 auto;
-    width: 32px;
-    pointer-events: none;
-    background: linear-gradient(to right, transparent, rgb(var(--zn-panel)));
-  }
+// zn-tabs owns the tablist's presentation, keyboard behaviour and overflow.
+.editor__tabs {
+  display: block;
 }
 
-.editor__tablist {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  gap: var(--zn-spacing-small);
+.editor__section-slot {
+  padding-top: var(--zn-spacing-sm);
 }
 
-.editor__tab {
-  // Zero inline padding so the first tab aligns with the field labels below it.
-  padding: calc(var(--zn-base-px) * 2) 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: rgb(var(--zn-color-muted-text));
-  background: transparent;
-  border: 0;
-  border-bottom: 2px solid transparent;
-  white-space: nowrap;
-  cursor: pointer;
-
-  &:hover {
-    color: rgb(var(--zn-text));
-  }
-
-  &--active {
-    color: rgb(var(--zn-text));
-    border-bottom-color: rgb(var(--zn-primary));
-  }
-}
-
-.editor__tabpanel {
+.editor__tab-panel {
   display: flex;
   flex-direction: column;
-  gap: var(--zn-spacing-medium);
-  padding-top: var(--zn-spacing-medium);
-
-  // Wins over the display:flex above regardless of rule order (higher specificity).
-  &[hidden] {
-    display: none;
-  }
 }
 
 .editor__footer {
@@ -166,7 +155,6 @@
 }
 
 .editor__preview {
-  position: relative;
   overflow: visible;
   flex: 1 1 auto;
   min-width: 0;
@@ -174,8 +162,10 @@
   flex-direction: column;
 }
 
-// A pull tab flush against the controls/preview seam, rather than a dot floating
-// over it. Collapsed there is no seam to attach to, so it becomes a small pill.
+// A pull tab flush against the controls/main seam, rather than a dot floating
+// over it, positioned against .editor__main (not .editor__preview) so it stays
+// centred on the full-height seam rather than just the preview's portion of it.
+// Collapsed there is no seam to attach to, so it becomes a small pill.
 .panel-toggle {
   position: absolute;
   top: 50%;
@@ -246,6 +236,23 @@
 .editor__mode {
   border: 1px solid rgb(var(--zn-border-color));
   border-radius: 4px;
+  // Sole occupant of .editor__controls-header's right side, beside the caption.
+  margin-left: auto;
+}
+
+.editor__sources {
+  width: auto;
+  max-width: 160px;
+
+  // Accessible name only - the label text stays out of the compact toolbar row.
+  &::part(form-control-label) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
 }
 
 .editor__error {
@@ -260,7 +267,7 @@
 
 // 768 must match STACKED_QUERY in theme-editor.component.ts.
 @media (max-width: 768px) {
-  .editor__row {
+  .editor {
     flex-direction: column;
   }
 
@@ -275,8 +282,9 @@
     display: none;
   }
 
-  .editor__preview {
+  .editor__main {
     width: 100%;
+    // Gap between the stacked controls' bottom border and the toolbar below.
     padding-top: var(--zn-spacing-medium);
   }
 

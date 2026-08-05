@@ -1,11 +1,11 @@
-import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
-import {HasSlotController} from "../../internal/slot";
-import {MutationController} from '@lit-labs/observers/mutation-controller.js';
-import {property, state} from 'lit/decorators.js';
-import {Store} from "../../internal/storage";
+import { classMap } from "lit/directives/class-map.js";
+import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
+import { HasSlotController } from "../../internal/slot";
+import { MutationController } from '@lit-labs/observers/mutation-controller.js';
+import { property, state } from 'lit/decorators.js';
+import { Store } from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
-import type {ZnInputEvent} from "../../events/zn-input";
+import type { ZnInputEvent } from "../../events/zn-input";
 import type ZnToggle from "../toggle";
 
 import styles from './collapsible.scss';
@@ -22,32 +22,33 @@ import styles from './collapsible.scss';
  *
  * @csspart header - The header row (toggle).
  * @csspart caption - The caption text.
+ * @csspart content - The expandable content wrapper.
  */
 export default class ZnCollapsible extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({reflect: true}) caption = '';
+  @property({ reflect: true }) caption = '';
 
-  @property({reflect: true}) description: string;
+  @property({ reflect: true }) description: string;
 
-  @property({reflect: true}) label = '';
+  @property({ reflect: true }) label = '';
 
-  @property({type: Boolean, attribute: 'show-number', reflect: true}) showNumber: boolean = false;
+  @property({ type: Boolean, attribute: 'show-number', reflect: true }) showNumber: boolean = false;
 
   // what element name to count
-  @property({type: String, attribute: 'count-element'}) countElement: string = '*';
+  @property({ type: String, attribute: 'count-element' }) countElement: string = '*';
 
-  @property({type: Boolean, reflect: true}) expanded: boolean = false;
+  @property({ type: Boolean, reflect: true }) expanded: boolean = false;
 
-  @property({attribute: 'default'}) defaultState: 'open' | 'closed';
+  @property({ attribute: 'default' }) defaultState: 'open' | 'closed';
 
-  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
+  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage: boolean;
 
-  @property({attribute: 'store-key', reflect: true}) storeKey: string = "";
+  @property({ attribute: 'store-key', reflect: true }) storeKey: string = "";
 
-  @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
+  @property({ attribute: 'store-ttl', type: Number, reflect: true }) storeTtl = 0;
 
-  @property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
+  @property({ attribute: 'flush', type: Boolean, reflect: true }) flush: boolean = false;
 
   @state() numberOfItems: number = 0;
 
@@ -57,7 +58,7 @@ export default class ZnCollapsible extends ZincElement {
 
   private readonly observer = new MutationController(this, {
     target: null,
-    config: {childList: true, subtree: true},
+    config: { childList: true, subtree: true },
     callback: () => this.recalculateNumberOfItems(),
   });
 
@@ -159,10 +160,7 @@ export default class ZnCollapsible extends ZincElement {
               <zn-icon library="material-outlined" src="expand_more" class="expand"></zn-icon>` : ''}
           </div>
         </slot>
-        <div class="${classMap({
-          'content': true,
-          'content--flush': this.flush,
-        })}">
+        <div class=${classMap({ 'content': true, 'content--flush': this.flush, })} part="content">
           <slot @slotchange="${this.requestUpdate}"></slot>
         </div>
       </div>`;

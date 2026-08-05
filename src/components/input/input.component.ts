@@ -826,23 +826,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
                })}>
 
             <span part="prefix" class="input__prefix">
-              ${this.type === 'color'
-                ? html`
-                  <div
-                    class="input__color-swatch"
-                    @click=${this.handleColorSwatchClick}
-                    style="--color-value: ${this.convertToHex(this.value) || '#000000'}">
-                    <div class="input__color-swatch-inner"></div>
-                  </div>
-                  <input
-                    class="input__color-picker"
-                    type="color"
-                    .value=${this.convertToHex(this.value) || '#000000'}
-                    @change=${this.handleColorPickerChange}
-                    @input=${this.handleColorPickerChange}
-                    tabindex="-1"
-                  />`
-                : this.type === 'currency'
+              ${this.type === 'currency'
                 ? html`
                   <zn-icon class="input__prefix-default" src="payments"></zn-icon>`
                 : this.type === 'email' && hasOptionalIcon
@@ -933,6 +917,23 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
 
             <span part="suffix" class="input__suffix">
               <slot name="suffix"></slot>
+              ${this.type === 'color'
+                ? html`
+                  <div
+                    class="input__color-swatch"
+                    @click=${this.handleColorSwatchClick}
+                    style="--color-value: ${this.convertToHex(this.value) || '#000000'}">
+                    <div class="input__color-swatch-inner"></div>
+                  </div>
+                  <input
+                    class="input__color-picker"
+                    type="color"
+                    .value=${this.convertToHex(this.value) || '#000000'}
+                    @change=${this.handleColorPickerChange}
+                    @input=${this.handleColorPickerChange}
+                    tabindex="-1"
+                  />`
+                : ''}
             </span>
           </div>
         </div>

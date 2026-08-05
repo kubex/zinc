@@ -136,7 +136,7 @@ the [Properties table](#properties) for the full list of options.
 
 #### Color Input
 
-The color input type displays a clickable color swatch on the left that opens the browser's native color picker. The color value is shown as editable text in the input field, allowing users to either pick a color visually or enter a color value directly.
+The color input type displays a clickable color swatch on the right that opens the browser's native color picker. The color value is shown as editable text in the input field, allowing users to either pick a color visually or enter a color value directly.
 
 Use the `color-format` attribute to specify the format: `hex` (default), `rgb`, or `oklch`.
 

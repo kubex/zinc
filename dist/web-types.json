@@ -16,6 +16,28 @@
           "js": { "properties": [], "events": [] }
         },
         {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -75,28 +97,6 @@
               { "name": "center", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -4702,7 +4702,7 @@
         },
         {
           "name": "zn-input",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the control loses focus.\n- **zn-change** - Emitted when an alteration to the control's value is committed by the user.\n- **zn-clear** - Emitted when the clear button is activated.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-input** - Emitted when the control receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Methods:**\n - **focus(options: _FocusOptions_)** - Sets focus on the input.\n- **blur()** - Removes focus from the input.\n- **select()** - Selects all the text in the input.\n- **setSelectionRange(selectionStart: _number_, selectionEnd: _number_, selectionDirection: _'forward' | 'backward' | 'none'_)** - Sets the start and end positions of the text selection (0-based).\n- **setRangeText(replacement: _string_, start: _number_, end: _number_, selectMode: _'select' | 'start' | 'end' | 'preserve'_)** - Replaces a range of text with a new string.\n- **showPicker()** - Displays the browser picker for an input element (only works if the browser supports it for the input type).\n- **stepUp()** - Increments the value of a numeric input type by the value of the step attribute.\n- **stepDown()** - Decrements the value of a numeric input type by the value of the step attribute.\n- **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - **label** - The input's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute.\n- **prefix** - Used to prepend a presentational icon or similar element to the input.\n- **suffix** - Used to append a presentational icon or similar element to the input.\n- **clear-icon** - An icon to use in lieu of the default clear icon.\n- **show-password-icon** - An icon to use in lieu of the default show password icon.\n- **hide-password-icon** - An icon to use in lieu of the default hide password icon.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **input** - The internal `<input>` control.\n- **prefix** - The container that wraps the prefix.\n- **clear-button** - The clear button.\n- **password-toggle-button** - The password toggle button.\n- **suffix** - The container that wraps the suffix.",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the control loses focus.\n- **zn-change** - Emitted when an alteration to the control's value is committed by the user.\n- **zn-clear** - Emitted when the clear button is activated.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-input** - Emitted when the control receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Methods:**\n - **focus(options: _FocusOptions_)** - Sets focus on the input.\n- **blur()** - Removes focus from the input.\n- **select()** - Selects all the text in the input.\n- **setSelectionRange(selectionStart: _number_, selectionEnd: _number_, selectionDirection: _'forward' | 'backward' | 'none'_)** - Sets the start and end positions of the text selection (0-based).\n- **setRangeText(replacement: _string_, start: _number_, end: _number_, selectMode: _'select' | 'start' | 'end' | 'preserve'_)** - Replaces a range of text with a new string.\n- **showPicker()** - Displays the browser picker for an input element (only works if the browser supports it for the input type).\n- **stepUp()** - Increments the value of a numeric input type by the value of the step attribute.\n- **stepDown()** - Decrements the value of a numeric input type by the value of the step attribute.\n- **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - **label** - The input's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute. Range inputs display their live value here unless this is set.\n- **prefix** - Used to prepend a presentational icon or similar element to the input.\n- **suffix** - Used to append a presentational icon or similar element to the input.\n- **clear-icon** - An icon to use in lieu of the default clear icon.\n- **show-password-icon** - An icon to use in lieu of the default show password icon.\n- **hide-password-icon** - An icon to use in lieu of the default hide password icon.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--zn-range-track-height** - The height of a range input's track. _(default: undefined)_\n- **--zn-range-track-color** - The color of a range input's track. _(default: undefined)_\n- **--zn-range-thumb-size** - The diameter of a range input's thumb. _(default: undefined)_\n- **--zn-range-thumb-color** - The color of a range input's thumb. _(default: undefined)_\n- **--zn-range-thumb-ring-width** - The width of the ring drawn around a range input's thumb. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **input** - The internal `<input>` control.\n- **prefix** - The container that wraps the prefix.\n- **clear-button** - The clear button.\n- **password-toggle-button** - The password toggle button.\n- **suffix** - The container that wraps the suffix.",
           "doc-url": "",
           "attributes": [
             {
@@ -4713,7 +4713,7 @@
               "name": "type",
               "description": "The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults\nto `text`",
               "value": {
-                "type": "'color' | 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' |\n    'search' | 'tel' | 'text' | 'time' | 'url'",
+                "type": "'color' | 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' |\n    'range' | 'search' | 'tel' | 'text' | 'time' | 'url'",
                 "default": "'text'"
               }
             },
@@ -4814,6 +4814,11 @@
               }
             },
             {
+              "name": "value-suffix",
+              "description": "Appended to the value that range inputs display above the track, on the right, e.g. `rem`. Only applies when type\nis 'range' and no `context-note` is set.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
               "name": "form",
               "description": "By default, form-controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be\nin the same document or shadow root for this to work.",
               "value": { "type": "string" }
@@ -4911,7 +4916,7 @@
             },
             {
               "name": "context-note",
-              "description": "Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute."
+              "description": "Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute. Range inputs display their live value here unless this is set."
             },
             {
               "name": "prefix",
@@ -4972,7 +4977,7 @@
               {
                 "name": "type",
                 "description": "The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults\nto `text`",
-                "type": "'color' | 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' |\n    'search' | 'tel' | 'text' | 'time' | 'url'"
+                "type": "'color' | 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' |\n    'range' | 'search' | 'tel' | 'text' | 'time' | 'url'"
               },
               {
                 "name": "name",
@@ -5068,6 +5073,11 @@
                 "name": "colorFormat",
                 "description": "The color format to display for color inputs. Only applies when type is 'color'. *",
                 "type": "'hex' | 'rgb' | 'hsl' | 'oklch'"
+              },
+              {
+                "name": "valueSuffix",
+                "description": "Appended to the value that range inputs display above the track, on the right, e.g. `rem`. Only applies when type\nis 'range' and no `context-note` is set.",
+                "type": "string"
               },
               {
                 "name": "form",

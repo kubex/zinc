@@ -1880,7 +1880,7 @@ declare module "components/input/input.component" {
      *
      * @slot label - The input's label. Alternatively, you can use the `label` attribute.
      * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.
-     * @slot context-note - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute.
+     * @slot context-note - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute. Range inputs display their live value here unless this is set.
      * @slot prefix - Used to prepend a presentational icon or similar element to the input.
      * @slot suffix - Used to append a presentational icon or similar element to the input.
      * @slot clear-icon - An icon to use in lieu of the default clear icon.
@@ -1898,6 +1898,12 @@ declare module "components/input/input.component" {
      * @csspart clear-button - The clear button.
      * @csspart password-toggle-button - The password toggle button.
      * @csspart suffix - The container that wraps the suffix.
+     *
+     * @cssproperty --zn-range-track-height - The height of a range input's track.
+     * @cssproperty --zn-range-track-color - The color of a range input's track.
+     * @cssproperty --zn-range-thumb-size - The diameter of a range input's thumb.
+     * @cssproperty --zn-range-thumb-color - The color of a range input's thumb.
+     * @cssproperty --zn-range-thumb-ring-width - The width of the ring drawn around a range input's thumb.
      */
     export default class ZnInput extends ZincElement implements ZincFormControl {
         static styles: import("lit").CSSResult;
@@ -1919,7 +1925,7 @@ declare module "components/input/input.component" {
          * The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults
          * to `text`
          */
-        type: 'color' | 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'time' | 'url';
+        type: 'color' | 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' | 'range' | 'search' | 'tel' | 'text' | 'time' | 'url';
         /** The name of the input, submitted as a name/value pair with form data. */
         name: string;
         /** The current value of the input, submitted as a name/value pair with form data. */
@@ -1965,6 +1971,11 @@ declare module "components/input/input.component" {
         noSpinButtons: boolean;
         /** The color format to display for color inputs. Only applies when type is 'color'. **/
         colorFormat: 'hex' | 'rgb' | 'hsl' | 'oklch';
+        /**
+         * Appended to the value that range inputs display above the track, on the right, e.g. `rem`. Only applies when type
+         * is 'range' and no `context-note` is set.
+         */
+        valueSuffix: string;
         /**
          * By default, form-controls are associated with the nearest containing `<form>` element. This attribute allows you
          * to place the form control outside a form and associate it with the form that has this `id`. The form must be
@@ -2046,6 +2057,7 @@ declare module "components/input/input.component" {
         private handleColorSwatchClick;
         private handleColorPickerChange;
         private focusInput;
+        protected firstUpdated(): void;
         handleDisabledChange(): void;
         handleStepChange(): void;
         handleValueChange(): Promise<void>;

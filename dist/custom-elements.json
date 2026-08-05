@@ -49,6 +49,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -237,79 +310,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -17994,6 +17994,28 @@
           "kind": "class",
           "description": "",
           "name": "ZnInput",
+          "cssProperties": [
+            {
+              "description": "The height of a range input's track.",
+              "name": "--zn-range-track-height"
+            },
+            {
+              "description": "The color of a range input's track.",
+              "name": "--zn-range-track-color"
+            },
+            {
+              "description": "The diameter of a range input's thumb.",
+              "name": "--zn-range-thumb-size"
+            },
+            {
+              "description": "The color of a range input's thumb.",
+              "name": "--zn-range-thumb-color"
+            },
+            {
+              "description": "The width of the ring drawn around a range input's thumb.",
+              "name": "--zn-range-thumb-ring-width"
+            }
+          ],
           "cssParts": [
             {
               "description": "The form control that wraps the label, input, and help text.",
@@ -18046,7 +18068,7 @@
               "name": "label-tooltip"
             },
             {
-              "description": "Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute.",
+              "description": "Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute. Range inputs display their live value here unless this is set.",
               "name": "context-note"
             },
             {
@@ -18160,7 +18182,7 @@
               "kind": "field",
               "name": "type",
               "type": {
-                "text": "'color' | 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' |\n    'search' | 'tel' | 'text' | 'time' | 'url'"
+                "text": "'color' | 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' |\n    'range' | 'search' | 'tel' | 'text' | 'time' | 'url'"
               },
               "default": "'text'",
               "description": "The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults\nto `text`",
@@ -18361,6 +18383,16 @@
               "default": "'hex'",
               "description": "The color format to display for color inputs. Only applies when type is 'color'. *",
               "attribute": "color-format"
+            },
+            {
+              "kind": "field",
+              "name": "valueSuffix",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Appended to the value that range inputs display above the track, on the right, e.g. `rem`. Only applies when type\nis 'range' and no `context-note` is set.",
+              "attribute": "value-suffix"
             },
             {
               "kind": "field",
@@ -18966,7 +18998,7 @@
             {
               "name": "type",
               "type": {
-                "text": "'color' | 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' |\n    'search' | 'tel' | 'text' | 'time' | 'url'"
+                "text": "'color' | 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' |\n    'range' | 'search' | 'tel' | 'text' | 'time' | 'url'"
               },
               "default": "'text'",
               "description": "The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults\nto `text`",
@@ -19135,6 +19167,15 @@
               "fieldName": "colorFormat"
             },
             {
+              "name": "value-suffix",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Appended to the value that range inputs display above the track, on the right, e.g. `rem`. Only applies when type\nis 'range' and no `context-note` is set.",
+              "fieldName": "valueSuffix"
+            },
+            {
               "name": "form",
               "type": {
                 "text": "string"
@@ -19274,7 +19315,7 @@
           "tagNameWithoutPrefix": "input",
           "tagName": "zn-input",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/input\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n * @dependency zn-tooltip\n *\n * @event zn-blur - Emitted when the control loses focus.\n * @event zn-change - Emitted when an alteration to the control's value is committed by the user.\n * @event zn-clear - Emitted when the clear button is activated.\n * @event zn-focus - Emitted when the control gains focus.\n * @event zn-input - Emitted when the control receives input.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n *\n * @slot label - The input's label. Alternatively, you can use the `label` attribute.\n * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n * @slot context-note - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute.\n * @slot prefix - Used to prepend a presentational icon or similar element to the input.\n * @slot suffix - Used to append a presentational icon or similar element to the input.\n * @slot clear-icon - An icon to use in lieu of the default clear icon.\n * @slot show-password-icon - An icon to use in lieu of the default show password icon.\n * @slot hide-password-icon - An icon to use in lieu of the default hide password icon.\n * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n *\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart base - The component's base wrapper.\n * @csspart input - The internal `<input>` control.\n * @csspart prefix - The container that wraps the prefix.\n * @csspart clear-button - The clear button.\n * @csspart password-toggle-button - The password toggle button.\n * @csspart suffix - The container that wraps the suffix.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/input\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n * @dependency zn-tooltip\n *\n * @event zn-blur - Emitted when the control loses focus.\n * @event zn-change - Emitted when an alteration to the control's value is committed by the user.\n * @event zn-clear - Emitted when the clear button is activated.\n * @event zn-focus - Emitted when the control gains focus.\n * @event zn-input - Emitted when the control receives input.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n *\n * @slot label - The input's label. Alternatively, you can use the `label` attribute.\n * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n * @slot context-note - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute. Range inputs display their live value here unless this is set.\n * @slot prefix - Used to prepend a presentational icon or similar element to the input.\n * @slot suffix - Used to append a presentational icon or similar element to the input.\n * @slot clear-icon - An icon to use in lieu of the default clear icon.\n * @slot show-password-icon - An icon to use in lieu of the default show password icon.\n * @slot hide-password-icon - An icon to use in lieu of the default hide password icon.\n * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n *\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart base - The component's base wrapper.\n * @csspart input - The internal `<input>` control.\n * @csspart prefix - The container that wraps the prefix.\n * @csspart clear-button - The clear button.\n * @csspart password-toggle-button - The password toggle button.\n * @csspart suffix - The container that wraps the suffix.\n *\n * @cssproperty --zn-range-track-height - The height of a range input's track.\n * @cssproperty --zn-range-track-color - The color of a range input's track.\n * @cssproperty --zn-range-thumb-size - The diameter of a range input's thumb.\n * @cssproperty --zn-range-thumb-color - The color of a range input's thumb.\n * @cssproperty --zn-range-thumb-ring-width - The width of the ring drawn around a range input's thumb.\n */",
           "documentation": "https://zinc.style/components/input",
           "status": "experimental",
           "since": "1.0",

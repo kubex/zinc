@@ -29,8 +29,9 @@ The preview always fills its column, leaving no dead space beneath it.
 it's still forwarded to the [preview frame](/components/preview-frame/), which
 uses it the same way.
 
-Controls can be organized into tabs with collapsible groups inside each —
-`sections` with `groups` below is the canonical arrangement:
+Controls organize themselves into tabs with collapsible groups inside each:
+give each one a `group` and a `category` and the editor builds the structure
+around them, no slot names required.
 
 ```html:preview
 <zn-theme-editor
@@ -38,19 +39,10 @@ Controls can be organized into tabs with collapsible groups inside each —
   src="/components/preview-frame-demo/"
   min-height="420"
   controls-caption="Theme Builder"
-  preview-caption="Live Preview"
-  sections='[
-    {"name":"colors","caption":"Colors","groups":[
-      {"name":"brand","caption":"Brand","open":true},
-      {"name":"background","caption":"Background"}
-    ]},
-    {"name":"shapes","caption":"Shapes","groups":[
-      {"name":"radius","caption":"Radius"}
-    ]}
-  ]'>
-  <zn-input slot="brand" name="accent" label="Accent" value="#6936f5" dark-value="#f5c542" type="color"></zn-input>
-  <zn-input slot="background" name="background" label="Background" value="#ffffff" dark-value="#18181b" type="color"></zn-input>
-  <zn-input slot="radius" name="radius" label="Corner radius" type="number" value="4"></zn-input>
+  preview-caption="Live Preview">
+  <zn-input group="Colors" category="Brand" name="accent" label="Accent" value="#6936f5" dark-value="#f5c542" type="color"></zn-input>
+  <zn-input group="Colors" category="Background" name="background" label="Background" value="#ffffff" dark-value="#18181b" type="color"></zn-input>
+  <zn-input group="Shapes" category="Radius" name="radius" label="Corner radius" type="number" value="4"></zn-input>
 </zn-theme-editor>
 
 <script>
@@ -172,9 +164,44 @@ Set the controls column width with `--zn-theme-editor-controls-width`
 (default `343px`, matching page-builder's palette). Below 768px the columns
 stack.
 
-## Grouping controls into tabs and collapsibles
+## Grouping controls with `group` and `category`
 
-Set `sections` to a JSON array of `{name, caption, groups}`. Each section
+The simplest way to structure an editor is to let the controls describe their
+own place in it. Leave `sections` unset and give each control a `group` (which
+becomes a tab) and a `category` (a collapsible inside that tab) — the editor
+builds the tabs and collapsibles from those labels and slots each control into
+the right one for you, so there are no slot names to keep in sync by hand:
+
+```html
+<zn-theme-editor src="/embed?t=..." frame-origin="https://pay.example">
+  <zn-color-select group="Background &amp; Foreground" category="Colors"
+                   name="background" label="Background" value="#ffffff"></zn-color-select>
+  <zn-color-select group="Background &amp; Foreground" category="Colors"
+                   name="foreground" label="Foreground" value="#18181b"></zn-color-select>
+  <zn-input group="Background &amp; Foreground" category="Spacing"
+            name="gap" label="Gap" type="number" value="8"></zn-input>
+  <zn-input group="Typography" category="Family"
+            name="font" label="Font" value="Inter"></zn-input>
+</zn-theme-editor>
+```
+
+That renders a **Background & Foreground** tab holding *Colors* and *Spacing*
+collapsibles, and a **Typography** tab holding *Family*. Labels are free text —
+they're slugged into slot names internally, and two tabs can each hold a
+category of the same name without colliding.
+
+Either attribute works on its own: a control with only `group` sits directly in
+its tab above any collapsibles, and one with only `category` becomes its own
+top-level section. A control with neither stays in the default slot, ungrouped
+above everything else. Tabs and collapsibles appear in the order the controls
+first mention them, and controls added after mount are derived and slotted the
+same way.
+
+### Declaring the structure explicitly with `sections`
+
+Set `sections` to take full control instead — it disables the attribute
+derivation entirely, and is the way to set a group's `description` or have it
+render `open`. It takes a JSON array of `{name, caption, groups}`. Each section
 becomes a `zn-tabs` tab; each entry in its `groups` — `{name, caption,
 description?, open?}` — becomes a collapsible inside that tab, and a control
 is assigned to a group with `slot="<group-name>"`:

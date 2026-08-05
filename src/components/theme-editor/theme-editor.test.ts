@@ -983,6 +983,123 @@ describe('<zn-theme-editor>', () => {
     });
   });
 
+  describe('structure derived from group/category attributes', () => {
+    const DERIVED_FIXTURE = () => fixture(html`
+      <zn-theme-editor src="about:blank" frame-origin="https://site.example" debounce="10">
+        <zn-input group="Background &amp; Foreground" category="Colors" name="bg" value="#ffffff"></zn-input>
+        <zn-input group="Background &amp; Foreground" category="Colors" name="fg" value="#000000"></zn-input>
+        <zn-input group="Background &amp; Foreground" category="Spacing" name="gap" value="8"></zn-input>
+        <zn-input group="Typography" category="Colors" name="font" value="Inter"></zn-input>
+      </zn-theme-editor>`);
+
+    it('renders and is accessible', async () => {
+      const el = await DERIVED_FIXTURE();
+      await expect(el).to.be.accessible();
+    });
+
+    it('creates a tab per group and a collapsible per category within it', async () => {
+      const el = await DERIVED_FIXTURE();
+
+      const tabs = Array.from(el.shadowRoot!.querySelectorAll('li[tab]')).map(t => t.textContent?.trim());
+      expect(tabs).to.deep.equal(['Background & Foreground', 'Typography']);
+
+      const captions = Array.from(el.shadowRoot!.querySelectorAll('.editor__section'))
+        .map(s => s.getAttribute('caption'));
+      expect(captions).to.deep.equal(['Colors', 'Spacing', 'Colors']);
+    });
+
+    it('slots each control into its derived collapsible and harvests them all', async () => {
+      const el = await DERIVED_FIXTURE();
+
+      // Two tabs each hold a "Colors" category - their slots must not collide.
+      const bgSlot = el.querySelector('zn-input[name="bg"]')!.getAttribute('slot');
+      const fontSlot = el.querySelector('zn-input[name="font"]')!.getAttribute('slot');
+      expect(bgSlot).to.be.a('string').and.not.equal('');
+      expect(fontSlot).to.not.equal(bgSlot);
+      // controls sharing a group+category land in the same slot
+      expect(el.querySelector('zn-input[name="fg"]')!.getAttribute('slot')).to.equal(bgSlot);
+
+      expect((el as HTMLElement & {values: {light: Record<string, unknown>}}).values.light)
+        .to.deep.equal({bg: '#ffffff', fg: '#000000', gap: '8', font: 'Inter'});
+    });
+
+    it('puts a control with only group directly in its tab', async () => {
+      const el = await fixture(html`
+        <zn-theme-editor src="about:blank" frame-origin="https://site.example">
+          <zn-input group="Colors" category="Brand" name="accent" value="#6936f5"></zn-input>
+          <zn-input group="Colors" name="loose" value="x"></zn-input>
+        </zn-theme-editor>`);
+
+      expect(el.shadowRoot!.querySelectorAll('li[tab]').length).to.equal(1);
+      const captions = Array.from(el.shadowRoot!.querySelectorAll('.editor__section'))
+        .map(s => s.getAttribute('caption'));
+      expect(captions).to.deep.equal(['Brand']);
+      expect((el as HTMLElement & {values: {light: Record<string, unknown>}}).values.light)
+        .to.deep.equal({accent: '#6936f5', loose: 'x'});
+    });
+
+    it('treats a control with only category as its own top-level section', async () => {
+      const el = await fixture(html`
+        <zn-theme-editor src="about:blank" frame-origin="https://site.example">
+          <zn-input category="Colors" name="accent" value="#6936f5"></zn-input>
+        </zn-theme-editor>`);
+
+      const captions = Array.from(el.shadowRoot!.querySelectorAll('.editor__section'))
+        .map(s => s.getAttribute('caption'));
+      expect(captions).to.deep.equal(['Colors']);
+      expect((el as HTMLElement & {values: {light: Record<string, unknown>}}).values.light)
+        .to.deep.equal({accent: '#6936f5'});
+    });
+
+    it('an explicit sections wins over the attributes', async () => {
+      const el = await fixture(html`
+        <zn-theme-editor
+          src="about:blank" frame-origin="https://site.example"
+          .sections="${[{name: 'explicit', caption: 'Explicit'}]}">
+          <zn-input slot="explicit" group="Ignored" category="Ignored too" name="accent" value="#6936f5"></zn-input>
+        </zn-theme-editor>`);
+
+      const captions = Array.from(el.shadowRoot!.querySelectorAll('.editor__section'))
+        .map(s => s.getAttribute('caption'));
+      expect(captions).to.deep.equal(['Explicit']);
+      // the explicit slot assignment is left untouched
+      expect(el.querySelector('zn-input')!.getAttribute('slot')).to.equal('explicit');
+    });
+
+    it('derives, slots and pushes a control added after mount', async () => {
+      const el = await fixture(html`
+        <zn-theme-editor src="about:blank" frame-origin="https://site.example">
+          <zn-input group="Colors" category="Brand" name="accent" value="#6936f5"></zn-input>
+        </zn-theme-editor>`);
+      const calls = spyOnFrame(el);
+      expect(el.shadowRoot!.querySelectorAll('li[tab]').length).to.equal(1);
+
+      const added = document.createElement('zn-input');
+      added.setAttribute('group', 'Shapes');
+      added.setAttribute('category', 'Radius');
+      added.setAttribute('name', 'radius');
+      added.setAttribute('value', '4');
+      el.append(added);
+
+      await waitUntil(() => calls.length >= 1);
+      expect((calls[0]['values'] as Record<string, unknown>)['radius']).to.equal('4');
+      await waitUntil(() => el.shadowRoot!.querySelectorAll('li[tab]').length === 2);
+      expect(added.getAttribute('slot')).to.be.a('string').and.not.equal('');
+    });
+
+    it('leaves controls with neither attribute in the default slot', async () => {
+      const el = await fixture(html`
+        <zn-theme-editor src="about:blank" frame-origin="https://site.example">
+          <zn-input group="Colors" category="Brand" name="accent" value="#6936f5"></zn-input>
+          <zn-input name="loose" value="x"></zn-input>
+        </zn-theme-editor>`);
+
+      expect(el.querySelector('zn-input[name="loose"]')!.hasAttribute('slot')).to.be.false;
+      expect((el as HTMLElement & {values: {light: Record<string, unknown>}}).values.light)
+        .to.deep.equal({accent: '#6936f5', loose: 'x'});
+    });
+  });
+
   describe('preview sources', () => {
     it('with sources unset, renders no dropdown and leaves src alone', async () => {
       const el = await fixture(html`

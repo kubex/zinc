@@ -1,4 +1,4 @@
-import { type CSSResultGroup, html, nothing, unsafeCSS } from 'lit';
+import { type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS } from 'lit';
 import { HasSlotController } from '../../internal/slot';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { MutationController } from '@lit-labs/observers/mutation-controller.js';
@@ -62,6 +62,17 @@ interface HarvestableControl extends HTMLElement {
   type?: string;
 }
 
+/** Turns a freeform `group`/`category` label into a slot-safe name. */
+function slugify(label: string): string {
+  return label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+interface DerivedStructure {
+  sections: ThemeEditorSection[];
+  /** The slot name each control must be assigned to. */
+  assignments: Map<Element, string>;
+}
+
 /**
  * @summary A theme editor: slotted form controls drive a live preview frame,
  * with a toolbar for the preview's light/dark mode and device width.
@@ -89,6 +100,14 @@ interface HarvestableControl extends HTMLElement {
  * `groups` entry) render inside that section/group instead. Harvesting and
  * change detection walk every slot's full assigned subtree, not just direct
  * children.
+ *
+ * With `sections` left unset, the structure is instead derived from the
+ * controls' own attributes: `group="<label>"` becomes a tab and
+ * `category="<label>"` a collapsible within it, and the control is slotted
+ * into that collapsible automatically. Either attribute works alone - a
+ * control with only `group` sits directly in its tab, and one with only
+ * `category` becomes its own top-level section. Setting `sections`
+ * explicitly disables the derivation entirely.
  * @slot toolbar - Actions in the toolbar, right-aligned beside the device
  * controls. Where a save button belongs.
  * @slot footer - Actions pinned beneath the controls. The built-in submit button
@@ -150,10 +169,11 @@ export default class ZnThemeEditor extends ZincElement {
   @property({ type: Number, attribute: 'save-debounce' }) saveDebounce = 1000;
 
   /**
-   * Groups controls into named sections. Empty/unset renders one ungrouped
-   * column. A section with a non-empty `groups` nests a collapsible per
-   * group inside a `zn-tabs` tab for that section - see `groups` on
-   * `ThemeEditorSection`.
+   * Groups controls into named sections. Empty/unset falls back to deriving the
+   * structure from the controls' own `group`/`category` attributes, and renders
+   * one ungrouped column when they carry neither. A section with a non-empty
+   * `groups` nests a collapsible per group inside a `zn-tabs` tab for that
+   * section - see `groups` on `ThemeEditorSection`.
    */
   @property({ type: Array }) sections: ThemeEditorSection[] = [];
 
@@ -595,9 +615,93 @@ export default class ZnThemeEditor extends ZincElement {
     return Array.isArray(section?.groups) ? section.groups : [];
   }
 
+  /** Whether any direct child carries the `group`/`category` structure attributes. */
+  private _hasStructureAttributes(): boolean {
+    return Array.from(this.children).some(el => el.hasAttribute('group') || el.hasAttribute('category'));
+  }
+
+  /** Attribute-derived structure applies only when `sections` is left unset. */
+  private _usesDerivedSections(): boolean {
+    return this._sectionsSafe().length === 0 && this._hasStructureAttributes();
+  }
+
+  /**
+   * Builds the tab/collapsible tree from the controls' own `group` (tab) and
+   * `category` (collapsible) attributes, alongside the slot name each control
+   * needs assigning to. Only direct children are considered, since `slot` only
+   * works one level deep. Slot names are slugged from the labels and made
+   * unique across the whole tree, so two tabs can each hold a "Colors"
+   * category without their slots colliding.
+   */
+  private _derive(): DerivedStructure {
+    const used = new Set<string>();
+    const unique = (label: string) => {
+      const base = slugify(label) || 'group';
+      let name = base;
+      for (let i = 2; used.has(name); i++) name = `${base}-${i}`;
+      used.add(name);
+      return name;
+    };
+
+    const sections = new Map<string, ThemeEditorSection & { groups: ThemeEditorGroup[] }>();
+    const groupNames = new Map<string, string>();
+    const assignments = new Map<Element, string>();
+
+    for (const child of Array.from(this.children)) {
+      const group = child.getAttribute('group')?.trim() ?? '';
+      const category = child.getAttribute('category')?.trim() ?? '';
+      if (!group && !category) continue;
+
+      // A `category` with no `group` becomes its own top-level section.
+      const sectionLabel = group || category;
+      let section = sections.get(sectionLabel);
+      if (!section) {
+        section = { name: unique(sectionLabel), caption: sectionLabel, groups: [] };
+        sections.set(sectionLabel, section);
+      }
+
+      // Only one of the two present: the control sits directly in the section.
+      if (!group || !category) {
+        assignments.set(child, section.name);
+        continue;
+      }
+
+      const key = `${sectionLabel} ${category}`;
+      let groupName = groupNames.get(key);
+      if (!groupName) {
+        groupName = unique(`${sectionLabel}-${category}`);
+        groupNames.set(key, groupName);
+        section.groups.push({ name: groupName, caption: category });
+      }
+      assignments.set(child, groupName);
+    }
+
+    return { sections: Array.from(sections.values()), assignments };
+  }
+
+  /** Explicit `sections` when set, otherwise the attribute-derived tree. */
+  private _effectiveSections(): ThemeEditorSection[] {
+    return this._usesDerivedSections() ? this._derive().sections : this._sectionsSafe();
+  }
+
+  // Assignment is idempotent: the `slot` attribute is only written when it
+  // actually differs, so the slotchange this triggers settles in one pass. The
+  // observer's childList-only config means these writes never feed back into it.
+  private _assignDerivedSlots() {
+    if (!this._usesDerivedSections()) return;
+    for (const [el, slotName] of this._derive().assignments) {
+      if (el.getAttribute('slot') !== slotName) el.setAttribute('slot', slotName);
+    }
+  }
+
+  protected willUpdate(changed: PropertyValues) {
+    super.willUpdate(changed);
+    this._assignDerivedSlots();
+  }
+
   /** Whether any section has a populated `groups` - the switch to nested tabs+collapsibles. */
   private _hasNestedGroups(): boolean {
-    return this._sectionsSafe().some(section => this._groupsFor(section).length > 0);
+    return this._effectiveSections().some(section => this._groupsFor(section).length > 0);
   }
 
   private _visibleGroups(section: ThemeEditorSection): ThemeEditorGroup[] {
@@ -606,7 +710,7 @@ export default class ZnThemeEditor extends ZincElement {
 
   /** Configured sections that have an assigned control, or (nested) a populated group - shared by every presentation. */
   private _visibleSections(): ThemeEditorSection[] {
-    const sections = this._sectionsSafe();
+    const sections = this._effectiveSections();
     return this._hasNestedGroups()
       ? sections.filter(section => this._visibleGroups(section).length > 0)
       : sections.filter(section => this._hasAssignedControls(section.name));
@@ -684,7 +788,10 @@ export default class ZnThemeEditor extends ZincElement {
               @input="${this._onControlChange}">
               <slot @slotchange="${this._onSlotChange}"></slot>
               ${this._hasNestedGroups()
-                ? this._renderTabs(section => this._renderGroups(section))
+                ? this._renderTabs(section => html`
+                    ${this._hasAssignedControls(section.name) ? html`
+                      <slot name="${section.name}" class="editor__section-slot" @slotchange="${this._onSlotChange}"></slot>` : nothing}
+                    ${this._renderGroups(section)}`)
                 : this.sectionLayout === 'tabs'
                   ? this._renderTabs(section => html`
                       <slot name="${section.name}" class="editor__section-slot" @slotchange="${this._onSlotChange}"></slot>`)

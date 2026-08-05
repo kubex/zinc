@@ -1390,6 +1390,7 @@ declare module "components/collapsible/collapsible.component" {
      *
      * @csspart header - The header row (toggle).
      * @csspart caption - The caption text.
+     * @csspart content - The expandable content wrapper.
      */
     export default class ZnCollapsible extends ZincElement {
         static styles: CSSResultGroup;

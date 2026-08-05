@@ -5419,6 +5419,10 @@
             {
               "description": "The caption text.",
               "name": "caption"
+            },
+            {
+              "description": "The expandable content wrapper.",
+              "name": "content"
             }
           ],
           "slots": [
@@ -5561,7 +5565,7 @@
               "name": "observer",
               "privacy": "private",
               "readonly": true,
-              "default": "new MutationController(this, { target: null, config: {childList: true, subtree: true}, callback: () => this.recalculateNumberOfItems(), })"
+              "default": "new MutationController(this, { target: null, config: { childList: true, subtree: true }, callback: () => this.recalculateNumberOfItems(), })"
             },
             {
               "kind": "field",
@@ -5682,7 +5686,7 @@
           "tagNameWithoutPrefix": "collapsible",
           "tagName": "zn-collapsible",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Toggles between showing and hiding content when clicked\n * @documentation https://zinc.style/components/collapsible\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon - The icon element\n *\n * @slot header - Clicking will toggle the show state of the data\n *\n * @csspart header - The header row (toggle).\n * @csspart caption - The caption text.\n */",
+          "jsDoc": "/**\n * @summary Toggles between showing and hiding content when clicked\n * @documentation https://zinc.style/components/collapsible\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon - The icon element\n *\n * @slot header - Clicking will toggle the show state of the data\n *\n * @csspart header - The header row (toggle).\n * @csspart caption - The caption text.\n * @csspart content - The expandable content wrapper.\n */",
           "documentation": "https://zinc.style/components/collapsible",
           "status": "experimental",
           "since": "1.0",

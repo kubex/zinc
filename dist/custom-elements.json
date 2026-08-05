@@ -39906,32 +39906,20 @@
               "name": "base"
             },
             {
-              "description": "The device and mode switcher, spanning the full width.",
-              "name": "toolbar"
-            },
-            {
-              "description": "The left-hand controls column.",
+              "description": "The left-hand controls column, full height.",
               "name": "controls"
             },
             {
-              "description": "A rendered section's collapsible (`section-layout=\"collapsible\"`).",
+              "description": "The controls column's header row: `controls-caption` on the left, the light/dark mode toggle on the right.",
+              "name": "controls-header"
+            },
+            {
+              "description": "The preview column's header row: `preview-caption` on the left, the device switcher (and sources/submit) on the right. Spans the preview column only.",
+              "name": "toolbar"
+            },
+            {
+              "description": "A rendered section's or group's collapsible (`section-layout=\"collapsible\"`, or any nested group).",
               "name": "section"
-            },
-            {
-              "description": "Non-scrolling wrapper around the tablist; carries the border and right-edge overflow fade.",
-              "name": "tablist-wrap"
-            },
-            {
-              "description": "The section tab strip (`section-layout=\"tabs\"`), a single-row horizontal scroller.",
-              "name": "tablist"
-            },
-            {
-              "description": "A section's tab button.",
-              "name": "tab"
-            },
-            {
-              "description": "A section's tab panel.",
-              "name": "tabpanel"
             },
             {
               "description": "The footer wrapper beneath the controls.",
@@ -39964,11 +39952,11 @@
           ],
           "slots": [
             {
-              "description": "Ungrouped theme controls, rendered above any sections. Controls assigned `slot=\"<name>\"` matching a `sections` entry render inside that section instead. Harvesting and change detection walk every slot's full assigned subtree, not just direct children.",
+              "description": "Ungrouped theme controls, rendered above any sections. Controls assigned `slot=\"<name>\"` matching a `sections` entry (or, when nested, a `groups` entry) render inside that section/group instead. Harvesting and change detection walk every slot's full assigned subtree, not just direct children.",
               "name": ""
             },
             {
-              "description": "Actions in the toolbar, right-aligned beside the device and mode controls. Where a save button belongs.",
+              "description": "Actions in the toolbar, right-aligned beside the device controls. Where a save button belongs.",
               "name": "toolbar"
             },
             {
@@ -39984,7 +39972,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ 'zn-collapsible': ZnCollapsible, 'zn-preview-frame': ZnPreviewFrame, 'zn-icon': ZnIcon, 'zn-button': ZnButton, }"
+              "default": "{ 'zn-collapsible': ZnCollapsible, 'zn-preview-frame': ZnPreviewFrame, 'zn-icon': ZnIcon, 'zn-button': ZnButton, 'zn-tabs': ZnTabs, 'zn-navbar': ZnNavbar, 'zn-select': ZnSelect, 'zn-option': ZnOption, }"
             },
             {
               "kind": "field",
@@ -40085,7 +40073,7 @@
                 "text": "ThemeEditorSection[]"
               },
               "default": "[]",
-              "description": "Groups controls into named, collapsible sections. Empty/unset renders one ungrouped column.",
+              "description": "Groups controls into named sections. Empty/unset renders one ungrouped\ncolumn. A section with a non-empty `groups` nests a collapsible per\ngroup inside a `zn-tabs` tab for that section - see `groups` on\n`ThemeEditorSection`.",
               "attribute": "sections"
             },
             {
@@ -40095,8 +40083,18 @@
                 "text": "'collapsible' | 'tabs'"
               },
               "default": "'collapsible'",
-              "description": "Presentation for `sections`: stacked `zn-collapsible`s (default) or a tab\nstrip. Reuses `sections` and its named slots verbatim; `description` and\n`open` are ignored in `tabs`.",
+              "description": "Presentation for flat, group-less `sections`: stacked `zn-collapsible`s\n(default) or a `zn-tabs` strip. Ignored once any section has `groups` -\nnested sections always render as tabs.",
               "attribute": "section-layout"
+            },
+            {
+              "kind": "field",
+              "name": "sources",
+              "type": {
+                "text": "ThemeEditorSource[]"
+              },
+              "default": "[]",
+              "description": "Dropdown of preview sources, `{label, src}`, rendered in the toolbar. Empty/unset renders no dropdown; the first entry wins over an explicit `src` when non-empty.",
+              "attribute": "sources"
             },
             {
               "kind": "field",
@@ -40119,6 +40117,26 @@
               "description": "Presents the editor as its own bordered, rounded panel with a plain preview backdrop, rather than embedded in a dotted canvas.",
               "attribute": "standalone",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "controlsCaption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Caption in the controls column's header row. Empty (default) renders no text; the row itself always renders.",
+              "attribute": "controls-caption"
+            },
+            {
+              "kind": "field",
+              "name": "previewCaption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Caption at the left of the toolbar, opposite the device and mode controls. Empty (default) renders no text.",
+              "attribute": "preview-caption"
             },
             {
               "kind": "field",
@@ -40183,12 +40201,12 @@
             },
             {
               "kind": "field",
-              "name": "_activeTab",
+              "name": "_sourceIndex",
               "type": {
-                "text": "string"
+                "text": "number"
               },
               "privacy": "private",
-              "default": "''"
+              "default": "0"
             },
             {
               "kind": "field",
@@ -40281,7 +40299,7 @@
               },
               "privacy": "private",
               "readonly": true,
-              "default": "{childList: true, subtree: true}"
+              "default": "{ childList: true, subtree: true }"
             },
             {
               "kind": "field",
@@ -40297,7 +40315,7 @@
                 "text": "Record<ThemeEditorMode, Record<string, unknown>>"
               },
               "privacy": "private",
-              "default": "{light: {}, dark: {}}"
+              "default": "{ light: {}, dark: {} }"
             },
             {
               "kind": "field",
@@ -40312,7 +40330,7 @@
               "kind": "field",
               "name": "values",
               "type": {
-                "text": "{light: Record<string, unknown>; dark: Record<string, unknown>}"
+                "text": "{ light: Record<string, unknown>; dark: Record<string, unknown> }"
               },
               "description": "The current per-mode value sets. Returns copies.",
               "readonly": true
@@ -40343,7 +40361,7 @@
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "{name: string; control: HarvestableControl}[]"
+                  "text": "{ name: string; control: HarvestableControl }[]"
                 }
               },
               "description": "Walks every control slot (default and sections) for every enabled, named control."
@@ -40539,6 +40557,89 @@
             },
             {
               "kind": "method",
+              "name": "_sourcesSafe",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ThemeEditorSource[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_frameSrc",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_onSourceChange",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_sectionsSafe",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ThemeEditorSection[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_groupsFor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ThemeEditorGroup[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "section",
+                  "type": {
+                    "text": "ThemeEditorSection"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_hasNestedGroups",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Whether any section has a populated `groups` - the switch to nested tabs+collapsibles."
+            },
+            {
+              "kind": "method",
+              "name": "_visibleGroups",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ThemeEditorGroup[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "section",
+                  "type": {
+                    "text": "ThemeEditorSection"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "_visibleSections",
               "privacy": "private",
               "return": {
@@ -40546,7 +40647,7 @@
                   "text": "ThemeEditorSection[]"
                 }
               },
-              "description": "Configured sections that have an assigned control - shared by both section-layout presentations."
+              "description": "Configured sections that have an assigned control, or (nested) a populated group - shared by every presentation."
             },
             {
               "kind": "method",
@@ -40555,53 +40656,29 @@
             },
             {
               "kind": "method",
-              "name": "_activeTabName",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "sections",
-                  "type": {
-                    "text": "ThemeEditorSection[]"
-                  }
-                }
-              ],
-              "description": "The active tab, falling back to the first visible section if the tracked name no longer matches one."
-            },
-            {
-              "kind": "field",
-              "name": "_setActiveTab",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "_scrollTabIntoView",
+              "name": "_renderGroups",
               "privacy": "private",
               "parameters": [
                 {
-                  "name": "name",
+                  "name": "section",
                   "type": {
-                    "text": "string"
+                    "text": "ThemeEditorSection"
                   }
                 }
-              ],
-              "description": "Keeps a tab reachable in the single-row scroller when it becomes active."
-            },
-            {
-              "kind": "field",
-              "name": "_onTabKeydown",
-              "privacy": "private",
-              "readonly": true
+              ]
             },
             {
               "kind": "method",
               "name": "_renderTabs",
-              "privacy": "private"
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "panel",
+                  "type": {
+                    "text": "(section: ThemeEditorSection) => unknown"
+                  }
+                }
+              ]
             }
           ],
           "events": [
@@ -40706,7 +40783,7 @@
                 "text": "ThemeEditorSection[]"
               },
               "default": "[]",
-              "description": "Groups controls into named, collapsible sections. Empty/unset renders one ungrouped column.",
+              "description": "Groups controls into named sections. Empty/unset renders one ungrouped\ncolumn. A section with a non-empty `groups` nests a collapsible per\ngroup inside a `zn-tabs` tab for that section - see `groups` on\n`ThemeEditorSection`.",
               "fieldName": "sections"
             },
             {
@@ -40715,8 +40792,17 @@
                 "text": "'collapsible' | 'tabs'"
               },
               "default": "'collapsible'",
-              "description": "Presentation for `sections`: stacked `zn-collapsible`s (default) or a tab\nstrip. Reuses `sections` and its named slots verbatim; `description` and\n`open` are ignored in `tabs`.",
+              "description": "Presentation for flat, group-less `sections`: stacked `zn-collapsible`s\n(default) or a `zn-tabs` strip. Ignored once any section has `groups` -\nnested sections always render as tabs.",
               "fieldName": "sectionLayout"
+            },
+            {
+              "name": "sources",
+              "type": {
+                "text": "ThemeEditorSource[]"
+              },
+              "default": "[]",
+              "description": "Dropdown of preview sources, `{label, src}`, rendered in the toolbar. Empty/unset renders no dropdown; the first entry wins over an explicit `src` when non-empty.",
+              "fieldName": "sources"
             },
             {
               "name": "controls-collapsed",
@@ -40735,6 +40821,24 @@
               "default": "false",
               "description": "Presents the editor as its own bordered, rounded panel with a plain preview backdrop, rather than embedded in a dotted canvas.",
               "fieldName": "standalone"
+            },
+            {
+              "name": "controls-caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Caption in the controls column's header row. Empty (default) renders no text; the row itself always renders.",
+              "fieldName": "controlsCaption"
+            },
+            {
+              "name": "preview-caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Caption at the left of the toolbar, opposite the device and mode controls. Empty (default) renders no text.",
+              "fieldName": "previewCaption"
             },
             {
               "name": "submit-label",
@@ -40763,7 +40867,7 @@
           "tagNameWithoutPrefix": "theme-editor",
           "tagName": "zn-theme-editor",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A theme editor: slotted form controls drive a live preview frame,\n * with a toolbar for the preview's light/dark mode and device width.\n * @documentation https://zinc.style/components/theme-editor\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-collapsible\n * @dependency zn-preview-frame\n * @dependency zn-icon\n * @dependency zn-button\n *\n * @event zn-theme-change - Emitted when the values, mode or device change.\n * @event zn-theme-submit - Emitted on submit (button click), carrying the\n * current values. With `action` set, only fires after a successful save.\n * @event zn-error - Emitted when a save fails. Also seen for preview render\n * failures: the frame's zn-error is composed and not stopped, so it bubbles\n * out through the editor too.\n *\n * @slot - Ungrouped theme controls, rendered above any sections. Controls\n * assigned `slot=\"<name>\"` matching a `sections` entry render inside that\n * section instead. Harvesting and change detection walk every slot's full\n * assigned subtree, not just direct children.\n * @slot toolbar - Actions in the toolbar, right-aligned beside the device and\n * mode controls. Where a save button belongs.\n * @slot footer - Actions pinned beneath the controls. The built-in submit button\n * lives in the toolbar, not here.\n *\n * @csspart base - The component's base wrapper.\n * @csspart toolbar - The device and mode switcher, spanning the full width.\n * @csspart controls - The left-hand controls column.\n * @csspart section - A rendered section's collapsible (`section-layout=\"collapsible\"`).\n * @csspart tablist-wrap - Non-scrolling wrapper around the tablist; carries the border and right-edge overflow fade.\n * @csspart tablist - The section tab strip (`section-layout=\"tabs\"`), a single-row horizontal scroller.\n * @csspart tab - A section's tab button.\n * @csspart tabpanel - A section's tab panel.\n * @csspart footer - The footer wrapper beneath the controls.\n * @csspart preview - The preview column.\n * @csspart error - The inline error strip.\n * @csspart preview__base - The frame's base wrapper (forwarded from zn-preview-frame).\n * @csspart preview__stage - The frame's device-width wrapper (forwarded from zn-preview-frame).\n * @csspart preview__iframe - The frame's iframe (forwarded from zn-preview-frame).\n * @csspart preview__error - The frame's own error overlay (forwarded from zn-preview-frame).\n *\n * @cssproperty --zn-theme-editor-controls-width - Width of the controls column.\n */",
+          "jsDoc": "/**\n * @summary A theme editor: slotted form controls drive a live preview frame,\n * with a toolbar for the preview's light/dark mode and device width.\n * @documentation https://zinc.style/components/theme-editor\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-collapsible\n * @dependency zn-preview-frame\n * @dependency zn-icon\n * @dependency zn-button\n * @dependency zn-tabs\n * @dependency zn-navbar\n * @dependency zn-select\n *\n * @event zn-theme-change - Emitted when the values, mode or device change.\n * @event zn-theme-submit - Emitted on submit (button click), carrying the\n * current values. With `action` set, only fires after a successful save.\n * @event zn-error - Emitted when a save fails. Also seen for preview render\n * failures: the frame's zn-error is composed and not stopped, so it bubbles\n * out through the editor too.\n *\n * @slot - Ungrouped theme controls, rendered above any sections. Controls\n * assigned `slot=\"<name>\"` matching a `sections` entry (or, when nested, a\n * `groups` entry) render inside that section/group instead. Harvesting and\n * change detection walk every slot's full assigned subtree, not just direct\n * children.\n * @slot toolbar - Actions in the toolbar, right-aligned beside the device\n * controls. Where a save button belongs.\n * @slot footer - Actions pinned beneath the controls. The built-in submit button\n * lives in the toolbar, not here.\n *\n * @csspart base - The component's base wrapper.\n * @csspart controls - The left-hand controls column, full height.\n * @csspart controls-header - The controls column's header row: `controls-caption` on the left, the light/dark mode toggle on the right.\n * @csspart toolbar - The preview column's header row: `preview-caption` on the left, the device switcher (and sources/submit) on the right. Spans the preview column only.\n * @csspart section - A rendered section's or group's collapsible (`section-layout=\"collapsible\"`, or any nested group).\n * @csspart footer - The footer wrapper beneath the controls.\n * @csspart preview - The preview column.\n * @csspart error - The inline error strip.\n * @csspart preview__base - The frame's base wrapper (forwarded from zn-preview-frame).\n * @csspart preview__stage - The frame's device-width wrapper (forwarded from zn-preview-frame).\n * @csspart preview__iframe - The frame's iframe (forwarded from zn-preview-frame).\n * @csspart preview__error - The frame's own error overlay (forwarded from zn-preview-frame).\n *\n * @cssproperty --zn-theme-editor-controls-width - Width of the controls column.\n */",
           "documentation": "https://zinc.style/components/theme-editor",
           "status": "experimental",
           "since": "1.0",
@@ -40771,7 +40875,10 @@
             "zn-collapsible",
             "zn-preview-frame",
             "zn-icon",
-            "zn-button"
+            "zn-button",
+            "zn-tabs",
+            "zn-navbar",
+            "zn-select"
           ]
         }
       ],

@@ -9755,7 +9755,7 @@
         },
         {
           "name": "zn-theme-editor",
-          "description": "A theme editor: slotted form controls drive a live preview frame,\nwith a toolbar for the preview's light/dark mode and device width.\n---\n\n\n### **Events:**\n - **zn-theme-change** - Emitted when the values, mode or device change.\n- **zn-theme-submit** - Emitted on submit (button click), carrying the current values. With `action` set, only fires after a successful save.\n- **zn-error** - Emitted when a save fails. Also seen for preview render failures: the frame's zn-error is composed and not stopped, so it bubbles out through the editor too.\n\n### **Slots:**\n - _default_ - Ungrouped theme controls, rendered above any sections. Controls assigned `slot=\"<name>\"` matching a `sections` entry render inside that section instead. Harvesting and change detection walk every slot's full assigned subtree, not just direct children.\n- **toolbar** - Actions in the toolbar, right-aligned beside the device and mode controls. Where a save button belongs.\n- **footer** - Actions pinned beneath the controls. The built-in submit button lives in the toolbar, not here.\n\n### **CSS Properties:**\n - **--zn-theme-editor-controls-width** - Width of the controls column. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The device and mode switcher, spanning the full width.\n- **controls** - The left-hand controls column.\n- **section** - A rendered section's collapsible (`section-layout=\"collapsible\"`).\n- **tablist-wrap** - Non-scrolling wrapper around the tablist; carries the border and right-edge overflow fade.\n- **tablist** - The section tab strip (`section-layout=\"tabs\"`), a single-row horizontal scroller.\n- **tab** - A section's tab button.\n- **tabpanel** - A section's tab panel.\n- **footer** - The footer wrapper beneath the controls.\n- **preview** - The preview column.\n- **error** - The inline error strip.\n- **preview__base** - The frame's base wrapper (forwarded from zn-preview-frame).\n- **preview__stage** - The frame's device-width wrapper (forwarded from zn-preview-frame).\n- **preview__iframe** - The frame's iframe (forwarded from zn-preview-frame).\n- **preview__error** - The frame's own error overlay (forwarded from zn-preview-frame).",
+          "description": "A theme editor: slotted form controls drive a live preview frame,\nwith a toolbar for the preview's light/dark mode and device width.\n---\n\n\n### **Events:**\n - **zn-theme-change** - Emitted when the values, mode or device change.\n- **zn-theme-submit** - Emitted on submit (button click), carrying the current values. With `action` set, only fires after a successful save.\n- **zn-error** - Emitted when a save fails. Also seen for preview render failures: the frame's zn-error is composed and not stopped, so it bubbles out through the editor too.\n\n### **Slots:**\n - _default_ - Ungrouped theme controls, rendered above any sections. Controls assigned `slot=\"<name>\"` matching a `sections` entry (or, when nested, a `groups` entry) render inside that section/group instead. Harvesting and change detection walk every slot's full assigned subtree, not just direct children.\n- **toolbar** - Actions in the toolbar, right-aligned beside the device controls. Where a save button belongs.\n- **footer** - Actions pinned beneath the controls. The built-in submit button lives in the toolbar, not here.\n\n### **CSS Properties:**\n - **--zn-theme-editor-controls-width** - Width of the controls column. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **controls** - The left-hand controls column, full height.\n- **controls-header** - The controls column's header row: `controls-caption` on the left, the light/dark mode toggle on the right.\n- **toolbar** - The preview column's header row: `preview-caption` on the left, the device switcher (and sources/submit) on the right. Spans the preview column only.\n- **section** - A rendered section's or group's collapsible (`section-layout=\"collapsible\"`, or any nested group).\n- **footer** - The footer wrapper beneath the controls.\n- **preview** - The preview column.\n- **error** - The inline error strip.\n- **preview__base** - The frame's base wrapper (forwarded from zn-preview-frame).\n- **preview__stage** - The frame's device-width wrapper (forwarded from zn-preview-frame).\n- **preview__iframe** - The frame's iframe (forwarded from zn-preview-frame).\n- **preview__error** - The frame's own error overlay (forwarded from zn-preview-frame).",
           "doc-url": "",
           "attributes": [
             {
@@ -9805,16 +9805,21 @@
             },
             {
               "name": "sections",
-              "description": "Groups controls into named, collapsible sections. Empty/unset renders one ungrouped column.",
+              "description": "Groups controls into named sections. Empty/unset renders one ungrouped\ncolumn. A section with a non-empty `groups` nests a collapsible per\ngroup inside a `zn-tabs` tab for that section - see `groups` on\n`ThemeEditorSection`.",
               "value": { "type": "ThemeEditorSection[]", "default": "[]" }
             },
             {
               "name": "section-layout",
-              "description": "Presentation for `sections`: stacked `zn-collapsible`s (default) or a tab\nstrip. Reuses `sections` and its named slots verbatim; `description` and\n`open` are ignored in `tabs`.",
+              "description": "Presentation for flat, group-less `sections`: stacked `zn-collapsible`s\n(default) or a `zn-tabs` strip. Ignored once any section has `groups` -\nnested sections always render as tabs.",
               "value": {
                 "type": "'collapsible' | 'tabs'",
                 "default": "'collapsible'"
               }
+            },
+            {
+              "name": "sources",
+              "description": "Dropdown of preview sources, `{label, src}`, rendered in the toolbar. Empty/unset renders no dropdown; the first entry wins over an explicit `src` when non-empty.",
+              "value": { "type": "ThemeEditorSource[]", "default": "[]" }
             },
             {
               "name": "controls-collapsed",
@@ -9825,6 +9830,16 @@
               "name": "standalone",
               "description": "Presents the editor as its own bordered, rounded panel with a plain preview backdrop, rather than embedded in a dotted canvas.",
               "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "controls-caption",
+              "description": "Caption in the controls column's header row. Empty (default) renders no text; the row itself always renders.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "preview-caption",
+              "description": "Caption at the left of the toolbar, opposite the device and mode controls. Empty (default) renders no text.",
+              "value": { "type": "string", "default": "''" }
             },
             {
               "name": "submit-label",
@@ -9840,11 +9855,11 @@
           "slots": [
             {
               "name": "",
-              "description": "Ungrouped theme controls, rendered above any sections. Controls assigned `slot=\"<name>\"` matching a `sections` entry render inside that section instead. Harvesting and change detection walk every slot's full assigned subtree, not just direct children."
+              "description": "Ungrouped theme controls, rendered above any sections. Controls assigned `slot=\"<name>\"` matching a `sections` entry (or, when nested, a `groups` entry) render inside that section/group instead. Harvesting and change detection walk every slot's full assigned subtree, not just direct children."
             },
             {
               "name": "toolbar",
-              "description": "Actions in the toolbar, right-aligned beside the device and mode controls. Where a save button belongs."
+              "description": "Actions in the toolbar, right-aligned beside the device controls. Where a save button belongs."
             },
             {
               "name": "footer",
@@ -9914,13 +9929,18 @@
               },
               {
                 "name": "sections",
-                "description": "Groups controls into named, collapsible sections. Empty/unset renders one ungrouped column.",
+                "description": "Groups controls into named sections. Empty/unset renders one ungrouped\ncolumn. A section with a non-empty `groups` nests a collapsible per\ngroup inside a `zn-tabs` tab for that section - see `groups` on\n`ThemeEditorSection`.",
                 "type": "ThemeEditorSection[]"
               },
               {
                 "name": "sectionLayout",
-                "description": "Presentation for `sections`: stacked `zn-collapsible`s (default) or a tab\nstrip. Reuses `sections` and its named slots verbatim; `description` and\n`open` are ignored in `tabs`.",
+                "description": "Presentation for flat, group-less `sections`: stacked `zn-collapsible`s\n(default) or a `zn-tabs` strip. Ignored once any section has `groups` -\nnested sections always render as tabs.",
                 "type": "'collapsible' | 'tabs'"
+              },
+              {
+                "name": "sources",
+                "description": "Dropdown of preview sources, `{label, src}`, rendered in the toolbar. Empty/unset renders no dropdown; the first entry wins over an explicit `src` when non-empty.",
+                "type": "ThemeEditorSource[]"
               },
               {
                 "name": "controlsCollapsed",
@@ -9931,6 +9951,16 @@
                 "name": "standalone",
                 "description": "Presents the editor as its own bordered, rounded panel with a plain preview backdrop, rather than embedded in a dotted canvas.",
                 "type": "boolean"
+              },
+              {
+                "name": "controlsCaption",
+                "description": "Caption in the controls column's header row. Empty (default) renders no text; the row itself always renders.",
+                "type": "string"
+              },
+              {
+                "name": "previewCaption",
+                "description": "Caption at the left of the toolbar, opposite the device and mode controls. Empty (default) renders no text.",
+                "type": "string"
               },
               {
                 "name": "submitLabel",
@@ -9946,7 +9976,7 @@
               {
                 "name": "values",
                 "description": "The current per-mode value sets. Returns copies.",
-                "type": "{light: Record<string, unknown>; dark: Record<string, unknown>}"
+                "type": "{ light: Record<string, unknown>; dark: Record<string, unknown> }"
               },
               {
                 "name": "activeValues",

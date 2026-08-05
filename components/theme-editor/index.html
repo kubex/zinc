@@ -562,8 +562,11 @@
             <li data-level="2"><a href="#reading-and-persisting-values">Reading and Persisting Values</a></li>
             <li data-level="3"><a href="#manual-saving-with-a-submit-button">Manual saving with a submit button</a></li>
             <li data-level="2"><a href="#controls">Controls</a></li>
-            <li data-level="2"><a href="#grouping-controls-into-sections">Grouping controls into sections</a></li>
-            <li data-level="2"><a href="#tabbed-sections">Tabbed sections</a></li>
+            <li data-level="2">
+              <a href="#grouping-controls-into-tabs-and-collapsibles">Grouping controls into tabs and collapsibles</a>
+            </li>
+            <li data-level="3"><a href="#flat-sections-no-groups">Flat sections (no groups)</a></li>
+            <li data-level="2"><a href="#preview-sources">Preview sources</a></li>
             <li data-level="2"><a href="#collapsing-the-controls-column">Collapsing the controls column</a></li>
             <li data-level="2"><a href="#standalone-panel">Standalone panel</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
@@ -597,27 +600,66 @@
 
           <p>
             Put form controls in the default slot and give each a <code>name</code>. Every control is per-mode: it holds
-            a light value and a dark value, and the toolbar’s mode toggle swaps which one the control displays. Changing
+            a light value and a dark value, and the sidebar’s mode toggle swaps which one the control displays. Changing
             a control harvests every named control’s <em>currently displayed</em> value and pushes the active mode’s set
             into the embedded <a href="/components/preview-frame/">preview frame</a> as an
             <code>hp-preview:theme</code> message — no save, no fetch, no page reload.
           </p>
           <p>
-            The toolbar above the preview switches the mode the preview renders in and the width it renders at: desktop
-            (full width), tablet (768px) or mobile (390px). Because the iframe itself is resized, the embedded page’s
-            own media queries fire.
+            The controls column runs the full height of the component, with its own header row on top holding the
+            light/dark mode toggle beside its caption. The toolbar sits opposite it, above the preview only, and
+            switches the width the preview renders at: desktop (full width), tablet (768px) or mobile (390px). Because
+            the iframe itself is resized, the embedded page’s own media queries fire.
           </p>
           <p>
-            The preview always fills its column, matching the controls column’s height rather than leaving dead space
-            beneath it. <code>min-height</code> (default <code>480</code>) is a floor for that row, not a fixed height —
-            it’s still forwarded to the <a href="/components/preview-frame/">preview frame</a>, which uses it the same
-            way.
+            Set <code>controls-caption</code> and <code>preview-caption</code> to label each column’s header row — both
+            are empty by default, rendering no text (the controls column’s header row still renders either way, so the
+            two columns stay aligned).
+          </p>
+          <p>
+            The preview always fills its column, leaving no dead space beneath it. <code>min-height</code> (default
+            <code>480</code>) is a floor for that column, not a fixed height — it’s still forwarded to the
+            <a href="/components/preview-frame/">preview frame</a>, which uses it the same way.
+          </p>
+          <p>
+            Controls can be organized into tabs with collapsible groups inside each — <code>sections</code> with
+            <code>groups</code> below is the canonical arrangement:
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-theme-editor id="theme-editor-demo" src="/components/preview-frame-demo/" min-height="420">
-                <zn-color-select name="accent" label="Accent" value="#6936f5" dark-value="#f5c542"></zn-color-select>
-                <zn-input name="radius" label="Corner radius" type="number" value="4"></zn-input>
+              <zn-theme-editor
+                id="theme-editor-demo"
+                src="/components/preview-frame-demo/"
+                min-height="420"
+                controls-caption="Theme Builder"
+                preview-caption="Live Preview"
+                sections='[
+    {"name":"colors","caption":"Colors","groups":[
+      {"name":"brand","caption":"Brand","open":true},
+      {"name":"background","caption":"Background"}
+    ]},
+    {"name":"shapes","caption":"Shapes","groups":[
+      {"name":"radius","caption":"Radius"}
+    ]}
+  ]'
+              >
+                <zn-input
+                  slot="brand"
+                  name="accent"
+                  label="Accent"
+                  value="#6936f5"
+                  dark-value="#f5c542"
+                  type="color"
+                ></zn-input>
+                <zn-input
+                  slot="background"
+                  name="background"
+                  label="Background"
+                  value="#ffffff"
+                  dark-value="#18181b"
+                  type="color"
+                ></zn-input>
+                <zn-input slot="radius" name="radius" label="Corner radius" type="number" value="4"></zn-input>
               </zn-theme-editor>
 
               <script>
@@ -636,9 +678,21 @@
                 <pre><code class="language-html" id="code-block-1518"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-theme-editor</span>
   <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>theme-editor-demo<span class="token punctuation">"</span></span>
   <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/components/preview-frame-demo/<span class="token punctuation">"</span></span>
-  <span class="token attr-name">min-height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>420<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-color-select</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>accent<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Accent<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#6936f5<span class="token punctuation">"</span></span> <span class="token attr-name">dark-value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#f5c542<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-color-select</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>radius<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Corner radius<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>number<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+  <span class="token attr-name">min-height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>420<span class="token punctuation">"</span></span>
+  <span class="token attr-name">controls-caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Theme Builder<span class="token punctuation">"</span></span>
+  <span class="token attr-name">preview-caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Live Preview<span class="token punctuation">"</span></span>
+  <span class="token attr-name">sections</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>[
+    {"name":"colors","caption":"Colors","groups":[
+      {"name":"brand","caption":"Brand","open":true},
+      {"name":"background","caption":"Background"}
+    ]},
+    {"name":"shapes","caption":"Shapes","groups":[
+      {"name":"radius","caption":"Radius"}
+    ]}
+  ]<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>brand<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>accent<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Accent<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#6936f5<span class="token punctuation">"</span></span> <span class="token attr-name">dark-value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#f5c542<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>color<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>background<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>background<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Background<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#ffffff<span class="token punctuation">"</span></span> <span class="token attr-name">dark-value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#18181b<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>color<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>radius<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>radius<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Corner radius<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>number<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-theme-editor</span><span class="token punctuation">&gt;</span></span>
 
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
@@ -679,9 +733,9 @@
             Dark values<a href="#dark-values" aria-label='Direct link to "Dark values"'></a>
           </h2>
           <p>
-            Give a control a <code>dark-value</code> attribute alongside <code>value</code> to author its dark variant.
-            A control with no <code>dark-value</code> falls back to its <code>value</code> in dark mode, so adding dark
-            support to an existing editor is additive:
+            Give a control a <code>dark-value</code> attribute alongside <code>value</code> to author its dark variant,
+            as <code>accent</code> and <code>background</code> do above. A control with no <code>dark-value</code> falls
+            back to its <code>value</code> in dark mode, so adding dark support to an existing editor is additive:
           </p>
           <pre><code class="language-html" id="code-block-1519"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-color-select</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>accent<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Accent<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#6936f5<span class="token punctuation">"</span></span> <span class="token attr-name">dark-value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#f5c542<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-color-select</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-1519"></zn-copy-button></pre>
@@ -735,74 +789,17 @@
           </h3>
           <p>
             Set <code>submit-label</code> to render a built-in save button at the right of the toolbar, opposite the
-            device and mode controls — empty (the default) renders no button. Add <code>manual</code> to disable the
-            debounced auto-save entirely, so persistence only happens when the button is clicked; the live preview keeps
-            updating on every change either way, only saving becomes explicit:
+            device controls — empty (the default) renders no button. Add <code>manual</code> to disable the debounced
+            auto-save entirely, so persistence only happens when the button is clicked; the live preview keeps updating
+            on every change either way, only saving becomes explicit:
           </p>
-          <div class="code-preview">
-            <div class="code-preview__preview">
-              <zn-theme-editor
-                id="theme-editor-manual"
-                src="/components/preview-frame-demo/"
-                min-height="420"
-                manual=""
-                submit-label="Save theme"
-              >
-                <zn-color-select name="accent" label="Accent" value="#6936f5" dark-value="#f5c542"></zn-color-select>
-                <zn-input name="radius" label="Corner radius" type="number" value="4"></zn-input>
-              </zn-theme-editor>
-
-              <script>
-                (() => {
-                  document.getElementById('theme-editor-manual').frameOrigin = location.origin;
-                })();
-              </script>
-
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
-            </div>
-
-            <div class="code-preview__source-group" id="code-preview-source-group-1202">
-              <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1522"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-theme-editor</span>
-  <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>theme-editor-manual<span class="token punctuation">"</span></span>
-  <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/components/preview-frame-demo/<span class="token punctuation">"</span></span>
-  <span class="token attr-name">min-height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>420<span class="token punctuation">"</span></span>
+          <pre><code class="language-html" id="code-block-1522"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-theme-editor</span>
+  <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/embed?t=...<span class="token punctuation">"</span></span> <span class="token attr-name">frame-origin</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://pay.example<span class="token punctuation">"</span></span>
   <span class="token attr-name">manual</span>
   <span class="token attr-name">submit-label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Save theme<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-color-select</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>accent<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Accent<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#6936f5<span class="token punctuation">"</span></span> <span class="token attr-name">dark-value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#f5c542<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-color-select</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>radius<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Corner radius<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>number<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-theme-editor</span><span class="token punctuation">&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
-  document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'theme-editor-manual'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>frameOrigin <span class="token operator">=</span> location<span class="token punctuation">.</span>origin<span class="token punctuation">;</span>
-</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-1522"></zn-copy-button></pre>
-              </div>
-            </div>
-
-            <div class="code-preview__buttons">
-              <button
-                type="button"
-                class="code-preview__button code-preview__toggle"
-                aria-expanded="false"
-                aria-controls="code-preview-source-group-1202"
-              >
-                Source
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </button>
-            </div>
-          </div>
           <p>
             Clicking the button flushes any pending edit, then saves immediately through the same single-slot save queue
             used for auto-save — it never opens a second concurrent request. With <code>action</code> set, a successful
@@ -844,186 +841,84 @@
             Set the controls column width with <code>--zn-theme-editor-controls-width</code> (default
             <code>343px</code>, matching page-builder’s palette). Below 768px the columns stack.
           </p>
-          <h2 id="grouping-controls-into-sections" class="anchor-heading">
-            Grouping controls into sections<a
-              href="#grouping-controls-into-sections"
-              aria-label='Direct link to "Grouping controls into sections"'
+          <h2 id="grouping-controls-into-tabs-and-collapsibles" class="anchor-heading">
+            Grouping controls into tabs and collapsibles<a
+              href="#grouping-controls-into-tabs-and-collapsibles"
+              aria-label='Direct link to "Grouping controls into tabs and collapsibles"'
             ></a>
           </h2>
           <p>
-            Set <code>sections</code> to a JSON array of <code>{name, caption, description?, open?}</code> and assign
-            controls to a section with <code>slot="&lt;name&gt;"</code>. The editor renders each section as a
-            collapsible itself — no <code>zn-collapsible</code> markup needed on the author’s side. A control with no
-            <code>slot</code> renders ungrouped, above the sections. Harvesting and change detection walk every
-            section’s slot exactly like the default one, so a control nested in a section is read, seeded and pushed
-            just like a bare one, including one added into an already-rendered section after the page has loaded. A
-            section with no assigned controls renders no chrome.
+            Set <code>sections</code> to a JSON array of <code>{name, caption, groups}</code>. Each section becomes a
+            <code>zn-tabs</code> tab; each entry in its <code>groups</code> —
+            <code>{name, caption, description?, open?}</code> — becomes a collapsible inside that tab, and a control is
+            assigned to a group with <code>slot="&lt;group-name&gt;"</code>:
           </p>
-          <div class="code-preview">
-            <div class="code-preview__preview">
-              <zn-theme-editor
-                id="theme-editor-grouped"
-                src="/components/preview-frame-demo/"
-                min-height="420"
-                sections='[{"name":"colors","caption":"Colors","open":true},{"name":"layout","caption":"Layout","description":"Advanced"}]'
-              >
-                <zn-color-select
-                  slot="colors"
-                  name="accent"
-                  label="Accent"
-                  value="#6936f5"
-                  dark-value="#f5c542"
-                ></zn-color-select>
-                <zn-color-select
-                  slot="colors"
-                  name="background"
-                  label="Background"
-                  value="#ffffff"
-                  dark-value="#0b0b0f"
-                ></zn-color-select>
-                <zn-input slot="layout" name="radius" label="Corner radius" type="number" value="4"></zn-input>
-              </zn-theme-editor>
-
-              <script>
-                (() => {
-                  document.getElementById('theme-editor-grouped').frameOrigin = location.origin;
-                })();
-              </script>
-
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
-            </div>
-
-            <div class="code-preview__source-group" id="code-preview-source-group-1203">
-              <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1525"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-theme-editor</span>
-  <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>theme-editor-grouped<span class="token punctuation">"</span></span>
-  <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/components/preview-frame-demo/<span class="token punctuation">"</span></span>
-  <span class="token attr-name">min-height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>420<span class="token punctuation">"</span></span>
-  <span class="token attr-name">sections</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>[{"name":"colors","caption":"Colors","open":true},{"name":"layout","caption":"Layout","description":"Advanced"}]<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-color-select</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>colors<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>accent<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Accent<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#6936f5<span class="token punctuation">"</span></span> <span class="token attr-name">dark-value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#f5c542<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-color-select</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-color-select</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>colors<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>background<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Background<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#ffffff<span class="token punctuation">"</span></span> <span class="token attr-name">dark-value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#0b0b0f<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-color-select</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>layout<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>radius<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Corner radius<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>number<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+          <pre><code class="language-html" id="code-block-1525"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-theme-editor</span>
+  <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/embed?t=...<span class="token punctuation">"</span></span> <span class="token attr-name">frame-origin</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://pay.example<span class="token punctuation">"</span></span>
+  <span class="token attr-name">sections</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>[
+    {"name":"colors","caption":"Colors","groups":[
+      {"name":"brand","caption":"Brand","open":true},
+      {"name":"semantic","caption":"Semantic"}
+    ]},
+    {"name":"shapes","caption":"Shapes","groups":[{"name":"radius","caption":"Radius"}]}
+  ]<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-color-select</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>brand<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>accent<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Accent<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#6936f5<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-color-select</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>radius<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>radius<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Corner radius<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>number<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-theme-editor</span><span class="token punctuation">&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
-  document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'theme-editor-grouped'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>frameOrigin <span class="token operator">=</span> location<span class="token punctuation">.</span>origin<span class="token punctuation">;</span>
-</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-1525"></zn-copy-button></pre>
-              </div>
-            </div>
-
-            <div class="code-preview__buttons">
-              <button
-                type="button"
-                class="code-preview__button code-preview__toggle"
-                aria-expanded="false"
-                aria-controls="code-preview-source-group-1203"
-              >
-                Source
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </button>
-            </div>
-          </div>
           <p>
-            The <code>colors</code> section above opens by default (<code>"open":true</code>);
-            <code>layout</code> starts closed.
+            A group with no assigned controls renders no collapsible, and a section none of whose groups are populated
+            renders no tab — the same “no chrome for empty config” rule flat sections already followed. Every tab’s
+            panel stays mounted while hidden (<code>zn-tabs</code> toggles visibility, never removes a panel), so
+            switching tabs never drops a value out of the theme, a preview push or a save.
           </p>
-          <h2 id="tabbed-sections" class="anchor-heading">
-            Tabbed sections<a href="#tabbed-sections" aria-label='Direct link to "Tabbed sections"'></a>
-          </h2>
+          <h3 id="flat-sections-no-groups" class="anchor-heading">
+            Flat sections (no groups)<a
+              href="#flat-sections-no-groups"
+              aria-label='Direct link to "Flat sections (no groups)"'
+            ></a>
+          </h3>
           <p>
-            Set <code>section-layout="tabs"</code> to present the same <code>sections</code>/named-slot config as a tab
-            strip instead of stacked collapsibles. <code>description</code> and <code>open</code> are meaningless for
-            tabs and are ignored. Every tab’s slot stays mounted while hidden, so switching tabs never drops a value out
-            of the theme, a preview push or a save — only the active pane’s visibility changes.
+            A section can omit <code>groups</code> and just take controls directly via
+            <code>slot="&lt;section-name&gt;"</code>, exactly as before nesting existed.
+            <code>section-layout</code> then decides the presentation — stacked <code>zn-collapsible</code>s
+            (<code>"collapsible"</code>, the default) or a <code>zn-tabs</code> strip (<code>"tabs"</code>) — and is
+            otherwise ignored: once <em>any</em> section has a populated <code>groups</code>, every section renders as a
+            nested tab regardless of <code>section-layout</code>.
           </p>
-          <p>
-            The strip is always a single row: with more tabs than fit the controls column, it scrolls horizontally
-            rather than wrapping, and a fade at the right edge signals there’s more to scroll rather than letting a
-            tab’s caption read as clipped text. Activating a tab — by click or with the arrow keys — scrolls it into
-            view if it isn’t already visible.
-          </p>
-          <div class="code-preview">
-            <div class="code-preview__preview">
-              <zn-theme-editor
-                id="theme-editor-tabs"
-                src="/components/preview-frame-demo/"
-                min-height="420"
-                section-layout="tabs"
-                sections='[{"name":"colors","caption":"Colors"},{"name":"layout","caption":"Layout"}]'
-              >
-                <zn-color-select
-                  slot="colors"
-                  name="accent"
-                  label="Accent"
-                  value="#6936f5"
-                  dark-value="#f5c542"
-                ></zn-color-select>
-                <zn-input slot="layout" name="radius" label="Corner radius" type="number" value="4"></zn-input>
-              </zn-theme-editor>
-
-              <script>
-                (() => {
-                  document.getElementById('theme-editor-tabs').frameOrigin = location.origin;
-                })();
-              </script>
-
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
-            </div>
-
-            <div class="code-preview__source-group" id="code-preview-source-group-1204">
-              <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1526"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-theme-editor</span>
-  <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>theme-editor-tabs<span class="token punctuation">"</span></span>
-  <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/components/preview-frame-demo/<span class="token punctuation">"</span></span>
-  <span class="token attr-name">min-height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>420<span class="token punctuation">"</span></span>
+          <pre><code class="language-html" id="code-block-1526"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-theme-editor</span>
+  <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/embed?t=...<span class="token punctuation">"</span></span> <span class="token attr-name">frame-origin</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://pay.example<span class="token punctuation">"</span></span>
   <span class="token attr-name">section-layout</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tabs<span class="token punctuation">"</span></span>
   <span class="token attr-name">sections</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>[{"name":"colors","caption":"Colors"},{"name":"layout","caption":"Layout"}]<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-color-select</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>colors<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>accent<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Accent<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#6936f5<span class="token punctuation">"</span></span> <span class="token attr-name">dark-value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#f5c542<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-color-select</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-color-select</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>colors<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>accent<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Accent<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#6936f5<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-color-select</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>layout<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>radius<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Corner radius<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>number<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-theme-editor</span><span class="token punctuation">&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
-  document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'theme-editor-tabs'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>frameOrigin <span class="token operator">=</span> location<span class="token punctuation">.</span>origin<span class="token punctuation">;</span>
-</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-1526"></zn-copy-button></pre>
-              </div>
-            </div>
-
-            <div class="code-preview__buttons">
-              <button
-                type="button"
-                class="code-preview__button code-preview__toggle"
-                aria-expanded="false"
-                aria-controls="code-preview-source-group-1204"
-              >
-                Source
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </button>
-            </div>
-          </div>
+          <p>
+            An author can also slot their own <code>zn-collapsible</code> into any named slot (or the default slot)
+            instead of relying on <code>groups</code> — its presentation is then entirely its own; add
+            <code>flush</code> yourself if you want it to run the full width of the column.
+          </p>
+          <h2 id="preview-sources" class="anchor-heading">
+            Preview sources<a href="#preview-sources" aria-label='Direct link to "Preview sources"'></a>
+          </h2>
+          <p>
+            Set <code>sources</code> to a JSON array of <code>{label, src}</code> to render a dropdown in the toolbar,
+            beside the device buttons, for switching which page the preview loads:
+          </p>
+          <pre><code class="language-html" id="code-block-1527"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-theme-editor</span>
+  <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/embed?t=...<span class="token punctuation">"</span></span> <span class="token attr-name">frame-origin</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://pay.example<span class="token punctuation">"</span></span>
+  <span class="token attr-name">sources</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>[{"label":"Checkout","src":"/embed/checkout"},{"label":"Storefront","src":"/embed/storefront"}]<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-color-select</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>accent<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Accent<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#6936f5<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-color-select</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-theme-editor</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1527"></zn-copy-button></pre>
+          <p>
+            The first entry is the initial selection — it wins over an explicit <code>src</code> when
+            <code>sources</code> is non-empty. Selecting a different entry reloads the iframe; nothing further is needed
+            to keep the theme, since the frame retains the last pushed payload and replays it once the reloaded page
+            re-announces itself ready. Leave <code>sources</code> unset (the default) and <code>src</code> behaves
+            exactly as it always has, with no dropdown rendered.
+          </p>
           <h2 id="collapsing-the-controls-column" class="anchor-heading">
             Collapsing the controls column<a
               href="#collapsing-the-controls-column"
@@ -1046,68 +941,10 @@
             already embedded in a page shell that provides that chrome. It also switches the preview’s
             <a href="/components/preview-frame/">backdrop</a> from the dot grid to a plain panel to match.
           </p>
-          <div class="code-preview">
-            <div class="code-preview__preview">
-              <zn-theme-editor
-                id="theme-editor-standalone"
-                src="/components/preview-frame-demo/"
-                min-height="420"
-                standalone=""
-              >
-                <zn-color-select name="accent" label="Accent" value="#6936f5" dark-value="#f5c542"></zn-color-select>
-                <zn-input name="radius" label="Corner radius" type="number" value="4"></zn-input>
-              </zn-theme-editor>
-
-              <script>
-                (() => {
-                  document.getElementById('theme-editor-standalone').frameOrigin = location.origin;
-                })();
-              </script>
-
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
-            </div>
-
-            <div class="code-preview__source-group" id="code-preview-source-group-1205">
-              <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1527"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-theme-editor</span>
-  <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>theme-editor-standalone<span class="token punctuation">"</span></span>
-  <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/components/preview-frame-demo/<span class="token punctuation">"</span></span>
-  <span class="token attr-name">min-height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>420<span class="token punctuation">"</span></span>
-  <span class="token attr-name">standalone</span><span class="token punctuation">&gt;</span></span>
+          <pre><code class="language-html" id="code-block-1528"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-theme-editor</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/embed?t=...<span class="token punctuation">"</span></span> <span class="token attr-name">frame-origin</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://pay.example<span class="token punctuation">"</span></span> <span class="token attr-name">standalone</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-color-select</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>accent<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Accent<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#6936f5<span class="token punctuation">"</span></span> <span class="token attr-name">dark-value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#f5c542<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-color-select</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>radius<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Corner radius<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>number<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-theme-editor</span><span class="token punctuation">&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
-  document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'theme-editor-standalone'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>frameOrigin <span class="token operator">=</span> location<span class="token punctuation">.</span>origin<span class="token punctuation">;</span>
-</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1527"></zn-copy-button></pre>
-              </div>
-            </div>
-
-            <div class="code-preview__buttons">
-              <button
-                type="button"
-                class="code-preview__button code-preview__toggle"
-                aria-expanded="false"
-                aria-controls="code-preview-source-group-1205"
-              >
-                Source
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </button>
-            </div>
-          </div>
+</code><zn-copy-button class="copy-code-button" from="code-block-1528"></zn-copy-button></pre>
 
           <h2 id="importing" class="anchor-heading">
             Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
@@ -1130,7 +967,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-1528"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.68/dist/components/theme-editor/theme-editor.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1528"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-1529"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.68/dist/components/theme-editor/theme-editor.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1529"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1145,12 +982,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-1529"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.68/dist/components/theme-editor/theme-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1529"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1530"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.68/dist/components/theme-editor/theme-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1530"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-1530"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/theme-editor/theme-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1530"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1531"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/theme-editor/theme-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1531"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -1168,9 +1005,9 @@
                   <td class="nowrap">(default)</td>
                   <td>
                     Ungrouped theme controls, rendered above any sections. Controls assigned
-                    <code>slot="&lt;name&gt;"</code> matching a <code>sections</code> entry render inside that section
-                    instead. Harvesting and change detection walk every slot’s full assigned subtree, not just direct
-                    children.
+                    <code>slot="&lt;name&gt;"</code> matching a <code>sections</code> entry (or, when nested, a
+                    <code>groups</code> entry) render inside that section/group instead. Harvesting and change detection
+                    walk every slot’s full assigned subtree, not just direct children.
                   </td>
                 </tr>
 
@@ -1179,8 +1016,7 @@
                     <code>toolbar</code>
                   </td>
                   <td>
-                    Actions in the toolbar, right-aligned beside the device and mode controls. Where a save button
-                    belongs.
+                    Actions in the toolbar, right-aligned beside the device controls. Where a save button belongs.
                   </td>
                 </tr>
 
@@ -1378,7 +1214,11 @@
                   <td>
                     <code class="nowrap">sections</code>
                   </td>
-                  <td>Groups controls into named, collapsible sections. Empty/unset renders one ungrouped column.</td>
+                  <td>
+                    Groups controls into named sections. Empty/unset renders one ungrouped column. A section with a
+                    non-empty <code>groups</code> nests a collapsible per group inside a <code>zn-tabs</code> tab for
+                    that section - see <code>groups</code> on <code>ThemeEditorSection</code>.
+                  </td>
                   <td style="text-align: center"></td>
                   <td>
                     <code>ThemeEditorSection[]</code>
@@ -1400,9 +1240,9 @@
                     </zn-tooltip>
                   </td>
                   <td>
-                    Presentation for <code>sections</code>: stacked <code>zn-collapsible</code>s (default) or a tab
-                    strip. Reuses <code>sections</code> and its named slots verbatim; <code>description</code> and
-                    <code>open</code> are ignored in <code>tabs</code>.
+                    Presentation for flat, group-less <code>sections</code>: stacked <code>zn-collapsible</code>s
+                    (default) or a <code>zn-tabs</code> strip. Ignored once any section has <code>groups</code> - nested
+                    sections always render as tabs.
                   </td>
                   <td style="text-align: center"></td>
                   <td>
@@ -1410,6 +1250,23 @@
                   </td>
                   <td>
                     <code>'collapsible'</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">sources</code>
+                  </td>
+                  <td>
+                    Dropdown of preview sources, <code>{label, src}</code>, rendered in the toolbar. Empty/unset renders
+                    no dropdown; the first entry wins over an explicit <code>src</code> when non-empty.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>ThemeEditorSource[]</code>
+                  </td>
+                  <td>
+                    <code>[]</code>
                   </td>
                 </tr>
 
@@ -1452,6 +1309,54 @@
                   </td>
                   <td>
                     <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">controlsCaption</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> controls-caption </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    Caption in the controls column’s header row. Empty (default) renders no text; the row itself always
+                    renders.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">previewCaption</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> preview-caption </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    Caption at the left of the toolbar, opposite the device and mode controls. Empty (default) renders
+                    no text.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
                   </td>
                 </tr>
 
@@ -1501,7 +1406,7 @@
                   <td style="text-align: center"></td>
                   <td>
                     <code
-                      >{light: Record<string, unknown="">; dark: Record<string, unknown="">}</string,></string,></code
+                      >{ light: Record<string, unknown="">; dark: Record<string, unknown=""> }</string,></string,></code
                     >
                   </td>
                   <td>-</td>
@@ -1634,38 +1539,32 @@
                 </tr>
 
                 <tr>
-                  <td class="nowrap"><code>toolbar</code></td>
-                  <td>The device and mode switcher, spanning the full width.</td>
+                  <td class="nowrap"><code>controls</code></td>
+                  <td>The left-hand controls column, full height.</td>
                 </tr>
 
                 <tr>
-                  <td class="nowrap"><code>controls</code></td>
-                  <td>The left-hand controls column.</td>
+                  <td class="nowrap"><code>controls-header</code></td>
+                  <td>
+                    The controls column’s header row: <code>controls-caption</code> on the left, the light/dark mode
+                    toggle on the right.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>toolbar</code></td>
+                  <td>
+                    The preview column’s header row: <code>preview-caption</code> on the left, the device switcher (and
+                    sources/submit) on the right. Spans the preview column only.
+                  </td>
                 </tr>
 
                 <tr>
                   <td class="nowrap"><code>section</code></td>
-                  <td>A rendered section’s collapsible (<code>section-layout="collapsible"</code>).</td>
-                </tr>
-
-                <tr>
-                  <td class="nowrap"><code>tablist-wrap</code></td>
-                  <td>Non-scrolling wrapper around the tablist; carries the border and right-edge overflow fade.</td>
-                </tr>
-
-                <tr>
-                  <td class="nowrap"><code>tablist</code></td>
-                  <td>The section tab strip (<code>section-layout="tabs"</code>), a single-row horizontal scroller.</td>
-                </tr>
-
-                <tr>
-                  <td class="nowrap"><code>tab</code></td>
-                  <td>A section’s tab button.</td>
-                </tr>
-
-                <tr>
-                  <td class="nowrap"><code>tabpanel</code></td>
-                  <td>A section’s tab panel.</td>
+                  <td>
+                    A rendered section’s or group’s collapsible (<code>section-layout="collapsible"</code>, or any
+                    nested group).
+                  </td>
                 </tr>
 
                 <tr>
@@ -1721,11 +1620,27 @@
 
             <li><code>&lt;zn-collapsible&gt;</code></li>
 
+            <li><code>&lt;zn-dropdown&gt;</code></li>
+
             <li><code>&lt;zn-example&gt;</code></li>
 
             <li><code>&lt;zn-icon&gt;</code></li>
 
+            <li><code>&lt;zn-navbar&gt;</code></li>
+
+            <li><code>&lt;zn-opt-group&gt;</code></li>
+
+            <li><code>&lt;zn-option&gt;</code></li>
+
+            <li><code>&lt;zn-popup&gt;</code></li>
+
             <li><code>&lt;zn-preview-frame&gt;</code></li>
+
+            <li><code>&lt;zn-select&gt;</code></li>
+
+            <li><code>&lt;zn-tabs&gt;</code></li>
+
+            <li><code>&lt;zn-tag&gt;</code></li>
 
             <li><code>&lt;zn-tooltip&gt;</code></li>
           </ul>

@@ -10517,16 +10517,32 @@ declare module "components/theme-editor/theme-editor.component" {
     import ZnButton from "components/button/index";
     import ZnCollapsible from "components/collapsible/index";
     import ZnIcon from "components/icon/index";
+    import ZnNavbar from "components/navbar/index";
+    import ZnOption from "components/option/index";
     import ZnPreviewFrame from "components/preview-frame/index";
+    import ZnSelect from "components/select/index";
+    import ZnTabs from "components/tabs/index";
     export type ThemeEditorMode = 'light' | 'dark';
     export type ThemeEditorDevice = 'desktop' | 'tablet' | 'mobile';
-    export interface ThemeEditorSection {
+    export interface ThemeEditorGroup {
         /** The slot name controls are assigned to with `slot="<name>"`. */
         name: string;
         caption: string;
         description?: string;
-        /** Renders the section expanded initially. */
+        /** Renders expanded initially. */
         open?: boolean;
+    }
+    export interface ThemeEditorSection extends ThemeEditorGroup {
+        /**
+         * Nests a collapsible per group inside this section's tab instead of the
+         * section's own controls directly. A non-empty `groups` on ANY section
+         * switches every section to `zn-tabs`, regardless of `section-layout`.
+         */
+        groups?: ThemeEditorGroup[];
+    }
+    export interface ThemeEditorSource {
+        label: string;
+        src: string;
     }
     /**
      * @summary A theme editor: slotted form controls drive a live preview frame,
@@ -10539,6 +10555,9 @@ declare module "components/theme-editor/theme-editor.component" {
      * @dependency zn-preview-frame
      * @dependency zn-icon
      * @dependency zn-button
+     * @dependency zn-tabs
+     * @dependency zn-navbar
+     * @dependency zn-select
      *
      * @event zn-theme-change - Emitted when the values, mode or device change.
      * @event zn-theme-submit - Emitted on submit (button click), carrying the
@@ -10548,22 +10567,20 @@ declare module "components/theme-editor/theme-editor.component" {
      * out through the editor too.
      *
      * @slot - Ungrouped theme controls, rendered above any sections. Controls
-     * assigned `slot="<name>"` matching a `sections` entry render inside that
-     * section instead. Harvesting and change detection walk every slot's full
-     * assigned subtree, not just direct children.
-     * @slot toolbar - Actions in the toolbar, right-aligned beside the device and
-     * mode controls. Where a save button belongs.
+     * assigned `slot="<name>"` matching a `sections` entry (or, when nested, a
+     * `groups` entry) render inside that section/group instead. Harvesting and
+     * change detection walk every slot's full assigned subtree, not just direct
+     * children.
+     * @slot toolbar - Actions in the toolbar, right-aligned beside the device
+     * controls. Where a save button belongs.
      * @slot footer - Actions pinned beneath the controls. The built-in submit button
      * lives in the toolbar, not here.
      *
      * @csspart base - The component's base wrapper.
-     * @csspart toolbar - The device and mode switcher, spanning the full width.
-     * @csspart controls - The left-hand controls column.
-     * @csspart section - A rendered section's collapsible (`section-layout="collapsible"`).
-     * @csspart tablist-wrap - Non-scrolling wrapper around the tablist; carries the border and right-edge overflow fade.
-     * @csspart tablist - The section tab strip (`section-layout="tabs"`), a single-row horizontal scroller.
-     * @csspart tab - A section's tab button.
-     * @csspart tabpanel - A section's tab panel.
+     * @csspart controls - The left-hand controls column, full height.
+     * @csspart controls-header - The controls column's header row: `controls-caption` on the left, the light/dark mode toggle on the right.
+     * @csspart toolbar - The preview column's header row: `preview-caption` on the left, the device switcher (and sources/submit) on the right. Spans the preview column only.
+     * @csspart section - A rendered section's or group's collapsible (`section-layout="collapsible"`, or any nested group).
      * @csspart footer - The footer wrapper beneath the controls.
      * @csspart preview - The preview column.
      * @csspart error - The inline error strip.
@@ -10581,6 +10598,10 @@ declare module "components/theme-editor/theme-editor.component" {
             'zn-preview-frame': typeof ZnPreviewFrame;
             'zn-icon': typeof ZnIcon;
             'zn-button': typeof ZnButton;
+            'zn-tabs': typeof ZnTabs;
+            'zn-navbar': typeof ZnNavbar;
+            'zn-select': typeof ZnSelect;
+            'zn-option': typeof ZnOption;
         };
         /** URL of the preview shell page; forwarded to the frame. */
         src: string;
@@ -10600,18 +10621,29 @@ declare module "components/theme-editor/theme-editor.component" {
         action: string;
         /** Debounce in ms between a control change and the save POST. */
         saveDebounce: number;
-        /** Groups controls into named, collapsible sections. Empty/unset renders one ungrouped column. */
+        /**
+         * Groups controls into named sections. Empty/unset renders one ungrouped
+         * column. A section with a non-empty `groups` nests a collapsible per
+         * group inside a `zn-tabs` tab for that section - see `groups` on
+         * `ThemeEditorSection`.
+         */
         sections: ThemeEditorSection[];
         /**
-         * Presentation for `sections`: stacked `zn-collapsible`s (default) or a tab
-         * strip. Reuses `sections` and its named slots verbatim; `description` and
-         * `open` are ignored in `tabs`.
+         * Presentation for flat, group-less `sections`: stacked `zn-collapsible`s
+         * (default) or a `zn-tabs` strip. Ignored once any section has `groups` -
+         * nested sections always render as tabs.
          */
         sectionLayout: 'collapsible' | 'tabs';
+        /** Dropdown of preview sources, `{label, src}`, rendered in the toolbar. Empty/unset renders no dropdown; the first entry wins over an explicit `src` when non-empty. */
+        sources: ThemeEditorSource[];
         /** Collapses the controls column. */
         controlsCollapsed: boolean;
         /** Presents the editor as its own bordered, rounded panel with a plain preview backdrop, rather than embedded in a dotted canvas. */
         standalone: boolean;
+        /** Caption in the controls column's header row. Empty (default) renders no text; the row itself always renders. */
+        controlsCaption: string;
+        /** Caption at the left of the toolbar, opposite the device and mode controls. Empty (default) renders no text. */
+        previewCaption: string;
         /** Label for the built-in submit button. Empty (default) renders no button. */
         submitLabel: string;
         /** Disables the debounced auto-save; saving then happens only via submit. Preview pushes are unaffected. */
@@ -10621,7 +10653,7 @@ declare module "components/theme-editor/theme-editor.component" {
         private sectionSlots;
         protected error: string;
         private _submitting;
-        private _activeTab;
+        private _sourceIndex;
         private readonly hasSlotController;
         private _pushTimer?;
         private _saveTimer?;
@@ -10683,15 +10715,18 @@ declare module "components/theme-editor/theme-editor.component" {
         private readonly _setDevice;
         private readonly _toggleMode;
         private readonly _onFrameError;
-        /** Configured sections that have an assigned control - shared by both section-layout presentations. */
+        private _sourcesSafe;
+        private _frameSrc;
+        private readonly _onSourceChange;
+        private _sectionsSafe;
+        private _groupsFor;
+        /** Whether any section has a populated `groups` - the switch to nested tabs+collapsibles. */
+        private _hasNestedGroups;
+        private _visibleGroups;
+        /** Configured sections that have an assigned control, or (nested) a populated group - shared by every presentation. */
         private _visibleSections;
         private _renderSections;
-        /** The active tab, falling back to the first visible section if the tracked name no longer matches one. */
-        private _activeTabName;
-        private readonly _setActiveTab;
-        /** Keeps a tab reachable in the single-row scroller when it becomes active. */
-        private _scrollTabIntoView;
-        private readonly _onTabKeydown;
+        private _renderGroups;
         private _renderTabs;
         render(): import("lit-html").TemplateResult<1>;
     }

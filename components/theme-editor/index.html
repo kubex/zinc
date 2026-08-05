@@ -908,6 +908,12 @@
             panel stays mounted while hidden (<code>zn-tabs</code> toggles visibility, never removes a panel), so
             switching tabs never drops a value out of the theme, a preview push or a save.
           </p>
+          <p>
+            The editor never shows a tab with everything shut: on load, and again whenever a tab is clicked, its first
+            collapsible expands unless one in that tab is already open. <code>open: true</code> therefore only matters
+            for picking <em>which</em> group opens — and closing them all yourself sticks, since nothing reopens until
+            the next tab click.
+          </p>
           <h3 id="flat-sections-no-groups" class="anchor-heading">
             Flat sections (no groups)<a
               href="#flat-sections-no-groups"
@@ -920,7 +926,8 @@
             <code>section-layout</code> then decides the presentation — stacked <code>zn-collapsible</code>s
             (<code>"collapsible"</code>, the default) or a <code>zn-tabs</code> strip (<code>"tabs"</code>) — and is
             otherwise ignored: once <em>any</em> section has a populated <code>groups</code>, every section renders as a
-            nested tab regardless of <code>section-layout</code>.
+            nested tab regardless of <code>section-layout</code>. Stacked sections get the same load-time expansion as
+            tabs: the first one opens unless another already has <code>open</code>.
           </p>
           <pre><code class="language-html" id="code-block-1528"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-theme-editor</span>
   <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/embed?t=...<span class="token punctuation">"</span></span> <span class="token attr-name">frame-origin</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://pay.example<span class="token punctuation">"</span></span>

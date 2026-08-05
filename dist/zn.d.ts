@@ -10701,6 +10701,7 @@ declare module "components/theme-editor/theme-editor.component" {
         private readonly _controlsObserver;
         private _modeValues;
         private _suppressDepth;
+        private _openedInitialCollapsible;
         /** The current per-mode value sets. Returns copies. */
         get values(): {
             light: Record<string, unknown>;
@@ -10777,6 +10778,12 @@ declare module "components/theme-editor/theme-editor.component" {
         private _visibleSections;
         private _renderSections;
         private _renderGroups;
+        /** Every collapsible inside a tab's panel, in document order. */
+        private _tabCollapsibles;
+        /** Expands the first collapsible, unless one is already open. */
+        private _expandFirst;
+        private _openFirstCollapsible;
+        protected updated(changed: PropertyValues): void;
         private _renderTabs;
         render(): import("lit-html").TemplateResult<1>;
     }

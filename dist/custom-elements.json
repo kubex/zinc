@@ -49,6 +49,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -237,79 +310,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -28469,6 +28469,16 @@
             },
             {
               "kind": "field",
+              "name": "refreshOn",
+              "type": {
+                "text": "string"
+              },
+              "default": "'form'",
+              "description": "Selector for forms whose saves are left to the shell but should still\nrefresh the preview. These are never intercepted: the shell submits them\n(so its own response handling — alerts, refreshes — runs as normal) and the\npreview re-fetches its config once the shell reports the save complete.\nSet empty to disable.",
+              "attribute": "refresh-on"
+            },
+            {
+              "kind": "field",
               "name": "debounce",
               "type": {
                 "text": "number"
@@ -28571,6 +28581,13 @@
             },
             {
               "kind": "field",
+              "name": "_refreshForms",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<HTMLFormElement>()"
+            },
+            {
+              "kind": "field",
               "name": "_debounceTimers",
               "privacy": "private",
               "readonly": true,
@@ -28621,6 +28638,12 @@
               "kind": "method",
               "name": "_attachForms",
               "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onShellSave",
+              "privacy": "private",
+              "readonly": true
             },
             {
               "kind": "method",
@@ -28718,6 +28741,15 @@
               "fieldName": "watch"
             },
             {
+              "name": "refresh-on",
+              "type": {
+                "text": "string"
+              },
+              "default": "'form'",
+              "description": "Selector for forms whose saves are left to the shell but should still\nrefresh the preview. These are never intercepted: the shell submits them\n(so its own response handling — alerts, refreshes — runs as normal) and the\npreview re-fetches its config once the shell reports the save complete.\nSet empty to disable.",
+              "fieldName": "refreshOn"
+            },
+            {
               "name": "debounce",
               "type": {
                 "text": "number"
@@ -28776,11 +28808,11 @@
             "name": "ZincElement",
             "module": "/src/internal/zinc-element"
           },
-          "summary": "Embeds a live preview iframe and drives the hp-preview postMessage\nprotocol: answers the frame's ready handshake with a config payload fetched\nfrom data-uri, auto-saves watched forms on change, refreshes the preview\nafter each save, and accepts a theme payload via setTheme() that is\nretained and replayed after every ready handshake.",
+          "summary": "Embeds a live preview iframe and drives the hp-preview postMessage\nprotocol: answers the frame's ready handshake with a config payload fetched\nfrom data-uri, auto-saves watched forms on change, refreshes the preview\nafter each save (its own, or a shell-driven save of a `refresh-on` form),\nand accepts a theme payload via setTheme() that is retained and replayed\nafter every ready handshake.",
           "tagNameWithoutPrefix": "preview-frame",
           "tagName": "zn-preview-frame",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Embeds a live preview iframe and drives the hp-preview postMessage\n * protocol: answers the frame's ready handshake with a config payload fetched\n * from data-uri, auto-saves watched forms on change, refreshes the preview\n * after each save, and accepts a theme payload via setTheme() that is\n * retained and replayed after every ready handshake.\n * @documentation https://zinc.style/components/preview-frame\n * @status experimental\n * @since 1.0\n *\n * @event zn-error - Emitted when the preview reports a render error or a save fails.\n *\n * @csspart base - The component's base wrapper.\n * @csspart stage - The device-width wrapper around the iframe.\n * @csspart iframe - The preview iframe.\n * @csspart error - The error overlay.\n *\n * @cssproperty --zn-preview-frame-dot-spacing - Spacing of the backdrop dot grid (`backdrop=\"dots\"`). Defaults to 20px.\n * @cssproperty --zn-preview-frame-dot-opacity - Opacity of the backdrop dots (`backdrop=\"dots\"`). Defaults to 0.08.\n */",
+          "jsDoc": "/**\n * @summary Embeds a live preview iframe and drives the hp-preview postMessage\n * protocol: answers the frame's ready handshake with a config payload fetched\n * from data-uri, auto-saves watched forms on change, refreshes the preview\n * after each save (its own, or a shell-driven save of a `refresh-on` form),\n * and accepts a theme payload via setTheme() that is retained and replayed\n * after every ready handshake.\n * @documentation https://zinc.style/components/preview-frame\n * @status experimental\n * @since 1.0\n *\n * @event zn-error - Emitted when the preview reports a render error or a save fails.\n *\n * @csspart base - The component's base wrapper.\n * @csspart stage - The device-width wrapper around the iframe.\n * @csspart iframe - The preview iframe.\n * @csspart error - The error overlay.\n *\n * @cssproperty --zn-preview-frame-dot-spacing - Spacing of the backdrop dot grid (`backdrop=\"dots\"`). Defaults to 20px.\n * @cssproperty --zn-preview-frame-dot-opacity - Opacity of the backdrop dots (`backdrop=\"dots\"`). Defaults to 0.08.\n */",
           "documentation": "https://zinc.style/components/preview-frame",
           "status": "experimental",
           "since": "1.0"

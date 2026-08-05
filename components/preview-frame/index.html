@@ -586,8 +586,8 @@
           <p class="component-summary">
             Embeds a live preview iframe and drives the hp-preview postMessage protocol: answers the frame’s ready
             handshake with a config payload fetched from data-uri, auto-saves watched forms on change, refreshes the
-            preview after each save, and accepts a theme payload via setTheme() that is retained and replayed after
-            every ready handshake.
+            preview after each save (its own, or a shell-driven save of a <code>refresh-on</code> form), and accepts a
+            theme payload via setTheme() that is retained and replayed after every ready handshake.
           </p>
 
           <p>
@@ -1056,6 +1056,32 @@
                   </td>
                   <td>
                     <code>'form[data-auto-save]'</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">refreshOn</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> refresh-on </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    Selector for forms whose saves are left to the shell but should still refresh the preview. These are
+                    never intercepted: the shell submits them (so its own response handling — alerts, refreshes — runs
+                    as normal) and the preview re-fetches its config once the shell reports the save complete. Set empty
+                    to disable.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>'form'</code>
                   </td>
                 </tr>
 

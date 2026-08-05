@@ -14,6 +14,17 @@
       ]
     },
     {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
+        }
+      ]
+    },
+    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -50,17 +61,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
-        }
-      ]
-    },
-    {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -2955,7 +2955,7 @@
     },
     {
       "name": "zn-preview-frame",
-      "description": "Embeds a live preview iframe and drives the hp-preview postMessage\nprotocol: answers the frame's ready handshake with a config payload fetched\nfrom data-uri, auto-saves watched forms on change, refreshes the preview\nafter each save, and accepts a theme payload via setTheme() that is\nretained and replayed after every ready handshake.\n---\n\n\n### **Events:**\n - **zn-error** - Emitted when the preview reports a render error or a save fails.\n\n### **Methods:**\n - **refresh()** - Re-fetches the payload and pushes a fresh config to the preview.\n- **setTheme(theme: _Record<string, unknown>_)** - Pushes a theme payload into the preview. The payload is retained and\nre-posted after every ready handshake, so a frame reload doesn't drop an\nin-progress theme.\n\n### **CSS Properties:**\n - **--zn-preview-frame-dot-spacing** - Spacing of the backdrop dot grid (`backdrop=\"dots\"`). Defaults to 20px. _(default: undefined)_\n- **--zn-preview-frame-dot-opacity** - Opacity of the backdrop dots (`backdrop=\"dots\"`). Defaults to 0.08. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **stage** - The device-width wrapper around the iframe.\n- **iframe** - The preview iframe.\n- **error** - The error overlay.",
+      "description": "Embeds a live preview iframe and drives the hp-preview postMessage\nprotocol: answers the frame's ready handshake with a config payload fetched\nfrom data-uri, auto-saves watched forms on change, refreshes the preview\nafter each save (its own, or a shell-driven save of a `refresh-on` form),\nand accepts a theme payload via setTheme() that is retained and replayed\nafter every ready handshake.\n---\n\n\n### **Events:**\n - **zn-error** - Emitted when the preview reports a render error or a save fails.\n\n### **Methods:**\n - **refresh()** - Re-fetches the payload and pushes a fresh config to the preview.\n- **setTheme(theme: _Record<string, unknown>_)** - Pushes a theme payload into the preview. The payload is retained and\nre-posted after every ready handshake, so a frame reload doesn't drop an\nin-progress theme.\n\n### **CSS Properties:**\n - **--zn-preview-frame-dot-spacing** - Spacing of the backdrop dot grid (`backdrop=\"dots\"`). Defaults to 20px. _(default: undefined)_\n- **--zn-preview-frame-dot-opacity** - Opacity of the backdrop dots (`backdrop=\"dots\"`). Defaults to 0.08. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **stage** - The device-width wrapper around the iframe.\n- **iframe** - The preview iframe.\n- **error** - The error overlay.",
       "attributes": [
         {
           "name": "src",
@@ -2975,6 +2975,11 @@
         {
           "name": "watch",
           "description": "Selector (resolved against the component's root node) for the forms to watch.\nDefaults to only forms explicitly opted in via a `data-auto-save` attribute —\nunmarked forms keep normal submit behavior and are never intercepted,\nauto-saved, or used to trigger a preview refresh. Override to widen the scope.",
+          "values": []
+        },
+        {
+          "name": "refresh-on",
+          "description": "Selector for forms whose saves are left to the shell but should still\nrefresh the preview. These are never intercepted: the shell submits them\n(so its own response handling — alerts, refreshes — runs as normal) and the\npreview re-fetches its config once the shell reports the save complete.\nSet empty to disable.",
           "values": []
         },
         {

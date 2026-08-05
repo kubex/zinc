@@ -10398,8 +10398,9 @@ declare module "components/preview-frame/preview-frame.component" {
      * @summary Embeds a live preview iframe and drives the hp-preview postMessage
      * protocol: answers the frame's ready handshake with a config payload fetched
      * from data-uri, auto-saves watched forms on change, refreshes the preview
-     * after each save, and accepts a theme payload via setTheme() that is
-     * retained and replayed after every ready handshake.
+     * after each save (its own, or a shell-driven save of a `refresh-on` form),
+     * and accepts a theme payload via setTheme() that is retained and replayed
+     * after every ready handshake.
      * @documentation https://zinc.style/components/preview-frame
      * @status experimental
      * @since 1.0
@@ -10429,6 +10430,14 @@ declare module "components/preview-frame/preview-frame.component" {
          * auto-saved, or used to trigger a preview refresh. Override to widen the scope.
          */
         watch: string;
+        /**
+         * Selector for forms whose saves are left to the shell but should still
+         * refresh the preview. These are never intercepted: the shell submits them
+         * (so its own response handling — alerts, refreshes — runs as normal) and the
+         * preview re-fetches its config once the shell reports the save complete.
+         * Set empty to disable.
+         */
+        refreshOn: string;
         /** Debounce in ms between a form change and its auto-save. */
         debounce: number;
         /**
@@ -10466,6 +10475,7 @@ declare module "components/preview-frame/preview-frame.component" {
         private _generation;
         private _theme;
         private readonly _watchedForms;
+        private readonly _refreshForms;
         private readonly _debounceTimers;
         private readonly _formObserver;
         connectedCallback(): void;
@@ -10482,6 +10492,7 @@ declare module "components/preview-frame/preview-frame.component" {
         private _postTheme;
         private _sendConfig;
         private _attachForms;
+        private readonly _onShellSave;
         private _detachForm;
         private readonly _onChange;
         private readonly _onSubmit;

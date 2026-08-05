@@ -970,6 +970,57 @@ describe('<zn-theme-editor>', () => {
       expect(el.shadowRoot!.querySelectorAll('.editor__section').length).to.equal(0);
     });
 
+    it("expands the first tab's first group on load, and closing it stays closed", async () => {
+      const el = await fixture(html`
+        <zn-theme-editor
+          src="about:blank" frame-origin="https://site.example"
+          .sections="${[
+            {name: 'colors', caption: 'Colors', groups: [
+              {name: 'brand', caption: 'Brand'},
+              {name: 'semantic', caption: 'Semantic'},
+            ]},
+          ]}">
+          <zn-input slot="brand" name="brand" value="1"></zn-input>
+          <zn-input slot="semantic" name="semantic" value="2"></zn-input>
+        </zn-theme-editor>`);
+
+      const sections = el.shadowRoot!.querySelectorAll<HTMLElement & {expanded: boolean}>('.editor__section');
+      expect([sections[0].expanded, sections[1].expanded]).to.deep.equal([true, false]);
+
+      // The auto-expand is one-shot - a later render must not reopen it.
+      sections[0].expanded = false;
+      (el as HTMLElement & {requestUpdate: () => void}).requestUpdate();
+      await (el as HTMLElement & {updateComplete: Promise<boolean>}).updateComplete;
+      expect(sections[0].expanded).to.be.false;
+    });
+
+    it("clicking a tab expands its first group, and leaves an already-open group alone", async () => {
+      const el = await NESTED_GROUPS_FIXTURE();
+      const sections = el.shadowRoot!.querySelectorAll<HTMLElement & {expanded: boolean}>('.editor__section');
+      const panels = el.shadowRoot!.querySelectorAll('.editor__tab-panel');
+      const tabs = el.shadowRoot!.querySelectorAll<HTMLElement>('li[tab]');
+      await waitUntil(() => panels[0].hasAttribute('selected'));
+
+      // Colors: Brand (closed) + Semantic (open: true). Shapes: Radius (closed).
+      expect([sections[0].expanded, sections[1].expanded, sections[2].expanded])
+        .to.deep.equal([false, true, false]);
+
+      tabs[1].click();
+      await waitUntil(() => panels[1].hasAttribute('selected'));
+      expect(sections[2].expanded).to.be.true;
+
+      // Semantic is already open, so Brand stays closed.
+      tabs[0].click();
+      await waitUntil(() => panels[0].hasAttribute('selected'));
+      expect(sections[0].expanded).to.be.false;
+      expect(sections[1].expanded).to.be.true;
+
+      // With every group closed, the first one opens.
+      sections[1].expanded = false;
+      tabs[0].click();
+      expect(sections[0].expanded).to.be.true;
+    });
+
     it('does not crash render when groups is malformed', async () => {
       const el = await fixture(html`
         <zn-theme-editor

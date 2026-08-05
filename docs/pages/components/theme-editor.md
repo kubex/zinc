@@ -227,6 +227,12 @@ config" rule flat sections already followed. Every tab's panel stays mounted
 while hidden (`zn-tabs` toggles visibility, never removes a panel), so
 switching tabs never drops a value out of the theme, a preview push or a save.
 
+The editor never shows a tab with everything shut: on load, and again whenever
+a tab is clicked, its first collapsible expands unless one in that tab is
+already open. `open: true` therefore only matters for picking *which* group
+opens — and closing them all yourself sticks, since nothing reopens until the
+next tab click.
+
 ### Flat sections (no groups)
 
 A section can omit `groups` and just take controls directly via
@@ -234,7 +240,8 @@ A section can omit `groups` and just take controls directly via
 then decides the presentation — stacked `zn-collapsible`s (`"collapsible"`,
 the default) or a `zn-tabs` strip (`"tabs"`) — and is otherwise ignored: once
 *any* section has a populated `groups`, every section renders as a nested tab
-regardless of `section-layout`.
+regardless of `section-layout`. Stacked sections get the same load-time
+expansion as tabs: the first one opens unless another already has `open`.
 
 ```html
 <zn-theme-editor

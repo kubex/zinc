@@ -266,6 +266,9 @@ export default class ZnThemeEditor extends ZincElement {
   // the other's guard early.
   private _suppressDepth = 0;
 
+  // One-shot: the initial auto-expand must not fight a user who closes it.
+  private _openedInitialCollapsible = false;
+
   /** The current per-mode value sets. Returns copies. */
   get values(): { light: Record<string, unknown>; dark: Record<string, unknown> } {
     return { light: { ...this._modeValues.light }, dark: { ...this._modeValues.dark } };
@@ -744,6 +747,52 @@ export default class ZnThemeEditor extends ZincElement {
       </zn-collapsible>`);
   }
 
+  /** Every collapsible inside a tab's panel, in document order. */
+  private _tabCollapsibles(section: ThemeEditorSection): ZnCollapsible[] {
+    const panel = Array.from(this.renderRoot.querySelectorAll<HTMLElement>('.editor__tab-panel'))
+      .find(el => el.id === section.name);
+    if (!panel) return [];
+
+    // Author-slotted collapsibles stay in the light DOM, so they aren't
+    // descendants of the panel - reach them through the slot's assignment.
+    // They precede any group collapsibles the editor renders itself.
+    const slotted = Array.from(panel.querySelectorAll('slot'))
+      .flatMap(slot => slot.assignedElements({ flatten: true }))
+      .filter((el): el is ZnCollapsible => el.tagName.toLowerCase() === 'zn-collapsible');
+
+    return [...slotted, ...Array.from(panel.querySelectorAll<ZnCollapsible>('zn-collapsible'))];
+  }
+
+  /** Expands the first collapsible, unless one is already open. */
+  private _expandFirst(collapsibles: ZnCollapsible[]) {
+    if (collapsibles.length === 0 || collapsibles.some(collapsible => collapsible.expanded)) return;
+    collapsibles[0].expanded = true;
+  }
+
+  // zn-tabs emits no selection event, so this hangs off the same <li> zn-tabs
+  // binds its own click handler to. Independent of that handler: expanding a
+  // collapsible in a panel that is about to be selected needs no ordering.
+  private _openFirstCollapsible(section: ThemeEditorSection) {
+    this._expandFirst(this._tabCollapsibles(section));
+  }
+
+  // Same rule as a tab click, applied once to whatever renders first, so the
+  // editor never opens with every collapsible shut. Runs from updated() rather
+  // than firstUpdated() because the sections themselves only appear once slot
+  // assignment (including the derived kind) has settled.
+  protected updated(changed: PropertyValues) {
+    super.updated(changed);
+    if (this._openedInitialCollapsible) return;
+
+    const sections = this._visibleSections();
+    if (sections.length === 0) return;
+    this._openedInitialCollapsible = true;
+
+    this._expandFirst(this._hasNestedGroups() || this.sectionLayout === 'tabs'
+      ? this._tabCollapsibles(sections[0])
+      : Array.from(this.renderRoot.querySelectorAll<ZnCollapsible>('.editor__section')));
+  }
+
   // zn-tabs never removes a panel - it toggles `selected` on it and hides the
   // rest via its own shadow stylesheet - so every section's slot(s) stay
   // assigned and switching tabs can never drop a control's value from the
@@ -757,7 +806,8 @@ export default class ZnThemeEditor extends ZincElement {
     return html`
       <zn-tabs class="editor__tabs" flush active="${sections[0].name}">
         <zn-navbar slot="top" border>
-          ${sections.map(section => html`<li tab="${section.name}">${section.caption}</li>`)}
+          ${sections.map(section => html`
+            <li tab="${section.name}" @click="${() => this._openFirstCollapsible(section)}">${section.caption}</li>`)}
         </zn-navbar>
         ${sections.map(section => html`
           <div id="${section.name}" class="editor__tab-panel">${panel(section)}</div>`)}

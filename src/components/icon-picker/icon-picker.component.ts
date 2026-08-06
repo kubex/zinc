@@ -300,6 +300,13 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
     this.openDialog();
   }
 
+  private _handleTriggerKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      this._handleTriggerClick();
+    }
+  }
+
   render() {
     const hasLabel = !!this.label;
     const hasHelpText = !!this.helpText;
@@ -320,27 +327,51 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
         </label>
 
         <div part="form-control-input" class="form-control-input">
-          <zn-button
-            part="trigger"
-            class="icon-picker__trigger"
-            panel-bg
-            icon=${hasValue ? triggerIcon : nothing}
-            icon-library=${triggerLibrary}
-            icon-color=${(hasValue && !this.isImageValue && this.color) || nothing}
-            icon-size="24"
-            ?disabled=${this.disabled}
-            @click=${this._handleTriggerClick}>
-            ${hasValue ? 'Click to edit' : 'Set an icon'}
-          </zn-button>
-          ${hasValue ? html`
+          ${hasValue && this.isImageValue ? html`
+            <div
+              part="trigger"
+              class="icon-picker__image-trigger"
+              role="button"
+              aria-label="Click to edit"
+              tabindex=${this.disabled ? '-1' : '0'}
+              @click=${this._handleTriggerClick}
+              @keydown=${this._handleTriggerKeyDown}>
+              <zn-button
+                class="icon-picker__image-clear"
+                color="default"
+                outline
+                icon="close"
+                icon-size="18"
+                ?disabled=${this.disabled}
+                @click="${this.handleClear}"
+              ></zn-button>
+              <div class="icon-picker__image-trigger-background">
+                <img class="icon-picker__image-trigger-preview" src=${triggerIcon} alt="">
+              </div>
+            </div>
+          ` : html`
             <zn-button
-              class="icon-picker__clear"
-              color="transparent"
-              icon="close"
-              icon-size="16"
-              @click="${this.handleClear}"
-            ></zn-button>
-          ` : nothing}
+              part="trigger"
+              class="icon-picker__trigger"
+              panel-bg
+              icon=${hasValue ? triggerIcon : nothing}
+              icon-library=${triggerLibrary}
+              icon-color=${(hasValue && this.color) || nothing}
+              icon-size="24"
+              ?disabled=${this.disabled}
+              @click=${this._handleTriggerClick}>
+              ${hasValue ? 'Click to edit' : 'Set an icon'}
+            </zn-button>
+            ${hasValue ? html`
+              <zn-button
+                class="icon-picker__clear"
+                color="transparent"
+                icon="close"
+                icon-size="16"
+                @click="${this.handleClear}"
+              ></zn-button>
+            ` : nothing}
+          `}
         </div>
 
         ${this.name ? html`

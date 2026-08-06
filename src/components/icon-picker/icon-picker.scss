@@ -16,6 +16,77 @@ zn-dialog {
   --icon-color: rgb(var(--zn-text));
 }
 
+// Mirrors zn-file's droparea preview so a chosen image reads the same as an
+// uploaded file.
+.icon-picker__image-trigger {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 180px;
+  border: 1px solid var(--zn-input-border-color);
+  border-radius: var(--zn-border-radius);
+  cursor: pointer;
+  transition: var(--zn-transition-medium) background,
+    var(--zn-transition-medium) border-color;
+
+  &:focus-visible {
+    border-color: var(--zn-color-primary-600);
+    outline: var(--zn-focus-ring);
+    outline-offset: var(--zn-focus-ring-offset);
+  }
+
+  &:not(:focus-visible):hover {
+    border-color: var(--zn-color-primary-700);
+  }
+}
+
+:host([disabled]) .icon-picker__image-trigger {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.icon-picker__image-trigger-background {
+  --zn-droparea-checker-size: 12px;
+  --zn-droparea-checker-a: var(--zn-color-neutral-50);
+  --zn-droparea-checker-b: var(--zn-color-neutral-100);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  padding: var(--zn-spacing-large) var(--zn-spacing-medium);
+  box-sizing: border-box;
+  background-color: var(--zn-droparea-checker-a);
+  background-image:
+    linear-gradient(45deg, var(--zn-droparea-checker-b) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--zn-droparea-checker-b) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--zn-droparea-checker-b) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--zn-droparea-checker-b) 75%);
+  background-size: var(--zn-droparea-checker-size) var(--zn-droparea-checker-size);
+  background-position:
+    0 0,
+    0 calc(var(--zn-droparea-checker-size) / 2),
+    calc(var(--zn-droparea-checker-size) / 2) calc(var(--zn-droparea-checker-size) / -2),
+    calc(var(--zn-droparea-checker-size) / -2) 0;
+  border-radius: calc(var(--zn-border-radius) - 1px);
+}
+
+.icon-picker__image-trigger-preview {
+  display: block;
+  width: 100%;
+  height: 150px;
+  object-fit: contain;
+}
+
+.icon-picker__image-clear {
+  position: absolute;
+  top: var(--zn-spacing-small);
+  right: var(--zn-spacing-small);
+  z-index: 1;
+}
+
 .icon-picker__dialog-layout {
   display: flex;
   gap: var(--zn-spacing-large);

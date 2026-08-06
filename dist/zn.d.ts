@@ -4709,6 +4709,9 @@ declare module "components/icon-picker/icon-picker.component" {
         helpText: string;
         disabled: boolean;
         required: boolean;
+        triggerSubmit: boolean;
+        allowUpload: boolean;
+        accept: string;
         form: string;
         defaultValue: string;
         private _dialogOpen;
@@ -4718,9 +4721,19 @@ declare module "components/icon-picker/icon-picker.component" {
         private _pendingIcon;
         private _pendingLibrary;
         private _pendingColor;
+        private _pendingFile;
+        private _pendingFileUrl;
+        private _mode;
+        private _file;
+        private _fileUrl;
         private _dialog;
+        private _fileInput;
         get value(): string;
         set value(val: string);
+        /** The chosen file when the user uploaded an image instead of picking an icon. */
+        get file(): File | null;
+        /** True when the current value renders as an image (an uploaded file or a URL) rather than a library icon. */
+        get isImageValue(): boolean;
         get validity(): ValidityState;
         get validationMessage(): string;
         checkValidity(): boolean;
@@ -4734,6 +4747,10 @@ declare module "components/icon-picker/icon-picker.component" {
         private closeDialog;
         private handleConfirm;
         private handleCancel;
+        private handleFileSelect;
+        private discardPendingFile;
+        private clearFile;
+        disconnectedCallback(): void;
         private handleSearchInput;
         private filterIcons;
         private handleIconSelect;
@@ -7279,6 +7296,12 @@ declare module "components/file/file.component" {
         private handleClearClick;
         /** Clear the current value after the user confirms. */
         private confirmClear;
+        /**
+         * Programmatically clears the selected file and any external `src` without
+         * confirmation. Unlike a user-initiated clear, this does not flag the control
+         * to submit an empty value.
+         */
+        clear(): void;
         private updatePreview;
         /**
          * Returns the URL currently shown in the droparea — the locally-selected file's object URL

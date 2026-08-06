@@ -49,79 +49,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -310,6 +237,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -13565,6 +13565,11 @@
             },
             {
               "kind": "method",
+              "name": "clear",
+              "description": "Programmatically clears the selected file and any external `src` without\nconfirmation. Unlike a user-initiated clear, this does not flag the control\nto submit an empty value."
+            },
+            {
+              "kind": "method",
               "name": "updatePreview",
               "privacy": "private"
             },
@@ -16683,7 +16688,7 @@
               "name": "formControlController",
               "privacy": "private",
               "readonly": true,
-              "default": "new FormControlController(this, { assumeInteractionOn: ['zn-change'] })"
+              "default": "new FormControlController(this, { assumeInteractionOn: ['zn-change'], // With allow-upload, a chosen file is submitted under `name` in place of // the icon string — the two are mutually exclusive. value: (el: ZnIconPicker) => el._file ?? el.icon })"
             },
             {
               "kind": "field",
@@ -16718,7 +16723,7 @@
               "type": {
                 "text": "string"
               },
-              "default": "'material'",
+              "default": "'material-symbols-outlined'",
               "attribute": "library"
             },
             {
@@ -16776,6 +16781,33 @@
               "default": "false",
               "attribute": "required",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "triggerSubmit",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "trigger-submit"
+            },
+            {
+              "kind": "field",
+              "name": "allowUpload",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "allow-upload"
+            },
+            {
+              "kind": "field",
+              "name": "accept",
+              "type": {
+                "text": "string"
+              },
+              "default": "'image/*'",
+              "attribute": "accept"
             },
             {
               "kind": "field",
@@ -16859,9 +16891,62 @@
             },
             {
               "kind": "field",
+              "name": "_pendingFile",
+              "type": {
+                "text": "File | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_pendingFileUrl",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_mode",
+              "type": {
+                "text": "'icon' | 'upload'"
+              },
+              "privacy": "private",
+              "default": "'icon'"
+            },
+            {
+              "kind": "field",
+              "name": "_file",
+              "type": {
+                "text": "File | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_fileUrl",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
               "name": "_dialog",
               "type": {
                 "text": "ZnDialog"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_fileInput",
+              "type": {
+                "text": "HTMLInputElement"
               },
               "privacy": "private"
             },
@@ -16871,6 +16956,24 @@
               "type": {
                 "text": "string"
               }
+            },
+            {
+              "kind": "field",
+              "name": "file",
+              "type": {
+                "text": "File | null"
+              },
+              "description": "The chosen file when the user uploaded an image instead of picking an icon.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "isImageValue",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "True when the current value renders as an image (an uploaded file or a URL) rather than a library icon.",
+              "readonly": true
             },
             {
               "kind": "field",
@@ -16993,6 +17096,29 @@
             },
             {
               "kind": "method",
+              "name": "handleFileSelect",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "discardPendingFile",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "clearFile",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
               "name": "handleSearchInput",
               "privacy": "private",
               "parameters": [
@@ -17110,7 +17236,7 @@
               "type": {
                 "text": "string"
               },
-              "default": "'material'",
+              "default": "'material-symbols-outlined'",
               "fieldName": "library"
             },
             {
@@ -17160,6 +17286,30 @@
               },
               "default": "false",
               "fieldName": "required"
+            },
+            {
+              "name": "trigger-submit",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "triggerSubmit"
+            },
+            {
+              "name": "allow-upload",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "allowUpload"
+            },
+            {
+              "name": "accept",
+              "type": {
+                "text": "string"
+              },
+              "default": "'image/*'",
+              "fieldName": "accept"
             },
             {
               "name": "form",
@@ -43727,7 +43877,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.69",
+    "version": "1.1.70",
     "author": "",
     "license": "MIT"
   }

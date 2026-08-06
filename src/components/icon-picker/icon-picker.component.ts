@@ -508,11 +508,11 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
               </div>
             </div>
 
-            <div slot="footer">
-              <zn-button color="default" @click=${this.handleCancel}>Cancel</zn-button>
-              <zn-button color="primary" @click=${this.handleConfirm}
+            <div slot="footer" class="icon-picker__footer">
+              <zn-button panel-bg icon="close" @click=${this.handleCancel}>Cancel</zn-button>
+              <zn-button color="primary" icon="check" @click=${this.handleConfirm}
                          ?disabled=${this._mode === 'upload' ? !this._pendingFile && !this.isImageValue : !this._pendingIcon}>
-                Confirm
+                Save
               </zn-button>
             </div>
           </zn-dialog>

@@ -195,3 +195,14 @@ zn-dialog {
   color: rgb(var(--zn-text-muted));
 }
 
+// Mirrors the global .form-actions layout, which isn't available in the
+// shadow DOM. currentColor undoes the dialog-wide --icon-color override so
+// button icons match their button's text colour.
+.icon-picker__footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--zn-spacing-small);
+  --icon-color: currentColor;
+}
+

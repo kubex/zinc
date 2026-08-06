@@ -4,6 +4,10 @@
   display: block;
   // Matches page-builder's --palette-col.
   --zn-theme-editor-controls-width: 343px;
+  // Resolves to auto when the parent height is indefinite, so the editor still
+  // grows to its content there; given a definite parent it stays inside it and
+  // the two columns scroll on their own instead.
+  height: 100%;
 }
 
 .editor {
@@ -11,6 +15,7 @@
 
   display: flex;
   align-items: stretch;
+  height: 100%;
 
   &--controls-collapsed {
     --controls-col: 0px;
@@ -38,6 +43,7 @@
 .editor__toolbar {
   display: flex;
   align-items: center;
+  flex: 0 0 auto;
   min-height: 44px;
   gap: var(--zn-spacing-small);
   padding: var(--zn-spacing-small) var(--zn-spacing-medium);
@@ -59,6 +65,7 @@
 }
 
 .editor__controls {
+  position: relative;
   display: flex;
   flex-direction: column;
   flex: 0 0 var(--controls-col);
@@ -70,9 +77,21 @@
   transition: flex-basis 0.2s ease;
 }
 
+// Taken out of flow so the controls contribute no height to the row: expanding
+// a section can then never stretch the editor, it just scrolls in place. The
+// preview column alone sets the height (its own min-height, or the parent's if
+// that is definite).
+.editor__controls-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 .editor__controls-header {
   display: flex;
   align-items: center;
+  flex: 0 0 auto;
   min-height: 44px;
   padding: var(--zn-spacing-small) var(--zn-spacing-medium);
 }
@@ -82,6 +101,7 @@
   flex-direction: column;
   gap: var(--zn-spacing-medium);
   flex: 1 1 auto;
+  min-height: 0;
 }
 
 .editor__main {
@@ -90,12 +110,17 @@
   flex-direction: column;
   flex: 1 1 auto;
   min-width: 0;
+  min-height: 0;
 }
 
+// The sidebar's scroll region: the header above and the footer below stay put.
 .editor__fields {
   display: flex;
   flex-direction: column;
   gap: var(--zn-spacing-medium);
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 // Supports an author hand-slotting a bare zn-collapsible into the default slot.
@@ -148,16 +173,19 @@
 
 .editor__footer {
   display: flex;
+  flex: 0 0 auto;
   gap: var(--zn-spacing-small);
   padding-top: var(--zn-spacing-small);
   border-top: 1px solid rgb(var(--zn-border-color));
   margin-top: auto;
 }
 
+// The preview's scroll region: the toolbar above stays put.
 .editor__preview {
-  overflow: visible;
+  overflow: auto;
   flex: 1 1 auto;
   min-width: 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
 }
@@ -267,8 +295,20 @@
 
 // 768 must match STACKED_QUERY in theme-editor.component.ts.
 @media (max-width: 768px) {
+  // Stacked, the two columns share one vertical axis, so they flow with the
+  // page rather than each owning a cramped scroller of its own.
+  :host {
+    height: auto;
+  }
+
   .editor {
     flex-direction: column;
+    height: auto;
+  }
+
+  .editor__fields,
+  .editor__preview {
+    overflow: visible;
   }
 
   .editor__controls {
@@ -276,6 +316,12 @@
     width: 100%;
     border-right: none;
     border-bottom: 1px solid rgb(var(--zn-border-color));
+  }
+
+  // Stacked there is no second column to take the height from, so the controls
+  // go back in flow and size themselves.
+  .editor__controls-inner {
+    position: static;
   }
 
   .editor--controls-collapsed .editor__controls {

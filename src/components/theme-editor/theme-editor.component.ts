@@ -819,38 +819,40 @@ export default class ZnThemeEditor extends ZincElement {
       <div part="base" class="editor ${this.controlsCollapsed ? 'editor--controls-collapsed' : ''}"
            style="min-height: ${this.minHeight}px">
         <div part="controls" class="editor__controls">
-          <div part="controls-header" class="editor__controls-header">
-            ${this.controlsCaption ? html`<span class="editor__caption">${this.controlsCaption}</span>` : nothing}
-            <button type="button"
-                    class="editor__mode"
-                    data-mode-toggle
-                    aria-label="${this.mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}"
-                    @click="${this._toggleMode}">
-              <zn-icon src="${this.mode === 'dark' ? 'sun' : 'moon'}" library="lucide" size="16"></zn-icon>
-            </button>
-          </div>
-          <div class="editor__controls-body">
-            <div
-              class="editor__fields ${this.hasSlotController.test('[default]') ? '' : 'editor__fields--sections-only'}"
-              @zn-change="${this._onControlChange}"
-              @zn-input="${this._onControlChange}"
-              @change="${this._onControlChange}"
-              @input="${this._onControlChange}">
-              <slot @slotchange="${this._onSlotChange}"></slot>
-              ${this._hasNestedGroups()
-                ? this._renderTabs(section => html`
-                    ${this._hasAssignedControls(section.name) ? html`
-                      <slot name="${section.name}" class="editor__section-slot" @slotchange="${this._onSlotChange}"></slot>` : nothing}
-                    ${this._renderGroups(section)}`)
-                : this.sectionLayout === 'tabs'
-                  ? this._renderTabs(section => html`
-                      <slot name="${section.name}" class="editor__section-slot" @slotchange="${this._onSlotChange}"></slot>`)
-                  : this._renderSections()}
+          <div class="editor__controls-inner">
+            <div part="controls-header" class="editor__controls-header">
+              ${this.controlsCaption ? html`<span class="editor__caption">${this.controlsCaption}</span>` : nothing}
+              <button type="button"
+                      class="editor__mode"
+                      data-mode-toggle
+                      aria-label="${this.mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}"
+                      @click="${this._toggleMode}">
+                <zn-icon src="${this.mode === 'dark' ? 'sun' : 'moon'}" library="lucide" size="16"></zn-icon>
+              </button>
             </div>
-            ${this.hasSlotController.test('footer') ? html`
-              <div part="footer" class="editor__footer">
-                <slot name="footer"></slot>
-              </div>` : nothing}
+            <div class="editor__controls-body">
+              <div
+                class="editor__fields ${this.hasSlotController.test('[default]') ? '' : 'editor__fields--sections-only'}"
+                @zn-change="${this._onControlChange}"
+                @zn-input="${this._onControlChange}"
+                @change="${this._onControlChange}"
+                @input="${this._onControlChange}">
+                <slot @slotchange="${this._onSlotChange}"></slot>
+                ${this._hasNestedGroups()
+                  ? this._renderTabs(section => html`
+                      ${this._hasAssignedControls(section.name) ? html`
+                        <slot name="${section.name}" class="editor__section-slot" @slotchange="${this._onSlotChange}"></slot>` : nothing}
+                      ${this._renderGroups(section)}`)
+                  : this.sectionLayout === 'tabs'
+                    ? this._renderTabs(section => html`
+                        <slot name="${section.name}" class="editor__section-slot" @slotchange="${this._onSlotChange}"></slot>`)
+                    : this._renderSections()}
+              </div>
+              ${this.hasSlotController.test('footer') ? html`
+                <div part="footer" class="editor__footer">
+                  <slot name="footer"></slot>
+                </div>` : nothing}
+            </div>
           </div>
         </div>
 

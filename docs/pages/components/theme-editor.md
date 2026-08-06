@@ -29,6 +29,14 @@ The preview always fills its column, leaving no dead space beneath it.
 it's still forwarded to the [preview frame](/components/preview-frame/), which
 uses it the same way.
 
+The preview column alone sets the editor's height — the controls never stretch
+it, however many sections are expanded, they just scroll in place. So the
+editor is as tall as its parent when that parent has a definite height, and
+`min-height` tall otherwise; either way the controls and the preview scroll
+independently while the header, toolbar and footer rows stay put. Stacked
+(under 768px) there's no second column to take the height from, so both flow
+with the page and there's only ever one scrollbar.
+
 Controls organize themselves into tabs with collapsible groups inside each:
 give each one a `group` and a `category` and the editor builds the structure
 around them, no slot names required.

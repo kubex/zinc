@@ -87,6 +87,20 @@ Use the `avatar` library to generate initials from a name.
 <zn-icon-picker name="av" label="Avatar" icon="John Smith" library="avatar" no-color></zn-icon-picker>
 ```
 
+### Upload Image
+
+By default the picker only offers library icons. Add the `allow-upload` attribute to enable a secondary "Upload Image" mode in the dialog, letting users upload an image file instead of picking an icon. Use the `accept` attribute to restrict the accepted file types (defaults to `image/*`).
+
+An uploaded file replaces the icon value: on submit, the file is sent under `name` in place of the icon string — the two are mutually exclusive. The chosen file is also available via the element's `file` property.
+
+```html:preview
+<zn-icon-picker name="logo" label="Logo" allow-upload></zn-icon-picker>
+```
+
+```html:preview
+<zn-icon-picker name="photo" label="Photo (PNG only)" allow-upload accept="image/png"></zn-icon-picker>
+```
+
 ### Help Text
 
 Add descriptive text below the picker with the `help-text` attribute.

@@ -590,6 +590,21 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
     this.emit('zn-clear');
   }
 
+  /**
+   * Programmatically clears the selected file and any external `src` without
+   * confirmation. Unlike a user-initiated clear, this does not flag the control
+   * to submit an empty value.
+   */
+  clear() {
+    if (this.input) {
+      this.input.value = '';
+    }
+    this.files = null;
+    this.src = '';
+    this.updatePreview();
+    this.formControlController.updateValidity();
+  }
+
   private updatePreview() {
     if (this.fileObjectUrl) {
       URL.revokeObjectURL(this.fileObjectUrl);

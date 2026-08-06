@@ -26,19 +26,27 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
   };
 
   private readonly formControlController = new FormControlController(this, {
-    assumeInteractionOn: ['zn-change']
+    assumeInteractionOn: ['zn-change'],
+    // With allow-upload, a chosen file is submitted under `name` in place of
+    // the icon string — the two are mutually exclusive.
+    value: (el: ZnIconPicker) => el._file ?? el.icon
   });
 
   @property() name = '';
   @property() icon = '';
   @property() label = '';
-  @property() library: string = 'material';
+  // Matches zn-icon's defaultLibrary so the picked icon previews the same way
+  // it will render wherever the stored name is displayed.
+  @property() library: string = 'material-symbols-outlined';
   @property() color: string = '';
   @property({type: Boolean, attribute: 'no-color'}) noColor: boolean = false;
   @property({type: Boolean, attribute: 'no-library'}) noLibrary: boolean = false;
   @property({attribute: 'help-text'}) helpText: string = '';
   @property({type: Boolean, reflect: true}) disabled = false;
   @property({type: Boolean, reflect: true}) required = false;
+  @property({type: Boolean, attribute: 'trigger-submit'}) triggerSubmit = false;
+  @property({type: Boolean, attribute: 'allow-upload'}) allowUpload = false;
+  @property() accept = 'image/*';
   @property({reflect: true}) form: string;
 
   @defaultValue() defaultValue = '';
@@ -52,8 +60,16 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
   @state() private _pendingIcon = '';
   @state() private _pendingLibrary = '';
   @state() private _pendingColor = '';
+  @state() private _pendingFile: File | null = null;
+  @state() private _pendingFileUrl: string | null = null;
+  @state() private _mode: 'icon' | 'upload' = 'icon';
+
+  // Committed upload (allow-upload mode)
+  @state() private _file: File | null = null;
+  @state() private _fileUrl: string | null = null;
 
   @query('zn-dialog') private _dialog: ZnDialog;
+  @query('.icon-picker__file-input') private _fileInput: HTMLInputElement;
 
   get value(): string {
     return this.icon;
@@ -63,8 +79,18 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
     this.icon = val;
   }
 
+  /** The chosen file when the user uploaded an image instead of picking an icon. */
+  get file(): File | null {
+    return this._file;
+  }
+
+  /** True when the current value renders as an image (an uploaded file or a URL) rather than a library icon. */
+  get isImageValue(): boolean {
+    return !!this._file || this.icon.includes('/');
+  }
+
   get validity(): ValidityState {
-    if (this.required && !this.icon) {
+    if (this.required && !this.icon && !this._file) {
       return {
         valid: false,
         valueMissing: true,
@@ -81,7 +107,7 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
   }
 
   get validationMessage(): string {
-    return this.required && !this.icon ? 'Please select an icon.' : '';
+    return this.required && !this.icon && !this._file ? 'Please select an icon.' : '';
   }
 
   checkValidity(): boolean { return this.validity.valid; }
@@ -129,10 +155,11 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
   }
 
   private async openDialog() {
-    this._pendingIcon = this.icon;
+    this._pendingIcon = this.isImageValue ? '' : this.icon;
     this._pendingLibrary = this.library;
     this._pendingColor = this.color;
     this._searchQuery = '';
+    this._mode = this.allowUpload && this.isImageValue ? 'upload' : 'icon';
     this._iconList = await this.getIconsForLibrary(this.library);
     this._filteredIcons = this._iconList.slice(0, 200);
     this._dialogOpen = true;
@@ -142,20 +169,72 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
   }
 
   private closeDialog() {
+    this.discardPendingFile();
     this._dialog.hide();
     this._dialogOpen = false;
   }
 
   private handleConfirm() {
-    this.icon = this._pendingIcon;
-    this.library = this._pendingLibrary;
-    this.color = this._pendingColor;
+    if (this._mode === 'upload') {
+      if (this._pendingFile) {
+        if (this._fileUrl) {
+          URL.revokeObjectURL(this._fileUrl);
+        }
+        this._file = this._pendingFile;
+        this._fileUrl = this._pendingFileUrl;
+        this._pendingFile = null;
+        this._pendingFileUrl = null;
+        this.icon = '';
+      }
+    } else {
+      this.icon = this._pendingIcon;
+      this.library = this._pendingLibrary;
+      this.color = this._pendingColor;
+      this.clearFile();
+    }
     this.closeDialog();
     this.emit('zn-change');
+    if (this.triggerSubmit) {
+      this.formControlController.submit();
+    }
   }
 
   private handleCancel() {
     this.closeDialog();
+  }
+
+  private handleFileSelect(e: Event) {
+    const input = e.target as HTMLInputElement;
+    const file = input.files?.[0] ?? null;
+    if (!file) return;
+    this.discardPendingFile();
+    this._pendingFile = file;
+    this._pendingFileUrl = URL.createObjectURL(file);
+    input.value = '';
+  }
+
+  private discardPendingFile() {
+    if (this._pendingFileUrl) {
+      URL.revokeObjectURL(this._pendingFileUrl);
+    }
+    this._pendingFile = null;
+    this._pendingFileUrl = null;
+  }
+
+  private clearFile() {
+    if (this._fileUrl) {
+      URL.revokeObjectURL(this._fileUrl);
+    }
+    this._file = null;
+    this._fileUrl = null;
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.discardPendingFile();
+    if (this._fileUrl) {
+      URL.revokeObjectURL(this._fileUrl);
+    }
   }
 
   private handleSearchInput(e: Event) {
@@ -209,7 +288,11 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
     e.stopPropagation();
     this.icon = '';
     this.color = '';
+    this.clearFile();
     this.emit('zn-change');
+    if (this.triggerSubmit) {
+      this.formControlController.submit();
+    }
   }
 
   private _handleTriggerClick() {
@@ -220,7 +303,12 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
   render() {
     const hasLabel = !!this.label;
     const hasHelpText = !!this.helpText;
-    const hasIcon = !!this.icon;
+    const hasValue = !!this.icon || !!this._file;
+    // Image values (uploaded file or URL) omit the library so zn-icon's URL
+    // auto-detection renders an <img> instead of a font ligature.
+    const triggerIcon = this._fileUrl ?? this.icon;
+    const triggerLibrary = hasValue && !this.isImageValue ? this.library : nothing;
+    const pendingPreviewUrl = this._pendingFileUrl ?? (this.isImageValue && !this._file ? this.icon : this._fileUrl);
 
     return html`
       <div part="form-control"
@@ -236,15 +324,15 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
             part="trigger"
             class="icon-picker__trigger"
             panel-bg
-            icon=${hasIcon ? this.icon : nothing}
-            icon-library=${hasIcon ? this.library : nothing}
-            icon-color=${(hasIcon && this.color) || nothing}
+            icon=${hasValue ? triggerIcon : nothing}
+            icon-library=${triggerLibrary}
+            icon-color=${(hasValue && !this.isImageValue && this.color) || nothing}
             icon-size="24"
             ?disabled=${this.disabled}
             @click=${this._handleTriggerClick}>
-            ${hasIcon ? 'Click to edit' : 'Set an icon'}
+            ${hasValue ? 'Click to edit' : 'Set an icon'}
           </zn-button>
-          ${hasIcon ? html`
+          ${hasValue ? html`
             <zn-button
               class="icon-picker__clear"
               color="transparent"
@@ -272,6 +360,38 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
           <zn-dialog size="custom" label="Select Icon" @zn-close=${this.handleCancel}>
             <div class="icon-picker__dialog-layout">
               <div class="icon-picker__dialog-main">
+                ${this.allowUpload ? html`
+                  <div class="icon-picker__mode-switch">
+                    <zn-button
+                      size="small"
+                      color=${this._mode === 'icon' ? 'secondary' : 'transparent'}
+                      icon="apps"
+                      @click=${() => this._mode = 'icon'}>
+                      Icon Library
+                    </zn-button>
+                    <zn-button
+                      size="small"
+                      color=${this._mode === 'upload' ? 'secondary' : 'transparent'}
+                      icon="upload"
+                      @click=${() => this._mode = 'upload'}>
+                      Upload Image
+                    </zn-button>
+                  </div>
+                ` : nothing}
+
+                ${this._mode === 'upload' ? html`
+                  <div class="icon-picker__upload">
+                    <input class="icon-picker__file-input" type="file" accept=${this.accept} hidden
+                           @change=${this.handleFileSelect}>
+                    <zn-icon src="image" size="48"></zn-icon>
+                    ${this._pendingFile ? html`
+                      <span class="icon-picker__upload-filename">${this._pendingFile.name}</span>
+                    ` : nothing}
+                    <zn-button icon="upload" color="secondary" @click=${() => this._fileInput.click()}>
+                      ${pendingPreviewUrl ? 'Choose a different file' : 'Choose a file'}
+                    </zn-button>
+                  </div>
+                ` : html`
                 <div class="icon-picker__dialog-controls">
                   ${!this.noLibrary ? html`
                     <zn-select
@@ -354,10 +474,21 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
                     `)}
                   </div>
                 `}
+                `}
               </div>
 
               <div class="icon-picker__dialog-sidebar">
-                ${this._pendingIcon ? html`
+                ${this._mode === 'upload' ? html`
+                  <div class="icon-picker__preview ${pendingPreviewUrl ? '' : 'icon-picker__preview--empty'}">
+                    ${pendingPreviewUrl ? html`
+                      <img class="icon-picker__upload-preview" src=${pendingPreviewUrl} alt="">
+                      <span class="icon-picker__preview-name">${this._pendingFile?.name ?? ''}</span>
+                    ` : html`
+                      <zn-icon src="image" size="48"></zn-icon>
+                      <span class="icon-picker__preview-hint">Choose an image</span>
+                    `}
+                  </div>
+                ` : this._pendingIcon ? html`
                   <div class="icon-picker__preview">
                     <zn-icon
                       src=${this._pendingIcon}
@@ -379,7 +510,10 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
 
             <div slot="footer">
               <zn-button color="default" @click=${this.handleCancel}>Cancel</zn-button>
-              <zn-button color="primary" @click=${this.handleConfirm} ?disabled=${!this._pendingIcon}>Confirm</zn-button>
+              <zn-button color="primary" @click=${this.handleConfirm}
+                         ?disabled=${this._mode === 'upload' ? !this._pendingFile && !this.isImageValue : !this._pendingIcon}>
+                Confirm
+              </zn-button>
             </div>
           </zn-dialog>
         ` : nothing}

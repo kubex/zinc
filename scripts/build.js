@@ -9,7 +9,6 @@ import * as path from 'path';
 import chalk from 'chalk';
 import fs from 'fs/promises';
 import {readFileSync} from 'fs';
-import {replace} from 'esbuild-plugin-replace';
 import {sassPlugin} from 'esbuild-sass-plugin';
 import getPort, {portNumbers} from 'get-port';
 import postCSS from 'postcss';
@@ -144,7 +143,11 @@ async function buildTheSource()
     entryPoints,
     define:    {
       // Floating UI requires this to be set
-      'process.env.NODE_ENV': '"production"'
+      'process.env.NODE_ENV': '"production"',
+      // Substituted natively by esbuild. Don't move this to an onLoad-based replace plugin: those
+      // read every module in the graph from Node with no concurrency cap, which exhausts the file
+      // table (ENFILE) once deps with thousands of modules (echarts, lucide) are bundled.
+      __ZINC_VERSION__:       zincVersion
     },
     bundle:    true,
     splitting: true,
@@ -165,9 +168,6 @@ async function buildTheSource()
             console.error(err);
           }
         }
-      }),
-      replace({
-        __ZINC_VERSION__: zincVersion
       })
     ]
   };

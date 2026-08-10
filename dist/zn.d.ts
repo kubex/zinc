@@ -4487,6 +4487,29 @@ declare module "components/tab/index" {
         }
     }
 }
+declare module "components/tabs/tabs-navigation" {
+    export const TAB_STORE_PREFIX = "zntab:";
+    /** Scopes a store key to the current location, so each page keeps its own tab. */
+    export function locationScopedKey(key: string): string;
+    /**
+     * Ends the visits to every location other than the one on screen, discarding
+     * the tabs they were left showing. Called whenever the location may have
+     * changed, so the only tabs ever remembered are the current page's.
+     */
+    export function endVisitsToOtherLocations(): void;
+    /**
+     * Whether the current location was reached in a way that should replay the tab
+     * it was last left on: a reload, or a history traversal. A fresh navigation -
+     * including a client side one to a location visited earlier - returns false.
+     */
+    export function isRestorableLocation(): boolean;
+    /** The tab the current history entry was left showing, if it recorded one for the visit under way. */
+    export function getHistoryTab(key: string): string | null;
+    /** Adds a history entry for a tab change, making it its own Back step. */
+    export function pushHistoryTab(key: string, tab: string): void;
+    /** Records the tab on the current entry without adding a Back step. */
+    export function replaceHistoryTab(key: string, tab: string): void;
+}
 declare module "components/tabs/tabs.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import { Store } from "internal/storage";
@@ -4540,12 +4563,24 @@ declare module "components/tabs/tabs.component" {
         private _tabs;
         private _actions;
         private _knownUri;
+        private _defaultTab;
         private readonly hasSlotController;
         private readonly _domObserver;
         private readonly _monitorObserver;
         constructor();
         connectedCallback(): Promise<void>;
+        disconnectedCallback(): void;
         monitorDom(): void;
+        /** The key the active tab is persisted under. Null disables persistence. */
+        protected getTabStoreKey(): string | null;
+        protected getStoredTab(): string | null;
+        protected storeActiveTab(tabName: string): void;
+        protected restoreStoredTab(stored: string): void;
+        /** Activates the tab the container starts on, ignoring any stored selection. */
+        protected activateDefaultTab(): void;
+        private readonly handlePopState;
+        private pushTabHistory;
+        private getUriForTabId;
         _addPanel(panel: HTMLElement): void;
         _addTab(tab: HTMLElement): void;
         reRegisterTabs: () => void;
@@ -4558,9 +4593,9 @@ declare module "components/tabs/tabs.component" {
         _createUriPanel(tabEle: Element, tabUri: string, tabId: string): HTMLDivElement;
         _handleClick(event: PointerEvent): void;
         fetchUriTab(target: HTMLElement): void;
-        clickTab(target: HTMLElement, refresh: boolean): void;
+        clickTab(target: HTMLElement, refresh: boolean, pushHistory?: boolean): void;
         getRefTab(target: HTMLElement): string | null;
-        setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab?: string | null): void;
+        setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab?: string | null, pushHistory?: boolean): void;
         _setTabEleActive(ele: Element, active: boolean): void;
         selectTab(tabName: string, refresh: boolean): boolean;
         getActiveTab(): Element[];
@@ -4625,6 +4660,7 @@ declare module "components/page/page.component" {
         private hasExpandingActions;
         private actionObserver;
         private tabObserver;
+        private pageHistoryKey;
         connectedCallback(): Promise<void>;
         disconnectedCallback(): void;
         private handleAltPress;
@@ -4644,8 +4680,12 @@ declare module "components/page/page.component" {
         private handlePageScroll;
         updated(changedProperties: PropertyValues): void;
         private handleNavigationSelect;
+        private getNavigationItemPage;
         private activateTab;
         private activateInitialPageTab;
+        protected getTabStoreKey(): string;
+        protected activateDefaultTab(): void;
+        private getPageHistoryKey;
         private activateTabDefinition;
         private findNavItemForUri;
         private registerPagePanels;

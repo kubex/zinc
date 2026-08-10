@@ -583,6 +583,7 @@
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots-1">Slots</a></li>
             <li data-level="2"><a href="#events">Events</a></li>
+            <li data-level="2"><a href="#methods">Methods</a></li>
             <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
             <li data-level="2"><a href="#parts">Parts</a></li>
             <li data-level="2"><a href="#dependencies">Dependencies</a></li>
@@ -1208,9 +1209,17 @@
           <h3 id="storage-persistence" class="anchor-heading">
             Storage Persistence<a href="#storage-persistence" aria-label='Direct link to "Storage Persistence"'></a>
           </h3>
+          <p>Use <code>store-key</code> to persist the active tab selection.</p>
           <p>
-            Use <code>store-key</code> to persist the active tab selection across page reloads. By default, uses session
-            storage with a 5-minute TTL. Use <code>local-storage</code> for persistent storage beyond the session.
+            Each tab you open becomes its own history entry, so Back and Forward step through the tabs you visited
+            before leaving the page, and the entry the page was first rendered on returns you to the default tab.
+            Reloading restores the tab you were on. Navigating to the page — including a client-side navigation back to
+            somewhere visited earlier — starts from the default tab.
+          </p>
+          <p>
+            Selections are held in session storage, keyed by location. Use <code>local-storage</code> when a selection
+            should survive fresh navigation and browser sessions; it is then keyed by <code>store-key</code> alone and
+            takes no part in history.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -2343,6 +2352,39 @@
 
           <p>
             <em>Learn more about <a href="/getting-started/usage#events">events</a>.</em>
+          </p>
+
+          <h2 id="methods" class="anchor-heading">
+            Methods<a href="#methods" aria-label='Direct link to "Methods"'></a>
+          </h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-arguments">Arguments</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap"><code>getTabStoreKey()</code></td>
+                  <td>The key the active tab is persisted under. Null disables persistence.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>activateDefaultTab()</code></td>
+                  <td>Activates the tab the container starts on, ignoring any stored selection.</td>
+                  <td>-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/usage#methods">methods</a>.</em>
           </p>
 
           <h2 id="custom-properties" class="anchor-heading">

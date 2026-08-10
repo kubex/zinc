@@ -23773,6 +23773,15 @@
             },
             {
               "kind": "field",
+              "name": "pageHistoryKey",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
               "name": "handleAltPress",
               "privacy": "private"
             },
@@ -23931,6 +23940,24 @@
             },
             {
               "kind": "method",
+              "name": "getNavigationItemPage",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ZnPage | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "activateTab",
               "privacy": "private",
               "parameters": [
@@ -23945,6 +23972,10 @@
                   "type": {
                     "text": "boolean"
                   }
+                },
+                {
+                  "name": "pushHistory",
+                  "default": "false"
                 }
               ]
             },
@@ -23952,6 +23983,41 @@
               "kind": "method",
               "name": "activateInitialPageTab",
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "getTabStoreKey",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "description": "The key the active tab is persisted under. Null disables persistence.",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "activateDefaultTab",
+              "privacy": "protected",
+              "description": "Activates the tab the container starts on, ignoring any stored selection.",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getPageHistoryKey",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
             },
             {
               "kind": "method",
@@ -23963,6 +24029,10 @@
                   "type": {
                     "text": "TabDefinition"
                   }
+                },
+                {
+                  "name": "store",
+                  "default": "false"
                 }
               ]
             },
@@ -24393,6 +24463,19 @@
             },
             {
               "kind": "field",
+              "name": "_defaultTab",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
               "name": "hasSlotController",
               "privacy": "private",
               "readonly": true,
@@ -24407,7 +24490,7 @@
               "name": "_domObserver",
               "privacy": "private",
               "readonly": true,
-              "default": "new MutationController(this, { target: null, config: { childList: true, subtree: true }, callback: mutations => { mutations.forEach(mutation => { if (mutation.type !== 'childList') return; if (mutation.addedNodes.length > 0) { this._registerTabs(); } if (mutation.removedNodes.length > 0) { mutation.removedNodes.forEach(node => { const id = node instanceof HTMLElement ? node.id : ''; if (id) this.removeTabAndPanel(id); }); } }); }, })",
+              "default": "new MutationController(this, { target: null, config: {childList: true, subtree: true}, callback: mutations => { mutations.forEach(mutation => { if (mutation.type !== 'childList') return; if (mutation.addedNodes.length > 0) { this._registerTabs(); } if (mutation.removedNodes.length > 0) { mutation.removedNodes.forEach(node => { const id = node instanceof HTMLElement ? node.id : ''; if (id) this.removeTabAndPanel(id); }); } }); }, })",
               "inheritedFrom": {
                 "name": "ZnTabs",
                 "module": "components/tabs/tabs.js"
@@ -24418,7 +24501,7 @@
               "name": "_monitorObserver",
               "privacy": "private",
               "readonly": true,
-              "default": "new MutationController(this, { target: null, config: { childList: true, subtree: true }, callback: mutations => { mutations.forEach(mutation => { if (mutation.type !== 'childList') return; mutation.addedNodes.forEach(node => { if (node instanceof HTMLElement && node.id === this.monitor) { this.reRegisterTabs(); const storedValue = this._store.get(this.storeKey); if (storedValue !== null) { this._prepareTab(storedValue); this.setActiveTab(storedValue, false, false); } } }); }); }, })",
+              "default": "new MutationController(this, { target: null, config: {childList: true, subtree: true}, callback: mutations => { mutations.forEach(mutation => { if (mutation.type !== 'childList') return; mutation.addedNodes.forEach(node => { if (node instanceof HTMLElement && node.id === this.monitor) { this.reRegisterTabs(); const storedValue = this.getStoredTab(); if (storedValue !== null) { this.restoreStoredTab(storedValue); } } }); }); }, })",
               "inheritedFrom": {
                 "name": "ZnTabs",
                 "module": "components/tabs/tabs.js"
@@ -24427,6 +24510,103 @@
             {
               "kind": "method",
               "name": "monitorDom",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getStoredTab",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "storeActiveTab",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "tabName",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "restoreStoredTab",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "stored",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "handlePopState",
+              "privacy": "private",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "pushTabHistory",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "tabName",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getUriForTabId",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "tabId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "ZnTabs",
                 "module": "components/tabs/tabs.js"
@@ -24621,6 +24801,10 @@
                   "type": {
                     "text": "boolean"
                   }
+                },
+                {
+                  "name": "pushHistory",
+                  "default": "false"
                 }
               ],
               "inheritedFrom": {
@@ -24672,6 +24856,10 @@
                   "type": {
                     "text": "string | null"
                   }
+                },
+                {
+                  "name": "pushHistory",
+                  "default": "false"
                 }
               ],
               "inheritedFrom": {
@@ -26958,6 +27146,19 @@
             },
             {
               "kind": "field",
+              "name": "_defaultTab",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
               "name": "hasSlotController",
               "privacy": "private",
               "readonly": true,
@@ -26972,7 +27173,7 @@
               "name": "_domObserver",
               "privacy": "private",
               "readonly": true,
-              "default": "new MutationController(this, { target: null, config: { childList: true, subtree: true }, callback: mutations => { mutations.forEach(mutation => { if (mutation.type !== 'childList') return; if (mutation.addedNodes.length > 0) { this._registerTabs(); } if (mutation.removedNodes.length > 0) { mutation.removedNodes.forEach(node => { const id = node instanceof HTMLElement ? node.id : ''; if (id) this.removeTabAndPanel(id); }); } }); }, })",
+              "default": "new MutationController(this, { target: null, config: {childList: true, subtree: true}, callback: mutations => { mutations.forEach(mutation => { if (mutation.type !== 'childList') return; if (mutation.addedNodes.length > 0) { this._registerTabs(); } if (mutation.removedNodes.length > 0) { mutation.removedNodes.forEach(node => { const id = node instanceof HTMLElement ? node.id : ''; if (id) this.removeTabAndPanel(id); }); } }); }, })",
               "inheritedFrom": {
                 "name": "ZnTabs",
                 "module": "components/tabs/tabs.js"
@@ -26983,7 +27184,7 @@
               "name": "_monitorObserver",
               "privacy": "private",
               "readonly": true,
-              "default": "new MutationController(this, { target: null, config: { childList: true, subtree: true }, callback: mutations => { mutations.forEach(mutation => { if (mutation.type !== 'childList') return; mutation.addedNodes.forEach(node => { if (node instanceof HTMLElement && node.id === this.monitor) { this.reRegisterTabs(); const storedValue = this._store.get(this.storeKey); if (storedValue !== null) { this._prepareTab(storedValue); this.setActiveTab(storedValue, false, false); } } }); }); }, })",
+              "default": "new MutationController(this, { target: null, config: {childList: true, subtree: true}, callback: mutations => { mutations.forEach(mutation => { if (mutation.type !== 'childList') return; mutation.addedNodes.forEach(node => { if (node instanceof HTMLElement && node.id === this.monitor) { this.reRegisterTabs(); const storedValue = this.getStoredTab(); if (storedValue !== null) { this.restoreStoredTab(storedValue); } } }); }); }, })",
               "inheritedFrom": {
                 "name": "ZnTabs",
                 "module": "components/tabs/tabs.js"
@@ -26992,6 +27193,128 @@
             {
               "kind": "method",
               "name": "monitorDom",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getTabStoreKey",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              },
+              "description": "The key the active tab is persisted under. Null disables persistence.",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getStoredTab",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "storeActiveTab",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "tabName",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "restoreStoredTab",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "stored",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "activateDefaultTab",
+              "privacy": "protected",
+              "description": "Activates the tab the container starts on, ignoring any stored selection.",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "handlePopState",
+              "privacy": "private",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "pushTabHistory",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "tabName",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getUriForTabId",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "tabId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "ZnTabs",
                 "module": "components/tabs/tabs.js"
@@ -38784,6 +39107,15 @@
             },
             {
               "kind": "field",
+              "name": "_defaultTab",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
               "name": "hasSlotController",
               "privacy": "private",
               "readonly": true,
@@ -38794,18 +39126,108 @@
               "name": "_domObserver",
               "privacy": "private",
               "readonly": true,
-              "default": "new MutationController(this, { target: null, config: { childList: true, subtree: true }, callback: mutations => { mutations.forEach(mutation => { if (mutation.type !== 'childList') return; if (mutation.addedNodes.length > 0) { this._registerTabs(); } if (mutation.removedNodes.length > 0) { mutation.removedNodes.forEach(node => { const id = node instanceof HTMLElement ? node.id : ''; if (id) this.removeTabAndPanel(id); }); } }); }, })"
+              "default": "new MutationController(this, { target: null, config: {childList: true, subtree: true}, callback: mutations => { mutations.forEach(mutation => { if (mutation.type !== 'childList') return; if (mutation.addedNodes.length > 0) { this._registerTabs(); } if (mutation.removedNodes.length > 0) { mutation.removedNodes.forEach(node => { const id = node instanceof HTMLElement ? node.id : ''; if (id) this.removeTabAndPanel(id); }); } }); }, })"
             },
             {
               "kind": "field",
               "name": "_monitorObserver",
               "privacy": "private",
               "readonly": true,
-              "default": "new MutationController(this, { target: null, config: { childList: true, subtree: true }, callback: mutations => { mutations.forEach(mutation => { if (mutation.type !== 'childList') return; mutation.addedNodes.forEach(node => { if (node instanceof HTMLElement && node.id === this.monitor) { this.reRegisterTabs(); const storedValue = this._store.get(this.storeKey); if (storedValue !== null) { this._prepareTab(storedValue); this.setActiveTab(storedValue, false, false); } } }); }); }, })"
+              "default": "new MutationController(this, { target: null, config: {childList: true, subtree: true}, callback: mutations => { mutations.forEach(mutation => { if (mutation.type !== 'childList') return; mutation.addedNodes.forEach(node => { if (node instanceof HTMLElement && node.id === this.monitor) { this.reRegisterTabs(); const storedValue = this.getStoredTab(); if (storedValue !== null) { this.restoreStoredTab(storedValue); } } }); }); }, })"
             },
             {
               "kind": "method",
               "name": "monitorDom"
+            },
+            {
+              "kind": "method",
+              "name": "getTabStoreKey",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              },
+              "description": "The key the active tab is persisted under. Null disables persistence."
+            },
+            {
+              "kind": "method",
+              "name": "getStoredTab",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "storeActiveTab",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "tabName",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "restoreStoredTab",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "stored",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "activateDefaultTab",
+              "privacy": "protected",
+              "description": "Activates the tab the container starts on, ignoring any stored selection."
+            },
+            {
+              "kind": "field",
+              "name": "handlePopState",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "pushTabHistory",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "tabName",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getUriForTabId",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "tabId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -38952,6 +39374,10 @@
                   "type": {
                     "text": "boolean"
                   }
+                },
+                {
+                  "name": "pushHistory",
+                  "default": "false"
                 }
               ]
             },
@@ -38995,6 +39421,10 @@
                   "type": {
                     "text": "string | null"
                   }
+                },
+                {
+                  "name": "pushHistory",
+                  "default": "false"
                 }
               ]
             },
@@ -43628,6 +44058,89 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/well/well.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnWell",
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "inline",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "inline",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, '[default]', 'action')"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "icon"
+            },
+            {
+              "name": "inline",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "inline"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "well",
+          "tagName": "zn-well",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/well\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot.\n */",
+          "documentation": "https://zinc.style/components/well",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnWell",
+            "module": "components/well/well.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/vertical-stepper/vertical-stepper.js",
       "declarations": [
         {
@@ -43791,89 +44304,6 @@
           "declaration": {
             "name": "ZnVerticalStepper",
             "module": "components/vertical-stepper/vertical-stepper.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/well/well.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnWell",
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "icon"
-            },
-            {
-              "kind": "field",
-              "name": "inline",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "inline",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, '[default]', 'action')"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "icon"
-            },
-            {
-              "name": "inline",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "inline"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "well",
-          "tagName": "zn-well",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/well\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot.\n */",
-          "documentation": "https://zinc.style/components/well",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnWell",
-            "module": "components/well/well.js"
           }
         }
       ]

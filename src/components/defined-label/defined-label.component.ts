@@ -149,21 +149,15 @@ export default class ZnDefinedLabel extends ZincElement implements ZincFormContr
   private handleInputValueChange(e: Event) {
     const target = e.target as HTMLInputElement | HTMLSelectElement;
     this.inputValue = target.value.toLowerCase();
-
-    if (target.hasAttribute('data-label')) this.value = target.getAttribute('data-label') ?? "";
   }
 
-  private handleFormSubmit(e: Event, label?: string) {
-    // Sync from the submitted row so a partially typed filter never wins over
-    // the row's actual label key, and stale values from other rows are discarded
+  private handleFormSubmit(e: Event, label: string) {
+    // Submit the key shown on the clicked row — a predefined name, or the typed
+    // key for the custom row — and discard values left behind on other rows
     const row = (e.currentTarget as HTMLElement).closest('.defined-label__row');
     const control = row?.querySelector<ZnInput | ZnSelect>('.defined-label__value');
-    if (label) {
-      this.value = label;
-    }
-    if (control) {
-      this.inputValue = String(control.value ?? '').toLowerCase();
-    }
+    this.value = label;
+    this.inputValue = control ? String(control.value ?? '').toLowerCase() : '';
 
     const form = this.formControlController.getForm();
 
@@ -181,7 +175,6 @@ export default class ZnDefinedLabel extends ZincElement implements ZincFormContr
         <zn-select
           part="input-value"
           class="defined-label__value"
-          data-label="${label.name}"
           size="small"
           @zn-change="${this.handleInputValueChange}"
           @zn-input="${this.handleInputValueChange}">
@@ -197,16 +190,15 @@ export default class ZnDefinedLabel extends ZincElement implements ZincFormContr
         class="defined-label__value"
         type="text"
         placeholder="Label Value"
-        data-label="${label.name}"
         size="small"
         @zn-change="${this.handleInputValueChange}"
         @zn-input="${this.handleInputValueChange}"></zn-input>`;
   }
 
-  private renderRow(name: string, control: TemplateResult, label?: string): TemplateResult {
+  private renderRow(label: string, control: TemplateResult): TemplateResult {
     return html`
       <div class="defined-label__row">
-        <small class="defined-label__row-label">${name}</small>
+        <small class="defined-label__row-label">${label}</small>
         <div class="defined-label__row-controls">
           ${control}
           <zn-button
@@ -219,6 +211,7 @@ export default class ZnDefinedLabel extends ZincElement implements ZincFormContr
 
   render() {
     const labels = this.getFilteredLabels();
+    const showCustom = this.allowCustom && this.value !== '' && !labels.some(label => label.name === this.value);
 
     return html`
       <zn-dropdown class="defined-label__dropdown" sync="width">
@@ -243,11 +236,11 @@ export default class ZnDefinedLabel extends ZincElement implements ZincFormContr
 
         <div class="defined-label__panel">
           ${labels.length > 0
-            ? labels.map(label => this.renderRow(label.name, this.renderValueControl(label), label.name))
+            ? labels.map(label => this.renderRow(label.name, this.renderValueControl(label)))
             : html`
               <div class="defined-label__empty">Cannot find any predefined labels</div>`}
 
-          ${this.allowCustom && this.value !== '' ? this.renderRow(this.value, html`
+          ${showCustom ? this.renderRow(this.value, html`
             <zn-input
               part="input-value"
               class="defined-label__value"

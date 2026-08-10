@@ -200,8 +200,15 @@ Use the `active` attribute to specify which tab should be active by default.
 
 ### Storage Persistence
 
-Use `store-key` to persist the active tab selection across page reloads. By default, uses session storage with a
-5-minute TTL. Use `local-storage` for persistent storage beyond the session.
+Use `store-key` to persist the active tab selection.
+
+Each tab you open becomes its own history entry, so Back and Forward step through the tabs you visited before leaving the
+page, and the entry the page was first rendered on returns you to the default tab. Reloading restores the tab you were
+on. Navigating to the page — including a client-side navigation back to somewhere visited earlier — starts from the
+default tab.
+
+Selections are held in session storage, keyed by location. Use `local-storage` when a selection should survive fresh
+navigation and browser sessions; it is then keyed by `store-key` alone and takes no part in history.
 
 ```html:preview
 <zn-tabs flush store-key="my-tabs">

@@ -1,11 +1,20 @@
-import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
-import { deepQuerySelectorAll } from "../../utilities/query";
-import { HasSlotController } from "../../internal/slot";
-import { ifDefined } from "lit/directives/if-defined.js";
-import { md5 } from "../../utilities/md5";
-import { MutationController } from '@lit-labs/observers/mutation-controller.js';
-import { property } from 'lit/decorators.js';
-import { Store } from "../../internal/storage";
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {deepQuerySelectorAll} from "../../utilities/query";
+import {
+  endVisitsToOtherLocations,
+  getHistoryTab,
+  isRestorableLocation,
+  locationScopedKey,
+  pushHistoryTab,
+  replaceHistoryTab,
+  TAB_STORE_PREFIX
+} from './tabs-navigation';
+import {HasSlotController} from "../../internal/slot";
+import {ifDefined} from "lit/directives/if-defined.js";
+import {md5} from "../../utilities/md5";
+import {MutationController} from '@lit-labs/observers/mutation-controller.js';
+import {property} from 'lit/decorators.js';
+import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './tabs.scss';
@@ -34,25 +43,25 @@ const tabContainerSelector = 'zn-tabs, zn-page, zn-page-nav';
  */
 export default class ZnTabs extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
-  @property({ attribute: 'master-id', reflect: true }) masterId: string;
-  @property({ attribute: 'default-uri', reflect: true }) defaultUri = '';
-  @property({ attribute: 'active', reflect: true }) _current = '';
-  @property({ attribute: 'split', type: Number, reflect: true }) _split: number;
-  @property({ attribute: 'split-min', type: Number, reflect: true }) _splitMin = 60;
-  @property({ attribute: 'split-min-secondary', type: Number, reflect: true }) _splitMinSecondary: number;
-  @property({ attribute: 'split-max', type: Number, reflect: true }) _splitMax: number;
-  @property({ attribute: 'primary-caption', reflect: true }) primaryCaption = 'Navigation';
-  @property({ attribute: 'secondary-caption', reflect: true }) secondaryCaption = 'Content';
-  @property({ attribute: 'no-prefetch', type: Boolean, reflect: true }) noPrefetch = false;
-  @property({ attribute: 'no-cache', type: Boolean, reflect: true }) noCache = false;
+  @property({attribute: 'master-id', reflect: true}) masterId: string;
+  @property({attribute: 'default-uri', reflect: true}) defaultUri = '';
+  @property({attribute: 'active', reflect: true}) _current = '';
+  @property({attribute: 'split', type: Number, reflect: true}) _split: number;
+  @property({attribute: 'split-min', type: Number, reflect: true}) _splitMin = 60;
+  @property({attribute: 'split-min-secondary', type: Number, reflect: true}) _splitMinSecondary: number;
+  @property({attribute: 'split-max', type: Number, reflect: true}) _splitMax: number;
+  @property({attribute: 'primary-caption', reflect: true}) primaryCaption = 'Navigation';
+  @property({attribute: 'secondary-caption', reflect: true}) secondaryCaption = 'Content';
+  @property({attribute: 'no-prefetch', type: Boolean, reflect: true}) noPrefetch = false;
+  @property({attribute: 'no-cache', type: Boolean, reflect: true}) noCache = false;
   // session storage if not local
-  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage: boolean;
-  @property({ attribute: 'store-key' }) storeKey: string;
-  @property({ attribute: 'store-ttl', type: Number, reflect: true }) storeTtl = 0;
-  @property({ attribute: 'padded', type: Boolean, reflect: true }) padded = false;
-  @property({ attribute: 'fetch-style', type: String, reflect: true }) fetchStyle = "";
-  @property({ attribute: 'full-width', type: Boolean, reflect: true }) fullWidth = false;
-  @property({ attribute: 'padded-right', type: Boolean, reflect: true }) paddedRight = false;
+  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
+  @property({attribute: 'store-key'}) storeKey: string;
+  @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
+  @property({attribute: 'padded', type: Boolean, reflect: true}) padded = false;
+  @property({attribute: 'fetch-style', type: String, reflect: true}) fetchStyle = "";
+  @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth = false;
+  @property({attribute: 'padded-right', type: Boolean, reflect: true}) paddedRight = false;
   @property() monitor: string;
   // Creating a header
   @property() caption: string;
@@ -66,11 +75,12 @@ export default class ZnTabs extends ZincElement {
   private _tabs: HTMLElement[] = [];
   private _actions: HTMLElement[] = [];
   private _knownUri: Map<string, string> = new Map<string, string>();
+  private _defaultTab = '';
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'bottom', 'right', 'left', 'top', 'actions');
 
   private readonly _domObserver = new MutationController(this, {
     target: null,
-    config: { childList: true, subtree: true },
+    config: {childList: true, subtree: true},
     callback: mutations => {
       mutations.forEach(mutation => {
         if (mutation.type !== 'childList') return;
@@ -89,17 +99,16 @@ export default class ZnTabs extends ZincElement {
 
   private readonly _monitorObserver = new MutationController(this, {
     target: null,
-    config: { childList: true, subtree: true },
+    config: {childList: true, subtree: true},
     callback: mutations => {
       mutations.forEach(mutation => {
         if (mutation.type !== 'childList') return;
         mutation.addedNodes.forEach(node => {
           if (node instanceof HTMLElement && node.id === this.monitor) {
             this.reRegisterTabs();
-            const storedValue = this._store.get(this.storeKey);
+            const storedValue = this.getStoredTab();
             if (storedValue !== null) {
-              this._prepareTab(storedValue);
-              this.setActiveTab(storedValue, false, false);
+              this.restoreStoredTab(storedValue);
             }
           }
         });
@@ -133,7 +142,7 @@ export default class ZnTabs extends ZincElement {
 
     const defaultID = this.defaultUri ? this._uriToId(this.defaultUri) : '';
 
-    this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "zntab:", this.storeTtl);
+    this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, TAB_STORE_PREFIX, this.storeTtl);
     Array.from(this.children).forEach((element) => {
       if (element.slot === '') {
         this._panels.set(element.getAttribute('id') || defaultID, [element]);
@@ -142,12 +151,137 @@ export default class ZnTabs extends ZincElement {
 
     this.observerDom();
     this.monitorDom();
+    window.addEventListener('popstate', this.handlePopState, {passive: true});
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('popstate', this.handlePopState);
+
+    // The container is torn down before the url it is being replaced by is
+    // pushed, so the check waits a task: by then a navigation has changed the
+    // location and this visit is over, while a re-render is back on screen.
+    setTimeout(() => {
+      if (!this.isConnected) {
+        endVisitsToOtherLocations();
+      }
+    });
   }
 
   monitorDom() {
     if (this.monitor) {
       this._monitorObserver.observe(this);
     }
+  }
+
+  /** The key the active tab is persisted under. Null disables persistence. */
+  protected getTabStoreKey(): string | null {
+    return this.storeKey || null;
+  }
+
+  protected getStoredTab(): string | null {
+    const key = this.getTabStoreKey();
+    if (key === null || !this._store) {
+      return null;
+    }
+
+    // Local storage persists across fresh navigation and browser sessions.
+    if (this.localStorage) {
+      return this._store.get(key);
+    }
+
+    // Nothing is remembered for a location that has been navigated away from:
+    // its stored tab went with the visit, and so did the tabs on its entries.
+    const stored = this._store.get(locationScopedKey(key));
+    if (stored === null) {
+      return null;
+    }
+
+    // The history entry is authoritative where it survived; a reload wipes it,
+    // leaving the selection the location was last left on.
+    const fromHistory = getHistoryTab(key);
+    if (fromHistory !== null) {
+      return fromHistory;
+    }
+
+    return isRestorableLocation() ? stored : null;
+  }
+
+  protected storeActiveTab(tabName: string) {
+    const key = this.getTabStoreKey();
+    if (key === null || !this._store) {
+      return;
+    }
+
+    // Uri tab ids are derived from the master id, so store the uri itself.
+    const value = this.getUriForTabId(tabName) ?? tabName;
+    this._store.set(this.localStorage ? key : locationScopedKey(key), value);
+    if (!this.localStorage) {
+      replaceHistoryTab(key, value);
+    }
+  }
+
+  protected restoreStoredTab(stored: string) {
+    const uriTab = this._tabs.find(tab => tab.getAttribute('tab-uri') === stored);
+    if (uriTab) {
+      this.clickTab(uriTab, false);
+      return;
+    }
+
+    this._prepareTab(stored);
+    this.setActiveTab(stored, true, false);
+  }
+
+  /** Activates the tab the container starts on, ignoring any stored selection. */
+  protected activateDefaultTab() {
+    if (!this._panels.has(this._defaultTab) && this._tabs.length > 0) {
+      const tabUri = this._tabs[0].getAttribute('tab-uri');
+      if (tabUri) {
+        this.clickTab(this._tabs[0], false);
+        return;
+      }
+    }
+
+    this.setActiveTab(this._defaultTab, true, false);
+  }
+
+  // Back and forward move between recorded tabs.
+  private readonly handlePopState = () => {
+    const key = this.getTabStoreKey();
+    if (key === null) {
+      return;
+    }
+
+    // Only entries that name a tab move the container. Entries that say nothing
+    // about it - the extra one the console pushes for every document load, one
+    // pushed before this container was on screen, one belonging to another page,
+    // one left by a visit that has ended - leave the open tab where it is.
+    // Overwriting it with the default tab would show the first tab on the way
+    // through, in place of the tab the entry being stepped onto stands for.
+    const tab = getHistoryTab(key);
+    if (tab === null) {
+      return;
+    }
+
+    this.restoreStoredTab(tab);
+  };
+
+  private pushTabHistory(tabName: string) {
+    const key = this.getTabStoreKey();
+    if (key === null || this.localStorage) {
+      return;
+    }
+
+    pushHistoryTab(key, this.getUriForTabId(tabName) ?? tabName);
+  }
+
+  private getUriForTabId(tabId: string): string | null {
+    for (const [uri, id] of this._knownUri) {
+      if (id === tabId) {
+        return uri;
+      }
+    }
+    return null;
   }
 
   _addPanel(panel: HTMLElement) {
@@ -176,29 +310,20 @@ export default class ZnTabs extends ZincElement {
     super.firstUpdated(_changedProperties);
     setTimeout(() => {
       this._registerTabs();
+      this._defaultTab = this._current || '';
 
-      const storedValue = this._store.get(this.storeKey);
+      const storedValue = this.getStoredTab();
       if (storedValue !== null) {
-        this._prepareTab(storedValue);
-        this.setActiveTab(storedValue, false, false);
+        this.restoreStoredTab(storedValue);
         return;
       }
 
-      const defaultTab = this._current || '';
-      if (!this._panels.has(defaultTab) && this._tabs.length > 0) {
-        const tabUri = this._tabs[0].getAttribute('tab-uri');
-        if (tabUri) {
-          this.clickTab(this._tabs[0], false);
-          return;
-        }
-      }
-
-      this.setActiveTab(defaultTab, false, false);
+      this.activateDefaultTab();
     }, 10);
 
     this.addEventListener('zn-menu-select', () => {
       setTimeout(this.reRegisterTabs, 200);
-    }, { passive: true });
+    }, {passive: true});
   }
 
   switchTab(inc: number) {
@@ -215,7 +340,7 @@ export default class ZnTabs extends ZincElement {
       nextIndex = 0; // wrap around to the first tab
     }
     const nextTabId = Array.from(this._panels.keys())[nextIndex];
-    this.setActiveTab(nextTabId, true, false);
+    this.setActiveTab(nextTabId, true, false, null, true);
   }
 
   nextTab() {
@@ -277,7 +402,7 @@ export default class ZnTabs extends ZincElement {
     }
 
     document.dispatchEvent(new CustomEvent('zn-new-element', {
-      detail: { element: tabNode, source: tabEle }
+      detail: {element: tabNode, source: tabEle}
     }));
     return tabNode;
   }
@@ -288,9 +413,9 @@ export default class ZnTabs extends ZincElement {
     if (target) {
       if ('startViewTransition' in document) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (document as any).startViewTransition(() => this.clickTab(target, event.altKey));
+        (document as any).startViewTransition(() => this.clickTab(target, event.altKey, true));
       } else {
-        this.clickTab(target, event.altKey)
+        this.clickTab(target, event.altKey, true)
       }
     }
   }
@@ -303,7 +428,7 @@ export default class ZnTabs extends ZincElement {
     }
   }
 
-  clickTab(target: HTMLElement, refresh: boolean) {
+  clickTab(target: HTMLElement, refresh: boolean, pushHistory = false) {
     const tabUri = target.getAttribute('tab-uri');
     const wasCached = !!tabUri && this._panels.has(this._uriToId(tabUri));
     this.fetchUriTab(target);
@@ -311,7 +436,7 @@ export default class ZnTabs extends ZincElement {
     if (target.hasAttribute('tab')) {
       const forceRefresh = refresh || (this.noCache && wasCached);
       setTimeout(() => {
-        this.setActiveTab(target.getAttribute('tab') || '', true, forceRefresh, this.getRefTab(target));
+        this.setActiveTab(target.getAttribute('tab') || '', true, forceRefresh, this.getRefTab(target), pushHistory);
       }, 10);
     }
   }
@@ -331,7 +456,8 @@ export default class ZnTabs extends ZincElement {
     return null;
   }
 
-  setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab: string | null = null) {
+  setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab: string | null = null, pushHistory = false) {
+    const previous = this._current;
     let hasActive = false;
     this._tabs.forEach(tab => {
 
@@ -355,8 +481,14 @@ export default class ZnTabs extends ZincElement {
     //Set on the element as a failsafe before TabPanel is loaded
     //This must be done AFTER selectTab to avoid panel bugs
 
-    if (store && this._store !== null) {
-      this._store.set(this.storeKey, tabName);
+    // The entry must be pushed before the tab is recorded, so the entry being
+    // left keeps the tab it was showing.
+    if (pushHistory && this._current === tabName && previous !== tabName) {
+      this.pushTabHistory(tabName);
+    }
+
+    if (store) {
+      this.storeActiveTab(tabName);
     }
   }
 
@@ -402,7 +534,7 @@ export default class ZnTabs extends ZincElement {
               gaid = this._activeTab.getAttribute('gaid')!;
             }
             document.dispatchEvent(new CustomEvent('zn-refresh-element', {
-              detail: { element: element, uri: uri, gaid: gaid }
+              detail: {element: element, uri: uri, gaid: gaid}
             }));
           }
         });

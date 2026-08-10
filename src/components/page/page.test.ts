@@ -85,6 +85,214 @@ describe('<zn-page>', () => {
     expect(getComputedStyle(selectedTab).display).to.not.equal('none');
   });
 
+  describe('tab persistence', () => {
+    const originalHref = window.location.href;
+    let locationCount = 0;
+
+    const renderPage = () => fixture<ZnPage>(html`
+      <zn-page caption="Persisted Page">
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+        <zn-tab caption="Billing">Billing Content</zn-tab>
+        <zn-tab caption="Notes">Notes Content</zn-tab>
+      </zn-page>
+    `);
+
+    const clickTab = async (page: ZnPage, index: number) => {
+      const navbar = page.shadowRoot!.querySelector('zn-navbar')!;
+      navbar.shadowRoot!.querySelectorAll<HTMLElement>('li:not(.more)')[index].click();
+      await aTimeout(40);
+    };
+
+    const clickBilling = (page: ZnPage) => clickTab(page, 1);
+
+    const goBack = async () => {
+      await new Promise<void>(resolve => {
+        window.addEventListener('popstate', () => resolve(), {once: true});
+        window.history.back();
+      });
+      await aTimeout(40);
+    };
+
+    beforeEach(() => {
+      locationCount += 1;
+      window.history.pushState({}, '', `?page-test=case-${locationCount}`);
+    });
+
+    afterEach(() => window.history.replaceState({}, '', originalHref));
+
+    it('restores the active tab when the page is reloaded or returned to', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+      await clickBilling(page);
+      expect(page.getAttribute('active')).to.equal('billing');
+      page.remove();
+
+      // A reload replaces the document; the shell may also replace the history
+      // entry's state, so restoring must not depend on that state surviving.
+      window.history.replaceState({uri: window.location.pathname}, '');
+      window.dispatchEvent(new PopStateEvent('popstate'));
+
+      const restoredPage = await renderPage();
+      await aTimeout(40);
+      expect(restoredPage.getAttribute('active')).to.equal('billing');
+    });
+
+    it('uses the default tab when navigating to the page', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+      await clickBilling(page);
+      page.remove();
+
+      const stored = window.location.search;
+      window.history.pushState({}, '', '?page-test=elsewhere');
+      window.history.pushState({}, '', stored);
+
+      const freshPage = await renderPage();
+      await aTimeout(40);
+      expect(freshPage.getAttribute('active')).to.equal('');
+    });
+
+    it('restores a tab cycled without the navigation', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+
+      // Keyboard shortcuts cycle tabs directly, bypassing the navbar.
+      page.nextTab();
+      await aTimeout(40);
+      expect(page.getAttribute('active')).to.equal('billing');
+      page.remove();
+
+      window.dispatchEvent(new PopStateEvent('popstate'));
+      const restoredPage = await renderPage();
+      await aTimeout(40);
+      expect(restoredPage.getAttribute('active')).to.equal('billing');
+    });
+
+    it('steps back through each tab that was opened', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+
+      await clickTab(page, 1);
+      expect(page.getAttribute('active')).to.equal('billing');
+      await clickTab(page, 2);
+      expect(page.getAttribute('active')).to.equal('notes');
+
+      await goBack();
+      expect(page.getAttribute('active')).to.equal('billing');
+
+      await goBack();
+      expect(page.getAttribute('active')).to.equal('');
+    });
+
+    it('keeps the open tab when stepping back onto an entry that records no tab', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+
+      // The shell pushes an entry of its own for every document load, recording
+      // no tab of the page already on screen.
+      window.history.pushState({uri: window.location.pathname}, '', window.location.href);
+
+      await clickTab(page, 2);
+      expect(page.getAttribute('active')).to.equal('notes');
+
+      // Stepping onto the shell's entry says nothing about the tab, so the open
+      // one stays rather than the page dropping back to its first tab.
+      await goBack();
+      expect(page.getAttribute('active')).to.equal('notes');
+    });
+
+    it('keeps the tab history when the page is reloaded', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+      await clickTab(page, 1);
+      await clickTab(page, 2);
+      expect(page.getAttribute('active')).to.equal('notes');
+      page.remove();
+
+      // A reload replaces the document, and the shell pushes a fresh entry for it.
+      window.history.pushState({uri: window.location.pathname}, '', window.location.href);
+      window.dispatchEvent(new PopStateEvent('popstate'));
+
+      const reloadedPage = await renderPage();
+      await aTimeout(40);
+      expect(reloadedPage.getAttribute('active')).to.equal('notes');
+
+      await goBack();
+      expect(reloadedPage.getAttribute('active')).to.equal('notes');
+
+      await goBack();
+      expect(reloadedPage.getAttribute('active')).to.equal('billing');
+    });
+
+    it('steps straight back to the previous tab when the reloaded entry is kept', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+      await clickTab(page, 1);
+      await clickTab(page, 2);
+      expect(page.getAttribute('active')).to.equal('notes');
+      page.remove();
+
+      // The shell records the uri on the entry the document loaded on, rather
+      // than pushing a second entry for the same page.
+      const state = window.history.state as Record<string, unknown> | null;
+      window.history.replaceState({...state, uri: window.location.pathname}, '', window.location.href);
+      window.dispatchEvent(new PopStateEvent('popstate'));
+
+      const reloadedPage = await renderPage();
+      await aTimeout(40);
+      expect(reloadedPage.getAttribute('active')).to.equal('notes');
+
+      await goBack();
+      expect(reloadedPage.getAttribute('active')).to.equal('billing');
+
+      await goBack();
+      expect(reloadedPage.getAttribute('active')).to.equal('');
+    });
+
+    it('keeps the tab when the page is re-rendered at the same location', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+      await clickBilling(page);
+      page.remove();
+
+      const rerenderedPage = await renderPage();
+      await aTimeout(40);
+      expect(rerenderedPage.getAttribute('active')).to.equal('billing');
+    });
+
+    it('forgets the tab and its history once the page is navigated away from', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+      await clickBilling(page);
+      const pageLocation = window.location.search;
+      page.remove();
+
+      window.history.pushState({}, '', '?page-test=departed');
+      await aTimeout(40);
+
+      await goBack();
+      expect(window.location.search).to.equal(pageLocation);
+
+      const returnedPage = await renderPage();
+      await aTimeout(40);
+      expect(returnedPage.getAttribute('active')).to.equal('');
+    });
+
+    it('adds one history entry per tab, and none for the tab it opens on', async () => {
+      const lengthBeforeRender = window.history.length;
+      const page = await renderPage();
+      await aTimeout(40);
+      expect(window.history.length).to.equal(lengthBeforeRender);
+
+      await clickTab(page, 1);
+      expect(window.history.length).to.equal(lengthBeforeRender + 1);
+
+      // Reselecting the open tab is not a new step.
+      await clickTab(page, 1);
+      expect(window.history.length).to.equal(lengthBeforeRender + 1);
+    });
+  });
+
   it('creates uri tab panels from page navigation items', async () => {
     const el = await fixture<ZnPage>(html`
       <zn-page caption="Page Title">
@@ -140,6 +348,45 @@ describe('<zn-page>', () => {
     expect(middleDynamicPanel).to.equal(null);
     expect(innerDynamicPanel).to.exist;
     expect(innerDynamicPanel.hasAttribute('selected')).to.equal(true);
+  });
+
+  it('keeps nested page tab selections scoped to the nested page', async () => {
+    const outerPage = await fixture<ZnPage>(html`
+      <zn-page caption="Outer Page">
+        <zn-tab caption="Outer One">
+          <zn-page caption="Inner Page" nested>
+            <zn-tab caption="Inner One">Inner One Content</zn-tab>
+            <zn-tab caption="Inner Two">Inner Two Content</zn-tab>
+          </zn-page>
+        </zn-tab>
+        <zn-tab caption="Outer Two">Outer Two Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(80);
+
+    const innerPage = outerPage.querySelector<ZnPage>('zn-page')!;
+    const outerNavbar = outerPage.shadowRoot!.querySelector('zn-navbar')!;
+    const innerNavbar = innerPage.shadowRoot!.querySelector('zn-navbar')!;
+    const innerSecondItem = innerNavbar.shadowRoot!.querySelectorAll<HTMLElement>('li:not(.more)')[1];
+
+    innerSecondItem.click();
+    await aTimeout(40);
+
+    expect(innerPage.getAttribute('active')).to.equal('inner-two');
+    expect(outerPage.getAttribute('active')).to.equal('outer-one');
+    expect(outerPage.shadowRoot!.querySelector('#outer-one')!.hasAttribute('selected')).to.equal(true);
+    expect(outerPage.shadowRoot!.querySelector('#outer-two')!.hasAttribute('selected')).to.equal(false);
+
+    // Even if a composed selection is delivered to an ancestor navbar, the
+    // ancestor page must ignore an item owned by the nested page.
+    outerNavbar.dispatchEvent(new CustomEvent('zn-select', {
+      bubbles: true,
+      composed: true,
+      detail: {item: innerSecondItem}
+    }));
+    await aTimeout(20);
+
+    expect(outerPage.getAttribute('active')).to.equal('outer-one');
   });
 
   it('uses an explicit zn-tab for overview content', async () => {

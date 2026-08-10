@@ -1,11 +1,13 @@
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {deepQuerySelectorAll} from "../../utilities/query";
 import {
+  endVisitsToOtherLocations,
   getHistoryTab,
   isRestorableLocation,
   locationScopedKey,
   pushHistoryTab,
-  replaceHistoryTab
+  replaceHistoryTab,
+  TAB_STORE_PREFIX
 } from './tabs-navigation';
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
@@ -140,7 +142,7 @@ export default class ZnTabs extends ZincElement {
 
     const defaultID = this.defaultUri ? this._uriToId(this.defaultUri) : '';
 
-    this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "zntab:", this.storeTtl);
+    this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, TAB_STORE_PREFIX, this.storeTtl);
     Array.from(this.children).forEach((element) => {
       if (element.slot === '') {
         this._panels.set(element.getAttribute('id') || defaultID, [element]);
@@ -155,6 +157,15 @@ export default class ZnTabs extends ZincElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     window.removeEventListener('popstate', this.handlePopState);
+
+    // The container is torn down before the url it is being replaced by is
+    // pushed, so the check waits a task: by then a navigation has changed the
+    // location and this visit is over, while a re-render is back on screen.
+    setTimeout(() => {
+      if (!this.isConnected) {
+        endVisitsToOtherLocations();
+      }
+    });
   }
 
   monitorDom() {
@@ -179,6 +190,13 @@ export default class ZnTabs extends ZincElement {
       return this._store.get(key);
     }
 
+    // Nothing is remembered for a location that has been navigated away from:
+    // its stored tab went with the visit, and so did the tabs on its entries.
+    const stored = this._store.get(locationScopedKey(key));
+    if (stored === null) {
+      return null;
+    }
+
     // The history entry is authoritative where it survived; a reload wipes it,
     // leaving the selection the location was last left on.
     const fromHistory = getHistoryTab(key);
@@ -186,7 +204,7 @@ export default class ZnTabs extends ZincElement {
       return fromHistory;
     }
 
-    return isRestorableLocation() ? this._store.get(locationScopedKey(key)) : null;
+    return isRestorableLocation() ? stored : null;
   }
 
   protected storeActiveTab(tabName: string) {
@@ -227,18 +245,21 @@ export default class ZnTabs extends ZincElement {
     this.setActiveTab(this._defaultTab, true, false);
   }
 
-  // Back and forward move between recorded tabs. An entry with no record - the
-  // one the page was first rendered on, or one belonging to another page - puts
-  // the container back on its default tab.
+  // Back and forward move between recorded tabs.
   private readonly handlePopState = () => {
     const key = this.getTabStoreKey();
     if (key === null) {
       return;
     }
 
+    // Only entries that name a tab move the container. Entries that say nothing
+    // about it - the extra one the console pushes for every document load, one
+    // pushed before this container was on screen, one belonging to another page,
+    // one left by a visit that has ended - leave the open tab where it is.
+    // Overwriting it with the default tab would show the first tab on the way
+    // through, in place of the tab the entry being stepped onto stands for.
     const tab = getHistoryTab(key);
     if (tab === null) {
-      this.activateDefaultTab();
       return;
     }
 

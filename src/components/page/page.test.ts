@@ -184,6 +184,100 @@ describe('<zn-page>', () => {
       expect(page.getAttribute('active')).to.equal('');
     });
 
+    it('keeps the open tab when stepping back onto an entry that records no tab', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+
+      // The shell pushes an entry of its own for every document load, recording
+      // no tab of the page already on screen.
+      window.history.pushState({uri: window.location.pathname}, '', window.location.href);
+
+      await clickTab(page, 2);
+      expect(page.getAttribute('active')).to.equal('notes');
+
+      // Stepping onto the shell's entry says nothing about the tab, so the open
+      // one stays rather than the page dropping back to its first tab.
+      await goBack();
+      expect(page.getAttribute('active')).to.equal('notes');
+    });
+
+    it('keeps the tab history when the page is reloaded', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+      await clickTab(page, 1);
+      await clickTab(page, 2);
+      expect(page.getAttribute('active')).to.equal('notes');
+      page.remove();
+
+      // A reload replaces the document, and the shell pushes a fresh entry for it.
+      window.history.pushState({uri: window.location.pathname}, '', window.location.href);
+      window.dispatchEvent(new PopStateEvent('popstate'));
+
+      const reloadedPage = await renderPage();
+      await aTimeout(40);
+      expect(reloadedPage.getAttribute('active')).to.equal('notes');
+
+      await goBack();
+      expect(reloadedPage.getAttribute('active')).to.equal('notes');
+
+      await goBack();
+      expect(reloadedPage.getAttribute('active')).to.equal('billing');
+    });
+
+    it('steps straight back to the previous tab when the reloaded entry is kept', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+      await clickTab(page, 1);
+      await clickTab(page, 2);
+      expect(page.getAttribute('active')).to.equal('notes');
+      page.remove();
+
+      // The shell records the uri on the entry the document loaded on, rather
+      // than pushing a second entry for the same page.
+      const state = window.history.state as Record<string, unknown> | null;
+      window.history.replaceState({...state, uri: window.location.pathname}, '', window.location.href);
+      window.dispatchEvent(new PopStateEvent('popstate'));
+
+      const reloadedPage = await renderPage();
+      await aTimeout(40);
+      expect(reloadedPage.getAttribute('active')).to.equal('notes');
+
+      await goBack();
+      expect(reloadedPage.getAttribute('active')).to.equal('billing');
+
+      await goBack();
+      expect(reloadedPage.getAttribute('active')).to.equal('');
+    });
+
+    it('keeps the tab when the page is re-rendered at the same location', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+      await clickBilling(page);
+      page.remove();
+
+      const rerenderedPage = await renderPage();
+      await aTimeout(40);
+      expect(rerenderedPage.getAttribute('active')).to.equal('billing');
+    });
+
+    it('forgets the tab and its history once the page is navigated away from', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+      await clickBilling(page);
+      const pageLocation = window.location.search;
+      page.remove();
+
+      window.history.pushState({}, '', '?page-test=departed');
+      await aTimeout(40);
+
+      await goBack();
+      expect(window.location.search).to.equal(pageLocation);
+
+      const returnedPage = await renderPage();
+      await aTimeout(40);
+      expect(returnedPage.getAttribute('active')).to.equal('');
+    });
+
     it('adds one history entry per tab, and none for the tab it opens on', async () => {
       const lengthBeforeRender = window.history.length;
       const page = await renderPage();

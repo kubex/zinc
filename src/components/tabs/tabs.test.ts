@@ -146,6 +146,26 @@ describe('<zn-tabs>', () => {
       expect(el.getAttribute('active')).to.equal('first');
     });
 
+    it('forgets the selection once the location is navigated away from', async () => {
+      const el = await renderTabs();
+      await aTimeout(40);
+      el.querySelector('zn-navbar')!.querySelectorAll<HTMLElement>('li')[1].click();
+      await aTimeout(40);
+      const stored = window.location.search;
+      el.remove();
+
+      navigateTo('departed');
+      await aTimeout(40);
+      expect(sessionStorage.getItem(`zntab:${storeKey}@${window.location.pathname}${stored}`)).to.equal(null);
+
+      window.history.replaceState({}, '', stored);
+      returnWithHistory();
+      const returned = await renderTabs();
+      await aTimeout(40);
+
+      expect(returned.getAttribute('active')).to.equal('first');
+    });
+
     it('keeps a session selection out of local storage', async () => {
       const el = await renderTabs();
       await aTimeout(40);

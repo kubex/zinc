@@ -23,12 +23,6 @@ interface TabDefinition {
   selected: boolean;
 }
 
-const PAGE_TABS_HISTORY_KEY = '__znPageTabs';
-
-interface PageTabsHistoryState {
-  [PAGE_TABS_HISTORY_KEY]?: Record<string, string>;
-}
-
 /**
  * @summary Combines a page header with tab navigation and tab panels.
  * @documentation https://zinc.style/components/page
@@ -296,14 +290,13 @@ export default class ZnPage extends ZnTabs {
     const tabId = item.getAttribute('tab');
 
     if (tabUri) {
-      this.clickTab(item, false);
+      this.clickTab(item, false, true);
       this.syncNavigationActive(item);
-      this.persistActivePageTab(tabUri);
       return;
     }
 
     if (tabId !== null) {
-      this.activateTab(tabId, true);
+      this.activateTab(tabId, true, true);
     }
   }
 
@@ -326,11 +319,8 @@ export default class ZnPage extends ZnTabs {
     return null;
   }
 
-  private activateTab(tabId: string, store: boolean) {
-    this.setActiveTab(tabId, store, false);
-    if (store) {
-      this.persistActivePageTab(tabId);
-    }
+  private activateTab(tabId: string, store: boolean, pushHistory = false) {
+    this.setActiveTab(tabId, store, false, null, pushHistory);
     const navItem = this.shadowRoot?.querySelector<HTMLElement>(`zn-navbar li[tab="${CSS.escape(tabId)}"]`);
     if (navItem) {
       this.syncNavigationActive(navItem);
@@ -338,7 +328,7 @@ export default class ZnPage extends ZnTabs {
   }
 
   private activateInitialPageTab() {
-    const restoredTab = this.getPersistedPageTab();
+    const restoredTab = this.getStoredTab();
     if (restoredTab !== null) {
       const definition = this.tabDefinitions.find(tab => tab.id === restoredTab || tab.uri === restoredTab);
       if (definition) {
@@ -361,6 +351,20 @@ export default class ZnPage extends ZnTabs {
     }
   }
 
+  // Pages have no store-key, so they persist against their own identity.
+  protected getTabStoreKey(): string {
+    return this.getPageHistoryKey();
+  }
+
+  // A page's default is its preselected tab, or the first one - not the empty
+  // active tab zn-tabs starts from.
+  protected activateDefaultTab() {
+    const preselected = this.tabDefinitions.find(tab => tab.selected) ?? this.tabDefinitions[0];
+    if (preselected) {
+      this.activateTabDefinition(preselected, true);
+    }
+  }
+
   private getPageHistoryKey(): string {
     if (this.pageHistoryKey !== null) {
       return this.pageHistoryKey;
@@ -379,36 +383,7 @@ export default class ZnPage extends ZnTabs {
     return this.pageHistoryKey;
   }
 
-  private getPersistedPageTab(): string | null {
-    const historyState = window.history.state as unknown;
-    if (historyState === null || typeof historyState !== 'object') {
-      return null;
-    }
-
-    const tab = (historyState as PageTabsHistoryState)[PAGE_TABS_HISTORY_KEY]?.[this.getPageHistoryKey()];
-    return typeof tab === 'string' ? tab : null;
-  }
-
-  private persistActivePageTab(tab: string) {
-    const currentHistoryState = window.history.state as unknown;
-    const historyState = currentHistoryState !== null && typeof currentHistoryState === 'object'
-      ? currentHistoryState as Record<string, unknown>
-      : {};
-    const storedPageTabs = historyState[PAGE_TABS_HISTORY_KEY];
-    const pageTabs = storedPageTabs !== null && typeof storedPageTabs === 'object'
-      ? storedPageTabs as Record<string, string>
-      : {};
-
-    window.history.replaceState({
-      ...historyState,
-      [PAGE_TABS_HISTORY_KEY]: {
-        ...pageTabs,
-        [this.getPageHistoryKey()]: tab
-      }
-    }, '');
-  }
-
-  private activateTabDefinition(tab: TabDefinition) {
+  private activateTabDefinition(tab: TabDefinition, store = false) {
     if (tab.uri) {
       const navItem = this.findNavItemForUri(tab.uri);
       if (navItem) {
@@ -417,7 +392,7 @@ export default class ZnPage extends ZnTabs {
         return;
       }
     }
-    this.activateTab(tab.id, false);
+    this.activateTab(tab.id, store);
   }
 
   private findNavItemForUri(uri: string): HTMLElement | null {

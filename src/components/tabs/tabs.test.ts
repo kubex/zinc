@@ -1,6 +1,6 @@
 import '../../../dist/zn.min.js';
 import { aTimeout, expect, fixture, html } from '@open-wc/testing';
-import { shouldRestoreTabSelection } from './tabs-navigation';
+import { locationScopedKey } from './tabs-navigation';
 import type ZnTabs from './tabs.component';
 
 describe('<zn-tabs>', () => {
@@ -50,19 +50,12 @@ describe('<zn-tabs>', () => {
     expect(selectedPagePanel.id).to.equal('');
   });
 
-  it('restores tabs for reload and browser history navigation', () => {
-    expect(shouldRestoreTabSelection([{ type: 'reload' }])).to.equal(true);
-    expect(shouldRestoreTabSelection([{ type: 'back_forward' }])).to.equal(true);
-    expect(shouldRestoreTabSelection([{ type: 'navigate' }])).to.equal(false);
-    expect(shouldRestoreTabSelection([])).to.equal(false);
-  });
-
-  it('discards a stored tab after navigating to the page', async () => {
+  describe('selection persistence', () => {
     const storeKey = 'tabs-navigation-test';
-    const storageKey = `zntab:${storeKey}`;
-    sessionStorage.setItem(storageKey, '0,second');
+    const originalHref = window.location.href;
+    let locationCount = 0;
 
-    const el = await fixture<ZnTabs>(html`
+    const renderTabs = () => fixture<ZnTabs>(html`
       <zn-tabs store-key=${storeKey} active="first">
         <zn-navbar slot="top">
           <li tab="first">First</li>
@@ -73,9 +66,94 @@ describe('<zn-tabs>', () => {
       </zn-tabs>
     `);
 
-    await new Promise(resolve => setTimeout(resolve, 20));
+    // Each test runs on its own location so a stored selection, and whether that
+    // location may restore one, cannot leak between them.
+    const navigateTo = (name: string) => window.history.pushState({}, '', `?tabs-test=${name}`);
+    const returnWithHistory = () => window.dispatchEvent(new PopStateEvent('popstate'));
 
-    expect(el.getAttribute('active')).to.equal('first');
-    expect(sessionStorage.getItem(storageKey)).to.equal(null);
+    beforeEach(() => {
+      locationCount += 1;
+      navigateTo(`case-${locationCount}`);
+      sessionStorage.removeItem(`zntab:${storeKey}`);
+    });
+
+    afterEach(() => window.history.replaceState({}, '', originalHref));
+
+    it('restores the tab a location was left on when returning to it', async () => {
+      const el = await renderTabs();
+      await aTimeout(40);
+      el.querySelector('zn-navbar')!.querySelectorAll<HTMLElement>('li')[1].click();
+      await aTimeout(40);
+      expect(el.getAttribute('active')).to.equal('second');
+      el.remove();
+
+      returnWithHistory();
+      const restored = await renderTabs();
+      await aTimeout(40);
+
+      expect(restored.getAttribute('active')).to.equal('second');
+    });
+
+    it('starts from the default tab when navigating to the location', async () => {
+      const first = await renderTabs();
+      await aTimeout(40);
+      first.querySelector('zn-navbar')!.querySelectorAll<HTMLElement>('li')[1].click();
+      await aTimeout(40);
+      first.remove();
+
+      // Leave and navigate back, rather than returning through history.
+      const stored = window.location.search;
+      navigateTo('elsewhere');
+      window.history.pushState({}, '', stored);
+
+      const el = await renderTabs();
+      await aTimeout(40);
+
+      expect(el.getAttribute('active')).to.equal('first');
+    });
+
+    it('stores tab changes made outside the navigation', async () => {
+      const el = await renderTabs();
+      await aTimeout(40);
+
+      el.nextTab();
+      await aTimeout(40);
+      expect(el.getAttribute('active')).to.equal('second');
+      el.remove();
+
+      returnWithHistory();
+      const restored = await renderTabs();
+      await aTimeout(40);
+
+      expect(restored.getAttribute('active')).to.equal('second');
+    });
+
+    it('steps back through each tab that was opened', async () => {
+      const el = await renderTabs();
+      await aTimeout(40);
+      const items = el.querySelector('zn-navbar')!.querySelectorAll<HTMLElement>('li');
+
+      items[1].click();
+      await aTimeout(40);
+      expect(el.getAttribute('active')).to.equal('second');
+
+      await new Promise<void>(resolve => {
+        window.addEventListener('popstate', () => resolve(), {once: true});
+        window.history.back();
+      });
+      await aTimeout(40);
+
+      expect(el.getAttribute('active')).to.equal('first');
+    });
+
+    it('keeps a session selection out of local storage', async () => {
+      const el = await renderTabs();
+      await aTimeout(40);
+      el.querySelector('zn-navbar')!.querySelectorAll<HTMLElement>('li')[1].click();
+      await aTimeout(40);
+
+      expect(localStorage.getItem(`zntab:${storeKey}`)).to.equal(null);
+      expect(sessionStorage.getItem(`zntab:${locationScopedKey(storeKey)}`)).to.contain('second');
+    });
   });
 });

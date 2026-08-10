@@ -85,40 +85,118 @@ describe('<zn-page>', () => {
     expect(getComputedStyle(selectedTab).display).to.not.equal('none');
   });
 
-  it('restores the active tab for the current history entry only', async () => {
-    const originalState = window.history.state as unknown;
-    window.history.replaceState({}, '');
+  describe('tab persistence', () => {
+    const originalHref = window.location.href;
+    let locationCount = 0;
 
-    try {
-      const renderPage = () => fixture<ZnPage>(html`
-        <zn-page caption="History Page">
-          <zn-tab caption="Overview">Overview Content</zn-tab>
-          <zn-tab caption="Details">Details Content</zn-tab>
-        </zn-page>
-      `);
+    const renderPage = () => fixture<ZnPage>(html`
+      <zn-page caption="Persisted Page">
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+        <zn-tab caption="Billing">Billing Content</zn-tab>
+        <zn-tab caption="Notes">Notes Content</zn-tab>
+      </zn-page>
+    `);
 
-      const firstPage = await renderPage();
+    const clickTab = async (page: ZnPage, index: number) => {
+      const navbar = page.shadowRoot!.querySelector('zn-navbar')!;
+      navbar.shadowRoot!.querySelectorAll<HTMLElement>('li:not(.more)')[index].click();
       await aTimeout(40);
-      const firstNavbar = firstPage.shadowRoot!.querySelector('zn-navbar')!;
-      const detailsItem = firstNavbar.shadowRoot!.querySelectorAll<HTMLElement>('li:not(.more)')[1];
+    };
 
-      detailsItem.click();
+    const clickBilling = (page: ZnPage) => clickTab(page, 1);
+
+    const goBack = async () => {
+      await new Promise<void>(resolve => {
+        window.addEventListener('popstate', () => resolve(), {once: true});
+        window.history.back();
+      });
       await aTimeout(40);
-      firstPage.remove();
+    };
+
+    beforeEach(() => {
+      locationCount += 1;
+      window.history.pushState({}, '', `?page-test=case-${locationCount}`);
+    });
+
+    afterEach(() => window.history.replaceState({}, '', originalHref));
+
+    it('restores the active tab when the page is reloaded or returned to', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+      await clickBilling(page);
+      expect(page.getAttribute('active')).to.equal('billing');
+      page.remove();
+
+      // A reload replaces the document; the shell may also replace the history
+      // entry's state, so restoring must not depend on that state surviving.
+      window.history.replaceState({uri: window.location.pathname}, '');
+      window.dispatchEvent(new PopStateEvent('popstate'));
 
       const restoredPage = await renderPage();
       await aTimeout(40);
-      expect(restoredPage.getAttribute('active')).to.equal('details');
-      restoredPage.remove();
+      expect(restoredPage.getAttribute('active')).to.equal('billing');
+    });
 
-      // A new history entry has no zn-page tab state, so it starts at the default.
-      window.history.replaceState({}, '');
+    it('uses the default tab when navigating to the page', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+      await clickBilling(page);
+      page.remove();
+
+      const stored = window.location.search;
+      window.history.pushState({}, '', '?page-test=elsewhere');
+      window.history.pushState({}, '', stored);
+
       const freshPage = await renderPage();
       await aTimeout(40);
       expect(freshPage.getAttribute('active')).to.equal('');
-    } finally {
-      window.history.replaceState(originalState, '');
-    }
+    });
+
+    it('restores a tab cycled without the navigation', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+
+      // Keyboard shortcuts cycle tabs directly, bypassing the navbar.
+      page.nextTab();
+      await aTimeout(40);
+      expect(page.getAttribute('active')).to.equal('billing');
+      page.remove();
+
+      window.dispatchEvent(new PopStateEvent('popstate'));
+      const restoredPage = await renderPage();
+      await aTimeout(40);
+      expect(restoredPage.getAttribute('active')).to.equal('billing');
+    });
+
+    it('steps back through each tab that was opened', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+
+      await clickTab(page, 1);
+      expect(page.getAttribute('active')).to.equal('billing');
+      await clickTab(page, 2);
+      expect(page.getAttribute('active')).to.equal('notes');
+
+      await goBack();
+      expect(page.getAttribute('active')).to.equal('billing');
+
+      await goBack();
+      expect(page.getAttribute('active')).to.equal('');
+    });
+
+    it('adds one history entry per tab, and none for the tab it opens on', async () => {
+      const lengthBeforeRender = window.history.length;
+      const page = await renderPage();
+      await aTimeout(40);
+      expect(window.history.length).to.equal(lengthBeforeRender);
+
+      await clickTab(page, 1);
+      expect(window.history.length).to.equal(lengthBeforeRender + 1);
+
+      // Reselecting the open tab is not a new step.
+      await clickTab(page, 1);
+      expect(window.history.length).to.equal(lengthBeforeRender + 1);
+    });
   });
 
   it('creates uri tab panels from page navigation items', async () => {

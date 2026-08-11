@@ -47,6 +47,85 @@ fill — used by [`zn-theme-editor`](/components/theme-editor/)'s `standalone`
 mode, where the frame is already inside its own bordered panel. `backdrop="dots"`
 is the default.
 
+## Interactivity
+
+The preview is display-only: the iframe takes `pointer-events: none`, so clicks
+never reach the embedded page and the previewed form can't be submitted or
+navigated away from inside the frame. The embed is cross-origin, so its own
+handlers can't be cancelled from out here — blocking pointer input is the only
+way to stop them, and hover goes with it. Scrolling doesn't: an overflowing page
+is scrolled by the panel instead, as below.
+
+Set `interactive` when the embed is meant to be used rather than looked at.
+
+```html:preview
+<zn-preview-frame
+  id="preview-frame-interactive"
+  src="/components/preview-frame-demo/"
+  data-uri="/data/preview-frame-payload.json"
+  watch="#preview-frame-interactive-none"
+  interactive></zn-preview-frame>
+
+<script>
+  document.getElementById('preview-frame-interactive').frameOrigin = location.origin;
+</script>
+```
+
+## Overflowing Content
+
+A page taller than the panel is scrolled by the panel, not inside the frame. The
+frame can't do it itself: a cross-origin document can't be scrolled from the host
+(`contentWindow.scrollTo` is blocked), and with pointer input off the wheel never
+reaches it anyway. So the frame is instead laid out at its full content height —
+nothing scrolls inside it — and the panel scrolls that.
+
+For the frame to be sized that way, the embed reports its height alongside
+`hp-preview:rendered`:
+
+```js
+post({
+  type: 'hp-preview:rendered',
+  height: document.documentElement.scrollHeight
+});
+```
+
+A page that grows after its first render — a revealed section, a lazy-loaded
+image — reports the new height on its own:
+
+```js
+post({type: 'hp-preview:height', height: document.documentElement.scrollHeight});
+```
+
+Heights that aren't a positive number are ignored, as is one reported while the
+error overlay is up. A height under the panel's own is kept but changes nothing:
+the frame still fills the panel, so the backdrop never shows under a short page.
+The height is dropped whenever `src` changes, since the next page has its own.
+
+The example below previews a long itemised page, so the panel scrolls. Scrolling
+works with the frame inert — clicking `Pay` still does nothing.
+
+```html:preview
+<zn-preview-frame
+  id="preview-frame-tall"
+  src="/components/preview-frame-demo/"
+  data-uri="/data/preview-frame-payload-tall.json"
+  watch="#preview-frame-tall-none"></zn-preview-frame>
+
+<script>
+  document.getElementById('preview-frame-tall').frameOrigin = location.origin;
+</script>
+```
+
+:::tip
+A **same-origin** embed doesn't need to report anything — its document is
+measured directly. The measurement only ever grows the frame: the frame's own
+height feeds back into it, so a value at or under the current height is ignored
+rather than flipping the frame between two sizes forever. An embed that shrinks
+has to report its height to be followed back down, and one whose root is sized
+to the viewport (`html {height: 100%}`) can't be measured at all — it reports or
+it clips.
+:::
+
 ## Live Form Updates
 
 In a real deployment, editing a watched form auto-saves it and the preview refreshes with the newly saved config. This docs site is static, so the example simulates the save: form changes are encoded into a `data:` payload URI and `refresh()` re-runs the fetch → `hp-preview:config` cycle — the same path a real save triggers.

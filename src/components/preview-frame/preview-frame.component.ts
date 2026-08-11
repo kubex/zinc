@@ -1,4 +1,4 @@
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property, query, state} from 'lit/decorators.js';
 import {styleMap} from 'lit/directives/style-map.js';
@@ -19,8 +19,10 @@ export type PreviewFrameDevice = keyof typeof DEVICE_WIDTHS;
  * protocol: answers the frame's ready handshake with a config payload fetched
  * from data-uri, auto-saves watched forms on change, refreshes the preview
  * after each save (its own, or a shell-driven save of a `refresh-on` form),
- * and accepts a theme payload via setTheme() that is retained and replayed
- * after every ready handshake.
+ * accepts a theme payload via setTheme() that is retained and replayed
+ * after every ready handshake, and grows the frame to a content height the
+ * embed reports so the panel scrolls an overflowing page.
+ *
  * @documentation https://zinc.style/components/preview-frame
  * @status experimental
  * @since 1.0
@@ -102,12 +104,34 @@ export default class ZnPreviewFrame extends ZincElement {
   /** Backdrop behind the stage: `dots` (default) is the canvas dot grid; `panel` is a plain `rgb(var(--zn-panel))` fill. */
   @property({reflect: true}) backdrop: 'dots' | 'panel' = 'dots';
 
+  /**
+   * Lets pointer input through to the embedded page. The preview is inert by
+   * default: clicks never reach the frame, so the previewed page can't be
+   * navigated or submitted from inside the preview. Cross-origin content can't
+   * be reached from here to cancel its own handlers, so this blocks pointer
+   * input entirely — hover goes with it. Scrolling doesn't: an overflowing
+   * page is scrolled by the panel rather than by the frame (see _contentHeight).
+   */
+  @property({type: Boolean, reflect: true}) interactive = false;
+
   @query('iframe') frame: HTMLIFrameElement;
 
   @state() private error = '';
 
+  /**
+   * Height of the embedded page's content, when it's known: reported by the
+   * embed (`height` on hp-preview:rendered, or an hp-preview:height message) or
+   * measured directly for a same-origin embed. The frame is laid out at this
+   * height rather than the panel's, so the page never scrolls inside the frame
+   * — the panel scrolls instead, which is what makes an overflowing preview
+   * reachable while pointer input to the frame is blocked. 0 = unknown, and the
+   * frame falls back to filling the panel.
+   */
+  @state() private _contentHeight = 0;
+
   private _generation = 0;
   private _theme: Record<string, unknown> | undefined;
+  private _contentObserver: ResizeObserver | undefined;
 
   private readonly _watchedForms = new Set<HTMLFormElement>();
   private readonly _refreshForms = new Set<HTMLFormElement>();
@@ -136,9 +160,15 @@ export default class ZnPreviewFrame extends ZincElement {
     }
   }
 
+  protected willUpdate(changed: PropertyValues<this>) {
+    if (changed.has('src')) this._resetContentHeight();
+  }
+
   disconnectedCallback() {
     super.disconnectedCallback();
     window.removeEventListener('message', this._onMessage);
+    this._contentObserver?.disconnect();
+    this._contentObserver = undefined;
     this._watchedForms.forEach(form => this._detachForm(form));
     this._watchedForms.clear();
     this._refreshForms.forEach(form => form.removeEventListener('complete', this._onShellSave));
@@ -150,7 +180,7 @@ export default class ZnPreviewFrame extends ZincElement {
     if (e.origin !== this.frameOrigin) return;
     if (!this.frame || e.source !== this.frame.contentWindow) return;
 
-    const data = e.data as {type?: string; message?: string} | undefined;
+    const data = e.data as { type?: string; message?: string; height?: unknown } | undefined;
     switch (data?.type) {
       case 'hp-preview:ready':
         // config first: the embed applies the theme on top of a rendered page
@@ -158,11 +188,50 @@ export default class ZnPreviewFrame extends ZincElement {
         break;
       case 'hp-preview:rendered':
         this.error = '';
+        this._applyContentHeight(data.height);
+        break;
+      case 'hp-preview:height':
+        this._applyContentHeight(data.height);
         break;
       case 'hp-preview:error':
         this._fail(String(data.message ?? 'Preview failed to render'));
         break;
     }
+  };
+
+  private _applyContentHeight(height: unknown) {
+    const value = Math.round(Number(height));
+    if (!Number.isFinite(value) || value <= 0) return;
+    this._contentHeight = value;
+  }
+
+  private _resetContentHeight() {
+    this._contentHeight = 0;
+    this._contentObserver?.disconnect();
+    this._contentObserver = undefined;
+  }
+
+  // Same-origin embeds don't need to implement the height half of the protocol —
+  // their document can be measured from here.
+  private readonly _onFrameLoad = () => {
+    this._contentObserver?.disconnect();
+    this._contentObserver = undefined;
+
+    let root: HTMLElement | null | undefined;
+    try {
+      root = this.frame?.contentDocument?.documentElement;
+    } catch {
+      return; // cross-origin: the embed has to report its own height
+    }
+    if (!root) return;
+
+    const measure = () => {
+      const measured = root.getBoundingClientRect().height;
+      if (measured > (this.frame?.clientHeight ?? 0)) this._applyContentHeight(measured);
+    };
+    measure();
+    this._contentObserver = new ResizeObserver(measure);
+    this._contentObserver.observe(root);
   };
 
   /** Re-fetches the payload and pushes a fresh config to the preview. */
@@ -327,26 +396,33 @@ export default class ZnPreviewFrame extends ZincElement {
     // transformed back down, so the frame fills the panel while the content
     // renders smaller and more of the page is visible. Percentage width means
     // nothing is measured — no layout feedback loop.
+    const content = this.error ? 0 : this._contentHeight;
     const iframeStyles = this.fill
-      ? {width: '100%', height: '100%'}
+      ? {width: '100%', height: content ? `max(${content}px, 100%)` : '100%'}
       : {
         width: `${100 / zoom}%`,
-        height: `${this.minHeight / zoom}px`,
+        height: `${Math.max(content, this.minHeight / zoom)}px`,
         transform: `scale(${zoom})`,
         transformOrigin: '0 0',
       };
     const containerStyles = this.fill
       ? {height: '100%', minHeight: `${this.minHeight}px`}
       : {height: `${this.minHeight}px`};
+    const stageStyles: Record<string, string> = {
+      width: DEVICE_WIDTHS[this.device] ?? DEVICE_WIDTHS.desktop,
+    };
+    if (content) {
+      stageStyles.height = this.fill ? `max(${content}px, 100%)` : `${Math.max(content * zoom, this.minHeight)}px`;
+    }
 
     return html`
       <div part="base" class="preview" style="${styleMap(containerStyles)}">
-        <div part="stage" class="preview__stage"
-             style="${styleMap({width: DEVICE_WIDTHS[this.device] ?? DEVICE_WIDTHS.desktop})}">
+        <div part="stage" class="preview__stage" style="${styleMap(stageStyles)}">
           <iframe part="iframe"
                   src="${this.src}"
                   title="Payment form preview"
                   allow="local-network-access"
+                  @load="${this._onFrameLoad}"
                   style="${styleMap(iframeStyles)}"></iframe>
         </div>
         ${this.error ? html`

@@ -26,6 +26,7 @@ permalink: /components/preview-frame-demo/index.html
         <input type="text" placeholder="123" disabled>
       </label>
     </div>
+    <div class="card__lines" id="lines"></div>
     <button id="pay" type="button">Pay now</button>
   </div>
 </div>
@@ -36,6 +37,13 @@ permalink: /components/preview-frame-demo/index.html
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  /* A page taller than the frame: top-aligned, or the overflow clips the top. */
+  .shell--tall {
+    height: auto;
+    align-items: flex-start;
+    padding: 24px 0;
   }
 
   #waiting {
@@ -91,6 +99,20 @@ permalink: /components/preview-frame-demo/index.html
     gap: 12px;
   }
 
+  .card__lines:not(:empty) {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.8125rem;
+  }
+
+  .card__line {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgb(var(--zn-border-color));
+  }
+
   .card__row label {
     flex: 1;
   }
@@ -124,6 +146,26 @@ permalink: /components/preview-frame-demo/index.html
   // should use the host's origin instead of '*'.
   const post = message => window.parent.postMessage(message, '*');
 
+  // Reporting a height lets the host grow the frame to fit, so an overflowing
+  // page is scrolled by the panel instead of inside the frame. Measured after a
+  // frame so the layout has settled.
+  const postRendered = () => requestAnimationFrame(() => post({
+    type: 'hp-preview:rendered',
+    height: document.documentElement.scrollHeight
+  }));
+
+  const renderLines = count => {
+    const lines = document.getElementById('lines');
+    lines.innerHTML = '';
+    document.querySelector('.shell').classList.toggle('shell--tall', count > 0);
+    for (let i = 1; i <= count; i++) {
+      const line = document.createElement('div');
+      line.className = 'card__line';
+      line.innerHTML = `<span>Line item ${i}</span><span>£${(i * 1.5).toFixed(2)}</span>`;
+      lines.append(line);
+    }
+  };
+
   window.addEventListener('message', e => {
     const data = e.data;
     if (data?.type !== 'hp-preview:config') return;
@@ -140,7 +182,8 @@ permalink: /components/preview-frame-demo/index.html
     document.getElementById('merchant').textContent = data.merchant || 'Merchant';
     document.getElementById('amount').textContent = data.amount || '';
     document.getElementById('pay').textContent = data.buttonLabel || 'Pay now';
-    post({type: 'hp-preview:rendered'});
+    renderLines(Number(data.lines) || 0);
+    postRendered();
   });
 
   // The theme half of the protocol: applied independently of the config, so
@@ -159,7 +202,7 @@ permalink: /components/preview-frame-demo/index.html
       card.style.borderRadius = values.radius + 'px';
     }
     document.getElementById('waiting').hidden = true;
-    post({type: 'hp-preview:rendered'});
+    postRendered();
   });
 
   post({type: 'hp-preview:ready'});

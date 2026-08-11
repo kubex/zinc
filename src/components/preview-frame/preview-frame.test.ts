@@ -51,6 +51,13 @@ describe('<zn-preview-frame>', () => {
     window.fetch = realFetch;
   });
 
+  // ShadowRoot.elementFromPoint resolves inside the shadow tree, where
+  // document.elementFromPoint would only ever hand back the host.
+  function hitTest(el: Element, target: Element) {
+    const {left, top, width, height} = target.getBoundingClientRect();
+    return el.shadowRoot!.elementFromPoint(left + width / 2, top + height / 2);
+  }
+
   function ready(el: Element, origin = 'https://site.example') {
     const iframe = el.shadowRoot!.querySelector('iframe')!;
     window.dispatchEvent(new MessageEvent('message', {
@@ -499,6 +506,183 @@ describe('<zn-preview-frame>', () => {
     expect(el.getAttribute('backdrop')).to.equal('panel');
     const preview = el.shadowRoot!.querySelector<HTMLDivElement>('.preview')!;
     expect(getComputedStyle(preview).backgroundImage).to.equal('none');
+  });
+
+  it('takes no pointer input by default, so nothing clicks through to the embed', async () => {
+    const el = await fixture(FIXTURE);
+    const iframe = el.shadowRoot!.querySelector('iframe')!;
+    expect(getComputedStyle(iframe).pointerEvents).to.equal('none');
+    // hit-testing inside the shadow root: a click over the frame lands on the
+    // stage behind it, never the iframe
+    expect(hitTest(el, iframe)).to.not.equal(iframe);
+  });
+
+  it('lets pointer input through when interactive is set', async () => {
+    const el = await fixture(html`
+      <zn-preview-frame
+        src="about:blank"
+        frame-origin="https://site.example"
+        data-uri="/payload"
+        interactive></zn-preview-frame>`);
+
+    const iframe = el.shadowRoot!.querySelector('iframe')!;
+    expect(getComputedStyle(iframe).pointerEvents).to.equal('auto');
+    expect(hitTest(el, iframe)).to.equal(iframe);
+  });
+
+  describe('overflowing content', () => {
+    function reportHeight(el: Element, height: unknown, type = 'hp-preview:rendered') {
+      const iframe = el.shadowRoot!.querySelector('iframe')!;
+      window.dispatchEvent(new MessageEvent('message', {
+        data: {type, height},
+        origin: 'https://site.example',
+        source: iframe.contentWindow
+      }));
+    }
+
+    it('scrolls the panel rather than the frame when the embed reports a taller page', async () => {
+      const el = await fixture(FIXTURE);
+      const iframe = el.shadowRoot!.querySelector('iframe')!;
+      const panel = el.shadowRoot!.querySelector<HTMLDivElement>('.preview')!;
+      const stage = el.shadowRoot!.querySelector<HTMLDivElement>('.preview__stage')!;
+
+      reportHeight(el, 1400);
+      await waitUntil(() => iframe.style.height === '1400px');
+
+      // the frame is laid out at full content height, so it never scrolls itself
+      expect(stage.style.height).to.equal('1400px');
+      expect(panel.style.height).to.equal('480px');
+      expect(panel.scrollHeight).to.be.greaterThan(panel.clientHeight);
+
+      // a wheel over the frame hit-tests to the stage, whose only user-scrollable
+      // ancestor is the panel — so the gesture scrolls the panel
+      const hit = hitTest(el, panel);
+      expect(hit).to.not.equal(iframe);
+      expect(panel.contains(hit!)).to.equal(true);
+      expect(getComputedStyle(stage).overflowY).to.equal('hidden');
+
+      panel.scrollTop = 200;
+      expect(panel.scrollTop).to.equal(200);
+    });
+
+    it('scrolls vertically only, so a zoomed-out frame gets no horizontal bar', async () => {
+      const el = await fixture(html`
+        <zn-preview-frame
+          src="about:blank"
+          frame-origin="https://site.example"
+          data-uri="/payload"
+          zoom="0.5"
+          min-height="400"></zn-preview-frame>`);
+
+      const panel = el.shadowRoot!.querySelector<HTMLDivElement>('.preview')!;
+      expect(getComputedStyle(panel).overflowX).to.equal('hidden');
+      expect(getComputedStyle(panel).overflowY).to.equal('auto');
+
+      const iframe = el.shadowRoot!.querySelector('iframe')!;
+      reportHeight(el, 1600);
+      await waitUntil(() => iframe.style.height === '1600px');
+
+      // the stage tracks the frame's *visible* height (1600 × 0.5), so scrolling
+      // stops at the end of the page instead of at the oversized layout box
+      const stage = el.shadowRoot!.querySelector<HTMLDivElement>('.preview__stage')!;
+      expect(stage.style.height).to.equal('800px');
+      expect(panel.scrollWidth).to.equal(panel.clientWidth);
+    });
+
+    it('accepts a later hp-preview:height message when the page grows', async () => {
+      const el = await fixture(FIXTURE);
+      const iframe = el.shadowRoot!.querySelector('iframe')!;
+
+      reportHeight(el, 900);
+      await waitUntil(() => iframe.style.height === '900px');
+
+      reportHeight(el, 1300, 'hp-preview:height');
+      await waitUntil(() => iframe.style.height === '1300px');
+    });
+
+    it('keeps filling the panel for a page shorter than it', async () => {
+      const el = await fixture(FIXTURE);
+      const iframe = el.shadowRoot!.querySelector('iframe')!;
+      const panel = el.shadowRoot!.querySelector<HTMLDivElement>('.preview')!;
+
+      reportHeight(el, 120);
+      await new Promise(resolve => setTimeout(resolve, 50));
+
+      expect(iframe.style.height).to.equal('480px');
+      expect(panel.scrollHeight).to.equal(panel.clientHeight);
+    });
+
+    it('ignores a height that is missing, zero, negative or not a number', async () => {
+      const el = await fixture(FIXTURE);
+      const iframe = el.shadowRoot!.querySelector('iframe')!;
+
+      for (const height of [undefined, 0, -400, 'tall', NaN, Infinity]) {
+        reportHeight(el, height);
+        await new Promise(resolve => setTimeout(resolve, 20));
+        expect(iframe.style.height, `height: ${String(height)}`).to.equal('480px');
+      }
+    });
+
+    it('ignores the reported height while the error overlay is up', async () => {
+      const el = await fixture(FIXTURE);
+      const iframe = el.shadowRoot!.querySelector('iframe')!;
+
+      reportHeight(el, 1400);
+      await waitUntil(() => iframe.style.height === '1400px');
+
+      reportHeight(el, 1400, 'hp-preview:error');
+      await waitUntil(() => el.shadowRoot!.querySelector('[part="error"]'));
+      expect(iframe.style.height).to.equal('480px');
+
+      // clears again once the embed reports a good render
+      reportHeight(el, 1400);
+      await waitUntil(() => iframe.style.height === '1400px');
+    });
+
+    it('drops the reported height when src changes', async () => {
+      const el = await fixture(FIXTURE);
+      const iframe = el.shadowRoot!.querySelector('iframe')!;
+
+      reportHeight(el, 1400);
+      await waitUntil(() => iframe.style.height === '1400px');
+
+      (el as HTMLElement & {src: string}).src = 'about:blank?next';
+      await waitUntil(() => iframe.style.height === '480px');
+    });
+
+    it('measures a same-origin embed without it reporting anything', async () => {
+      const src = URL.createObjectURL(new Blob([
+        '<!doctype html><html><body style="margin:0"><div style="height:1200px"></div></body></html>'
+      ], {type: 'text/html'}));
+
+      const el = await fixture(html`
+        <zn-preview-frame src="${src}" frame-origin="https://site.example"></zn-preview-frame>`);
+      const iframe = el.shadowRoot!.querySelector('iframe')!;
+
+      await waitUntil(() => parseInt(iframe.style.height, 10) >= 1200, 'never measured the embed');
+      const panel = el.shadowRoot!.querySelector<HTMLDivElement>('.preview')!;
+      expect(panel.scrollHeight).to.be.greaterThan(panel.clientHeight);
+      URL.revokeObjectURL(src);
+    });
+
+    it('fills the panel when a fill frame has no known content height', async () => {
+      const el = await fixture(html`
+        <zn-preview-frame
+          src="about:blank"
+          frame-origin="https://site.example"
+          data-uri="/payload"
+          fill></zn-preview-frame>`);
+
+      const iframe = el.shadowRoot!.querySelector('iframe')!;
+      expect(iframe.style.height).to.equal('100%');
+
+      reportHeight(el, 1500);
+      await waitUntil(() => iframe.style.height !== '100%');
+      // a floor of the panel height, so a short page still fills a stretched column
+      expect(iframe.style.height).to.equal('max(1500px, 100%)');
+      const stage = el.shadowRoot!.querySelector<HTMLDivElement>('.preview__stage')!;
+      expect(stage.style.height).to.equal('max(1500px, 100%)');
+    });
   });
 
   it('skips the config fetch when data-uri is empty', async () => {

@@ -11,7 +11,8 @@
 .preview {
   position: relative;
   width: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 
   // Matches page-builder's canvas.
   background:
@@ -36,9 +37,14 @@ iframe {
   display: block;
   width: 100%;
   border: 0;
+  pointer-events: none;
   // Iframes are transparent by default, so without this the dot grid would show
   // through any embed that doesn't set its own background.
   background: rgb(var(--zn-body));
+}
+
+:host([interactive]) iframe {
+  pointer-events: auto;
 }
 
 .preview__error {

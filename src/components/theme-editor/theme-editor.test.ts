@@ -729,6 +729,22 @@ describe('<zn-theme-editor>', () => {
       expect(controlsHeader).to.exist;
       expect(controlsHeader!.textContent?.trim()).to.equal('');
     });
+
+    it('gives the preview an interactive frame that scrolls itself, so the column never adds a second scrollbar', async () => {
+      const el = await fixture(FIXTURE);
+      await (el as HTMLElement & {updateComplete: Promise<unknown>}).updateComplete;
+
+      const preview = el.shadowRoot!.querySelector<HTMLElement>('[part="preview"]')!;
+      const frame = el.shadowRoot!.querySelector<HTMLElement>('zn-preview-frame')!;
+      await (frame as HTMLElement & {updateComplete: Promise<unknown>}).updateComplete;
+
+      expect(frame.hasAttribute('interactive')).to.equal(true);
+      expect(getComputedStyle(preview).overflowY).to.equal('hidden');
+      expect(preview.scrollHeight).to.equal(preview.clientHeight);
+
+      const iframe = frame.shadowRoot!.querySelector('iframe')!;
+      expect(getComputedStyle(iframe).pointerEvents).to.equal('auto');
+    });
   });
 
   describe('tabbed sections (section-layout="tabs")', () => {

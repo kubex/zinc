@@ -683,6 +683,44 @@ describe('<zn-preview-frame>', () => {
       const stage = el.shadowRoot!.querySelector<HTMLDivElement>('.preview__stage')!;
       expect(stage.style.height).to.equal('max(1500px, 100%)');
     });
+
+    it('leaves an interactive frame at the panel height, so the embed scrolls itself', async () => {
+      const el = await fixture(html`
+        <zn-preview-frame
+          src="about:blank"
+          frame-origin="https://site.example"
+          data-uri="/payload"
+          fill
+          interactive></zn-preview-frame>`);
+
+      const iframe = el.shadowRoot!.querySelector('iframe')!;
+      const panel = el.shadowRoot!.querySelector<HTMLDivElement>('.preview')!;
+      const stage = el.shadowRoot!.querySelector<HTMLDivElement>('.preview__stage')!;
+
+      reportHeight(el, 1500);
+      await new Promise(resolve => setTimeout(resolve, 50));
+
+      expect(iframe.style.height).to.equal('100%');
+      expect(stage.style.height).to.equal('');
+      expect(panel.scrollHeight).to.equal(panel.clientHeight);
+    });
+
+    it('inflates the frame again when interactive is turned off', async () => {
+      const el = await fixture(html`
+        <zn-preview-frame
+          src="about:blank"
+          frame-origin="https://site.example"
+          data-uri="/payload"
+          interactive></zn-preview-frame>`) as HTMLElement & {interactive: boolean};
+      const iframe = el.shadowRoot!.querySelector('iframe')!;
+
+      reportHeight(el, 1400);
+      await new Promise(resolve => setTimeout(resolve, 50));
+      expect(iframe.style.height).to.equal('480px');
+
+      el.interactive = false;
+      await waitUntil(() => iframe.style.height === '1400px', 'kept the reported height unused');
+    });
   });
 
   it('skips the config fetch when data-uri is empty', async () => {

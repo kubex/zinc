@@ -111,6 +111,12 @@ export default class ZnPreviewFrame extends ZincElement {
    * be reached from here to cancel its own handlers, so this blocks pointer
    * input entirely — hover goes with it. Scrolling doesn't: an overflowing
    * page is scrolled by the panel rather than by the frame (see _contentHeight).
+   *
+   * Set, the frame becomes a real viewport instead: it stays the panel's own
+   * height and the embed scrolls itself, so there is one scrollbar rather than
+   * a panel scrolling an oversized frame, and the embed's viewport-relative
+   * layout (`100vh`, `position: fixed`, sticky headers) sizes to what's on
+   * screen. _contentHeight is ignored while this is set.
    */
   @property({type: Boolean, reflect: true}) interactive = false;
 
@@ -125,7 +131,8 @@ export default class ZnPreviewFrame extends ZincElement {
    * height rather than the panel's, so the page never scrolls inside the frame
    * — the panel scrolls instead, which is what makes an overflowing preview
    * reachable while pointer input to the frame is blocked. 0 = unknown, and the
-   * frame falls back to filling the panel.
+   * frame falls back to filling the panel. Kept up to date either way, but only
+   * laid out when the frame is inert: an `interactive` frame scrolls itself.
    */
   @state() private _contentHeight = 0;
 
@@ -396,7 +403,10 @@ export default class ZnPreviewFrame extends ZincElement {
     // transformed back down, so the frame fills the panel while the content
     // renders smaller and more of the page is visible. Percentage width means
     // nothing is measured — no layout feedback loop.
-    const content = this.error ? 0 : this._contentHeight;
+    // Growing the frame past the panel is the workaround for an inert frame not
+    // being scrollable; interactive, that trades one scrollbar for two and hands
+    // the embed a viewport taller than the panel it's shown in.
+    const content = this.error || this.interactive ? 0 : this._contentHeight;
     const iframeStyles = this.fill
       ? {width: '100%', height: content ? `max(${content}px, 100%)` : '100%'}
       : {

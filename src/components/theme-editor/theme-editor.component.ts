@@ -840,12 +840,14 @@ export default class ZnThemeEditor extends ZincElement {
                 <slot @slotchange="${this._onSlotChange}"></slot>
                 ${this._hasNestedGroups()
                   ? this._renderTabs(section => html`
-                      ${this._hasAssignedControls(section.name) ? html`
-                        <slot name="${section.name}" class="editor__section-slot" @slotchange="${this._onSlotChange}"></slot>` : nothing}
-                      ${this._renderGroups(section)}`)
+                    ${this._hasAssignedControls(section.name) ? html`
+                      <slot name="${section.name}" class="editor__section-slot"
+                            @slotchange="${this._onSlotChange}"></slot>` : nothing}
+                    ${this._renderGroups(section)}`)
                   : this.sectionLayout === 'tabs'
                     ? this._renderTabs(section => html`
-                        <slot name="${section.name}" class="editor__section-slot" @slotchange="${this._onSlotChange}"></slot>`)
+                      <slot name="${section.name}" class="editor__section-slot"
+                            @slotchange="${this._onSlotChange}"></slot>`)
                     : this._renderSections()}
               </div>
               ${this.hasSlotController.test('footer') ? html`
@@ -910,6 +912,7 @@ export default class ZnThemeEditor extends ZincElement {
               device="${this.device}"
               min-height="${this.minHeight}"
               fill
+              interactive
               backdrop="${this.standalone ? 'panel' : 'dots'}"
               exportparts="base:preview__base,stage:preview__stage,iframe:preview__iframe,error:preview__error"
               @zn-error="${this._onFrameError}"></zn-preview-frame>

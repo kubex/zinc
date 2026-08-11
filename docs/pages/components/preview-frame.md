@@ -56,7 +56,13 @@ handlers can't be cancelled from out here — blocking pointer input is the only
 way to stop them, and hover goes with it. Scrolling doesn't: an overflowing page
 is scrolled by the panel instead, as below.
 
-Set `interactive` when the embed is meant to be used rather than looked at.
+Set `interactive` when the embed is meant to be used rather than looked at. The
+frame then behaves as a viewport: it stays the panel's own height and the embed
+scrolls itself, so there's a single scrollbar and the embed's `100vh`,
+`position: fixed` and sticky content size to what's actually on screen. The
+[reported content height](#overflowing-content) is ignored while `interactive`
+is set — it exists to make an *inert* frame's overflow reachable, which an
+interactive one does for itself.
 
 ```html:preview
 <zn-preview-frame
@@ -73,11 +79,13 @@ Set `interactive` when the embed is meant to be used rather than looked at.
 
 ## Overflowing Content
 
-A page taller than the panel is scrolled by the panel, not inside the frame. The
-frame can't do it itself: a cross-origin document can't be scrolled from the host
-(`contentWindow.scrollTo` is blocked), and with pointer input off the wheel never
-reaches it anyway. So the frame is instead laid out at its full content height —
-nothing scrolls inside it — and the panel scrolls that.
+An inert page taller than the panel is scrolled by the panel, not inside the
+frame. The frame can't do it itself: a cross-origin document can't be scrolled
+from the host (`contentWindow.scrollTo` is blocked), and with pointer input off
+the wheel never reaches it anyway. So the frame is instead laid out at its full
+content height — nothing scrolls inside it — and the panel scrolls that. An
+[`interactive`](#interactivity) frame doesn't need any of this and opts out of
+it: it keeps the panel's height and the embed scrolls itself.
 
 For the frame to be sized that way, the embed reports its height alongside
 `hp-preview:rendered`:

@@ -180,9 +180,11 @@
   margin-top: auto;
 }
 
-// The preview's scroll region: the toolbar above stays put.
+// Holds the preview below the toolbar, and never scrolls: the frame is its own
+// scroll region (interactive, the embed is), so a scroller here would only ever
+// be a second scrollbar beside that one.
 .editor__preview {
-  overflow: auto;
+  overflow: hidden;
   flex: 1 1 auto;
   min-width: 0;
   min-height: 0;

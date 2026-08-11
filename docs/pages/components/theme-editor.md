@@ -24,6 +24,10 @@ Set `controls-caption` and `preview-caption` to label each column's header
 row — both are empty by default, rendering no text (the controls column's
 header row still renders either way, so the two columns stay aligned).
 
+The preview is [interactive](/components/preview-frame/#interactivity): the
+embedded page can be clicked and hovered, and it scrolls itself, so the preview
+column never adds a second scrollbar beside the embed's own.
+
 The preview always fills its column, leaving no dead space beneath it.
 `min-height` (default `480`) is a floor for that column, not a fixed height —
 it's still forwarded to the [preview frame](/components/preview-frame/), which

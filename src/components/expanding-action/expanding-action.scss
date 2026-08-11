@@ -72,13 +72,18 @@
   height: 100%;
 }
 
-.expanding-action--drop .expanding-action__content {
+.expanding-action--drop .expanding-action__frame {
+  @include wc.scrollbars;
+
   --expanding-action-trigger-width: 36px;
 
   position: relative;
+  display: flex;
+  flex-direction: column;
   min-width: 300px;
   width: var(--expanding-action-basis, var(--zn-container-smp, 320px));
   max-width: 80vw;
+  max-height: var(--expanding-action-max-height, var(--auto-size-available-height, 80vh));
   background-color: rgb(var(--zn-panel));
   box-shadow: 0 8px 16px -6px rgba(33, 33, 33, 0.18);
   border: solid 1px rgb(var(--zn-border-color));
@@ -98,7 +103,14 @@
   }
 }
 
-:host([data-trigger-side="left"]) .expanding-action--drop .expanding-action__content {
+.expanding-action--drop .expanding-action__content {
+  flex: 1 1 auto;
+  min-height: 0; // Without this the flex item refuses to shrink below its content height
+  overflow-y: auto;
+  border-radius: inherit;
+}
+
+:host([data-trigger-side="left"]) .expanding-action--drop .expanding-action__frame {
   border-radius: 0 var(--zn-border-radius) var(--zn-border-radius) var(--zn-border-radius);
 
   &::before {

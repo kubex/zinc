@@ -325,8 +325,10 @@ export default class ZnExpandingAction extends ZincElement {
                    plain
                    notification="${this.count || nothing}">
         </zn-button>
-        <div id="content" class="expanding-action__content">
-          <slot></slot>
+        <div class="expanding-action__frame">
+          <div id="content" class="expanding-action__content">
+            <slot></slot>
+          </div>
         </div>
       </zn-dropdown>`
   }

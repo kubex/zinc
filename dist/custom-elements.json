@@ -29069,7 +29069,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Lets pointer input through to the embedded page. The preview is inert by\ndefault: clicks never reach the frame, so the previewed page can't be\nnavigated or submitted from inside the preview. Cross-origin content can't\nbe reached from here to cancel its own handlers, so this blocks pointer\ninput entirely — hover goes with it. Scrolling doesn't: an overflowing\npage is scrolled by the panel rather than by the frame (see _contentHeight).",
+              "description": "Lets pointer input through to the embedded page. The preview is inert by\ndefault: clicks never reach the frame, so the previewed page can't be\nnavigated or submitted from inside the preview. Cross-origin content can't\nbe reached from here to cancel its own handlers, so this blocks pointer\ninput entirely — hover goes with it. Scrolling doesn't: an overflowing\npage is scrolled by the panel rather than by the frame (see _contentHeight).\n\nSet, the frame becomes a real viewport instead: it stays the panel's own\nheight and the embed scrolls itself, so there is one scrollbar rather than\na panel scrolling an oversized frame, and the embed's viewport-relative\nlayout (`100vh`, `position: fixed`, sticky headers) sizes to what's on\nscreen. _contentHeight is ignored while this is set.",
               "attribute": "interactive",
               "reflects": true
             },
@@ -29097,7 +29097,7 @@
               },
               "privacy": "private",
               "default": "0",
-              "description": "Height of the embedded page's content, when it's known: reported by the\nembed (`height` on hp-preview:rendered, or an hp-preview:height message) or\nmeasured directly for a same-origin embed. The frame is laid out at this\nheight rather than the panel's, so the page never scrolls inside the frame\n— the panel scrolls instead, which is what makes an overflowing preview\nreachable while pointer input to the frame is blocked. 0 = unknown, and the\nframe falls back to filling the panel."
+              "description": "Height of the embedded page's content, when it's known: reported by the\nembed (`height` on hp-preview:rendered, or an hp-preview:height message) or\nmeasured directly for a same-origin embed. The frame is laid out at this\nheight rather than the panel's, so the page never scrolls inside the frame\n— the panel scrolls instead, which is what makes an overflowing preview\nreachable while pointer input to the frame is blocked. 0 = unknown, and the\nframe falls back to filling the panel. Kept up to date either way, but only\nlaid out when the frame is inert: an `interactive` frame scrolls itself."
             },
             {
               "kind": "field",
@@ -29385,7 +29385,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Lets pointer input through to the embedded page. The preview is inert by\ndefault: clicks never reach the frame, so the previewed page can't be\nnavigated or submitted from inside the preview. Cross-origin content can't\nbe reached from here to cancel its own handlers, so this blocks pointer\ninput entirely — hover goes with it. Scrolling doesn't: an overflowing\npage is scrolled by the panel rather than by the frame (see _contentHeight).",
+              "description": "Lets pointer input through to the embedded page. The preview is inert by\ndefault: clicks never reach the frame, so the previewed page can't be\nnavigated or submitted from inside the preview. Cross-origin content can't\nbe reached from here to cancel its own handlers, so this blocks pointer\ninput entirely — hover goes with it. Scrolling doesn't: an overflowing\npage is scrolled by the panel rather than by the frame (see _contentHeight).\n\nSet, the frame becomes a real viewport instead: it stays the panel's own\nheight and the embed scrolls itself, so there is one scrollbar rather than\na panel scrolling an oversized frame, and the embed's viewport-relative\nlayout (`100vh`, `position: fixed`, sticky headers) sizes to what's on\nscreen. _contentHeight is ignored while this is set.",
               "fieldName": "interactive"
             }
           ],
@@ -44374,7 +44374,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.76",
+    "version": "1.1.77",
     "author": "",
     "license": "MIT"
   }

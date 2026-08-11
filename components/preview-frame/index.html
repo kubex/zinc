@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.76">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.77">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -79,7 +79,7 @@
         <a href="/">
           <img src="/assets/images/watermark.svg" alt="zinc" />
         </a>
-        <div class="sidebar-version">1.1.76</div>
+        <div class="sidebar-version">1.1.77</div>
       </header>
 
       <div class="sidebar-buttons">
@@ -713,7 +713,14 @@
             way to stop them, and hover goes with it. Scrolling doesn’t: an overflowing page is scrolled by the panel
             instead, as below.
           </p>
-          <p>Set <code>interactive</code> when the embed is meant to be used rather than looked at.</p>
+          <p>
+            Set <code>interactive</code> when the embed is meant to be used rather than looked at. The frame then
+            behaves as a viewport: it stays the panel’s own height and the embed scrolls itself, so there’s a single
+            scrollbar and the embed’s <code>100vh</code>, <code>position: fixed</code> and sticky content size to what’s
+            actually on screen. The <a href="#overflowing-content">reported content height</a> is ignored while
+            <code>interactive</code> is set — it exists to make an <em>inert</em> frame’s overflow reachable, which an
+            interactive one does for itself.
+          </p>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-preview-frame
@@ -776,10 +783,12 @@
             Overflowing Content<a href="#overflowing-content" aria-label='Direct link to "Overflowing Content"'></a>
           </h2>
           <p>
-            A page taller than the panel is scrolled by the panel, not inside the frame. The frame can’t do it itself: a
-            cross-origin document can’t be scrolled from the host (<code>contentWindow.scrollTo</code> is blocked), and
-            with pointer input off the wheel never reaches it anyway. So the frame is instead laid out at its full
-            content height — nothing scrolls inside it — and the panel scrolls that.
+            An inert page taller than the panel is scrolled by the panel, not inside the frame. The frame can’t do it
+            itself: a cross-origin document can’t be scrolled from the host (<code>contentWindow.scrollTo</code> is
+            blocked), and with pointer input off the wheel never reaches it anyway. So the frame is instead laid out at
+            its full content height — nothing scrolls inside it — and the panel scrolls that. An
+            <a href="#interactivity"><code>interactive</code></a> frame doesn’t need any of this and opts out of it: it
+            keeps the panel’s height and the embed scrolls itself.
           </p>
           <p>
             For the frame to be sized that way, the embed reports its height alongside <code>hp-preview:rendered</code>:
@@ -1112,7 +1121,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-1088"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.76/dist/components/preview-frame/preview-frame.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1088"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-1088"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.77/dist/components/preview-frame/preview-frame.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1088"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1127,7 +1136,7 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-1089"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.76/dist/components/preview-frame/preview-frame.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1089"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1089"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.77/dist/components/preview-frame/preview-frame.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1089"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
@@ -1379,7 +1388,11 @@
                     the frame, so the previewed page can’t be navigated or submitted from inside the preview.
                     Cross-origin content can’t be reached from here to cancel its own handlers, so this blocks pointer
                     input entirely — hover goes with it. Scrolling doesn’t: an overflowing page is scrolled by the panel
-                    rather than by the frame (see _contentHeight).
+                    rather than by the frame (see _contentHeight). Set, the frame becomes a real viewport instead: it
+                    stays the panel’s own height and the embed scrolls itself, so there is one scrollbar rather than a
+                    panel scrolling an oversized frame, and the embed’s viewport-relative layout (<code>100vh</code>,
+                    <code>position: fixed</code>, sticky headers) sizes to what’s on screen. _contentHeight is ignored
+                    while this is set.
                   </td>
                   <td style="text-align: center">
                     <zn-icon label="yes" src="check"></zn-icon>

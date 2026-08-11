@@ -3023,7 +3023,7 @@
         },
         {
           "name": "interactive",
-          "description": "Lets pointer input through to the embedded page. The preview is inert by\ndefault: clicks never reach the frame, so the previewed page can't be\nnavigated or submitted from inside the preview. Cross-origin content can't\nbe reached from here to cancel its own handlers, so this blocks pointer\ninput entirely — hover goes with it. Scrolling doesn't: an overflowing\npage is scrolled by the panel rather than by the frame (see _contentHeight).",
+          "description": "Lets pointer input through to the embedded page. The preview is inert by\ndefault: clicks never reach the frame, so the previewed page can't be\nnavigated or submitted from inside the preview. Cross-origin content can't\nbe reached from here to cancel its own handlers, so this blocks pointer\ninput entirely — hover goes with it. Scrolling doesn't: an overflowing\npage is scrolled by the panel rather than by the frame (see _contentHeight).\n\nSet, the frame becomes a real viewport instead: it stays the panel's own\nheight and the embed scrolls itself, so there is one scrollbar rather than\na panel scrolling an oversized frame, and the embed's viewport-relative\nlayout (`100vh`, `position: fixed`, sticky headers) sizes to what's on\nscreen. _contentHeight is ignored while this is set.",
           "values": []
         }
       ],

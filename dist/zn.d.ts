@@ -10556,6 +10556,12 @@ declare module "components/preview-frame/preview-frame.component" {
          * be reached from here to cancel its own handlers, so this blocks pointer
          * input entirely — hover goes with it. Scrolling doesn't: an overflowing
          * page is scrolled by the panel rather than by the frame (see _contentHeight).
+         *
+         * Set, the frame becomes a real viewport instead: it stays the panel's own
+         * height and the embed scrolls itself, so there is one scrollbar rather than
+         * a panel scrolling an oversized frame, and the embed's viewport-relative
+         * layout (`100vh`, `position: fixed`, sticky headers) sizes to what's on
+         * screen. _contentHeight is ignored while this is set.
          */
         interactive: boolean;
         frame: HTMLIFrameElement;
@@ -10567,7 +10573,8 @@ declare module "components/preview-frame/preview-frame.component" {
          * height rather than the panel's, so the page never scrolls inside the frame
          * — the panel scrolls instead, which is what makes an overflowing preview
          * reachable while pointer input to the frame is blocked. 0 = unknown, and the
-         * frame falls back to filling the panel.
+         * frame falls back to filling the panel. Kept up to date either way, but only
+         * laid out when the frame is inert: an `interactive` frame scrolls itself.
          */
         private _contentHeight;
         private _generation;

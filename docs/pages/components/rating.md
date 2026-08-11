@@ -74,6 +74,29 @@ Use the `disabled` attribute to disable the rating component.
 <zn-rating value="3" disabled label="Rating disabled with value"></zn-rating>
 ```
 
+### Help Text
+
+Add descriptive help text to a rating with the `help-text` attribute. For help text that contains HTML, use the
+`help-text` slot instead.
+
+```html:preview
+<zn-rating label="Rate this product" help-text="Select a star to rate this product."></zn-rating>
+<br />
+<zn-rating value="3" precision="0.5" label="Overall rating">
+  <div slot="help-text">Ratings are <strong>public</strong> and can be changed at any time.</div>
+</zn-rating>
+```
+
+Help text is styled to match [Input](/components/input) and follows the `size` attribute.
+
+```html:preview
+<zn-rating size="small" value="3" help-text="Small help text"></zn-rating>
+<br />
+<zn-rating size="medium" value="3" help-text="Medium help text"></zn-rating>
+<br />
+<zn-rating size="large" value="3" help-text="Large help text"></zn-rating>
+```
+
 ### Sizes
 
 Use the `size` attribute to change the rating size. Available sizes are `small`, `medium` (default), and `large`.
@@ -115,6 +138,40 @@ The rating component displays hover effects by default, scaling the hovered star
 :::tip
 **Usage:** Hover effects provide visual feedback to help users understand which rating they will select. The hover effect is automatically disabled for `readonly` and `disabled` ratings.
 :::
+
+### Preview
+
+Use the `preview` attribute to show the value next to the symbols. While the pointer moves across the symbols the
+preview follows it, so the value being selected is visible before it is committed. Once the pointer leaves, the preview
+falls back to the selected value.
+
+```html:preview
+<zn-rating preview label="Rate this product"></zn-rating>
+<br />
+<zn-rating preview value="2.5" precision="0.5" label="Half star precision"></zn-rating>
+<br />
+<zn-rating preview value="3.75" precision="0.25" max="10" size="large" label="Quarter star precision"></zn-rating>
+```
+
+The preview is formatted to match `precision`, so a rating with `precision="0.5"` previews `4.5` rather than `4`.
+It also works with `readonly` and `disabled` ratings, where it simply displays the current value.
+
+```html:preview
+<zn-rating preview value="4.5" precision="0.5" readonly label="Average rating"></zn-rating>
+<br />
+<zn-rating preview value="3" disabled label="Rating disabled"></zn-rating>
+```
+
+Style the preview with the `--preview-color` and `--preview-size` custom properties, or the `preview` part.
+
+```html:preview
+<zn-rating
+  preview
+  value="4"
+  label="Custom preview styling"
+  style="--preview-color: #3B82F6; --preview-size: 1.25rem;"
+></zn-rating>
+```
 
 ### Form Integration
 
@@ -272,6 +329,8 @@ Available CSS custom properties:
 - `--symbol-color-active` - Color of filled/active symbols
 - `--symbol-size` - Size of the symbols
 - `--symbol-spacing` - Spacing between symbols
+- `--preview-color` - Color of the preview value (see [Preview](#preview))
+- `--preview-size` - Font size of the preview value
 
 ### Complete Example
 

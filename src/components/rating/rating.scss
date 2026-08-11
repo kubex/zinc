@@ -1,10 +1,13 @@
 @use "../../wc";
+@use "../../form-control";
 
 :host {
   --symbol-color: rgb(var(--zn-border-color));
   --symbol-color-active: var(--zn-color-amber-400);
   --symbol-size: 1.2rem;
   --symbol-spacing: 4px;
+  --preview-color: rgb(var(--zn-text));
+  --preview-size: 0.875rem;
 
   display: block;
 }
@@ -12,6 +15,7 @@
 .rating {
   position: relative;
   display: inline-flex;
+  align-items: center;
   border-radius: var(--zn-border-radius);
   vertical-align: middle;
 
@@ -62,6 +66,21 @@
     }
   }
 
+  &__preview {
+    margin-left: var(--symbol-spacing);
+    font-size: var(--preview-size);
+    font-weight: var(--zn-font-weight-semibold);
+    line-height: 1;
+    color: var(--preview-color);
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+    user-select: none;
+
+    &--hover {
+      color: var(--symbol-color-active);
+    }
+  }
+
   &--disabled &__symbols,
   &--readonly &__symbols {
     cursor: default;
@@ -70,6 +89,11 @@
   &--disabled &__symbol--hover,
   &--readonly &__symbol--hover {
     scale: none;
+  }
+
+  &--disabled &__preview--hover,
+  &--readonly &__preview--hover {
+    color: var(--preview-color);
   }
 
   &--disabled {

@@ -29064,6 +29064,17 @@
             },
             {
               "kind": "field",
+              "name": "interactive",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lets pointer input through to the embedded page. The preview is inert by\ndefault: clicks never reach the frame, so the previewed page can't be\nnavigated or submitted from inside the preview. Cross-origin content can't\nbe reached from here to cancel its own handlers, so this blocks pointer\ninput entirely — hover goes with it. Scrolling doesn't: an overflowing\npage is scrolled by the panel rather than by the frame (see _contentHeight).",
+              "attribute": "interactive",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "frame",
               "type": {
                 "text": "HTMLIFrameElement"
@@ -29080,6 +29091,16 @@
             },
             {
               "kind": "field",
+              "name": "_contentHeight",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0",
+              "description": "Height of the embedded page's content, when it's known: reported by the\nembed (`height` on hp-preview:rendered, or an hp-preview:height message) or\nmeasured directly for a same-origin embed. The frame is laid out at this\nheight rather than the panel's, so the page never scrolls inside the frame\n— the panel scrolls instead, which is what makes an overflowing preview\nreachable while pointer input to the frame is blocked. 0 = unknown, and the\nframe falls back to filling the panel."
+            },
+            {
+              "kind": "field",
               "name": "_generation",
               "type": {
                 "text": "number"
@@ -29092,6 +29113,14 @@
               "name": "_theme",
               "type": {
                 "text": "Record<string, unknown> | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_contentObserver",
+              "type": {
+                "text": "ResizeObserver | undefined"
               },
               "privacy": "private"
             },
@@ -29126,6 +29155,30 @@
             {
               "kind": "field",
               "name": "_onMessage",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_applyContentHeight",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "height",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_resetContentHeight",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onFrameLoad",
               "privacy": "private",
               "readonly": true
             },
@@ -29325,17 +29378,26 @@
               "default": "'dots'",
               "description": "Backdrop behind the stage: `dots` (default) is the canvas dot grid; `panel` is a plain `rgb(var(--zn-panel))` fill.",
               "fieldName": "backdrop"
+            },
+            {
+              "name": "interactive",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lets pointer input through to the embedded page. The preview is inert by\ndefault: clicks never reach the frame, so the previewed page can't be\nnavigated or submitted from inside the preview. Cross-origin content can't\nbe reached from here to cancel its own handlers, so this blocks pointer\ninput entirely — hover goes with it. Scrolling doesn't: an overflowing\npage is scrolled by the panel rather than by the frame (see _contentHeight).",
+              "fieldName": "interactive"
             }
           ],
           "superclass": {
             "name": "ZincElement",
             "module": "/src/internal/zinc-element"
           },
-          "summary": "Embeds a live preview iframe and drives the hp-preview postMessage\nprotocol: answers the frame's ready handshake with a config payload fetched\nfrom data-uri, auto-saves watched forms on change, refreshes the preview\nafter each save (its own, or a shell-driven save of a `refresh-on` form),\nand accepts a theme payload via setTheme() that is retained and replayed\nafter every ready handshake.",
+          "summary": "Embeds a live preview iframe and drives the hp-preview postMessage\nprotocol: answers the frame's ready handshake with a config payload fetched\nfrom data-uri, auto-saves watched forms on change, refreshes the preview\nafter each save (its own, or a shell-driven save of a `refresh-on` form),\naccepts a theme payload via setTheme() that is retained and replayed\nafter every ready handshake, and grows the frame to a content height the\nembed reports so the panel scrolls an overflowing page.",
           "tagNameWithoutPrefix": "preview-frame",
           "tagName": "zn-preview-frame",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Embeds a live preview iframe and drives the hp-preview postMessage\n * protocol: answers the frame's ready handshake with a config payload fetched\n * from data-uri, auto-saves watched forms on change, refreshes the preview\n * after each save (its own, or a shell-driven save of a `refresh-on` form),\n * and accepts a theme payload via setTheme() that is retained and replayed\n * after every ready handshake.\n * @documentation https://zinc.style/components/preview-frame\n * @status experimental\n * @since 1.0\n *\n * @event zn-error - Emitted when the preview reports a render error or a save fails.\n *\n * @csspart base - The component's base wrapper.\n * @csspart stage - The device-width wrapper around the iframe.\n * @csspart iframe - The preview iframe.\n * @csspart error - The error overlay.\n *\n * @cssproperty --zn-preview-frame-dot-spacing - Spacing of the backdrop dot grid (`backdrop=\"dots\"`). Defaults to 20px.\n * @cssproperty --zn-preview-frame-dot-opacity - Opacity of the backdrop dots (`backdrop=\"dots\"`). Defaults to 0.08.\n */",
+          "jsDoc": "/**\n * @summary Embeds a live preview iframe and drives the hp-preview postMessage\n * protocol: answers the frame's ready handshake with a config payload fetched\n * from data-uri, auto-saves watched forms on change, refreshes the preview\n * after each save (its own, or a shell-driven save of a `refresh-on` form),\n * accepts a theme payload via setTheme() that is retained and replayed\n * after every ready handshake, and grows the frame to a content height the\n * embed reports so the panel scrolls an overflowing page.\n *\n * @documentation https://zinc.style/components/preview-frame\n * @status experimental\n * @since 1.0\n *\n * @event zn-error - Emitted when the preview reports a render error or a save fails.\n *\n * @csspart base - The component's base wrapper.\n * @csspart stage - The device-width wrapper around the iframe.\n * @csspart iframe - The preview iframe.\n * @csspart error - The error overlay.\n *\n * @cssproperty --zn-preview-frame-dot-spacing - Spacing of the backdrop dot grid (`backdrop=\"dots\"`). Defaults to 20px.\n * @cssproperty --zn-preview-frame-dot-opacity - Opacity of the backdrop dots (`backdrop=\"dots\"`). Defaults to 0.08.\n */",
           "documentation": "https://zinc.style/components/preview-frame",
           "status": "experimental",
           "since": "1.0"
@@ -44058,89 +44120,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/well/well.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnWell",
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "icon"
-            },
-            {
-              "kind": "field",
-              "name": "inline",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "inline",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, '[default]', 'action')"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "icon"
-            },
-            {
-              "name": "inline",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "inline"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "well",
-          "tagName": "zn-well",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/well\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot.\n */",
-          "documentation": "https://zinc.style/components/well",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnWell",
-            "module": "components/well/well.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/vertical-stepper/vertical-stepper.js",
       "declarations": [
         {
@@ -44307,12 +44286,95 @@
           }
         }
       ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/well/well.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnWell",
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "inline",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "inline",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, '[default]', 'action')"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "icon"
+            },
+            {
+              "name": "inline",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "inline"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "well",
+          "tagName": "zn-well",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/well\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot.\n */",
+          "documentation": "https://zinc.style/components/well",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnWell",
+            "module": "components/well/well.js"
+          }
+        }
+      ]
     }
   ],
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.73",
+    "version": "1.1.74",
     "author": "",
     "license": "MIT"
   }

@@ -2964,7 +2964,7 @@
     },
     {
       "name": "zn-preview-frame",
-      "description": "Embeds a live preview iframe and drives the hp-preview postMessage\nprotocol: answers the frame's ready handshake with a config payload fetched\nfrom data-uri, auto-saves watched forms on change, refreshes the preview\nafter each save (its own, or a shell-driven save of a `refresh-on` form),\nand accepts a theme payload via setTheme() that is retained and replayed\nafter every ready handshake.\n---\n\n\n### **Events:**\n - **zn-error** - Emitted when the preview reports a render error or a save fails.\n\n### **Methods:**\n - **refresh()** - Re-fetches the payload and pushes a fresh config to the preview.\n- **setTheme(theme: _Record<string, unknown>_)** - Pushes a theme payload into the preview. The payload is retained and\nre-posted after every ready handshake, so a frame reload doesn't drop an\nin-progress theme.\n\n### **CSS Properties:**\n - **--zn-preview-frame-dot-spacing** - Spacing of the backdrop dot grid (`backdrop=\"dots\"`). Defaults to 20px. _(default: undefined)_\n- **--zn-preview-frame-dot-opacity** - Opacity of the backdrop dots (`backdrop=\"dots\"`). Defaults to 0.08. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **stage** - The device-width wrapper around the iframe.\n- **iframe** - The preview iframe.\n- **error** - The error overlay.",
+      "description": "Embeds a live preview iframe and drives the hp-preview postMessage\nprotocol: answers the frame's ready handshake with a config payload fetched\nfrom data-uri, auto-saves watched forms on change, refreshes the preview\nafter each save (its own, or a shell-driven save of a `refresh-on` form),\naccepts a theme payload via setTheme() that is retained and replayed\nafter every ready handshake, and grows the frame to a content height the\nembed reports so the panel scrolls an overflowing page.\n---\n\n\n### **Events:**\n - **zn-error** - Emitted when the preview reports a render error or a save fails.\n\n### **Methods:**\n - **refresh()** - Re-fetches the payload and pushes a fresh config to the preview.\n- **setTheme(theme: _Record<string, unknown>_)** - Pushes a theme payload into the preview. The payload is retained and\nre-posted after every ready handshake, so a frame reload doesn't drop an\nin-progress theme.\n\n### **CSS Properties:**\n - **--zn-preview-frame-dot-spacing** - Spacing of the backdrop dot grid (`backdrop=\"dots\"`). Defaults to 20px. _(default: undefined)_\n- **--zn-preview-frame-dot-opacity** - Opacity of the backdrop dots (`backdrop=\"dots\"`). Defaults to 0.08. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **stage** - The device-width wrapper around the iframe.\n- **iframe** - The preview iframe.\n- **error** - The error overlay.",
       "attributes": [
         {
           "name": "src",
@@ -3020,6 +3020,11 @@
           "name": "backdrop",
           "description": "Backdrop behind the stage: `dots` (default) is the canvas dot grid; `panel` is a plain `rgb(var(--zn-panel))` fill.",
           "values": [{ "name": "dots" }, { "name": "panel" }]
+        },
+        {
+          "name": "interactive",
+          "description": "Lets pointer input through to the embedded page. The preview is inert by\ndefault: clicks never reach the frame, so the previewed page can't be\nnavigated or submitted from inside the preview. Cross-origin content can't\nbe reached from here to cancel its own handlers, so this blocks pointer\ninput entirely — hover goes with it. Scrolling doesn't: an overflowing\npage is scrolled by the panel rather than by the frame (see _contentHeight).",
+          "values": []
         }
       ],
       "references": [
@@ -4482,17 +4487,6 @@
       ]
     },
     {
-      "name": "zn-well",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.",
-      "attributes": [
-        { "name": "icon", "values": [] },
-        { "name": "inline", "values": [] }
-      ],
-      "references": [
-        { "name": "Documentation", "url": "https://zinc.style/components/well" }
-      ]
-    },
-    {
       "name": "zn-vertical-stepper",
       "description": "Vertical steppers display a sequence of steps in a vertical layout with descriptions and optional icons.\n---\n\n\n### **Slots:**\n - **icon** - Optional slot for adding an icon or indicator before the step content.\n\n### **CSS Parts:**\n - **vs** - The main container for the vertical stepper.\n- **vs__left** - The left section containing the icon and connecting line.\n- **vs__icon** - The icon container.\n- **vs__line** - The vertical connecting line between steps.\n- **vs__right** - The right section containing caption and description text.\n- **vs__caption** - The caption/title text element.\n- **vs__description** - The description text element.",
       "attributes": [
@@ -4527,6 +4521,17 @@
           "name": "Documentation",
           "url": "https://zinc.style/components/vertical-stepper"
         }
+      ]
+    },
+    {
+      "name": "zn-well",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.",
+      "attributes": [
+        { "name": "icon", "values": [] },
+        { "name": "inline", "values": [] }
+      ],
+      "references": [
+        { "name": "Documentation", "url": "https://zinc.style/components/well" }
       ]
     }
   ]

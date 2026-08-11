@@ -10463,7 +10463,7 @@ declare module "components/page-builder/index" {
     }
 }
 declare module "components/preview-frame/preview-frame.component" {
-    import { type CSSResultGroup } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     const DEVICE_WIDTHS: {
         readonly desktop: "100%";
@@ -10476,8 +10476,10 @@ declare module "components/preview-frame/preview-frame.component" {
      * protocol: answers the frame's ready handshake with a config payload fetched
      * from data-uri, auto-saves watched forms on change, refreshes the preview
      * after each save (its own, or a shell-driven save of a `refresh-on` form),
-     * and accepts a theme payload via setTheme() that is retained and replayed
-     * after every ready handshake.
+     * accepts a theme payload via setTheme() that is retained and replayed
+     * after every ready handshake, and grows the frame to a content height the
+     * embed reports so the panel scrolls an overflowing page.
+     *
      * @documentation https://zinc.style/components/preview-frame
      * @status experimental
      * @since 1.0
@@ -10547,17 +10549,41 @@ declare module "components/preview-frame/preview-frame.component" {
         device: PreviewFrameDevice;
         /** Backdrop behind the stage: `dots` (default) is the canvas dot grid; `panel` is a plain `rgb(var(--zn-panel))` fill. */
         backdrop: 'dots' | 'panel';
+        /**
+         * Lets pointer input through to the embedded page. The preview is inert by
+         * default: clicks never reach the frame, so the previewed page can't be
+         * navigated or submitted from inside the preview. Cross-origin content can't
+         * be reached from here to cancel its own handlers, so this blocks pointer
+         * input entirely — hover goes with it. Scrolling doesn't: an overflowing
+         * page is scrolled by the panel rather than by the frame (see _contentHeight).
+         */
+        interactive: boolean;
         frame: HTMLIFrameElement;
         private error;
+        /**
+         * Height of the embedded page's content, when it's known: reported by the
+         * embed (`height` on hp-preview:rendered, or an hp-preview:height message) or
+         * measured directly for a same-origin embed. The frame is laid out at this
+         * height rather than the panel's, so the page never scrolls inside the frame
+         * — the panel scrolls instead, which is what makes an overflowing preview
+         * reachable while pointer input to the frame is blocked. 0 = unknown, and the
+         * frame falls back to filling the panel.
+         */
+        private _contentHeight;
         private _generation;
         private _theme;
+        private _contentObserver;
         private readonly _watchedForms;
         private readonly _refreshForms;
         private readonly _debounceTimers;
         private readonly _formObserver;
         connectedCallback(): void;
+        protected willUpdate(changed: PropertyValues<this>): void;
         disconnectedCallback(): void;
         private readonly _onMessage;
+        private _applyContentHeight;
+        private _resetContentHeight;
+        private readonly _onFrameLoad;
         /** Re-fetches the payload and pushes a fresh config to the preview. */
         refresh(): Promise<void>;
         /**

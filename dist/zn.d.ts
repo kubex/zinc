@@ -6939,24 +6939,36 @@ declare module "components/rating/rating.component" {
      *
      * @slot - The default slot.
      * @slot example - An example slot.
+     * @slot help-text - Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.
      *
+     * @csspart form-control - The form control that wraps the symbols and help text.
+     * @csspart form-control-help-text - The help text's wrapper.
      * @csspart base - The component's base wrapper.
+     * @csspart preview - The value shown next to the symbols when `preview` is enabled.
      *
      * @cssproperty --example - An example CSS custom property.
+     * @cssproperty --preview-color - The color of the preview value.
+     * @cssproperty --preview-size - The font size of the preview value.
      */
     export default class ZnRating extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
         private readonly formControlController;
+        private readonly hasSlotController;
         rating: HTMLElement;
+        symbols: HTMLElement;
         private hoverValue;
         private isHovering;
         label: string;
+        /** The rating's help text. If you need to display HTML, use the `help-text` slot instead. */
+        helpText: string;
         name: string;
         value: number;
         max: number;
         precision: number;
         readonly: boolean;
         disabled: boolean;
+        /** Displays the value alongside the symbols, updating live as the pointer moves across them. */
+        preview: boolean;
         size: 'small' | 'medium' | 'large';
         getSymbol: (value: number) => string;
         /** Gets the validity state object */
@@ -6973,6 +6985,7 @@ declare module "components/rating/rating.component" {
         setCustomValidity(): void;
         private _roundToPrecision;
         private _getValueFromXCoordinate;
+        private _formatValue;
         private _getValueFromMousePosition;
         private _getValueFromTouchPosition;
         private _setValue;

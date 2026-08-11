@@ -328,7 +328,8 @@ Available CSS custom properties:
 - `--symbol-color` - Color of unfilled symbols
 - `--symbol-color-active` - Color of filled/active symbols
 - `--symbol-size` - Size of the symbols
-- `--symbol-spacing` - Spacing between symbols
+- `--symbol-spacing` - Gap between symbols. The rating adds no padding of its own, so the first symbol sits flush with
+  the component's edge and lines up with other form controls.
 - `--preview-color` - Color of the preview value (see [Preview](#preview))
 - `--preview-size` - Font size of the preview value
 

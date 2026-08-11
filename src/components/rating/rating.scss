@@ -5,7 +5,7 @@
   --symbol-color: rgb(var(--zn-border-color));
   --symbol-color-active: var(--zn-color-amber-400);
   --symbol-size: 1.2rem;
-  --symbol-spacing: 4px;
+  --symbol-spacing: var(--zn-spacing-x-small);
   --preview-color: rgb(var(--zn-text));
   --preview-size: 0.875rem;
 
@@ -31,15 +31,12 @@
   &__symbols {
     display: inline-flex;
     position: relative;
+    gap: var(--symbol-spacing);
     font-size: var(--symbol-size);
     line-height: 0;
     color: var(--symbol-color);
     white-space: nowrap;
     cursor: pointer;
-
-    > * {
-      padding: var(--symbol-spacing);
-    }
   }
 
   &__symbol--active,
@@ -53,8 +50,8 @@
 
   &__partial--filled {
     position: absolute;
-    top: var(--symbol-spacing);
-    left: var(--symbol-spacing);
+    top: 0;
+    left: 0;
   }
 
   &__symbol {
@@ -106,7 +103,7 @@
 
   &--small {
     --symbol-size: 1rem;
-    --symbol-spacing: 2px;
+    --symbol-spacing: var(--zn-spacing-2x-small);
   }
 
   &--medium {
@@ -115,6 +112,6 @@
 
   &--large {
     --symbol-size: 1.5rem;
-    --symbol-spacing: 6px;
+    --symbol-spacing: 12px;
   }
 }

@@ -112,7 +112,16 @@ export default class ZnRating extends ZincElement implements ZincFormControl {
 
   private _getValueFromXCoordinate(coordinate: number): number {
     const {left, width} = this.symbols.getBoundingClientRect();
-    const value = this._roundToPrecision(((coordinate - left) / width) * this.max, this.precision);
+    // Symbols are spaced with a gap rather than padding, so the symbols only cover part of the
+    // container and a plain width-to-value ratio would skew fractions within each symbol.
+    const gap = parseFloat(getComputedStyle(this.symbols).columnGap) || 0;
+    const symbolWidth = (width - gap * (this.max - 1)) / this.max;
+    const stride = symbolWidth + gap;
+    const position = Math.min(Math.max(coordinate - left, 0), width);
+    const index = Math.min(Math.floor(position / stride), this.max - 1);
+    // Landing in a gap reads as the preceding symbol being complete.
+    const fraction = Math.min((position - index * stride) / symbolWidth, 1);
+    const value = this._roundToPrecision(index + fraction, this.precision);
 
     return Math.min(Math.max(value, 0), this.max);
   }

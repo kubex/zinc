@@ -9202,9 +9202,11 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
      *
      * @csspart base - The component's base wrapper.
      * @csspart toolbar - The always-visible block-insert toolbar.
+     * @csspart raw-toggle - The button that switches between the block view and the raw source view.
      * @csspart block - A rendered block wrapper.
      * @csspart rendered - The rendered remarkd output of a block.
      * @csspart input - The textarea shown while editing a block.
+     * @csspart raw - The full-document textarea shown in raw source mode.
      * @csspart slash-menu - The context menu opened by typing "/" in a block.
      * @csspart image-controls - The caption / alignment / size panel shown when an image block is clicked.
      */
@@ -9212,6 +9214,7 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         static styles: CSSResultGroup;
         private readonly formControlController;
         private editingDraft;
+        private rawEntryValue;
         private suppressValueSync;
         private suppressBlurCommit;
         private validationInput;
@@ -9225,6 +9228,7 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private dropIndicator;
         private dragIndex;
         private editShell;
+        private rawMode;
         private pendingDragHandle;
         private dragStartX;
         private dragStartY;
@@ -9243,6 +9247,8 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
          * to `uploadUrl` and the returned `uploadPath` is embedded as the image URL.
          */
         attachmentUrl: string;
+        /** Adds a toolbar toggle that swaps the block view for the full remarkd source. */
+        allowRaw: boolean;
         /** Makes the editor required for form submission. */
         required: boolean;
         /** Makes the editor read-only. */
@@ -9257,7 +9263,7 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         setCustomValidity(message: string): void;
         /** Starts editing the first block, or a new block if the document is empty. */
         focus(): void;
-        /** Commits any in-progress block edit. */
+        /** Commits any in-progress block or raw edit. */
         blur(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         disconnectedCallback(): void;
@@ -9321,11 +9327,26 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private insertImage;
         private uploadImage;
         private autosize;
+        private toggleRawMode;
+        private focusRaw;
+        /**
+         * Raw mode keeps the whole document in one textarea, so the textarea — not
+         * the block list — is authoritative while it is open: re-splitting on every
+         * keystroke would normalise blank lines out from under the cursor.
+         */
+        private handleRawInput;
+        /**
+         * Re-splits the raw source into blocks. Not `updateBlocks` — that only
+         * reports a change when the re-join differs from the value, and raw edits
+         * have already written straight to the value.
+         */
+        private commitRaw;
         private handleToolbarInsert;
         private renderSlashMenu;
         private renderImageControls;
         private renderBlock;
         render(): import("lit-html").TemplateResult<1>;
+        private renderRaw;
         /** The block views, with the inline image picker spliced in when active. */
         private renderBody;
         private renderImagePicker;

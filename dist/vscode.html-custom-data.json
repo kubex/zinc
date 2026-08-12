@@ -1785,6 +1785,29 @@
       ]
     },
     {
+      "name": "zn-header",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "full-location", "values": [] },
+        { "name": "entity-id", "values": [] },
+        { "name": "entity-id-show", "values": [] },
+        { "name": "transparent", "values": [] },
+        { "name": "caption", "values": [] },
+        { "name": "icon", "values": [] },
+        { "name": "navigation", "values": [{ "name": "array" }] },
+        { "name": "full-width", "values": [] },
+        { "name": "previous-path", "values": [] },
+        { "name": "previous-target", "values": [] },
+        { "name": "hide-breadcrumb", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/header"
+        }
+      ]
+    },
+    {
       "name": "zn-hover-container",
       "description": "The HoverContainer component is used to display additional information when a user hovers over or clicks\non an element.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the hover-container is shown.\n- **zn-after-show** - Emitted after the hover-container is shown.\n- **zn-hide** - Emitted when the hover-container is hidden.\n- **zn-after-hide** - Emitted after the hover-container is hidden.\n\n### **Slots:**\n - _default_ - The content of the hover-container\n- **anchor** - The anchor the hover-container is attached to.",
       "attributes": [
@@ -1818,29 +1841,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/hover-container"
-        }
-      ]
-    },
-    {
-      "name": "zn-header",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "full-location", "values": [] },
-        { "name": "entity-id", "values": [] },
-        { "name": "entity-id-show", "values": [] },
-        { "name": "transparent", "values": [] },
-        { "name": "caption", "values": [] },
-        { "name": "icon", "values": [] },
-        { "name": "navigation", "values": [{ "name": "array" }] },
-        { "name": "full-width", "values": [] },
-        { "name": "previous-path", "values": [] },
-        { "name": "previous-target", "values": [] },
-        { "name": "hide-breadcrumb", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/header"
         }
       ]
     },
@@ -3363,7 +3363,7 @@
     },
     {
       "name": "zn-remarkd-editor",
-      "description": "A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted on each keystroke while editing a block.\n- **zn-change** - Emitted when a block edit is committed and the value changes.\n\n### **Methods:**\n - **focus()** - Starts editing the first block, or a new block if the document is empty.\n- **blur()** - Commits any in-progress block edit.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The always-visible block-insert toolbar.\n- **block** - A rendered block wrapper.\n- **rendered** - The rendered remarkd output of a block.\n- **input** - The textarea shown while editing a block.\n- **slash-menu** - The context menu opened by typing \"/\" in a block.\n- **image-controls** - The caption / alignment / size panel shown when an image block is clicked.",
+      "description": "A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted on each keystroke while editing a block.\n- **zn-change** - Emitted when a block edit is committed and the value changes.\n\n### **Methods:**\n - **focus()** - Starts editing the first block, or a new block if the document is empty.\n- **blur()** - Commits any in-progress block or raw edit.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The always-visible block-insert toolbar.\n- **raw-toggle** - The button that switches between the block view and the raw source view.\n- **block** - A rendered block wrapper.\n- **rendered** - The rendered remarkd output of a block.\n- **input** - The textarea shown while editing a block.\n- **raw** - The full-document textarea shown in raw source mode.\n- **slash-menu** - The context menu opened by typing \"/\" in a block.\n- **image-controls** - The caption / alignment / size panel shown when an image block is clicked.",
       "attributes": [
         {
           "name": "name",
@@ -3383,6 +3383,11 @@
         {
           "name": "attachment-url",
           "description": "Endpoint for image uploads — required for image support. Posting the file\nmetadata here must return `{uploadPath, uploadUrl}`; the file is then PUT\nto `uploadUrl` and the returned `uploadPath` is embedded as the image URL.",
+          "values": []
+        },
+        {
+          "name": "allow-raw",
+          "description": "Adds a toolbar toggle that swaps the block view for the full remarkd source.",
           "values": []
         },
         {

@@ -4208,6 +4208,63 @@
           }
         },
         {
+          "name": "zn-header",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "full-location", "value": { "type": "string" } },
+            { "name": "entity-id", "value": { "type": "string" } },
+            { "name": "entity-id-show", "value": { "type": "boolean" } },
+            {
+              "name": "transparent",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "caption", "value": { "type": "string" } },
+            { "name": "icon", "value": { "type": "string" } },
+            {
+              "name": "navigation",
+              "value": { "type": "array", "default": "[]" }
+            },
+            { "name": "full-width", "value": { "type": "boolean" } },
+            { "name": "previous-path", "value": { "type": "string" } },
+            { "name": "previous-target", "value": { "type": "string" } },
+            {
+              "name": "hide-breadcrumb",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "fullLocation", "type": "string" },
+              { "name": "entityId", "type": "string" },
+              { "name": "entityIdShow", "type": "boolean" },
+              { "name": "transparent", "type": "boolean" },
+              { "name": "caption", "type": "string" },
+              { "name": "icon", "type": "string" },
+              { "name": "navigation", "type": "array" },
+              { "name": "fullWidth", "type": "boolean" },
+              { "name": "previousPath", "type": "string" },
+              { "name": "previousTarget", "type": "string" },
+              { "name": "hideBreadcrumb", "type": "boolean" },
+              { "name": "handleAltPress" },
+              { "name": "handleAltUp" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-hover-container",
           "description": "The HoverContainer component is used to display additional information when a user hovers over or clicks\non an element.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the hover-container is shown.\n- **zn-after-show** - Emitted after the hover-container is shown.\n- **zn-hide** - Emitted when the hover-container is hidden.\n- **zn-after-hide** - Emitted after the hover-container is hidden.\n\n### **Slots:**\n - _default_ - The content of the hover-container\n- **anchor** - The anchor the hover-container is attached to.",
           "doc-url": "",
@@ -4306,63 +4363,6 @@
               {
                 "name": "zn-after-hide",
                 "description": "Emitted after the hover-container is hidden."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-header",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "full-location", "value": { "type": "string" } },
-            { "name": "entity-id", "value": { "type": "string" } },
-            { "name": "entity-id-show", "value": { "type": "boolean" } },
-            {
-              "name": "transparent",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "caption", "value": { "type": "string" } },
-            { "name": "icon", "value": { "type": "string" } },
-            {
-              "name": "navigation",
-              "value": { "type": "array", "default": "[]" }
-            },
-            { "name": "full-width", "value": { "type": "boolean" } },
-            { "name": "previous-path", "value": { "type": "string" } },
-            { "name": "previous-target", "value": { "type": "string" } },
-            {
-              "name": "hide-breadcrumb",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "fullLocation", "type": "string" },
-              { "name": "entityId", "type": "string" },
-              { "name": "entityIdShow", "type": "boolean" },
-              { "name": "transparent", "type": "boolean" },
-              { "name": "caption", "type": "string" },
-              { "name": "icon", "type": "string" },
-              { "name": "navigation", "type": "array" },
-              { "name": "fullWidth", "type": "boolean" },
-              { "name": "previousPath", "type": "string" },
-              { "name": "previousTarget", "type": "string" },
-              { "name": "hideBreadcrumb", "type": "boolean" },
-              { "name": "handleAltPress" },
-              { "name": "handleAltUp" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
               }
             ]
           }
@@ -7848,7 +7848,7 @@
         },
         {
           "name": "zn-remarkd-editor",
-          "description": "A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted on each keystroke while editing a block.\n- **zn-change** - Emitted when a block edit is committed and the value changes.\n\n### **Methods:**\n - **focus()** - Starts editing the first block, or a new block if the document is empty.\n- **blur()** - Commits any in-progress block edit.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The always-visible block-insert toolbar.\n- **block** - A rendered block wrapper.\n- **rendered** - The rendered remarkd output of a block.\n- **input** - The textarea shown while editing a block.\n- **slash-menu** - The context menu opened by typing \"/\" in a block.\n- **image-controls** - The caption / alignment / size panel shown when an image block is clicked.",
+          "description": "A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted on each keystroke while editing a block.\n- **zn-change** - Emitted when a block edit is committed and the value changes.\n\n### **Methods:**\n - **focus()** - Starts editing the first block, or a new block if the document is empty.\n- **blur()** - Commits any in-progress block or raw edit.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The always-visible block-insert toolbar.\n- **raw-toggle** - The button that switches between the block view and the raw source view.\n- **block** - A rendered block wrapper.\n- **rendered** - The rendered remarkd output of a block.\n- **input** - The textarea shown while editing a block.\n- **raw** - The full-document textarea shown in raw source mode.\n- **slash-menu** - The context menu opened by typing \"/\" in a block.\n- **image-controls** - The caption / alignment / size panel shown when an image block is clicked.",
           "doc-url": "",
           "attributes": [
             {
@@ -7870,6 +7870,11 @@
               "name": "attachment-url",
               "description": "Endpoint for image uploads — required for image support. Posting the file\nmetadata here must return `{uploadPath, uploadUrl}`; the file is then PUT\nto `uploadUrl` and the returned `uploadPath` is embedded as the image URL.",
               "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "allow-raw",
+              "description": "Adds a toolbar toggle that swaps the block view for the full remarkd source.",
+              "value": { "type": "boolean", "default": "false" }
             },
             {
               "name": "required",
@@ -7923,6 +7928,11 @@
                 "name": "attachmentUrl",
                 "description": "Endpoint for image uploads — required for image support. Posting the file\nmetadata here must return `{uploadPath, uploadUrl}`; the file is then PUT\nto `uploadUrl` and the returned `uploadPath` is embedded as the image URL.",
                 "type": "string"
+              },
+              {
+                "name": "allowRaw",
+                "description": "Adds a toolbar toggle that swaps the block view for the full remarkd source.",
+                "type": "boolean"
               },
               {
                 "name": "required",

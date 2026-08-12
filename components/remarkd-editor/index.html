@@ -570,6 +570,7 @@
             <li data-level="3"><a href="#adding-and-moving-blocks">Adding and Moving Blocks</a></li>
             <li data-level="3"><a href="#images">Images</a></li>
             <li data-level="3"><a href="#remarkd-blocks">Remarkd Blocks</a></li>
+            <li data-level="3"><a href="#raw-source">Raw Source</a></li>
             <li data-level="3"><a href="#form-integration">Form Integration</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#properties">Properties</a></li>
@@ -853,6 +854,69 @@ with a blank line inside
               </button>
             </div>
           </div>
+          <h3 id="raw-source" class="anchor-heading">
+            Raw Source<a href="#raw-source" aria-label='Direct link to "Raw Source"'></a>
+          </h3>
+          <p>
+            Add <code>allow-raw</code> for a toolbar toggle that swaps the block view for the whole document as editable
+            remarkd source. Useful for pasting in a finished document or fixing syntax the block view makes awkward.
+            Toggling back re-splits the source into blocks, normalising the spacing between them to a single blank line.
+            The toggle is only offered on editable editors — <code>readonly</code> and <code>disabled</code> instances
+            hide the toolbar entirely.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-remarkd-editor
+                name="content"
+                allow-raw=""
+                value="# Raw Source
+
+Hit the toggle at the right of the toolbar to edit this whole document at once.
+
+NOTE: The value is the same remarkd source either way."
+              ></zn-remarkd-editor>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-946">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1202"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span>
+  <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span>
+  <span class="token attr-name">allow-raw</span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span># Raw Source
+
+Hit the toggle at the right of the toolbar to edit this whole document at once.
+
+NOTE: The value is the same remarkd source either way.<span class="token punctuation">"</span></span>
+<span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1202"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-946"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
           <h3 id="form-integration" class="anchor-heading">
             Form Integration<a href="#form-integration" aria-label='Direct link to "Form Integration"'></a>
           </h3>
@@ -886,9 +950,9 @@ with a blank line inside
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-946">
+            <div class="code-preview__source-group" id="code-preview-source-group-947">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1202"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>remarkd-editor-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1203"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>remarkd-editor-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span> <span class="token attr-name">required</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Edit me, then submit.<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>success<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Submit<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
@@ -906,7 +970,7 @@ with a blank line inside
     <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Submitted!\n\n'</span> <span class="token operator">+</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1202"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1203"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -915,7 +979,7 @@ with a blank line inside
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-946"
+                aria-controls="code-preview-source-group-947"
               >
                 Source
                 <svg
@@ -953,7 +1017,7 @@ with a blank line inside
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-1203"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.80/dist/components/remarkd-editor/remarkd-editor.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1203"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-1204"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.80/dist/components/remarkd-editor/remarkd-editor.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1204"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -968,12 +1032,12 @@ with a blank line inside
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-1204"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.80/dist/components/remarkd-editor/remarkd-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1204"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1205"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.80/dist/components/remarkd-editor/remarkd-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1205"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-1205"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/remarkd-editor/remarkd-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1205"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1206"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/remarkd-editor/remarkd-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1206"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="properties" class="anchor-heading">
@@ -1070,6 +1134,29 @@ with a blank line inside
                   </td>
                   <td>
                     <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">allowRaw</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> allow-raw </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>Adds a toolbar toggle that swaps the block view for the full remarkd source.</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
                   </td>
                 </tr>
 
@@ -1198,7 +1285,7 @@ with a blank line inside
 
                 <tr>
                   <td class="nowrap"><code>blur()</code></td>
-                  <td>Commits any in-progress block edit.</td>
+                  <td>Commits any in-progress block or raw edit.</td>
                   <td>-</td>
                 </tr>
               </tbody>
@@ -1231,6 +1318,11 @@ with a blank line inside
                 </tr>
 
                 <tr>
+                  <td class="nowrap"><code>raw-toggle</code></td>
+                  <td>The button that switches between the block view and the raw source view.</td>
+                </tr>
+
+                <tr>
                   <td class="nowrap"><code>block</code></td>
                   <td>A rendered block wrapper.</td>
                 </tr>
@@ -1243,6 +1335,11 @@ with a blank line inside
                 <tr>
                   <td class="nowrap"><code>input</code></td>
                   <td>The textarea shown while editing a block.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>raw</code></td>
+                  <td>The full-document textarea shown in raw source mode.</td>
                 </tr>
 
                 <tr>

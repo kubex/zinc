@@ -10980,6 +10980,11 @@ declare module "components/preview-frame/preview-frame.component" {
          * refresh the preview. These are never intercepted: the shell submits them
          * (so its own response handling — alerts, refreshes — runs as normal) and the
          * preview re-fetches its config once the shell reports the save complete.
+         * Matched by delegation on the shell's bubbled `complete` event rather than
+         * by attaching to the forms themselves, so a save anywhere on the page
+         * refreshes the preview — including forms in a different DOM root, e.g. a
+         * page-level form saved while the preview sits inside a tab panel's shadow
+         * root (a page's Template select lives on one tab, its preview on another).
          * Set empty to disable.
          */
         refreshOn: string;
@@ -11047,8 +11052,9 @@ declare module "components/preview-frame/preview-frame.component" {
         private _theme;
         private _contentObserver;
         private readonly _watchedForms;
-        private readonly _refreshForms;
         private readonly _debounceTimers;
+        private _shellSaveRoots;
+        private _lastShellSave;
         private readonly _formObserver;
         connectedCallback(): void;
         protected willUpdate(changed: PropertyValues<this>): void;

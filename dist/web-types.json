@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.1.85",
+  "version": "1.1.86",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -7089,7 +7089,7 @@
             },
             {
               "name": "refresh-on",
-              "description": "Selector for forms whose saves are left to the shell but should still\nrefresh the preview. These are never intercepted: the shell submits them\n(so its own response handling — alerts, refreshes — runs as normal) and the\npreview re-fetches its config once the shell reports the save complete.\nSet empty to disable.",
+              "description": "Selector for forms whose saves are left to the shell but should still\nrefresh the preview. These are never intercepted: the shell submits them\n(so its own response handling — alerts, refreshes — runs as normal) and the\npreview re-fetches its config once the shell reports the save complete.\nMatched by delegation on the shell's bubbled `complete` event rather than\nby attaching to the forms themselves, so a save anywhere on the page\nrefreshes the preview — including forms in a different DOM root, e.g. a\npage-level form saved while the preview sits inside a tab panel's shadow\nroot (a page's Template select lives on one tab, its preview on another).\nSet empty to disable.",
               "value": { "type": "string", "default": "'form'" }
             },
             {
@@ -7158,7 +7158,7 @@
               },
               {
                 "name": "refreshOn",
-                "description": "Selector for forms whose saves are left to the shell but should still\nrefresh the preview. These are never intercepted: the shell submits them\n(so its own response handling — alerts, refreshes — runs as normal) and the\npreview re-fetches its config once the shell reports the save complete.\nSet empty to disable.",
+                "description": "Selector for forms whose saves are left to the shell but should still\nrefresh the preview. These are never intercepted: the shell submits them\n(so its own response handling — alerts, refreshes — runs as normal) and the\npreview re-fetches its config once the shell reports the save complete.\nMatched by delegation on the shell's bubbled `complete` event rather than\nby attaching to the forms themselves, so a save anywhere on the page\nrefreshes the preview — including forms in a different DOM root, e.g. a\npage-level form saved while the preview sits inside a tab panel's shadow\nroot (a page's Template select lives on one tab, its preview on another).\nSet empty to disable.",
                 "type": "string"
               },
               {

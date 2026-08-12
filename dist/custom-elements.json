@@ -29331,7 +29331,7 @@
                 "text": "string"
               },
               "default": "'form'",
-              "description": "Selector for forms whose saves are left to the shell but should still\nrefresh the preview. These are never intercepted: the shell submits them\n(so its own response handling — alerts, refreshes — runs as normal) and the\npreview re-fetches its config once the shell reports the save complete.\nSet empty to disable.",
+              "description": "Selector for forms whose saves are left to the shell but should still\nrefresh the preview. These are never intercepted: the shell submits them\n(so its own response handling — alerts, refreshes — runs as normal) and the\npreview re-fetches its config once the shell reports the save complete.\nMatched by delegation on the shell's bubbled `complete` event rather than\nby attaching to the forms themselves, so a save anywhere on the page\nrefreshes the preview — including forms in a different DOM root, e.g. a\npage-level form saved while the preview sits inside a tab panel's shadow\nroot (a page's Template select lives on one tab, its preview on another).\nSet empty to disable.",
               "attribute": "refresh-on"
             },
             {
@@ -29467,17 +29467,27 @@
             },
             {
               "kind": "field",
-              "name": "_refreshForms",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new Set<HTMLFormElement>()"
-            },
-            {
-              "kind": "field",
               "name": "_debounceTimers",
               "privacy": "private",
               "readonly": true,
               "default": "new Map<HTMLFormElement, number>()"
+            },
+            {
+              "kind": "field",
+              "name": "_shellSaveRoots",
+              "type": {
+                "text": "EventTarget[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_lastShellSave",
+              "type": {
+                "text": "Event | undefined"
+              },
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -29656,7 +29666,7 @@
                 "text": "string"
               },
               "default": "'form'",
-              "description": "Selector for forms whose saves are left to the shell but should still\nrefresh the preview. These are never intercepted: the shell submits them\n(so its own response handling — alerts, refreshes — runs as normal) and the\npreview re-fetches its config once the shell reports the save complete.\nSet empty to disable.",
+              "description": "Selector for forms whose saves are left to the shell but should still\nrefresh the preview. These are never intercepted: the shell submits them\n(so its own response handling — alerts, refreshes — runs as normal) and the\npreview re-fetches its config once the shell reports the save complete.\nMatched by delegation on the shell's bubbled `complete` event rather than\nby attaching to the forms themselves, so a save anywhere on the page\nrefreshes the preview — including forms in a different DOM root, e.g. a\npage-level form saved while the preview sits inside a tab panel's shadow\nroot (a page's Template select lives on one tab, its preview on another).\nSet empty to disable.",
               "fieldName": "refreshOn"
             },
             {
@@ -45851,7 +45861,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.85",
+    "version": "1.1.86",
     "author": "",
     "license": "MIT"
   }

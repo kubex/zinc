@@ -74,6 +74,48 @@ The layout pattern repeats for additional children. With "2,1", items cycle thro
 </zn-cols>
 ```
 
+### Stacking Order
+
+Use `stack-at` to name the container width the columns collapse to a single column below, as one of
+the container sizes (`sm`, `smp`, `ph`, `md`, `lg`, `hd`, `3k`, `4k`). Children can then declare a
+`stack-order` to say where they belong in that single column, which lets a sidebar sit second in the
+markup but move to the top once stacked.
+
+`stack-order` takes `first`/`high` (before unordered children), `last`/`low` (after them), or any
+integer for finer control. It has no effect while the columns are side by side, so the reading order
+of your markup is what wide screens get.
+
+```html:preview
+<zn-cols layout="2,1" stack-at="md">
+  <zn-panel>Main content — first in the markup, second when stacked</zn-panel>
+  <zn-panel stack-order="first">Sidebar — second in the markup, first when stacked</zn-panel>
+</zn-cols>
+```
+
+### Splitting a Column by Priority
+
+Add `stack-split` to a column to break it apart when stacked. Its children stay together as one
+column on wide screens, then each becomes a column in its own right and takes its own `stack-order`,
+so high priority content can move above the main column while low priority content drops below it.
+
+```html:preview
+<zn-cols layout="2,1" stack-at="md">
+  <zn-panel>Databases — the main column</zn-panel>
+  <div stack-split>
+    <zn-panel stack-order="high">Usage — above the main column when stacked</zn-panel>
+    <zn-panel stack-order="low">Tutorials — below the main column when stacked</zn-panel>
+  </div>
+</zn-cols>
+```
+
+Keep `stack-split` on a plain wrapper element rather than a component: `zn-cols` lays it out as a
+column (`display: flex` in a column, with the standard gap) and then removes its box entirely while
+stacked, so any styling of its own would disappear along with it.
+
+`stack-at` defaults to `lg` when any child declares `stack-order` or `stack-split`. Set it explicitly
+at or above the width where your columns would otherwise wrap on their own, so that reordering is
+already in effect by the time the layout breaks.
+
 ### With Borders
 
 Use the `border` attribute to add borders around columns.

@@ -33,11 +33,17 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   };
 
   private readonly formControlController: FormControlController = new FormControlController(this);
-  private readonly hasSlotController = new HasSlotController(this, 'label', 'expand');
+  private readonly hasSlotController = new HasSlotController(this, 'label', 'expand', 'help-text');
 
   @property() name = '';
   @property() value = '{"en":""}';
   @property() label: string = '';
+
+  /**
+   * Text shown below the field, describing how to fill it in. Applies to every language. If you need HTML, use the
+   * `help-text` slot instead.
+   */
+  @property({attribute: 'help-text'}) helpText: string = '';
   @property({type: Boolean, reflect: true}) disabled = false;
   @property({type: Boolean, reflect: true}) required = false;
   @property({type: Boolean, reflect: true}) flush = false;
@@ -356,6 +362,8 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     const hasLabelSlot = this.hasSlotController.test('label');
     const hasLabel = this.label ? true : hasLabelSlot;
     const hasExpandSlot = this.hasSlotController.test('expand');
+    const hasHelpTextSlot = this.hasSlotController.test('help-text');
+    const hasHelpText = this.helpText ? true : hasHelpTextSlot;
     const hasMultipleLanguages = Object.keys(this.languages).length > 1;
     const showActions = !this.grouped && (hasMultipleLanguages || hasExpandSlot);
 
@@ -368,6 +376,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
              'form-control': true,
              'form-control--medium': true,
              'form-control--has-label': hasLabel,
+             'form-control--has-help-text': hasHelpText,
            })}"
            @keydown="${this.handleKeyDown}">
         <div class="translations__header">
@@ -443,6 +452,12 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
             ></zn-inline-edit>
           `)}
         </div>
+
+        ${hasHelpText ? html`
+          <div part="form-control-help-text" class="form-control__help-text" aria-hidden="false">
+            <slot name="help-text">${this.helpText}</slot>
+          </div>
+        ` : nothing}
       </div>
     `;
   }

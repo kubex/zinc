@@ -323,6 +323,22 @@ A complete example showing product content management with translations.
 </div>
 ```
 
+### Help Text
+
+Use the `help-text` attribute to describe how the field should be filled in. It sits below the field and applies to
+every language, so it is the place to explain a convention the translator needs to follow. For help text containing
+HTML, use the `help-text` slot instead.
+
+```html:preview
+<zn-translations
+  label="Confirmation headline"
+  help-text="Keep this under 60 characters so it does not wrap on mobile."></zn-translations>
+<br />
+<zn-translations label="Footer">
+  <div slot="help-text">Shown on <strong>every</strong> page of the checkout.</div>
+</zn-translations>
+```
+
 ### Slash Menu Quick Insertions
 
 {% raw %}
@@ -360,6 +376,7 @@ way `Enter` otherwise would.
 | `name`      | `string`                    | `''`            | Form field name for submission                                       |
 | `value`     | `string`                    | `'{"en":""}'`   | JSON string of translations                                          |
 | `label`     | `string`                    | `''`            | Label displayed above the component                                  |
+| `help-text` | `string`                    | `''`            | Text shown below the field, describing how to fill it in             |
 | `disabled`  | `boolean`                   | `false`         | Disables editing of all translations                                 |
 | `required`  | `boolean`                   | `false`         | Makes the field required for form validation                         |
 | `flush`     | `boolean`                   | `false`         | Removes padding for compact layout                                   |
@@ -379,10 +396,11 @@ way `Enter` otherwise would.
 
 ## Slots
 
-| Slot      | Description                                                      |
-|-----------|------------------------------------------------------------------|
-| `label`   | Alternative to the `label` attribute for rich HTML content       |
-| `expand`  | Action button displayed in the navbar (e.g., translate button)   |
+| Slot        | Description                                                      |
+|-------------|------------------------------------------------------------------|
+| `label`     | Alternative to the `label` attribute for rich HTML content       |
+| `expand`    | Action button displayed in the navbar (e.g., translate button)   |
+| `help-text` | Alternative to the `help-text` attribute for rich HTML content   |
 
 ## Methods
 

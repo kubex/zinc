@@ -50,6 +50,48 @@ describe('<zn-translations>', () => {
     await expect(JSON.parse(el.value)).to.deep.equal({'en': 'Hello World'});
   });
 
+  describe('help text', () => {
+    function helpTextOf(el: ZnTranslations) {
+      return el.shadowRoot!.querySelector<HTMLElement>('[part="form-control-help-text"]');
+    }
+
+    it('is not rendered when unset', async () => {
+      const el = await fixture<ZnTranslations>(html`<zn-translations></zn-translations>`);
+      await el.updateComplete;
+
+      expect(helpTextOf(el)).to.not.exist;
+    });
+
+    it('renders the help-text attribute below the field', async () => {
+      const el = await fixture<ZnTranslations>(html`
+        <zn-translations help-text="Type / to insert a replacement"></zn-translations>`);
+      await el.updateComplete;
+
+      expect(helpTextOf(el)?.textContent?.trim()).to.equal('Type / to insert a replacement');
+    });
+
+    it('renders the help-text slot', async () => {
+      const el = await fixture<ZnTranslations>(html`
+        <zn-translations>
+          <div slot="help-text">Type <strong>/</strong> to insert</div>
+        </zn-translations>`);
+      await el.updateComplete;
+
+      expect(helpTextOf(el), 'a slotted help text should still render the wrapper').to.exist;
+    });
+
+    it('shows the same help text after switching language', async () => {
+      const el = await fixture<ZnTranslations>(html`
+        <zn-translations help-text="Type / to insert a replacement"></zn-translations>`);
+      el.languages = {'en': 'EN', 'fr': 'FR'};
+      el.values = {'en': '', 'fr': ''};
+      el.setActiveLanguage('fr');
+      await el.updateComplete;
+
+      expect(helpTextOf(el)?.textContent?.trim()).to.equal('Type / to insert a replacement');
+    });
+  });
+
   describe('slash menu', () => {
     /** Puts the active language's field into edit mode, the way clicking it does. */
     async function textareaOf(el: ZnTranslations) {

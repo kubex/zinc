@@ -49,79 +49,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -310,6 +237,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -42069,7 +42069,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ 'zn-collapsible': ZnCollapsible, 'zn-preview-frame': ZnPreviewFrame, 'zn-icon': ZnIcon, 'zn-button': ZnButton, 'zn-tabs': ZnTabs, 'zn-navbar': ZnNavbar, 'zn-select': ZnSelect, 'zn-option': ZnOption, }"
+              "default": "{ 'zn-collapsible': ZnCollapsible, 'zn-preview-frame': ZnPreviewFrame, 'zn-icon': ZnIcon, 'zn-button': ZnButton, 'zn-button-group': ZnButtonGroup, 'zn-tabs': ZnTabs, 'zn-navbar': ZnNavbar, 'zn-select': ZnSelect, 'zn-option': ZnOption, }"
             },
             {
               "kind": "field",
@@ -43068,7 +43068,7 @@
           "tagNameWithoutPrefix": "theme-editor",
           "tagName": "zn-theme-editor",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A theme editor: slotted form controls drive a live preview frame,\n * with a toolbar for the preview's light/dark mode and device width.\n * @documentation https://zinc.style/components/theme-editor\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-collapsible\n * @dependency zn-preview-frame\n * @dependency zn-icon\n * @dependency zn-button\n * @dependency zn-tabs\n * @dependency zn-navbar\n * @dependency zn-select\n *\n * @event zn-theme-change - Emitted when the values, mode or device change.\n * @event zn-theme-submit - Emitted on submit (button click), carrying the\n * current values. With `action` set, only fires after a successful save.\n * @event zn-error - Emitted when a save fails. Also seen for preview render\n * failures: the frame's zn-error is composed and not stopped, so it bubbles\n * out through the editor too.\n *\n * @slot - Ungrouped theme controls, rendered above any sections. Controls\n * assigned `slot=\"<name>\"` matching a `sections` entry (or, when nested, a\n * `groups` entry) render inside that section/group instead. Harvesting and\n * change detection walk every slot's full assigned subtree, not just direct\n * children.\n *\n * With `sections` left unset, the structure is instead derived from the\n * controls' own attributes: `group=\"<label>\"` becomes a tab and\n * `category=\"<label>\"` a collapsible within it, and the control is slotted\n * into that collapsible automatically. Either attribute works alone - a\n * control with only `group` sits directly in its tab, and one with only\n * `category` becomes its own top-level section. Setting `sections`\n * explicitly disables the derivation entirely.\n * @slot toolbar - Actions in the toolbar, right-aligned beside the device\n * controls. Where a save button belongs.\n * @slot footer - Actions pinned beneath the controls. The built-in submit button\n * lives in the toolbar, not here.\n *\n * @csspart base - The component's base wrapper.\n * @csspart controls - The left-hand controls column, full height.\n * @csspart controls-header - The controls column's header row: `controls-caption` on the left, the light/dark mode toggle on the right.\n * @csspart toolbar - The preview column's header row: `preview-caption` on the left, the device switcher (and sources/submit) on the right. Spans the preview column only.\n * @csspart section - A rendered section's or group's collapsible (`section-layout=\"collapsible\"`, or any nested group).\n * @csspart footer - The footer wrapper beneath the controls.\n * @csspart preview - The preview column.\n * @csspart error - The inline error strip.\n * @csspart preview__base - The frame's base wrapper (forwarded from zn-preview-frame).\n * @csspart preview__stage - The frame's device-width wrapper (forwarded from zn-preview-frame).\n * @csspart preview__iframe - The frame's iframe (forwarded from zn-preview-frame).\n * @csspart preview__error - The frame's own error overlay (forwarded from zn-preview-frame).\n *\n * @cssproperty --zn-theme-editor-controls-width - Width of the controls column.\n */",
+          "jsDoc": "/**\n * @summary A theme editor: slotted form controls drive a live preview frame,\n * with a toolbar for the preview's light/dark mode and device width.\n * @documentation https://zinc.style/components/theme-editor\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-collapsible\n * @dependency zn-preview-frame\n * @dependency zn-icon\n * @dependency zn-button\n * @dependency zn-button-group\n * @dependency zn-tabs\n * @dependency zn-navbar\n * @dependency zn-select\n *\n * @event zn-theme-change - Emitted when the values, mode or device change.\n * @event zn-theme-submit - Emitted on submit (button click), carrying the\n * current values. With `action` set, only fires after a successful save.\n * @event zn-error - Emitted when a save fails. Also seen for preview render\n * failures: the frame's zn-error is composed and not stopped, so it bubbles\n * out through the editor too.\n *\n * @slot - Ungrouped theme controls, rendered above any sections. Controls\n * assigned `slot=\"<name>\"` matching a `sections` entry (or, when nested, a\n * `groups` entry) render inside that section/group instead. Harvesting and\n * change detection walk every slot's full assigned subtree, not just direct\n * children.\n *\n * With `sections` left unset, the structure is instead derived from the\n * controls' own attributes: `group=\"<label>\"` becomes a tab and\n * `category=\"<label>\"` a collapsible within it, and the control is slotted\n * into that collapsible automatically. Either attribute works alone - a\n * control with only `group` sits directly in its tab, and one with only\n * `category` becomes its own top-level section. Setting `sections`\n * explicitly disables the derivation entirely.\n * @slot toolbar - Actions in the toolbar, right-aligned beside the device\n * controls. Where a save button belongs.\n * @slot footer - Actions pinned beneath the controls. The built-in submit button\n * lives in the toolbar, not here.\n *\n * @csspart base - The component's base wrapper.\n * @csspart controls - The left-hand controls column, full height.\n * @csspart controls-header - The controls column's header row: `controls-caption` on the left, the light/dark mode toggle on the right.\n * @csspart toolbar - The preview column's header row: `preview-caption` on the left, the device switcher (and sources/submit) on the right. Spans the preview column only.\n * @csspart section - A rendered section's or group's collapsible (`section-layout=\"collapsible\"`, or any nested group).\n * @csspart footer - The footer wrapper beneath the controls.\n * @csspart preview - The preview column.\n * @csspart error - The inline error strip.\n * @csspart preview__base - The frame's base wrapper (forwarded from zn-preview-frame).\n * @csspart preview__stage - The frame's device-width wrapper (forwarded from zn-preview-frame).\n * @csspart preview__iframe - The frame's iframe (forwarded from zn-preview-frame).\n * @csspart preview__error - The frame's own error overlay (forwarded from zn-preview-frame).\n *\n * @cssproperty --zn-theme-editor-controls-width - Width of the controls column.\n */",
           "documentation": "https://zinc.style/components/theme-editor",
           "status": "experimental",
           "since": "1.0",
@@ -43077,6 +43077,7 @@
             "zn-preview-frame",
             "zn-icon",
             "zn-button",
+            "zn-button-group",
             "zn-tabs",
             "zn-navbar",
             "zn-select"
@@ -45850,7 +45851,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.84",
+    "version": "1.1.85",
     "author": "",
     "license": "MIT"
   }

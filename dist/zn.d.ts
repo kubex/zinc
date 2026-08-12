@@ -11102,6 +11102,7 @@ declare module "components/theme-editor/theme-editor.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     import ZnButton from "components/button/index";
+    import ZnButtonGroup from "components/button-group/index";
     import ZnCollapsible from "components/collapsible/index";
     import ZnIcon from "components/icon/index";
     import ZnNavbar from "components/navbar/index";
@@ -11142,6 +11143,7 @@ declare module "components/theme-editor/theme-editor.component" {
      * @dependency zn-preview-frame
      * @dependency zn-icon
      * @dependency zn-button
+     * @dependency zn-button-group
      * @dependency zn-tabs
      * @dependency zn-navbar
      * @dependency zn-select
@@ -11193,6 +11195,7 @@ declare module "components/theme-editor/theme-editor.component" {
             'zn-preview-frame': typeof ZnPreviewFrame;
             'zn-icon': typeof ZnIcon;
             'zn-button': typeof ZnButton;
+            'zn-button-group': typeof ZnButtonGroup;
             'zn-tabs': typeof ZnTabs;
             'zn-navbar': typeof ZnNavbar;
             'zn-select': typeof ZnSelect;

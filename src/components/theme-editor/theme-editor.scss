@@ -1,6 +1,7 @@
 @use "../../wc";
 
 :host {
+  @include wc.scrollbars; // styles scrollbars of all descendant scroll areas (controls column), as the other builders do
   display: block;
   // Matches page-builder's --palette-col.
   --zn-theme-editor-controls-width: 343px;
@@ -65,6 +66,10 @@
 }
 
 .editor__controls {
+  // Colour the tab strip's active tab to match the controls panel surface,
+  // rather than the navbar's default body colour (flow-builder pattern).
+  --zn-active-nav-background: var(--zn-panel);
+
   position: relative;
   display: flex;
   flex-direction: column;
@@ -192,39 +197,41 @@
   flex-direction: column;
 }
 
-// A pull tab flush against the controls/main seam, rather than a dot floating
-// over it, positioned against .editor__main (not .editor__preview) so it stays
-// centred on the full-height seam rather than just the preview's portion of it.
-// Collapsed there is no seam to attach to, so it becomes a small pill.
+// Chevron straddling the controls/main seam — tuck the controls away / bring
+// them back (flow-builder pattern). Positioned against .editor__main (not
+// .editor__preview) so it stays centred on the full-height seam rather than
+// just the preview's portion of it.
 .panel-toggle {
   position: absolute;
   top: 50%;
-  left: 0;
   z-index: 6;
   transform: translateY(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 44px;
+  width: 24px;
+  height: 24px;
   padding: 0;
-  border: 1px solid rgb(var(--zn-border-color));
-  border-left: 0;
-  border-radius: 0 6px 6px 0;
+  border-radius: 50%;
   color: rgb(var(--zn-color-muted-text));
   background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  box-shadow: 0 1px 3px rgba(var(--zn-shadow), 0.4);
   cursor: pointer;
-  transition: left 0.2s ease, color 0.12s ease, border-color 0.12s ease;
+  transition: left 0.2s ease, right 0.2s ease, color 0.12s ease, border-color 0.12s ease;
 
   &:hover {
     color: rgb(var(--zn-text));
-    background: rgba(var(--zn-border-color), 0.4);
+    border-color: rgb(var(--zn-color-border-active));
   }
 
-  &--tucked {
-    left: var(--zn-spacing-small);
-    border-left: 1px solid rgb(var(--zn-border-color));
-    border-radius: 6px;
+  &--left {
+    left: -12px;
+
+    // With the panel tucked away, sit fully inside the preview column.
+    &.panel-toggle--tucked {
+      left: 8px;
+    }
   }
 }
 
@@ -336,22 +343,19 @@
     padding-top: var(--zn-spacing-medium);
   }
 
-  // Stacked: the seam is horizontal, so the tab attaches to the top edge instead.
+  // Stacked: the seam is horizontal, so the chevron straddles the top edge instead.
   .panel-toggle {
-    top: 0;
-    left: 50%;
-    width: 44px;
-    height: 18px;
-    border: 1px solid rgb(var(--zn-border-color));
-    border-top: 0;
-    border-radius: 0 0 6px 6px;
+    top: -12px;
     transform: translateX(-50%);
-  }
+    transition: top 0.2s ease, color 0.12s ease, border-color 0.12s ease;
 
-  .panel-toggle--tucked {
-    top: var(--zn-spacing-small);
-    left: 50%;
-    border-top: 1px solid rgb(var(--zn-border-color));
-    border-radius: 6px;
+    &--left {
+      left: 50%;
+
+      &.panel-toggle--tucked {
+        top: 8px;
+        left: 50%;
+      }
+    }
   }
 }

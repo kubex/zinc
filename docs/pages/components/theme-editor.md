@@ -294,12 +294,14 @@ no dropdown rendered.
 ## Collapsing the controls column
 
 Set `controls-collapsed` to hide the controls column, or click the chevron
-toggle that sits on the seam between the columns. Collapsing is purely a
+toggle that straddles the seam between the columns — the same edge chevron
+the flow and page builders use for their side panels. Collapsing is purely a
 layout change — it never affects harvested values or pushes a new theme to
-the preview. Below the 768px stacked breakpoint the toggle is hidden, since
-there's no side-by-side seam to tuck into — the editor also un-collapses
-itself if it's already showing `controls-collapsed` when the layout narrows
-that far, so the controls are never stuck unreachable.
+the preview. Below the 768px stacked breakpoint the columns stack vertically
+and the chevron attaches to the horizontal seam above the preview instead;
+crossing into that breakpoint also auto-collapses the controls (once —
+re-expanding while narrow is respected), and the toggle stays available to
+bring them back.
 
 ## Standalone panel
 

@@ -188,7 +188,24 @@ export default class ZnSlashMenu extends ZincElement {
 
   private scrollActiveIntoView() {
     const active = this.renderRoot.querySelector<HTMLElement>('[data-slash-item][aria-selected="true"]');
-    active?.scrollIntoView({block: 'nearest'});
+    if (!active) return;
+
+    const items = this.visibleItems;
+    const panel = this.panel;
+
+    // The heading and footer scroll with the list, and `nearest` stops at the item's own box — so
+    // landing on the first or last item goes all the way to the panel's edge to bring them back
+    if (panel && items.slice(0, this.activeIndex).every(item => item.disabled)) {
+      panel.scrollTop = 0;
+      return;
+    }
+
+    if (panel && items.slice(this.activeIndex + 1).every(item => item.disabled)) {
+      panel.scrollTop = panel.scrollHeight;
+      return;
+    }
+
+    active.scrollIntoView({block: 'nearest'});
   }
 
   // mousedown, not click: preventDefault keeps focus (and the caret) in the field
@@ -215,6 +232,11 @@ export default class ZnSlashMenu extends ZincElement {
 
   protected updated(changed: PropertyValues) {
     super.updated(changed);
+
+    // A new list, or a reopen, starts at the top rather than wherever the last one was scrolled to
+    if (changed.has('items') || (changed.has('open') && this.open)) {
+      this.scrollActiveIntoView();
+    }
 
     if (changed.has('open') || changed.has('anchor')) {
       if (this.open) {

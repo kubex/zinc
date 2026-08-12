@@ -1,7 +1,8 @@
 import '../../../dist/zn.min.js';
-import {expect, fixture, html} from '@open-wc/testing';
+import {expect, fixture, html, waitUntil} from '@open-wc/testing';
 import {clearFormStoreValues} from '../../utilities/form';
 import type ZnInput from './input.component';
+import type ZnSlashMenu from '../slash-menu/slash-menu.component';
 
 describe('<zn-input>', () => {
   it('should render a component', async () => {
@@ -215,6 +216,117 @@ describe('<zn-input>', () => {
       await el.updateComplete;
 
       expect(contextNote(el)).to.equal('Custom');
+    });
+  });
+
+  describe('slash menu', () => {
+    function slashMenuOf(el: ZnInput) {
+      return el.shadowRoot!.querySelector<ZnSlashMenu>('zn-slash-menu');
+    }
+
+    /** Types `text` into the field the way a user would, leaving the caret at the end. */
+    function type(el: ZnInput, text: string) {
+      el.input.value = text;
+      el.input.setSelectionRange(text.length, text.length);
+      el.input.dispatchEvent(new InputEvent('input', {bubbles: true, composed: true}));
+    }
+
+    async function openSlashMenu(el: ZnInput, text = '/') {
+      await el.updateComplete;
+      el.focus();
+      type(el, text);
+      await waitUntil(() => slashMenuOf(el)?.open, 'the slash menu never opened');
+
+      return slashMenuOf(el)!;
+    }
+
+    it('stays closed when no items are configured', async () => {
+      const el = await fixture<ZnInput>(html`<zn-input></zn-input>`);
+      await el.updateComplete;
+
+      el.focus();
+      type(el, '/');
+      await el.updateComplete;
+      await el.updateComplete;
+
+      expect(slashMenuOf(el)?.open ?? false, 'nothing to insert, so nothing to show').to.be.false;
+    });
+
+    it('opens on the trigger with items from the slash-items attribute', async () => {
+      const el = await fixture<ZnInput>(html`
+        <zn-input slash-items="Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}"></zn-input>`);
+      const menu = await openSlashMenu(el);
+
+      expect(menu.items.map(item => item.label)).to.deep.equal(['Brand name', 'Support email']);
+    });
+
+    it('collects items from slotted zn-slash-item elements', async () => {
+      const el = await fixture<ZnInput>(html`
+        <zn-input>
+          <zn-slash-item label="Brand name" value="{{BRAND_NAME}}"></zn-slash-item>
+        </zn-input>`);
+      const menu = await openSlashMenu(el);
+
+      expect(menu.items.map(item => item.label)).to.deep.equal(['Brand name']);
+    });
+
+    it('inserts the active item on Enter, replacing the trigger and query', async () => {
+      const el = await fixture<ZnInput>(html`
+        <zn-input slash-items="Brand name={{BRAND_NAME}}"></zn-input>`);
+      await openSlashMenu(el, 'Welcome to /bra');
+
+      el.input.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'Enter',
+        bubbles: true,
+        composed: true,
+        cancelable: true
+      }));
+      await el.updateComplete;
+
+      expect(el.value).to.equal('Welcome to {{BRAND_NAME}}');
+    });
+
+    it('does not submit the form when Enter chooses an item', async () => {
+      const form = await fixture<HTMLFormElement>(html`
+        <form>
+          <zn-input slash-items="Brand name={{BRAND_NAME}}"></zn-input>
+        </form>`);
+      const el = form.querySelector<ZnInput>('zn-input')!;
+
+      let submits = 0;
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        submits++;
+      });
+
+      await openSlashMenu(el);
+      el.input.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'Enter',
+        bubbles: true,
+        composed: true,
+        cancelable: true
+      }));
+      await el.updateComplete;
+
+      expect(el.value, 'the token should have replaced the trigger').to.equal('{{BRAND_NAME}}');
+      expect(submits, 'Enter belongs to the open menu, not the form').to.equal(0);
+    });
+
+    it('closes on Escape without blurring the field', async () => {
+      const el = await fixture<ZnInput>(html`
+        <zn-input slash-items="Brand name={{BRAND_NAME}}"></zn-input>`);
+      const menu = await openSlashMenu(el);
+
+      el.input.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'Escape',
+        bubbles: true,
+        composed: true,
+        cancelable: true
+      }));
+      await el.updateComplete;
+
+      expect(menu.open, 'Escape should close the menu').to.be.false;
+      expect(el.shadowRoot!.activeElement, 'the field should keep focus').to.equal(el.input);
     });
   });
 });

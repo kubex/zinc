@@ -113,20 +113,13 @@ The menu doesn't listen for keys itself — whatever owns the field decides whic
 scrolls when its content exceeds `--slash-menu-max-height`.
 
 ```html:preview
-<zn-button id="capped-toggle">Show 3 of 9</zn-button>
-<zn-slash-menu id="capped-menu" max-items="3"></zn-slash-menu>
-
-<script type="module">
-  const menu = document.getElementById('capped-menu');
-  const toggle = document.getElementById('capped-toggle');
-
-  await customElements.whenDefined('zn-slash-menu');
-
-  menu.items = Array.from({length: 9}, (_, i) => ({label: `Replacement ${i + 1}`, value: `{{TOKEN_${i + 1}}}`}));
-  menu.anchor = toggle;
-
-  toggle.addEventListener('click', () => menu.open ? menu.hide() : menu.show());
-</script>
+<zn-textarea label="Terms and conditions" rows="5" help-text="Type / to see 3 of 9, then keep typing to narrow"
+             slash-items="Brand name={{BRAND_NAME}}, Legal entity={{LEGAL_ENTITY}}, Jurisdiction={{JURISDICTION}},
+                          Customer name={{CUSTOMER_NAME}}, Customer email={{CUSTOMER_EMAIL}},
+                          Invoice number={{INVOICE_NUMBER}}, Invoice date={{INVOICE_DATE}},
+                          Support email={{SUPPORT_EMAIL}}, Support phone={{SUPPORT_PHONE}}">
+  <zn-slash-menu slot="slash-menu" heading="Replacement strings" max-items="3"></zn-slash-menu>
+</zn-textarea>
 ```
 
 ### Attaching It To Your Own Field

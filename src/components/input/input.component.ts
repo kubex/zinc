@@ -1,15 +1,19 @@
 import {classMap} from "lit/directives/class-map.js";
 import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
+import {getSlashMenuPreset, parseSlashItems, type SlashMenuItem} from "../slash-menu/slash-menu-items";
 import {HasSlotController} from "../../internal/slot";
 import {html, unsafeCSS} from 'lit';
 import {ifDefined} from "lit/directives/if-defined.js";
 import {live} from "lit/directives/live.js";
 import {LocalizeController} from "../../utilities/localize";
 import {property, query, state} from 'lit/decorators.js';
+import {SlashMenuController} from "../slash-menu/slash-menu-controller";
 import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
 import ZnIcon from "../icon";
+import ZnSlashItem from "../slash-item";
+import ZnSlashMenu from "../slash-menu";
 import ZnTooltip from "../tooltip";
 import type {ZincFormControl} from '../../internal/zinc-element';
 
@@ -40,8 +44,20 @@ import styles from './input.scss';
  * @slot show-password-icon - An icon to use in lieu of the default show password icon.
  * @slot hide-password-icon - An icon to use in lieu of the default hide password icon.
  * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
+ * @slot slash-items - `<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are
+ *  picked up wherever they sit inside the input, so this slot name is optional.
+ * @slot slash-menu - A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can
+ *  be set in markup. Any `<zn-slash-item>` children of it become the menu's items.
+ *
+ * @dependency zn-slash-item
+ * @dependency zn-slash-menu
+ *
+ * @event zn-slash-select - Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to
+ *  suppress the insertion and handle the item yourself.
+ * @event zn-slash-insert - Emitted after a slash menu item's value has been inserted.
  *
  * @csspart form-control - The form control that wraps the label, input, and help text.
+ * @csspart slash-menu - The slash menu shown at the caret.
  * @csspart form-control-label - The label's wrapper.
  * @csspart form-control-input - The input's wrapper.
  * @csspart form-control-help-text - The help text's wrapper.
@@ -62,6 +78,8 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
   static styles = unsafeCSS(styles);
   static dependencies = {
     'zn-icon': ZnIcon,
+    'zn-slash-item': ZnSlashItem,
+    'zn-slash-menu': ZnSlashMenu,
     'zn-tooltip': ZnTooltip
   }
 
@@ -71,10 +89,24 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
   private readonly hasSlotController = new HasSlotController(this, 'help-text', 'label', 'label-tooltip');
   private readonly localize = new LocalizeController(this);
 
+  private readonly slashController = new SlashMenuController(this, {
+    menu: () => this.mountSlashMenu(),
+    items: search => this.resolveSlashItems(search),
+    trigger: () => this.slashTrigger,
+    onSelect: (item, search) => !this.emit('zn-slash-select', {
+      detail: {item, query: search}
+    }).defaultPrevented,
+    onInsert: (item, value) => this.emit('zn-slash-insert', {detail: {item, value}})
+  });
+
   @query('.input__control') input: HTMLInputElement;
   @query('.input__color-picker') colorPicker: HTMLInputElement;
+  @query('zn-slash-menu') slashMenuElement: ZnSlashMenu | null;
 
   @state() private hasFocus = false;
+
+  /** Renders the slash menu only once it has been needed, keeping unused inputs cheap. */
+  @state() private hasSlashMenu = false;
   @state() private isUserTyping = false;
   @property() title = "" // make reactive pass through
 
@@ -223,6 +255,35 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
    * keyboard on supportive devices.
    */
   @property() inputmode: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url';
+
+  /**
+   * Quick insertions offered by the slash menu. Accepts a JSON array of items, or the shorthand
+   * `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Can also be set as an array of
+   * `SlashMenuItem` objects in JavaScript.
+   */
+  @property({
+    attribute: 'slash-items',
+    converter: {
+      fromAttribute: (value: string) => parseSlashItems(value),
+      toAttribute: (value: SlashMenuItem[]) => JSON.stringify(value)
+    }
+  })
+  slashItems: SlashMenuItem[] = [];
+
+  /** Names of item sets registered with `registerSlashMenuPreset`, comma separated. */
+  @property({attribute: 'slash-preset'}) slashPreset = '';
+
+  /** The characters that open the slash menu. */
+  @property({attribute: 'slash-trigger'}) slashTrigger = '/';
+
+  /** The heading shown above the slash menu's items. */
+  @property({attribute: 'slash-heading'}) slashHeading = 'Insert';
+
+  /**
+   * Resolves additional items each time the menu opens, for lists that come from elsewhere (e.g. an
+   * API). Receives the current query and may return a promise. JavaScript only.
+   */
+  @property({attribute: false}) slashItemsProvider?: (query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]>;
 
   /**
    * When enabled, pressing enter will always submit the surrounding form, even when the form uses
@@ -565,6 +626,10 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
   }
 
   private handleKeyDown(event: KeyboardEvent) {
+    // The slash menu claims its own keys; while it is open Escape closes it and Enter picks an item,
+    // rather than blurring the field or submitting the form
+    if (this.slashController.open) return;
+
     if (event.key === 'Escape') {
       this.input.blur();
       event.stopPropagation();
@@ -632,6 +697,78 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     if (this.type === 'range' && this.value === '') {
       this.value = this.input.value;
     }
+
+    this.slashController.attach(this.input);
+  }
+
+  /** The insertions the slash menu offers, gathered from every source, in the order they were declared. */
+  async resolveSlashItems(search = ''): Promise<SlashMenuItem[]> {
+    const items = [
+      ...getSlashMenuPreset(this.slashPreset),
+      ...this.slashItems,
+      ...this.slottedSlashItems()
+    ];
+
+    const provided = await this.slashItemsProvider?.(search);
+    return provided ? [...items, ...provided] : items;
+  }
+
+  /** Opens the slash menu at the caret, inserting the trigger if it isn't already there. */
+  async showSlashMenu() {
+    this.focus();
+
+    const caret = this.input.selectionStart ?? this.input.value.length;
+    const precedes = this.input.value.slice(caret - this.slashTrigger.length, caret);
+    if (precedes !== this.slashTrigger) {
+      this.setRangeText(this.slashTrigger, caret, caret, 'end');
+    }
+
+    await this.updateComplete;
+    this.slashController.requestOpen();
+  }
+
+  /** Closes the slash menu. */
+  hideSlashMenu() {
+    this.slashController.close();
+  }
+
+  private slottedSlashItems(): SlashMenuItem[] {
+    const elements = [...this.querySelectorAll<ZnSlashItem>('zn-slash-item')];
+
+    return elements.map(element => {
+      // Elements from a different zinc build may not have upgraded, so fall back to their markup
+      if (typeof element.toSlashMenuItem === 'function') return element.toSlashMenuItem();
+
+      const value = element.getAttribute('value') ?? (element.textContent ?? '').trim();
+      const order = element.getAttribute('order');
+      const caretOffset = element.getAttribute('caret-offset');
+
+      return {
+        label: element.getAttribute('label') ?? value,
+        value,
+        icon: element.getAttribute('icon') ?? undefined,
+        description: element.getAttribute('description') ?? undefined,
+        keywords: element.getAttribute('keywords') ?? undefined,
+        group: element.getAttribute('group') ?? undefined,
+        action: element.getAttribute('action') ?? undefined,
+        order: order === null ? undefined : Number(order),
+        caretOffset: caretOffset === null ? undefined : Number(caretOffset),
+        disabled: element.hasAttribute('disabled')
+      };
+    });
+  }
+
+  private async mountSlashMenu(): Promise<ZnSlashMenu | null> {
+    // A slotted menu is the author's own: it keeps its own heading, sizing and styling
+    const slotted = this.querySelector<ZnSlashMenu>('zn-slash-menu');
+    if (slotted) return slotted;
+
+    if (!this.hasSlashMenu) {
+      this.hasSlashMenu = true;
+      await this.updateComplete;
+    }
+
+    return this.slashMenuElement;
   }
 
   @watch('disabled', {waitUntilFirstUpdate: true})
@@ -958,6 +1095,12 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
                 : ''}
             </span>
           </div>
+          ${this.hasSlashMenu
+            ? html`
+              <zn-slash-menu part="slash-menu" heading=${this.slashHeading}></zn-slash-menu>`
+            : ''}
+          <slot name="slash-menu"></slot>
+          <slot name="slash-items" hidden></slot>
         </div>
 
         <div

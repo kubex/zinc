@@ -328,8 +328,8 @@ A complete example showing product content management with translations.
 {% raw %}
 
 Copy that carries replacement strings — `{{BRAND_NAME}}` and the like — needs the same tokens in every language. Set
-`slash-items` alongside `input-type="textarea"` and typing `/` offers them at the caret, in whichever language is
-being edited. The attribute takes the same shorthand and JSON that
+`slash-items` and typing `/` offers them at the caret, in whichever language is being edited. This works on both the
+single-line default and `input-type="textarea"`. The attribute takes the same shorthand and JSON that
 [`zn-textarea`](/components/textarea#slash-menu-quick-insertions) accepts, and `slash-preset`, `slash-trigger` and
 `slash-heading` are forwarded too.
 
@@ -365,7 +365,7 @@ way `Enter` otherwise would.
 | `flush`     | `boolean`                   | `false`         | Removes padding for compact layout                                   |
 | `languages` | `Record<string, string>`    | `{en: "EN"}`    | Object mapping language codes to display names                       |
 | `values`    | `Record<string, string>`    | `{}`            | Object mapping language codes to translation text                    |
-| `slash-items`   | `SlashMenuItem[]`       | `[]`            | Quick insertions offered by the slash menu on a `textarea` input     |
+| `slash-items`   | `SlashMenuItem[]`       | `[]`            | Quick insertions offered by the slash menu                           |
 | `slash-preset`  | `string`                | `''`            | Registered item sets to offer, comma separated                       |
 | `slash-trigger` | `string`                | `'/'`           | The characters that open the slash menu                              |
 | `slash-heading` | `string`                | `'Insert'`      | Heading shown above the slash menu's items                           |

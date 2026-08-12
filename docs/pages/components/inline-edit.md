@@ -122,8 +122,9 @@ Use `input-type="textarea"` for multi-line text content.
 {% raw %}
 
 `slash-items`, `slash-preset`, `slash-trigger` and `slash-heading` are forwarded to the inner
-[`zn-textarea`](/components/textarea#slash-menu-quick-insertions), so typing `/` offers replacement strings at the
-caret. The menu claims `Enter` and `Escape` while it is open, so choosing an item neither submits nor cancels the edit.
+[`zn-textarea`](/components/textarea#slash-menu-quick-insertions) or
+[`zn-input`](/components/input#slash-menu-quick-insertions), so typing `/` offers replacement strings at the caret on
+both. The menu claims `Enter` and `Escape` while it is open, so choosing an item neither submits nor cancels the edit.
 
 ```html:preview
 <zn-inline-edit

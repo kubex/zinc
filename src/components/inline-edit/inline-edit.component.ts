@@ -99,8 +99,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   @property({ attribute: "textarea-rows", type: Number }) textareaRows: 1;
 
   /**
-   * Quick insertions offered by the slash menu of a `textarea` input. Accepts a JSON array of items, or the
-   * shorthand `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Forwarded to the inner `zn-textarea`.
+   * Quick insertions offered by the slash menu of a `text` or `textarea` input. Accepts a JSON array of items, or
+   * the shorthand `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`.
    */
   @property({
     attribute: 'slash-items',
@@ -482,6 +482,11 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                 autocomplete=${ifDefined(this.autocomplete)}
                 required=${ifDefined(this.required)}
                 dir="${this.dir}"
+                slash-trigger="${this.slashTrigger}"
+                slash-heading="${this.slashHeading}"
+                slash-preset="${this.slashPreset}"
+                .slashItems="${this.slashItems}"
+                .slashItemsProvider="${this.slashItemsProvider}"
                 @zn-input="${this.handleInput}"
                 @zn-blur="${this.handleBlur}">
       </zn-input>`;

@@ -464,6 +464,27 @@ Add the `trigger-submit` attribute to make pressing Enter in the input always su
 </script>
 ```
 
+### Slash Menu Quick Insertions
+
+{% raw %}
+
+Typing `/` opens a menu at the caret, exactly as it does on
+[`zn-textarea`](/components/textarea#slash-menu-quick-insertions) — useful for short single-line copy that carries
+replacement strings, such as a headline or a button label. The same `slash-items`, `slash-preset`, `slash-trigger` and
+`slash-heading` attributes apply, and `zn-slash-item` children work too.
+
+```html:preview
+<zn-input
+  label="Confirmation headline"
+  help-text="Type / to insert a replacement string"
+  slash-items="Brand name={{BRAND_NAME}}, Customer email={{CUSTOMER_EMAIL}}"></zn-input>
+```
+
+While the menu is open it claims `↑`, `↓`, `Enter`, `Tab` and `Escape`, so choosing an item does not submit the
+surrounding form the way `Enter` otherwise would.
+
+{% endraw %}
+
 ### Customizing Label Position
 
 Use [CSS parts](#css-parts) to customize the way form controls are drawn. This example uses CSS grid to position the

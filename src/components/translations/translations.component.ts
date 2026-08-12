@@ -45,7 +45,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   @property({attribute: "textarea-rows", type: Number}) textareaRows: number | undefined;
 
   /**
-   * Quick insertions offered by the slash menu when `input-type` is `textarea`. Accepts a JSON array of items, or
+   * Quick insertions offered by the slash menu on `text` and `textarea` inputs. Accepts a JSON array of items, or
    * the shorthand `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Every language shares the list.
    */
   @property({

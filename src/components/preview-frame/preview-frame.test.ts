@@ -248,6 +248,54 @@ describe('<zn-preview-frame>', () => {
     expect(posted[0]['type']).to.equal('hp-preview:config');
   });
 
+  // A uri tab panel puts the preview in the tabs component's shadow root while
+  // page-level forms (e.g. the page's Template select) stay in the document —
+  // a save out there must still refresh the preview.
+  it('refreshes on a shell save of a form outside the component\'s own root', async () => {
+    const wrapper = await fixture(html`
+      <div>
+        <form action="/save" method="post"><input name="template" value="flow"></form>
+        <div id="host"></div>
+      </div>`);
+
+    const shadow = wrapper.querySelector('#host')!.attachShadow({mode: 'open'});
+    const el = document.createElement('zn-preview-frame');
+    el.setAttribute('src', 'about:blank');
+    el.setAttribute('frame-origin', 'https://site.example');
+    el.setAttribute('data-uri', '/payload');
+    shadow.appendChild(el);
+    await (el as HTMLElement & {updateComplete: Promise<boolean>}).updateComplete;
+
+    wrapper.querySelector('form')!.dispatchEvent(
+      new CustomEvent('complete', {bubbles: true, detail: {}}));
+
+    await waitUntil(() => fetchCalls.length === 1);
+    expect(fetchCalls[0].uri).to.equal('/payload');
+  });
+
+  it('refreshes once for a composed complete event inside its own shadow root', async () => {
+    const wrapper = await fixture(html`<div><div id="host"></div></div>`);
+
+    const shadow = wrapper.querySelector('#host')!.attachShadow({mode: 'open'});
+    const form = document.createElement('form');
+    form.setAttribute('action', '/save');
+    shadow.appendChild(form);
+    const el = document.createElement('zn-preview-frame');
+    el.setAttribute('src', 'about:blank');
+    el.setAttribute('frame-origin', 'https://site.example');
+    el.setAttribute('data-uri', '/payload');
+    shadow.appendChild(el);
+    await (el as HTMLElement & {updateComplete: Promise<boolean>}).updateComplete;
+
+    // the shell fires composed events, so this reaches both the shadow root
+    // and the document — it must trigger a single refresh
+    form.dispatchEvent(new CustomEvent('complete', {bubbles: true, composed: true, detail: {}}));
+
+    await waitUntil(() => fetchCalls.length === 1);
+    await new Promise(resolve => setTimeout(resolve, 50));
+    expect(fetchCalls.length).to.equal(1);
+  });
+
   it('does not intercept the submit of a refresh-on form', async () => {
     const wrapper = await fixture(html`
       <div>

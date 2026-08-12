@@ -62,6 +62,11 @@ export default class ZnPreviewFrame extends ZincElement {
    * refresh the preview. These are never intercepted: the shell submits them
    * (so its own response handling — alerts, refreshes — runs as normal) and the
    * preview re-fetches its config once the shell reports the save complete.
+   * Matched by delegation on the shell's bubbled `complete` event rather than
+   * by attaching to the forms themselves, so a save anywhere on the page
+   * refreshes the preview — including forms in a different DOM root, e.g. a
+   * page-level form saved while the preview sits inside a tab panel's shadow
+   * root (a page's Template select lives on one tab, its preview on another).
    * Set empty to disable.
    */
   @property({attribute: 'refresh-on'}) refreshOn = 'form';
@@ -141,8 +146,13 @@ export default class ZnPreviewFrame extends ZincElement {
   private _contentObserver: ResizeObserver | undefined;
 
   private readonly _watchedForms = new Set<HTMLFormElement>();
-  private readonly _refreshForms = new Set<HTMLFormElement>();
   private readonly _debounceTimers = new Map<HTMLFormElement, number>();
+  // 'complete' delegation targets: the document always, plus the component's
+  // own shadow root when it has one (a non-composed event never reaches the
+  // document). A composed event inside the shadow root hits both, so the
+  // handler dedupes by event object.
+  private _shellSaveRoots: EventTarget[] = [];
+  private _lastShellSave: Event | undefined;
 
   // Forms are siblings in light DOM and get replaced when other content
   // re-renders; re-resolve them whenever the surrounding DOM changes.
@@ -158,6 +168,8 @@ export default class ZnPreviewFrame extends ZincElement {
     window.addEventListener('message', this._onMessage);
     this._attachForms();
     const root = this.getRootNode();
+    this._shellSaveRoots = root instanceof ShadowRoot ? [document, root] : [document];
+    this._shellSaveRoots.forEach(target => target.addEventListener('complete', this._onShellSave));
     if (root instanceof Document) {
       this._formObserver.observe(root.body);
     } else if (root instanceof ShadowRoot) {
@@ -178,8 +190,8 @@ export default class ZnPreviewFrame extends ZincElement {
     this._contentObserver = undefined;
     this._watchedForms.forEach(form => this._detachForm(form));
     this._watchedForms.clear();
-    this._refreshForms.forEach(form => form.removeEventListener('complete', this._onShellSave));
-    this._refreshForms.clear();
+    this._shellSaveRoots.forEach(target => target.removeEventListener('complete', this._onShellSave));
+    this._shellSaveRoots = [];
   }
 
   private readonly _onMessage = (e: MessageEvent) => {
@@ -315,30 +327,18 @@ export default class ZnPreviewFrame extends ZincElement {
       form.addEventListener('zn-input', this._onChange);
       form.addEventListener('change', this._onChange);
     });
-
-    // Shell-saved forms: the shell fires 'complete' on the form it submitted.
-    const refreshMatched = new Set<HTMLFormElement>();
-    if (this.refreshOn) {
-      root.querySelectorAll(this.refreshOn).forEach(node => {
-        if (node instanceof HTMLFormElement && !matched.has(node)) refreshMatched.add(node);
-      });
-    }
-
-    this._refreshForms.forEach(form => {
-      if (!refreshMatched.has(form)) {
-        form.removeEventListener('complete', this._onShellSave);
-        this._refreshForms.delete(form);
-      }
-    });
-
-    refreshMatched.forEach(form => {
-      if (this._refreshForms.has(form)) return;
-      this._refreshForms.add(form);
-      form.addEventListener('complete', this._onShellSave);
-    });
   }
 
-  private readonly _onShellSave = () => {
+  // Shell-saved forms: the shell fires a bubbling 'complete' on the form it
+  // submitted. composedPath()[0] recovers the form when the event was
+  // retargeted crossing a shadow boundary on its way to the document.
+  private readonly _onShellSave = (e: Event) => {
+    if (e === this._lastShellSave) return;
+    this._lastShellSave = e;
+    if (!this.refreshOn) return;
+    const origin = e.composedPath()[0];
+    if (!(origin instanceof HTMLFormElement) || !origin.matches(this.refreshOn)) return;
+    if (this._watchedForms.has(origin)) return; // auto-saved forms refresh via _save
     void this._sendConfig();
   };
 

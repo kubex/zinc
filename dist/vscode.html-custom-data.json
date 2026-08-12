@@ -14,6 +14,17 @@
       ]
     },
     {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
+        }
+      ]
+    },
+    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -50,17 +61,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
-        }
-      ]
-    },
-    {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -1941,7 +1941,7 @@
         { "name": "textarea-rows", "values": [{ "name": "1" }] },
         {
           "name": "slash-items",
-          "description": "Quick insertions offered by the slash menu of a `textarea` input. Accepts a JSON array of items, or the\nshorthand `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Forwarded to the inner `zn-textarea`.",
+          "description": "Quick insertions offered by the slash menu of a `text` or `textarea` input. Accepts a JSON array of items, or\nthe shorthand `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`.",
           "values": [{ "name": "SlashMenuItem[]" }]
         },
         {
@@ -2013,7 +2013,7 @@
     },
     {
       "name": "zn-input",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the control loses focus.\n- **zn-change** - Emitted when an alteration to the control's value is committed by the user.\n- **zn-clear** - Emitted when the clear button is activated.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-input** - Emitted when the control receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Methods:**\n - **focus(options: _FocusOptions_)** - Sets focus on the input.\n- **blur()** - Removes focus from the input.\n- **select()** - Selects all the text in the input.\n- **setSelectionRange(selectionStart: _number_, selectionEnd: _number_, selectionDirection: _'forward' | 'backward' | 'none'_)** - Sets the start and end positions of the text selection (0-based).\n- **setRangeText(replacement: _string_, start: _number_, end: _number_, selectMode: _'select' | 'start' | 'end' | 'preserve'_)** - Replaces a range of text with a new string.\n- **showPicker()** - Displays the browser picker for an input element (only works if the browser supports it for the input type).\n- **stepUp()** - Increments the value of a numeric input type by the value of the step attribute.\n- **stepDown()** - Decrements the value of a numeric input type by the value of the step attribute.\n- **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - **label** - The input's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute. Range inputs display their live value here unless this is set.\n- **prefix** - Used to prepend a presentational icon or similar element to the input.\n- **suffix** - Used to append a presentational icon or similar element to the input.\n- **clear-icon** - An icon to use in lieu of the default clear icon.\n- **show-password-icon** - An icon to use in lieu of the default show password icon.\n- **hide-password-icon** - An icon to use in lieu of the default hide password icon.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--zn-range-track-height** - The height of a range input's track. _(default: undefined)_\n- **--zn-range-track-color** - The color of a range input's track. _(default: undefined)_\n- **--zn-range-thumb-size** - The diameter of a range input's thumb. _(default: undefined)_\n- **--zn-range-thumb-color** - The color of a range input's thumb. _(default: undefined)_\n- **--zn-range-thumb-ring-width** - The width of the ring drawn around a range input's thumb. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **input** - The internal `<input>` control.\n- **prefix** - The container that wraps the prefix.\n- **clear-button** - The clear button.\n- **password-toggle-button** - The password toggle button.\n- **suffix** - The container that wraps the suffix.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the control loses focus.\n- **zn-change** - Emitted when an alteration to the control's value is committed by the user.\n- **zn-clear** - Emitted when the clear button is activated.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-input** - Emitted when the control receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n- **zn-slash-select** - Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to suppress the insertion and handle the item yourself.\n- **zn-slash-insert** - Emitted after a slash menu item's value has been inserted.\n\n### **Methods:**\n - **resolveSlashItems(search): _Promise<SlashMenuItem[]>_** - The insertions the slash menu offers, gathered from every source, in the order they were declared.\n- **showSlashMenu()** - Opens the slash menu at the caret, inserting the trigger if it isn't already there.\n- **hideSlashMenu()** - Closes the slash menu.\n- **focus(options: _FocusOptions_)** - Sets focus on the input.\n- **blur()** - Removes focus from the input.\n- **select()** - Selects all the text in the input.\n- **setSelectionRange(selectionStart: _number_, selectionEnd: _number_, selectionDirection: _'forward' | 'backward' | 'none'_)** - Sets the start and end positions of the text selection (0-based).\n- **setRangeText(replacement: _string_, start: _number_, end: _number_, selectMode: _'select' | 'start' | 'end' | 'preserve'_)** - Replaces a range of text with a new string.\n- **showPicker()** - Displays the browser picker for an input element (only works if the browser supports it for the input type).\n- **stepUp()** - Increments the value of a numeric input type by the value of the step attribute.\n- **stepDown()** - Decrements the value of a numeric input type by the value of the step attribute.\n- **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - **label** - The input's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute. Range inputs display their live value here unless this is set.\n- **prefix** - Used to prepend a presentational icon or similar element to the input.\n- **suffix** - Used to append a presentational icon or similar element to the input.\n- **clear-icon** - An icon to use in lieu of the default clear icon.\n- **show-password-icon** - An icon to use in lieu of the default show password icon.\n- **hide-password-icon** - An icon to use in lieu of the default hide password icon.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n- **slash-items** - `<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are picked up wherever they sit inside the input, so this slot name is optional.\n- **slash-menu** - A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can be set in markup. Any `<zn-slash-item>` children of it become the menu's items.\n\n### **CSS Properties:**\n - **--zn-range-track-height** - The height of a range input's track. _(default: undefined)_\n- **--zn-range-track-color** - The color of a range input's track. _(default: undefined)_\n- **--zn-range-thumb-size** - The diameter of a range input's thumb. _(default: undefined)_\n- **--zn-range-thumb-color** - The color of a range input's thumb. _(default: undefined)_\n- **--zn-range-thumb-ring-width** - The width of the ring drawn around a range input's thumb. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **slash-menu** - The slash menu shown at the caret.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **input** - The internal `<input>` control.\n- **prefix** - The container that wraps the prefix.\n- **clear-button** - The clear button.\n- **password-toggle-button** - The password toggle button.\n- **suffix** - The container that wraps the suffix.",
       "attributes": [
         { "name": "title", "values": [] },
         {
@@ -2238,6 +2238,26 @@
             { "name": "email" },
             { "name": "url" }
           ]
+        },
+        {
+          "name": "slash-items",
+          "description": "Quick insertions offered by the slash menu. Accepts a JSON array of items, or the shorthand\n`Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Can also be set as an array of\n`SlashMenuItem` objects in JavaScript.",
+          "values": [{ "name": "SlashMenuItem[]" }]
+        },
+        {
+          "name": "slash-preset",
+          "description": "Names of item sets registered with `registerSlashMenuPreset`, comma separated.",
+          "values": []
+        },
+        {
+          "name": "slash-trigger",
+          "description": "The characters that open the slash menu.",
+          "values": []
+        },
+        {
+          "name": "slash-heading",
+          "description": "The heading shown above the slash menu's items.",
+          "values": []
         },
         {
           "name": "trigger-submit",
@@ -2983,6 +3003,78 @@
       ]
     },
     {
+      "name": "zn-preview-frame",
+      "description": "Embeds a live preview iframe and drives the hp-preview postMessage\nprotocol: answers the frame's ready handshake with a config payload fetched\nfrom data-uri, auto-saves watched forms on change, refreshes the preview\nafter each save (its own, or a shell-driven save of a `refresh-on` form),\naccepts a theme payload via setTheme() that is retained and replayed\nafter every ready handshake, and grows the frame to a content height the\nembed reports so the panel scrolls an overflowing page.\n---\n\n\n### **Events:**\n - **zn-error** - Emitted when the preview reports a render error or a save fails.\n\n### **Methods:**\n - **refresh()** - Re-fetches the payload and pushes a fresh config to the preview.\n- **setTheme(theme: _Record<string, unknown>_)** - Pushes a theme payload into the preview. The payload is retained and\nre-posted after every ready handshake, so a frame reload doesn't drop an\nin-progress theme.\n\n### **CSS Properties:**\n - **--zn-preview-frame-dot-spacing** - Spacing of the backdrop dot grid (`backdrop=\"dots\"`). Defaults to 20px. _(default: undefined)_\n- **--zn-preview-frame-dot-opacity** - Opacity of the backdrop dots (`backdrop=\"dots\"`). Defaults to 0.08. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **stage** - The device-width wrapper around the iframe.\n- **iframe** - The preview iframe.\n- **error** - The error overlay.",
+      "attributes": [
+        {
+          "name": "src",
+          "description": "URL of the preview shell page (tokened embed URL).",
+          "values": []
+        },
+        {
+          "name": "frame-origin",
+          "description": "Expected origin of the iframe; all postMessage traffic is checked against it.",
+          "values": []
+        },
+        {
+          "name": "data-uri",
+          "description": "Endpoint returning the hp-preview:config payload JSON. The console proxy rewrites this attribute to an app-prefixed path for proper fetch resolution.",
+          "values": []
+        },
+        {
+          "name": "watch",
+          "description": "Selector (resolved against the component's root node) for the forms to watch.\nDefaults to only forms explicitly opted in via a `data-auto-save` attribute —\nunmarked forms keep normal submit behavior and are never intercepted,\nauto-saved, or used to trigger a preview refresh. Override to widen the scope.",
+          "values": []
+        },
+        {
+          "name": "refresh-on",
+          "description": "Selector for forms whose saves are left to the shell but should still\nrefresh the preview. These are never intercepted: the shell submits them\n(so its own response handling — alerts, refreshes — runs as normal) and the\npreview re-fetches its config once the shell reports the save complete.\nSet empty to disable.",
+          "values": []
+        },
+        {
+          "name": "debounce",
+          "description": "Debounce in ms between a form change and its auto-save.",
+          "values": []
+        },
+        {
+          "name": "zoom",
+          "description": "Zooms the previewed page out (0–1]. The frame always fills the panel;\nzoom shrinks the content browser-style, so 0.4 shows the page at 40%\nsize with correspondingly more of it visible. 1 = natural size.\nIgnored when `fill` is set.",
+          "values": []
+        },
+        {
+          "name": "min-height",
+          "description": "The visible height (in CSS pixels) of the preview panel. Fixed rather\nthan measured, because a measured height would feed back into the\nscaled iframe's layout box and grow unbounded. With `fill` set, this\nbecomes a `min-height` floor instead of the height.",
+          "values": []
+        },
+        {
+          "name": "fill",
+          "description": "Fills the panel's own column height instead of using a fixed\n`min-height` pixel height — for hosts (like zn-theme-editor) whose\nlayout already stretches the column to match a taller sibling.\n`zoom` is ignored when set: its oversize maths depends on a known\npixel height, which `fill` deliberately doesn't have.",
+          "values": []
+        },
+        {
+          "name": "device",
+          "description": "Constrains and centres the preview to a device width: `desktop` (100%),\n`tablet` (768px) or `mobile` (390px). The iframe element itself is\nnarrowed, so the embedded page's own media queries fire.",
+          "values": [{ "name": "PreviewFrameDevice" }]
+        },
+        {
+          "name": "backdrop",
+          "description": "Backdrop behind the stage: `dots` (default) is the canvas dot grid; `panel` is a plain `rgb(var(--zn-panel))` fill.",
+          "values": [{ "name": "dots" }, { "name": "panel" }]
+        },
+        {
+          "name": "interactive",
+          "description": "Lets pointer input through to the embedded page. The preview is inert by\ndefault: clicks never reach the frame, so the previewed page can't be\nnavigated or submitted from inside the preview. Cross-origin content can't\nbe reached from here to cancel its own handlers, so this blocks pointer\ninput entirely — hover goes with it. Scrolling doesn't: an overflowing\npage is scrolled by the panel rather than by the frame (see _contentHeight).\n\nSet, the frame becomes a real viewport instead: it stays the panel's own\nheight and the embed scrolls itself, so there is one scrollbar rather than\na panel scrolling an oversized frame, and the embed's viewport-relative\nlayout (`100vh`, `position: fixed`, sticky headers) sizes to what's on\nscreen. _contentHeight is ignored while this is set.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/preview-frame"
+        }
+      ]
+    },
+    {
       "name": "zn-priority-list",
       "description": "A reorderable list where each item receives a numerical priority based on its position. Supports drag-and-drop\nand keyboard reordering. Priority values are submitted as form data via hidden inputs.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the order of items changes.\n- **zn-reorder** - Emitted when items are reordered. Call `getPriorityMap()` on the component to get the updated `{ key: string, priority: number }[]` array.\n\n### **Methods:**\n - **getPriorityMap(): _PriorityItem[]_** - Returns the priority map: an array of { key, priority } objects.\n- **checkValidity(): _boolean_** - Checks for validity but does not show a validation message.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(_message)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot where list items are placed. Each slotted element must have a `value` attribute that uniquely identifies the item. The component automatically assigns slot names to project each item into the correct position. The item's position in the list determines its priority (top = `priority-start`, incrementing).\n- **label** - The component's label. Required for proper accessibility. Alternatively, use the `label` attribute.\n- **label-tooltip** - Used to add text displayed in a tooltip next to the label.\n- **help-text** - Text that describes how to use the component. Alternatively, use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--zn-priority-list-item-gap** - The gap between list items. Defaults to `var(--zn-spacing-2x-small)`. _(default: undefined)_\n- **--zn-priority-list-item-padding** - The padding inside each item. Defaults to `var(--zn-spacing-small) var(--zn-spacing-medium)`. _(default: undefined)_\n- **--zn-priority-list-handle-color** - The color of the drag handle. Defaults to `var(--zn-color-neutral-500)`. _(default: undefined)_\n- **--zn-priority-list-priority-color** - The color of the priority number. Defaults to `var(--zn-color-neutral-600)`. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control wrapper.\n- **form-control-label** - The label wrapper.\n- **form-control-input** - The input area wrapper.\n- **form-control-help-text** - The help text wrapper.\n- **list** - The list container.\n- **item** - An individual list item row.\n- **drag-handle** - The drag handle icon.\n- **priority** - The priority number badge.\n- **content** - The content area of an item.",
       "attributes": [
@@ -3055,78 +3147,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/priority-list"
-        }
-      ]
-    },
-    {
-      "name": "zn-preview-frame",
-      "description": "Embeds a live preview iframe and drives the hp-preview postMessage\nprotocol: answers the frame's ready handshake with a config payload fetched\nfrom data-uri, auto-saves watched forms on change, refreshes the preview\nafter each save (its own, or a shell-driven save of a `refresh-on` form),\naccepts a theme payload via setTheme() that is retained and replayed\nafter every ready handshake, and grows the frame to a content height the\nembed reports so the panel scrolls an overflowing page.\n---\n\n\n### **Events:**\n - **zn-error** - Emitted when the preview reports a render error or a save fails.\n\n### **Methods:**\n - **refresh()** - Re-fetches the payload and pushes a fresh config to the preview.\n- **setTheme(theme: _Record<string, unknown>_)** - Pushes a theme payload into the preview. The payload is retained and\nre-posted after every ready handshake, so a frame reload doesn't drop an\nin-progress theme.\n\n### **CSS Properties:**\n - **--zn-preview-frame-dot-spacing** - Spacing of the backdrop dot grid (`backdrop=\"dots\"`). Defaults to 20px. _(default: undefined)_\n- **--zn-preview-frame-dot-opacity** - Opacity of the backdrop dots (`backdrop=\"dots\"`). Defaults to 0.08. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **stage** - The device-width wrapper around the iframe.\n- **iframe** - The preview iframe.\n- **error** - The error overlay.",
-      "attributes": [
-        {
-          "name": "src",
-          "description": "URL of the preview shell page (tokened embed URL).",
-          "values": []
-        },
-        {
-          "name": "frame-origin",
-          "description": "Expected origin of the iframe; all postMessage traffic is checked against it.",
-          "values": []
-        },
-        {
-          "name": "data-uri",
-          "description": "Endpoint returning the hp-preview:config payload JSON. The console proxy rewrites this attribute to an app-prefixed path for proper fetch resolution.",
-          "values": []
-        },
-        {
-          "name": "watch",
-          "description": "Selector (resolved against the component's root node) for the forms to watch.\nDefaults to only forms explicitly opted in via a `data-auto-save` attribute —\nunmarked forms keep normal submit behavior and are never intercepted,\nauto-saved, or used to trigger a preview refresh. Override to widen the scope.",
-          "values": []
-        },
-        {
-          "name": "refresh-on",
-          "description": "Selector for forms whose saves are left to the shell but should still\nrefresh the preview. These are never intercepted: the shell submits them\n(so its own response handling — alerts, refreshes — runs as normal) and the\npreview re-fetches its config once the shell reports the save complete.\nSet empty to disable.",
-          "values": []
-        },
-        {
-          "name": "debounce",
-          "description": "Debounce in ms between a form change and its auto-save.",
-          "values": []
-        },
-        {
-          "name": "zoom",
-          "description": "Zooms the previewed page out (0–1]. The frame always fills the panel;\nzoom shrinks the content browser-style, so 0.4 shows the page at 40%\nsize with correspondingly more of it visible. 1 = natural size.\nIgnored when `fill` is set.",
-          "values": []
-        },
-        {
-          "name": "min-height",
-          "description": "The visible height (in CSS pixels) of the preview panel. Fixed rather\nthan measured, because a measured height would feed back into the\nscaled iframe's layout box and grow unbounded. With `fill` set, this\nbecomes a `min-height` floor instead of the height.",
-          "values": []
-        },
-        {
-          "name": "fill",
-          "description": "Fills the panel's own column height instead of using a fixed\n`min-height` pixel height — for hosts (like zn-theme-editor) whose\nlayout already stretches the column to match a taller sibling.\n`zoom` is ignored when set: its oversize maths depends on a known\npixel height, which `fill` deliberately doesn't have.",
-          "values": []
-        },
-        {
-          "name": "device",
-          "description": "Constrains and centres the preview to a device width: `desktop` (100%),\n`tablet` (768px) or `mobile` (390px). The iframe element itself is\nnarrowed, so the embedded page's own media queries fire.",
-          "values": [{ "name": "PreviewFrameDevice" }]
-        },
-        {
-          "name": "backdrop",
-          "description": "Backdrop behind the stage: `dots` (default) is the canvas dot grid; `panel` is a plain `rgb(var(--zn-panel))` fill.",
-          "values": [{ "name": "dots" }, { "name": "panel" }]
-        },
-        {
-          "name": "interactive",
-          "description": "Lets pointer input through to the embedded page. The preview is inert by\ndefault: clicks never reach the frame, so the previewed page can't be\nnavigated or submitted from inside the preview. Cross-origin content can't\nbe reached from here to cancel its own handlers, so this blocks pointer\ninput entirely — hover goes with it. Scrolling doesn't: an overflowing\npage is scrolled by the panel rather than by the frame (see _contentHeight).\n\nSet, the frame becomes a real viewport instead: it stays the panel's own\nheight and the embed scrolls itself, so there is one scrollbar rather than\na panel scrolling an oversized frame, and the embed's viewport-relative\nlayout (`100vh`, `position: fixed`, sticky headers) sizes to what's on\nscreen. _contentHeight is ignored while this is set.",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/preview-frame"
         }
       ]
     },
@@ -4636,7 +4656,7 @@
         { "name": "textarea-rows", "values": [] },
         {
           "name": "slash-items",
-          "description": "Quick insertions offered by the slash menu when `input-type` is `textarea`. Accepts a JSON array of items, or\nthe shorthand `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Every language shares the list.",
+          "description": "Quick insertions offered by the slash menu on `text` and `textarea` inputs. Accepts a JSON array of items, or\nthe shorthand `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Every language shares the list.",
           "values": [{ "name": "SlashMenuItem[]" }]
         },
         {

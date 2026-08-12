@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.80">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.81">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -79,7 +79,7 @@
         <a href="/">
           <img src="/assets/images/watermark.svg" alt="zinc" />
         </a>
-        <div class="sidebar-version">1.1.80</div>
+        <div class="sidebar-version">1.1.81</div>
       </header>
 
       <div class="sidebar-buttons">
@@ -1005,9 +1005,11 @@
           <p>
             <code>slash-items</code>, <code>slash-preset</code>, <code>slash-trigger</code> and
             <code>slash-heading</code> are forwarded to the inner
-            <a href="/components/textarea#slash-menu-quick-insertions"><code>zn-textarea</code></a
-            >, so typing <code>/</code> offers replacement strings at the caret. The menu claims <code>Enter</code> and
-            <code>Escape</code> while it is open, so choosing an item neither submits nor cancels the edit.
+            <a href="/components/textarea#slash-menu-quick-insertions"><code>zn-textarea</code></a> or
+            <a href="/components/input#slash-menu-quick-insertions"><code>zn-input</code></a
+            >, so typing <code>/</code> offers replacement strings at the caret on both. The menu claims
+            <code>Enter</code> and <code>Escape</code> while it is open, so choosing an item neither submits nor cancels
+            the edit.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -3117,7 +3119,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-820"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.80/dist/components/inline-edit/inline-edit.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-820"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-820"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.81/dist/components/inline-edit/inline-edit.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-820"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -3132,7 +3134,7 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-821"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.80/dist/components/inline-edit/inline-edit.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-821"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-821"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.81/dist/components/inline-edit/inline-edit.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-821"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
@@ -3262,9 +3264,9 @@
                     </zn-tooltip>
                   </td>
                   <td>
-                    Quick insertions offered by the slash menu of a <code>textarea</code> input. Accepts a JSON array of
-                    items, or the shorthand <code>Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}</code>.
-                    Forwarded to the inner <code>zn-textarea</code>.
+                    Quick insertions offered by the slash menu of a <code>text</code> or <code>textarea</code> input.
+                    Accepts a JSON array of items, or the shorthand
+                    <code>Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}</code>.
                   </td>
                   <td style="text-align: center"></td>
                   <td>

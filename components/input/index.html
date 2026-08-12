@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.80">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.81">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -73,7 +73,7 @@
         <a href="/">
           <img src="/assets/images/watermark.svg" alt="zinc" />
         </a>
-        <div class="sidebar-version">1.1.80</div>
+        <div class="sidebar-version">1.1.81</div>
       </header>
 
       <div class="sidebar-buttons">
@@ -577,6 +577,7 @@
             <li data-level="3"><a href="#prefix-submit-button">Prefix Submit Button</a></li>
             <li data-level="3"><a href="#form-navigation-with-enter-key">Form Navigation with Enter Key</a></li>
             <li data-level="3"><a href="#trigger-submit">Trigger Submit</a></li>
+            <li data-level="3"><a href="#slash-menu-quick-insertions">Slash Menu Quick Insertions</a></li>
             <li data-level="3"><a href="#customizing-label-position">Customizing Label Position</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
@@ -2125,6 +2126,68 @@
               </button>
             </div>
           </div>
+          <h3 id="slash-menu-quick-insertions" class="anchor-heading">
+            Slash Menu Quick Insertions<a
+              href="#slash-menu-quick-insertions"
+              aria-label='Direct link to "Slash Menu Quick Insertions"'
+            ></a>
+          </h3>
+          <p>
+            Typing <code>/</code> opens a menu at the caret, exactly as it does on
+            <a href="/components/textarea#slash-menu-quick-insertions"><code>zn-textarea</code></a> — useful for short
+            single-line copy that carries replacement strings, such as a headline or a button label. The same
+            <code>slash-items</code>, <code>slash-preset</code>, <code>slash-trigger</code> and
+            <code>slash-heading</code> attributes apply, and <code>zn-slash-item</code> children work too.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-input
+                label="Confirmation headline"
+                help-text="Type / to insert a replacement string"
+                slash-items="Brand name={{BRAND_NAME}}, Customer email={{CUSTOMER_EMAIL}}"
+              ></zn-input>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-695">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-860"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Confirmation headline<span class="token punctuation">"</span></span>
+  <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Type / to insert a replacement string<span class="token punctuation">"</span></span>
+  <span class="token attr-name">slash-items</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Brand name={{BRAND_NAME}}, Customer email={{CUSTOMER_EMAIL}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-860"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-695"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <p>
+            While the menu is open it claims <code>↑</code>, <code>↓</code>, <code>Enter</code>, <code>Tab</code> and
+            <code>Escape</code>, so choosing an item does not submit the surrounding form the way
+            <code>Enter</code> otherwise would.
+          </p>
           <h3 id="customizing-label-position" class="anchor-heading">
             Customizing Label Position<a
               href="#customizing-label-position"
@@ -2173,9 +2236,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-695">
+            <div class="code-preview__source-group" id="code-preview-source-group-696">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-860"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>label-on-left<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Name<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Enter your name<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-861"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>label-on-left<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Name<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Enter your name<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>label-on-left<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Email<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Enter your email<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-textarea</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>label-on-left<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Bio<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Tell us something about yourself<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-textarea</span><span class="token punctuation">&gt;</span></span>
 
@@ -2204,7 +2267,7 @@
     <span class="token property">grid-column-start</span><span class="token punctuation">:</span> 2<span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-860"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-861"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -2213,7 +2276,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-695"
+                aria-controls="code-preview-source-group-696"
               >
                 Source
                 <svg
@@ -2251,7 +2314,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-861"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.80/dist/components/input/input.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-861"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-862"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.81/dist/components/input/input.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-862"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -2266,12 +2329,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-862"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.80/dist/components/input/input.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-862"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-863"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.81/dist/components/input/input.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-863"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-863"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/input/input.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-863"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-864"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/input/input.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-864"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -2355,6 +2418,27 @@
                   <td>
                     Text that describes how to use the input. Alternatively, you can use the
                     <code>help-text</code> attribute.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap">
+                    <code>slash-items</code>
+                  </td>
+                  <td>
+                    <code>&lt;zn-slash-item&gt;</code> elements describing the insertions offered by the slash menu.
+                    Items are picked up wherever they sit inside the input, so this slot name is optional.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap">
+                    <code>slash-menu</code>
+                  </td>
+                  <td>
+                    A <code>&lt;zn-slash-menu&gt;</code> to use instead of the built-in one, so its heading, sizing and
+                    styling can be set in markup. Any <code>&lt;zn-slash-item&gt;</code> children of it become the
+                    menu’s items.
                   </td>
                 </tr>
               </tbody>
@@ -2988,6 +3072,113 @@
 
                 <tr>
                   <td>
+                    <code class="nowrap">slashItems</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> slash-items </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    Quick insertions offered by the slash menu. Accepts a JSON array of items, or the shorthand
+                    <code>Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}</code>. Can also be set as an array
+                    of <code>SlashMenuItem</code> objects in JavaScript.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>SlashMenuItem[]</code>
+                  </td>
+                  <td>
+                    <code>[]</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">slashPreset</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> slash-preset </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>Names of item sets registered with <code>registerSlashMenuPreset</code>, comma separated.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">slashTrigger</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> slash-trigger </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>The characters that open the slash menu.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>'/'</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">slashHeading</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> slash-heading </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>The heading shown above the slash menu’s items.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>'Insert'</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">slashItemsProvider</code>
+                  </td>
+                  <td>
+                    Resolves additional items each time the menu opens, for lists that come from elsewhere (e.g. an
+                    API). Receives the current query and may return a promise. JavaScript only.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code
+                      >(query: string) =&gt; SlashMenuItem[] | Promise<slashmenuitem[]>
+                        | undefined</slashmenuitem[]
+                      ></code
+                    >
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>
                     <code class="nowrap">triggerSubmit</code>
 
                     <br />
@@ -3134,6 +3325,23 @@
                   </td>
                   <td>-</td>
                 </tr>
+
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-slash-select</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>
+                    Emitted when a slash menu item is chosen. Cancelable — call <code>preventDefault()</code> to
+                    suppress the insertion and handle the item yourself.
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-slash-insert</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted after a slash menu item’s value has been inserted.</td>
+                  <td>-</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -3156,6 +3364,28 @@
                 </tr>
               </thead>
               <tbody>
+                <tr>
+                  <td class="nowrap"><code>resolveSlashItems()</code></td>
+                  <td>
+                    The insertions the slash menu offers, gathered from every source, in the order they were declared.
+                  </td>
+                  <td>
+                    <code> search: </code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>showSlashMenu()</code></td>
+                  <td>Opens the slash menu at the caret, inserting the trigger if it isn’t already there.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>hideSlashMenu()</code></td>
+                  <td>Closes the slash menu.</td>
+                  <td>-</td>
+                </tr>
+
                 <tr>
                   <td class="nowrap"><code>focus()</code></td>
                   <td>Sets focus on the input.</td>
@@ -3325,6 +3555,11 @@
                 </tr>
 
                 <tr>
+                  <td class="nowrap"><code>slash-menu</code></td>
+                  <td>The slash menu shown at the caret.</td>
+                </tr>
+
+                <tr>
                   <td class="nowrap"><code>form-control-label</code></td>
                   <td>The label’s wrapper.</td>
                 </tr>
@@ -3386,6 +3621,10 @@
             <li><code>&lt;zn-example&gt;</code></li>
 
             <li><code>&lt;zn-icon&gt;</code></li>
+
+            <li><code>&lt;zn-slash-item&gt;</code></li>
+
+            <li><code>&lt;zn-slash-menu&gt;</code></li>
 
             <li><code>&lt;zn-tooltip&gt;</code></li>
           </ul>

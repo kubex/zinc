@@ -1857,9 +1857,292 @@ declare module "components/data-table-filter/index" {
         }
     }
 }
-declare module "components/input/input.component" {
+declare module "components/slash-menu/slash-menu-items" {
+    export interface SlashMenuItem {
+        /** The text shown in the menu. */
+        label: string;
+        /** The text inserted into the field. Omit for items handled entirely by the `zn-slash-select` event. */
+        value?: string;
+        /** Icon shown against the item, e.g. `tag@lu`. */
+        icon?: string;
+        /** Supporting text shown under the label. */
+        description?: string;
+        /** Extra terms the item can be found by. */
+        keywords?: string | string[];
+        /** Heading the item is listed under. Items without a group are listed first, in source order. */
+        group?: string;
+        /** Overrides the position of the item within its match band. Lower sorts first. */
+        order?: number;
+        /** Identifier passed through on `zn-slash-select`, for items that do something other than insert text. */
+        action?: string;
+        /** Where the caret lands after insertion, as an offset into `value`. Defaults to the end. */
+        caretOffset?: number;
+        /** Listed, but not selectable. */
+        disabled?: boolean;
+    }
+    /**
+     * Registers a named, reusable set of insertions, so a list defined once (e.g. the merge fields
+     * allowed in legal copy) can be referenced from markup with `slash-preset="<name>"`.
+     */
+    export function registerSlashMenuPreset(name: string, items: SlashMenuItem[]): void;
+    /** Removes a preset registered with `registerSlashMenuPreset`. */
+    export function unregisterSlashMenuPreset(name: string): void;
+    /** The names of every registered preset. */
+    export function slashMenuPresetNames(): string[];
+    /** Resolves one or more preset names (comma separated, or an array) to their items. */
+    export function getSlashMenuPreset(names: string | string[]): SlashMenuItem[];
+    /**
+     * Parses the `slash-items` attribute. Accepts a JSON array of items, or the shorthand
+     * `Label={{TOKEN}}, Other={{OTHER}}` (the label may be omitted to use the token as its own label).
+     */
+    export function parseSlashItems(value: string | null | undefined): SlashMenuItem[];
+    /** Filters and ranks items against a query. An empty query keeps every item in its declared order. */
+    export function filterSlashItems(items: SlashMenuItem[], query: string): SlashMenuItem[];
+}
+declare module "utilities/caret-position" {
+    export interface CaretCoordinates {
+        top: number;
+        left: number;
+        height: number;
+    }
+    export type TextField = HTMLTextAreaElement | HTMLInputElement;
+    /**
+     * Measures where the caret sits inside a text field, relative to the field's own top/left corner.
+     * There is no browser API for this, so the field is mirrored into an off-screen div and the offset
+     * of a marker span at `index` is read back.
+     */
+    export function getCaretCoordinates(field: TextField, index: number): CaretCoordinates;
+    /**
+     * Projects measured caret coordinates onto the viewport, clamped to the field's box so a caret
+     * scrolled out of view doesn't drag anchored content off with it. Split from the measurement so a
+     * cached measurement can be re-projected as the field scrolls or moves.
+     */
+    export function caretRectFrom(field: TextField, { top, left, height }: CaretCoordinates): DOMRect;
+    /** The caret's position as a viewport rect. */
+    export function getCaretRect(field: TextField, index: number): DOMRect;
+}
+declare module "components/slash-menu/slash-menu.component" {
     import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
+    import type { CSSResultGroup, PropertyValues } from 'lit';
+    import type { Placement, VirtualElement } from '@floating-ui/dom';
+    import type { SlashMenuItem } from "components/slash-menu/slash-menu-items";
+    export const SLASH_ITEM_SELECT = "zn-slash-item-select";
+    /**
+     * @summary A keyboard-driven list of insertions, anchored to the caret of the field that opened it.
+     * @documentation https://zinc.style/components/slash-menu
+     * @status experimental
+     * @since 1.1
+     *
+     * @dependency zn-icon
+     *
+     * @event zn-slash-item-select - Emitted when an item is chosen. Does not cross shadow boundaries; the
+     *  component driving the menu (e.g. `zn-textarea`) re-emits it as `zn-slash-select`.
+     *
+     * @csspart panel - The floating panel that holds the list.
+     * @csspart heading - The panel's heading.
+     * @csspart item - An item in the list.
+     * @csspart group-heading - A group heading between items.
+     * @csspart footer - The truncation footer, shown when not every match fits.
+     *
+     * @cssproperty --slash-menu-width - The width of the panel.
+     * @cssproperty --slash-menu-max-height - The maximum height of the panel before it scrolls.
+     */
+    export default class ZnSlashMenu extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+        };
+        private panel;
+        private stopAutoUpdate?;
+        /** Whether the menu is showing. */
+        open: boolean;
+        /** The items to list. Already filtered — the menu displays what it is given. */
+        items: SlashMenuItem[];
+        /** The query the items were matched against, shown in the heading. */
+        query: string;
+        /** The heading shown when there is no query. */
+        heading: string;
+        /** Shown in place of the list when there are no items. */
+        emptyText: string;
+        /** The most items to render at once. Remaining matches are reported in the footer. */
+        maxItems: number;
+        /** The element or caret rect the panel is positioned against. */
+        anchor: Element | VirtualElement | null;
+        /** The preferred placement of the panel. */
+        placement: Placement;
+        /** The gap between the caret and the panel. */
+        distance: number;
+        private activeIndex;
+        private get visibleItems();
+        /** The item that Enter would insert. */
+        get activeItem(): SlashMenuItem | undefined;
+        show(): void;
+        hide(): void;
+        /** Sets the active item by index, wrapping at both ends and skipping disabled items. */
+        setActiveIndex(index: number): void;
+        /** Moves the active item by `delta` places. */
+        moveActive(delta: number): void;
+        /** Chooses the active item, as pressing Enter would. */
+        selectActive(): void;
+        /** Recalculates the panel's position against its anchor. */
+        reposition(): void;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        private startPositioner;
+        private stopPositioner;
+        private position;
+        private selectItem;
+        private scrollActiveIntoView;
+        private readonly handleItemMouseDown;
+        protected willUpdate(changed: PropertyValues): void;
+        protected updated(changed: PropertyValues): void;
+        private renderItem;
+        private renderItems;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/slash-menu/slash-menu-controller" {
+    import type { TextField } from "utilities/caret-position";
+    import type { ReactiveController, ReactiveControllerHost } from 'lit';
+    import type { SlashMenuItem } from "components/slash-menu/slash-menu-items";
+    import type ZnSlashMenu from "components/slash-menu/slash-menu.component";
+    export interface SlashMenuControllerOptions {
+        /**
+         * Resolves the menu to render results into. Called the first time the menu is needed, so the host
+         * can render it lazily; may return a promise (e.g. after awaiting `updateComplete`).
+         */
+        menu: () => ZnSlashMenu | null | Promise<ZnSlashMenu | null>;
+        /** The available items, unfiltered. Receives the current query so lists can be resolved remotely. */
+        items: (query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]>;
+        /** The characters that open the menu. Defaults to `/`. */
+        trigger?: () => string;
+        /** Called before an item is inserted. Return `false` to handle the item yourself. */
+        onSelect?: (item: SlashMenuItem, query: string) => boolean;
+        /** Called after an item's value has been written into the field. */
+        onInsert?: (item: SlashMenuItem, value: string) => void;
+    }
+    /**
+     * Drives a slash menu for a plain `<textarea>` or `<input>`: watches the caret for the trigger
+     * sequence, resolves and filters items, and inserts the chosen value.
+     *
+     * The host owns the field and the menu element; this controller owns the interaction.
+     */
+    export class SlashMenuController implements ReactiveController {
+        private readonly host;
+        private readonly options;
+        private readonly caretAnchor;
+        private field;
+        private menu;
+        private triggerIndex;
+        private query;
+        /** Trigger position the user dismissed with Escape; the menu stays shut until they move off it. */
+        private dismissedIndex;
+        private resolveToken;
+        private inserting;
+        private isOpen;
+        private listening;
+        /** Caret measurement is the expensive part of positioning, so the last one is reused. */
+        private measured?;
+        constructor(host: ReactiveControllerHost & HTMLElement, options: SlashMenuControllerOptions);
+        /** Whether the menu is currently showing. */
+        get open(): boolean;
+        hostConnected(): void;
+        hostDisconnected(): void;
+        /** Starts watching a field. Safe to call repeatedly with the same field. */
+        attach(field: TextField): void;
+        /** Stops watching the current field and closes the menu. */
+        detach(): void;
+        private addListeners;
+        private removeListeners;
+        /** Closes the menu without marking the trigger as dismissed. */
+        close(): void;
+        /** Opens the menu at the caret, as a toolbar button or keyboard shortcut would. */
+        requestOpen(): void;
+        private caretRect;
+        private readonly handleInput;
+        private readonly handleCaretMove;
+        private readonly handleKeyUp;
+        private readonly handleBlur;
+        private readonly handleScroll;
+        private readonly handleKeyDown;
+        private readonly handleItemSelect;
+        private detect;
+        private resolve;
+        private select;
+        private replace;
+    }
+}
+declare module "components/slash-item/slash-item.component" {
+    import ZincElement from "internal/zinc-element";
+    import type { CSSResultGroup } from 'lit';
+    import type { SlashMenuItem } from "components/slash-menu/slash-menu-items";
+    /**
+     * @summary Declares a single insertion for a slash menu. Renders nothing itself — it describes an
+     *  entry for the component it is slotted into, e.g. `<zn-textarea>`'s `slash-items` slot.
+     * @documentation https://zinc.style/components/slash-item
+     * @status experimental
+     * @since 1.1
+     *
+     * @slot - The text to insert, for values that are long or span multiple lines. Ignored when the
+     *  `value` attribute is set.
+     */
+    export default class ZnSlashItem extends ZincElement {
+        static styles: CSSResultGroup;
+        /** The text shown in the menu. */
+        label: string;
+        /** The text inserted into the field. Falls back to this element's text content. */
+        value: string;
+        /** Icon shown against the item, e.g. `tag@lu`. */
+        icon: string;
+        /** Supporting text shown under the label. */
+        description: string;
+        /** Extra terms the item can be found by, comma separated. */
+        keywords: string;
+        /** Heading the item is listed under. */
+        group: string;
+        /** Overrides the item's position in the menu. Lower sorts first. */
+        order: number;
+        /** Where the caret lands after insertion, as an offset into the inserted value. */
+        caretOffset: number;
+        /** Identifier passed through on `zn-slash-select`, for items that do something other than insert. */
+        action: string;
+        /** Listed, but not selectable. */
+        disabled: boolean;
+        /** The item as the slash menu consumes it. */
+        toSlashMenuItem(): SlashMenuItem;
+        private get insertValue();
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/slash-item/index" {
+    import ZnSlashItem from "components/slash-item/slash-item.component";
+    export * from "components/slash-item/slash-item.component";
+    export default ZnSlashItem;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-slash-item': ZnSlashItem;
+        }
+    }
+}
+declare module "components/slash-menu/index" {
+    import ZnSlashMenu from "components/slash-menu/slash-menu.component";
+    export * from "components/slash-menu/slash-menu.component";
+    export * from "components/slash-menu/slash-menu-controller";
+    export * from "components/slash-menu/slash-menu-items";
+    export default ZnSlashMenu;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-slash-menu': ZnSlashMenu;
+        }
+    }
+}
+declare module "components/input/input.component" {
+    import { type SlashMenuItem } from "components/slash-menu/slash-menu-items";
+    import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    import ZnSlashItem from "components/slash-item/index";
+    import ZnSlashMenu from "components/slash-menu/index";
     import ZnTooltip from "components/tooltip/index";
     import type { ZincFormControl } from "internal/zinc-element";
     /**
@@ -1887,8 +2170,20 @@ declare module "components/input/input.component" {
      * @slot show-password-icon - An icon to use in lieu of the default show password icon.
      * @slot hide-password-icon - An icon to use in lieu of the default hide password icon.
      * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
+     * @slot slash-items - `<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are
+     *  picked up wherever they sit inside the input, so this slot name is optional.
+     * @slot slash-menu - A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can
+     *  be set in markup. Any `<zn-slash-item>` children of it become the menu's items.
+     *
+     * @dependency zn-slash-item
+     * @dependency zn-slash-menu
+     *
+     * @event zn-slash-select - Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to
+     *  suppress the insertion and handle the item yourself.
+     * @event zn-slash-insert - Emitted after a slash menu item's value has been inserted.
      *
      * @csspart form-control - The form control that wraps the label, input, and help text.
+     * @csspart slash-menu - The slash menu shown at the caret.
      * @csspart form-control-label - The label's wrapper.
      * @csspart form-control-input - The input's wrapper.
      * @csspart form-control-help-text - The help text's wrapper.
@@ -1909,14 +2204,20 @@ declare module "components/input/input.component" {
         static styles: import("lit").CSSResult;
         static dependencies: {
             'zn-icon': typeof ZnIcon;
+            'zn-slash-item': typeof ZnSlashItem;
+            'zn-slash-menu': typeof ZnSlashMenu;
             'zn-tooltip': typeof ZnTooltip;
         };
         private readonly formControlController;
         private readonly hasSlotController;
         private readonly localize;
+        private readonly slashController;
         input: HTMLInputElement;
         colorPicker: HTMLInputElement;
+        slashMenuElement: ZnSlashMenu | null;
         private hasFocus;
+        /** Renders the slash menu only once it has been needed, keeping unused inputs cheap. */
+        private hasSlashMenu;
         private isUserTyping;
         title: string;
         private __numberInput;
@@ -2020,6 +2321,23 @@ declare module "components/input/input.component" {
          */
         inputmode: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url';
         /**
+         * Quick insertions offered by the slash menu. Accepts a JSON array of items, or the shorthand
+         * `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Can also be set as an array of
+         * `SlashMenuItem` objects in JavaScript.
+         */
+        slashItems: SlashMenuItem[];
+        /** Names of item sets registered with `registerSlashMenuPreset`, comma separated. */
+        slashPreset: string;
+        /** The characters that open the slash menu. */
+        slashTrigger: string;
+        /** The heading shown above the slash menu's items. */
+        slashHeading: string;
+        /**
+         * Resolves additional items each time the menu opens, for lists that come from elsewhere (e.g. an
+         * API). Receives the current query and may return a promise. JavaScript only.
+         */
+        slashItemsProvider?: (query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]>;
+        /**
          * When enabled, pressing enter will always submit the surrounding form, even when the form uses
          * enter-navigation to move between fields.
          */
@@ -2058,6 +2376,14 @@ declare module "components/input/input.component" {
         private handleColorPickerChange;
         private focusInput;
         protected firstUpdated(): void;
+        /** The insertions the slash menu offers, gathered from every source, in the order they were declared. */
+        resolveSlashItems(search?: string): Promise<SlashMenuItem[]>;
+        /** Opens the slash menu at the caret, inserting the trigger if it isn't already there. */
+        showSlashMenu(): Promise<void>;
+        /** Closes the slash menu. */
+        hideSlashMenu(): void;
+        private slottedSlashItems;
+        private mountSlashMenu;
         handleDisabledChange(): void;
         handleStepChange(): void;
         handleValueChange(): Promise<void>;
@@ -4813,48 +5139,6 @@ declare module "components/icon-picker/index" {
         }
     }
 }
-declare module "components/slash-menu/slash-menu-items" {
-    export interface SlashMenuItem {
-        /** The text shown in the menu. */
-        label: string;
-        /** The text inserted into the field. Omit for items handled entirely by the `zn-slash-select` event. */
-        value?: string;
-        /** Icon shown against the item, e.g. `tag@lu`. */
-        icon?: string;
-        /** Supporting text shown under the label. */
-        description?: string;
-        /** Extra terms the item can be found by. */
-        keywords?: string | string[];
-        /** Heading the item is listed under. Items without a group are listed first, in source order. */
-        group?: string;
-        /** Overrides the position of the item within its match band. Lower sorts first. */
-        order?: number;
-        /** Identifier passed through on `zn-slash-select`, for items that do something other than insert text. */
-        action?: string;
-        /** Where the caret lands after insertion, as an offset into `value`. Defaults to the end. */
-        caretOffset?: number;
-        /** Listed, but not selectable. */
-        disabled?: boolean;
-    }
-    /**
-     * Registers a named, reusable set of insertions, so a list defined once (e.g. the merge fields
-     * allowed in legal copy) can be referenced from markup with `slash-preset="<name>"`.
-     */
-    export function registerSlashMenuPreset(name: string, items: SlashMenuItem[]): void;
-    /** Removes a preset registered with `registerSlashMenuPreset`. */
-    export function unregisterSlashMenuPreset(name: string): void;
-    /** The names of every registered preset. */
-    export function slashMenuPresetNames(): string[];
-    /** Resolves one or more preset names (comma separated, or an array) to their items. */
-    export function getSlashMenuPreset(names: string | string[]): SlashMenuItem[];
-    /**
-     * Parses the `slash-items` attribute. Accepts a JSON array of items, or the shorthand
-     * `Label={{TOKEN}}, Other={{OTHER}}` (the label may be omitted to use the token as its own label).
-     */
-    export function parseSlashItems(value: string | null | undefined): SlashMenuItem[];
-    /** Filters and ranks items against a query. An empty query keeps every item in its declared order. */
-    export function filterSlashItems(items: SlashMenuItem[], query: string): SlashMenuItem[];
-}
 declare module "components/inline-edit/inline-edit.component" {
     import { type CSSResultGroup, type HTMLTemplateResult, type PropertyValues } from 'lit';
     import { type SlashMenuItem } from "components/slash-menu/slash-menu-items";
@@ -4914,8 +5198,8 @@ declare module "components/inline-edit/inline-edit.component" {
         inputType: 'select' | 'text' | 'data-select' | 'number' | 'textarea';
         textareaRows: 1;
         /**
-         * Quick insertions offered by the slash menu of a `textarea` input. Accepts a JSON array of items, or the
-         * shorthand `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Forwarded to the inner `zn-textarea`.
+         * Quick insertions offered by the slash menu of a `text` or `textarea` input. Accepts a JSON array of items, or
+         * the shorthand `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`.
          */
         slashItems: SlashMenuItem[];
         /** Names of item sets registered with `registerSlashMenuPreset`, comma separated. */
@@ -6260,244 +6544,6 @@ declare module "components/editor/modules/ai/tooltip/ai-tooltip.component" {
         show(): void;
         hide(): void;
         render(): import("lit-html").TemplateResult<1>;
-    }
-}
-declare module "utilities/caret-position" {
-    export interface CaretCoordinates {
-        top: number;
-        left: number;
-        height: number;
-    }
-    export type TextField = HTMLTextAreaElement | HTMLInputElement;
-    /**
-     * Measures where the caret sits inside a text field, relative to the field's own top/left corner.
-     * There is no browser API for this, so the field is mirrored into an off-screen div and the offset
-     * of a marker span at `index` is read back.
-     */
-    export function getCaretCoordinates(field: TextField, index: number): CaretCoordinates;
-    /**
-     * Projects measured caret coordinates onto the viewport, clamped to the field's box so a caret
-     * scrolled out of view doesn't drag anchored content off with it. Split from the measurement so a
-     * cached measurement can be re-projected as the field scrolls or moves.
-     */
-    export function caretRectFrom(field: TextField, { top, left, height }: CaretCoordinates): DOMRect;
-    /** The caret's position as a viewport rect. */
-    export function getCaretRect(field: TextField, index: number): DOMRect;
-}
-declare module "components/slash-menu/slash-menu.component" {
-    import ZincElement from "internal/zinc-element";
-    import ZnIcon from "components/icon/index";
-    import type { CSSResultGroup, PropertyValues } from 'lit';
-    import type { Placement, VirtualElement } from '@floating-ui/dom';
-    import type { SlashMenuItem } from "components/slash-menu/slash-menu-items";
-    export const SLASH_ITEM_SELECT = "zn-slash-item-select";
-    /**
-     * @summary A keyboard-driven list of insertions, anchored to the caret of the field that opened it.
-     * @documentation https://zinc.style/components/slash-menu
-     * @status experimental
-     * @since 1.1
-     *
-     * @dependency zn-icon
-     *
-     * @event zn-slash-item-select - Emitted when an item is chosen. Does not cross shadow boundaries; the
-     *  component driving the menu (e.g. `zn-textarea`) re-emits it as `zn-slash-select`.
-     *
-     * @csspart panel - The floating panel that holds the list.
-     * @csspart heading - The panel's heading.
-     * @csspart item - An item in the list.
-     * @csspart group-heading - A group heading between items.
-     * @csspart footer - The truncation footer, shown when not every match fits.
-     *
-     * @cssproperty --slash-menu-width - The width of the panel.
-     * @cssproperty --slash-menu-max-height - The maximum height of the panel before it scrolls.
-     */
-    export default class ZnSlashMenu extends ZincElement {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-icon': typeof ZnIcon;
-        };
-        private panel;
-        private stopAutoUpdate?;
-        /** Whether the menu is showing. */
-        open: boolean;
-        /** The items to list. Already filtered — the menu displays what it is given. */
-        items: SlashMenuItem[];
-        /** The query the items were matched against, shown in the heading. */
-        query: string;
-        /** The heading shown when there is no query. */
-        heading: string;
-        /** Shown in place of the list when there are no items. */
-        emptyText: string;
-        /** The most items to render at once. Remaining matches are reported in the footer. */
-        maxItems: number;
-        /** The element or caret rect the panel is positioned against. */
-        anchor: Element | VirtualElement | null;
-        /** The preferred placement of the panel. */
-        placement: Placement;
-        /** The gap between the caret and the panel. */
-        distance: number;
-        private activeIndex;
-        private get visibleItems();
-        /** The item that Enter would insert. */
-        get activeItem(): SlashMenuItem | undefined;
-        show(): void;
-        hide(): void;
-        /** Sets the active item by index, wrapping at both ends and skipping disabled items. */
-        setActiveIndex(index: number): void;
-        /** Moves the active item by `delta` places. */
-        moveActive(delta: number): void;
-        /** Chooses the active item, as pressing Enter would. */
-        selectActive(): void;
-        /** Recalculates the panel's position against its anchor. */
-        reposition(): void;
-        connectedCallback(): void;
-        disconnectedCallback(): void;
-        private startPositioner;
-        private stopPositioner;
-        private position;
-        private selectItem;
-        private scrollActiveIntoView;
-        private readonly handleItemMouseDown;
-        protected willUpdate(changed: PropertyValues): void;
-        protected updated(changed: PropertyValues): void;
-        private renderItem;
-        private renderItems;
-        render(): import("lit-html").TemplateResult<1>;
-    }
-}
-declare module "components/slash-menu/slash-menu-controller" {
-    import type { TextField } from "utilities/caret-position";
-    import type { ReactiveController, ReactiveControllerHost } from 'lit';
-    import type { SlashMenuItem } from "components/slash-menu/slash-menu-items";
-    import type ZnSlashMenu from "components/slash-menu/slash-menu.component";
-    export interface SlashMenuControllerOptions {
-        /**
-         * Resolves the menu to render results into. Called the first time the menu is needed, so the host
-         * can render it lazily; may return a promise (e.g. after awaiting `updateComplete`).
-         */
-        menu: () => ZnSlashMenu | null | Promise<ZnSlashMenu | null>;
-        /** The available items, unfiltered. Receives the current query so lists can be resolved remotely. */
-        items: (query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]>;
-        /** The characters that open the menu. Defaults to `/`. */
-        trigger?: () => string;
-        /** Called before an item is inserted. Return `false` to handle the item yourself. */
-        onSelect?: (item: SlashMenuItem, query: string) => boolean;
-        /** Called after an item's value has been written into the field. */
-        onInsert?: (item: SlashMenuItem, value: string) => void;
-    }
-    /**
-     * Drives a slash menu for a plain `<textarea>` or `<input>`: watches the caret for the trigger
-     * sequence, resolves and filters items, and inserts the chosen value.
-     *
-     * The host owns the field and the menu element; this controller owns the interaction.
-     */
-    export class SlashMenuController implements ReactiveController {
-        private readonly host;
-        private readonly options;
-        private readonly caretAnchor;
-        private field;
-        private menu;
-        private triggerIndex;
-        private query;
-        /** Trigger position the user dismissed with Escape; the menu stays shut until they move off it. */
-        private dismissedIndex;
-        private resolveToken;
-        private inserting;
-        private isOpen;
-        private listening;
-        /** Caret measurement is the expensive part of positioning, so the last one is reused. */
-        private measured?;
-        constructor(host: ReactiveControllerHost & HTMLElement, options: SlashMenuControllerOptions);
-        /** Whether the menu is currently showing. */
-        get open(): boolean;
-        hostConnected(): void;
-        hostDisconnected(): void;
-        /** Starts watching a field. Safe to call repeatedly with the same field. */
-        attach(field: TextField): void;
-        /** Stops watching the current field and closes the menu. */
-        detach(): void;
-        private addListeners;
-        private removeListeners;
-        /** Closes the menu without marking the trigger as dismissed. */
-        close(): void;
-        /** Opens the menu at the caret, as a toolbar button or keyboard shortcut would. */
-        requestOpen(): void;
-        private caretRect;
-        private readonly handleInput;
-        private readonly handleCaretMove;
-        private readonly handleKeyUp;
-        private readonly handleBlur;
-        private readonly handleScroll;
-        private readonly handleKeyDown;
-        private readonly handleItemSelect;
-        private detect;
-        private resolve;
-        private select;
-        private replace;
-    }
-}
-declare module "components/slash-item/slash-item.component" {
-    import ZincElement from "internal/zinc-element";
-    import type { CSSResultGroup } from 'lit';
-    import type { SlashMenuItem } from "components/slash-menu/slash-menu-items";
-    /**
-     * @summary Declares a single insertion for a slash menu. Renders nothing itself — it describes an
-     *  entry for the component it is slotted into, e.g. `<zn-textarea>`'s `slash-items` slot.
-     * @documentation https://zinc.style/components/slash-item
-     * @status experimental
-     * @since 1.1
-     *
-     * @slot - The text to insert, for values that are long or span multiple lines. Ignored when the
-     *  `value` attribute is set.
-     */
-    export default class ZnSlashItem extends ZincElement {
-        static styles: CSSResultGroup;
-        /** The text shown in the menu. */
-        label: string;
-        /** The text inserted into the field. Falls back to this element's text content. */
-        value: string;
-        /** Icon shown against the item, e.g. `tag@lu`. */
-        icon: string;
-        /** Supporting text shown under the label. */
-        description: string;
-        /** Extra terms the item can be found by, comma separated. */
-        keywords: string;
-        /** Heading the item is listed under. */
-        group: string;
-        /** Overrides the item's position in the menu. Lower sorts first. */
-        order: number;
-        /** Where the caret lands after insertion, as an offset into the inserted value. */
-        caretOffset: number;
-        /** Identifier passed through on `zn-slash-select`, for items that do something other than insert. */
-        action: string;
-        /** Listed, but not selectable. */
-        disabled: boolean;
-        /** The item as the slash menu consumes it. */
-        toSlashMenuItem(): SlashMenuItem;
-        private get insertValue();
-        render(): import("lit-html").TemplateResult<1>;
-    }
-}
-declare module "components/slash-item/index" {
-    import ZnSlashItem from "components/slash-item/slash-item.component";
-    export * from "components/slash-item/slash-item.component";
-    export default ZnSlashItem;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-slash-item': ZnSlashItem;
-        }
-    }
-}
-declare module "components/slash-menu/index" {
-    import ZnSlashMenu from "components/slash-menu/slash-menu.component";
-    export * from "components/slash-menu/slash-menu.component";
-    export * from "components/slash-menu/slash-menu-controller";
-    export * from "components/slash-menu/slash-menu-items";
-    export default ZnSlashMenu;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-slash-menu': ZnSlashMenu;
-        }
     }
 }
 declare module "components/textarea/textarea.component" {
@@ -8652,7 +8698,7 @@ declare module "components/translations/translations.component" {
         inputType: 'select' | 'text' | 'number' | 'textarea';
         textareaRows: number | undefined;
         /**
-         * Quick insertions offered by the slash menu when `input-type` is `textarea`. Accepts a JSON array of items, or
+         * Quick insertions offered by the slash menu on `text` and `textarea` inputs. Accepts a JSON array of items, or
          * the shorthand `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Every language shares the list.
          */
         slashItems: SlashMenuItem[];

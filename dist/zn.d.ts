@@ -8692,6 +8692,11 @@ declare module "components/translations/translations.component" {
         name: string;
         value: string;
         label: string;
+        /**
+         * Text shown below the field, describing how to fill it in. Applies to every language. If you need HTML, use the
+         * `help-text` slot instead.
+         */
+        helpText: string;
         disabled: boolean;
         required: boolean;
         flush: boolean;

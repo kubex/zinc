@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.1.81",
+  "version": "1.1.82",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -10989,6 +10989,11 @@
             },
             { "name": "label", "value": { "type": "string", "default": "''" } },
             {
+              "name": "help-text",
+              "description": "Text shown below the field, describing how to fill it in. Applies to every language. If you need HTML, use the\n`help-text` slot instead.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
               "name": "disabled",
               "value": { "type": "boolean", "default": "false" }
             },
@@ -11054,6 +11059,11 @@
               { "name": "name", "type": "string" },
               { "name": "value", "type": "string" },
               { "name": "label", "type": "string" },
+              {
+                "name": "helpText",
+                "description": "Text shown below the field, describing how to fill it in. Applies to every language. If you need HTML, use the\n`help-text` slot instead.",
+                "type": "string"
+              },
               { "name": "disabled", "type": "boolean" },
               { "name": "required", "type": "boolean" },
               { "name": "flush", "type": "boolean" },

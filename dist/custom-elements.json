@@ -49,79 +49,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -310,6 +237,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -15593,272 +15593,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/header/header.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnHeader",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, '[default]', 'nav', 'breadcrumb')"
-            },
-            {
-              "kind": "field",
-              "name": "fullLocation",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "full-location"
-            },
-            {
-              "kind": "field",
-              "name": "entityId",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "entity-id"
-            },
-            {
-              "kind": "field",
-              "name": "entityIdShow",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "entity-id-show"
-            },
-            {
-              "kind": "field",
-              "name": "transparent",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "transparent"
-            },
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "caption"
-            },
-            {
-              "kind": "field",
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "icon"
-            },
-            {
-              "kind": "field",
-              "name": "navigation",
-              "type": {
-                "text": "array"
-              },
-              "default": "[]",
-              "attribute": "navigation"
-            },
-            {
-              "kind": "field",
-              "name": "fullWidth",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "full-width"
-            },
-            {
-              "kind": "field",
-              "name": "previousPath",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "previous-path"
-            },
-            {
-              "kind": "field",
-              "name": "previousTarget",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "previous-target"
-            },
-            {
-              "kind": "field",
-              "name": "hideBreadcrumb",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "hide-breadcrumb"
-            },
-            {
-              "kind": "field",
-              "name": "navbar",
-              "type": {
-                "text": "ZnNavbar"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleAltPress"
-            },
-            {
-              "kind": "field",
-              "name": "handleAltUp"
-            },
-            {
-              "kind": "method",
-              "name": "updateNav"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "full-location",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "fullLocation"
-            },
-            {
-              "name": "entity-id",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "entityId"
-            },
-            {
-              "name": "entity-id-show",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "entityIdShow"
-            },
-            {
-              "name": "transparent",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "transparent"
-            },
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "caption"
-            },
-            {
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "icon"
-            },
-            {
-              "name": "navigation",
-              "type": {
-                "text": "array"
-              },
-              "default": "[]",
-              "fieldName": "navigation"
-            },
-            {
-              "name": "full-width",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "fullWidth"
-            },
-            {
-              "name": "previous-path",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "previousPath"
-            },
-            {
-              "name": "previous-target",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "previousTarget"
-            },
-            {
-              "name": "hide-breadcrumb",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "hideBreadcrumb"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "header",
-          "tagName": "zn-header",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/header\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/header",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnHeader",
-            "module": "components/header/header.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/hover-container/hover-container.js",
       "declarations": [
         {
@@ -16156,6 +15890,272 @@
           "declaration": {
             "name": "ZnHoverContainer",
             "module": "components/hover-container/hover-container.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/header/header.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnHeader",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, '[default]', 'nav', 'breadcrumb')"
+            },
+            {
+              "kind": "field",
+              "name": "fullLocation",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "full-location"
+            },
+            {
+              "kind": "field",
+              "name": "entityId",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "entity-id"
+            },
+            {
+              "kind": "field",
+              "name": "entityIdShow",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "entity-id-show"
+            },
+            {
+              "kind": "field",
+              "name": "transparent",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "transparent"
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "navigation",
+              "type": {
+                "text": "array"
+              },
+              "default": "[]",
+              "attribute": "navigation"
+            },
+            {
+              "kind": "field",
+              "name": "fullWidth",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "full-width"
+            },
+            {
+              "kind": "field",
+              "name": "previousPath",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "previous-path"
+            },
+            {
+              "kind": "field",
+              "name": "previousTarget",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "previous-target"
+            },
+            {
+              "kind": "field",
+              "name": "hideBreadcrumb",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hide-breadcrumb"
+            },
+            {
+              "kind": "field",
+              "name": "navbar",
+              "type": {
+                "text": "ZnNavbar"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleAltPress"
+            },
+            {
+              "kind": "field",
+              "name": "handleAltUp"
+            },
+            {
+              "kind": "method",
+              "name": "updateNav"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "full-location",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "fullLocation"
+            },
+            {
+              "name": "entity-id",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "entityId"
+            },
+            {
+              "name": "entity-id-show",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "entityIdShow"
+            },
+            {
+              "name": "transparent",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "transparent"
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "caption"
+            },
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "icon"
+            },
+            {
+              "name": "navigation",
+              "type": {
+                "text": "array"
+              },
+              "default": "[]",
+              "fieldName": "navigation"
+            },
+            {
+              "name": "full-width",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "fullWidth"
+            },
+            {
+              "name": "previous-path",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "previousPath"
+            },
+            {
+              "name": "previous-target",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "previousTarget"
+            },
+            {
+              "name": "hide-breadcrumb",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hideBreadcrumb"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "header",
+          "tagName": "zn-header",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/header\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/header",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnHeader",
+            "module": "components/header/header.js"
           }
         }
       ]
@@ -17573,6 +17573,54 @@
             },
             {
               "kind": "field",
+              "name": "slashItems",
+              "type": {
+                "text": "SlashMenuItem[]"
+              },
+              "default": "[]",
+              "description": "Quick insertions offered by the slash menu of a `textarea` input. Accepts a JSON array of items, or the\nshorthand `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Forwarded to the inner `zn-textarea`.",
+              "attribute": "slash-items"
+            },
+            {
+              "kind": "field",
+              "name": "slashPreset",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Names of item sets registered with `registerSlashMenuPreset`, comma separated.",
+              "attribute": "slash-preset"
+            },
+            {
+              "kind": "field",
+              "name": "slashTrigger",
+              "type": {
+                "text": "string"
+              },
+              "default": "'/'",
+              "description": "The characters that open the slash menu.",
+              "attribute": "slash-trigger"
+            },
+            {
+              "kind": "field",
+              "name": "slashHeading",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Insert'",
+              "description": "The heading shown above the slash menu's items.",
+              "attribute": "slash-heading"
+            },
+            {
+              "kind": "field",
+              "name": "slashItemsProvider",
+              "type": {
+                "text": "(query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]> | undefined"
+              },
+              "description": "Resolves additional slash menu items each time the menu opens. JavaScript only."
+            },
+            {
+              "kind": "field",
               "name": "options",
               "type": {
                 "text": "{ [key: string]: string }"
@@ -18030,6 +18078,42 @@
                 "text": "1"
               },
               "fieldName": "textareaRows"
+            },
+            {
+              "name": "slash-items",
+              "type": {
+                "text": "SlashMenuItem[]"
+              },
+              "default": "[]",
+              "description": "Quick insertions offered by the slash menu of a `textarea` input. Accepts a JSON array of items, or the\nshorthand `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Forwarded to the inner `zn-textarea`.",
+              "fieldName": "slashItems"
+            },
+            {
+              "name": "slash-preset",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Names of item sets registered with `registerSlashMenuPreset`, comma separated.",
+              "fieldName": "slashPreset"
+            },
+            {
+              "name": "slash-trigger",
+              "type": {
+                "text": "string"
+              },
+              "default": "'/'",
+              "description": "The characters that open the slash menu.",
+              "fieldName": "slashTrigger"
+            },
+            {
+              "name": "slash-heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Insert'",
+              "description": "The heading shown above the slash menu's items.",
+              "fieldName": "slashHeading"
             },
             {
               "name": "options",
@@ -36220,6 +36304,670 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/slash-item/slash-item.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnSlashItem",
+          "slots": [
+            {
+              "description": "The text to insert, for values that are long or span multiple lines. Ignored when the `value` attribute is set.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The text shown in the menu.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "The text inserted into the field. Falls back to this element's text content.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "description": "Icon shown against the item, e.g. `tag@lu`.",
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "description": "Supporting text shown under the label.",
+              "attribute": "description"
+            },
+            {
+              "kind": "field",
+              "name": "keywords",
+              "type": {
+                "text": "string"
+              },
+              "description": "Extra terms the item can be found by, comma separated.",
+              "attribute": "keywords"
+            },
+            {
+              "kind": "field",
+              "name": "group",
+              "type": {
+                "text": "string"
+              },
+              "description": "Heading the item is listed under.",
+              "attribute": "group"
+            },
+            {
+              "kind": "field",
+              "name": "order",
+              "type": {
+                "text": "number"
+              },
+              "description": "Overrides the item's position in the menu. Lower sorts first.",
+              "attribute": "order"
+            },
+            {
+              "kind": "field",
+              "name": "caretOffset",
+              "type": {
+                "text": "number"
+              },
+              "description": "Where the caret lands after insertion, as an offset into the inserted value.",
+              "attribute": "caret-offset"
+            },
+            {
+              "kind": "field",
+              "name": "action",
+              "type": {
+                "text": "string"
+              },
+              "description": "Identifier passed through on `zn-slash-select`, for items that do something other than insert.",
+              "attribute": "action"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Listed, but not selectable.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "toSlashMenuItem",
+              "return": {
+                "type": {
+                  "text": "SlashMenuItem"
+                }
+              },
+              "description": "The item as the slash menu consumes it."
+            },
+            {
+              "kind": "field",
+              "name": "insertValue",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "readonly": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The text shown in the menu.",
+              "fieldName": "label"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "The text inserted into the field. Falls back to this element's text content.",
+              "fieldName": "value"
+            },
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "description": "Icon shown against the item, e.g. `tag@lu`.",
+              "fieldName": "icon"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "description": "Supporting text shown under the label.",
+              "fieldName": "description"
+            },
+            {
+              "name": "keywords",
+              "type": {
+                "text": "string"
+              },
+              "description": "Extra terms the item can be found by, comma separated.",
+              "fieldName": "keywords"
+            },
+            {
+              "name": "group",
+              "type": {
+                "text": "string"
+              },
+              "description": "Heading the item is listed under.",
+              "fieldName": "group"
+            },
+            {
+              "name": "order",
+              "type": {
+                "text": "number"
+              },
+              "description": "Overrides the item's position in the menu. Lower sorts first.",
+              "fieldName": "order"
+            },
+            {
+              "name": "caret-offset",
+              "type": {
+                "text": "number"
+              },
+              "description": "Where the caret lands after insertion, as an offset into the inserted value.",
+              "fieldName": "caretOffset"
+            },
+            {
+              "name": "action",
+              "type": {
+                "text": "string"
+              },
+              "description": "Identifier passed through on `zn-slash-select`, for items that do something other than insert.",
+              "fieldName": "action"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Listed, but not selectable.",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Declares a single insertion for a slash menu. Renders nothing itself — it describes an\nentry for the component it is slotted into, e.g. `<zn-textarea>`'s `slash-items` slot.",
+          "tagNameWithoutPrefix": "slash-item",
+          "tagName": "zn-slash-item",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Declares a single insertion for a slash menu. Renders nothing itself — it describes an\n *  entry for the component it is slotted into, e.g. `<zn-textarea>`'s `slash-items` slot.\n * @documentation https://zinc.style/components/slash-item\n * @status experimental\n * @since 1.1\n *\n * @slot - The text to insert, for values that are long or span multiple lines. Ignored when the\n *  `value` attribute is set.\n */",
+          "documentation": "https://zinc.style/components/slash-item",
+          "status": "experimental",
+          "since": "1.1"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnSlashItem",
+            "module": "components/slash-item/slash-item.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/slash-menu/slash-menu.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "SLASH_ITEM_SELECT",
+          "type": {
+            "text": "string"
+          },
+          "default": "'zn-slash-item-select'"
+        },
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnSlashMenu",
+          "cssProperties": [
+            {
+              "description": "The width of the panel.",
+              "name": "--slash-menu-width"
+            },
+            {
+              "description": "The maximum height of the panel before it scrolls.",
+              "name": "--slash-menu-max-height"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The floating panel that holds the list.",
+              "name": "panel"
+            },
+            {
+              "description": "The panel's heading.",
+              "name": "heading"
+            },
+            {
+              "description": "An item in the list.",
+              "name": "item"
+            },
+            {
+              "description": "A group heading between items.",
+              "name": "group-heading"
+            },
+            {
+              "description": "The truncation footer, shown when not every match fits.",
+              "name": "footer"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-icon': ZnIcon }"
+            },
+            {
+              "kind": "field",
+              "name": "panel",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "stopAutoUpdate",
+              "type": {
+                "text": "() => void | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the menu is showing.",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "SlashMenuItem[]"
+              },
+              "default": "[]",
+              "description": "The items to list. Already filtered — the menu displays what it is given.",
+              "attribute": "items"
+            },
+            {
+              "kind": "field",
+              "name": "query",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The query the items were matched against, shown in the heading.",
+              "attribute": "query"
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Insert'",
+              "description": "The heading shown when there is no query.",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "emptyText",
+              "type": {
+                "text": "string"
+              },
+              "default": "'No matches'",
+              "description": "Shown in place of the list when there are no items.",
+              "attribute": "empty-text"
+            },
+            {
+              "kind": "field",
+              "name": "maxItems",
+              "type": {
+                "text": "number"
+              },
+              "default": "25",
+              "description": "The most items to render at once. Remaining matches are reported in the footer.",
+              "attribute": "max-items"
+            },
+            {
+              "kind": "field",
+              "name": "anchor",
+              "type": {
+                "text": "Element | VirtualElement | null"
+              },
+              "default": "null",
+              "description": "The element or caret rect the panel is positioned against."
+            },
+            {
+              "kind": "field",
+              "name": "placement",
+              "type": {
+                "text": "Placement"
+              },
+              "default": "'bottom-start'",
+              "description": "The preferred placement of the panel.",
+              "attribute": "placement"
+            },
+            {
+              "kind": "field",
+              "name": "distance",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "description": "The gap between the caret and the panel.",
+              "attribute": "distance"
+            },
+            {
+              "kind": "field",
+              "name": "activeIndex",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "visibleItems",
+              "type": {
+                "text": "SlashMenuItem[]"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "activeItem",
+              "type": {
+                "text": "SlashMenuItem | undefined"
+              },
+              "description": "The item that Enter would insert.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "show"
+            },
+            {
+              "kind": "method",
+              "name": "hide"
+            },
+            {
+              "kind": "method",
+              "name": "setActiveIndex",
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Sets the active item by index, wrapping at both ends and skipping disabled items."
+            },
+            {
+              "kind": "method",
+              "name": "moveActive",
+              "parameters": [
+                {
+                  "name": "delta",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Moves the active item by `delta` places."
+            },
+            {
+              "kind": "method",
+              "name": "selectActive",
+              "description": "Chooses the active item, as pressing Enter would."
+            },
+            {
+              "kind": "method",
+              "name": "reposition",
+              "description": "Recalculates the panel's position against its anchor."
+            },
+            {
+              "kind": "method",
+              "name": "startPositioner",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "stopPositioner",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "position",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "selectItem",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "SlashMenuItem"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "scrollActiveIntoView",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleItemMouseDown",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "renderItem",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "SlashMenuItem"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "showIcons",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderItems",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "name": "SLASH_ITEM_SELECT",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "description": "Emitted when an item is chosen. Does not cross shadow boundaries; the component driving the menu (e.g. `zn-textarea`) re-emits it as `zn-slash-select`.",
+              "name": "zn-slash-item-select"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the menu is showing.",
+              "fieldName": "open"
+            },
+            {
+              "name": "items",
+              "type": {
+                "text": "SlashMenuItem[]"
+              },
+              "default": "[]",
+              "description": "The items to list. Already filtered — the menu displays what it is given.",
+              "fieldName": "items"
+            },
+            {
+              "name": "query",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The query the items were matched against, shown in the heading.",
+              "fieldName": "query"
+            },
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Insert'",
+              "description": "The heading shown when there is no query.",
+              "fieldName": "heading"
+            },
+            {
+              "name": "empty-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "'No matches'",
+              "description": "Shown in place of the list when there are no items.",
+              "fieldName": "emptyText"
+            },
+            {
+              "name": "max-items",
+              "type": {
+                "text": "number"
+              },
+              "default": "25",
+              "description": "The most items to render at once. Remaining matches are reported in the footer.",
+              "fieldName": "maxItems"
+            },
+            {
+              "name": "placement",
+              "type": {
+                "text": "Placement"
+              },
+              "default": "'bottom-start'",
+              "description": "The preferred placement of the panel.",
+              "fieldName": "placement"
+            },
+            {
+              "name": "distance",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "description": "The gap between the caret and the panel.",
+              "fieldName": "distance"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A keyboard-driven list of insertions, anchored to the caret of the field that opened it.",
+          "tagNameWithoutPrefix": "slash-menu",
+          "tagName": "zn-slash-menu",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A keyboard-driven list of insertions, anchored to the caret of the field that opened it.\n * @documentation https://zinc.style/components/slash-menu\n * @status experimental\n * @since 1.1\n *\n * @dependency zn-icon\n *\n * @event zn-slash-item-select - Emitted when an item is chosen. Does not cross shadow boundaries; the\n *  component driving the menu (e.g. `zn-textarea`) re-emits it as `zn-slash-select`.\n *\n * @csspart panel - The floating panel that holds the list.\n * @csspart heading - The panel's heading.\n * @csspart item - An item in the list.\n * @csspart group-heading - A group heading between items.\n * @csspart footer - The truncation footer, shown when not every match fits.\n *\n * @cssproperty --slash-menu-width - The width of the panel.\n * @cssproperty --slash-menu-max-height - The maximum height of the panel before it scrolls.\n */",
+          "documentation": "https://zinc.style/components/slash-menu",
+          "status": "experimental",
+          "since": "1.1",
+          "dependencies": [
+            "zn-icon"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "SLASH_ITEM_SELECT",
+          "declaration": {
+            "name": "SLASH_ITEM_SELECT",
+            "module": "components/slash-menu/slash-menu.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnSlashMenu",
+            "module": "components/slash-menu/slash-menu.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/slideout/slideout.js",
       "declarations": [
         {
@@ -39882,6 +40630,10 @@
             {
               "description": "The internal `<textarea>` control.",
               "name": "textarea"
+            },
+            {
+              "description": "The slash menu shown at the caret.",
+              "name": "slash-menu"
             }
           ],
           "slots": [
@@ -39900,9 +40652,26 @@
             {
               "description": "Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.",
               "name": "help-text"
+            },
+            {
+              "description": "`<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are picked up wherever they sit inside the textarea, so this slot name is optional.",
+              "name": "slash-items"
+            },
+            {
+              "description": "A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can be set in markup. Any `<zn-slash-item>` children of it become the menu's items.",
+              "name": "slash-menu"
             }
           ],
           "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-slash-item': ZnSlashItem, 'zn-slash-menu': ZnSlashMenu }"
+            },
             {
               "kind": "field",
               "name": "formControlController",
@@ -39936,6 +40705,13 @@
             },
             {
               "kind": "field",
+              "name": "slashController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new SlashMenuController(this, { menu: () => this.mountSlashMenu(), items: search => this.resolveSlashItems(search), trigger: () => this.slashTrigger, onSelect: (item, search) => !this.emit('zn-slash-select', { detail: {item, query: search} }).defaultPrevented, // The field's own input event has already synced `value` by this point onInsert: (item, value) => this.emit('zn-slash-insert', {detail: {item, value}}) })"
+            },
+            {
+              "kind": "field",
               "name": "formControl",
               "type": {
                 "text": "HTMLElement"
@@ -39950,11 +40726,28 @@
             },
             {
               "kind": "field",
+              "name": "slashMenuElement",
+              "type": {
+                "text": "ZnSlashMenu | null"
+              }
+            },
+            {
+              "kind": "field",
               "name": "hasFocus",
               "type": {
                 "text": "boolean"
               },
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "hasSlashMenu",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Renders the slash menu only once it has been needed, keeping unused textareas cheap."
             },
             {
               "kind": "field",
@@ -40204,6 +40997,54 @@
             },
             {
               "kind": "field",
+              "name": "slashItems",
+              "type": {
+                "text": "SlashMenuItem[]"
+              },
+              "default": "[]",
+              "description": "Quick insertions offered by the slash menu. Accepts a JSON array of items, or the shorthand\n`Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Can also be set as an array of\n`SlashMenuItem` objects in JavaScript.",
+              "attribute": "slash-items"
+            },
+            {
+              "kind": "field",
+              "name": "slashPreset",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Names of item sets registered with `registerSlashMenuPreset`, comma separated.",
+              "attribute": "slash-preset"
+            },
+            {
+              "kind": "field",
+              "name": "slashTrigger",
+              "type": {
+                "text": "string"
+              },
+              "default": "'/'",
+              "description": "The characters that open the slash menu.",
+              "attribute": "slash-trigger"
+            },
+            {
+              "kind": "field",
+              "name": "slashHeading",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Insert'",
+              "description": "The heading shown above the slash menu's items.",
+              "attribute": "slash-heading"
+            },
+            {
+              "kind": "field",
+              "name": "slashItemsProvider",
+              "type": {
+                "text": "(query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]> | undefined"
+              },
+              "description": "Resolves additional items each time the menu opens, for lists that come from elsewhere (e.g. an\nAPI). Receives the current query and may return a promise. JavaScript only."
+            },
+            {
+              "kind": "field",
               "name": "defaultValue",
               "type": {
                 "text": "string"
@@ -40231,6 +41072,52 @@
               "name": "validationMessage",
               "description": "Gets the validation message",
               "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "resolveSlashItems",
+              "return": {
+                "type": {
+                  "text": "Promise<SlashMenuItem[]>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "search",
+                  "default": "''"
+                }
+              ],
+              "description": "The insertions the slash menu offers, gathered from every source, in the order they were declared."
+            },
+            {
+              "kind": "method",
+              "name": "showSlashMenu",
+              "description": "Opens the slash menu at the caret, inserting the trigger if it isn't already there."
+            },
+            {
+              "kind": "method",
+              "name": "hideSlashMenu",
+              "description": "Closes the slash menu."
+            },
+            {
+              "kind": "method",
+              "name": "slottedSlashItems",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "SlashMenuItem[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "mountSlashMenu",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<ZnSlashMenu | null>"
+                }
+              }
             },
             {
               "kind": "method",
@@ -40452,6 +41339,14 @@
             {
               "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied.",
               "name": "zn-invalid"
+            },
+            {
+              "description": "Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to suppress the insertion and handle the item yourself.",
+              "name": "zn-slash-select"
+            },
+            {
+              "description": "Emitted after a slash menu item's value has been inserted.",
+              "name": "zn-slash-insert"
             }
           ],
           "attributes": [
@@ -40671,6 +41566,42 @@
               "fieldName": "inputmode"
             },
             {
+              "name": "slash-items",
+              "type": {
+                "text": "SlashMenuItem[]"
+              },
+              "default": "[]",
+              "description": "Quick insertions offered by the slash menu. Accepts a JSON array of items, or the shorthand\n`Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Can also be set as an array of\n`SlashMenuItem` objects in JavaScript.",
+              "fieldName": "slashItems"
+            },
+            {
+              "name": "slash-preset",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Names of item sets registered with `registerSlashMenuPreset`, comma separated.",
+              "fieldName": "slashPreset"
+            },
+            {
+              "name": "slash-trigger",
+              "type": {
+                "text": "string"
+              },
+              "default": "'/'",
+              "description": "The characters that open the slash menu.",
+              "fieldName": "slashTrigger"
+            },
+            {
+              "name": "slash-heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Insert'",
+              "description": "The heading shown above the slash menu's items.",
+              "fieldName": "slashHeading"
+            },
+            {
               "name": "transparent",
               "type": {
                 "text": "boolean"
@@ -40687,10 +41618,14 @@
           "tagNameWithoutPrefix": "textarea",
           "tagName": "zn-textarea",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Textareas collect data from the user and allow multiple lines of text.\n * @documentation https://zinc.style/components/textarea\n * @status stable\n * @since 2.0\n *\n * @slot label - The textareas label. Alternatively, you can use the `label` attribute.\n * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n * @slot context-note - Used to add contextual text that is displayed above the textarea, on the right. Alternatively, you can use the `context-note` attribute.\n * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n *\n * @event zn-blur - Emitted when the control loses focus.\n * @event zn-change - Emitted when an alteration to the control's value is committed by the user.\n * @event zn-focus - Emitted when the control gains focus.\n * @event zn-input - Emitted when the control receives input.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n *\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart base - The component's base wrapper.\n * @csspart textarea - The internal `<textarea>` control.\n */",
+          "jsDoc": "/**\n * @summary Textareas collect data from the user and allow multiple lines of text.\n * @documentation https://zinc.style/components/textarea\n * @status stable\n * @since 2.0\n *\n * @slot label - The textareas label. Alternatively, you can use the `label` attribute.\n * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n * @slot context-note - Used to add contextual text that is displayed above the textarea, on the right. Alternatively, you can use the `context-note` attribute.\n * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n * @slot slash-items - `<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are\n *  picked up wherever they sit inside the textarea, so this slot name is optional.\n * @slot slash-menu - A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can\n *  be set in markup. Any `<zn-slash-item>` children of it become the menu's items.\n *\n * @dependency zn-slash-item\n * @dependency zn-slash-menu\n *\n * @event zn-blur - Emitted when the control loses focus.\n * @event zn-change - Emitted when an alteration to the control's value is committed by the user.\n * @event zn-focus - Emitted when the control gains focus.\n * @event zn-input - Emitted when the control receives input.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n * @event zn-slash-select - Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to\n *  suppress the insertion and handle the item yourself.\n * @event zn-slash-insert - Emitted after a slash menu item's value has been inserted.\n *\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart base - The component's base wrapper.\n * @csspart textarea - The internal `<textarea>` control.\n * @csspart slash-menu - The slash menu shown at the caret.\n */",
           "documentation": "https://zinc.style/components/textarea",
           "status": "stable",
-          "since": "2.0"
+          "since": "2.0",
+          "dependencies": [
+            "zn-slash-item",
+            "zn-slash-menu"
+          ]
         }
       ],
       "exports": [
@@ -43896,6 +44831,54 @@
             },
             {
               "kind": "field",
+              "name": "slashItems",
+              "type": {
+                "text": "SlashMenuItem[]"
+              },
+              "default": "[]",
+              "description": "Quick insertions offered by the slash menu when `input-type` is `textarea`. Accepts a JSON array of items, or\nthe shorthand `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Every language shares the list.",
+              "attribute": "slash-items"
+            },
+            {
+              "kind": "field",
+              "name": "slashPreset",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Names of item sets registered with `registerSlashMenuPreset`, comma separated.",
+              "attribute": "slash-preset"
+            },
+            {
+              "kind": "field",
+              "name": "slashTrigger",
+              "type": {
+                "text": "string"
+              },
+              "default": "'/'",
+              "description": "The characters that open the slash menu.",
+              "attribute": "slash-trigger"
+            },
+            {
+              "kind": "field",
+              "name": "slashHeading",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Insert'",
+              "description": "The heading shown above the slash menu's items.",
+              "attribute": "slash-heading"
+            },
+            {
+              "kind": "field",
+              "name": "slashItemsProvider",
+              "type": {
+                "text": "(query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]> | undefined"
+              },
+              "description": "Resolves additional slash menu items each time the menu opens. JavaScript only."
+            },
+            {
+              "kind": "field",
               "name": "grouped",
               "type": {
                 "text": "boolean"
@@ -44165,6 +45148,42 @@
                 "text": "number | undefined"
               },
               "fieldName": "textareaRows"
+            },
+            {
+              "name": "slash-items",
+              "type": {
+                "text": "SlashMenuItem[]"
+              },
+              "default": "[]",
+              "description": "Quick insertions offered by the slash menu when `input-type` is `textarea`. Accepts a JSON array of items, or\nthe shorthand `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Every language shares the list.",
+              "fieldName": "slashItems"
+            },
+            {
+              "name": "slash-preset",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Names of item sets registered with `registerSlashMenuPreset`, comma separated.",
+              "fieldName": "slashPreset"
+            },
+            {
+              "name": "slash-trigger",
+              "type": {
+                "text": "string"
+              },
+              "default": "'/'",
+              "description": "The characters that open the slash menu.",
+              "fieldName": "slashTrigger"
+            },
+            {
+              "name": "slash-heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Insert'",
+              "description": "The heading shown above the slash menu's items.",
+              "fieldName": "slashHeading"
             },
             {
               "name": "grouped",
@@ -44468,7 +45487,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.79",
+    "version": "1.1.80",
     "author": "",
     "license": "MIT"
   }

@@ -14,17 +14,6 @@
       ]
     },
     {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
-        }
-      ]
-    },
-    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -61,6 +50,17 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
+        }
+      ]
+    },
+    {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -1785,29 +1785,6 @@
       ]
     },
     {
-      "name": "zn-header",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "full-location", "values": [] },
-        { "name": "entity-id", "values": [] },
-        { "name": "entity-id-show", "values": [] },
-        { "name": "transparent", "values": [] },
-        { "name": "caption", "values": [] },
-        { "name": "icon", "values": [] },
-        { "name": "navigation", "values": [{ "name": "array" }] },
-        { "name": "full-width", "values": [] },
-        { "name": "previous-path", "values": [] },
-        { "name": "previous-target", "values": [] },
-        { "name": "hide-breadcrumb", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/header"
-        }
-      ]
-    },
-    {
       "name": "zn-hover-container",
       "description": "The HoverContainer component is used to display additional information when a user hovers over or clicks\non an element.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the hover-container is shown.\n- **zn-after-show** - Emitted after the hover-container is shown.\n- **zn-hide** - Emitted when the hover-container is hidden.\n- **zn-after-hide** - Emitted after the hover-container is hidden.\n\n### **Slots:**\n - _default_ - The content of the hover-container\n- **anchor** - The anchor the hover-container is attached to.",
       "attributes": [
@@ -1841,6 +1818,29 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/hover-container"
+        }
+      ]
+    },
+    {
+      "name": "zn-header",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "full-location", "values": [] },
+        { "name": "entity-id", "values": [] },
+        { "name": "entity-id-show", "values": [] },
+        { "name": "transparent", "values": [] },
+        { "name": "caption", "values": [] },
+        { "name": "icon", "values": [] },
+        { "name": "navigation", "values": [{ "name": "array" }] },
+        { "name": "full-width", "values": [] },
+        { "name": "previous-path", "values": [] },
+        { "name": "previous-target", "values": [] },
+        { "name": "hide-breadcrumb", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/header"
         }
       ]
     },
@@ -1939,6 +1939,26 @@
           ]
         },
         { "name": "textarea-rows", "values": [{ "name": "1" }] },
+        {
+          "name": "slash-items",
+          "description": "Quick insertions offered by the slash menu of a `textarea` input. Accepts a JSON array of items, or the\nshorthand `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Forwarded to the inner `zn-textarea`.",
+          "values": [{ "name": "SlashMenuItem[]" }]
+        },
+        {
+          "name": "slash-preset",
+          "description": "Names of item sets registered with `registerSlashMenuPreset`, comma separated.",
+          "values": []
+        },
+        {
+          "name": "slash-trigger",
+          "description": "The characters that open the slash menu.",
+          "values": []
+        },
+        {
+          "name": "slash-heading",
+          "description": "The heading shown above the slash menu's items.",
+          "values": []
+        },
         {
           "name": "options",
           "values": [{ "name": "{ [key: string]: string }" }]
@@ -3678,6 +3698,120 @@
       ]
     },
     {
+      "name": "zn-slash-item",
+      "description": "Declares a single insertion for a slash menu. Renders nothing itself — it describes an\nentry for the component it is slotted into, e.g. `<zn-textarea>`'s `slash-items` slot.\n---\n\n\n### **Methods:**\n - **toSlashMenuItem(): _SlashMenuItem_** - The item as the slash menu consumes it.\n\n### **Slots:**\n - _default_ - The text to insert, for values that are long or span multiple lines. Ignored when the `value` attribute is set.",
+      "attributes": [
+        {
+          "name": "label",
+          "description": "The text shown in the menu.",
+          "values": []
+        },
+        {
+          "name": "value",
+          "description": "The text inserted into the field. Falls back to this element's text content.",
+          "values": []
+        },
+        {
+          "name": "icon",
+          "description": "Icon shown against the item, e.g. `tag@lu`.",
+          "values": []
+        },
+        {
+          "name": "description",
+          "description": "Supporting text shown under the label.",
+          "values": []
+        },
+        {
+          "name": "keywords",
+          "description": "Extra terms the item can be found by, comma separated.",
+          "values": []
+        },
+        {
+          "name": "group",
+          "description": "Heading the item is listed under.",
+          "values": []
+        },
+        {
+          "name": "order",
+          "description": "Overrides the item's position in the menu. Lower sorts first.",
+          "values": []
+        },
+        {
+          "name": "caret-offset",
+          "description": "Where the caret lands after insertion, as an offset into the inserted value.",
+          "values": []
+        },
+        {
+          "name": "action",
+          "description": "Identifier passed through on `zn-slash-select`, for items that do something other than insert.",
+          "values": []
+        },
+        {
+          "name": "disabled",
+          "description": "Listed, but not selectable.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/slash-item"
+        }
+      ]
+    },
+    {
+      "name": "zn-slash-menu",
+      "description": "A keyboard-driven list of insertions, anchored to the caret of the field that opened it.\n---\n\n\n### **Events:**\n - **SLASH_ITEM_SELECT**\n- **zn-slash-item-select** - Emitted when an item is chosen. Does not cross shadow boundaries; the component driving the menu (e.g. `zn-textarea`) re-emits it as `zn-slash-select`.\n\n### **Methods:**\n - **setActiveIndex(index: _number_)** - Sets the active item by index, wrapping at both ends and skipping disabled items.\n- **moveActive(delta: _number_)** - Moves the active item by `delta` places.\n- **selectActive()** - Chooses the active item, as pressing Enter would.\n- **reposition()** - Recalculates the panel's position against its anchor.\n\n### **CSS Properties:**\n - **--slash-menu-width** - The width of the panel. _(default: undefined)_\n- **--slash-menu-max-height** - The maximum height of the panel before it scrolls. _(default: undefined)_\n\n### **CSS Parts:**\n - **panel** - The floating panel that holds the list.\n- **heading** - The panel's heading.\n- **item** - An item in the list.\n- **group-heading** - A group heading between items.\n- **footer** - The truncation footer, shown when not every match fits.",
+      "attributes": [
+        {
+          "name": "open",
+          "description": "Whether the menu is showing.",
+          "values": []
+        },
+        {
+          "name": "items",
+          "description": "The items to list. Already filtered — the menu displays what it is given.",
+          "values": [{ "name": "SlashMenuItem[]" }]
+        },
+        {
+          "name": "query",
+          "description": "The query the items were matched against, shown in the heading.",
+          "values": []
+        },
+        {
+          "name": "heading",
+          "description": "The heading shown when there is no query.",
+          "values": []
+        },
+        {
+          "name": "empty-text",
+          "description": "Shown in place of the list when there are no items.",
+          "values": []
+        },
+        {
+          "name": "max-items",
+          "description": "The most items to render at once. Remaining matches are reported in the footer.",
+          "values": []
+        },
+        {
+          "name": "placement",
+          "description": "The preferred placement of the panel.",
+          "values": [{ "name": "Placement" }]
+        },
+        {
+          "name": "distance",
+          "description": "The gap between the caret and the panel.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/slash-menu"
+        }
+      ]
+    },
+    {
       "name": "zn-slideout",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the slideout is opens.\n- **zn-close** - Emitted when the slideout is closed.\n- **zn-request-close** - Emitted when the user attempts to close the slideout by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the slideout open. Avoid using this unless closing the slideout will result in destructive behavior such as data loss.\n\n### **Methods:**\n - **show()** - Shows the slideout.\n- **hide()** - Hides the slideout.\n\n### **Slots:**\n - _default_ - The default slot.\n- **label** - The slideout's label. Alternatively you can use the `label` attribute.\n\n### **CSS Properties:**\n - **--width** - The preferred width of the slideout. Note the slideout will shrink to accommodate smaller screens. _(default: undefined)_\n- **--header-spacing** - The amount of padding to use for the header. _(default: undefined)_\n- **--body-spacing** - The amount of padding to use for the body. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The slideout's header. This element wraps the title and header actions.\n- **close-button** - The slideout's close button.\n- **close-button__base** - The close buttons exported `base` part.\n- **body** - The slideout's body.",
       "attributes": [
@@ -4003,7 +4137,7 @@
     },
     {
       "name": "zn-textarea",
-      "description": "Textareas collect data from the user and allow multiple lines of text.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the control loses focus.\n- **zn-change** - Emitted when an alteration to the control's value is committed by the user.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-input** - Emitted when the control receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Methods:**\n - **focus(options: _FocusOptions_)** - Sets focus on the textarea.\n- **blur()** - Removes focus from the textarea.\n- **select()** - Selects all the text in the textarea.\n- **scrollPosition(position: _{ top?: number; left?: number }_): _{ top: number; left: number } | undefined_** - Gets or sets the textarea scroll position.\n- **setSelectionRange(selectionStart: _number_, selectionEnd: _number_, selectionDirection: _'forward' | 'backward' | 'none'_)** - Sets the start and end positions of the text selection (0-based).\n- **setRangeText(replacement: _string_, start: _number_, end: _number_, selectMode: _'select' | 'start' | 'end' | 'preserve'_)** - Replaces a range of text with a new string.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - **label** - The textareas label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the textarea, on the right. Alternatively, you can use the `context-note` attribute.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **textarea** - The internal `<textarea>` control.",
+      "description": "Textareas collect data from the user and allow multiple lines of text.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the control loses focus.\n- **zn-change** - Emitted when an alteration to the control's value is committed by the user.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-input** - Emitted when the control receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n- **zn-slash-select** - Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to suppress the insertion and handle the item yourself.\n- **zn-slash-insert** - Emitted after a slash menu item's value has been inserted.\n\n### **Methods:**\n - **resolveSlashItems(search): _Promise<SlashMenuItem[]>_** - The insertions the slash menu offers, gathered from every source, in the order they were declared.\n- **showSlashMenu()** - Opens the slash menu at the caret, inserting the trigger if it isn't already there.\n- **hideSlashMenu()** - Closes the slash menu.\n- **focus(options: _FocusOptions_)** - Sets focus on the textarea.\n- **blur()** - Removes focus from the textarea.\n- **select()** - Selects all the text in the textarea.\n- **scrollPosition(position: _{ top?: number; left?: number }_): _{ top: number; left: number } | undefined_** - Gets or sets the textarea scroll position.\n- **setSelectionRange(selectionStart: _number_, selectionEnd: _number_, selectionDirection: _'forward' | 'backward' | 'none'_)** - Sets the start and end positions of the text selection (0-based).\n- **setRangeText(replacement: _string_, start: _number_, end: _number_, selectMode: _'select' | 'start' | 'end' | 'preserve'_)** - Replaces a range of text with a new string.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - **label** - The textareas label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the textarea, on the right. Alternatively, you can use the `context-note` attribute.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n- **slash-items** - `<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are picked up wherever they sit inside the textarea, so this slot name is optional.\n- **slash-menu** - A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can be set in markup. Any `<zn-slash-item>` children of it become the menu's items.\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **textarea** - The internal `<textarea>` control.\n- **slash-menu** - The slash menu shown at the caret.",
       "attributes": [
         { "name": "title", "values": [] },
         {
@@ -4153,6 +4287,26 @@
             { "name": "email" },
             { "name": "url" }
           ]
+        },
+        {
+          "name": "slash-items",
+          "description": "Quick insertions offered by the slash menu. Accepts a JSON array of items, or the shorthand\n`Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Can also be set as an array of\n`SlashMenuItem` objects in JavaScript.",
+          "values": [{ "name": "SlashMenuItem[]" }]
+        },
+        {
+          "name": "slash-preset",
+          "description": "Names of item sets registered with `registerSlashMenuPreset`, comma separated.",
+          "values": []
+        },
+        {
+          "name": "slash-trigger",
+          "description": "The characters that open the slash menu.",
+          "values": []
+        },
+        {
+          "name": "slash-heading",
+          "description": "The heading shown above the slash menu's items.",
+          "values": []
         },
         { "name": "transparent", "values": [] }
       ],
@@ -4475,6 +4629,26 @@
           ]
         },
         { "name": "textarea-rows", "values": [] },
+        {
+          "name": "slash-items",
+          "description": "Quick insertions offered by the slash menu when `input-type` is `textarea`. Accepts a JSON array of items, or\nthe shorthand `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Every language shares the list.",
+          "values": [{ "name": "SlashMenuItem[]" }]
+        },
+        {
+          "name": "slash-preset",
+          "description": "Names of item sets registered with `registerSlashMenuPreset`, comma separated.",
+          "values": []
+        },
+        {
+          "name": "slash-trigger",
+          "description": "The characters that open the slash menu.",
+          "values": []
+        },
+        {
+          "name": "slash-heading",
+          "description": "The heading shown above the slash menu's items.",
+          "values": []
+        },
         {
           "name": "grouped",
           "description": "When true, hides the individual language navbar and defers language control to a parent zn-translation-group.",

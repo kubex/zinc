@@ -92,6 +92,27 @@ with a blank line inside
 ></zn-remarkd-editor>
 ````
 
+### Raw Source
+
+Add `allow-raw` for a toolbar toggle that swaps the block view for the whole
+document as editable remarkd source. Useful for pasting in a finished document
+or fixing syntax the block view makes awkward. Toggling back re-splits the
+source into blocks, normalising the spacing between them to a single blank
+line. The toggle is only offered on editable editors — `readonly` and
+`disabled` instances hide the toolbar entirely.
+
+```html:preview
+<zn-remarkd-editor
+  name="content"
+  allow-raw
+  value="# Raw Source
+
+Hit the toggle at the right of the toolbar to edit this whole document at once.
+
+NOTE: The value is the same remarkd source either way."
+></zn-remarkd-editor>
+```
+
 ### Form Integration
 
 `zn-remarkd-editor` is a [form control](/getting-started/form-controls); its

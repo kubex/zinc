@@ -62,9 +62,11 @@ const BLOCK_TYPES: BlockType[] = [
  *
  * @csspart base - The component's base wrapper.
  * @csspart toolbar - The always-visible block-insert toolbar.
+ * @csspart raw-toggle - The button that switches between the block view and the raw source view.
  * @csspart block - A rendered block wrapper.
  * @csspart rendered - The rendered remarkd output of a block.
  * @csspart input - The textarea shown while editing a block.
+ * @csspart raw - The full-document textarea shown in raw source mode.
  * @csspart slash-menu - The context menu opened by typing "/" in a block.
  * @csspart image-controls - The caption / alignment / size panel shown when an image block is clicked.
  */
@@ -76,6 +78,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   });
 
   private editingDraft = '';
+  private rawEntryValue = '';
   private suppressValueSync = false;
   private suppressBlurCommit = false;
 
@@ -91,6 +94,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   @state() private dropIndicator: number | null = null;
   @state() private dragIndex: number | null = null;
   @state() private editShell = '';
+  @state() private rawMode = false;
 
   private pendingDragHandle: HTMLElement | null = null;
   private dragStartX = 0;
@@ -115,6 +119,9 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
    * to `uploadUrl` and the returned `uploadPath` is embedded as the image URL.
    */
   @property({attribute: 'attachment-url'}) attachmentUrl = '';
+
+  /** Adds a toolbar toggle that swaps the block view for the full remarkd source. */
+  @property({type: Boolean, attribute: 'allow-raw', reflect: true}) allowRaw = false;
 
   /** Makes the editor required for form submission. */
   @property({type: Boolean, reflect: true}) required = false;
@@ -152,6 +159,10 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
 
   /** Starts editing the first block, or a new block if the document is empty. */
   focus() {
+    if (this.rawMode) {
+      this.shadowRoot?.querySelector<HTMLTextAreaElement>('.remarkd-editor__raw')?.focus();
+      return;
+    }
     if (this.blocks.length) {
       this.startEdit(0);
     } else {
@@ -159,9 +170,10 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     }
   }
 
-  /** Commits any in-progress block edit. */
+  /** Commits any in-progress block or raw edit. */
   blur() {
-    this.shadowRoot?.querySelector<HTMLTextAreaElement>('.remarkd-editor__input')?.blur();
+    const selector = this.rawMode ? '.remarkd-editor__raw' : '.remarkd-editor__input';
+    this.shadowRoot?.querySelector<HTMLTextAreaElement>(selector)?.blur();
   }
 
   protected firstUpdated(_changedProperties: PropertyValues) {
@@ -566,10 +578,12 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   };
 
   private handleDragOver = (e: DragEvent) => {
+    if (this.rawMode) return;
     if (e.dataTransfer?.types.includes('Files')) e.preventDefault();
   };
 
   private handleDrop = (e: DragEvent) => {
+    if (this.rawMode) return;
     const file = Array.from(e.dataTransfer?.files ?? []).find(f => f.type.startsWith('image/'));
     if (!file) return;
     e.preventDefault();
@@ -729,6 +743,59 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     input.style.height = 'auto';
     input.style.height = `${input.scrollHeight}px`;
   }
+
+  private toggleRawMode = () => {
+    if (this.rawMode) {
+      this.commitRaw();
+      this.rawMode = false;
+      return;
+    }
+    if (this.editingIndex !== null) this.commitEdit();
+    this.rawEntryValue = this.value;
+    this.rawMode = true;
+    void this.focusRaw();
+  };
+
+  private async focusRaw() {
+    await this.updateComplete;
+    const raw = this.shadowRoot?.querySelector<HTMLTextAreaElement>('.remarkd-editor__raw');
+    if (!raw) return;
+    raw.focus();
+    raw.setSelectionRange(raw.value.length, raw.value.length);
+  }
+
+  /**
+   * Raw mode keeps the whole document in one textarea, so the textarea — not
+   * the block list — is authoritative while it is open: re-splitting on every
+   * keystroke would normalise blank lines out from under the cursor.
+   */
+  private handleRawInput = (e: Event) => {
+    const input = e.target as HTMLTextAreaElement;
+    if (input.value === this.value) return;
+    this.suppressValueSync = true;
+    this.value = input.value;
+    this.formControlController.updateValidity();
+    this.emit('zn-input');
+  };
+
+  /**
+   * Re-splits the raw source into blocks. Not `updateBlocks` — that only
+   * reports a change when the re-join differs from the value, and raw edits
+   * have already written straight to the value.
+   */
+  private commitRaw = () => {
+    const blocks = this.splitBlocks(this.value || '');
+    const joined = blocks.join('\n\n');
+    this.blocks = blocks;
+    if (joined !== this.value) {
+      this.suppressValueSync = true;
+      this.value = joined;
+    }
+    if (this.value === this.rawEntryValue) return;
+    this.rawEntryValue = this.value;
+    this.formControlController.updateValidity();
+    this.emit('zn-change');
+  };
 
   private handleToolbarInsert(item: BlockType) {
     if (this.editingIndex !== null) this.suppressBlurCommit = true;
@@ -893,16 +960,26 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
            @drop=${this.handleDrop}>
         ${editable ? html`
           <div part="toolbar" class="remarkd-editor__toolbar">
-            ${BLOCK_TYPES.map(item => html`
+            ${this.rawMode ? '' : BLOCK_TYPES.map(item => html`
               <zn-button type="button" icon-button plain icon=${item.icon} icon-size="18"
                          tooltip=${item.label}
                          @click=${() => this.handleToolbarInsert(item)}></zn-button>`)}
+            ${this.allowRaw ? html`
+              <zn-button part="raw-toggle" class="remarkd-editor__raw-toggle"
+                         type="button" icon-button icon="code-xml@lu" icon-size="18"
+                         ?plain=${!this.rawMode}
+                         tooltip=${this.rawMode ? 'Show blocks' : 'Show raw source'}
+                         @click=${this.toggleRawMode}></zn-button>` : ''}
           </div>` : ''}
-        <div class="remarkd-editor__body">
-          ${this.renderBody()}
-          <div class="remarkd-editor__add" @click=${() => this.insertDraftBlock(this.blocks.length)}>
-            ${this.blocks.length === 0 && this.editingIndex === null ? this.placeholder : ''}
-          </div>
+        <div class=${classMap({
+          'remarkd-editor__body': true,
+          'remarkd-editor__body--raw': this.rawMode,
+        })}>
+          ${this.rawMode ? this.renderRaw() : html`
+            ${this.renderBody()}
+            <div class="remarkd-editor__add" @click=${() => this.insertDraftBlock(this.blocks.length)}>
+              ${this.blocks.length === 0 && this.editingIndex === null ? this.placeholder : ''}
+            </div>`}
         </div>
         <textarea class="remarkd-editor__validation"
                   .value=${this.value}
@@ -910,6 +987,17 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                   tabindex="-1"
                   aria-hidden="true"></textarea>
       </div>`;
+  }
+
+  private renderRaw() {
+    return html`
+      <textarea part="raw"
+                class="remarkd-editor__raw"
+                placeholder=${this.placeholder}
+                spellcheck="false"
+                .value=${this.value}
+                @input=${this.handleRawInput}
+                @blur=${this.commitRaw}></textarea>`;
   }
 
   /** The block views, with the inline image picker spliced in when active. */

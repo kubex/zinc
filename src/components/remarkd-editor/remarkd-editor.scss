@@ -26,6 +26,30 @@
   min-height: 10rem;
 }
 
+// Raw mode has no gutter handles, so it reclaims the left padding.
+.remarkd-editor__body--raw {
+  display: flex;
+  padding-left: var(--zn-spacing-large);
+}
+
+.remarkd-editor__raw-toggle {
+  margin-left: auto;
+}
+
+.remarkd-editor__raw {
+  flex: 1;
+  min-height: 10rem;
+  resize: vertical;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  padding: 0;
+  outline: none;
+}
+
 .remarkd-editor--disabled {
   opacity: 0.6;
   pointer-events: none;

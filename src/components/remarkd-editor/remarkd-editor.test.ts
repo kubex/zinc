@@ -160,6 +160,50 @@ Second"></zn-remarkd-editor>`);
     expect(el.shadowRoot!.querySelectorAll('.remarkd-editor__block').length).to.equal(1);
   });
 
+  it('should only show the raw toggle when allow-raw is set', async () => {
+    const plain = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="Hello"></zn-remarkd-editor>`);
+    expect(plain.shadowRoot!.querySelector('.remarkd-editor__raw-toggle')).to.not.exist;
+
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor allow-raw value="Hello"></zn-remarkd-editor>`);
+    expect(el.shadowRoot!.querySelector('.remarkd-editor__raw-toggle')).to.exist;
+  });
+
+  it('should swap the blocks for a full-source textarea and commit edits on toggle back', async () => {
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor allow-raw value="# Title
+
+Second"></zn-remarkd-editor>`);
+    let changes = 0;
+    el.addEventListener('zn-change', () => {
+      changes++;
+    });
+
+    const toggle = el.shadowRoot!.querySelector('.remarkd-editor__raw-toggle')!;
+    toggle.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+    await el.updateComplete;
+
+    const raw = el.shadowRoot!.querySelector<HTMLTextAreaElement>('.remarkd-editor__raw')!;
+    expect(raw).to.exist;
+    expect(raw.value).to.equal('# Title\n\nSecond');
+    expect(el.shadowRoot!.querySelectorAll('.remarkd-editor__block').length).to.equal(0);
+
+    raw.value = '# Changed\n\nSecond\n\nThird';
+    raw.dispatchEvent(new Event('input', {bubbles: true}));
+    await el.updateComplete;
+    expect(el.value).to.equal('# Changed\n\nSecond\n\nThird');
+
+    el.shadowRoot!.querySelector('.remarkd-editor__raw-toggle')!
+      .dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+    await el.updateComplete;
+
+    const blocks = el.shadowRoot!.querySelectorAll('.remarkd-editor__block');
+    expect(blocks.length).to.equal(3);
+    expect(blocks[0].innerHTML).to.contain('Changed');
+    expect(changes).to.be.greaterThan(0);
+  });
+
   it('should emit zn-change when a block edit changes the value', async () => {
     const el = await fixture<ZnRemarkdEditor>(html`
       <zn-remarkd-editor value="Hello"></zn-remarkd-editor>`);

@@ -9185,6 +9185,7 @@ declare module "components/markdown-editor/index" {
 declare module "components/remarkd-editor/remarkd-editor.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import ZnSlashMenu from "components/slash-menu/index";
     import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.
@@ -9196,6 +9197,7 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
      * @dependency zn-button-group
      * @dependency zn-icon
      * @dependency zn-file
+     * @dependency zn-slash-menu
      *
      * @event zn-input - Emitted on each keystroke while editing a block.
      * @event zn-change - Emitted when a block edit is committed and the value changes.
@@ -9207,22 +9209,26 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
      * @csspart rendered - The rendered remarkd output of a block.
      * @csspart input - The textarea shown while editing a block.
      * @csspart raw - The full-document textarea shown in raw source mode.
-     * @csspart slash-menu - The context menu opened by typing "/" in a block.
+     * @csspart slash-menu - The `zn-slash-menu` opened by typing "/" in an empty block.
      * @csspart image-controls - The caption / alignment / size panel shown when an image block is clicked.
      */
     export default class ZnRemarkdEditor extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-slash-menu': typeof ZnSlashMenu;
+        };
         private readonly formControlController;
+        private readonly slashController;
         private editingDraft;
         private rawEntryValue;
         private suppressValueSync;
         private suppressBlurCommit;
         private validationInput;
+        private slashMenuElement;
         private blocks;
         private editingIndex;
-        private slashMenuOpen;
-        private slashQuery;
-        private slashActiveIndex;
+        /** Renders the slash menu only once it has been needed. */
+        private hasSlashMenu;
         private imagePickerIndex;
         private imageEdit;
         private dropIndicator;
@@ -9306,10 +9312,13 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private handleEditBlur;
         /** Commits the in-progress edit; returns the index after the committed parts. */
         private commitEdit;
-        private get filteredSlashItems();
         private handleDraftInput;
         private handleEditKeydown;
-        private applySlashItem;
+        /** Whether the block being edited is nothing but the slash command. */
+        private isSlashBlock;
+        private mountSlashMenu;
+        /** Returns false for items the controller should not insert text for. */
+        private handleSlashSelect;
         private handleEditPaste;
         private handleDragOver;
         private handleDrop;
@@ -9342,7 +9351,6 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
          */
         private commitRaw;
         private handleToolbarInsert;
-        private renderSlashMenu;
         private renderImageControls;
         private renderBlock;
         render(): import("lit-html").TemplateResult<1>;

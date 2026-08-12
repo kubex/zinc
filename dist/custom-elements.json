@@ -28999,507 +28999,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/preview-frame/preview-frame.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnPreviewFrame",
-          "cssProperties": [
-            {
-              "description": "Spacing of the backdrop dot grid (`backdrop=\"dots\"`). Defaults to 20px.",
-              "name": "--zn-preview-frame-dot-spacing"
-            },
-            {
-              "description": "Opacity of the backdrop dots (`backdrop=\"dots\"`). Defaults to 0.08.",
-              "name": "--zn-preview-frame-dot-opacity"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            },
-            {
-              "description": "The device-width wrapper around the iframe.",
-              "name": "stage"
-            },
-            {
-              "description": "The preview iframe.",
-              "name": "iframe"
-            },
-            {
-              "description": "The error overlay.",
-              "name": "error"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "src",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "URL of the preview shell page (tokened embed URL).",
-              "attribute": "src"
-            },
-            {
-              "kind": "field",
-              "name": "frameOrigin",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Expected origin of the iframe; all postMessage traffic is checked against it.",
-              "attribute": "frame-origin"
-            },
-            {
-              "kind": "field",
-              "name": "dataUri",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Endpoint returning the hp-preview:config payload JSON. The console proxy rewrites this attribute to an app-prefixed path for proper fetch resolution.",
-              "attribute": "data-uri"
-            },
-            {
-              "kind": "field",
-              "name": "watch",
-              "type": {
-                "text": "string"
-              },
-              "default": "'form[data-auto-save]'",
-              "description": "Selector (resolved against the component's root node) for the forms to watch.\nDefaults to only forms explicitly opted in via a `data-auto-save` attribute —\nunmarked forms keep normal submit behavior and are never intercepted,\nauto-saved, or used to trigger a preview refresh. Override to widen the scope.",
-              "attribute": "watch"
-            },
-            {
-              "kind": "field",
-              "name": "refreshOn",
-              "type": {
-                "text": "string"
-              },
-              "default": "'form'",
-              "description": "Selector for forms whose saves are left to the shell but should still\nrefresh the preview. These are never intercepted: the shell submits them\n(so its own response handling — alerts, refreshes — runs as normal) and the\npreview re-fetches its config once the shell reports the save complete.\nSet empty to disable.",
-              "attribute": "refresh-on"
-            },
-            {
-              "kind": "field",
-              "name": "debounce",
-              "type": {
-                "text": "number"
-              },
-              "default": "400",
-              "description": "Debounce in ms between a form change and its auto-save.",
-              "attribute": "debounce"
-            },
-            {
-              "kind": "field",
-              "name": "zoom",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "Zooms the previewed page out (0–1]. The frame always fills the panel;\nzoom shrinks the content browser-style, so 0.4 shows the page at 40%\nsize with correspondingly more of it visible. 1 = natural size.\nIgnored when `fill` is set.",
-              "attribute": "zoom"
-            },
-            {
-              "kind": "field",
-              "name": "minHeight",
-              "type": {
-                "text": "number"
-              },
-              "default": "480",
-              "description": "The visible height (in CSS pixels) of the preview panel. Fixed rather\nthan measured, because a measured height would feed back into the\nscaled iframe's layout box and grow unbounded. With `fill` set, this\nbecomes a `min-height` floor instead of the height.",
-              "attribute": "min-height"
-            },
-            {
-              "kind": "field",
-              "name": "fill",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Fills the panel's own column height instead of using a fixed\n`min-height` pixel height — for hosts (like zn-theme-editor) whose\nlayout already stretches the column to match a taller sibling.\n`zoom` is ignored when set: its oversize maths depends on a known\npixel height, which `fill` deliberately doesn't have.",
-              "attribute": "fill"
-            },
-            {
-              "kind": "field",
-              "name": "device",
-              "type": {
-                "text": "PreviewFrameDevice"
-              },
-              "default": "'desktop'",
-              "description": "Constrains and centres the preview to a device width: `desktop` (100%),\n`tablet` (768px) or `mobile` (390px). The iframe element itself is\nnarrowed, so the embedded page's own media queries fire.",
-              "attribute": "device",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "backdrop",
-              "type": {
-                "text": "'dots' | 'panel'"
-              },
-              "default": "'dots'",
-              "description": "Backdrop behind the stage: `dots` (default) is the canvas dot grid; `panel` is a plain `rgb(var(--zn-panel))` fill.",
-              "attribute": "backdrop",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "interactive",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Lets pointer input through to the embedded page. The preview is inert by\ndefault: clicks never reach the frame, so the previewed page can't be\nnavigated or submitted from inside the preview. Cross-origin content can't\nbe reached from here to cancel its own handlers, so this blocks pointer\ninput entirely — hover goes with it. Scrolling doesn't: an overflowing\npage is scrolled by the panel rather than by the frame (see _contentHeight).\n\nSet, the frame becomes a real viewport instead: it stays the panel's own\nheight and the embed scrolls itself, so there is one scrollbar rather than\na panel scrolling an oversized frame, and the embed's viewport-relative\nlayout (`100vh`, `position: fixed`, sticky headers) sizes to what's on\nscreen. _contentHeight is ignored while this is set.",
-              "attribute": "interactive",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "frame",
-              "type": {
-                "text": "HTMLIFrameElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "error",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "default": "''"
-            },
-            {
-              "kind": "field",
-              "name": "_contentHeight",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0",
-              "description": "Height of the embedded page's content, when it's known: reported by the\nembed (`height` on hp-preview:rendered, or an hp-preview:height message) or\nmeasured directly for a same-origin embed. The frame is laid out at this\nheight rather than the panel's, so the page never scrolls inside the frame\n— the panel scrolls instead, which is what makes an overflowing preview\nreachable while pointer input to the frame is blocked. 0 = unknown, and the\nframe falls back to filling the panel. Kept up to date either way, but only\nlaid out when the frame is inert: an `interactive` frame scrolls itself."
-            },
-            {
-              "kind": "field",
-              "name": "_generation",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0"
-            },
-            {
-              "kind": "field",
-              "name": "_theme",
-              "type": {
-                "text": "Record<string, unknown> | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_contentObserver",
-              "type": {
-                "text": "ResizeObserver | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_watchedForms",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new Set<HTMLFormElement>()"
-            },
-            {
-              "kind": "field",
-              "name": "_refreshForms",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new Set<HTMLFormElement>()"
-            },
-            {
-              "kind": "field",
-              "name": "_debounceTimers",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new Map<HTMLFormElement, number>()"
-            },
-            {
-              "kind": "field",
-              "name": "_formObserver",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new MutationController(this, { target: null, config: {subtree: true, childList: true}, callback: () => this._attachForms(), })"
-            },
-            {
-              "kind": "field",
-              "name": "_onMessage",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "_applyContentHeight",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "height",
-                  "type": {
-                    "text": "unknown"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_resetContentHeight",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_onFrameLoad",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "refresh",
-              "description": "Re-fetches the payload and pushes a fresh config to the preview."
-            },
-            {
-              "kind": "method",
-              "name": "setTheme",
-              "parameters": [
-                {
-                  "name": "theme",
-                  "type": {
-                    "text": "Record<string, unknown>"
-                  }
-                }
-              ],
-              "description": "Pushes a theme payload into the preview. The payload is retained and\nre-posted after every ready handshake, so a frame reload doesn't drop an\nin-progress theme."
-            },
-            {
-              "kind": "method",
-              "name": "_postTheme",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_sendConfig",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_attachForms",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_onShellSave",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "_detachForm",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "form",
-                  "type": {
-                    "text": "HTMLFormElement"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "_onChange",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_onSubmit",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "_save",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "form",
-                  "type": {
-                    "text": "HTMLFormElement"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_fail",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "message",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted when the preview reports a render error or a save fails.",
-              "name": "zn-error"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "src",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "URL of the preview shell page (tokened embed URL).",
-              "fieldName": "src"
-            },
-            {
-              "name": "frame-origin",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Expected origin of the iframe; all postMessage traffic is checked against it.",
-              "fieldName": "frameOrigin"
-            },
-            {
-              "name": "data-uri",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Endpoint returning the hp-preview:config payload JSON. The console proxy rewrites this attribute to an app-prefixed path for proper fetch resolution.",
-              "fieldName": "dataUri"
-            },
-            {
-              "name": "watch",
-              "type": {
-                "text": "string"
-              },
-              "default": "'form[data-auto-save]'",
-              "description": "Selector (resolved against the component's root node) for the forms to watch.\nDefaults to only forms explicitly opted in via a `data-auto-save` attribute —\nunmarked forms keep normal submit behavior and are never intercepted,\nauto-saved, or used to trigger a preview refresh. Override to widen the scope.",
-              "fieldName": "watch"
-            },
-            {
-              "name": "refresh-on",
-              "type": {
-                "text": "string"
-              },
-              "default": "'form'",
-              "description": "Selector for forms whose saves are left to the shell but should still\nrefresh the preview. These are never intercepted: the shell submits them\n(so its own response handling — alerts, refreshes — runs as normal) and the\npreview re-fetches its config once the shell reports the save complete.\nSet empty to disable.",
-              "fieldName": "refreshOn"
-            },
-            {
-              "name": "debounce",
-              "type": {
-                "text": "number"
-              },
-              "default": "400",
-              "description": "Debounce in ms between a form change and its auto-save.",
-              "fieldName": "debounce"
-            },
-            {
-              "name": "zoom",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "Zooms the previewed page out (0–1]. The frame always fills the panel;\nzoom shrinks the content browser-style, so 0.4 shows the page at 40%\nsize with correspondingly more of it visible. 1 = natural size.\nIgnored when `fill` is set.",
-              "fieldName": "zoom"
-            },
-            {
-              "name": "min-height",
-              "type": {
-                "text": "number"
-              },
-              "default": "480",
-              "description": "The visible height (in CSS pixels) of the preview panel. Fixed rather\nthan measured, because a measured height would feed back into the\nscaled iframe's layout box and grow unbounded. With `fill` set, this\nbecomes a `min-height` floor instead of the height.",
-              "fieldName": "minHeight"
-            },
-            {
-              "name": "fill",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Fills the panel's own column height instead of using a fixed\n`min-height` pixel height — for hosts (like zn-theme-editor) whose\nlayout already stretches the column to match a taller sibling.\n`zoom` is ignored when set: its oversize maths depends on a known\npixel height, which `fill` deliberately doesn't have.",
-              "fieldName": "fill"
-            },
-            {
-              "name": "device",
-              "type": {
-                "text": "PreviewFrameDevice"
-              },
-              "default": "'desktop'",
-              "description": "Constrains and centres the preview to a device width: `desktop` (100%),\n`tablet` (768px) or `mobile` (390px). The iframe element itself is\nnarrowed, so the embedded page's own media queries fire.",
-              "fieldName": "device"
-            },
-            {
-              "name": "backdrop",
-              "type": {
-                "text": "'dots' | 'panel'"
-              },
-              "default": "'dots'",
-              "description": "Backdrop behind the stage: `dots` (default) is the canvas dot grid; `panel` is a plain `rgb(var(--zn-panel))` fill.",
-              "fieldName": "backdrop"
-            },
-            {
-              "name": "interactive",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Lets pointer input through to the embedded page. The preview is inert by\ndefault: clicks never reach the frame, so the previewed page can't be\nnavigated or submitted from inside the preview. Cross-origin content can't\nbe reached from here to cancel its own handlers, so this blocks pointer\ninput entirely — hover goes with it. Scrolling doesn't: an overflowing\npage is scrolled by the panel rather than by the frame (see _contentHeight).\n\nSet, the frame becomes a real viewport instead: it stays the panel's own\nheight and the embed scrolls itself, so there is one scrollbar rather than\na panel scrolling an oversized frame, and the embed's viewport-relative\nlayout (`100vh`, `position: fixed`, sticky headers) sizes to what's on\nscreen. _contentHeight is ignored while this is set.",
-              "fieldName": "interactive"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Embeds a live preview iframe and drives the hp-preview postMessage\nprotocol: answers the frame's ready handshake with a config payload fetched\nfrom data-uri, auto-saves watched forms on change, refreshes the preview\nafter each save (its own, or a shell-driven save of a `refresh-on` form),\naccepts a theme payload via setTheme() that is retained and replayed\nafter every ready handshake, and grows the frame to a content height the\nembed reports so the panel scrolls an overflowing page.",
-          "tagNameWithoutPrefix": "preview-frame",
-          "tagName": "zn-preview-frame",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Embeds a live preview iframe and drives the hp-preview postMessage\n * protocol: answers the frame's ready handshake with a config payload fetched\n * from data-uri, auto-saves watched forms on change, refreshes the preview\n * after each save (its own, or a shell-driven save of a `refresh-on` form),\n * accepts a theme payload via setTheme() that is retained and replayed\n * after every ready handshake, and grows the frame to a content height the\n * embed reports so the panel scrolls an overflowing page.\n *\n * @documentation https://zinc.style/components/preview-frame\n * @status experimental\n * @since 1.0\n *\n * @event zn-error - Emitted when the preview reports a render error or a save fails.\n *\n * @csspart base - The component's base wrapper.\n * @csspart stage - The device-width wrapper around the iframe.\n * @csspart iframe - The preview iframe.\n * @csspart error - The error overlay.\n *\n * @cssproperty --zn-preview-frame-dot-spacing - Spacing of the backdrop dot grid (`backdrop=\"dots\"`). Defaults to 20px.\n * @cssproperty --zn-preview-frame-dot-opacity - Opacity of the backdrop dots (`backdrop=\"dots\"`). Defaults to 0.08.\n */",
-          "documentation": "https://zinc.style/components/preview-frame",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnPreviewFrame",
-            "module": "components/preview-frame/preview-frame.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/priority-list/priority-list.js",
       "declarations": [
         {
@@ -30143,6 +29642,507 @@
           "declaration": {
             "name": "ZnPriorityList",
             "module": "components/priority-list/priority-list.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/preview-frame/preview-frame.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnPreviewFrame",
+          "cssProperties": [
+            {
+              "description": "Spacing of the backdrop dot grid (`backdrop=\"dots\"`). Defaults to 20px.",
+              "name": "--zn-preview-frame-dot-spacing"
+            },
+            {
+              "description": "Opacity of the backdrop dots (`backdrop=\"dots\"`). Defaults to 0.08.",
+              "name": "--zn-preview-frame-dot-opacity"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The device-width wrapper around the iframe.",
+              "name": "stage"
+            },
+            {
+              "description": "The preview iframe.",
+              "name": "iframe"
+            },
+            {
+              "description": "The error overlay.",
+              "name": "error"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "URL of the preview shell page (tokened embed URL).",
+              "attribute": "src"
+            },
+            {
+              "kind": "field",
+              "name": "frameOrigin",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Expected origin of the iframe; all postMessage traffic is checked against it.",
+              "attribute": "frame-origin"
+            },
+            {
+              "kind": "field",
+              "name": "dataUri",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Endpoint returning the hp-preview:config payload JSON. The console proxy rewrites this attribute to an app-prefixed path for proper fetch resolution.",
+              "attribute": "data-uri"
+            },
+            {
+              "kind": "field",
+              "name": "watch",
+              "type": {
+                "text": "string"
+              },
+              "default": "'form[data-auto-save]'",
+              "description": "Selector (resolved against the component's root node) for the forms to watch.\nDefaults to only forms explicitly opted in via a `data-auto-save` attribute —\nunmarked forms keep normal submit behavior and are never intercepted,\nauto-saved, or used to trigger a preview refresh. Override to widen the scope.",
+              "attribute": "watch"
+            },
+            {
+              "kind": "field",
+              "name": "refreshOn",
+              "type": {
+                "text": "string"
+              },
+              "default": "'form'",
+              "description": "Selector for forms whose saves are left to the shell but should still\nrefresh the preview. These are never intercepted: the shell submits them\n(so its own response handling — alerts, refreshes — runs as normal) and the\npreview re-fetches its config once the shell reports the save complete.\nSet empty to disable.",
+              "attribute": "refresh-on"
+            },
+            {
+              "kind": "field",
+              "name": "debounce",
+              "type": {
+                "text": "number"
+              },
+              "default": "400",
+              "description": "Debounce in ms between a form change and its auto-save.",
+              "attribute": "debounce"
+            },
+            {
+              "kind": "field",
+              "name": "zoom",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Zooms the previewed page out (0–1]. The frame always fills the panel;\nzoom shrinks the content browser-style, so 0.4 shows the page at 40%\nsize with correspondingly more of it visible. 1 = natural size.\nIgnored when `fill` is set.",
+              "attribute": "zoom"
+            },
+            {
+              "kind": "field",
+              "name": "minHeight",
+              "type": {
+                "text": "number"
+              },
+              "default": "480",
+              "description": "The visible height (in CSS pixels) of the preview panel. Fixed rather\nthan measured, because a measured height would feed back into the\nscaled iframe's layout box and grow unbounded. With `fill` set, this\nbecomes a `min-height` floor instead of the height.",
+              "attribute": "min-height"
+            },
+            {
+              "kind": "field",
+              "name": "fill",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Fills the panel's own column height instead of using a fixed\n`min-height` pixel height — for hosts (like zn-theme-editor) whose\nlayout already stretches the column to match a taller sibling.\n`zoom` is ignored when set: its oversize maths depends on a known\npixel height, which `fill` deliberately doesn't have.",
+              "attribute": "fill"
+            },
+            {
+              "kind": "field",
+              "name": "device",
+              "type": {
+                "text": "PreviewFrameDevice"
+              },
+              "default": "'desktop'",
+              "description": "Constrains and centres the preview to a device width: `desktop` (100%),\n`tablet` (768px) or `mobile` (390px). The iframe element itself is\nnarrowed, so the embedded page's own media queries fire.",
+              "attribute": "device",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "backdrop",
+              "type": {
+                "text": "'dots' | 'panel'"
+              },
+              "default": "'dots'",
+              "description": "Backdrop behind the stage: `dots` (default) is the canvas dot grid; `panel` is a plain `rgb(var(--zn-panel))` fill.",
+              "attribute": "backdrop",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "interactive",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lets pointer input through to the embedded page. The preview is inert by\ndefault: clicks never reach the frame, so the previewed page can't be\nnavigated or submitted from inside the preview. Cross-origin content can't\nbe reached from here to cancel its own handlers, so this blocks pointer\ninput entirely — hover goes with it. Scrolling doesn't: an overflowing\npage is scrolled by the panel rather than by the frame (see _contentHeight).\n\nSet, the frame becomes a real viewport instead: it stays the panel's own\nheight and the embed scrolls itself, so there is one scrollbar rather than\na panel scrolling an oversized frame, and the embed's viewport-relative\nlayout (`100vh`, `position: fixed`, sticky headers) sizes to what's on\nscreen. _contentHeight is ignored while this is set.",
+              "attribute": "interactive",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "frame",
+              "type": {
+                "text": "HTMLIFrameElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "_contentHeight",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0",
+              "description": "Height of the embedded page's content, when it's known: reported by the\nembed (`height` on hp-preview:rendered, or an hp-preview:height message) or\nmeasured directly for a same-origin embed. The frame is laid out at this\nheight rather than the panel's, so the page never scrolls inside the frame\n— the panel scrolls instead, which is what makes an overflowing preview\nreachable while pointer input to the frame is blocked. 0 = unknown, and the\nframe falls back to filling the panel. Kept up to date either way, but only\nlaid out when the frame is inert: an `interactive` frame scrolls itself."
+            },
+            {
+              "kind": "field",
+              "name": "_generation",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_theme",
+              "type": {
+                "text": "Record<string, unknown> | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_contentObserver",
+              "type": {
+                "text": "ResizeObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_watchedForms",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<HTMLFormElement>()"
+            },
+            {
+              "kind": "field",
+              "name": "_refreshForms",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<HTMLFormElement>()"
+            },
+            {
+              "kind": "field",
+              "name": "_debounceTimers",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<HTMLFormElement, number>()"
+            },
+            {
+              "kind": "field",
+              "name": "_formObserver",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new MutationController(this, { target: null, config: {subtree: true, childList: true}, callback: () => this._attachForms(), })"
+            },
+            {
+              "kind": "field",
+              "name": "_onMessage",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_applyContentHeight",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "height",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_resetContentHeight",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onFrameLoad",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "refresh",
+              "description": "Re-fetches the payload and pushes a fresh config to the preview."
+            },
+            {
+              "kind": "method",
+              "name": "setTheme",
+              "parameters": [
+                {
+                  "name": "theme",
+                  "type": {
+                    "text": "Record<string, unknown>"
+                  }
+                }
+              ],
+              "description": "Pushes a theme payload into the preview. The payload is retained and\nre-posted after every ready handshake, so a frame reload doesn't drop an\nin-progress theme."
+            },
+            {
+              "kind": "method",
+              "name": "_postTheme",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_sendConfig",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_attachForms",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onShellSave",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_detachForm",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "form",
+                  "type": {
+                    "text": "HTMLFormElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_onChange",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_onSubmit",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_save",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "form",
+                  "type": {
+                    "text": "HTMLFormElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_fail",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the preview reports a render error or a save fails.",
+              "name": "zn-error"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "URL of the preview shell page (tokened embed URL).",
+              "fieldName": "src"
+            },
+            {
+              "name": "frame-origin",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Expected origin of the iframe; all postMessage traffic is checked against it.",
+              "fieldName": "frameOrigin"
+            },
+            {
+              "name": "data-uri",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Endpoint returning the hp-preview:config payload JSON. The console proxy rewrites this attribute to an app-prefixed path for proper fetch resolution.",
+              "fieldName": "dataUri"
+            },
+            {
+              "name": "watch",
+              "type": {
+                "text": "string"
+              },
+              "default": "'form[data-auto-save]'",
+              "description": "Selector (resolved against the component's root node) for the forms to watch.\nDefaults to only forms explicitly opted in via a `data-auto-save` attribute —\nunmarked forms keep normal submit behavior and are never intercepted,\nauto-saved, or used to trigger a preview refresh. Override to widen the scope.",
+              "fieldName": "watch"
+            },
+            {
+              "name": "refresh-on",
+              "type": {
+                "text": "string"
+              },
+              "default": "'form'",
+              "description": "Selector for forms whose saves are left to the shell but should still\nrefresh the preview. These are never intercepted: the shell submits them\n(so its own response handling — alerts, refreshes — runs as normal) and the\npreview re-fetches its config once the shell reports the save complete.\nSet empty to disable.",
+              "fieldName": "refreshOn"
+            },
+            {
+              "name": "debounce",
+              "type": {
+                "text": "number"
+              },
+              "default": "400",
+              "description": "Debounce in ms between a form change and its auto-save.",
+              "fieldName": "debounce"
+            },
+            {
+              "name": "zoom",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Zooms the previewed page out (0–1]. The frame always fills the panel;\nzoom shrinks the content browser-style, so 0.4 shows the page at 40%\nsize with correspondingly more of it visible. 1 = natural size.\nIgnored when `fill` is set.",
+              "fieldName": "zoom"
+            },
+            {
+              "name": "min-height",
+              "type": {
+                "text": "number"
+              },
+              "default": "480",
+              "description": "The visible height (in CSS pixels) of the preview panel. Fixed rather\nthan measured, because a measured height would feed back into the\nscaled iframe's layout box and grow unbounded. With `fill` set, this\nbecomes a `min-height` floor instead of the height.",
+              "fieldName": "minHeight"
+            },
+            {
+              "name": "fill",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Fills the panel's own column height instead of using a fixed\n`min-height` pixel height — for hosts (like zn-theme-editor) whose\nlayout already stretches the column to match a taller sibling.\n`zoom` is ignored when set: its oversize maths depends on a known\npixel height, which `fill` deliberately doesn't have.",
+              "fieldName": "fill"
+            },
+            {
+              "name": "device",
+              "type": {
+                "text": "PreviewFrameDevice"
+              },
+              "default": "'desktop'",
+              "description": "Constrains and centres the preview to a device width: `desktop` (100%),\n`tablet` (768px) or `mobile` (390px). The iframe element itself is\nnarrowed, so the embedded page's own media queries fire.",
+              "fieldName": "device"
+            },
+            {
+              "name": "backdrop",
+              "type": {
+                "text": "'dots' | 'panel'"
+              },
+              "default": "'dots'",
+              "description": "Backdrop behind the stage: `dots` (default) is the canvas dot grid; `panel` is a plain `rgb(var(--zn-panel))` fill.",
+              "fieldName": "backdrop"
+            },
+            {
+              "name": "interactive",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lets pointer input through to the embedded page. The preview is inert by\ndefault: clicks never reach the frame, so the previewed page can't be\nnavigated or submitted from inside the preview. Cross-origin content can't\nbe reached from here to cancel its own handlers, so this blocks pointer\ninput entirely — hover goes with it. Scrolling doesn't: an overflowing\npage is scrolled by the panel rather than by the frame (see _contentHeight).\n\nSet, the frame becomes a real viewport instead: it stays the panel's own\nheight and the embed scrolls itself, so there is one scrollbar rather than\na panel scrolling an oversized frame, and the embed's viewport-relative\nlayout (`100vh`, `position: fixed`, sticky headers) sizes to what's on\nscreen. _contentHeight is ignored while this is set.",
+              "fieldName": "interactive"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Embeds a live preview iframe and drives the hp-preview postMessage\nprotocol: answers the frame's ready handshake with a config payload fetched\nfrom data-uri, auto-saves watched forms on change, refreshes the preview\nafter each save (its own, or a shell-driven save of a `refresh-on` form),\naccepts a theme payload via setTheme() that is retained and replayed\nafter every ready handshake, and grows the frame to a content height the\nembed reports so the panel scrolls an overflowing page.",
+          "tagNameWithoutPrefix": "preview-frame",
+          "tagName": "zn-preview-frame",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Embeds a live preview iframe and drives the hp-preview postMessage\n * protocol: answers the frame's ready handshake with a config payload fetched\n * from data-uri, auto-saves watched forms on change, refreshes the preview\n * after each save (its own, or a shell-driven save of a `refresh-on` form),\n * accepts a theme payload via setTheme() that is retained and replayed\n * after every ready handshake, and grows the frame to a content height the\n * embed reports so the panel scrolls an overflowing page.\n *\n * @documentation https://zinc.style/components/preview-frame\n * @status experimental\n * @since 1.0\n *\n * @event zn-error - Emitted when the preview reports a render error or a save fails.\n *\n * @csspart base - The component's base wrapper.\n * @csspart stage - The device-width wrapper around the iframe.\n * @csspart iframe - The preview iframe.\n * @csspart error - The error overlay.\n *\n * @cssproperty --zn-preview-frame-dot-spacing - Spacing of the backdrop dot grid (`backdrop=\"dots\"`). Defaults to 20px.\n * @cssproperty --zn-preview-frame-dot-opacity - Opacity of the backdrop dots (`backdrop=\"dots\"`). Defaults to 0.08.\n */",
+          "documentation": "https://zinc.style/components/preview-frame",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnPreviewFrame",
+            "module": "components/preview-frame/preview-frame.js"
           }
         }
       ]
@@ -32739,7 +32739,7 @@
               "name": "raw"
             },
             {
-              "description": "The context menu opened by typing \"/\" in a block.",
+              "description": "The `zn-slash-menu` opened by typing \"/\" in an empty block.",
               "name": "slash-menu"
             },
             {
@@ -32750,10 +32750,26 @@
           "members": [
             {
               "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-slash-menu': ZnSlashMenu }"
+            },
+            {
+              "kind": "field",
               "name": "formControlController",
               "privacy": "private",
               "readonly": true,
               "default": "new FormControlController(this, { assumeInteractionOn: ['zn-input', 'zn-change'], })"
+            },
+            {
+              "kind": "field",
+              "name": "slashController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new SlashMenuController(this, { menu: () => this.mountSlashMenu(), // The menu only belongs in a block that is nothing but the slash command — a // block prefix like \"## \" is not valid remarkd part-way through a line. items: () => this.isSlashBlock() ? SLASH_ITEMS : [], onSelect: item => this.handleSlashSelect(item) })"
             },
             {
               "kind": "field",
@@ -32801,6 +32817,14 @@
             },
             {
               "kind": "field",
+              "name": "slashMenuElement",
+              "type": {
+                "text": "ZnSlashMenu | null"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
               "name": "blocks",
               "type": {
                 "text": "string[]"
@@ -32819,30 +32843,13 @@
             },
             {
               "kind": "field",
-              "name": "slashMenuOpen",
+              "name": "hasSlashMenu",
               "type": {
                 "text": "boolean"
               },
               "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "slashQuery",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "default": "''"
-            },
-            {
-              "kind": "field",
-              "name": "slashActiveIndex",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0"
+              "default": "false",
+              "description": "Renders the slash menu only once it has been needed."
             },
             {
               "kind": "field",
@@ -33396,15 +33403,6 @@
             },
             {
               "kind": "field",
-              "name": "filteredSlashItems",
-              "type": {
-                "text": "BlockType[]"
-              },
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
               "name": "handleDraftInput",
               "privacy": "private"
             },
@@ -33415,16 +33413,43 @@
             },
             {
               "kind": "method",
-              "name": "applySlashItem",
+              "name": "isSlashBlock",
               "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Whether the block being edited is nothing but the slash command."
+            },
+            {
+              "kind": "method",
+              "name": "mountSlashMenu",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<ZnSlashMenu | null>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleSlashSelect",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
               "parameters": [
                 {
                   "name": "item",
                   "type": {
-                    "text": "BlockType"
+                    "text": "SlashMenuItem"
                   }
                 }
-              ]
+              ],
+              "description": "Returns false for items the controller should not insert text for."
             },
             {
               "kind": "field",
@@ -33622,11 +33647,6 @@
             },
             {
               "kind": "method",
-              "name": "renderSlashMenu",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
               "name": "renderImageControls",
               "privacy": "private"
             },
@@ -33758,7 +33778,7 @@
           "tagNameWithoutPrefix": "remarkd-editor",
           "tagName": "zn-remarkd-editor",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n * @documentation https://zinc.style/components/remarkd-editor\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-button-group\n * @dependency zn-icon\n * @dependency zn-file\n *\n * @event zn-input - Emitted on each keystroke while editing a block.\n * @event zn-change - Emitted when a block edit is committed and the value changes.\n *\n * @csspart base - The component's base wrapper.\n * @csspart toolbar - The always-visible block-insert toolbar.\n * @csspart raw-toggle - The button that switches between the block view and the raw source view.\n * @csspart block - A rendered block wrapper.\n * @csspart rendered - The rendered remarkd output of a block.\n * @csspart input - The textarea shown while editing a block.\n * @csspart raw - The full-document textarea shown in raw source mode.\n * @csspart slash-menu - The context menu opened by typing \"/\" in a block.\n * @csspart image-controls - The caption / alignment / size panel shown when an image block is clicked.\n */",
+          "jsDoc": "/**\n * @summary A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n * @documentation https://zinc.style/components/remarkd-editor\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-button-group\n * @dependency zn-icon\n * @dependency zn-file\n * @dependency zn-slash-menu\n *\n * @event zn-input - Emitted on each keystroke while editing a block.\n * @event zn-change - Emitted when a block edit is committed and the value changes.\n *\n * @csspart base - The component's base wrapper.\n * @csspart toolbar - The always-visible block-insert toolbar.\n * @csspart raw-toggle - The button that switches between the block view and the raw source view.\n * @csspart block - A rendered block wrapper.\n * @csspart rendered - The rendered remarkd output of a block.\n * @csspart input - The textarea shown while editing a block.\n * @csspart raw - The full-document textarea shown in raw source mode.\n * @csspart slash-menu - The `zn-slash-menu` opened by typing \"/\" in an empty block.\n * @csspart image-controls - The caption / alignment / size panel shown when an image block is clicked.\n */",
           "documentation": "https://zinc.style/components/remarkd-editor",
           "status": "experimental",
           "since": "1.0",
@@ -33766,7 +33786,8 @@
             "zn-button",
             "zn-button-group",
             "zn-icon",
-            "zn-file"
+            "zn-file",
+            "zn-slash-menu"
           ]
         }
       ],

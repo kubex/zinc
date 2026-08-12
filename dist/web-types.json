@@ -6983,150 +6983,6 @@
           }
         },
         {
-          "name": "zn-preview-frame",
-          "description": "Embeds a live preview iframe and drives the hp-preview postMessage\nprotocol: answers the frame's ready handshake with a config payload fetched\nfrom data-uri, auto-saves watched forms on change, refreshes the preview\nafter each save (its own, or a shell-driven save of a `refresh-on` form),\naccepts a theme payload via setTheme() that is retained and replayed\nafter every ready handshake, and grows the frame to a content height the\nembed reports so the panel scrolls an overflowing page.\n---\n\n\n### **Events:**\n - **zn-error** - Emitted when the preview reports a render error or a save fails.\n\n### **Methods:**\n - **refresh()** - Re-fetches the payload and pushes a fresh config to the preview.\n- **setTheme(theme: _Record<string, unknown>_)** - Pushes a theme payload into the preview. The payload is retained and\nre-posted after every ready handshake, so a frame reload doesn't drop an\nin-progress theme.\n\n### **CSS Properties:**\n - **--zn-preview-frame-dot-spacing** - Spacing of the backdrop dot grid (`backdrop=\"dots\"`). Defaults to 20px. _(default: undefined)_\n- **--zn-preview-frame-dot-opacity** - Opacity of the backdrop dots (`backdrop=\"dots\"`). Defaults to 0.08. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **stage** - The device-width wrapper around the iframe.\n- **iframe** - The preview iframe.\n- **error** - The error overlay.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "src",
-              "description": "URL of the preview shell page (tokened embed URL).",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "frame-origin",
-              "description": "Expected origin of the iframe; all postMessage traffic is checked against it.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "data-uri",
-              "description": "Endpoint returning the hp-preview:config payload JSON. The console proxy rewrites this attribute to an app-prefixed path for proper fetch resolution.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "watch",
-              "description": "Selector (resolved against the component's root node) for the forms to watch.\nDefaults to only forms explicitly opted in via a `data-auto-save` attribute —\nunmarked forms keep normal submit behavior and are never intercepted,\nauto-saved, or used to trigger a preview refresh. Override to widen the scope.",
-              "value": { "type": "string", "default": "'form[data-auto-save]'" }
-            },
-            {
-              "name": "refresh-on",
-              "description": "Selector for forms whose saves are left to the shell but should still\nrefresh the preview. These are never intercepted: the shell submits them\n(so its own response handling — alerts, refreshes — runs as normal) and the\npreview re-fetches its config once the shell reports the save complete.\nSet empty to disable.",
-              "value": { "type": "string", "default": "'form'" }
-            },
-            {
-              "name": "debounce",
-              "description": "Debounce in ms between a form change and its auto-save.",
-              "value": { "type": "number", "default": "400" }
-            },
-            {
-              "name": "zoom",
-              "description": "Zooms the previewed page out (0–1]. The frame always fills the panel;\nzoom shrinks the content browser-style, so 0.4 shows the page at 40%\nsize with correspondingly more of it visible. 1 = natural size.\nIgnored when `fill` is set.",
-              "value": { "type": "number", "default": "1" }
-            },
-            {
-              "name": "min-height",
-              "description": "The visible height (in CSS pixels) of the preview panel. Fixed rather\nthan measured, because a measured height would feed back into the\nscaled iframe's layout box and grow unbounded. With `fill` set, this\nbecomes a `min-height` floor instead of the height.",
-              "value": { "type": "number", "default": "480" }
-            },
-            {
-              "name": "fill",
-              "description": "Fills the panel's own column height instead of using a fixed\n`min-height` pixel height — for hosts (like zn-theme-editor) whose\nlayout already stretches the column to match a taller sibling.\n`zoom` is ignored when set: its oversize maths depends on a known\npixel height, which `fill` deliberately doesn't have.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "device",
-              "description": "Constrains and centres the preview to a device width: `desktop` (100%),\n`tablet` (768px) or `mobile` (390px). The iframe element itself is\nnarrowed, so the embedded page's own media queries fire.",
-              "value": { "type": "PreviewFrameDevice", "default": "'desktop'" }
-            },
-            {
-              "name": "backdrop",
-              "description": "Backdrop behind the stage: `dots` (default) is the canvas dot grid; `panel` is a plain `rgb(var(--zn-panel))` fill.",
-              "value": { "type": "'dots' | 'panel'", "default": "'dots'" }
-            },
-            {
-              "name": "interactive",
-              "description": "Lets pointer input through to the embedded page. The preview is inert by\ndefault: clicks never reach the frame, so the previewed page can't be\nnavigated or submitted from inside the preview. Cross-origin content can't\nbe reached from here to cancel its own handlers, so this blocks pointer\ninput entirely — hover goes with it. Scrolling doesn't: an overflowing\npage is scrolled by the panel rather than by the frame (see _contentHeight).\n\nSet, the frame becomes a real viewport instead: it stays the panel's own\nheight and the embed scrolls itself, so there is one scrollbar rather than\na panel scrolling an oversized frame, and the embed's viewport-relative\nlayout (`100vh`, `position: fixed`, sticky headers) sizes to what's on\nscreen. _contentHeight is ignored while this is set.",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "events": [
-            {
-              "name": "zn-error",
-              "description": "Emitted when the preview reports a render error or a save fails."
-            }
-          ],
-          "js": {
-            "properties": [
-              {
-                "name": "src",
-                "description": "URL of the preview shell page (tokened embed URL).",
-                "type": "string"
-              },
-              {
-                "name": "frameOrigin",
-                "description": "Expected origin of the iframe; all postMessage traffic is checked against it.",
-                "type": "string"
-              },
-              {
-                "name": "dataUri",
-                "description": "Endpoint returning the hp-preview:config payload JSON. The console proxy rewrites this attribute to an app-prefixed path for proper fetch resolution.",
-                "type": "string"
-              },
-              {
-                "name": "watch",
-                "description": "Selector (resolved against the component's root node) for the forms to watch.\nDefaults to only forms explicitly opted in via a `data-auto-save` attribute —\nunmarked forms keep normal submit behavior and are never intercepted,\nauto-saved, or used to trigger a preview refresh. Override to widen the scope.",
-                "type": "string"
-              },
-              {
-                "name": "refreshOn",
-                "description": "Selector for forms whose saves are left to the shell but should still\nrefresh the preview. These are never intercepted: the shell submits them\n(so its own response handling — alerts, refreshes — runs as normal) and the\npreview re-fetches its config once the shell reports the save complete.\nSet empty to disable.",
-                "type": "string"
-              },
-              {
-                "name": "debounce",
-                "description": "Debounce in ms between a form change and its auto-save.",
-                "type": "number"
-              },
-              {
-                "name": "zoom",
-                "description": "Zooms the previewed page out (0–1]. The frame always fills the panel;\nzoom shrinks the content browser-style, so 0.4 shows the page at 40%\nsize with correspondingly more of it visible. 1 = natural size.\nIgnored when `fill` is set.",
-                "type": "number"
-              },
-              {
-                "name": "minHeight",
-                "description": "The visible height (in CSS pixels) of the preview panel. Fixed rather\nthan measured, because a measured height would feed back into the\nscaled iframe's layout box and grow unbounded. With `fill` set, this\nbecomes a `min-height` floor instead of the height.",
-                "type": "number"
-              },
-              {
-                "name": "fill",
-                "description": "Fills the panel's own column height instead of using a fixed\n`min-height` pixel height — for hosts (like zn-theme-editor) whose\nlayout already stretches the column to match a taller sibling.\n`zoom` is ignored when set: its oversize maths depends on a known\npixel height, which `fill` deliberately doesn't have.",
-                "type": "boolean"
-              },
-              {
-                "name": "device",
-                "description": "Constrains and centres the preview to a device width: `desktop` (100%),\n`tablet` (768px) or `mobile` (390px). The iframe element itself is\nnarrowed, so the embedded page's own media queries fire.",
-                "type": "PreviewFrameDevice"
-              },
-              {
-                "name": "backdrop",
-                "description": "Backdrop behind the stage: `dots` (default) is the canvas dot grid; `panel` is a plain `rgb(var(--zn-panel))` fill.",
-                "type": "'dots' | 'panel'"
-              },
-              {
-                "name": "interactive",
-                "description": "Lets pointer input through to the embedded page. The preview is inert by\ndefault: clicks never reach the frame, so the previewed page can't be\nnavigated or submitted from inside the preview. Cross-origin content can't\nbe reached from here to cancel its own handlers, so this blocks pointer\ninput entirely — hover goes with it. Scrolling doesn't: an overflowing\npage is scrolled by the panel rather than by the frame (see _contentHeight).\n\nSet, the frame becomes a real viewport instead: it stays the panel's own\nheight and the embed scrolls itself, so there is one scrollbar rather than\na panel scrolling an oversized frame, and the embed's viewport-relative\nlayout (`100vh`, `position: fixed`, sticky headers) sizes to what's on\nscreen. _contentHeight is ignored while this is set.",
-                "type": "boolean"
-              },
-              { "name": "frame", "type": "HTMLIFrameElement" }
-            ],
-            "events": [
-              {
-                "name": "zn-error",
-                "description": "Emitted when the preview reports a render error or a save fails."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-priority-list",
           "description": "A reorderable list where each item receives a numerical priority based on its position. Supports drag-and-drop\nand keyboard reordering. Priority values are submitted as form data via hidden inputs.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the order of items changes.\n- **zn-reorder** - Emitted when items are reordered. Call `getPriorityMap()` on the component to get the updated `{ key: string, priority: number }[]` array.\n\n### **Methods:**\n - **getPriorityMap(): _PriorityItem[]_** - Returns the priority map: an array of { key, priority } objects.\n- **checkValidity(): _boolean_** - Checks for validity but does not show a validation message.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(_message)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot where list items are placed. Each slotted element must have a `value` attribute that uniquely identifies the item. The component automatically assigns slot names to project each item into the correct position. The item's position in the list determines its priority (top = `priority-start`, incrementing).\n- **label** - The component's label. Required for proper accessibility. Alternatively, use the `label` attribute.\n- **label-tooltip** - Used to add text displayed in a tooltip next to the label.\n- **help-text** - Text that describes how to use the component. Alternatively, use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--zn-priority-list-item-gap** - The gap between list items. Defaults to `var(--zn-spacing-2x-small)`. _(default: undefined)_\n- **--zn-priority-list-item-padding** - The padding inside each item. Defaults to `var(--zn-spacing-small) var(--zn-spacing-medium)`. _(default: undefined)_\n- **--zn-priority-list-handle-color** - The color of the drag handle. Defaults to `var(--zn-color-neutral-500)`. _(default: undefined)_\n- **--zn-priority-list-priority-color** - The color of the priority number. Defaults to `var(--zn-color-neutral-600)`. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control wrapper.\n- **form-control-label** - The label wrapper.\n- **form-control-input** - The input area wrapper.\n- **form-control-help-text** - The help text wrapper.\n- **list** - The list container.\n- **item** - An individual list item row.\n- **drag-handle** - The drag handle icon.\n- **priority** - The priority number badge.\n- **content** - The content area of an item.",
           "doc-url": "",
@@ -7306,6 +7162,150 @@
               {
                 "name": "zn-reorder",
                 "description": "Emitted when items are reordered. Call `getPriorityMap()` on the component to get the updated `{ key: string, priority: number }[]` array."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-preview-frame",
+          "description": "Embeds a live preview iframe and drives the hp-preview postMessage\nprotocol: answers the frame's ready handshake with a config payload fetched\nfrom data-uri, auto-saves watched forms on change, refreshes the preview\nafter each save (its own, or a shell-driven save of a `refresh-on` form),\naccepts a theme payload via setTheme() that is retained and replayed\nafter every ready handshake, and grows the frame to a content height the\nembed reports so the panel scrolls an overflowing page.\n---\n\n\n### **Events:**\n - **zn-error** - Emitted when the preview reports a render error or a save fails.\n\n### **Methods:**\n - **refresh()** - Re-fetches the payload and pushes a fresh config to the preview.\n- **setTheme(theme: _Record<string, unknown>_)** - Pushes a theme payload into the preview. The payload is retained and\nre-posted after every ready handshake, so a frame reload doesn't drop an\nin-progress theme.\n\n### **CSS Properties:**\n - **--zn-preview-frame-dot-spacing** - Spacing of the backdrop dot grid (`backdrop=\"dots\"`). Defaults to 20px. _(default: undefined)_\n- **--zn-preview-frame-dot-opacity** - Opacity of the backdrop dots (`backdrop=\"dots\"`). Defaults to 0.08. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **stage** - The device-width wrapper around the iframe.\n- **iframe** - The preview iframe.\n- **error** - The error overlay.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "src",
+              "description": "URL of the preview shell page (tokened embed URL).",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "frame-origin",
+              "description": "Expected origin of the iframe; all postMessage traffic is checked against it.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "data-uri",
+              "description": "Endpoint returning the hp-preview:config payload JSON. The console proxy rewrites this attribute to an app-prefixed path for proper fetch resolution.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "watch",
+              "description": "Selector (resolved against the component's root node) for the forms to watch.\nDefaults to only forms explicitly opted in via a `data-auto-save` attribute —\nunmarked forms keep normal submit behavior and are never intercepted,\nauto-saved, or used to trigger a preview refresh. Override to widen the scope.",
+              "value": { "type": "string", "default": "'form[data-auto-save]'" }
+            },
+            {
+              "name": "refresh-on",
+              "description": "Selector for forms whose saves are left to the shell but should still\nrefresh the preview. These are never intercepted: the shell submits them\n(so its own response handling — alerts, refreshes — runs as normal) and the\npreview re-fetches its config once the shell reports the save complete.\nSet empty to disable.",
+              "value": { "type": "string", "default": "'form'" }
+            },
+            {
+              "name": "debounce",
+              "description": "Debounce in ms between a form change and its auto-save.",
+              "value": { "type": "number", "default": "400" }
+            },
+            {
+              "name": "zoom",
+              "description": "Zooms the previewed page out (0–1]. The frame always fills the panel;\nzoom shrinks the content browser-style, so 0.4 shows the page at 40%\nsize with correspondingly more of it visible. 1 = natural size.\nIgnored when `fill` is set.",
+              "value": { "type": "number", "default": "1" }
+            },
+            {
+              "name": "min-height",
+              "description": "The visible height (in CSS pixels) of the preview panel. Fixed rather\nthan measured, because a measured height would feed back into the\nscaled iframe's layout box and grow unbounded. With `fill` set, this\nbecomes a `min-height` floor instead of the height.",
+              "value": { "type": "number", "default": "480" }
+            },
+            {
+              "name": "fill",
+              "description": "Fills the panel's own column height instead of using a fixed\n`min-height` pixel height — for hosts (like zn-theme-editor) whose\nlayout already stretches the column to match a taller sibling.\n`zoom` is ignored when set: its oversize maths depends on a known\npixel height, which `fill` deliberately doesn't have.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "device",
+              "description": "Constrains and centres the preview to a device width: `desktop` (100%),\n`tablet` (768px) or `mobile` (390px). The iframe element itself is\nnarrowed, so the embedded page's own media queries fire.",
+              "value": { "type": "PreviewFrameDevice", "default": "'desktop'" }
+            },
+            {
+              "name": "backdrop",
+              "description": "Backdrop behind the stage: `dots` (default) is the canvas dot grid; `panel` is a plain `rgb(var(--zn-panel))` fill.",
+              "value": { "type": "'dots' | 'panel'", "default": "'dots'" }
+            },
+            {
+              "name": "interactive",
+              "description": "Lets pointer input through to the embedded page. The preview is inert by\ndefault: clicks never reach the frame, so the previewed page can't be\nnavigated or submitted from inside the preview. Cross-origin content can't\nbe reached from here to cancel its own handlers, so this blocks pointer\ninput entirely — hover goes with it. Scrolling doesn't: an overflowing\npage is scrolled by the panel rather than by the frame (see _contentHeight).\n\nSet, the frame becomes a real viewport instead: it stays the panel's own\nheight and the embed scrolls itself, so there is one scrollbar rather than\na panel scrolling an oversized frame, and the embed's viewport-relative\nlayout (`100vh`, `position: fixed`, sticky headers) sizes to what's on\nscreen. _contentHeight is ignored while this is set.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-error",
+              "description": "Emitted when the preview reports a render error or a save fails."
+            }
+          ],
+          "js": {
+            "properties": [
+              {
+                "name": "src",
+                "description": "URL of the preview shell page (tokened embed URL).",
+                "type": "string"
+              },
+              {
+                "name": "frameOrigin",
+                "description": "Expected origin of the iframe; all postMessage traffic is checked against it.",
+                "type": "string"
+              },
+              {
+                "name": "dataUri",
+                "description": "Endpoint returning the hp-preview:config payload JSON. The console proxy rewrites this attribute to an app-prefixed path for proper fetch resolution.",
+                "type": "string"
+              },
+              {
+                "name": "watch",
+                "description": "Selector (resolved against the component's root node) for the forms to watch.\nDefaults to only forms explicitly opted in via a `data-auto-save` attribute —\nunmarked forms keep normal submit behavior and are never intercepted,\nauto-saved, or used to trigger a preview refresh. Override to widen the scope.",
+                "type": "string"
+              },
+              {
+                "name": "refreshOn",
+                "description": "Selector for forms whose saves are left to the shell but should still\nrefresh the preview. These are never intercepted: the shell submits them\n(so its own response handling — alerts, refreshes — runs as normal) and the\npreview re-fetches its config once the shell reports the save complete.\nSet empty to disable.",
+                "type": "string"
+              },
+              {
+                "name": "debounce",
+                "description": "Debounce in ms between a form change and its auto-save.",
+                "type": "number"
+              },
+              {
+                "name": "zoom",
+                "description": "Zooms the previewed page out (0–1]. The frame always fills the panel;\nzoom shrinks the content browser-style, so 0.4 shows the page at 40%\nsize with correspondingly more of it visible. 1 = natural size.\nIgnored when `fill` is set.",
+                "type": "number"
+              },
+              {
+                "name": "minHeight",
+                "description": "The visible height (in CSS pixels) of the preview panel. Fixed rather\nthan measured, because a measured height would feed back into the\nscaled iframe's layout box and grow unbounded. With `fill` set, this\nbecomes a `min-height` floor instead of the height.",
+                "type": "number"
+              },
+              {
+                "name": "fill",
+                "description": "Fills the panel's own column height instead of using a fixed\n`min-height` pixel height — for hosts (like zn-theme-editor) whose\nlayout already stretches the column to match a taller sibling.\n`zoom` is ignored when set: its oversize maths depends on a known\npixel height, which `fill` deliberately doesn't have.",
+                "type": "boolean"
+              },
+              {
+                "name": "device",
+                "description": "Constrains and centres the preview to a device width: `desktop` (100%),\n`tablet` (768px) or `mobile` (390px). The iframe element itself is\nnarrowed, so the embedded page's own media queries fire.",
+                "type": "PreviewFrameDevice"
+              },
+              {
+                "name": "backdrop",
+                "description": "Backdrop behind the stage: `dots` (default) is the canvas dot grid; `panel` is a plain `rgb(var(--zn-panel))` fill.",
+                "type": "'dots' | 'panel'"
+              },
+              {
+                "name": "interactive",
+                "description": "Lets pointer input through to the embedded page. The preview is inert by\ndefault: clicks never reach the frame, so the previewed page can't be\nnavigated or submitted from inside the preview. Cross-origin content can't\nbe reached from here to cancel its own handlers, so this blocks pointer\ninput entirely — hover goes with it. Scrolling doesn't: an overflowing\npage is scrolled by the panel rather than by the frame (see _contentHeight).\n\nSet, the frame becomes a real viewport instead: it stays the panel's own\nheight and the embed scrolls itself, so there is one scrollbar rather than\na panel scrolling an oversized frame, and the embed's viewport-relative\nlayout (`100vh`, `position: fixed`, sticky headers) sizes to what's on\nscreen. _contentHeight is ignored while this is set.",
+                "type": "boolean"
+              },
+              { "name": "frame", "type": "HTMLIFrameElement" }
+            ],
+            "events": [
+              {
+                "name": "zn-error",
+                "description": "Emitted when the preview reports a render error or a save fails."
               }
             ]
           }
@@ -7848,7 +7848,7 @@
         },
         {
           "name": "zn-remarkd-editor",
-          "description": "A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted on each keystroke while editing a block.\n- **zn-change** - Emitted when a block edit is committed and the value changes.\n\n### **Methods:**\n - **focus()** - Starts editing the first block, or a new block if the document is empty.\n- **blur()** - Commits any in-progress block or raw edit.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The always-visible block-insert toolbar.\n- **raw-toggle** - The button that switches between the block view and the raw source view.\n- **block** - A rendered block wrapper.\n- **rendered** - The rendered remarkd output of a block.\n- **input** - The textarea shown while editing a block.\n- **raw** - The full-document textarea shown in raw source mode.\n- **slash-menu** - The context menu opened by typing \"/\" in a block.\n- **image-controls** - The caption / alignment / size panel shown when an image block is clicked.",
+          "description": "A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted on each keystroke while editing a block.\n- **zn-change** - Emitted when a block edit is committed and the value changes.\n\n### **Methods:**\n - **focus()** - Starts editing the first block, or a new block if the document is empty.\n- **blur()** - Commits any in-progress block or raw edit.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The always-visible block-insert toolbar.\n- **raw-toggle** - The button that switches between the block view and the raw source view.\n- **block** - A rendered block wrapper.\n- **rendered** - The rendered remarkd output of a block.\n- **input** - The textarea shown while editing a block.\n- **raw** - The full-document textarea shown in raw source mode.\n- **slash-menu** - The `zn-slash-menu` opened by typing \"/\" in an empty block.\n- **image-controls** - The caption / alignment / size panel shown when an image block is clicked.",
           "doc-url": "",
           "attributes": [
             {

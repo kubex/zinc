@@ -4,9 +4,12 @@ import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
 import {property, query, state} from 'lit/decorators.js';
 import {parse as remarkdParse} from "remarkd-js";
+import {SlashMenuController} from "../slash-menu/slash-menu-controller";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
+import ZnSlashMenu from "../slash-menu";
+import type {SlashMenuItem} from "../slash-menu/slash-menu-items";
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type ZnFile from "../file";
 
@@ -22,6 +25,8 @@ interface BlockType {
   label: string;
   icon: string;
   prefix?: string;
+  /** Where the caret lands within `prefix`. Defaults to the end. */
+  caretOffset?: number;
   image?: boolean;
 }
 
@@ -42,9 +47,14 @@ const BLOCK_TYPES: BlockType[] = [
   {label: 'Note', icon: 'info@lu', prefix: 'NOTE: '},
   {label: 'Tip', icon: 'lightbulb@lu', prefix: 'TIP: '},
   {label: 'Warning', icon: 'triangle-alert@lu', prefix: 'WARNING: '},
-  {label: 'Code', icon: 'code@lu', prefix: '```\n\n```'},
+  {label: 'Code', icon: 'code@lu', prefix: '```\n\n```', caretOffset: 4},
   {label: 'Image', icon: 'image@lu', image: true},
 ];
+
+/** The block types as slash menu insertions. Image opens the picker, so it inserts nothing. */
+const SLASH_ITEMS: SlashMenuItem[] = BLOCK_TYPES.map(item => item.image
+  ? {label: item.label, icon: item.icon, action: 'image'}
+  : {label: item.label, icon: item.icon, value: item.prefix ?? '', caretOffset: item.caretOffset});
 
 /**
  * @summary A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.
@@ -56,6 +66,7 @@ const BLOCK_TYPES: BlockType[] = [
  * @dependency zn-button-group
  * @dependency zn-icon
  * @dependency zn-file
+ * @dependency zn-slash-menu
  *
  * @event zn-input - Emitted on each keystroke while editing a block.
  * @event zn-change - Emitted when a block edit is committed and the value changes.
@@ -67,14 +78,25 @@ const BLOCK_TYPES: BlockType[] = [
  * @csspart rendered - The rendered remarkd output of a block.
  * @csspart input - The textarea shown while editing a block.
  * @csspart raw - The full-document textarea shown in raw source mode.
- * @csspart slash-menu - The context menu opened by typing "/" in a block.
+ * @csspart slash-menu - The `zn-slash-menu` opened by typing "/" in an empty block.
  * @csspart image-controls - The caption / alignment / size panel shown when an image block is clicked.
  */
 export default class ZnRemarkdEditor extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
+  static dependencies = {
+    'zn-slash-menu': ZnSlashMenu
+  };
 
   private readonly formControlController = new FormControlController(this, {
     assumeInteractionOn: ['zn-input', 'zn-change'],
+  });
+
+  private readonly slashController = new SlashMenuController(this, {
+    menu: () => this.mountSlashMenu(),
+    // The menu only belongs in a block that is nothing but the slash command — a
+    // block prefix like "## " is not valid remarkd part-way through a line.
+    items: () => this.isSlashBlock() ? SLASH_ITEMS : [],
+    onSelect: item => this.handleSlashSelect(item)
   });
 
   private editingDraft = '';
@@ -83,12 +105,12 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   private suppressBlurCommit = false;
 
   @query('.remarkd-editor__validation') private validationInput: HTMLTextAreaElement;
+  @query('zn-slash-menu') private slashMenuElement: ZnSlashMenu | null;
 
   @state() private blocks: string[] = [];
   @state() private editingIndex: number | null = null;
-  @state() private slashMenuOpen = false;
-  @state() private slashQuery = '';
-  @state() private slashActiveIndex = 0;
+  /** Renders the slash menu only once it has been needed. */
+  @state() private hasSlashMenu = false;
   @state() private imagePickerIndex: number | null = null;
   @state() private imageEdit: ImageBlockData | null = null;
   @state() private dropIndicator: number | null = null;
@@ -274,7 +296,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     if (image) {
       this.editingIndex = index;
       this.imageEdit = image;
-      this.slashMenuOpen = false;
+      this.slashController.close();
       return;
     }
 
@@ -351,7 +373,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     this.editingIndex = index;
     this.imageEdit = null;
     this.editShell = this.computeEditShell(this.editingDraft);
-    this.slashMenuOpen = false;
+    this.slashController.close();
     void this.focusInput();
   }
 
@@ -416,6 +438,8 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     await this.updateComplete;
     const input = this.shadowRoot?.querySelector<HTMLTextAreaElement>('.remarkd-editor__input');
     if (input) {
+      // Each edit renders its own textarea, so the slash menu is re-pointed at it.
+      this.slashController.attach(input);
       this.autosize(input);
       input.focus();
       input.setSelectionRange(input.value.length, input.value.length);
@@ -464,7 +488,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       this.closeImageEdit();
       return index + 1;
     }
-    this.slashMenuOpen = false;
+    this.slashController.close();
     if (this.editingIndex === null) return this.blocks.length;
     const index = this.editingIndex;
     const parts = this.splitBlocks(this.editingDraft);
@@ -474,11 +498,6 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     this.updateBlocks(blocks);
     return index + parts.length;
   };
-
-  private get filteredSlashItems(): BlockType[] {
-    const filter = this.slashQuery.toLowerCase();
-    return BLOCK_TYPES.filter(item => item.label.toLowerCase().includes(filter));
-  }
 
   private handleDraftInput = (e: Event) => {
     const input = e.target as HTMLTextAreaElement;
@@ -491,46 +510,14 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       void this.updateComplete.then(() => this.autosize(input));
     }
 
-    // A leading "/" in an otherwise fresh block opens the slash menu; the rest
-    // of the line filters it.
-    if (input.value === '/') {
-      this.slashMenuOpen = true;
-      this.slashQuery = '';
-      this.slashActiveIndex = 0;
-    } else if (this.slashMenuOpen) {
-      if (input.value.startsWith('/') && !input.value.includes('\n')) {
-        this.slashQuery = input.value.slice(1);
-        this.slashActiveIndex = 0;
-      } else {
-        this.slashMenuOpen = false;
-      }
-    }
-
     this.emit('zn-input');
   };
 
   private handleEditKeydown = (e: KeyboardEvent) => {
     const input = e.target as HTMLTextAreaElement;
 
-    if (this.slashMenuOpen) {
-      const items = this.filteredSlashItems;
-      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        const step = e.key === 'ArrowDown' ? 1 : -1;
-        this.slashActiveIndex = (this.slashActiveIndex + step + items.length) % Math.max(items.length, 1);
-        return;
-      }
-      if (e.key === 'Enter' && items.length) {
-        e.preventDefault();
-        this.applySlashItem(items[this.slashActiveIndex] ?? items[0]);
-        return;
-      }
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        this.slashMenuOpen = false;
-        return;
-      }
-    }
+    // The slash menu claims navigation, Enter and Escape in the capture phase.
+    if (this.slashController.open) return;
 
     if (e.key === 'Enter' && e.shiftKey) {
       e.preventDefault();
@@ -546,27 +533,32 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     }
   };
 
-  private applySlashItem(item: BlockType) {
-    this.slashMenuOpen = false;
+  /** Whether the block being edited is nothing but the slash command. */
+  private isSlashBlock(): boolean {
+    const value = this.shadowRoot?.querySelector<HTMLTextAreaElement>('.remarkd-editor__input')?.value ?? '';
+    return value.startsWith('/') && !value.includes('\n');
+  }
+
+  private async mountSlashMenu(): Promise<ZnSlashMenu | null> {
+    if (!this.hasSlashMenu) {
+      this.hasSlashMenu = true;
+      await this.updateComplete;
+    }
+    return this.slashMenuElement;
+  }
+
+  /** Returns false for items the controller should not insert text for. */
+  private handleSlashSelect(item: SlashMenuItem): boolean {
+    if (item.action !== 'image') return true;
+
     const index = this.editingIndex ?? this.blocks.length;
-    const input = this.shadowRoot?.querySelector<HTMLTextAreaElement>('.remarkd-editor__input');
-
-    if (item.image) {
-      // Drop the "/..." draft block, then run the image flow in its place.
-      this.editingDraft = '';
-      if (input) input.value = '';
-      input?.blur();
+    // Let the controller strip the "/…" text first, then drop the empty draft
+    // block and run the image flow in its place.
+    void this.updateComplete.then(() => {
+      this.blur();
       this.pickImage(index);
-      return;
-    }
-
-    this.editingDraft = item.prefix ?? '';
-    if (input) {
-      input.value = this.editingDraft;
-      this.autosize(input);
-      input.focus();
-      input.setSelectionRange(input.value.length, input.value.length);
-    }
+    });
+    return false;
   }
 
   private handleEditPaste = (e: ClipboardEvent) => {
@@ -751,6 +743,8 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       return;
     }
     if (this.editingIndex !== null) this.commitEdit();
+    // The per-block textarea the menu watches is about to be replaced.
+    this.slashController.detach();
     this.rawEntryValue = this.value;
     this.rawMode = true;
     void this.focusRaw();
@@ -805,27 +799,6 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     } else {
       this.insertDraftBlock(index, item.prefix ?? '');
     }
-  }
-
-  private renderSlashMenu() {
-    const items = this.filteredSlashItems;
-    if (!items.length) return '';
-    return html`
-      <div part="slash-menu" class="remarkd-editor__slash-menu">
-        ${items.map((item, i) => html`
-          <button type="button"
-                  class=${classMap({
-                    'remarkd-editor__slash-item': true,
-                    'remarkd-editor__slash-item--active': i === this.slashActiveIndex,
-                  })}
-                  @mousedown=${(e: Event) => {
-                    e.preventDefault();
-                    this.applySlashItem(item);
-                  }}>
-            <zn-icon src=${item.icon} size="16"></zn-icon>
-            <span>${item.label}</span>
-          </button>`)}
-      </div>`;
   }
 
   private renderImageControls() {
@@ -914,7 +887,6 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                       @paste=${this.handleEditPaste}
                       @blur=${this.handleEditBlur}></textarea>
           </div>
-          ${this.slashMenuOpen ? this.renderSlashMenu() : ''}
         </div>`;
     }
 
@@ -981,6 +953,8 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
               ${this.blocks.length === 0 && this.editingIndex === null ? this.placeholder : ''}
             </div>`}
         </div>
+        ${this.hasSlashMenu ? html`
+          <zn-slash-menu part="slash-menu" heading="Insert block"></zn-slash-menu>` : ''}
         <textarea class="remarkd-editor__validation"
                   .value=${this.value}
                   ?required=${this.required}

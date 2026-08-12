@@ -42,6 +42,28 @@ block committed empty is removed.
 ></zn-remarkd-editor>
 ```
 
+### Slash Menu
+
+Typing `/` in an empty block opens a [slash menu](/components/slash-menu) of
+block types at the caret. Keep typing to narrow it, `↑`/`↓` to move, `Enter` or
+`Tab` to insert, `Escape` to dismiss. The menu only appears in a block that is
+nothing but the slash command — a prefix like `## ` is not valid remarkd
+part-way through a line — so `/` in the middle of a sentence stays literal
+text.
+
+Choosing a block type replaces the command with its remarkd prefix and leaves
+the caret ready to type: `Heading 2` gives you `## `, `Code` opens a fence with
+the caret inside it, and `Image` opens the upload picker instead of inserting
+text. The same block types are on the toolbar, which inserts them as new blocks
+at the end of the document.
+
+```html:preview
+<zn-remarkd-editor
+  name="content"
+  value="Click the empty space below this block, then type / to see the menu."
+></zn-remarkd-editor>
+```
+
 ### Images
 
 Adding an image shows a `zn-file` drop area inline, at the point in the

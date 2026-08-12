@@ -87,6 +87,14 @@
     border-bottom: 1px solid rgb(var(--zn-border-color)) !important;
   }
 
+  // Children marked with [stack-split] act as a single column while the cols are
+  // side by side, and dissolve into individual columns once stacked (see below).
+  ::slotted([stack-split]) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--zn-gap);
+  }
+
   &--pad {
     padding: var(--zn-spacing-2x-small);
   }
@@ -97,5 +105,42 @@
 
   &--pad-y {
     padding-block: var(--zn-spacing-2x-small);
+  }
+}
+
+//
+// Responsive stacking
+//
+// `stack-at` names the container width the cols collapse to a single column below.
+// While stacked, `--zn-stacked` flips to 1 so the per-child `order: calc(var(--zn-stacked) * n)`
+// written by the component only takes effect in the stacked state, and `--zn-stack-basis`
+// gives promoted [stack-split] children something to size against.
+//
+// `:host()` is only in the selector to out-specify the `.zn-col-#{$i}` min-width rules above.
+//
+$stack-sizes: (sm, smp, ph, md, lg, hd, '3k', '4k');
+
+@each $size in $stack-sizes {
+  :host([stack-at="#{$size}"]) {
+    @include wc.container-query(null, $size) {
+      .cols ::slotted(*) {
+        --zn-stacked: 1;
+        --zn-stack-basis: 100%;
+
+        flex-basis: 100%;
+        min-width: 100%;
+        max-width: 100%;
+      }
+
+      // Hand this column's children over to the cols so each can be ordered individually
+      .cols ::slotted([stack-split]) {
+        display: contents;
+      }
+
+      // Vertical dividers make no sense once the columns are on top of each other
+      .cols--divide ::slotted(*:not(:last-child)):after {
+        display: none;
+      }
+    }
   }
 }

@@ -408,6 +408,154 @@ Use methods to programmatically control the textarea.
 </script>
 ```
 
+### Slash Menu Quick Insertions
+
+{% raw %}
+
+Give a textarea a list of quick insertions and typing `/` opens a menu at the caret, in the same way the
+[editor](/components/editor)'s context menu works. It is built for replacement strings — merge fields such as
+`{{BRAND_NAME}}` in legal copy — but any text can be inserted.
+
+The list can be declared as an attribute, which accepts the shorthand `Label={{TOKEN}}` for each entry:
+
+```html:preview
+<zn-textarea
+  label="Terms and conditions"
+  rows="6"
+  help-text="Type / to insert a replacement string"
+  slash-items="Brand name={{BRAND_NAME}}, Legal entity={{LEGAL_ENTITY}}, Jurisdiction={{JURISDICTION}}, Support email={{SUPPORT_EMAIL}}">
+This agreement is between you and {{LEGAL_ENTITY}}, trading as
+</zn-textarea>
+```
+
+Type `/` at the start of a word, keep typing to filter, then choose an item with `↑`/`↓` and `Enter` (or `Tab`), or by
+clicking it. `Escape` closes the menu without inserting and leaves the field focused. The trigger and the query that
+follows it are replaced by the item's value.
+
+#### Declaring Items With `zn-slash-item`
+
+For richer entries — icons, descriptions, groups, or multi-line values — put [`zn-slash-item`](/components/slash-item)
+elements inside the textarea. No `slot` attribute is needed: items are picked up wherever they sit. An item's text
+content is inserted when it has no `value` attribute, which keeps long clauses readable in markup.
+
+```html:preview
+<zn-textarea label="Privacy policy" rows="8" help-text="Type / to insert">
+  <zn-slash-item
+    group="Merchant"
+    icon="tag@lu"
+    label="Brand name"
+    description="The merchant's trading name"
+    keywords="company, trading"
+    value="{{BRAND_NAME}}"></zn-slash-item>
+  <zn-slash-item
+    group="Merchant"
+    icon="mail@lu"
+    label="Support email"
+    value="{{SUPPORT_EMAIL}}"></zn-slash-item>
+  <zn-slash-item
+    group="Clauses"
+    icon="scale@lu"
+    label="Governing law"
+    description="Full clause, inserted inline">This agreement is governed by the laws of {{JURISDICTION}}, and the parties submit to the exclusive jurisdiction of its courts.</zn-slash-item>
+</zn-textarea>
+```
+
+#### Slotting The Menu Itself
+
+Wrap the items in a [`zn-slash-menu`](/components/slash-menu) on the `slash-menu` slot to keep the whole configuration
+in one place and set the panel's own attributes — `heading`, `max-items`, `placement`, `empty-text` — in markup. The
+textarea uses that menu instead of building its own, so anything you style on it applies.
+
+```html:preview
+<zn-textarea label="Terms and conditions" rows="7" help-text="Type / to insert">
+  <zn-slash-menu slot="slash-menu" heading="Replacement strings" max-items="6" style="--slash-menu-width: 360px">
+    <zn-slash-item icon="tag@lu" label="Brand name" value="{{BRAND_NAME}}"></zn-slash-item>
+    <zn-slash-item icon="building@lu" label="Legal entity" value="{{LEGAL_ENTITY}}"></zn-slash-item>
+    <zn-slash-item icon="scale@lu" label="Jurisdiction" value="{{JURISDICTION}}"></zn-slash-item>
+    <zn-slash-item icon="mail@lu" label="Support email" value="{{SUPPORT_EMAIL}}"></zn-slash-item>
+  </zn-slash-menu>
+</zn-textarea>
+```
+
+#### Reusable Presets
+
+Register a list once and reference it by name from any textarea with `slash-preset`. This keeps a single definition of
+the merge fields an application allows.
+
+```html:preview
+<zn-textarea
+  label="Refund policy"
+  rows="5"
+  slash-preset="legal"
+  help-text="Type / to insert a replacement string"></zn-textarea>
+
+<script type="module">
+  import {registerSlashMenuPreset} from '/dist/zn.min.js';
+
+  registerSlashMenuPreset('legal', [
+    {label: 'Brand name', value: '{{BRAND_NAME}}', icon: 'tag@lu', group: 'Merchant'},
+    {label: 'Legal entity', value: '{{LEGAL_ENTITY}}', icon: 'building@lu', group: 'Merchant'},
+    {label: 'Refund window', value: '{{REFUND_DAYS}} days', icon: 'calendar@lu', group: 'Policy'},
+    {label: 'Jurisdiction', value: '{{JURISDICTION}}', icon: 'scale@lu', group: 'Policy'}
+  ]);
+</script>
+```
+
+#### Changing the Trigger
+
+Set `slash-trigger` to any characters. Using `{{` lets someone who already knows the token they want type it directly
+and get the list as they go.
+
+```html:preview
+<zn-textarea
+  label="Email footer"
+  rows="4"
+  slash-trigger="{{"
+  help-text="Type {{ to insert a replacement string"
+  slash-items="Brand name={{BRAND_NAME}}, Unsubscribe link={{UNSUBSCRIBE_URL}}"></zn-textarea>
+```
+
+#### Custom And Remote Items
+
+`slashItemsProvider` resolves extra items each time the menu opens, so a list can come from an API. `zn-slash-select` is
+cancelable: call `preventDefault()` to handle an item yourself instead of inserting its value, which is how items that
+open a dialog or run a command are built. The trigger and query the user typed are removed either way.
+
+```html:preview
+<zn-textarea id="provider-textarea" label="Notes" rows="5" help-text="Type / to insert"></zn-textarea>
+<div id="provider-log" style="margin-top: 1rem; font-family: monospace; font-size: 0.875rem;"></div>
+
+<script type="module">
+  const textarea = document.getElementById('provider-textarea');
+  const log = document.getElementById('provider-log');
+
+  await customElements.whenDefined('zn-textarea');
+
+  textarea.slashItemsProvider = async (query) => {
+    // In a real application this would be a fetch
+    return [
+      {label: 'Today', value: new Date().toLocaleDateString(), icon: 'calendar@lu'},
+      {label: 'Clear the field', icon: 'trash-2@lu', action: 'clear', description: 'Handled by the page'}
+    ];
+  };
+
+  textarea.addEventListener('zn-slash-select', (event) => {
+    log.textContent = `zn-slash-select: ${event.detail.item.label}`;
+
+    if (event.detail.item.action === 'clear') {
+      event.preventDefault();
+      textarea.value = '';
+    }
+  });
+
+  textarea.addEventListener('zn-slash-insert', (event) => {
+    log.textContent = `zn-slash-insert: ${event.detail.value}`;
+  });
+</script>
+```
+
+{% endraw %}
+
 ### Selection and Range Methods
 
 Use `setSelectionRange()` and `setRangeText()` methods to work with text selections.

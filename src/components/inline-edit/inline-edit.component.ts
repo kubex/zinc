@@ -5,6 +5,7 @@ import { defaultValue } from "../../internal/default-value";
 import { FormControlController } from "../../internal/form";
 import { HasSlotController } from "../../internal/slot";
 import { ifDefined } from "lit/directives/if-defined.js";
+import { parseSlashItems, type SlashMenuItem } from "../slash-menu/slash-menu-items";
 import { property, query, state } from 'lit/decorators.js';
 import { watch } from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
@@ -96,6 +97,31 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   @property({ attribute: "input-type" }) inputType: 'select' | 'text' | 'data-select' | 'number' | 'textarea' = 'text';
   @property({ attribute: "textarea-rows", type: Number }) textareaRows: 1;
+
+  /**
+   * Quick insertions offered by the slash menu of a `textarea` input. Accepts a JSON array of items, or the
+   * shorthand `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Forwarded to the inner `zn-textarea`.
+   */
+  @property({
+    attribute: 'slash-items',
+    converter: {
+      fromAttribute: (value: string) => parseSlashItems(value),
+      toAttribute: (value: SlashMenuItem[]) => JSON.stringify(value)
+    }
+  })
+  slashItems: SlashMenuItem[] = [];
+
+  /** Names of item sets registered with `registerSlashMenuPreset`, comma separated. */
+  @property({ attribute: 'slash-preset' }) slashPreset = '';
+
+  /** The characters that open the slash menu. */
+  @property({ attribute: 'slash-trigger' }) slashTrigger = '/';
+
+  /** The heading shown above the slash menu's items. */
+  @property({ attribute: 'slash-heading' }) slashHeading = 'Insert';
+
+  /** Resolves additional slash menu items each time the menu opens. JavaScript only. */
+  @property({ attribute: false }) slashItemsProvider?: (query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]>;
 
   @property({ type: Object }) options: { [key: string]: string } = {};
 
@@ -434,6 +460,11 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
         pattern=${ifDefined(this.pattern)}
         autocomplete=${ifDefined(this.autocomplete)}
         dir="${this.dir}"
+        slash-trigger="${this.slashTrigger}"
+        slash-heading="${this.slashHeading}"
+        slash-preset="${this.slashPreset}"
+        .slashItems="${this.slashItems}"
+        .slashItemsProvider="${this.slashItemsProvider}"
         @zn-input="${this.handleInput}"
         @zn-blur="${this.handleBlur}">
       </zn-textarea>`;

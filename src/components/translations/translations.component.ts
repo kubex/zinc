@@ -5,6 +5,7 @@ import {html, nothing, unsafeCSS} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {live} from 'lit/directives/live.js';
+import {parseSlashItems, type SlashMenuItem} from '../slash-menu/slash-menu-items';
 import {property, state} from 'lit/decorators.js';
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import ZincElement from '../../internal/zinc-element';
@@ -42,6 +43,31 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   @property({type: Boolean, reflect: true}) flush = false;
   @property({attribute: "input-type"}) inputType: 'select' | 'text' | 'number' | 'textarea' = 'text';
   @property({attribute: "textarea-rows", type: Number}) textareaRows: number | undefined;
+
+  /**
+   * Quick insertions offered by the slash menu when `input-type` is `textarea`. Accepts a JSON array of items, or
+   * the shorthand `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Every language shares the list.
+   */
+  @property({
+    attribute: 'slash-items',
+    converter: {
+      fromAttribute: (value: string) => parseSlashItems(value),
+      toAttribute: (value: SlashMenuItem[]) => JSON.stringify(value)
+    }
+  })
+  slashItems: SlashMenuItem[] = [];
+
+  /** Names of item sets registered with `registerSlashMenuPreset`, comma separated. */
+  @property({attribute: 'slash-preset'}) slashPreset = '';
+
+  /** The characters that open the slash menu. */
+  @property({attribute: 'slash-trigger'}) slashTrigger = '/';
+
+  /** The heading shown above the slash menu's items. */
+  @property({attribute: 'slash-heading'}) slashHeading = 'Insert';
+
+  /** Resolves additional slash menu items each time the menu opens. JavaScript only. */
+  @property({attribute: false}) slashItemsProvider?: (query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]>;
 
   /** When true, hides the individual language navbar and defers language control to a parent zn-translation-group. */
   @property({type: Boolean, reflect: true}) grouped = false;
@@ -406,6 +432,11 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
               name="${this.name}"
               placeholder="Enter translation..."
               dir="${isRTL ? 'rtl' : 'ltr'}"
+              slash-trigger="${this.slashTrigger}"
+              slash-heading="${this.slashHeading}"
+              slash-preset="${this.slashPreset}"
+              .slashItems="${this.slashItems}"
+              .slashItemsProvider="${this.slashItemsProvider}"
               @zn-change="${this.handleValueUpdate}"
               @zn-input="${this.handleValueUpdate}"
               @zn-submit="${this.handleSubmit}"

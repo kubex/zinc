@@ -323,6 +323,36 @@ A complete example showing product content management with translations.
 </div>
 ```
 
+### Slash Menu Quick Insertions
+
+{% raw %}
+
+Copy that carries replacement strings — `{{BRAND_NAME}}` and the like — needs the same tokens in every language. Set
+`slash-items` alongside `input-type="textarea"` and typing `/` offers them at the caret, in whichever language is
+being edited. The attribute takes the same shorthand and JSON that
+[`zn-textarea`](/components/textarea#slash-menu-quick-insertions) accepts, and `slash-preset`, `slash-trigger` and
+`slash-heading` are forwarded too.
+
+```html:preview
+<zn-translations
+  label="Confirmation message"
+  input-type="textarea"
+  textarea-rows="4"
+  languages='{"en": "EN", "fr": "FR", "de": "DE"}'
+  values='{"en": "Look for /"}'
+  slash-heading="Replacement strings"
+  slash-items='[
+    {"label": "Brand name", "value": "{{BRAND_NAME}}", "description": "The product / company name", "icon": "sell"},
+    {"label": "Customer email", "value": "{{CUSTOMER_EMAIL}}", "description": "The customer&#39;s email address", "icon": "mail"},
+    {"label": "Renewal price", "value": "{{RENEWAL_PRICE}}", "description": "The renewal price amount", "icon": "payments"}
+  ]'></zn-translations>
+```
+
+The menu claims `↑`, `↓`, `Enter`, `Tab` and `Escape` while it is open, so choosing an item never submits the form the
+way `Enter` otherwise would.
+
+{% endraw %}
+
 ## Properties
 
 | Property    | Type                        | Default         | Description                                                          |
@@ -335,6 +365,10 @@ A complete example showing product content management with translations.
 | `flush`     | `boolean`                   | `false`         | Removes padding for compact layout                                   |
 | `languages` | `Record<string, string>`    | `{en: "EN"}`    | Object mapping language codes to display names                       |
 | `values`    | `Record<string, string>`    | `{}`            | Object mapping language codes to translation text                    |
+| `slash-items`   | `SlashMenuItem[]`       | `[]`            | Quick insertions offered by the slash menu on a `textarea` input     |
+| `slash-preset`  | `string`                | `''`            | Registered item sets to offer, comma separated                       |
+| `slash-trigger` | `string`                | `'/'`           | The characters that open the slash menu                              |
+| `slash-heading` | `string`                | `'Insert'`      | Heading shown above the slash menu's items                           |
 
 ## Events
 

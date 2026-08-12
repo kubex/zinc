@@ -117,6 +117,27 @@ Use `input-type="textarea"` for multi-line text content.
 </div>
 ```
 
+#### Slash Menu Quick Insertions
+
+{% raw %}
+
+`slash-items`, `slash-preset`, `slash-trigger` and `slash-heading` are forwarded to the inner
+[`zn-textarea`](/components/textarea#slash-menu-quick-insertions), so typing `/` offers replacement strings at the
+caret. The menu claims `Enter` and `Escape` while it is open, so choosing an item neither submits nor cancels the edit.
+
+```html:preview
+<zn-inline-edit
+  name="terms"
+  input-type="textarea"
+  textarea-rows="4"
+  value="This agreement is between you and "
+  slash-heading="Replacement strings"
+  slash-items="Brand name={{BRAND_NAME}}, Legal entity={{LEGAL_ENTITY}}, Jurisdiction={{JURISDICTION}}">
+</zn-inline-edit>
+```
+
+{% endraw %}
+
 ### Number Input Type
 
 Use `input-type="number"` for numeric values.

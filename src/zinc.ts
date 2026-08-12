@@ -112,6 +112,8 @@ export { default as PagePaletteItem } from './components/page-builder/modules/pa
 export { default as PageSectionCard } from './components/page-builder/modules/page-section-card';
 export { default as PreviewFrame } from './components/preview-frame';
 export { default as ThemeEditor } from './components/theme-editor';
+export { default as SlashMenu } from './components/slash-menu';
+export { default as SlashItem } from './components/slash-item';
 /* plop:component */
 
 // Base Component
@@ -122,6 +124,7 @@ export * from './utilities/on';
 export * from './utilities/query';
 export * from './utilities/lit-to-html';
 export * from './utilities/form';
+export * from './utilities/caret-position';
 
 // Events
 export * from './events/events';

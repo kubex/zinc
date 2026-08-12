@@ -19,3 +19,5 @@ export type {ZnPageChangeEvent} from './zn-page-change';
 export type {ZnPageSelectionChangeEvent} from './zn-page-selection-change';
 export type {ZnThemeChangeEvent} from './zn-theme-change';
 export type {ZnThemeSubmitEvent} from './zn-theme-submit';
+export type {ZnSlashSelectEvent} from './zn-slash-select';
+export type {ZnSlashInsertEvent} from './zn-slash-insert';

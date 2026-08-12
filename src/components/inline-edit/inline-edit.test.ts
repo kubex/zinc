@@ -1,7 +1,19 @@
 import '../../../dist/zn.min.js';
-import { expect, fixture, html } from '@open-wc/testing';
+import { expect, fixture, html, waitUntil } from '@open-wc/testing';
 import type ZnInlineEdit from './inline-edit.component';
 import type ZnSelect from '../select/select.component';
+import type ZnSlashMenu from '../slash-menu/slash-menu.component';
+import type ZnTextarea from '../textarea/textarea.component';
+
+// The auto-resizing textarea's ResizeObserver can emit a benign "loop completed with undelivered
+// notifications" warning while the slash menu is positioned. It's not a real error — ignore it so the
+// test runner doesn't treat it as an uncaught exception (capture phase runs before the runner's).
+window.addEventListener('error', (e: ErrorEvent) => {
+  if (typeof e.message === 'string' && e.message.includes('ResizeObserver loop')) {
+    e.stopImmediatePropagation();
+    e.preventDefault();
+  }
+}, true);
 
 describe('<zn-inline-edit>', () => {
   it('should render a component', async () => {
@@ -482,5 +494,75 @@ describe('<zn-inline-edit>', () => {
 
     expect(el.shadowRoot!.querySelector('.ai--editing')).to.not.exist;
     expect(el.value).to.equal('real@example.com');
+  });
+
+  // -- Slash menu --
+
+  describe('slash menu', () => {
+    async function openSlashMenu(el: ZnInlineEdit) {
+      await el.updateComplete;
+
+      el.shadowRoot!.querySelector<HTMLElement>('.ai__left')!
+        .dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+      await el.updateComplete;
+
+      const textarea = el.shadowRoot!.querySelector<ZnTextarea>('zn-textarea')!;
+      await textarea.updateComplete;
+
+      textarea.focus();
+      textarea.input.value = '/';
+      textarea.input.setSelectionRange(1, 1);
+      textarea.input.dispatchEvent(new InputEvent('input', {bubbles: true, composed: true}));
+
+      const menuOf = () => textarea.shadowRoot!.querySelector<ZnSlashMenu>('zn-slash-menu');
+      await waitUntil(() => menuOf()?.open, 'the slash menu never opened');
+
+      return {textarea, menu: menuOf()!};
+    }
+
+    it('offers its slash items on the inner textarea', async () => {
+      const el = await fixture<ZnInlineEdit>(html`
+        <zn-inline-edit input-type="textarea"
+                        slash-items="Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}"></zn-inline-edit>`);
+      const {menu} = await openSlashMenu(el);
+
+      expect(menu.items.map(item => item.label)).to.deep.equal(['Brand name', 'Support email']);
+    });
+
+    it('forwards a custom trigger', async () => {
+      const el = await fixture<ZnInlineEdit>(html`
+        <zn-inline-edit input-type="textarea" slash-trigger="{{"
+                        slash-items="Brand name={{BRAND_NAME}}"></zn-inline-edit>`);
+      await el.updateComplete;
+
+      const textarea = el.shadowRoot!.querySelector<ZnTextarea>('zn-textarea')!;
+      expect(textarea.slashTrigger).to.equal('{{');
+    });
+
+    it('does not submit the form when Enter chooses an item', async () => {
+      const form = await fixture<HTMLFormElement>(html`
+        <form>
+          <zn-inline-edit input-type="textarea" slash-items="Brand name={{BRAND_NAME}}"></zn-inline-edit>
+        </form>`);
+      const el = form.querySelector<ZnInlineEdit>('zn-inline-edit')!;
+
+      let submits = 0;
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        submits++;
+      });
+
+      const {textarea} = await openSlashMenu(el);
+      textarea.input.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'Enter',
+        bubbles: true,
+        composed: true,
+        cancelable: true
+      }));
+      await el.updateComplete;
+
+      expect(el.value, 'the token should have replaced the trigger').to.equal('{{BRAND_NAME}}');
+      expect(submits, 'Enter belongs to the open menu, not the form').to.equal(0);
+    });
   });
 });

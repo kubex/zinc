@@ -3,6 +3,7 @@ meta:
   title: Cols
   description: A flexible column layout component that distributes children across multiple columns with configurable layouts, gaps, borders, and padding options.
 layout: component
+fullWidth: true
 ---
 
 ```html:preview

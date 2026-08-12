@@ -5,6 +5,7 @@ import { MutationController } from '@lit-labs/observers/mutation-controller.js';
 import { property, query, queryAll, state } from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from '../button';
+import ZnButtonGroup from '../button-group';
 import ZnCollapsible from '../collapsible';
 import ZnIcon from '../icon';
 import ZnNavbar from '../navbar';
@@ -84,6 +85,7 @@ interface DerivedStructure {
  * @dependency zn-preview-frame
  * @dependency zn-icon
  * @dependency zn-button
+ * @dependency zn-button-group
  * @dependency zn-tabs
  * @dependency zn-navbar
  * @dependency zn-select
@@ -135,6 +137,7 @@ export default class ZnThemeEditor extends ZincElement {
     'zn-preview-frame': ZnPreviewFrame,
     'zn-icon': ZnIcon,
     'zn-button': ZnButton,
+    'zn-button-group': ZnButtonGroup,
     'zn-tabs': ZnTabs,
     'zn-navbar': ZnNavbar,
     'zn-select': ZnSelect,
@@ -822,13 +825,14 @@ export default class ZnThemeEditor extends ZincElement {
           <div class="editor__controls-inner">
             <div part="controls-header" class="editor__controls-header">
               ${this.controlsCaption ? html`<span class="editor__caption">${this.controlsCaption}</span>` : nothing}
-              <button type="button"
-                      class="editor__mode"
-                      data-mode-toggle
-                      aria-label="${this.mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}"
-                      @click="${this._toggleMode}">
-                <zn-icon src="${this.mode === 'dark' ? 'sun' : 'moon'}" library="lucide" size="16"></zn-icon>
-              </button>
+              <zn-button class="editor__mode"
+                         icon-button="small"
+                         icon-size="20"
+                         icon="${this.mode === 'dark' ? 'sun@lu' : 'moon@lu'}"
+                         data-mode-toggle
+                         tooltip="${this.mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}"
+                         aria-label="${this.mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}"
+                         @click="${this._toggleMode}"></zn-button>
             </div>
             <div class="editor__controls-body">
               <div
@@ -870,17 +874,17 @@ export default class ZnThemeEditor extends ZincElement {
           <div part="toolbar" class="editor__toolbar">
             ${this.previewCaption ? html`<span class="editor__caption">${this.previewCaption}</span>` : nothing}
             <div class="editor__toolbar-actions">
-              <div class="editor__devices" role="group" aria-label="Preview width">
+              <zn-button-group class="editor__devices" aria-label="Preview width">
                 ${DEVICES.map(d => html`
-                  <button type="button"
-                          class="editor__device"
-                          data-device="${d.id}"
-                          aria-label="${d.label}"
-                          aria-pressed="${this.device === d.id ? 'true' : 'false'}"
-                          @click="${() => this._setDevice(d.id)}">
-                    <zn-icon src="${d.icon}" library="lucide" size="16"></zn-icon>
-                  </button>`)}
-              </div>
+                  <zn-button class="editor__device"
+                             icon-button="small"
+                             icon-size="20"
+                             icon="${d.icon}@lu"
+                             data-device="${d.id}"
+                             aria-label="${d.label}"
+                             aria-pressed="${this.device === d.id ? 'true' : 'false'}"
+                             @click="${() => this._setDevice(d.id)}"></zn-button>`)}
+              </zn-button-group>
               ${this._sourcesSafe().length > 0 ? html`
                 <zn-select
                   class="editor__sources"

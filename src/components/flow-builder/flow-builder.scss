@@ -141,6 +141,12 @@
   // rather than the navbar's default body colour.
   --zn-active-nav-background: var(--zn-panel);
 
+  // Themes with a glass page tab bar (e.g. Aura) frost inactive tabs on every
+  // navbar under a zn-page — over the panel the translucent white just reads
+  // as white. Pin the standard tab tint instead.
+  --navbar-page-inactive-tab-background: rgb(var(--zn-color-tab));
+  --navbar-page-inactive-tab-filter: none;
+
   border-right: 1px solid rgb(var(--zn-border-color));
 
   // The registry-driven steps panel fills the column below the title block.

@@ -70,6 +70,12 @@
   // rather than the navbar's default body colour (flow-builder pattern).
   --zn-active-nav-background: var(--zn-panel);
 
+  // Themes with a glass page tab bar (e.g. Aura) frost inactive tabs on every
+  // navbar under a zn-page — over the editor's opaque panel the translucent
+  // white just reads as white. Pin the standard tab tint instead.
+  --navbar-page-inactive-tab-background: rgb(var(--zn-color-tab));
+  --navbar-page-inactive-tab-filter: none;
+
   position: relative;
   display: flex;
   flex-direction: column;
@@ -235,44 +241,21 @@
   }
 }
 
-.editor__devices {
-  display: flex;
-  border: 1px solid rgb(var(--zn-border-color));
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.editor__device,
-.editor__mode {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 28px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: rgb(var(--zn-text));
-  cursor: pointer;
-}
-
-.editor__device + .editor__device {
-  border-left: 1px solid rgb(var(--zn-border-color));
-}
-
-.editor__device:hover,
-.editor__mode:hover {
-  background: rgba(var(--zn-border-color), 0.5);
-}
-
+// The device switcher is zn-button[icon-button="small"]s joined into a
+// segmented control by zn-button-group; only the active fill is styled here.
 .editor__device[aria-pressed="true"] {
-  background: rgb(var(--zn-primary));
-  color: white;
+  // The button's shadow border-color is !important, so it can only be
+  // overridden through its own custom property.
+  --zn-button-border-color: rgb(var(--zn-primary));
+
+  // !important so the fill also beats the button's shadow hover background.
+  &::part(base) {
+    background: rgb(var(--zn-primary)) !important;
+    color: white !important;
+  }
 }
 
 .editor__mode {
-  border: 1px solid rgb(var(--zn-border-color));
-  border-radius: 4px;
   // Sole occupant of .editor__controls-header's right side, beside the caption.
   margin-left: auto;
 }

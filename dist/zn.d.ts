@@ -4022,6 +4022,12 @@ declare module "components/cols/cols.component" {
     export default class ZnCols extends ZincElement {
         static styles: CSSResultGroup;
         layout: string;
+        /**
+         * Container width the columns collapse to a single column below, as one of the named zinc
+         * container sizes (sm, smp, ph, md, lg, hd, 3k, 4k). Defaults to `lg` when a child declares
+         * `stack-order` or `stack-split`, otherwise the columns never explicitly stack.
+         */
+        stackAt: string;
         maxColumns: number;
         noGap: boolean;
         border: boolean;
@@ -4029,6 +4035,18 @@ declare module "components/cols/cols.component" {
         divide: boolean;
         padX: boolean;
         padY: boolean;
+        private readonly childObserver;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        /**
+         * Reads the `stack-order` attribute of an element, returning null when it does not declare one.
+         */
+        private stackOrder;
+        /**
+         * Applies the declared stack order to an element. `--zn-stacked` is 0 until the container
+         * query in our stylesheet flips it to 1, so ordering only kicks in once stacked.
+         */
+        private applyStackOrder;
         render(): import("lit-html").TemplateResult<1>;
     }
 }

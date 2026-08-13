@@ -14,6 +14,7 @@ import type {PropertyValues} from 'lit';
  *
  */
 export default class ZnAbsoluteContainer extends ZincElement {
+  private _resizeFrame: number | null = null;
 
   constructor() {
     super();
@@ -30,12 +31,30 @@ export default class ZnAbsoluteContainer extends ZincElement {
     this.resize();
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this._resizeFrame !== null) {
+      cancelAnimationFrame(this._resizeFrame);
+      this._resizeFrame = null;
+    }
+  }
+
   resize() {
-    let newSize = 0;
-    Array.from(this.children).forEach((child) => {
-      newSize += child.getBoundingClientRect().height;
+    if (this._resizeFrame !== null) {
+      return;
+    }
+    this._resizeFrame = requestAnimationFrame(() => {
+      this._resizeFrame = null;
+      let newSize = 0;
+      Array.from(this.children).forEach((child) => {
+        newSize += child.getBoundingClientRect().height;
+      });
+      const minHeight = newSize + 'px';
+      // Guarded write: setting style re-triggers our own MutationController
+      if (this.style.minHeight !== minHeight) {
+        this.style.minHeight = minHeight;
+      }
     });
-    this.style.minHeight = newSize + 'px';
   }
 
   // the height of this element is set to the height of its children (absolute positioned)

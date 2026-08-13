@@ -1,4 +1,4 @@
-import {type CSSResultGroup, html, unsafeCSS, PropertyValues} from 'lit';
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property, query} from "lit/decorators.js";
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
@@ -34,6 +34,9 @@ export default class ZnScrollContainer extends ZincElement {
   @query('.scroll-footer')
   private footer: HTMLElement;
 
+  private _footerObserved: boolean = false;
+  private _footerHeightFrame: number | null = null;
+
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
     if (this.startScrolled && this.container) {
@@ -41,15 +44,34 @@ export default class ZnScrollContainer extends ZincElement {
     }
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this._footerHeightFrame !== null) {
+      cancelAnimationFrame(this._footerHeightFrame);
+      this._footerHeightFrame = null;
+    }
+  }
+
   scrollEnd() {
     this.container.scrollTop = this.container.scrollHeight;
   }
 
+  private _syncFooterHeight() {
+    if (this._footerHeightFrame !== null) {
+      return;
+    }
+    this._footerHeightFrame = requestAnimationFrame(() => {
+      this._footerHeightFrame = null;
+      const height = `${this.footer?.clientHeight ?? 0}px`;
+      if (this.style.getPropertyValue('--zn-scroll-footer-height') !== height) {
+        this.style.setProperty('--zn-scroll-footer-height', height);
+      }
+    });
+  }
+
   private readonly _footerResizeObserver = new ResizeController(this, {
     target: null,
-    callback: () => {
-      this.style.setProperty('--zn-scroll-footer-height', `${this.footer?.clientHeight ?? 0}px`);
-    },
+    callback: () => this._syncFooterHeight(),
   });
 
   private readonly _domObserver = new MutationController(this, {
@@ -58,8 +80,11 @@ export default class ZnScrollContainer extends ZincElement {
     callback: () => {
       setTimeout(() => this.scrollEnd(), 100);
       if (this.footer) {
-        this.style.setProperty('--zn-scroll-footer-height', `${this.footer.clientHeight}px`);
-        this._footerResizeObserver.observe(this.footer);
+        this._syncFooterHeight();
+        if (!this._footerObserved) {
+          this._footerObserved = true;
+          this._footerResizeObserver.observe(this.footer);
+        }
       }
     },
   });

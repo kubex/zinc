@@ -844,363 +844,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/bulk-actions/bulk-actions.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnBulkActions",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ 'zn-button': ZnButton, 'zn-input': ZnInput, 'zn-option': ZnOption, 'zn-select': ZnSelect, }"
-            },
-            {
-              "kind": "field",
-              "name": "container",
-              "type": {
-                "text": "HTMLDivElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "addRule",
-              "type": {
-                "text": "ZnSelect"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "input",
-              "type": {
-                "text": "HTMLInputElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "name"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "PropertyKey"
-              },
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "actions",
-              "type": {
-                "text": "BulkActionData"
-              },
-              "default": "[]",
-              "attribute": "actions"
-            },
-            {
-              "kind": "field",
-              "name": "_selectedRules",
-              "type": {
-                "text": "Map<string, CreatedRule>"
-              },
-              "privacy": "private",
-              "default": "new Map<string, CreatedRule>()"
-            },
-            {
-              "kind": "field",
-              "name": "_formController",
-              "type": {
-                "text": "FormControlController"
-              },
-              "privacy": "private",
-              "default": "new FormControlController(this, {})"
-            },
-            {
-              "kind": "field",
-              "name": "validationMessage",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "validity",
-              "type": {
-                "text": "ValidityState"
-              },
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "_handleChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_addRule",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "Event | null"
-                  }
-                },
-                {
-                  "name": "value",
-                  "default": "\"\"",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "pos",
-                  "optional": true,
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_createInput",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "ZnSelect | ZnInput | null"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "uniqueId",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "filter",
-                  "type": {
-                    "text": "BulkActionItem"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_updateValue",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "id",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "Event | { target: ZnSelect | ZnInput | HTMLDivElement }"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_getRulePosition",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "number"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "id",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_changeRule",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "id",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "ZnChangeEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_removeRule",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "id",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "Event"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "checkValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getForm",
-              "return": {
-                "type": {
-                  "text": "HTMLFormElement | null"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "reportValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "setCustomValidity",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "message",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "name"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "PropertyKey"
-              },
-              "fieldName": "value"
-            },
-            {
-              "name": "actions",
-              "type": {
-                "text": "BulkActionData"
-              },
-              "default": "[]",
-              "fieldName": "actions"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "bulk-actions",
-          "tagName": "zn-bulk-actions",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/bulk-actions\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-input\n * @dependency zn-option\n * @dependency zn-select\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/bulk-actions",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-button",
-            "zn-input",
-            "zn-option",
-            "zn-select"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnBulkActions",
-            "module": "components/bulk-actions/bulk-actions.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/button/button.js",
       "declarations": [
         {
@@ -2133,6 +1776,363 @@
           "declaration": {
             "name": "ZnButton",
             "module": "components/button/button.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/bulk-actions/bulk-actions.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnBulkActions",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-button': ZnButton, 'zn-input': ZnInput, 'zn-option': ZnOption, 'zn-select': ZnSelect, }"
+            },
+            {
+              "kind": "field",
+              "name": "container",
+              "type": {
+                "text": "HTMLDivElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "addRule",
+              "type": {
+                "text": "ZnSelect"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "input",
+              "type": {
+                "text": "HTMLInputElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "PropertyKey"
+              },
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "actions",
+              "type": {
+                "text": "BulkActionData"
+              },
+              "default": "[]",
+              "attribute": "actions"
+            },
+            {
+              "kind": "field",
+              "name": "_selectedRules",
+              "type": {
+                "text": "Map<string, CreatedRule>"
+              },
+              "privacy": "private",
+              "default": "new Map<string, CreatedRule>()"
+            },
+            {
+              "kind": "field",
+              "name": "_formController",
+              "type": {
+                "text": "FormControlController"
+              },
+              "privacy": "private",
+              "default": "new FormControlController(this, {})"
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_handleChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_addRule",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event | null"
+                  }
+                },
+                {
+                  "name": "value",
+                  "default": "\"\"",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "pos",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_createInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ZnSelect | ZnInput | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "uniqueId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "filter",
+                  "type": {
+                    "text": "BulkActionItem"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_updateValue",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event | { target: ZnSelect | ZnInput | HTMLDivElement }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_getRulePosition",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_changeRule",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "ZnChangeEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_removeRule",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "PropertyKey"
+              },
+              "fieldName": "value"
+            },
+            {
+              "name": "actions",
+              "type": {
+                "text": "BulkActionData"
+              },
+              "default": "[]",
+              "fieldName": "actions"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "bulk-actions",
+          "tagName": "zn-bulk-actions",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/bulk-actions\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-input\n * @dependency zn-option\n * @dependency zn-select\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/bulk-actions",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-button",
+            "zn-input",
+            "zn-option",
+            "zn-select"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnBulkActions",
+            "module": "components/bulk-actions/bulk-actions.js"
           }
         }
       ]
@@ -17696,6 +17696,16 @@
             },
             {
               "kind": "field",
+              "name": "slashHideKeys",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the insertion keys normally shown against the slash menu's items.",
+              "attribute": "slash-hide-keys"
+            },
+            {
+              "kind": "field",
               "name": "slashItemsProvider",
               "type": {
                 "text": "(query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]> | undefined"
@@ -18197,6 +18207,15 @@
               "default": "'Insert'",
               "description": "The heading shown above the slash menu's items.",
               "fieldName": "slashHeading"
+            },
+            {
+              "name": "slash-hide-keys",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the insertion keys normally shown against the slash menu's items.",
+              "fieldName": "slashHideKeys"
             },
             {
               "name": "options",
@@ -18930,6 +18949,16 @@
               "default": "'Insert'",
               "description": "The heading shown above the slash menu's items.",
               "attribute": "slash-heading"
+            },
+            {
+              "kind": "field",
+              "name": "slashHideKeys",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the insertion keys normally shown against the slash menu's items.",
+              "attribute": "slash-hide-keys"
             },
             {
               "kind": "field",
@@ -19794,6 +19823,15 @@
               "fieldName": "slashHeading"
             },
             {
+              "name": "slash-hide-keys",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the insertion keys normally shown against the slash menu's items.",
+              "fieldName": "slashHideKeys"
+            },
+            {
               "name": "trigger-submit",
               "type": {
                 "text": "boolean"
@@ -20414,220 +20452,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/key-container/key-container.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnKeyContainer",
-          "slots": [
-            {
-              "description": "The content to be filtered.",
-              "name": ""
-            },
-            {
-              "description": "The key items (zn-key) that define the filters.",
-              "name": "keys"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "keysSlot",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "defaultSlot",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "position",
-              "type": {
-                "text": "'top-end' | 'top-start' | 'bottom-end' | 'bottom-start'"
-              },
-              "default": "'bottom-start'",
-              "attribute": "position"
-            },
-            {
-              "kind": "field",
-              "name": "target",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "target"
-            },
-            {
-              "kind": "field",
-              "name": "itemSelector",
-              "type": {
-                "text": "string"
-              },
-              "default": "'[data-type]'",
-              "attribute": "item-selector"
-            },
-            {
-              "kind": "field",
-              "name": "filterAttribute",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "filter-attribute"
-            },
-            {
-              "kind": "field",
-              "name": "noScroll",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "no-scroll"
-            },
-            {
-              "kind": "field",
-              "name": "_hiddenElements",
-              "type": {
-                "text": "Set<Element>"
-              },
-              "privacy": "private",
-              "default": "new Set()"
-            },
-            {
-              "kind": "field",
-              "name": "_targetElement",
-              "type": {
-                "text": "HTMLElement | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "_handleKeyChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "getKeys",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "ZnKey[]"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "updateFilters",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "itemMatchesKey",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "Element"
-                  }
-                },
-                {
-                  "name": "key",
-                  "type": {
-                    "text": "ZnKey"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted when the set of active keys changes.",
-              "name": "zn-change"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "position",
-              "type": {
-                "text": "'top-end' | 'top-start' | 'bottom-end' | 'bottom-start'"
-              },
-              "default": "'bottom-start'",
-              "fieldName": "position"
-            },
-            {
-              "name": "target",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "target"
-            },
-            {
-              "name": "item-selector",
-              "type": {
-                "text": "string"
-              },
-              "default": "'[data-type]'",
-              "fieldName": "itemSelector"
-            },
-            {
-              "name": "filter-attribute",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "filterAttribute"
-            },
-            {
-              "name": "no-scroll",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "noScroll"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "A legend container that manages key items, typically used alongside charts to toggle visibility of data series by category.",
-          "tagNameWithoutPrefix": "key-container",
-          "tagName": "zn-key-container",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary A legend container that manages key items, typically used alongside charts to toggle visibility of data series by category.\n * @documentation https://zinc.style/components/key-container\n * @status experimental\n * @since 1.0\n *\n * @slot - The content to be filtered.\n * @slot keys - The key items (zn-key) that define the filters.\n *\n * @event zn-change - Emitted when the set of active keys changes.\n */",
-          "documentation": "https://zinc.style/components/key-container",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnKeyContainer",
-            "module": "components/key-container/key-container.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/linked-select/linked-select.js",
       "declarations": [
         {
@@ -20909,6 +20733,220 @@
           "declaration": {
             "name": "ZnLinkedSelect",
             "module": "components/linked-select/linked-select.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/key-container/key-container.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnKeyContainer",
+          "slots": [
+            {
+              "description": "The content to be filtered.",
+              "name": ""
+            },
+            {
+              "description": "The key items (zn-key) that define the filters.",
+              "name": "keys"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "keysSlot",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "defaultSlot",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "position",
+              "type": {
+                "text": "'top-end' | 'top-start' | 'bottom-end' | 'bottom-start'"
+              },
+              "default": "'bottom-start'",
+              "attribute": "position"
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "target"
+            },
+            {
+              "kind": "field",
+              "name": "itemSelector",
+              "type": {
+                "text": "string"
+              },
+              "default": "'[data-type]'",
+              "attribute": "item-selector"
+            },
+            {
+              "kind": "field",
+              "name": "filterAttribute",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "filter-attribute"
+            },
+            {
+              "kind": "field",
+              "name": "noScroll",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "no-scroll"
+            },
+            {
+              "kind": "field",
+              "name": "_hiddenElements",
+              "type": {
+                "text": "Set<Element>"
+              },
+              "privacy": "private",
+              "default": "new Set()"
+            },
+            {
+              "kind": "field",
+              "name": "_targetElement",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "_handleKeyChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "getKeys",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ZnKey[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updateFilters",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "itemMatchesKey",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "Element"
+                  }
+                },
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "ZnKey"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the set of active keys changes.",
+              "name": "zn-change"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "position",
+              "type": {
+                "text": "'top-end' | 'top-start' | 'bottom-end' | 'bottom-start'"
+              },
+              "default": "'bottom-start'",
+              "fieldName": "position"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "target"
+            },
+            {
+              "name": "item-selector",
+              "type": {
+                "text": "string"
+              },
+              "default": "'[data-type]'",
+              "fieldName": "itemSelector"
+            },
+            {
+              "name": "filter-attribute",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "filterAttribute"
+            },
+            {
+              "name": "no-scroll",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "noScroll"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A legend container that manages key items, typically used alongside charts to toggle visibility of data series by category.",
+          "tagNameWithoutPrefix": "key-container",
+          "tagName": "zn-key-container",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A legend container that manages key items, typically used alongside charts to toggle visibility of data series by category.\n * @documentation https://zinc.style/components/key-container\n * @status experimental\n * @since 1.0\n *\n * @slot - The content to be filtered.\n * @slot keys - The key items (zn-key) that define the filters.\n *\n * @event zn-change - Emitted when the set of active keys changes.\n */",
+          "documentation": "https://zinc.style/components/key-container",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnKeyContainer",
+            "module": "components/key-container/key-container.js"
           }
         }
       ]
@@ -37062,6 +37100,16 @@
             },
             {
               "kind": "field",
+              "name": "hideKeys",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the insertion key (the item's value) normally shown against each item.",
+              "attribute": "hide-keys"
+            },
+            {
+              "kind": "field",
               "name": "anchor",
               "type": {
                 "text": "Element | VirtualElement | null"
@@ -37306,6 +37354,15 @@
               "default": "25",
               "description": "The most items to render at once. Remaining matches are reported in the footer.",
               "fieldName": "maxItems"
+            },
+            {
+              "name": "hide-keys",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the insertion key (the item's value) normally shown against each item.",
+              "fieldName": "hideKeys"
             },
             {
               "name": "placement",
@@ -41433,6 +41490,16 @@
             },
             {
               "kind": "field",
+              "name": "slashHideKeys",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the insertion keys normally shown against the slash menu's items.",
+              "attribute": "slash-hide-keys"
+            },
+            {
+              "kind": "field",
               "name": "slashItemsProvider",
               "type": {
                 "text": "(query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]> | undefined"
@@ -41996,6 +42063,15 @@
               "default": "'Insert'",
               "description": "The heading shown above the slash menu's items.",
               "fieldName": "slashHeading"
+            },
+            {
+              "name": "slash-hide-keys",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the insertion keys normally shown against the slash menu's items.",
+              "fieldName": "slashHideKeys"
             },
             {
               "name": "transparent",
@@ -45278,6 +45354,16 @@
             },
             {
               "kind": "field",
+              "name": "slashHideKeys",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the insertion keys normally shown against the slash menu's items.",
+              "attribute": "slash-hide-keys"
+            },
+            {
+              "kind": "field",
               "name": "slashItemsProvider",
               "type": {
                 "text": "(query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]> | undefined"
@@ -45602,6 +45688,15 @@
               "fieldName": "slashHeading"
             },
             {
+              "name": "slash-hide-keys",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the insertion keys normally shown against the slash menu's items.",
+              "fieldName": "slashHideKeys"
+            },
+            {
               "name": "grouped",
               "type": {
                 "text": "boolean"
@@ -45903,7 +45998,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.90",
+    "version": "1.1.91",
     "author": "",
     "license": "MIT"
   }

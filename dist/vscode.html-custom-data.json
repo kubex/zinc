@@ -139,21 +139,6 @@
       ]
     },
     {
-      "name": "zn-bulk-actions",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "name", "values": [] },
-        { "name": "value", "values": [{ "name": "PropertyKey" }] },
-        { "name": "actions", "values": [{ "name": "BulkActionData" }] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/bulk-actions"
-        }
-      ]
-    },
-    {
       "name": "zn-button",
       "description": "Buttons represent actions that are available to the user.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the button loses focus.\n- **zn-focus** - Emitted when the button gains focus.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Slots:**\n - _default_ - The button's label.\n- **prefix** - A presentational prefix icon or similar element.\n- **suffix** - A presentational suffix icon or similar element.\n- **cancel** - Slot for custom cancel button/content when autoClick is active.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **prefix** - The container that wraps the prefix.\n- **label** - The button's label.\n- **suffix** - The container that wraps the suffix.\n- **caret** - The button's caret icon, an `<zn-icon>` element.\n- **spinner** - The spinner that shows when the button is in the loading state.",
       "attributes": [
@@ -283,6 +268,21 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/button"
+        }
+      ]
+    },
+    {
+      "name": "zn-bulk-actions",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "name", "values": [] },
+        { "name": "value", "values": [{ "name": "PropertyKey" }] },
+        { "name": "actions", "values": [{ "name": "BulkActionData" }] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/bulk-actions"
         }
       ]
     },
@@ -1965,6 +1965,11 @@
           "values": []
         },
         {
+          "name": "slash-hide-keys",
+          "description": "Hides the insertion keys normally shown against the slash menu's items.",
+          "values": []
+        },
+        {
           "name": "options",
           "values": [{ "name": "{ [key: string]: string }" }]
         },
@@ -2265,6 +2270,11 @@
           "values": []
         },
         {
+          "name": "slash-hide-keys",
+          "description": "Hides the insertion keys normally shown against the slash menu's items.",
+          "values": []
+        },
+        {
           "name": "trigger-submit",
           "description": "When enabled, pressing enter will always submit the surrounding form, even when the form uses\nenter-navigation to move between fields.",
           "values": []
@@ -2355,6 +2365,25 @@
       ]
     },
     {
+      "name": "zn-linked-select",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "name", "values": [] },
+        { "name": "value", "values": [] },
+        { "name": "checked", "values": [] },
+        { "name": "options", "values": [{ "name": "linkedSelectOptions" }] },
+        { "name": "linked-select", "values": [] },
+        { "name": "cache-key", "values": [] },
+        { "name": "label", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/linked-select"
+        }
+      ]
+    },
+    {
       "name": "zn-key-container",
       "description": "A legend container that manages key items, typically used alongside charts to toggle visibility of data series by category.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the set of active keys changes.\n\n### **Slots:**\n - _default_ - The content to be filtered.\n- **keys** - The key items (zn-key) that define the filters.",
       "attributes": [
@@ -2376,25 +2405,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/key-container"
-        }
-      ]
-    },
-    {
-      "name": "zn-linked-select",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "name", "values": [] },
-        { "name": "value", "values": [] },
-        { "name": "checked", "values": [] },
-        { "name": "options", "values": [{ "name": "linkedSelectOptions" }] },
-        { "name": "linked-select", "values": [] },
-        { "name": "cache-key", "values": [] },
-        { "name": "label", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/linked-select"
         }
       ]
     },
@@ -3824,6 +3834,11 @@
           "values": []
         },
         {
+          "name": "hide-keys",
+          "description": "Hides the insertion key (the item's value) normally shown against each item.",
+          "values": []
+        },
+        {
           "name": "placement",
           "description": "The preferred placement of the panel.",
           "values": [{ "name": "Placement" }]
@@ -4338,6 +4353,11 @@
           "description": "The heading shown above the slash menu's items.",
           "values": []
         },
+        {
+          "name": "slash-hide-keys",
+          "description": "Hides the insertion keys normally shown against the slash menu's items.",
+          "values": []
+        },
         { "name": "transparent", "values": [] }
       ],
       "references": [
@@ -4682,6 +4702,11 @@
         {
           "name": "slash-heading",
           "description": "The heading shown above the slash menu's items.",
+          "values": []
+        },
+        {
+          "name": "slash-hide-keys",
+          "description": "Hides the insertion keys normally shown against the slash menu's items.",
           "values": []
         },
         {

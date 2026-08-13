@@ -1969,6 +1969,8 @@ declare module "components/slash-menu/slash-menu.component" {
         emptyText: string;
         /** The most items to render at once. Remaining matches are reported in the footer. */
         maxItems: number;
+        /** Hides the insertion key (the item's value) normally shown against each item. */
+        hideKeys: boolean;
         /** The element or caret rect the panel is positioned against. */
         anchor: Element | VirtualElement | null;
         /** The preferred placement of the panel. */
@@ -2336,6 +2338,8 @@ declare module "components/input/input.component" {
         slashTrigger: string;
         /** The heading shown above the slash menu's items. */
         slashHeading: string;
+        /** Hides the insertion keys normally shown against the slash menu's items. */
+        slashHideKeys: boolean;
         /**
          * Resolves additional items each time the menu opens, for lists that come from elsewhere (e.g. an
          * API). Receives the current query and may return a promise. JavaScript only.
@@ -5230,6 +5234,8 @@ declare module "components/inline-edit/inline-edit.component" {
         slashTrigger: string;
         /** The heading shown above the slash menu's items. */
         slashHeading: string;
+        /** Hides the insertion keys normally shown against the slash menu's items. */
+        slashHideKeys: boolean;
         /** Resolves additional slash menu items each time the menu opens. JavaScript only. */
         slashItemsProvider?: (query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]>;
         options: {
@@ -6675,6 +6681,8 @@ declare module "components/textarea/textarea.component" {
         slashTrigger: string;
         /** The heading shown above the slash menu's items. */
         slashHeading: string;
+        /** Hides the insertion keys normally shown against the slash menu's items. */
+        slashHideKeys: boolean;
         /**
          * Resolves additional items each time the menu opens, for lists that come from elsewhere (e.g. an
          * API). Receives the current query and may return a promise. JavaScript only.
@@ -8713,6 +8721,8 @@ declare module "components/translations/translations.component" {
         slashTrigger: string;
         /** The heading shown above the slash menu's items. */
         slashHeading: string;
+        /** Hides the insertion keys normally shown against the slash menu's items. */
+        slashHideKeys: boolean;
         /** Resolves additional slash menu items each time the menu opens. JavaScript only. */
         slashItemsProvider?: (query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]>;
         /** When true, hides the individual language navbar and defers language control to a parent zn-translation-group. */

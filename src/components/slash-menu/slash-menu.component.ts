@@ -65,6 +65,9 @@ export default class ZnSlashMenu extends ZincElement {
   /** The most items to render at once. Remaining matches are reported in the footer. */
   @property({attribute: 'max-items', type: Number}) maxItems = 25;
 
+  /** Hides the insertion key (the item's value) normally shown against each item. */
+  @property({attribute: 'hide-keys', type: Boolean}) hideKeys = false;
+
   /** The element or caret rect the panel is positioned against. */
   @property({attribute: false}) anchor: Element | VirtualElement | null = null;
 
@@ -269,7 +272,7 @@ export default class ZnSlashMenu extends ZincElement {
 
   private renderItem(item: SlashMenuItem, index: number, showIcons: boolean) {
     const isActive = index === this.activeIndex;
-    const token = item.value && item.value !== item.label && !item.value.includes('\n') ? item.value : '';
+    const token = !this.hideKeys && item.value && item.value !== item.label && !item.value.includes('\n') ? item.value : '';
 
     return html`
       <button

@@ -120,6 +120,9 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   /** The heading shown above the slash menu's items. */
   @property({ attribute: 'slash-heading' }) slashHeading = 'Insert';
 
+  /** Hides the insertion keys normally shown against the slash menu's items. */
+  @property({ attribute: 'slash-hide-keys', type: Boolean }) slashHideKeys = false;
+
   /** Resolves additional slash menu items each time the menu opens. JavaScript only. */
   @property({ attribute: false }) slashItemsProvider?: (query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]>;
 
@@ -463,6 +466,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
         slash-trigger="${this.slashTrigger}"
         slash-heading="${this.slashHeading}"
         slash-preset="${this.slashPreset}"
+        ?slash-hide-keys="${this.slashHideKeys}"
         .slashItems="${this.slashItems}"
         .slashItemsProvider="${this.slashItemsProvider}"
         @zn-input="${this.handleInput}"
@@ -485,6 +489,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                 slash-trigger="${this.slashTrigger}"
                 slash-heading="${this.slashHeading}"
                 slash-preset="${this.slashPreset}"
+                ?slash-hide-keys="${this.slashHideKeys}"
                 .slashItems="${this.slashItems}"
                 .slashItemsProvider="${this.slashItemsProvider}"
                 @zn-input="${this.handleInput}"

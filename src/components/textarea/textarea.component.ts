@@ -203,6 +203,9 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
   /** The heading shown above the slash menu's items. */
   @property({attribute: 'slash-heading'}) slashHeading = 'Insert';
 
+  /** Hides the insertion keys normally shown against the slash menu's items. */
+  @property({attribute: 'slash-hide-keys', type: Boolean}) slashHideKeys = false;
+
   /**
    * Resolves additional items each time the menu opens, for lists that come from elsewhere (e.g. an
    * API). Receives the current query and may return a promise. JavaScript only.
@@ -584,7 +587,7 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
           </div>
           ${this.hasSlashMenu
             ? html`
-              <zn-slash-menu part="slash-menu" heading=${this.slashHeading}></zn-slash-menu>`
+              <zn-slash-menu part="slash-menu" heading=${this.slashHeading} ?hide-keys=${this.slashHideKeys}></zn-slash-menu>`
             : ''}
           <slot name="slash-menu"></slot>
           <slot name="slash-items" hidden></slot>

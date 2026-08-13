@@ -137,6 +137,21 @@ export default class ZnSlashMenu extends ZincElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.stopPositioner();
+    this.hidePanelPopover();
+  }
+
+  private showPanelPopover() {
+    const panel = this.panel;
+    if (typeof panel?.showPopover === 'function' && !panel.matches(':popover-open')) {
+      panel.showPopover();
+    }
+  }
+
+  private hidePanelPopover() {
+    const panel = this.panel;
+    if (typeof panel?.hidePopover === 'function' && panel.matches(':popover-open')) {
+      panel.hidePopover();
+    }
   }
 
   private startPositioner() {
@@ -155,6 +170,8 @@ export default class ZnSlashMenu extends ZincElement {
   private async position() {
     const {anchor, panel} = this;
     if (!this.open || !anchor || !panel) return;
+
+    this.showPanelPopover();
 
     const {x, y} = await computePosition(anchor, panel, {
       placement: this.placement,
@@ -233,20 +250,20 @@ export default class ZnSlashMenu extends ZincElement {
   protected updated(changed: PropertyValues) {
     super.updated(changed);
 
-    // A new list, or a reopen, starts at the top rather than wherever the last one was scrolled to
-    if (changed.has('items') || (changed.has('open') && this.open)) {
-      this.scrollActiveIntoView();
-    }
-
     if (changed.has('open') || changed.has('anchor')) {
       if (this.open) {
         this.startPositioner();
       } else {
         this.stopPositioner();
+        this.hidePanelPopover();
       }
     }
 
     if (this.open) void this.position();
+
+    if (changed.has('items') || (changed.has('open') && this.open)) {
+      this.scrollActiveIntoView();
+    }
   }
 
   private renderItem(item: SlashMenuItem, index: number, showIcons: boolean) {
@@ -310,6 +327,7 @@ export default class ZnSlashMenu extends ZincElement {
       <div
         part="panel"
         class="slash-menu__panel"
+        popover="manual"
         role="listbox"
         aria-hidden=${this.open ? 'false' : 'true'}
         aria-label=${this.query ? `Matches for ${this.query}` : this.heading}>

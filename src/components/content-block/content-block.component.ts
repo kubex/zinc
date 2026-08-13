@@ -4,6 +4,7 @@ import {HasSlotController} from "../../internal/slot";
 import {html, unsafeCSS} from 'lit';
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property, queryAssignedNodes, queryAsync, state} from 'lit/decorators.js';
+import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import ZincElement from "../../internal/zinc-element";
 import type {PropertyValues} from 'lit';
 import type ZnTile from "../tile";
@@ -279,7 +280,7 @@ export default class ContentBlock extends ZincElement {
                 'text-section--text': section.type === 'text',
                 'hidden': section.type === 'reply'
               })}>
-                ${section.lines.map((line) => html`${line}<br>`)}
+                ${section.lines.map((line) => html`${unsafeHTML(line)}<br>`)}
               </div>
             `)}
           </div>
@@ -374,7 +375,7 @@ export default class ContentBlock extends ZincElement {
     const textRows: TextRow[] = [];
 
     if (textContent) {
-      const text = textContent.innerText.replace(/<br\s*\/?>/gi, '\n');
+      const text = textContent.innerText;
       const rows = text.split('\n');
       let previousType: TextRow['type'] | null = null;
       let forceReply = false;

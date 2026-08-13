@@ -888,7 +888,6 @@ export default class ZnThemeEditor extends ZincElement {
               ${this._sourcesSafe().length > 0 ? html`
                 <zn-select
                   class="editor__sources"
-                  size="small"
                   label="Preview source"
                   hoist
                   .value="${String(this._sourceIndex)}"

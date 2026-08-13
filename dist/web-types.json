@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.1.88",
+  "version": "1.1.89",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -10801,6 +10801,90 @@
           }
         },
         {
+          "name": "zn-translation-group",
+          "description": "A panel-styled container that provides a shared language toggle for multiple zn-translations children.\n---\n\n\n### **Events:**\n - **zn-language-change** - Emitted when the active language changes. Detail: `{ language: string }`.\n\n### **Slots:**\n - _default_ - Default slot for `<zn-translations>` elements.\n- **actions** - Actions displayed in the panel header alongside language buttons.\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "label",
+              "description": "The group label displayed in the panel header.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "languages",
+              "description": "The available languages for the group.",
+              "value": {
+                "type": "Record<string, string>",
+                "default": "{ 'en': 'EN' }"
+              }
+            },
+            { "name": "basis-px", "value": { "type": "number" } },
+            { "name": "caption", "value": { "type": "string" } },
+            { "name": "icon", "value": { "type": "string" } },
+            { "name": "tabbed", "value": { "type": "boolean" } },
+            { "name": "header-borderless", "value": { "type": "boolean" } },
+            { "name": "cosmic", "value": { "type": "boolean" } },
+            { "name": "flush", "value": { "type": "boolean" } },
+            { "name": "flush-x", "value": { "type": "boolean" } },
+            { "name": "flush-y", "value": { "type": "boolean" } },
+            { "name": "flush-footer", "value": { "type": "boolean" } },
+            { "name": "transparent", "value": { "type": "boolean" } },
+            { "name": "shadow", "value": { "type": "boolean" } }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Default slot for `<zn-translations>` elements."
+            },
+            {
+              "name": "actions",
+              "description": "Actions displayed in the panel header alongside language buttons."
+            },
+            {
+              "name": "footer",
+              "description": "Content displayed in the panel footer."
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-language-change",
+              "description": "Emitted when the active language changes. Detail: `{ language: string }`."
+            }
+          ],
+          "js": {
+            "properties": [
+              {
+                "name": "label",
+                "description": "The group label displayed in the panel header.",
+                "type": "string"
+              },
+              {
+                "name": "languages",
+                "description": "The available languages for the group.",
+                "type": "Record<string, string>"
+              },
+              { "name": "basis", "type": "number" },
+              { "name": "caption", "type": "string" },
+              { "name": "icon", "type": "string" },
+              { "name": "tabbed", "type": "boolean" },
+              { "name": "headerBorderless", "type": "boolean" },
+              { "name": "cosmic", "type": "boolean" },
+              { "name": "flush", "type": "boolean" },
+              { "name": "flushX", "type": "boolean" },
+              { "name": "flushY", "type": "boolean" },
+              { "name": "flushFooter", "type": "boolean" },
+              { "name": "transparent", "type": "boolean" },
+              { "name": "shadow", "type": "boolean" }
+            ],
+            "events": [
+              {
+                "name": "zn-language-change",
+                "description": "Emitted when the active language changes. Detail: `{ language: string }`."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-tooltip",
           "description": "The Tooltip component is used to display additional information when a user hovers over or clicks\non an element.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the tooltip is shown.\n- **zn-after-show** - Emitted after the tooltip is shown.\n- **zn-hide** - Emitted when the tooltip is hidden.\n- **zn-after-hide** - Emitted after the tooltip is hidden.\n\n### **Slots:**\n - _default_ - The content of the tooltip\n- **anchor** - The anchor the tooltip is attached to.",
           "doc-url": "",
@@ -10899,90 +10983,6 @@
               {
                 "name": "zn-after-hide",
                 "description": "Emitted after the tooltip is hidden."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-translation-group",
-          "description": "A panel-styled container that provides a shared language toggle for multiple zn-translations children.\n---\n\n\n### **Events:**\n - **zn-language-change** - Emitted when the active language changes. Detail: `{ language: string }`.\n\n### **Slots:**\n - _default_ - Default slot for `<zn-translations>` elements.\n- **actions** - Actions displayed in the panel header alongside language buttons.\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "label",
-              "description": "The group label displayed in the panel header.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "languages",
-              "description": "The available languages for the group.",
-              "value": {
-                "type": "Record<string, string>",
-                "default": "{ 'en': 'EN' }"
-              }
-            },
-            { "name": "basis-px", "value": { "type": "number" } },
-            { "name": "caption", "value": { "type": "string" } },
-            { "name": "icon", "value": { "type": "string" } },
-            { "name": "tabbed", "value": { "type": "boolean" } },
-            { "name": "header-borderless", "value": { "type": "boolean" } },
-            { "name": "cosmic", "value": { "type": "boolean" } },
-            { "name": "flush", "value": { "type": "boolean" } },
-            { "name": "flush-x", "value": { "type": "boolean" } },
-            { "name": "flush-y", "value": { "type": "boolean" } },
-            { "name": "flush-footer", "value": { "type": "boolean" } },
-            { "name": "transparent", "value": { "type": "boolean" } },
-            { "name": "shadow", "value": { "type": "boolean" } }
-          ],
-          "slots": [
-            {
-              "name": "",
-              "description": "Default slot for `<zn-translations>` elements."
-            },
-            {
-              "name": "actions",
-              "description": "Actions displayed in the panel header alongside language buttons."
-            },
-            {
-              "name": "footer",
-              "description": "Content displayed in the panel footer."
-            }
-          ],
-          "events": [
-            {
-              "name": "zn-language-change",
-              "description": "Emitted when the active language changes. Detail: `{ language: string }`."
-            }
-          ],
-          "js": {
-            "properties": [
-              {
-                "name": "label",
-                "description": "The group label displayed in the panel header.",
-                "type": "string"
-              },
-              {
-                "name": "languages",
-                "description": "The available languages for the group.",
-                "type": "Record<string, string>"
-              },
-              { "name": "basis", "type": "number" },
-              { "name": "caption", "type": "string" },
-              { "name": "icon", "type": "string" },
-              { "name": "tabbed", "type": "boolean" },
-              { "name": "headerBorderless", "type": "boolean" },
-              { "name": "cosmic", "type": "boolean" },
-              { "name": "flush", "type": "boolean" },
-              { "name": "flushX", "type": "boolean" },
-              { "name": "flushY", "type": "boolean" },
-              { "name": "flushFooter", "type": "boolean" },
-              { "name": "transparent", "type": "boolean" },
-              { "name": "shadow", "type": "boolean" }
-            ],
-            "events": [
-              {
-                "name": "zn-language-change",
-                "description": "Emitted when the active language changes. Detail: `{ language: string }`."
               }
             ]
           }

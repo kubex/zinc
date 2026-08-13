@@ -321,7 +321,6 @@ Add custom quick actions to the context menu using the `zn-editor-quick-action` 
 ```html:preview
 <zn-editor
   name="content"
-  value="<p>Select this text to see custom quick actions in the context menu</p>"
   style="height: 300px">
   <zn-editor-quick-action
     slot="context-items"

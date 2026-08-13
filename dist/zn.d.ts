@@ -6356,33 +6356,6 @@ declare module "components/editor/modules/attachment/attachment" {
         private _uploadAttachment;
     }
 }
-declare module "components/editor/modules/context-menu/context-menu-component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    export interface ResultItem {
-        icon: string;
-        label: string;
-        format?: string;
-        key?: string;
-        value?: string | boolean;
-        order?: number;
-    }
-    export default class ContextMenuComponent extends ZincElement {
-        static styles: CSSResultGroup;
-        open: boolean;
-        query: string;
-        results: ResultItem[];
-        private _activeIndex;
-        show(): void;
-        hide(): void;
-        setPosition(left: number, top: number): void;
-        setActiveIndex(index: number): void;
-        getActiveIndex(): number;
-        private _onClickItem;
-        protected willUpdate(changed: PropertyValues): void;
-        render(): import("lit-html").TemplateResult<1>;
-    }
-}
 declare module "components/editor/modules/context-menu/quick-action/quick-action.component" {
     import ZincElement from "internal/zinc-element";
     export default class ZnEditorQuickAction extends ZincElement {
@@ -6406,29 +6379,30 @@ declare module "components/editor/modules/context-menu/quick-action/index" {
     }
 }
 declare module "components/editor/modules/context-menu/context-menu" {
-    import "components/editor/modules/context-menu/context-menu-component";
     import Quill from "quill";
     import type { EditorFeatureConfig } from "components/editor/editor.component";
     class ContextMenu {
         private _quill;
         private readonly _toolbarModule;
-        private _component;
+        private _menu;
         private _startIndex;
+        /** Trigger position the user dismissed with Escape; the menu stays shut until they move off it. */
+        private _dismissedIndex;
         private _keydownHandler;
         private _docClickHandler;
         private _featureConfig;
+        private readonly _caretAnchor;
         constructor(quill: Quill, options: {
             config: EditorFeatureConfig;
         });
         private initComponent;
         private attachEvents;
-        private createComponent;
         private onDocumentClick;
         private updateFromEditor;
-        private positionComponent;
+        private caretRect;
         private getToolbarQuery;
         private onKeydown;
-        private onToolbarSelect;
+        private onItemSelect;
         private _clickToolbarItem;
         private _applySelectedFormat;
         private deleteLastIndex;

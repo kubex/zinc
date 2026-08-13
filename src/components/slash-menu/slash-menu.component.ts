@@ -228,6 +228,7 @@ export default class ZnSlashMenu extends ZincElement {
   // mousedown, not click: preventDefault keeps focus (and the caret) in the field
   private readonly handleItemMouseDown = (event: MouseEvent) => {
     event.preventDefault();
+    event.stopPropagation();
 
     const index = Number((event.currentTarget as HTMLElement).dataset.index);
     const item = this.visibleItems[index];

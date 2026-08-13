@@ -1,23 +1,38 @@
-import './context-menu-component';
-import {html} from "lit";
-import {litToHTML} from "../../../../utilities/lit-to-html";
-import {type ResultItem} from "./context-menu-component";
+import {filterSlashItems, SLASH_ITEM_SELECT} from "../../../slash-menu";
 import Delta from "quill-delta";
 import Quill from "quill";
 import ZnEditorQuickAction from "./quick-action";
 import ZnEditorTool from "../toolbar/tool";
 import type {EditorFeatureConfig} from "../../editor.component";
-import type ContextMenuComponent from "./context-menu-component";
+import type {SlashMenuItem} from "../../../slash-menu";
+import type {VirtualElement} from "@floating-ui/dom";
 import type Toolbar from "../toolbar/toolbar";
+import type ZnSlashMenu from "../../../slash-menu";
+
+/**
+ * A slash menu entry plus what choosing it does in the editor: trigger a toolbar tool by `key`,
+ * or apply `format` with `formatValue`. `SlashMenuItem.value` is left unset so the menu never
+ * renders format values as insertion tokens.
+ */
+interface ContextMenuItem extends SlashMenuItem {
+  format?: string;
+  key?: string;
+  formatValue?: string | boolean;
+}
 
 class ContextMenu {
   private _quill: Quill;
   private readonly _toolbarModule: Toolbar;
-  private _component: ContextMenuComponent;
+  private _menu: ZnSlashMenu;
   private _startIndex = -1;
+  /** Trigger position the user dismissed with Escape; the menu stays shut until they move off it. */
+  private _dismissedIndex = -1;
   private _keydownHandler = (e: KeyboardEvent) => this.onKeydown(e);
   private _docClickHandler = (e: MouseEvent) => this.onDocumentClick(e);
   private _featureConfig: EditorFeatureConfig = {};
+  private readonly _caretAnchor: VirtualElement = {
+    getBoundingClientRect: () => this.caretRect()
+  };
 
   constructor(quill: Quill, options: { config: EditorFeatureConfig }) {
     this._quill = quill;
@@ -29,69 +44,56 @@ class ContextMenu {
   }
 
   private initComponent() {
-    this._component = this.createComponent()!;
-    this._quill.container.ownerDocument.body.appendChild(this._component);
+    const doc = this._quill.container.ownerDocument;
+    // The named import above pulls in the slash-menu module, which registers the element
+    this._menu = doc.createElement('zn-slash-menu');
+    this._menu.heading = 'Options';
+    this._caretAnchor.contextElement = this._quill.root;
+    this._menu.anchor = this._caretAnchor;
+    doc.body.appendChild(this._menu);
   }
 
   private attachEvents() {
-    this._quill.on(Quill.events.TEXT_CHANGE, () => this.updateFromEditor());
     this._quill.on(Quill.events.EDITOR_CHANGE, () => this.updateFromEditor());
     this._quill.root.addEventListener('keydown', this._keydownHandler);
-    this._component.addEventListener('zn-format-select', (e: Event) => this.onToolbarSelect(e as CustomEvent<ResultItem>));
-    this._quill.on('editor-change', () => this.positionComponent());
+    this._menu.addEventListener(SLASH_ITEM_SELECT, (e: Event) => this.onItemSelect(e as CustomEvent<{ item: ContextMenuItem }>));
     this._quill.focus();
   }
 
-  private createComponent() {
-    const tpl = html`
-      <zn-context-menu></zn-context-menu>`;
-    return litToHTML<ContextMenuComponent>(tpl);
-  }
-
   private onDocumentClick(e: MouseEvent) {
-    const target = e.composedPath ? e.composedPath()[0] as Node : (e.target as Node);
-    if (!target) return;
-
-    if (!this._component.contains(target) && !this._quill.root.contains(target)) {
+    const path = e.composedPath();
+    if (!path.includes(this._menu) && !path.includes(this._quill.root)) {
       this.hide();
     }
   }
 
   private updateFromEditor() {
     const info = this.getToolbarQuery();
-    if (!info) {
+    if (!info || info.start === this._dismissedIndex) {
       this.hide();
       return;
     }
 
     const {start, formatQuery} = info;
-    this._startIndex = start;
-
-    try {
-      const q = formatQuery.toLowerCase();
-      this._component.results = this._getOptions().filter(it => !q || it.label.toLowerCase().includes(q) || it?.format?.toLowerCase().includes(q));
-    } catch {
-      this._component.results = [];
+    const matches = filterSlashItems(this._getOptions(), formatQuery);
+    if (!matches.length) {
+      this.hide();
+      return;
     }
 
-    this._component.query = formatQuery;
+    this._startIndex = start;
+    this._menu.query = formatQuery;
+    this._menu.items = matches;
     this.show();
-    this.positionComponent();
   }
 
-  private positionComponent() {
-    if (!this._component || !this._component.open) return;
+  private caretRect(): DOMRect {
+    const index = this._startIndex >= 0 ? this._startIndex : (this._quill.getSelection()?.index ?? 0);
+    const container = this._quill.container.getBoundingClientRect();
+    const bounds = this._quill.getBounds(index);
+    if (!bounds) return new DOMRect(container.left, container.top, 0, 0);
 
-    const range = this._quill.getSelection();
-    if (!range) return;
-
-    const bounds = this._quill.getBounds(range.index);
-    if (!bounds) return;
-
-    const editorBounds = this._quill.container.getBoundingClientRect();
-    const left = Math.max(0, editorBounds.left + bounds.left);
-    const top = editorBounds.top + bounds.bottom + 4;
-    this._component.setPosition(left, top);
+    return new DOMRect(container.left + bounds.left, container.top + bounds.top, 0, bounds.height);
   }
 
   private getToolbarQuery(): { start: number; formatQuery: string } | null {
@@ -120,61 +122,50 @@ class ContextMenu {
   }
 
   private onKeydown(e: KeyboardEvent) {
-    if (!this._component?.open) return;
+    if (!this._menu.open) return;
 
-    if (e.key === 'Escape') {
-      e.preventDefault();
-      e.stopPropagation();
-      this.hide();
-      return;
-    }
-
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      e.stopPropagation();
-      const next = (this._component.getActiveIndex?.() ?? -1) + 1;
-      this._component.setActiveIndex?.(next);
-      return;
-    }
-
-    if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      e.stopPropagation();
-      const prev = (this._component.getActiveIndex?.() ?? 0) - 1;
-      this._component.setActiveIndex?.(prev);
-      return;
-    }
-
-    if (e.key === 'Enter') {
-      const idx = this._component.getActiveIndex?.();
-      const results = (this._component.results as ResultItem[]) || [];
-      const item = (typeof idx === 'number' && idx >= 0 && idx < results.length) ? results[idx] : undefined;
-      if (item?.format === 'toolbar' && item?.key) {
+    switch (e.key) {
+      case 'Escape':
         e.preventDefault();
         e.stopPropagation();
-        this._clickToolbarItem(item.key);
+        this._dismissedIndex = this._startIndex;
+        this.hide();
         return;
-      }
-      if (item?.format) {
+
+      case 'ArrowDown':
         e.preventDefault();
         e.stopPropagation();
-        this._applySelectedFormat(item.format, item.value);
+        this._menu.moveActive(1);
+        return;
+
+      case 'ArrowUp':
+        e.preventDefault();
+        e.stopPropagation();
+        this._menu.moveActive(-1);
+        return;
+
+      case 'Enter': {
+        if (!this._menu.activeItem) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+        this._menu.selectActive();
       }
     }
   }
 
-  private onToolbarSelect(e: CustomEvent<ResultItem>) {
-    const key: string | undefined = e.detail?.key as (string | undefined);
-    if (key) {
-      this._clickToolbarItem(key);
+  private onItemSelect(e: CustomEvent<{ item: ContextMenuItem }>) {
+    const item = e.detail?.item;
+    if (!item) return;
+
+    if (item.key) {
+      this._clickToolbarItem(item.key);
       return;
     }
 
-    const format: string = e.detail?.format || '';
-    const value: string | boolean | undefined = e.detail?.value as (string | boolean | undefined);
-    if (!format) return;
-
-    this._applySelectedFormat(format, value);
+    if (item.format) {
+      this._applySelectedFormat(item.format, item.formatValue);
+    }
   }
 
   private _clickToolbarItem(key: string) {
@@ -228,8 +219,8 @@ class ContextMenu {
     }
   }
 
-  private _getOptions(): ResultItem[] {
-    const options: ResultItem[] = [];
+  private _getOptions(): ContextMenuItem[] {
+    const options: ContextMenuItem[] = [];
     let orderCounter = 0;
 
     // 1) Quick Actions
@@ -251,11 +242,11 @@ class ContextMenu {
 
         if (label && icon) {
           if (key) {
-            options.push({icon, label, format: 'toolbar', key: key, order});
+            options.push({icon, label, key: key, order});
           } else if (uri) {
-            options.push({icon, label, format: 'dialog', value: uri, order});
+            options.push({icon, label, format: 'dialog', formatValue: uri, order});
           } else if (content) {
-            options.push({icon, label, format: 'insert', value: content, order});
+            options.push({icon, label, format: 'insert', formatValue: content, order});
           }
         }
       });
@@ -269,73 +260,72 @@ class ContextMenu {
         if (!label || !icon || !key) return;
 
         const order = typeof tool.order === 'number' ? tool.order : orderCounter++;
-        options.push({icon, label, format: 'toolbar', key: key, order});
+        options.push({icon, label, key: key, order});
       });
     }
 
     // 2) Built-in Actions (In order they should appear)
     options.push(
-      {icon: 'bold@lu', label: 'Bold', format: 'bold', order: orderCounter++},
-      {icon: 'italic@lu', label: 'Italic', format: 'italic', order: orderCounter++},
-      {icon: 'underline@lu', label: 'Underline', format: 'underline', order: orderCounter++},
-      {icon: 'strikethrough@lu', label: 'Strikethrough', format: 'strike', order: orderCounter++},
-      {icon: 'text-quote@lu', label: 'Blockquote', format: 'blockquote', order: orderCounter++},
+      {icon: 'bold@lu', label: 'Bold', format: 'bold', keywords: 'bold', order: orderCounter++},
+      {icon: 'italic@lu', label: 'Italic', format: 'italic', keywords: 'italic', order: orderCounter++},
+      {icon: 'underline@lu', label: 'Underline', format: 'underline', keywords: 'underline', order: orderCounter++},
+      {icon: 'strikethrough@lu', label: 'Strikethrough', format: 'strike', keywords: 'strike', order: orderCounter++},
+      {icon: 'text-quote@lu', label: 'Blockquote', format: 'blockquote', keywords: 'blockquote', order: orderCounter++},
     );
     if (this._featureConfig.codeEnabled !== false) {
-      options.push({icon: 'code@lu', label: 'Inline Code', format: 'code', order: orderCounter++});
+      options.push({icon: 'code@lu', label: 'Inline Code', format: 'code', keywords: 'code', order: orderCounter++});
     }
     if (this._featureConfig.codeBlocksEnabled !== false) {
-      options.push({icon: 'square-code@lu', label: 'Code Block', format: 'code-block', order: orderCounter++});
+      options.push({icon: 'square-code@lu', label: 'Code Block', format: 'code-block', keywords: 'code-block', order: orderCounter++});
     }
     options.push(
-      {icon: 'heading-1@lu', label: 'Heading 1', format: 'header', value: '1', order: orderCounter++},
-      {icon: 'heading-2@lu', label: 'Heading 2', format: 'header', value: '2', order: orderCounter++},
-      {icon: 'case-sensitive@lu', label: 'Normal Text', format: 'header', value: '', order: orderCounter++},
-      {icon: 'list@lu', label: 'Bulleted List', format: 'list', value: 'bullet', order: orderCounter++},
-      {icon: 'list-ordered@lu', label: 'Numbered List', format: 'list', value: 'ordered', order: orderCounter++},
-      {icon: 'list-todo@lu', label: 'Checklist', format: 'list', value: 'checked', order: orderCounter++}
+      {icon: 'heading-1@lu', label: 'Heading 1', format: 'header', formatValue: '1', keywords: 'header,h1', order: orderCounter++},
+      {icon: 'heading-2@lu', label: 'Heading 2', format: 'header', formatValue: '2', keywords: 'header,h2', order: orderCounter++},
+      {icon: 'case-sensitive@lu', label: 'Normal Text', format: 'header', formatValue: '', keywords: 'header,paragraph', order: orderCounter++},
+      {icon: 'list@lu', label: 'Bulleted List', format: 'list', formatValue: 'bullet', keywords: 'list,bullet', order: orderCounter++},
+      {icon: 'list-ordered@lu', label: 'Numbered List', format: 'list', formatValue: 'ordered', keywords: 'list,ordered', order: orderCounter++},
+      {icon: 'list-todo@lu', label: 'Checklist', format: 'list', formatValue: 'checked', keywords: 'list,checked,todo', order: orderCounter++}
     );
     if (this._featureConfig.linksEnabled !== false) {
-      options.push({icon: 'link@lu', label: 'Link', format: 'link', value: true, order: orderCounter++});
+      options.push({icon: 'link@lu', label: 'Link', format: 'link', formatValue: true, keywords: 'link', order: orderCounter++});
     }
     if (this._featureConfig.dividersEnabled !== false) {
-      options.push({icon: 'minus@lu', label: 'Divider', format: 'divider', order: orderCounter++});
+      options.push({icon: 'minus@lu', label: 'Divider', format: 'divider', keywords: 'divider,hr', order: orderCounter++});
     }
     if (this._featureConfig.attachmentsEnabled !== false) {
-      options.push({icon: 'paperclip@lu', label: 'Attachment', format: 'attachment', order: orderCounter++});
+      options.push({icon: 'paperclip@lu', label: 'Attachment', format: 'attachment', keywords: 'attachment', order: orderCounter++});
     }
     if (this._featureConfig.imagesEnabled !== false) {
-      options.push({icon: 'image@lu', label: 'Image', format: 'image', order: orderCounter++});
+      options.push({icon: 'image@lu', label: 'Image', format: 'image', keywords: 'image', order: orderCounter++});
     }
     if (this._featureConfig.videosEnabled !== false) {
-      options.push({icon: 'video@lu', label: 'Video', format: 'video', order: orderCounter++});
+      options.push({icon: 'video@lu', label: 'Video', format: 'video', keywords: 'video', order: orderCounter++});
     }
     if (this._featureConfig.datesEnabled !== false) {
-      options.push({icon: 'calendar@lu', label: 'Date', format: 'date', order: orderCounter++});
+      options.push({icon: 'calendar@lu', label: 'Date', format: 'date', keywords: 'date', order: orderCounter++});
     }
-    options.push({icon: 'remove-formatting@lu', label: 'Clear Formatting', format: 'clean', order: orderCounter++});
-
-    // Sort options by order property
-    options.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    options.push({icon: 'remove-formatting@lu', label: 'Clear Formatting', format: 'clean', keywords: 'clean', order: orderCounter++});
 
     return options;
   }
 
   private show() {
-    if (!this._component.open) {
-      this._component.show();
-      this._quill.container.ownerDocument.addEventListener('click', this._docClickHandler);
-    }
+    if (this._menu.open) return;
+
+    this._menu.show();
+    this._quill.container.ownerDocument.addEventListener('click', this._docClickHandler);
   }
 
   private hide() {
-    this._component.hide();
     this._startIndex = -1;
+    if (!this._menu.open) return;
+
+    this._menu.hide();
     this._quill.container.ownerDocument.removeEventListener('click', this._docClickHandler);
   }
 
   public isOpen() {
-    return this._component?.open;
+    return this._menu?.open ?? false;
   }
 }
 

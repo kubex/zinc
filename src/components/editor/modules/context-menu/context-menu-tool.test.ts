@@ -9,9 +9,9 @@ interface QuillLike {
   root: HTMLElement;
 }
 
-interface ContextMenuLike extends HTMLElement {
+interface SlashMenuLike extends HTMLElement {
   open: boolean;
-  results: { label: string }[];
+  items: { label: string }[];
   setActiveIndex: (index: number) => void;
 }
 
@@ -19,9 +19,13 @@ interface EditorDialogLike extends HTMLElement {
   dialogEl: HTMLDialogElement;
 }
 
+interface DropdownLike extends HTMLElement {
+  open: boolean;
+}
+
 describe('<zn-editor> context menu tools', () => {
   afterEach(() => {
-    document.querySelectorAll('zn-context-menu, zn-editor-dialog').forEach(el => el.remove());
+    document.querySelectorAll('zn-slash-menu, zn-editor-dialog').forEach(el => el.remove());
   });
 
   const editorWithTool = () => fixture<ZnEditor>(html`
@@ -43,8 +47,8 @@ describe('<zn-editor> context menu tools', () => {
     return quill;
   };
 
-  const contextMenu = (): ContextMenuLike =>
-    document.querySelector('zn-context-menu') as unknown as ContextMenuLike;
+  const contextMenu = (): SlashMenuLike =>
+    document.querySelector('zn-slash-menu') as unknown as SlashMenuLike;
 
   it('lists a context-menu flagged tool in the slash menu', async () => {
     const el = await editorWithTool();
@@ -54,7 +58,7 @@ describe('<zn-editor> context menu tools', () => {
     expect(menu, 'context menu should exist').to.exist;
     expect(menu.open, 'context menu should be open').to.be.true;
 
-    const labels = menu.results.map(r => r.label);
+    const labels = menu.items.map(item => item.label);
     expect(labels).to.include('Canned Responses');
   });
 
@@ -63,7 +67,7 @@ describe('<zn-editor> context menu tools', () => {
     const quill = await openContextMenu(el);
 
     const menu = contextMenu();
-    const index = menu.results.findIndex(r => r.label === 'Canned Responses');
+    const index = menu.items.findIndex(item => item.label === 'Canned Responses');
     expect(index).to.be.greaterThan(-1);
     menu.setActiveIndex(index);
 
@@ -79,5 +83,30 @@ describe('<zn-editor> context menu tools', () => {
     expect(dialog, 'editor dialog should exist').to.exist;
     expect(dialog.dialogEl.open, 'dialog should be open').to.be.true;
     expect(dialog.innerHTML).to.contain('/canned');
+  });
+
+  it('keeps the date picker open when Date is chosen with the mouse', async () => {
+    const el = await fixture<ZnEditor>(html`
+      <zn-editor id="test-editor" dates></zn-editor>`);
+    const quill = await openContextMenu(el);
+    quill.insertText(1, 'date', 'user');
+    quill.setSelection(5, 0, 'user');
+    await aTimeout(50);
+
+    const menu = contextMenu();
+    const index = menu.items.findIndex(item => item.label === 'Date');
+    expect(index, 'Date should be listed').to.be.greaterThan(-1);
+
+    const button = menu.shadowRoot!.querySelectorAll<HTMLButtonElement>('[data-slash-item]')[index];
+    expect(button, 'Date item should be rendered').to.exist;
+
+    const toolbar = el.shadowRoot!.getElementById('toolbar');
+    const dateDropdown = toolbar?.shadowRoot?.querySelector('zn-dropdown.toolbar__date-dropdown') as DropdownLike | null;
+    const overflowDropdown = toolbar?.shadowRoot?.querySelector('zn-dropdown.toolbar__overflow') as DropdownLike | null;
+
+    button.dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, composed: true}));
+    await aTimeout(100);
+
+    expect(dateDropdown?.open || overflowDropdown?.open, 'a dropdown holding the date picker should be open').to.be.true;
   });
 });

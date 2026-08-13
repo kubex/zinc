@@ -63,10 +63,22 @@ describe('<zn-slash-menu>', () => {
 
     const item = el.shadowRoot!.querySelector<HTMLButtonElement>('[data-slash-item]')!;
     const event = new MouseEvent('mousedown', {bubbles: true, cancelable: true, composed: true});
-    item.dispatchEvent(event);
+
+    let reachedDocument = false;
+    const documentListener = () => {
+      reachedDocument = true;
+    };
+    document.addEventListener('mousedown', documentListener);
+    try {
+      item.dispatchEvent(event);
+    } finally {
+      document.removeEventListener('mousedown', documentListener);
+    }
 
     expect(selected).to.deep.equal(['Brand name']);
     expect(event.defaultPrevented, 'mousedown is prevented so the field keeps focus').to.be.true;
+    // A selection may open another overlay; the mousedown must not leak to its outside-click dismisser
+    expect(reachedDocument, 'mousedown does not bubble to document').to.be.false;
   });
 
   it('reports how many matches were not rendered', async () => {

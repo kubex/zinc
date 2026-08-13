@@ -331,7 +331,10 @@ class Toolbar extends QuillToolbar {
     const isVisible = (el: HTMLElement | null) => (el?.offsetParent !== null);
 
     if (isVisible(button)) {
-      button!.click();
+      // zn-button overrides click() without dispatching a DOM event, so the
+      // dropdown's trigger listener never hears it — open the dropdown directly
+      const dateDropdown = shadow.querySelector('zn-dropdown.toolbar__date-dropdown') as ZnDropdown | null;
+      dateDropdown?.show().then();
       return;
     }
 

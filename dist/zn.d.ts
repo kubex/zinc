@@ -1989,6 +1989,8 @@ declare module "components/slash-menu/slash-menu.component" {
         reposition(): void;
         connectedCallback(): void;
         disconnectedCallback(): void;
+        private showPanelPopover;
+        private hidePanelPopover;
         private startPositioner;
         private stopPositioner;
         private position;

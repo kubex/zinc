@@ -11367,6 +11367,8 @@ declare module "components/schedule-builder/schedule-builder.component" {
     import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
     import ZnInput from "components/input/index";
+    import ZnOption from "components/option/index";
+    import ZnSelect from "components/select/index";
     import type { ZincFormControl } from "internal/zinc-element";
     /** The seven weekday keys used throughout the schedule. */
     export type ScheduleDay = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
@@ -11404,6 +11406,8 @@ declare module "components/schedule-builder/schedule-builder.component" {
         exceptions: ScheduleException[];
     }
     export type ScheduleView = 'calendar' | 'form';
+    /** The named sets accepted by `timezones`, alongside explicit IANA names. */
+    export type ScheduleTimezoneSet = 'en' | 'offsets' | 'common' | 'all';
     /**
      * @summary Builds a weekly opening-hours schedule as a drag-to-paint calendar or a compact list of
      * time ranges, and posts the result as JSON.
@@ -11413,6 +11417,8 @@ declare module "components/schedule-builder/schedule-builder.component" {
      *
      * @dependency zn-icon
      * @dependency zn-input
+     * @dependency zn-option
+     * @dependency zn-select
      *
      * @event zn-change - Emitted when the schedule changes.
      *
@@ -11437,6 +11443,8 @@ declare module "components/schedule-builder/schedule-builder.component" {
         static dependencies: {
             'zn-icon': typeof ZnIcon;
             'zn-input': typeof ZnInput;
+            'zn-option': typeof ZnOption;
+            'zn-select': typeof ZnSelect;
         };
         private readonly formControlController;
         private readonly hasSlotController;
@@ -11480,8 +11488,32 @@ declare module "components/schedule-builder/schedule-builder.component" {
         weekStart: ScheduleDay;
         /** Displays times as 12 or 24 hour. The serialised value is always 24 hour `HH:MM`. */
         timeFormat: '12' | '24';
-        /** The IANA timezone the hours are expressed in. Carried through to the value untouched. */
-        timezone: string;
+        /**
+         * The IANA timezone the hours are shown in. Accepts `auto` for the viewer's own timezone. Defaults
+         * to `save-timezone`, so nothing is converted until you ask for it. Changing this only re-labels
+         * the same underlying hours; the value never moves.
+         */
+        displayTimezone: string;
+        /**
+         * The IANA timezone the value is stored in. Defaults to `UTC` as soon as the schedule is
+         * timezone-aware (a display timezone is set, or the picker is shown), and to no timezone at all
+         * otherwise — in which case the times are stored exactly as they are shown.
+         */
+        saveTimezone: string;
+        /** Shows the timezone picker, letting the user read the schedule in any timezone. */
+        showTimezone: boolean;
+        /**
+         * The timezones offered by the picker, as IANA names or one of the named sets — `en` (the four US
+         * zones, the UK and Australia, under those names), `offsets` (one zone per UTC offset, the
+         * default), `common` (every offset plus the world's major centres) or `all` (the complete IANA
+         * list). Names and sets can be mixed, e.g. `en Asia/Tokyo`.
+         */
+        timezones: string[];
+        /**
+         * The date (`YYYY-MM-DD`) used to resolve timezone offsets. A weekly pattern has no date of its
+         * own, so one has to be picked to know whether daylight saving applies; today is used by default.
+         */
+        referenceDate: string;
         /** Disables the schedule. */
         disabled: boolean;
         /** Renders the schedule without any editing affordances. */
@@ -11491,7 +11523,10 @@ declare module "components/schedule-builder/schedule-builder.component" {
         /** The id of the form to associate with, when the control sits outside of it. */
         form: string;
         constructor();
-        /** The schedule as a plain object. Assigning to it replaces the whole schedule. */
+        /**
+         * The schedule as a plain object, with `days` in the save timezone. Assigning to it replaces the
+         * whole schedule.
+         */
         get schedule(): ScheduleValue;
         set schedule(schedule: ScheduleValue | null | undefined);
         /** The exceptions annotating the schedule. Also readable from, and written into, the value. */
@@ -11501,6 +11536,16 @@ declare module "components/schedule-builder/schedule-builder.component" {
         get validity(): ValidityState;
         /** Gets the validation message. */
         get validationMessage(): string;
+        /** Whether the schedule carries a timezone at all. */
+        private get _isZoned();
+        /** The timezone the value is stored in. Empty means the times are stored exactly as shown. */
+        private get _saveZone();
+        /** The timezone the grid and list are drawn in. */
+        private get _displayZone();
+        /** The moment used to resolve daylight saving for both zones. */
+        private get _reference();
+        /** Minutes to add to a stored time to get the time shown. */
+        private get _offsetDelta();
         private get _orderedDays();
         private get _interval();
         private get _startMinute();
@@ -11521,10 +11566,14 @@ declare module "components/schedule-builder/schedule-builder.component" {
         reportValidity(): boolean;
         /** Sets a custom validation message. Pass an empty string to restore validity. */
         setCustomValidity(message: string): void;
-        /** Replaces the hours for a single day. */
+        /** Replaces the hours for a single day, in the save timezone. */
         setDay(day: ScheduleDay, ranges: ScheduleRange[]): void;
-        /** Reads the hours for a single day. */
+        /** Reads the hours for a single day, in the save timezone. */
         getDay(day: ScheduleDay): ScheduleRange[];
+        /** The hours as currently shown, in the display timezone. */
+        get displayedDays(): ScheduleDayMap;
+        /** Replaces the hours for a single day, given in the display timezone. */
+        setDisplayDay(day: ScheduleDay, ranges: ScheduleRange[]): void;
         formResetCallback(): void;
         formStateRestoreCallback(restoredValue: string): void;
         private _customValidity;
@@ -11538,12 +11587,24 @@ declare module "components/schedule-builder/schedule-builder.component" {
         private _formatRange;
         private _formatDate;
         private _summariseDay;
+        /** The stored hours rotated into the display timezone. */
+        private get _storedAsShown();
+        /** The hours as drawn, which is the drag preview while a drag is in flight. */
+        private get _shownDays();
+        /** Stores hours that were edited in display coordinates, rotating them back to the save timezone. */
+        private _commitShownDays;
         /** The exceptions that touch a given weekday and actually change its hours. */
         private _exceptionsForDay;
+        /**
+         * The week spans an exception takes away, in display coordinates. Computed as spans rather than
+         * per-day ranges because a timezone rotation can move an exception's hours onto another weekday.
+         */
+        private get _shownReductionSpans();
+        /** The week minute a calendar cell sits on, measured from Monday 00:00. */
+        private _slotMinute;
         private _slotState;
-        private _isSlotOpen;
         private _pointerPosition;
-        /** Paints the rectangle between the drag anchor and the cursor onto a copy of the schedule. */
+        /** Paints the rectangle between the drag anchor and the cursor onto a copy of the shown schedule. */
         private _buildDragPreview;
         private _handleCanvasPointerDown;
         private _handleCanvasPointerMove;
@@ -11558,6 +11619,10 @@ declare module "components/schedule-builder/schedule-builder.component" {
         private _handleEditorKeyDown;
         private _handleEditorFocusOut;
         private _renderToolbar;
+        /** The picker's options: the configured list plus whatever zones are already in play. */
+        private get _timezoneOptions();
+        private _handleTimezoneChange;
+        private _renderTimezonePicker;
         private _renderCalendar;
         private _renderCalendarColumn;
         private _renderSummary;

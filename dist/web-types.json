@@ -16,6 +16,28 @@
           "js": { "properties": [], "events": [] }
         },
         {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -75,28 +97,6 @@
               { "name": "center", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -279,56 +279,6 @@
               { "name": "actions", "type": "BulkActionData" },
               { "name": "validationMessage", "type": "string" },
               { "name": "validity", "type": "ValidityState" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-button-group",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n\n### **CSS Properties:**\n - **--grow** - Use flex-grow to fill available space. _(default: undefined)_\n- **--start** - Justify content at the start of the flex space. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "direction",
-              "value": {
-                "type": "'horizontal' | 'vertical'",
-                "default": "'horizontal'"
-              }
-            },
-            {
-              "name": "grow",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "wrap",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "start",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "gap",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "slots": [{ "name": "", "description": "The default slot." }],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "direction", "type": "'horizontal' | 'vertical'" },
-              { "name": "grow", "type": "boolean" },
-              { "name": "wrap", "type": "boolean" },
-              { "name": "start", "type": "boolean" },
-              { "name": "gap", "type": "boolean" },
-              { "name": "defaultSlot", "type": "HTMLSlotElement" }
             ],
             "events": [
               {
@@ -600,6 +550,56 @@
               {
                 "name": "zn-invalid",
                 "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-button-group",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n\n### **CSS Properties:**\n - **--grow** - Use flex-grow to fill available space. _(default: undefined)_\n- **--start** - Justify content at the start of the flex space. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "direction",
+              "value": {
+                "type": "'horizontal' | 'vertical'",
+                "default": "'horizontal'"
+              }
+            },
+            {
+              "name": "grow",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "wrap",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "start",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "gap",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [{ "name": "", "description": "The default slot." }],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "direction", "type": "'horizontal' | 'vertical'" },
+              { "name": "grow", "type": "boolean" },
+              { "name": "wrap", "type": "boolean" },
+              { "name": "start", "type": "boolean" },
+              { "name": "gap", "type": "boolean" },
+              { "name": "defaultSlot", "type": "HTMLSlotElement" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
               }
             ]
           }
@@ -8120,7 +8120,7 @@
         },
         {
           "name": "zn-schedule-builder",
-          "description": "Builds a weekly opening-hours schedule as a drag-to-paint calendar or a compact list of\ntime ranges, and posts the result as JSON.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the schedule changes.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks validity but does not show a validation message.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n- **setDay(day: _ScheduleDay_, ranges: _ScheduleRange[]_)** - Replaces the hours for a single day.\n- **getDay(day: _ScheduleDay_): _ScheduleRange[]_** - Reads the hours for a single day.\n\n### **Slots:**\n - **label** - The schedule's label. Alternatively, use the `label` attribute.\n- **help-text** - Text that describes how to use the schedule. Alternatively, use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--slot-height** - The height of a single time slot in the calendar. Defaults to `18px`. _(default: undefined)_\n- **--gutter-width** - The width of the calendar's time gutter. Defaults to `64px`. _(default: undefined)_\n- **--open-color** - The fill used for open hours. _(default: undefined)_\n- **--reduced-color** - The fill used for hours an exception removes. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the builder, label and help text.\n- **base** - The component's base wrapper.\n- **toolbar** - The row above the builder holding the hint, legend and view toggle.\n- **calendar** - The calendar view wrapper.\n- **list** - The form (list) view wrapper.\n- **summary** - The summary panel beside the calendar.",
+          "description": "Builds a weekly opening-hours schedule as a drag-to-paint calendar or a compact list of\ntime ranges, and posts the result as JSON.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the schedule changes.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks validity but does not show a validation message.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n- **setDay(day: _ScheduleDay_, ranges: _ScheduleRange[]_)** - Replaces the hours for a single day, in the save timezone.\n- **getDay(day: _ScheduleDay_): _ScheduleRange[]_** - Reads the hours for a single day, in the save timezone.\n- **setDisplayDay(day: _ScheduleDay_, ranges: _ScheduleRange[]_)** - Replaces the hours for a single day, given in the display timezone.\n\n### **Slots:**\n - **label** - The schedule's label. Alternatively, use the `label` attribute.\n- **help-text** - Text that describes how to use the schedule. Alternatively, use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--slot-height** - The height of a single time slot in the calendar. Defaults to `18px`. _(default: undefined)_\n- **--gutter-width** - The width of the calendar's time gutter. Defaults to `64px`. _(default: undefined)_\n- **--open-color** - The fill used for open hours. _(default: undefined)_\n- **--reduced-color** - The fill used for hours an exception removes. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the builder, label and help text.\n- **base** - The component's base wrapper.\n- **toolbar** - The row above the builder holding the hint, legend and view toggle.\n- **calendar** - The calendar view wrapper.\n- **list** - The form (list) view wrapper.\n- **summary** - The summary panel beside the calendar.",
           "doc-url": "",
           "attributes": [
             {
@@ -8194,8 +8194,28 @@
               "value": { "type": "'12' | '24'", "default": "'24'" }
             },
             {
-              "name": "timezone",
-              "description": "The IANA timezone the hours are expressed in. Carried through to the value untouched.",
+              "name": "display-timezone",
+              "description": "The IANA timezone the hours are shown in. Accepts `auto` for the viewer's own timezone. Defaults\nto `save-timezone`, so nothing is converted until you ask for it. Changing this only re-labels\nthe same underlying hours; the value never moves.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "save-timezone",
+              "description": "The IANA timezone the value is stored in. Defaults to `UTC` as soon as the schedule is\ntimezone-aware (a display timezone is set, or the picker is shown), and to no timezone at all\notherwise — in which case the times are stored exactly as they are shown.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "show-timezone",
+              "description": "Shows the timezone picker, letting the user read the schedule in any timezone.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "timezones",
+              "description": "The timezones offered by the picker, as IANA names or one of the named sets — `en` (the four US\nzones, the UK and Australia, under those names), `offsets` (one zone per UTC offset, the\ndefault), `common` (every offset plus the world's major centres) or `all` (the complete IANA\nlist). Names and sets can be mixed, e.g. `en Asia/Tokyo`.",
+              "value": { "type": "string[]", "default": "[]" }
+            },
+            {
+              "name": "reference-date",
+              "description": "The date (`YYYY-MM-DD`) used to resolve timezone offsets. A weekly pattern has no date of its\nown, so one has to be picked to know whether daylight saving applies; today is used by default.",
               "value": { "type": "string", "default": "''" }
             },
             {
@@ -8313,8 +8333,28 @@
                 "type": "'12' | '24'"
               },
               {
-                "name": "timezone",
-                "description": "The IANA timezone the hours are expressed in. Carried through to the value untouched.",
+                "name": "displayTimezone",
+                "description": "The IANA timezone the hours are shown in. Accepts `auto` for the viewer's own timezone. Defaults\nto `save-timezone`, so nothing is converted until you ask for it. Changing this only re-labels\nthe same underlying hours; the value never moves.",
+                "type": "string"
+              },
+              {
+                "name": "saveTimezone",
+                "description": "The IANA timezone the value is stored in. Defaults to `UTC` as soon as the schedule is\ntimezone-aware (a display timezone is set, or the picker is shown), and to no timezone at all\notherwise — in which case the times are stored exactly as they are shown.",
+                "type": "string"
+              },
+              {
+                "name": "showTimezone",
+                "description": "Shows the timezone picker, letting the user read the schedule in any timezone.",
+                "type": "boolean"
+              },
+              {
+                "name": "timezones",
+                "description": "The timezones offered by the picker, as IANA names or one of the named sets — `en` (the four US\nzones, the UK and Australia, under those names), `offsets` (one zone per UTC offset, the\ndefault), `common` (every offset plus the world's major centres) or `all` (the complete IANA\nlist). Names and sets can be mixed, e.g. `en Asia/Tokyo`.",
+                "type": "string[]"
+              },
+              {
+                "name": "referenceDate",
+                "description": "The date (`YYYY-MM-DD`) used to resolve timezone offsets. A weekly pattern has no date of its\nown, so one has to be picked to know whether daylight saving applies; today is used by default.",
                 "type": "string"
               },
               {
@@ -8339,7 +8379,7 @@
               },
               {
                 "name": "schedule",
-                "description": "The schedule as a plain object. Assigning to it replaces the whole schedule.",
+                "description": "The schedule as a plain object, with `days` in the save timezone. Assigning to it replaces the\nwhole schedule.",
                 "type": "ScheduleValue"
               },
               {
@@ -8356,6 +8396,11 @@
                 "name": "validationMessage",
                 "description": "Gets the validation message.",
                 "type": "string"
+              },
+              {
+                "name": "displayedDays",
+                "description": "The hours as currently shown, in the display timezone.",
+                "type": "ScheduleDayMap"
               }
             ],
             "events": [
@@ -10958,6 +11003,137 @@
           }
         },
         {
+          "name": "zn-toggle",
+          "description": "Toggles allow the user to switch an option on or off.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted when the toggle receives input.\n\n### **Slots:**\n - _default_ - The toggle's label.\n- **description** - A description of the toggle's label. Alternatively, you can use the `description` attribute.\n- **help-text** - Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--zn-toggle-margin** - The margin around the toggle switch. Defaults to `8px 0`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper containing the toggle switch.\n- **control** - The toggle switch control (the circular button that slides).\n- **description** - The container that wraps the toggle's description.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "title",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            {
+              "name": "name",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            { "name": "value", "value": { "type": "string" } },
+            {
+              "name": "fallback",
+              "description": "The value submitted when the toggle is unchecked, so the toggle always submits a value.",
+              "value": { "type": "string", "default": "'off'" }
+            },
+            {
+              "name": "size",
+              "value": {
+                "type": "'small' | 'medium' | 'large'",
+                "default": "'medium'"
+              }
+            },
+            {
+              "name": "disabled",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "checked",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "form", "value": { "type": "string", "default": "''" } },
+            {
+              "name": "required",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "help-text",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            {
+              "name": "trigger-submit",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "on-text",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "off-text",
+              "value": { "type": "string", "default": "''" }
+            },
+            { "name": "label", "value": { "type": "string", "default": "''" } },
+            {
+              "name": "description",
+              "description": "The toggle's description, displayed under the label. If you need to display HTML, use the `description` slot instead.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "label-position",
+              "value": {
+                "type": "'top' | 'left' | 'right'",
+                "default": "'top'"
+              }
+            },
+            {
+              "name": "inline",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The toggle's label." },
+            {
+              "name": "description",
+              "description": "A description of the toggle's label. Alternatively, you can use the `description` attribute."
+            },
+            {
+              "name": "help-text",
+              "description": "Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute."
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-input",
+              "description": "Emitted when the toggle receives input."
+            }
+          ],
+          "js": {
+            "properties": [
+              { "name": "input", "type": "HTMLInputElement" },
+              { "name": "hasFocus", "type": "boolean" },
+              { "name": "title", "type": "string" },
+              { "name": "name", "type": "string" },
+              { "name": "value", "type": "string" },
+              {
+                "name": "fallbackValue",
+                "description": "The value submitted when the toggle is unchecked, so the toggle always submits a value.",
+                "type": "string"
+              },
+              { "name": "size", "type": "'small' | 'medium' | 'large'" },
+              { "name": "disabled", "type": "boolean" },
+              { "name": "checked", "type": "boolean" },
+              { "name": "defaultChecked", "type": "boolean" },
+              { "name": "form", "type": "string" },
+              { "name": "required", "type": "boolean" },
+              { "name": "helpText", "type": "string" },
+              { "name": "triggerSubmit", "type": "boolean" },
+              { "name": "onText", "type": "string" },
+              { "name": "offText", "type": "string" },
+              { "name": "label", "type": "string" },
+              {
+                "name": "description",
+                "description": "The toggle's description, displayed under the label. If you need to display HTML, use the `description` slot instead.",
+                "type": "string"
+              },
+              { "name": "labelPosition", "type": "'top' | 'left' | 'right'" },
+              { "name": "inline", "type": "boolean" },
+              { "name": "validity" },
+              { "name": "validationMessage" }
+            ],
+            "events": [
+              {
+                "name": "zn-input",
+                "description": "Emitted when the toggle receives input."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-tooltip",
           "description": "The Tooltip component is used to display additional information when a user hovers over or clicks\non an element.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the tooltip is shown.\n- **zn-after-show** - Emitted after the tooltip is shown.\n- **zn-hide** - Emitted when the tooltip is hidden.\n- **zn-after-hide** - Emitted after the tooltip is hidden.\n\n### **Slots:**\n - _default_ - The content of the tooltip\n- **anchor** - The anchor the tooltip is attached to.",
           "doc-url": "",
@@ -11140,137 +11316,6 @@
               {
                 "name": "zn-language-change",
                 "description": "Emitted when the active language changes. Detail: `{ language: string }`."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-toggle",
-          "description": "Toggles allow the user to switch an option on or off.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted when the toggle receives input.\n\n### **Slots:**\n - _default_ - The toggle's label.\n- **description** - A description of the toggle's label. Alternatively, you can use the `description` attribute.\n- **help-text** - Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--zn-toggle-margin** - The margin around the toggle switch. Defaults to `8px 0`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper containing the toggle switch.\n- **control** - The toggle switch control (the circular button that slides).\n- **description** - The container that wraps the toggle's description.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "title",
-              "value": { "type": "string", "default": "\"\"" }
-            },
-            {
-              "name": "name",
-              "value": { "type": "string", "default": "\"\"" }
-            },
-            { "name": "value", "value": { "type": "string" } },
-            {
-              "name": "fallback",
-              "description": "The value submitted when the toggle is unchecked, so the toggle always submits a value.",
-              "value": { "type": "string", "default": "'off'" }
-            },
-            {
-              "name": "size",
-              "value": {
-                "type": "'small' | 'medium' | 'large'",
-                "default": "'medium'"
-              }
-            },
-            {
-              "name": "disabled",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "checked",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "form", "value": { "type": "string", "default": "''" } },
-            {
-              "name": "required",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "help-text",
-              "value": { "type": "string", "default": "\"\"" }
-            },
-            {
-              "name": "trigger-submit",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "on-text",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "off-text",
-              "value": { "type": "string", "default": "''" }
-            },
-            { "name": "label", "value": { "type": "string", "default": "''" } },
-            {
-              "name": "description",
-              "description": "The toggle's description, displayed under the label. If you need to display HTML, use the `description` slot instead.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "label-position",
-              "value": {
-                "type": "'top' | 'left' | 'right'",
-                "default": "'top'"
-              }
-            },
-            {
-              "name": "inline",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The toggle's label." },
-            {
-              "name": "description",
-              "description": "A description of the toggle's label. Alternatively, you can use the `description` attribute."
-            },
-            {
-              "name": "help-text",
-              "description": "Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute."
-            }
-          ],
-          "events": [
-            {
-              "name": "zn-input",
-              "description": "Emitted when the toggle receives input."
-            }
-          ],
-          "js": {
-            "properties": [
-              { "name": "input", "type": "HTMLInputElement" },
-              { "name": "hasFocus", "type": "boolean" },
-              { "name": "title", "type": "string" },
-              { "name": "name", "type": "string" },
-              { "name": "value", "type": "string" },
-              {
-                "name": "fallbackValue",
-                "description": "The value submitted when the toggle is unchecked, so the toggle always submits a value.",
-                "type": "string"
-              },
-              { "name": "size", "type": "'small' | 'medium' | 'large'" },
-              { "name": "disabled", "type": "boolean" },
-              { "name": "checked", "type": "boolean" },
-              { "name": "defaultChecked", "type": "boolean" },
-              { "name": "form", "type": "string" },
-              { "name": "required", "type": "boolean" },
-              { "name": "helpText", "type": "string" },
-              { "name": "triggerSubmit", "type": "boolean" },
-              { "name": "onText", "type": "string" },
-              { "name": "offText", "type": "string" },
-              { "name": "label", "type": "string" },
-              {
-                "name": "description",
-                "description": "The toggle's description, displayed under the label. If you need to display HTML, use the `description` slot instead.",
-                "type": "string"
-              },
-              { "name": "labelPosition", "type": "'top' | 'left' | 'right'" },
-              { "name": "inline", "type": "boolean" },
-              { "name": "validity" },
-              { "name": "validationMessage" }
-            ],
-            "events": [
-              {
-                "name": "zn-input",
-                "description": "Emitted when the toggle receives input."
               }
             ]
           }

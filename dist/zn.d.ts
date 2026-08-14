@@ -11362,6 +11362,224 @@ declare module "components/theme-editor/index" {
         }
     }
 }
+declare module "components/schedule-builder/schedule-builder.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    import ZnInput from "components/input/index";
+    import type { ZincFormControl } from "internal/zinc-element";
+    /** The seven weekday keys used throughout the schedule. */
+    export type ScheduleDay = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
+    /** A single opening period within a day. Times are `HH:MM` in the schedule's own timezone. */
+    export interface ScheduleRange {
+        start: string;
+        end: string;
+    }
+    /**
+     * A dated deviation from the weekly pattern. Exceptions are never edited by the builder, they only
+     * annotate it — the surrounding application owns them.
+     */
+    export interface ScheduleException {
+        id?: string;
+        /** Human readable name, e.g. `Christmas Eve — early close`. */
+        label?: string;
+        /** A single calendar date (`YYYY-MM-DD`). */
+        date?: string;
+        /** Inclusive start of a multi-day exception (`YYYY-MM-DD`). */
+        from?: string;
+        /** Inclusive end of a multi-day exception (`YYYY-MM-DD`). */
+        to?: string;
+        /** Weekdays the exception applies to. Defaults to every weekday inside the date window. */
+        days?: ScheduleDay[];
+        /** When true the affected days close outright and `ranges` is ignored. */
+        closed?: boolean;
+        /** Replacement opening hours for the affected days. */
+        ranges?: ScheduleRange[];
+    }
+    export type ScheduleDayMap = Record<ScheduleDay, ScheduleRange[]>;
+    /** The shape serialised into the form value. */
+    export interface ScheduleValue {
+        timezone?: string;
+        days: ScheduleDayMap;
+        exceptions: ScheduleException[];
+    }
+    export type ScheduleView = 'calendar' | 'form';
+    /**
+     * @summary Builds a weekly opening-hours schedule as a drag-to-paint calendar or a compact list of
+     * time ranges, and posts the result as JSON.
+     * @documentation https://zinc.style/components/schedule-builder
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     * @dependency zn-input
+     *
+     * @event zn-change - Emitted when the schedule changes.
+     *
+     * @slot label - The schedule's label. Alternatively, use the `label` attribute.
+     * @slot help-text - Text that describes how to use the schedule. Alternatively, use the `help-text` attribute.
+     *
+     * @csspart form-control - The form control that wraps the builder, label and help text.
+     * @csspart base - The component's base wrapper.
+     * @csspart toolbar - The row above the builder holding the hint, legend and view toggle.
+     * @csspart calendar - The calendar view wrapper.
+     * @csspart list - The form (list) view wrapper.
+     * @csspart summary - The summary panel beside the calendar.
+     *
+     * @cssproperty --slot-height - The height of a single time slot in the calendar. Defaults to `18px`.
+     * @cssproperty --gutter-width - The width of the calendar's time gutter. Defaults to `64px`.
+     * @cssproperty --open-color - The fill used for open hours.
+     * @cssproperty --reduced-color - The fill used for hours an exception removes.
+     */
+    export default class ZnScheduleBuilder extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        static formAssociated: boolean;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+            'zn-input': typeof ZnInput;
+        };
+        private readonly formControlController;
+        private readonly hasSlotController;
+        private readonly localize;
+        private readonly internals;
+        private canvas;
+        private _days;
+        private _exceptions;
+        private _dragPreview;
+        private _editing;
+        private _dragMode;
+        private _dragAnchor;
+        private _dragPointerId;
+        /** The name of the form control, submitted as a name/value pair with form data. */
+        name: string;
+        /** The schedule as a JSON string. This is what gets posted with the form. */
+        value: string;
+        /** The default value, used when resetting the containing form. */
+        defaultValue: string;
+        /** The schedule's label. If you need to display HTML, use the `label` slot instead. */
+        label: string;
+        /** The schedule's help text. If you need to display HTML, use the `help-text` slot instead. */
+        helpText: string;
+        /** Which view is showing. */
+        view: ScheduleView;
+        /** The word used for hours the schedule covers, in the legend and in labels. */
+        openLabel: string;
+        /** The word used for hours the schedule doesn't cover, in the legend and against empty days. */
+        closedLabel: string;
+        /** Hides the calendar/form view toggle. */
+        noToggle: boolean;
+        /** Hides the summary panel beside the calendar. */
+        hideSummary: boolean;
+        /** The first hour shown in the calendar. */
+        startHour: number;
+        /** The last hour shown in the calendar. */
+        endHour: number;
+        /** The granularity of the calendar grid and the time inputs, in minutes. */
+        interval: number;
+        /** The weekday the week starts on. */
+        weekStart: ScheduleDay;
+        /** Displays times as 12 or 24 hour. The serialised value is always 24 hour `HH:MM`. */
+        timeFormat: '12' | '24';
+        /** The IANA timezone the hours are expressed in. Carried through to the value untouched. */
+        timezone: string;
+        /** Disables the schedule. */
+        disabled: boolean;
+        /** Renders the schedule without any editing affordances. */
+        readonly: boolean;
+        /** Makes the schedule a required field, invalid until at least one period is open. */
+        required: boolean;
+        /** The id of the form to associate with, when the control sits outside of it. */
+        form: string;
+        constructor();
+        /** The schedule as a plain object. Assigning to it replaces the whole schedule. */
+        get schedule(): ScheduleValue;
+        set schedule(schedule: ScheduleValue | null | undefined);
+        /** The exceptions annotating the schedule. Also readable from, and written into, the value. */
+        get exceptions(): ScheduleException[];
+        set exceptions(exceptions: ScheduleException[] | null | undefined);
+        /** Gets the validity state object. */
+        get validity(): ValidityState;
+        /** Gets the validation message. */
+        get validationMessage(): string;
+        private get _orderedDays();
+        private get _interval();
+        private get _startMinute();
+        private get _endMinute();
+        private get _slotCount();
+        private get _slotsPerHour();
+        private get _isEditable();
+        private get _hasHours();
+        connectedCallback(): void;
+        firstUpdated(): void;
+        handleValueChange(): void;
+        handleValidationStateChange(): void;
+        /** Checks validity but does not show a validation message. */
+        checkValidity(): boolean;
+        /** Gets the associated form, if one exists. */
+        getForm(): HTMLFormElement | null;
+        /** Checks for validity and shows the browser's validation message if the control is invalid. */
+        reportValidity(): boolean;
+        /** Sets a custom validation message. Pass an empty string to restore validity. */
+        setCustomValidity(message: string): void;
+        /** Replaces the hours for a single day. */
+        setDay(day: ScheduleDay, ranges: ScheduleRange[]): void;
+        /** Reads the hours for a single day. */
+        getDay(day: ScheduleDay): ScheduleRange[];
+        formResetCallback(): void;
+        formStateRestoreCallback(restoredValue: string): void;
+        private _customValidity;
+        private _cloneDays;
+        private _serialise;
+        /** Accepts a JSON string, a full `ScheduleValue`, or a bare day map. */
+        private _applySchedule;
+        private _syncFormValue;
+        private _commit;
+        private _formatTime;
+        private _formatRange;
+        private _formatDate;
+        private _summariseDay;
+        /** The exceptions that touch a given weekday and actually change its hours. */
+        private _exceptionsForDay;
+        private _slotState;
+        private _isSlotOpen;
+        private _pointerPosition;
+        /** Paints the rectangle between the drag anchor and the cursor onto a copy of the schedule. */
+        private _buildDragPreview;
+        private _handleCanvasPointerDown;
+        private _handleCanvasPointerMove;
+        private _handleCanvasPointerUp;
+        private _handleCanvasPointerCancel;
+        private _handleViewToggle;
+        /** Picks a sensible slot for a newly added range: the first hour-wide gap in the day. */
+        private _nextFreeRange;
+        private _handleAddRange;
+        private _handleRemoveRange;
+        private _handleRangeEdit;
+        private _handleEditorKeyDown;
+        private _handleEditorFocusOut;
+        private _renderToolbar;
+        private _renderCalendar;
+        private _renderCalendarColumn;
+        private _renderSummary;
+        private _renderList;
+        private _renderListRow;
+        private _renderRangeChip;
+        private _renderRangeEditor;
+        /** The exception annotation shown against a day in the form view. */
+        private _dayNote;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/schedule-builder/index" {
+    import ZnScheduleBuilder from "components/schedule-builder/schedule-builder.component";
+    export * from "components/schedule-builder/schedule-builder.component";
+    export default ZnScheduleBuilder;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-schedule-builder': ZnScheduleBuilder;
+        }
+    }
+}
 declare module "utilities/form" {
     export { clearFormStoreValues } from "internal/form";
 }
@@ -11722,6 +11940,7 @@ declare module "zinc" {
     export { default as ThemeEditor } from "components/theme-editor/index";
     export { default as SlashMenu } from "components/slash-menu/index";
     export { default as SlashItem } from "components/slash-item/index";
+    export { default as ScheduleBuilder } from "components/schedule-builder/index";
     export { default as ZincElement } from "internal/zinc-element";
     export * from "utilities/on";
     export * from "utilities/query";

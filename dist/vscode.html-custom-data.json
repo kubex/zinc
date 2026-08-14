@@ -14,17 +14,6 @@
       ]
     },
     {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
-        }
-      ]
-    },
-    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -61,6 +50,17 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
+        }
+      ]
+    },
+    {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -150,6 +150,26 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/bulk-actions"
+        }
+      ]
+    },
+    {
+      "name": "zn-button-group",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n\n### **CSS Properties:**\n - **--grow** - Use flex-grow to fill available space. _(default: undefined)_\n- **--start** - Justify content at the start of the flex space. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        {
+          "name": "direction",
+          "values": [{ "name": "horizontal" }, { "name": "vertical" }]
+        },
+        { "name": "grow", "values": [] },
+        { "name": "wrap", "values": [] },
+        { "name": "start", "values": [] },
+        { "name": "gap", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/button-group"
         }
       ]
     },
@@ -283,26 +303,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/button"
-        }
-      ]
-    },
-    {
-      "name": "zn-button-group",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n\n### **CSS Properties:**\n - **--grow** - Use flex-grow to fill available space. _(default: undefined)_\n- **--start** - Justify content at the start of the flex space. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        {
-          "name": "direction",
-          "values": [{ "name": "horizontal" }, { "name": "vertical" }]
-        },
-        { "name": "grow", "values": [] },
-        { "name": "wrap", "values": [] },
-        { "name": "start", "values": [] },
-        { "name": "gap", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/button-group"
         }
       ]
     },
@@ -3470,6 +3470,113 @@
       ]
     },
     {
+      "name": "zn-schedule-builder",
+      "description": "Builds a weekly opening-hours schedule as a drag-to-paint calendar or a compact list of\ntime ranges, and posts the result as JSON.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the schedule changes.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks validity but does not show a validation message.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n- **setDay(day: _ScheduleDay_, ranges: _ScheduleRange[]_)** - Replaces the hours for a single day.\n- **getDay(day: _ScheduleDay_): _ScheduleRange[]_** - Reads the hours for a single day.\n\n### **Slots:**\n - **label** - The schedule's label. Alternatively, use the `label` attribute.\n- **help-text** - Text that describes how to use the schedule. Alternatively, use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--slot-height** - The height of a single time slot in the calendar. Defaults to `18px`. _(default: undefined)_\n- **--gutter-width** - The width of the calendar's time gutter. Defaults to `64px`. _(default: undefined)_\n- **--open-color** - The fill used for open hours. _(default: undefined)_\n- **--reduced-color** - The fill used for hours an exception removes. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the builder, label and help text.\n- **base** - The component's base wrapper.\n- **toolbar** - The row above the builder holding the hint, legend and view toggle.\n- **calendar** - The calendar view wrapper.\n- **list** - The form (list) view wrapper.\n- **summary** - The summary panel beside the calendar.",
+      "attributes": [
+        {
+          "name": "name",
+          "description": "The name of the form control, submitted as a name/value pair with form data.",
+          "values": []
+        },
+        {
+          "name": "value",
+          "description": "The schedule as a JSON string. This is what gets posted with the form.",
+          "values": []
+        },
+        {
+          "name": "label",
+          "description": "The schedule's label. If you need to display HTML, use the `label` slot instead.",
+          "values": []
+        },
+        {
+          "name": "help-text",
+          "description": "The schedule's help text. If you need to display HTML, use the `help-text` slot instead.",
+          "values": []
+        },
+        {
+          "name": "view",
+          "description": "Which view is showing.",
+          "values": [{ "name": "ScheduleView" }]
+        },
+        {
+          "name": "open-label",
+          "description": "The word used for hours the schedule covers, in the legend and in labels.",
+          "values": []
+        },
+        {
+          "name": "closed-label",
+          "description": "The word used for hours the schedule doesn't cover, in the legend and against empty days.",
+          "values": []
+        },
+        {
+          "name": "no-toggle",
+          "description": "Hides the calendar/form view toggle.",
+          "values": []
+        },
+        {
+          "name": "hide-summary",
+          "description": "Hides the summary panel beside the calendar.",
+          "values": []
+        },
+        {
+          "name": "start-hour",
+          "description": "The first hour shown in the calendar.",
+          "values": []
+        },
+        {
+          "name": "end-hour",
+          "description": "The last hour shown in the calendar.",
+          "values": []
+        },
+        {
+          "name": "interval",
+          "description": "The granularity of the calendar grid and the time inputs, in minutes.",
+          "values": []
+        },
+        {
+          "name": "week-start",
+          "description": "The weekday the week starts on.",
+          "values": [{ "name": "ScheduleDay" }]
+        },
+        {
+          "name": "time-format",
+          "description": "Displays times as 12 or 24 hour. The serialised value is always 24 hour `HH:MM`.",
+          "values": [{ "name": "12" }, { "name": "24" }]
+        },
+        {
+          "name": "timezone",
+          "description": "The IANA timezone the hours are expressed in. Carried through to the value untouched.",
+          "values": []
+        },
+        {
+          "name": "disabled",
+          "description": "Disables the schedule.",
+          "values": []
+        },
+        {
+          "name": "readonly",
+          "description": "Renders the schedule without any editing affordances.",
+          "values": []
+        },
+        {
+          "name": "required",
+          "description": "Makes the schedule a required field, invalid until at least one period is open.",
+          "values": []
+        },
+        {
+          "name": "form",
+          "description": "The id of the form to associate with, when the control sits outside of it.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/schedule-builder"
+        }
+      ]
+    },
+    {
       "name": "zn-scroll-container",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [{ "name": "start-scrolled", "values": [] }],
@@ -4542,53 +4649,6 @@
       ]
     },
     {
-      "name": "zn-toggle",
-      "description": "Toggles allow the user to switch an option on or off.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted when the toggle receives input.\n\n### **Slots:**\n - _default_ - The toggle's label.\n- **description** - A description of the toggle's label. Alternatively, you can use the `description` attribute.\n- **help-text** - Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--zn-toggle-margin** - The margin around the toggle switch. Defaults to `8px 0`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper containing the toggle switch.\n- **control** - The toggle switch control (the circular button that slides).\n- **description** - The container that wraps the toggle's description.",
-      "attributes": [
-        { "name": "title", "values": [] },
-        { "name": "name", "values": [] },
-        { "name": "value", "values": [] },
-        {
-          "name": "fallback",
-          "description": "The value submitted when the toggle is unchecked, so the toggle always submits a value.",
-          "values": []
-        },
-        {
-          "name": "size",
-          "values": [
-            { "name": "small" },
-            { "name": "medium" },
-            { "name": "large" }
-          ]
-        },
-        { "name": "disabled", "values": [] },
-        { "name": "checked", "values": [] },
-        { "name": "form", "values": [] },
-        { "name": "required", "values": [] },
-        { "name": "help-text", "values": [] },
-        { "name": "trigger-submit", "values": [] },
-        { "name": "on-text", "values": [] },
-        { "name": "off-text", "values": [] },
-        { "name": "label", "values": [] },
-        {
-          "name": "description",
-          "description": "The toggle's description, displayed under the label. If you need to display HTML, use the `description` slot instead.",
-          "values": []
-        },
-        {
-          "name": "label-position",
-          "values": [{ "name": "top" }, { "name": "left" }, { "name": "right" }]
-        },
-        { "name": "inline", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/toggle"
-        }
-      ]
-    },
-    {
       "name": "zn-tooltip",
       "description": "The Tooltip component is used to display additional information when a user hovers over or clicks\non an element.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the tooltip is shown.\n- **zn-after-show** - Emitted after the tooltip is shown.\n- **zn-hide** - Emitted when the tooltip is hidden.\n- **zn-after-hide** - Emitted after the tooltip is hidden.\n\n### **Slots:**\n - _default_ - The content of the tooltip\n- **anchor** - The anchor the tooltip is attached to.",
       "attributes": [
@@ -4656,6 +4716,53 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/translation-group"
+        }
+      ]
+    },
+    {
+      "name": "zn-toggle",
+      "description": "Toggles allow the user to switch an option on or off.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted when the toggle receives input.\n\n### **Slots:**\n - _default_ - The toggle's label.\n- **description** - A description of the toggle's label. Alternatively, you can use the `description` attribute.\n- **help-text** - Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--zn-toggle-margin** - The margin around the toggle switch. Defaults to `8px 0`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper containing the toggle switch.\n- **control** - The toggle switch control (the circular button that slides).\n- **description** - The container that wraps the toggle's description.",
+      "attributes": [
+        { "name": "title", "values": [] },
+        { "name": "name", "values": [] },
+        { "name": "value", "values": [] },
+        {
+          "name": "fallback",
+          "description": "The value submitted when the toggle is unchecked, so the toggle always submits a value.",
+          "values": []
+        },
+        {
+          "name": "size",
+          "values": [
+            { "name": "small" },
+            { "name": "medium" },
+            { "name": "large" }
+          ]
+        },
+        { "name": "disabled", "values": [] },
+        { "name": "checked", "values": [] },
+        { "name": "form", "values": [] },
+        { "name": "required", "values": [] },
+        { "name": "help-text", "values": [] },
+        { "name": "trigger-submit", "values": [] },
+        { "name": "on-text", "values": [] },
+        { "name": "off-text", "values": [] },
+        { "name": "label", "values": [] },
+        {
+          "name": "description",
+          "description": "The toggle's description, displayed under the label. If you need to display HTML, use the `description` slot instead.",
+          "values": []
+        },
+        {
+          "name": "label-position",
+          "values": [{ "name": "top" }, { "name": "left" }, { "name": "right" }]
+        },
+        { "name": "inline", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/toggle"
         }
       ]
     },

@@ -206,6 +206,34 @@ describe('<zn-page-builder>', () => {
     expect(el.state.sections[0].data.categories).to.deep.equal(['billing', 'setup']);
   });
 
+  // zn-icon-picker keeps `value` as a plain accessor over its reactive `icon`,
+  // so it only prefills if the stamped element is upgraded before assignment —
+  // otherwise the assignment shadows the setter and the picker renders empty.
+  it('should prefill a control whose value is a plain accessor', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder config='{"sections":[{"id":"s1","type":"hero","data":{"icon":"receipt"}}]}'>
+        <template type="hero" slot="config" label="Hero">
+          <zn-icon-picker name="icon" label="Icon" no-color no-library></zn-icon-picker>
+        </template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    el.shadowRoot?.querySelector('zn-page-section-card')?.dispatchEvent(new Event('click'));
+    await el.updateComplete;
+
+    const picker = el.shadowRoot!.querySelector<HTMLElement & { value: string; icon: string }>(
+      '.inspector__form zn-icon-picker[name="icon"]')!;
+    expect(picker, 'stamped icon picker').to.exist;
+    expect(picker.value).to.equal('receipt');
+    expect(picker.icon, 'reached the reactive property, not an own shadowing one').to.equal('receipt');
+
+    picker.value = 'payments';
+    picker.dispatchEvent(new CustomEvent('zn-change', {bubbles: true}));
+    await el.updateComplete;
+
+    expect(el.state.sections[0].data.icon).to.equal('payments');
+  });
+
   it('should rename a section from the inspector', async () => {
     const el = await fixture<ZnPageBuilder>(html`
       <zn-page-builder config='{"sections":[{"id":"s1","type":"hero","data":{}}]}'>

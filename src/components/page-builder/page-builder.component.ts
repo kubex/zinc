@@ -1017,6 +1017,13 @@ export default class ZnPageBuilder extends ZincElement {
     const form = document.createElement('div');
     form.className = 'inspector__form';
     form.append(type.configTemplate.content.cloneNode(true));
+    // Custom elements cloned out of a <template> are inert until they are
+    // connected, so their accessors do not exist yet. Assigning `value` to one
+    // would define an own property that permanently shadows the setter the
+    // element defines on upgrade — Lit only replays properties it declares
+    // reactive, so a hand-written `value` accessor (zn-icon-picker) would keep
+    // its default and the control would render empty. Upgrade first.
+    customElements.upgrade(form);
     form.querySelectorAll<HTMLElement>('[name]').forEach(control => {
       const name = control.getAttribute('name')!;
       const value = section.data[name];

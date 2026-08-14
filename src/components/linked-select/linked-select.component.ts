@@ -12,8 +12,9 @@ interface linkedSelectOption {
   [key: string]: string;
 }
 
+// Each group is a flat value -> label map, keyed on the linked select's value.
 interface linkedSelectOptions {
-  [key: string]: linkedSelectOption[];
+  [key: string]: linkedSelectOption;
 }
 
 /**
@@ -45,6 +46,9 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
 
   @property({attribute: 'cache-key'}) cacheKey: string = "";
   @property() label: string = "";
+
+  /** Automatically select the first option of the linked group when no value is set. */
+  @property({attribute: 'select-first', type: Boolean}) selectFirst = false;
 
   @query('zn-select') input: ZnSelect;
 
@@ -123,7 +127,10 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
   }
 
   public handleLinkedSelectChange = () => {
-    this.value = "";
+    // The inner select only auto-selects on slotchange, which lit skips when it
+    // can reuse the option elements of the outgoing group, so the first option of
+    // the new group is resolved here rather than left to the select.
+    this.value = this.selectFirst ? Object.keys(this.currentOptions())[0] ?? "" : "";
     this.requestUpdate();
     this.formControlController.updateValidity();
   };
@@ -137,19 +144,29 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
     this.value = (e.target as ZnSelect).value as string;
   }
 
-  render() {
+  /** The options of the group the linked select currently points at. */
+  private currentOptions(): linkedSelectOption {
+    if (!this.options) {
+      return {};
+    }
+
     let selected = this.linkedSelectElement?.value as string;
-    if (!selected && this.options) {
+    if (!selected) {
       selected = Object.keys(this.options)[0];
     }
 
-    const options: linkedSelectOption[] = selected ? this.options[selected] : [];
+    return (selected ? this.options[selected] : {}) ?? {};
+  }
+
+  render() {
+    const options = this.currentOptions();
     return html`
       <zn-select part="select"
                  class="linked-select"
                  name="${this.name}"
                  id="main-input"
                  cache-key="${this.cacheKey}"
+                 ?select-first="${this.selectFirst}"
                  value="${this.value}"
                  @zn-change=${this.handleSelectChange}
                  label="${this.label}">

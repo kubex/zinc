@@ -114,6 +114,7 @@ export { default as PreviewFrame } from './components/preview-frame';
 export { default as ThemeEditor } from './components/theme-editor';
 export { default as SlashMenu } from './components/slash-menu';
 export { default as SlashItem } from './components/slash-item';
+export { default as ScheduleBuilder } from './components/schedule-builder';
 /* plop:component */
 
 // Base Component

@@ -7149,7 +7149,7 @@ declare module "components/linked-select/linked-select.component" {
         [key: string]: string;
     }
     interface linkedSelectOptions {
-        [key: string]: linkedSelectOption[];
+        [key: string]: linkedSelectOption;
     }
     /**
      * @summary Short summary of the component's intended use.
@@ -7177,6 +7177,8 @@ declare module "components/linked-select/linked-select.component" {
         linkedSelect: string;
         cacheKey: string;
         label: string;
+        /** Automatically select the first option of the linked group when no value is set. */
+        selectFirst: boolean;
         input: ZnSelect;
         private linkedSelectElement;
         private readonly formControlController;
@@ -7193,6 +7195,8 @@ declare module "components/linked-select/linked-select.component" {
         handleLinkedSelectChange: () => void;
         handleChange(e: Event): void;
         handleSelectChange: (e: ZnSelectEvent) => void;
+        /** The options of the group the linked select currently points at. */
+        private currentOptions;
         render(): import("lit-html").TemplateResult<1>;
     }
 }

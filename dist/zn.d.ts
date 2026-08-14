@@ -10575,7 +10575,11 @@ declare module "components/page-builder/page.types" {
     export function emptyPageState(): PageState;
     /** Unique-enough id for a new section, stable across edits once assigned. */
     export function generateSectionId(): string;
-    /** Card summary: the section's first non-empty string value, else the type description. */
+    /**
+     * Card summary: the label of the first value chosen from a select, else the first
+     * non-empty string value, else the type description. Options win over field order
+     * so a tile reads as its linked item however its other fields were filled in.
+     */
     export function sectionSummary(section: PageSection, type?: PageSectionType): string;
 }
 declare module "components/page-builder/page-registry" {

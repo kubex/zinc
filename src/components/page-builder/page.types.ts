@@ -68,8 +68,28 @@ export function generateSectionId(): string {
   return `s-${Date.now().toString(36)}-${(sectionCounter++).toString(36)}`;
 }
 
-/** Card summary: the section's first non-empty string value, else the type description. */
+/**
+ * The visible text of the option a value was chosen from, so a card summarises a
+ * select by what the user picked rather than by the opaque id it stores.
+ */
+function optionLabel(type: PageSectionType | undefined, name: string, value: string): string {
+  const control = type?.configTemplate?.content.querySelector(`[name="${CSS.escape(name)}"]`);
+  const escaped = CSS.escape(value);
+  const option = control?.querySelector(`option[value="${escaped}"], zn-option[value="${escaped}"]`);
+  return option?.textContent?.trim() ?? '';
+}
+
+/**
+ * Card summary: the label of the first value chosen from a select, else the first
+ * non-empty string value, else the type description. Options win over field order
+ * so a tile reads as its linked item however its other fields were filled in.
+ */
 export function sectionSummary(section: PageSection, type?: PageSectionType): string {
-  const first = Object.values(section.data).find(v => typeof v === 'string' && v.trim() !== '');
-  return (first as string) ?? type?.description ?? '';
+  const strings = Object.entries(section.data)
+    .filter((entry): entry is [string, string] => typeof entry[1] === 'string' && entry[1].trim() !== '');
+  for (const [name, value] of strings) {
+    const label = optionLabel(type, name, value);
+    if (label) return label;
+  }
+  return strings[0]?.[1] ?? type?.description ?? '';
 }

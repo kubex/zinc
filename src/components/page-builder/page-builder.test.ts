@@ -112,6 +112,35 @@ describe('<zn-page-builder>', () => {
     expect(el.state.sections[0].type).to.equal('gone'); // preserved through save
   });
 
+  it('should summarise a card with the chosen option label, not the stored value', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder
+        config='{"sections":[{"id":"s1","type":"tile","data":{"icon":"folder","article":"1a2b3c"}}]}'>
+        <template type="tile" slot="config" label="Article">
+          <zn-icon-picker name="icon"></zn-icon-picker>
+          <zn-select name="article">
+            <zn-option value="1a2b3c">Getting Started</zn-option>
+          </zn-select>
+        </template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    const card = el.shadowRoot?.querySelector('zn-page-section-card');
+    expect(card?.getAttribute('summary')).to.equal('Getting Started');
+  });
+
+  it('should fall back to the first string value when nothing matches an option', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder config='{"sections":[{"id":"s1","type":"hero","data":{"title":"Welcome"}}]}'>
+        <template type="hero" slot="config" label="Hero">
+          <input name="title">
+        </template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    expect(el.shadowRoot?.querySelector('zn-page-section-card')?.getAttribute('summary')).to.equal('Welcome');
+  });
+
   it('should round-trip section data through the inspector name binding', async () => {
     const el = await fixture<ZnPageBuilder>(html`
       <zn-page-builder config='{"sections":[{"id":"s1","type":"hero","data":{"title":"Before"}}]}'>

@@ -56,15 +56,22 @@
   display: flex;
   flex-direction: column;
   gap: var(--zn-spacing-medium);
+
+  padding-top: var(--zn-spacing-medium);
+}
+
+.navigation-group:first-of-type {
+  padding-top: 0;
 }
 
 .navigation-group h4 {
   margin: 0;
-  padding: var(--zn-spacing-medium) 0;
+  padding: 0;
   color: rgb(var(--zn-text-heading));
   font-size: var(--zn-font-size-medium);
   font-weight: var(--zn-font-weight-semibold);
 }
+
 
 .navigation-group .navigation-item {
   color: rgb(var(--zn-text));
@@ -73,6 +80,7 @@
   display: flex;
   align-items: center;
   gap: var(--zn-spacing-small);
+  min-height: var(--zn-icon-size);
 }
 
 .navigation-item.active {

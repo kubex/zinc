@@ -43,7 +43,7 @@ The schedule is serialised to JSON and exposed three ways:
 
 ```json
 {
-  "timezone": "Europe/London",
+  "timezone": "UTC",
   "days": {
     "mon": [{ "start": "08:00", "end": "18:00" }],
     "tue": [{ "start": "08:00", "end": "12:00" }, { "start": "13:30", "end": "18:00" }],
@@ -56,8 +56,9 @@ The schedule is serialised to JSON and exposed three ways:
 ```
 
 Ranges are always sorted, and overlapping or touching ranges are merged, so `08:00–12:00` plus
-`12:00–18:00` becomes a single `08:00–18:00`. Times are 24 hour `HH:MM` in the schedule's own
-timezone, regardless of the `time-format` used for display.
+`12:00–18:00` becomes a single `08:00–18:00`. Times are 24 hour `HH:MM` regardless of the
+`time-format` used for display, and `timezone` names the timezone they are expressed in — see
+[Timezones](#timezones).
 
 When you write the value yourself you can use the `"08:00-18:00"` shorthand instead of
 `{"start": "08:00", "end": "18:00"}`, and you can pass a bare day map without the `days` wrapper.
@@ -81,6 +82,105 @@ view, and `no-toggle` to remove the switcher and lock the component to one of th
 In the form view, click a range to edit it, and use **Add range** to split a day into multiple
 periods. In the calendar view, drag across the grid to open hours and drag over open hours to close
 them — a drag can span several days at once.
+
+### Timezones
+
+A schedule has two timezones: the one it is **stored** in, and the one it is **shown** in.
+
+- `save-timezone` is the timezone the value is written in. It defaults to `UTC` as soon as the
+  schedule is timezone-aware, so hours land in your database in one canonical zone.
+- `display-timezone` is the timezone the grid and the list are drawn in. It defaults to
+  `save-timezone`, and accepts `auto` for the viewer's own timezone.
+- `show-timezone` adds a picker so the viewer can read the same schedule in any timezone.
+
+Switching the display timezone never changes the value — the same hours are simply labelled in
+another zone, and `zn-change` doesn't fire. Edits work the other way around: you drag or type in the
+zone you are looking at, and the component converts back to `save-timezone` before storing.
+
+```html:preview
+<zn-schedule-builder
+  id="tz-demo"
+  show-timezone
+  display-timezone="Europe/London"
+  start-hour="0"
+  end-hour="24"
+  hide-summary
+  value='{"timezone":"UTC","days":{"mon":["08:00-18:00"],"tue":["08:00-18:00"],"wed":["08:00-18:00"],"thu":["08:00-18:00"],"fri":["08:00-16:00"]}}'>
+</zn-schedule-builder>
+
+<pre id="tz-demo-output" style="margin-top: 1rem"></pre>
+
+<script>
+  const tzBuilder = document.querySelector('#tz-demo');
+  const tzOutput = document.querySelector('#tz-demo-output');
+
+  const printTz = () => (tzOutput.textContent = `stored (UTC):\n${JSON.stringify(tzBuilder.schedule.days, null, 2)}`);
+
+  tzBuilder.addEventListener('zn-change', printTz);
+  printTz();
+</script>
+```
+
+Pick a timezone far from UTC and the blocks slide, wrapping onto the next day — or onto Monday, from
+the end of Sunday — while the stored hours below stay put.
+
+#### Which Timezones the Picker Offers
+
+`timezones` takes IANA names, or one of three named sets:
+
+| Set | Zones | What it is |
+| --- | --- | --- |
+| `en` | 6 | US Eastern, Central, Mountain and Pacific, the UK, and Australia — listed under those names rather than their IANA ones. For an English-speaking audience who would rather not read `America/Los_Angeles`. |
+| `offsets` | ~42 | One zone per UTC offset. The default — enough to read a schedule from anywhere without a long list, though the city standing in for each offset is arbitrary. |
+| `common` | ~90 | Every offset in use, plus the business and population centres that share one — so Berlin, Paris, Madrid and Rome all appear rather than one standing for the rest. Includes the half and quarter-hour zones (India, Iran, Nepal, Newfoundland, central Australia, Chatham). |
+| `all` | ~420 | Everything `Intl.supportedValuesOf('timeZone')` reports. Complete, but full of aliases and zones nobody selects. |
+
+`common` is the one to reach for whenever real users pick their own timezone; `offsets` suits an
+internal tool where the offset is all that matters; `en` suits a product whose customers are all in
+the US, the UK or Australia.
+
+```html:preview
+<zn-schedule-builder
+  show-timezone
+  timezones="en"
+  display-timezone="Europe/London"
+  view="form"
+  value='{"timezone":"UTC","days":{"mon":["13:00-21:00"],"tue":["13:00-21:00"]}}'>
+</zn-schedule-builder>
+```
+
+```html:preview
+<zn-schedule-builder
+  show-timezone
+  timezones="common"
+  display-timezone="auto"
+  view="form"
+  value='{"timezone":"UTC","days":{"mon":["13:00-21:00"],"tue":["13:00-21:00"]}}'>
+</zn-schedule-builder>
+```
+
+Sets and explicit names can be mixed — `timezones="en Asia/Tokyo"` adds Tokyo to the six above, and a
+set's friendly name wins over a later plain listing of the same zone. The viewer's own timezone plus
+both configured zones are always added, so the current selection is never missing from the list.
+
+```html:preview
+<zn-schedule-builder
+  show-timezone
+  display-timezone="America/New_York"
+  timezones="UTC Europe/London America/New_York Asia/Tokyo"
+  view="form"
+  value='{"timezone":"UTC","days":{"mon":["13:00-21:00"],"tue":["13:00-21:00"]}}'>
+</zn-schedule-builder>
+```
+
+Reading the hours in code follows the same split: `schedule`, `value` and `getDay()` are in the save
+timezone, while `displayedDays` and `setDisplayDay()` are in the display timezone.
+
+:::tip
+A weekly pattern has no date of its own, so there is no way to know whether daylight saving applies
+to it. Offsets are resolved against today by default; set `reference-date` to a `YYYY-MM-DD` date to
+pin them to a specific point in the year.
+:::
 
 ### Open and Closed Labels
 

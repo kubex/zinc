@@ -1316,6 +1316,7 @@ declare module "components/toggle/toggle.component" {
      *
      * @csspart base - The component's base wrapper containing the toggle switch.
      * @csspart control - The toggle switch control (the circular button that slides).
+     * @csspart label - The toggle's label.
      * @csspart description - The container that wraps the toggle's description.
      *
      * @cssproperty --zn-toggle-margin - The margin around the toggle switch. Defaults to `8px 0`.
@@ -10736,6 +10737,8 @@ declare module "components/page-builder/page-builder.component" {
      * @csspart palette - The left palette panel.
      * @csspart canvas - The centre section-card canvas.
      * @csspart inspector - The right panel while a section is selected.
+     * @csspart inspector-header - The inspector's fixed header (icon, section name, type, close).
+     * @csspart inspector-body - The inspector's scrolling form area.
      */
     export default class ZnPageBuilder extends ZincElement {
         static styles: CSSResultGroup;

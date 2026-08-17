@@ -25759,6 +25759,14 @@
             {
               "description": "The right panel while a section is selected.",
               "name": "inspector"
+            },
+            {
+              "description": "The inspector's fixed header (icon, section name, type, close).",
+              "name": "inspector-header"
+            },
+            {
+              "description": "The inspector's scrolling form area.",
+              "name": "inspector-body"
             }
           ],
           "slots": [
@@ -27004,7 +27012,7 @@
           "tagNameWithoutPrefix": "page-builder",
           "tagName": "zn-page-builder",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A config-driven page composer: a palette of predefined section types, a linear\n *   canvas of section cards, and an inspector for editing each section's content.\n * @documentation https://zinc.style/components/page-builder\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-collapsible\n * @dependency zn-icon\n * @dependency zn-input\n * @dependency zn-page-palette-item\n * @dependency zn-page-section-card\n *\n * @event zn-page-change - Emitted whenever the page state changes. `event.detail.state` is the new PageState.\n * @event zn-page-selection-change - Emitted when the selected section changes. `event.detail.sectionId`.\n *\n * @slot config - `<template type=\"…\">` declarations; never displayed. Each template's attributes\n *   (type, label, icon, icon-library, color, category, description, slots, accepts) declare a\n *   palette entry and its content declares the inspector form for that type. `slots` makes the\n *   section a container with that many child slots; `accepts` is a comma-separated list of the\n *   type keys its slots allow.\n * @slot header-left - Actions shown on the left of the header bar.\n * @slot header-right - Actions shown on the right of the header bar.\n *\n * @csspart base - The grid wrapper.\n * @csspart header - The full-width header action bar (only rendered when header slots are filled).\n * @csspart palette - The left palette panel.\n * @csspart canvas - The centre section-card canvas.\n * @csspart inspector - The right panel while a section is selected.\n */",
+          "jsDoc": "/**\n * @summary A config-driven page composer: a palette of predefined section types, a linear\n *   canvas of section cards, and an inspector for editing each section's content.\n * @documentation https://zinc.style/components/page-builder\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-collapsible\n * @dependency zn-icon\n * @dependency zn-input\n * @dependency zn-page-palette-item\n * @dependency zn-page-section-card\n *\n * @event zn-page-change - Emitted whenever the page state changes. `event.detail.state` is the new PageState.\n * @event zn-page-selection-change - Emitted when the selected section changes. `event.detail.sectionId`.\n *\n * @slot config - `<template type=\"…\">` declarations; never displayed. Each template's attributes\n *   (type, label, icon, icon-library, color, category, description, slots, accepts) declare a\n *   palette entry and its content declares the inspector form for that type. `slots` makes the\n *   section a container with that many child slots; `accepts` is a comma-separated list of the\n *   type keys its slots allow.\n * @slot header-left - Actions shown on the left of the header bar.\n * @slot header-right - Actions shown on the right of the header bar.\n *\n * @csspart base - The grid wrapper.\n * @csspart header - The full-width header action bar (only rendered when header slots are filled).\n * @csspart palette - The left palette panel.\n * @csspart canvas - The centre section-card canvas.\n * @csspart inspector - The right panel while a section is selected.\n * @csspart inspector-header - The inspector's fixed header (icon, section name, type, close).\n * @csspart inspector-body - The inspector's scrolling form area.\n */",
           "documentation": "https://zinc.style/components/page-builder",
           "status": "experimental",
           "since": "1.0",
@@ -45472,6 +45480,10 @@
               "name": "control"
             },
             {
+              "description": "The toggle's label.",
+              "name": "label"
+            },
+            {
               "description": "The container that wraps the toggle's description.",
               "name": "description"
             }
@@ -45948,7 +45960,7 @@
           "tagNameWithoutPrefix": "toggle",
           "tagName": "zn-toggle",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Toggles allow the user to switch an option on or off.\n * @documentation https://zinc.style/components/toggle\n * @status stable\n * @since 1.0\n *\n * @dependency zn-tooltip\n *\n * @event zn-input - Emitted when the toggle receives input.\n *\n * @slot - The toggle's label.\n * @slot description - A description of the toggle's label. Alternatively, you can use the `description` attribute.\n * @slot help-text - Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute.\n *\n * @csspart base - The component's base wrapper containing the toggle switch.\n * @csspart control - The toggle switch control (the circular button that slides).\n * @csspart description - The container that wraps the toggle's description.\n *\n * @cssproperty --zn-toggle-margin - The margin around the toggle switch. Defaults to `8px 0`.\n */",
+          "jsDoc": "/**\n * @summary Toggles allow the user to switch an option on or off.\n * @documentation https://zinc.style/components/toggle\n * @status stable\n * @since 1.0\n *\n * @dependency zn-tooltip\n *\n * @event zn-input - Emitted when the toggle receives input.\n *\n * @slot - The toggle's label.\n * @slot description - A description of the toggle's label. Alternatively, you can use the `description` attribute.\n * @slot help-text - Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute.\n *\n * @csspart base - The component's base wrapper containing the toggle switch.\n * @csspart control - The toggle switch control (the circular button that slides).\n * @csspart label - The toggle's label.\n * @csspart description - The container that wraps the toggle's description.\n *\n * @cssproperty --zn-toggle-margin - The margin around the toggle switch. Defaults to `8px 0`.\n */",
           "documentation": "https://zinc.style/components/toggle",
           "status": "stable",
           "since": "1.0",

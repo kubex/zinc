@@ -570,6 +570,7 @@
         <div class="content__toc">
           <ul>
             <li class="top"><a href="#">Page Builder</a></li>
+            <li data-level="2"><a href="#the-inspector">The inspector</a></li>
             <li data-level="2"><a href="#javascript-api">JavaScript API</a></li>
             <li data-level="2"><a href="#saving">Saving</a></li>
             <li data-level="2"><a href="#the-config">The config</a></li>
@@ -651,6 +652,17 @@
                 >
                   <zn-input name="title" label="Title"></zn-input>
                   <zn-input name="subtitle" label="Subtitle"></zn-input>
+                  <zn-input
+                    name="gradient"
+                    label="Background gradient"
+                    placeholder="linear-gradient(135deg, #00aaff, #aa00ff)"
+                    help-text="CSS gradient painted behind the hero. Leave empty for the theme default."
+                  ></zn-input>
+                  <zn-toggle
+                    name="showSearch"
+                    label="Show search"
+                    description="Draws the site search box in the banner."
+                  ></zn-toggle>
                 </template>
                 <template
                   type="article-list"
@@ -680,6 +692,10 @@
             <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Large banner with optional search<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>title<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Title<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>subtitle<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Subtitle<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>gradient<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Background gradient<span class="token punctuation">"</span></span> <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>linear-gradient(135deg, #00aaff, #aa00ff)<span class="token punctuation">"</span></span>
+              <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>CSS gradient painted behind the hero. Leave empty for the theme default.<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>showSearch<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Show search<span class="token punctuation">"</span></span>
+               <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Draws the site search box in the banner.<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>article-list<span class="token punctuation">"</span></span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>config<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Article List<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>list<span class="token punctuation">"</span></span> <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Content<span class="token punctuation">"</span></span>
             <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>A list of KB articles<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
@@ -716,6 +732,27 @@
             Types can also be registered programmatically via <code>sectionTypes</code> /
             <code>registerSectionTypes()</code>, including a <code>renderConfig(section, update)</code> callback for
             inspector bodies that need real logic.
+          </p>
+          <h2 id="the-inspector" class="anchor-heading">
+            The inspector<a href="#the-inspector" aria-label='Direct link to "The inspector"'></a>
+          </h2>
+          <p>
+            Selecting a section opens the inspector, which heads the panel with the section type’s icon and colour, the
+            section’s name, its type (shown only where a renamed section makes it useful), and a close button that
+            clears the selection. Below that, a <strong>Section name</strong> field renames the section (the card’s
+            label), followed by the type’s stamped config form. A type whose template has no content gets a hint in
+            place of the form rather than an empty panel.
+          </p>
+          <p>
+            Because the panel is narrow, the inspector sets its own form-label and help-text typography rather than
+            inheriting your app’s full-width form styling, and its <code>gap</code> is the single source of spacing
+            between fields — a control’s own outer margins are zeroed so they can’t stack with it. Stamped
+            <code>&lt;zn-toggle&gt;</code>s are laid out as a row, with the label and description left and the switch
+            right; set <code>label-position</code> yourself on a toggle to opt out.
+          </p>
+          <p>
+            Style the panel through <code>inspector</code>, <code>inspector-header</code> and
+            <code>inspector-body</code> parts.
           </p>
           <h2 id="javascript-api" class="anchor-heading">
             JavaScript API<a href="#javascript-api" aria-label='Direct link to "JavaScript API"'></a>
@@ -1429,6 +1466,16 @@
                 <tr>
                   <td class="nowrap"><code>inspector</code></td>
                   <td>The right panel while a section is selected.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>inspector-header</code></td>
+                  <td>The inspector’s fixed header (icon, section name, type, close).</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>inspector-body</code></td>
+                  <td>The inspector’s scrolling form area.</td>
                 </tr>
               </tbody>
             </table>

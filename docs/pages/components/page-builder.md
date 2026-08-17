@@ -27,6 +27,10 @@ are bound by their `name` attribute: values prefill from the section's data and 
             description="Large banner with optional search">
     <zn-input name="title" label="Title"></zn-input>
     <zn-input name="subtitle" label="Subtitle"></zn-input>
+    <zn-input name="gradient" label="Background gradient" placeholder="linear-gradient(135deg, #00aaff, #aa00ff)"
+              help-text="CSS gradient painted behind the hero. Leave empty for the theme default."></zn-input>
+    <zn-toggle name="showSearch" label="Show search"
+               description="Draws the site search box in the banner."></zn-toggle>
   </template>
   <template type="article-list" slot="config" label="Article List" icon="list" category="Content"
             description="A list of KB articles">
@@ -39,6 +43,24 @@ Listen for `zn-page-change` to persist the config, or read/write the `state` pro
 Types can also be registered programmatically via `sectionTypes` /
 `registerSectionTypes()`, including a `renderConfig(section, update)` callback for
 inspector bodies that need real logic.
+
+## The inspector
+
+Selecting a section opens the inspector, which heads the panel with the section type's
+icon and colour, the section's name, its type (shown only where a renamed section makes
+it useful), and a close button that clears the selection. Below that, a **Section name**
+field renames the section (the card's label), followed by the type's stamped config form.
+A type whose template has no content gets a hint in place of the form rather than an
+empty panel.
+
+Because the panel is narrow, the inspector sets its own form-label and help-text
+typography rather than inheriting your app's full-width form styling, and its `gap` is
+the single source of spacing between fields — a control's own outer margins are zeroed
+so they can't stack with it. Stamped `<zn-toggle>`s are laid out as a row, with the
+label and description left and the switch right; set `label-position` yourself on a
+toggle to opt out.
+
+Style the panel through `inspector`, `inspector-header` and `inspector-body` parts.
 
 ## JavaScript API
 

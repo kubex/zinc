@@ -26,6 +26,7 @@ import styles from './toggle.scss';
  *
  * @csspart base - The component's base wrapper containing the toggle switch.
  * @csspart control - The toggle switch control (the circular button that slides).
+ * @csspart label - The toggle's label.
  * @csspart description - The container that wraps the toggle's description.
  *
  * @cssproperty --zn-toggle-margin - The margin around the toggle switch. Defaults to `8px 0`.
@@ -218,7 +219,7 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
         <label>
           ${this.label || hasDescription ? html`
             <div class="switch__label-wrapper">
-              ${this.label ? html`<p class="switch-label">${this.label}</p>` : ''}
+              ${this.label ? html`<p part="label" class="switch-label">${this.label}</p>` : ''}
               <div part="description"
                    id="description"
                    class="switch__description"

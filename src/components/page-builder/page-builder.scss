@@ -50,7 +50,6 @@
     --inspector-col: 0px;
 
     .inspector {
-      padding: 0;
       border-left: none;
     }
   }
@@ -63,8 +62,10 @@
     --palette-col: 240px;
   }
 
+  // 300, not 280: below that the inspector's toggle rows wrap their switch
+  // under the label and the field rhythm breaks down.
   .builder:not(.builder--inspector-collapsed) {
-    --inspector-col: 280px;
+    --inspector-col: 300px;
   }
 }
 
@@ -249,21 +250,177 @@ zn-page-palette-item {
     rgb(var(--zn-body));
 }
 
+// Right column — anatomy shared with flow-builder's inspector (icon tile +
+// title/type head over a scrolling body), so the two builders read alike.
 .inspector {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 14px;
   border-left: 1px solid rgb(var(--zn-border-color));
-  overflow-y: auto;
+  overflow: hidden; // the body scrolls, not the panel — the head stays put
+  animation: inspector-in 0.18s ease;
 
+  &-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 0 0 auto;
+    padding: 16px;
+    border-bottom: 1px solid rgb(var(--zn-border-color));
+
+    &__icon {
+      --section-accent: rgb(var(--zn-color-primary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      color: var(--section-accent);
+      background: color-mix(in srgb, var(--section-accent) 15%, transparent);
+    }
+
+    // Long section names truncate rather than pushing the close button out.
+    &__text {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    &__title {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    &__type {
+      font-size: 0.75rem;
+      color: rgb(var(--zn-color-muted-text));
+    }
+
+    &__title,
+    &__type {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  // Field typography and rhythm for the stamped config form. Host themes size
+  // form labels for full-width forms, which reads oversized in a ~343px panel —
+  // the --zn-input-* tokens inherit into every zinc control's shadow root, so
+  // retuning them here needs no per-control ::part() list.
+  &-body {
+    --pb-field-label-size: 0.8125rem;
+    --pb-field-note-size: 0.75rem;
+    --pb-field-gap: 22px;
+    --pb-label-gap: 6px;
+    --pb-note-gap: 5px;
+    --zn-input-label-font-size-medium: var(--pb-field-label-size);
+    --zn-input-label-font-weight: 600;
+    --zn-input-label-line-height: 1.3;
+    --zn-input-label-color: rgb(var(--zn-text));
+    --zn-input-help-text-font-size-medium: var(--pb-field-note-size);
+    --zn-input-help-text-color: rgb(var(--zn-color-muted-text));
+    --zn-toggle-margin: 0;
+
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    // Extra bottom padding so the last field isn't flush against the scroll end.
+    padding: 18px 16px 24px;
+    gap: var(--pb-field-gap);
+
+    // A field's own internal spacing comes from --zn-spacing-* tokens, which
+    // zinc leaves to the host theme — undefined here, so those declarations
+    // drop out and every field collapses onto the flex gap alone. Set the
+    // rhythm explicitly instead: tight inside a field, wide between them, so
+    // a label reads as belonging to the control below it rather than floating
+    // between two.
+    ::part(form-control-label) {
+      margin-bottom: var(--pb-label-gap);
+    }
+
+    ::part(form-control-input) {
+      margin: 0;
+    }
+
+    ::part(form-control-help-text) {
+      margin-top: var(--pb-note-gap);
+    }
+
+    // zn-toggle sizes its own label and description from a fixed type scale
+    // rather than the --zn-input-label-* tokens, so bring it into line through
+    // its parts — otherwise a toggle row outweighs every field around it.
+    zn-toggle::part(label) {
+      font-size: var(--pb-field-label-size);
+      font-weight: 600;
+    }
+
+    zn-toggle::part(description) {
+      font-size: var(--pb-field-note-size);
+      margin-top: var(--pb-note-gap);
+    }
+
+    // The icon picker's trigger is a content-width button, which reads as a
+    // stranded chip in a column of full-width fields. Fill the row (the clear
+    // button, when there is a value, still takes its space beside it).
+    zn-icon-picker::part(trigger) {
+      flex: 1 1 auto;
+    }
+
+    > *,
+    .inspector__form > * {
+      margin-block: 0;
+    }
+
+    // The stamped wrapper is a layout box, not a field — it carries the same
+    // rhythm as the body so the host's controls space identically.
+    > .inspector__form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--pb-field-gap);
+    }
+  }
+
+  &-hint {
+    margin: 0;
+    font-size: 0.75rem;
+    color: rgb(var(--zn-color-muted-text));
+  }
 }
 
-.inspector__body,
-.inspector__form {
+.inspector-close {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  color: rgb(var(--zn-color-muted-text));
+  background: transparent;
+  cursor: pointer;
+
+  &:hover {
+    color: rgb(var(--zn-text));
+    background: rgb(var(--zn-color-tab));
+  }
+}
+
+// The panel slides in from the right as a section is selected (as flow-builder).
+@keyframes inspector-in {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .declarations {

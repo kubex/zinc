@@ -77,6 +77,8 @@ function timeAgo(ms: number): string {
  * @csspart palette - The left palette panel.
  * @csspart canvas - The centre section-card canvas.
  * @csspart inspector - The right panel while a section is selected.
+ * @csspart inspector-header - The inspector's fixed header (icon, section name, type, close).
+ * @csspart inspector-body - The inspector's scrolling form area.
  */
 export default class ZnPageBuilder extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -1023,6 +1025,14 @@ export default class ZnPageBuilder extends ZincElement {
     // element defines on upgrade — Lit only replays properties it declares
     // reactive, so a hand-written `value` accessor (zn-icon-picker) would keep
     // its default and the control would render empty. Upgrade first.
+    //
+    // Toggles default to a stacked label, which reads badly in a narrow panel —
+    // put the switch on the label's right unless the host asked for a position.
+    // Set before the upgrade, while `label-position` can only be an authored
+    // attribute and never one zn-toggle reflected from its own default.
+    form.querySelectorAll<HTMLElement>('zn-toggle:not([label-position])').forEach(toggle => {
+      toggle.setAttribute('label-position', 'left');
+    });
     customElements.upgrade(form);
     form.querySelectorAll<HTMLElement>('[name]').forEach(control => {
       const name = control.getAttribute('name')!;
@@ -1036,7 +1046,9 @@ export default class ZnPageBuilder extends ZincElement {
         (control as HTMLInputElement).value = String(value);
       }
     });
-    this._form = form;
+    // A content-free template stamps no controls — leave the form null so the
+    // inspector shows its "no settings" hint rather than a blank gap.
+    this._form = form.childElementCount ? form : null;
   }
 
   private _isBooleanControl(control: HTMLElement, value: unknown): boolean {
@@ -1076,22 +1088,48 @@ export default class ZnPageBuilder extends ZincElement {
     const section = this._selectedSection();
     if (!section) return html``;
     const type = this.registry.get(section.type);
+    const hasConfig = Boolean(type?.renderConfig) || this._form !== null;
+    const title = section.label ?? type?.label ?? section.type;
+    const typeLabel = type?.label ?? section.type;
     return html`
       <aside part="inspector" class="inspector">
-        <zn-input
-          class="inspector__rename"
-          label="Section name"
-          .value="${section.label ?? type?.label ?? ''}"
-          @zn-change="${(e: Event) => this._renameSection(section.id, String((e.target as ZnInput).value ?? ''))}"></zn-input>
+        <div part="inspector-header" class="inspector-head">
+          <span
+            class="inspector-head__icon"
+            style="--section-accent:${type?.color ?? 'rgb(var(--zn-color-primary))'}">
+            <zn-icon src="${type?.icon ?? 'widgets'}" library="${ifDefined(type?.iconLibrary)}" size="18"></zn-icon>
+          </span>
+          <div class="inspector-head__text">
+            <div class="inspector-head__title">${title}</div>
+            ${title === typeLabel ? '' : html`
+              <div class="inspector-head__type">${typeLabel}</div>`}
+          </div>
+          <button
+            type="button"
+            class="inspector-close"
+            title="Close section settings"
+            aria-label="Close section settings"
+            @click="${() => this._select(null)}">
+            <zn-icon src="x@lu" size="18"></zn-icon>
+          </button>
+        </div>
         <div
-          class="inspector__body"
+          part="inspector-body"
+          class="inspector-body"
           @change="${this._onInspectorInput}"
           @zn-change="${this._onInspectorInput}"
           @input="${this._onInspectorInput}"
           @zn-input="${this._onInspectorInput}">
+          <zn-input
+            class="inspector__rename"
+            label="Section name"
+            .value="${section.label ?? type?.label ?? ''}"
+            @zn-change="${(e: Event) => this._renameSection(section.id, String((e.target as ZnInput).value ?? ''))}"></zn-input>
           ${type?.renderConfig
             ? type.renderConfig(section, data => this._updateSectionData(section.id, data))
             : this._form}
+          ${hasConfig ? '' : html`
+            <p class="inspector-hint">This section type has no settings.</p>`}
         </div>
       </aside>`;
   }

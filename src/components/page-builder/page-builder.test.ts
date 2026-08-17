@@ -281,6 +281,83 @@ describe('<zn-page-builder>', () => {
     expect(el.state.sections[0].label).to.equal('My Hero');
   });
 
+  it('should head the inspector with the section name and its type', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder config='{"sections":[
+        {"id":"s1","type":"hero","label":"Top banner","data":{}},
+        {"id":"s2","type":"hero","data":{}}]}'>
+        <template type="hero" slot="config" label="Hero" icon="star">
+          <zn-input name="title" label="Title"></zn-input>
+        </template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    const cards = el.shadowRoot?.querySelectorAll('zn-page-section-card');
+    cards?.[0].dispatchEvent(new Event('click'));
+    await el.updateComplete;
+
+    const head = el.shadowRoot?.querySelector('[part="inspector-header"]');
+    expect(head, 'inspector header').to.exist;
+    expect(head?.querySelector('.inspector-head__title')?.textContent?.trim()).to.equal('Top banner');
+    expect(head?.querySelector('.inspector-head__type')?.textContent?.trim()).to.equal('Hero');
+    expect(head?.querySelector('zn-icon')?.getAttribute('src')).to.equal('star');
+    expect(el.shadowRoot?.querySelector('[part="inspector-body"] .inspector__rename'), 'rename in body').to.exist;
+
+    // An unnamed section's title already is the type label — don't print it twice.
+    cards?.[1].dispatchEvent(new Event('click'));
+    await el.updateComplete;
+    const unnamed = el.shadowRoot?.querySelector('[part="inspector-header"]');
+    expect(unnamed?.querySelector('.inspector-head__title')?.textContent?.trim()).to.equal('Hero');
+    expect(unnamed?.querySelector('.inspector-head__type'), 'no duplicate type line').to.not.exist;
+  });
+
+  it('should clear the selection from the inspector close button', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder config='{"sections":[{"id":"s1","type":"hero","data":{}}]}'>
+        <template type="hero" slot="config" label="Hero"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    el.shadowRoot?.querySelector('zn-page-section-card')?.dispatchEvent(new Event('click'));
+    await el.updateComplete;
+    expect(el.shadowRoot?.querySelector('[part="inspector"]')).to.exist;
+
+    el.shadowRoot?.querySelector<HTMLButtonElement>('.inspector-close')?.click();
+    await el.updateComplete;
+    expect(el.shadowRoot?.querySelector('[part="inspector"]'), 'inspector closes').to.not.exist;
+  });
+
+  it('should hint when the selected type has no settings', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder config='{"sections":[{"id":"s1","type":"divider","data":{}}]}'>
+        <template type="divider" slot="config" label="Divider"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    el.shadowRoot?.querySelector('zn-page-section-card')?.dispatchEvent(new Event('click'));
+    await el.updateComplete;
+
+    expect(el.shadowRoot?.querySelector('.inspector-hint')).to.exist;
+  });
+
+  it('should lay stamped toggles out as a row, honouring a host-set position', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder config='{"sections":[{"id":"s1","type":"hero","data":{}}]}'>
+        <template type="hero" slot="config" label="Hero">
+          <zn-toggle name="showSearch" label="Show search"></zn-toggle>
+          <zn-toggle name="showNav" label="Show nav" label-position="top"></zn-toggle>
+        </template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    el.shadowRoot?.querySelector('zn-page-section-card')?.dispatchEvent(new Event('click'));
+    await el.updateComplete;
+
+    const form = el.shadowRoot?.querySelector('.inspector__form');
+    expect(form?.querySelector('zn-toggle[name="showSearch"]')?.getAttribute('label-position')).to.equal('left');
+    expect(form?.querySelector('zn-toggle[name="showNav"]')?.getAttribute('label-position')).to.equal('top');
+  });
+
   it('should undo and redo a section add', async () => {
     const el = await fixture<ZnPageBuilder>(html`
       <zn-page-builder>

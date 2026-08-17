@@ -319,7 +319,7 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
 
     return html`
       <div part="form-control"
-           class="form-control ${hasLabel ? 'form-control--has-label' : ''} ${hasHelpText ? 'form-control--has-help-text' : ''}">
+           class="form-control form-control--medium ${hasLabel ? 'form-control--has-label' : ''} ${hasHelpText ? 'form-control--has-help-text' : ''}">
 
         <label part="form-control-label" class="form-control__label"
                aria-hidden=${hasLabel ? 'false' : 'true'}>

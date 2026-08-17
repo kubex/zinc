@@ -76,6 +76,10 @@ export default class ZnPanel extends ZincElement {
     const hasActionSlot = this.hasSlotController.test('actions');
     const hasFooterSlot = this.hasSlotController.test('footer');
     const hasHeader = this.caption || hasActionSlot;
+    // Transparent panels with no vertical body padding have nothing to separate the header from,
+    // so the underline is just a stray rule across the page.
+    const isFlushY = this.flush || this.tabbed || this.flushY;
+    const underlineHeader = !this.headerBorderless && !(this.transparent && isFlushY);
 
     return html`
       <div class="${classMap({
@@ -98,7 +102,7 @@ export default class ZnPanel extends ZincElement {
           ${hasHeader ? html`
             <zn-header class="${classMap({
               "panel__header": true,
-              "panel__header--underline": !this.headerBorderless,
+              "panel__header--underline": underlineHeader,
             })}"
                        icon="${this.icon}"
                        caption="${this.caption}"

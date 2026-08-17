@@ -14,10 +14,6 @@
 
 :host([appearance="solid"]) {
   background-color: rgb(var(--zn-panel));
-
-  .wrapper:before {
-    backdrop-filter: none;
-  }
 }
 
 .alert-icon {
@@ -28,20 +24,20 @@ p {
   margin: 0;
 }
 
+// No backdrop-filter here, deliberately. This used to carry a
+// `::before { inset: 0; z-index: -1; backdrop-filter: blur(3px) }`, which forces
+// a compositor render surface per alert and re-blurs whenever anything behind it
+// repaints. Alerts are the one component that routinely appears dozens of times
+// on a page (one per warning, per row), so that scaled into hundreds of render
+// surfaces and could stop the compositor rasterising the page at all. The host
+// background is `rgba(--zn-panel, 0.8)` over a flat panel, so the blur was not
+// perceptible anyway — it only ever mattered over a high-frequency backdrop,
+// which is not where alerts sit.
 .wrapper {
   position: relative;
   border: 1px solid rgb(var(--zn-border-color)) !important;
   width: 100%;
   height: 100%;
-
-  &:before {
-    border-radius: 10px;
-    position: absolute;
-    content: '';
-    inset: 0;
-    z-index: -1;
-    backdrop-filter: blur(3px);
-  }
 }
 
 :host([center]) .content {

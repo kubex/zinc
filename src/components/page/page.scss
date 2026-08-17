@@ -57,8 +57,20 @@
   background: linear-gradient(225deg, rgba(233, 227, 255, 1) 0%, rgba(214, 246, 245, 1) 40%, rgba(233, 227, 255, 1) 100%), linear-gradient(180deg, rgba(129, 153, 217, 0) 0%, rgba(0, 0, 0, 1) 100%);
 
 
+  // Held still deliberately. This gradient used to drift via
+  // `animation: page-header 25s ease infinite`, which animates
+  // `background-position` — a paint-only property, so it can never be
+  // composited. That repainted the header every frame for as long as the page
+  // was open, and because the header is `position: sticky` its paint chunk
+  // spans the whole page, so every backdrop-filter behind it (zn-alert, for
+  // one) was re-blurred each frame as well. On content-heavy pages that put
+  // enough work into each frame that tiles never finished rasterising: blank
+  // regions, content appearing only as you scrolled, and a dead inspector
+  // overlay. `0% 7%` is frame zero of the old keyframes, so the header looks as
+  // it did. If the drift is wanted back it has to move a compositable property
+  // (transform on a clipped, contained layer), not background-position.
   background-size: 150% 150%;
-  animation: page-header 25s ease infinite;
+  background-position: 0% 7%;
 
   .header:not(.header--has-navigation) {
     padding-bottom: var(--zn-base-gap);
@@ -89,12 +101,6 @@
   &.header--has-navigation::before {
     margin-bottom: -40px;
   }
-}
-
-@keyframes page-header {
-  0%{background-position:0% 7%}
-  50%{background-position:100% 94%}
-  100%{background-position:0% 7%}
 }
 
 .header {

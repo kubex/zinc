@@ -9024,6 +9024,7 @@ declare module "components/priority-list/priority-list.component" {
      *
      * @cssproperty --zn-priority-list-item-gap - The gap between list items. Defaults to `var(--zn-spacing-2x-small)`.
      * @cssproperty --zn-priority-list-item-padding - The padding inside each item. Defaults to `var(--zn-spacing-small) var(--zn-spacing-medium)`.
+     * @cssproperty --zn-priority-list-actions-gap - The gap between an item's slotted actions. Defaults to `var(--zn-spacing-x-small)`.
      * @cssproperty --zn-priority-list-handle-color - The color of the drag handle. Defaults to `var(--zn-color-neutral-500)`.
      * @cssproperty --zn-priority-list-priority-color - The color of the priority number. Defaults to `var(--zn-color-neutral-600)`.
      */

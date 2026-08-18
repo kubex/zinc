@@ -16,28 +16,6 @@
           "js": { "properties": [], "events": [] }
         },
         {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -97,6 +75,28 @@
               { "name": "center", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -6487,7 +6487,7 @@
         },
         {
           "name": "zn-page-builder",
-          "description": "A config-driven page composer: a palette of predefined section types, a linear\ncanvas of section cards, and an inspector for editing each section's content.\n---\n\n\n### **Events:**\n - **zn-page-change** - Emitted whenever the page state changes. `event.detail.state` is the new PageState.\n- **zn-page-selection-change** - Emitted when the selected section changes. `event.detail.sectionId`.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks for validity but does not show a validation message.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(_message)** - Sets a custom validation message. Pass an empty string to restore validity.\n- **addSection(type: _string_, index: _number_): _PageSection | null_** - Adds a section of a registered type at `index` (default: end). Returns null for unknown types.\n- **addSectionToSlot(type: _string_, containerId: _string_, slotIndex: _number_): _PageSection | null_** - Adds a new section of a registered type into a container's slot. Returns null if not allowed.\n\n### **Slots:**\n - **config** - `<template type=\"…\">` declarations; never displayed. Each template's attributes (type, label, icon, icon-library, color, category, description, slots, accepts) declare a palette entry and its content declares the inspector form for that type. `slots` makes the section a container with that many child slots; `accepts` is a comma-separated list of the type keys its slots allow.\n- **header-left** - Actions shown on the left of the header bar.\n- **header-right** - Actions shown on the right of the header bar.\n\n### **CSS Parts:**\n - **base** - The grid wrapper.\n- **header** - The full-width header action bar (only rendered when header slots are filled).\n- **palette** - The left palette panel.\n- **canvas** - The centre section-card canvas.\n- **inspector** - The right panel while a section is selected.\n- **inspector-header** - The inspector's fixed header (icon, section name, type, close).\n- **inspector-body** - The inspector's scrolling form area.",
+          "description": "A config-driven page composer: a palette of predefined section types, a linear\ncanvas of section cards, and an inspector for editing each section's content.\n---\n\n\n### **Events:**\n - **zn-page-change** - Emitted whenever the page state changes. `event.detail.state` is the new PageState.\n- **zn-page-selection-change** - Emitted when the selected section changes. `event.detail.sectionId`.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks for validity but does not show a validation message.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(_message)** - Sets a custom validation message. Pass an empty string to restore validity.\n- **addSection(type: _string_, index: _number_): _PageSection | null_** - Adds a section of a registered type at `index` (default: end). Returns null for unknown types.\n- **addSectionToCell(type: _string_, containerId: _string_, cellIndex: _number_, insertIndex): _PageSection | null_** - Adds a new section of a registered type into a container cell.\n\n### **Slots:**\n - **config** - `<template type=\"…\">` declarations; never displayed. Each template's attributes (type, label, icon, icon-library, color, category, description, container, columns, widths, grow, slots, accepts) declare a palette entry and its content declares the inspector form for that type. `container` makes the type a container whose editor-configurable layout starts from `columns` (seeds equal widths) or `widths` (explicit weights, wins over `columns`); `grow` seeds a growable instance. `accepts` is a comma-separated list of the type keys its cells allow — omitted on a `container` type, any type is allowed subject to the nesting cap. `slots` is\n- **header-left** - Actions shown on the left of the header bar.\n- **header-right** - Actions shown on the right of the header bar.\n\n### **CSS Parts:**\n - **base** - The grid wrapper.\n- **header** - The full-width header action bar (only rendered when header slots are filled).\n- **palette** - The left palette panel.\n- **canvas** - The centre section-card canvas.\n- **inspector** - The right panel while a section is selected.\n- **inspector-header** - The inspector's fixed header (icon, section name, type, close).\n- **inspector-body** - The inspector's scrolling form area.",
           "doc-url": "",
           "attributes": [
             {
@@ -6537,7 +6537,7 @@
           "slots": [
             {
               "name": "config",
-              "description": "`<template type=\"…\">` declarations; never displayed. Each template's attributes (type, label, icon, icon-library, color, category, description, slots, accepts) declare a palette entry and its content declares the inspector form for that type. `slots` makes the section a container with that many child slots; `accepts` is a comma-separated list of the type keys its slots allow."
+              "description": "`<template type=\"…\">` declarations; never displayed. Each template's attributes (type, label, icon, icon-library, color, category, description, container, columns, widths, grow, slots, accepts) declare a palette entry and its content declares the inspector form for that type. `container` makes the type a container whose editor-configurable layout starts from `columns` (seeds equal widths) or `widths` (explicit weights, wins over `columns`); `grow` seeds a growable instance. `accepts` is a comma-separated list of the type keys its cells allow — omitted on a `container` type, any type is allowed subject to the nesting cap. `slots` is"
             },
             {
               "name": "header-left",
@@ -7968,7 +7968,7 @@
         },
         {
           "name": "zn-remarkd-editor",
-          "description": "A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted on each keystroke while editing a block.\n- **zn-change** - Emitted when a block edit is committed and the value changes.\n\n### **Methods:**\n - **focus()** - Starts editing the first block, or a new block if the document is empty.\n- **blur()** - Commits any in-progress block or raw edit.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The always-visible block-insert toolbar.\n- **raw-toggle** - The button that switches between the block view and the raw source view.\n- **block** - A rendered block wrapper.\n- **rendered** - The rendered remarkd output of a block.\n- **input** - The textarea shown while editing a block.\n- **raw** - The full-document textarea shown in raw source mode.\n- **slash-menu** - The `zn-slash-menu` opened by typing \"/\" in an empty block.\n- **image-controls** - The caption / alignment / size panel shown when an image block is clicked.",
+          "description": "A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted on each keystroke while editing a block.\n- **zn-change** - Emitted when a block edit is committed and the value changes.\n\n### **Methods:**\n - **focus()** - Starts editing the first block, or a new block if the document is empty.\n- **blur()** - Commits any in-progress block or raw edit.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The always-visible block-insert toolbar.\n- **raw-toggle** - The button that switches between the block view and the raw source view.\n- **block** - A rendered block wrapper.\n- **rendered** - The rendered remarkd output of a block.\n- **input** - The textarea shown while editing a block.\n- **raw** - The full-document textarea shown in raw source mode.\n- **slash-menu** - The `zn-slash-menu` opened by typing \"/\" in an empty block.\n- **image-controls** - The caption / alignment / size panel shown when an image block is clicked.\n- **include** - The chip rendered in place of an `include::` directive.\n- **include-picker** - The inline Include picker opened from the toolbar or \"/include\".",
           "doc-url": "",
           "attributes": [
             {
@@ -7989,6 +7989,11 @@
             {
               "name": "attachment-url",
               "description": "Endpoint for image uploads — required for image support. Posting the file\nmetadata here must return `{uploadPath, uploadUrl}`; the file is then PUT\nto `uploadUrl` and the returned `uploadPath` is embedded as the image URL.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "include-url",
+              "description": "Endpoint listing the Includes this document may embed, as\n`{\"items\":[{id,title,description,scope,keywords,languages,url}]}`. Labels the\nchips rendered for `include::` directives and feeds the include picker.",
               "value": { "type": "string", "default": "''" }
             },
             {
@@ -8047,6 +8052,11 @@
               {
                 "name": "attachmentUrl",
                 "description": "Endpoint for image uploads — required for image support. Posting the file\nmetadata here must return `{uploadPath, uploadUrl}`; the file is then PUT\nto `uploadUrl` and the returned `uploadPath` is embedded as the image URL.",
+                "type": "string"
+              },
+              {
+                "name": "includeUrl",
+                "description": "Endpoint listing the Includes this document may embed, as\n`{\"items\":[{id,title,description,scope,keywords,languages,url}]}`. Labels the\nchips rendered for `include::` directives and feeds the include picker.",
                 "type": "string"
               },
               {

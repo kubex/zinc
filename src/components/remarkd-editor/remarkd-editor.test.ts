@@ -282,4 +282,183 @@ Second"></zn-remarkd-editor>`);
 
     expect(fired).to.be.true;
   });
+  it('should keep an include directive in a block of its own', async () => {
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="Intro
+include::inc-1[Payment Terms]
+Outro"></zn-remarkd-editor>`);
+
+    const blocks = el.shadowRoot!.querySelectorAll('.remarkd-editor__block');
+    expect(blocks.length).to.equal(3);
+    expect(blocks[1].querySelector('.remarkd-editor__include-title')!.textContent).to.contain('Payment Terms');
+    expect(blocks[0].querySelector('.remarkd-editor__include')).to.not.exist;
+  });
+
+  it('should leave an include directive inside a fence alone', async () => {
+    const fenced = '```\ninclude::inc-1[Payment Terms]\n```';
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value=${fenced}></zn-remarkd-editor>`);
+
+    expect(el.shadowRoot!.querySelectorAll('.remarkd-editor__block').length).to.equal(1);
+    expect(el.shadowRoot!.querySelector('.remarkd-editor__include')).to.not.exist;
+  });
+
+  it('should label an include chip from the marker when no list is configured', async () => {
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="include::inc-1[Payment Terms]"></zn-remarkd-editor>`);
+
+    const chip = el.shadowRoot!.querySelector('.remarkd-editor__include')!;
+    expect(chip.querySelector('.remarkd-editor__include-title')!.textContent).to.contain('Payment Terms');
+    expect(chip.classList.contains('remarkd-editor__include--missing')).to.be.false;
+  });
+
+  // Ordering an embed within the content is the whole point of the chip: the
+  // block chrome's drag handle has to move it like any other block.
+  it('should reorder an include block by dragging its handle', async () => {
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="Intro
+
+include::inc-1[Payment Terms]"></zn-remarkd-editor>`);
+
+    const first = el.shadowRoot!.querySelectorAll('.remarkd-editor__block')[0].getBoundingClientRect();
+    const handle = el.shadowRoot!.querySelectorAll<HTMLElement>('.remarkd-editor__drag-handle')[1];
+    const target = first.top + 1;
+
+    handle.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true, button: 0, buttons: 1, clientX: 0, clientY: 0}));
+    document.dispatchEvent(new PointerEvent('pointermove', {bubbles: true, buttons: 1, clientX: 0, clientY: target}));
+    document.dispatchEvent(new PointerEvent('pointerup', {bubbles: true, buttons: 0, clientX: 0, clientY: target}));
+    await el.updateComplete;
+
+    expect(el.value).to.equal('include::inc-1[Payment Terms]\n\nIntro');
+  });
+  /** Serves one include list to the editor, and restores fetch when the test ends. */
+  function stubIncludeList(items: unknown[]): void {
+    const original = window.fetch;
+    window.fetch = () => Promise.resolve(new Response(JSON.stringify({items}),
+      {headers: {'Content-Type': 'application/json'}}));
+    afterEach(() => {
+      window.fetch = original;
+    });
+  }
+
+  it('should label an include chip from the fetched list', async () => {
+    stubIncludeList([{id: 'inc-1', title: 'Refund Policy', scope: 'Global',
+      languages: 'English', url: '/kb/kb1/includes/inc-1'}]);
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor include-url="/options"
+                         value="include::inc-1[Stale Title]"></zn-remarkd-editor>`);
+
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__include-link'),
+      'the include list never resolved');
+    const chip = el.shadowRoot!.querySelector('.remarkd-editor__include')!;
+    expect(chip.querySelector('.remarkd-editor__include-title')!.textContent).to.contain('Refund Policy');
+    expect(chip.querySelector('.remarkd-editor__include-scope')!.textContent).to.contain('Global');
+    expect(chip.querySelector<HTMLAnchorElement>('.remarkd-editor__include-link')!.getAttribute('href'))
+      .to.equal('/kb/kb1/includes/inc-1');
+    expect(chip.classList.contains('remarkd-editor__include--missing')).to.be.false;
+  });
+
+  it('should flag an include the list does not know', async () => {
+    stubIncludeList([{id: 'inc-1', title: 'Refund Policy'}]);
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor include-url="/options"
+                         value="include::inc-9[Archived]"></zn-remarkd-editor>`);
+
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__include--missing'),
+      'the missing state never rendered');
+    expect(el.shadowRoot!.querySelector('.remarkd-editor__include-meta')!.textContent).to.contain('inc-9');
+  });
+
+  // remarkd's file include shares the syntax, so an unknown path is not broken.
+  it('should not flag a file include the list does not know', async () => {
+    stubIncludeList([{id: 'inc-1', title: 'Refund Policy'}]);
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor include-url="/options"
+                         value="include::partials/legal.adoc[Legal]"></zn-remarkd-editor>`);
+
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__include'),
+      'the chip never rendered');
+    expect(el.shadowRoot!.querySelector('.remarkd-editor__include--missing')).to.not.exist;
+  });
+
+  it('should not request the include list for a document with no embeds', async () => {
+    const original = window.fetch;
+    let requests = 0;
+    window.fetch = () => {
+      requests++;
+      return Promise.resolve(new Response('{"items":[]}'));
+    };
+    try {
+      const el = await fixture<ZnRemarkdEditor>(html`
+        <zn-remarkd-editor include-url="/options" value="# Title"></zn-remarkd-editor>`);
+      await el.updateComplete;
+      expect(requests).to.equal(0);
+    } finally {
+      window.fetch = original;
+    }
+  });
+  it('should insert an include marker from the toolbar picker', async () => {
+    stubIncludeList([{id: 'inc-1', title: 'Refund Policy', scope: 'Global', languages: 'English'}]);
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor include-url="/options" value="# Title"></zn-remarkd-editor>`);
+
+    const buttons = el.shadowRoot!.querySelectorAll<HTMLElement>('.remarkd-editor__toolbar zn-button');
+    const includeButton = buttons[buttons.length - 1];
+    includeButton.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__include-option'),
+      'the include picker never listed anything');
+    el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__include-option')!.click();
+    await el.updateComplete;
+
+    expect(el.value).to.equal('# Title\n\ninclude::inc-1[Refund Policy]');
+  });
+
+  it('should swap the slash command for the include picker when Include is chosen', async () => {
+    stubIncludeList([{id: 'inc-1', title: 'Refund Policy', languages: 'English'}]);
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor include-url="/options" value="Hello"></zn-remarkd-editor>`);
+    el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
+    await el.updateComplete;
+
+    const input = typeInBlock(el, '/include');
+    await waitUntil(() => el.shadowRoot!.querySelector('zn-slash-menu[open]'), 'the slash menu never opened');
+
+    input.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true, cancelable: true}));
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__include-picker'),
+      'the include picker never opened');
+
+    // The "/include" draft is dropped rather than committed as a block.
+    expect(el.value).to.equal('');
+  });
+
+  it('should filter the include picker', async () => {
+    stubIncludeList([
+      {id: 'inc-1', title: 'Refund Policy', keywords: ['money'], languages: 'English'},
+      {id: 'inc-2', title: 'Shipping', languages: 'English'},
+    ]);
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor include-url="/options" value="# Title"></zn-remarkd-editor>`);
+    const buttons = el.shadowRoot!.querySelectorAll<HTMLElement>('.remarkd-editor__toolbar zn-button');
+    buttons[buttons.length - 1].dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+    await waitUntil(() => el.shadowRoot!.querySelectorAll('.remarkd-editor__include-option').length === 2,
+      'the include picker never listed both');
+
+    const filter = el.shadowRoot!.querySelector<HTMLInputElement>('.remarkd-editor__include-filter')!;
+    filter.value = 'money';
+    filter.dispatchEvent(new Event('input', {bubbles: true}));
+    await el.updateComplete;
+
+    const options = el.shadowRoot!.querySelectorAll('.remarkd-editor__include-option');
+    expect(options.length).to.equal(1);
+    expect(options[0].textContent).to.contain('Refund Policy');
+  });
+
+  it('should offer no include entry points without an include-url', async () => {
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="# Title"></zn-remarkd-editor>`);
+    const tooltips = Array.from(el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar zn-button'))
+      .map(button => button.getAttribute('tooltip'));
+    expect(tooltips).to.not.contain('Include');
+  });
 });

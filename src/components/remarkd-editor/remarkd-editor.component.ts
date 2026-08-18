@@ -28,6 +28,7 @@ interface BlockType {
   /** Where the caret lands within `prefix`. Defaults to the end. */
   caretOffset?: number;
   image?: boolean;
+  include?: boolean;
 }
 
 interface ImageBlockData {
@@ -37,6 +38,21 @@ interface ImageBlockData {
   alt: string;
   width: string;
   height: string;
+}
+
+interface IncludeBlockData {
+  target: string;
+  label: string;
+}
+
+interface IncludeOption {
+  id: string;
+  title: string;
+  description?: string;
+  scope?: string;
+  keywords?: string[];
+  languages?: string;
+  url?: string;
 }
 
 const BLOCK_TYPES: BlockType[] = [
@@ -49,11 +65,25 @@ const BLOCK_TYPES: BlockType[] = [
   {label: 'Warning', icon: 'triangle-alert@lu', prefix: 'WARNING: '},
   {label: 'Code', icon: 'code@lu', prefix: '```\n\n```', caretOffset: 4},
   {label: 'Image', icon: 'image@lu', image: true},
+  {label: 'Include', icon: 'blocks@lu', include: true},
 ];
 
+/** remarkd's include directive on a line of its own: `include::<target>[<label>]`. */
+const INCLUDE_LINE = /^include::([^[]+)\[(.*)]\s*$/;
+
+/**
+ * The marker a document body carries for an embed. Mirrors app-kb's
+ * `model.IncludeEmbedMarker`: brackets and newlines in the title would break the
+ * directive, so they are replaced rather than escaped.
+ */
+function includeMarker(id: string, title: string): string {
+  const label = title.replace(/[\r\n]+/g, ' ').replace(/\[/g, '(').replace(/]/g, ')').trim();
+  return `include::${id}[${label}]`;
+}
+
 /** The block types as slash menu insertions. Image opens the picker, so it inserts nothing. */
-const SLASH_ITEMS: SlashMenuItem[] = BLOCK_TYPES.map(item => item.image
-  ? {label: item.label, icon: item.icon, action: 'image'}
+const SLASH_ITEMS: SlashMenuItem[] = BLOCK_TYPES.map(item => item.image || item.include
+  ? {label: item.label, icon: item.icon, action: item.image ? 'image' : 'include'}
   : {label: item.label, icon: item.icon, value: item.prefix ?? '', caretOffset: item.caretOffset});
 
 /**
@@ -80,6 +110,8 @@ const SLASH_ITEMS: SlashMenuItem[] = BLOCK_TYPES.map(item => item.image
  * @csspart raw - The full-document textarea shown in raw source mode.
  * @csspart slash-menu - The `zn-slash-menu` opened by typing "/" in an empty block.
  * @csspart image-controls - The caption / alignment / size panel shown when an image block is clicked.
+ * @csspart include - The chip rendered in place of an `include::` directive.
+ * @csspart include-picker - The inline Include picker opened from the toolbar or "/include".
  */
 export default class ZnRemarkdEditor extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -95,11 +127,14 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     menu: () => this.mountSlashMenu(),
     // The menu only belongs in a block that is nothing but the slash command — a
     // block prefix like "## " is not valid remarkd part-way through a line.
-    items: () => this.isSlashBlock() ? SLASH_ITEMS : [],
+    items: () => this.isSlashBlock()
+      ? SLASH_ITEMS.filter(item => item.action !== 'include' || !!this.includeUrl)
+      : [],
     onSelect: item => this.handleSlashSelect(item)
   });
 
   private editingDraft = '';
+  private includeRequest: Promise<IncludeOption[]> | null = null;
   private rawEntryValue = '';
   private suppressValueSync = false;
   private suppressBlurCommit = false;
@@ -117,6 +152,9 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   @state() private dragIndex: number | null = null;
   @state() private editShell = '';
   @state() private rawMode = false;
+  @state() private includeOptions: IncludeOption[] | null = null;
+  @state() private includePickerIndex: number | null = null;
+  @state() private includeQuery = '';
 
   private pendingDragHandle: HTMLElement | null = null;
   private dragStartX = 0;
@@ -141,6 +179,13 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
    * to `uploadUrl` and the returned `uploadPath` is embedded as the image URL.
    */
   @property({attribute: 'attachment-url'}) attachmentUrl = '';
+
+  /**
+   * Endpoint listing the Includes this document may embed, as
+   * `{"items":[{id,title,description,scope,keywords,languages,url}]}`. Labels the
+   * chips rendered for `include::` directives and feeds the include picker.
+   */
+  @property({attribute: 'include-url'}) includeUrl = '';
 
   /** Adds a toolbar toggle that swaps the block view for the full remarkd source. */
   @property({type: Boolean, attribute: 'allow-raw', reflect: true}) allowRaw = false;
@@ -201,6 +246,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
     this.formControlController.updateValidity();
+    if (this.hasIncludeBlock()) void this.loadIncludeOptions();
   }
 
   disconnectedCallback() {
@@ -215,6 +261,14 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       return;
     }
     this.blocks = this.splitBlocks(this.value || '');
+    if (this.hasUpdated && this.hasIncludeBlock()) void this.loadIncludeOptions();
+  }
+
+  @watch('includeUrl', {waitUntilFirstUpdate: true})
+  handleIncludeUrlChange() {
+    this.includeRequest = null;
+    this.includeOptions = null;
+    if (this.hasIncludeBlock()) void this.loadIncludeOptions();
   }
 
   /**
@@ -244,6 +298,12 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       if (marker) {
         current.push(line);
         fence = marker;
+        continue;
+      }
+      if (INCLUDE_LINE.test(trimmed)) {
+        push();
+        current.push(line);
+        push();
         continue;
       }
       if (trimmed === '') {
@@ -335,6 +395,13 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       }
     }
     return found ? data : null;
+  }
+
+  /** Parses a block that is nothing but an include directive. */
+  private parseIncludeBlock(block: string): IncludeBlockData | null {
+    const match = INCLUDE_LINE.exec((block ?? '').trim());
+    if (!match) return null;
+    return {target: match[1].trim(), label: match[2].trim()};
   }
 
   private serializeImageBlock(data: ImageBlockData): string {
@@ -549,14 +616,18 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
 
   /** Returns false for items the controller should not insert text for. */
   private handleSlashSelect(item: SlashMenuItem): boolean {
-    if (item.action !== 'image') return true;
+    if (item.action !== 'image' && item.action !== 'include') return true;
 
     const index = this.editingIndex ?? this.blocks.length;
     // Let the controller strip the "/…" text first, then drop the empty draft
-    // block and run the image flow in its place.
+    // block and run the picker in its place.
     void this.updateComplete.then(() => {
       this.blur();
-      this.pickImage(index);
+      if (item.action === 'image') {
+        this.pickImage(index);
+      } else {
+        this.pickInclude(index);
+      }
     });
     return false;
   }
@@ -682,7 +753,26 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
 
   private pickImage(index: number) {
     if (this.disabled || this.readonly) return;
+    this.includePickerIndex = null;
     this.imagePickerIndex = index;
+  }
+
+  private pickInclude(index: number) {
+    if (this.disabled || this.readonly || !this.includeUrl) return;
+    this.imagePickerIndex = null;
+    this.includeQuery = '';
+    this.includePickerIndex = index;
+    void this.loadIncludeOptions();
+  }
+
+  private closeIncludePicker = () => {
+    this.includePickerIndex = null;
+  };
+
+  private insertInclude(item: IncludeOption) {
+    const index = this.includePickerIndex ?? this.blocks.length;
+    this.includePickerIndex = null;
+    this.addBlockAt(index, includeMarker(item.id, item.title));
   }
 
   private closeImagePicker = () => {
@@ -729,6 +819,29 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     });
     if (!put.ok) throw new Error(`Upload failed: ${put.status}`);
     return data.uploadPath;
+  }
+
+  private hasIncludeBlock(): boolean {
+    return this.blocks.some(block => this.parseIncludeBlock(block) !== null);
+  }
+
+  /** Fetches the include list once; every later caller shares the same promise. */
+  private loadIncludeOptions(): Promise<IncludeOption[]> {
+    if (!this.includeUrl) return Promise.resolve([]);
+    if (!this.includeRequest) {
+      this.includeRequest = fetch(this.includeUrl, {headers: {Accept: 'application/json'}})
+        .then(res => res.ok ? res.json() as Promise<{items?: IncludeOption[]}> : {items: []})
+        .then(data => data.items ?? [])
+        .catch(error => {
+          console.error('[zn-remarkd-editor] include list failed', error);
+          return [] as IncludeOption[];
+        })
+        .then(items => {
+          this.includeOptions = items;
+          return items;
+        });
+    }
+    return this.includeRequest;
   }
 
   private autosize(input: HTMLTextAreaElement) {
@@ -796,6 +909,8 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     const index = this.editingIndex !== null ? this.commitEdit() : this.blocks.length;
     if (item.image) {
       this.pickImage(index);
+    } else if (item.include) {
+      this.pickInclude(index);
     } else {
       this.insertDraftBlock(index, item.prefix ?? '');
     }
@@ -867,6 +982,32 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       </div>`;
   }
 
+  private renderIncludeChip(data: IncludeBlockData) {
+    const option = this.includeOptions?.find(item => item.id === data.target);
+    // A path-like target is remarkd's file include, which this editor cannot
+    // resolve and must not call broken.
+    const filePath = /[/.]/.test(data.target);
+    const pending = !this.includeUrl || this.includeOptions === null;
+    const missing = !option && !pending && !filePath;
+    return html`
+      <div part="include"
+           class=${classMap({
+             'remarkd-editor__include': true,
+             'remarkd-editor__include--missing': missing,
+           })}>
+        <zn-icon src=${missing ? 'triangle-alert@lu' : 'blocks@lu'} size="16"></zn-icon>
+        <span class="remarkd-editor__include-title">${option?.title || data.label || data.target}</span>
+        ${option?.scope ? html`
+          <span class="remarkd-editor__include-scope">${option.scope}</span>` : ''}
+        <span class="remarkd-editor__include-meta">${missing
+          ? `Include not found · ${data.target}`
+          : !option && filePath ? 'File include' : 'Included content'}</span>
+        ${option?.url ? html`
+          <a class="remarkd-editor__include-link" href=${option.url} target="_blank" rel="noreferrer"
+             @click=${(e: MouseEvent) => e.stopPropagation()}>Open</a>` : ''}
+      </div>`;
+  }
+
   private renderBlock(block: string, index: number) {
     if (this.editingIndex === index) {
       if (this.imageEdit) {
@@ -890,6 +1031,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
         </div>`;
     }
 
+    const include = this.parseIncludeBlock(block);
     return html`
       <div part="block"
            class=${classMap({
@@ -914,7 +1056,8 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                      tooltip="Delete block"
                      @click=${() => this.deleteBlock(index)}></zn-button>`}
         <div part="rendered" class="remarkd-editor__rendered remarkd-rendered"
-             @click=${(e: MouseEvent) => this.handleRenderedClick(e, index)}>${unsafeHTML(remarkdParse(block))}
+             @click=${(e: MouseEvent) => this.handleRenderedClick(e, index)}>${
+          include ? this.renderIncludeChip(include) : unsafeHTML(remarkdParse(block))}
         </div>
       </div>`;
   }
@@ -932,7 +1075,9 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
            @drop=${this.handleDrop}>
         ${editable ? html`
           <div part="toolbar" class="remarkd-editor__toolbar">
-            ${this.rawMode ? '' : BLOCK_TYPES.map(item => html`
+            ${this.rawMode ? '' : BLOCK_TYPES
+              .filter(item => !item.include || !!this.includeUrl)
+              .map(item => html`
               <zn-button type="button" icon-button plain icon=${item.icon} icon-size="18"
                          tooltip=${item.label}
                          @click=${() => this.handleToolbarInsert(item)}></zn-button>`)}
@@ -980,7 +1125,42 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     if (this.imagePickerIndex !== null) {
       views.splice(this.imagePickerIndex, 0, this.renderImagePicker());
     }
+    if (this.includePickerIndex !== null) {
+      views.splice(this.includePickerIndex, 0, this.renderIncludePicker());
+    }
     return views;
+  }
+
+  private renderIncludePicker() {
+    const filter = this.includeQuery.trim().toLowerCase();
+    const items = (this.includeOptions ?? []).filter(item => !filter || [
+      item.title, item.description ?? '', (item.keywords ?? []).join(' '),
+    ].some(field => field.toLowerCase().includes(filter)));
+    return html`
+      <div part="include-picker" class="remarkd-editor__include-picker">
+        <div class="remarkd-editor__include-picker-head">
+          <input class="remarkd-editor__include-filter"
+                 placeholder="Find an Include"
+                 .value=${this.includeQuery}
+                 @input=${(e: Event) => {
+                   this.includeQuery = (e.target as HTMLInputElement).value;
+                 }}>
+          <zn-button type="button" icon-button="small" plain icon="x@lu"
+                     tooltip="Cancel" @click=${this.closeIncludePicker}></zn-button>
+        </div>
+        ${this.includeOptions === null
+          ? html`<div class="remarkd-editor__include-picker-empty">Loading…</div>`
+          : items.length
+            ? items.map(item => html`
+              <button type="button" class="remarkd-editor__include-option"
+                      ?disabled=${!item.languages}
+                      @click=${() => this.insertInclude(item)}>
+                <span class="remarkd-editor__include-option-title">${item.title}</span>
+                <span class="remarkd-editor__include-option-meta">${item.scope ?? ''}${
+                  item.languages ? ` · ${item.languages}` : ' · No content'}</span>
+              </button>`)
+            : html`<div class="remarkd-editor__include-picker-empty">No Includes found</div>`}
+      </div>`;
   }
 
   private renderImagePicker() {

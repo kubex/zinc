@@ -58,6 +58,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -246,79 +319,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -17691,7 +17691,7 @@
                 "text": "string"
               },
               "default": "'Insert'",
-              "description": "The heading shown above the slash menu's items.",
+              "description": "The name the slash menu's list is announced by.",
               "attribute": "slash-heading"
             },
             {
@@ -17703,6 +17703,16 @@
               "default": "false",
               "description": "Hides the insertion keys normally shown against the slash menu's items.",
               "attribute": "slash-hide-keys"
+            },
+            {
+              "kind": "field",
+              "name": "slashRecentKey",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Lists the slash menu items most recently chosen here above the rest, remembered under this key.",
+              "attribute": "slash-recent-key"
             },
             {
               "kind": "field",
@@ -18205,7 +18215,7 @@
                 "text": "string"
               },
               "default": "'Insert'",
-              "description": "The heading shown above the slash menu's items.",
+              "description": "The name the slash menu's list is announced by.",
               "fieldName": "slashHeading"
             },
             {
@@ -18216,6 +18226,15 @@
               "default": "false",
               "description": "Hides the insertion keys normally shown against the slash menu's items.",
               "fieldName": "slashHideKeys"
+            },
+            {
+              "name": "slash-recent-key",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Lists the slash menu items most recently chosen here above the rest, remembered under this key.",
+              "fieldName": "slashRecentKey"
             },
             {
               "name": "options",
@@ -18947,7 +18966,7 @@
                 "text": "string"
               },
               "default": "'Insert'",
-              "description": "The heading shown above the slash menu's items.",
+              "description": "The name the slash menu's list is announced by.",
               "attribute": "slash-heading"
             },
             {
@@ -18959,6 +18978,16 @@
               "default": "false",
               "description": "Hides the insertion keys normally shown against the slash menu's items.",
               "attribute": "slash-hide-keys"
+            },
+            {
+              "kind": "field",
+              "name": "slashRecentKey",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Lists the items most recently chosen here above the rest, remembered in `localStorage` under this\nkey. Share a key between the fields that should share a history; leave unset to offer no such list.",
+              "attribute": "slash-recent-key"
             },
             {
               "kind": "field",
@@ -19819,7 +19848,7 @@
                 "text": "string"
               },
               "default": "'Insert'",
-              "description": "The heading shown above the slash menu's items.",
+              "description": "The name the slash menu's list is announced by.",
               "fieldName": "slashHeading"
             },
             {
@@ -19830,6 +19859,15 @@
               "default": "false",
               "description": "Hides the insertion keys normally shown against the slash menu's items.",
               "fieldName": "slashHideKeys"
+            },
+            {
+              "name": "slash-recent-key",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Lists the items most recently chosen here above the rest, remembered in `localStorage` under this\nkey. Share a key between the fields that should share a history; leave unset to offer no such list.",
+              "fieldName": "slashRecentKey"
             },
             {
               "name": "trigger-submit",
@@ -28909,256 +28947,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/panel/panel.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnPanel",
-          "cssProperties": [
-            {
-              "description": "The flex-basis of the panel. Can be set using the basis-px attribute.",
-              "name": "--zn-panel-basis"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The panel's main content.",
-              "name": ""
-            },
-            {
-              "description": "Actions displayed in the panel header (buttons, chips, etc).",
-              "name": "actions"
-            },
-            {
-              "description": "Content displayed in the panel footer.",
-              "name": "footer"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, '[default]', 'actions', 'footer')"
-            },
-            {
-              "kind": "field",
-              "name": "basis",
-              "type": {
-                "text": "number"
-              },
-              "attribute": "basis-px"
-            },
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "caption"
-            },
-            {
-              "kind": "field",
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "icon"
-            },
-            {
-              "kind": "field",
-              "name": "tabbed",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "tabbed"
-            },
-            {
-              "kind": "field",
-              "name": "headerBorderless",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "header-borderless"
-            },
-            {
-              "kind": "field",
-              "name": "cosmic",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "cosmic"
-            },
-            {
-              "kind": "field",
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush"
-            },
-            {
-              "kind": "field",
-              "name": "flushX",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush-x"
-            },
-            {
-              "kind": "field",
-              "name": "flushY",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush-y"
-            },
-            {
-              "kind": "field",
-              "name": "flushFooter",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush-footer"
-            },
-            {
-              "kind": "field",
-              "name": "transparent",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "transparent"
-            },
-            {
-              "kind": "field",
-              "name": "shadow",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "shadow"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "basis-px",
-              "type": {
-                "text": "number"
-              },
-              "fieldName": "basis"
-            },
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "caption"
-            },
-            {
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "icon"
-            },
-            {
-              "name": "tabbed",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "tabbed"
-            },
-            {
-              "name": "header-borderless",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "headerBorderless"
-            },
-            {
-              "name": "cosmic",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "cosmic"
-            },
-            {
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flush"
-            },
-            {
-              "name": "flush-x",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flushX"
-            },
-            {
-              "name": "flush-y",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flushY"
-            },
-            {
-              "name": "flush-footer",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flushFooter"
-            },
-            {
-              "name": "transparent",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "transparent"
-            },
-            {
-              "name": "shadow",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "shadow"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.",
-          "tagNameWithoutPrefix": "panel",
-          "tagName": "zn-panel",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n * @documentation https://zinc.style/components/panel\n * @status experimental\n * @since 1.0\n *\n * @slot - The panel's main content.\n * @slot actions - Actions displayed in the panel header (buttons, chips, etc).\n * @slot footer - Content displayed in the panel footer.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.\n */",
-          "documentation": "https://zinc.style/components/panel",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnPanel",
-            "module": "components/panel/panel.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/popup/popup.js",
       "declarations": [
         {
@@ -29697,6 +29485,256 @@
           "declaration": {
             "name": "ZnPopup",
             "module": "components/popup/popup.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/panel/panel.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnPanel",
+          "cssProperties": [
+            {
+              "description": "The flex-basis of the panel. Can be set using the basis-px attribute.",
+              "name": "--zn-panel-basis"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The panel's main content.",
+              "name": ""
+            },
+            {
+              "description": "Actions displayed in the panel header (buttons, chips, etc).",
+              "name": "actions"
+            },
+            {
+              "description": "Content displayed in the panel footer.",
+              "name": "footer"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, '[default]', 'actions', 'footer')"
+            },
+            {
+              "kind": "field",
+              "name": "basis",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "basis-px"
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "tabbed",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "tabbed"
+            },
+            {
+              "kind": "field",
+              "name": "headerBorderless",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "header-borderless"
+            },
+            {
+              "kind": "field",
+              "name": "cosmic",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "cosmic"
+            },
+            {
+              "kind": "field",
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush"
+            },
+            {
+              "kind": "field",
+              "name": "flushX",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-x"
+            },
+            {
+              "kind": "field",
+              "name": "flushY",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-y"
+            },
+            {
+              "kind": "field",
+              "name": "flushFooter",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-footer"
+            },
+            {
+              "kind": "field",
+              "name": "transparent",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "transparent"
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "shadow"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "basis-px",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "basis"
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "caption"
+            },
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "icon"
+            },
+            {
+              "name": "tabbed",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "tabbed"
+            },
+            {
+              "name": "header-borderless",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "headerBorderless"
+            },
+            {
+              "name": "cosmic",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "cosmic"
+            },
+            {
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flush"
+            },
+            {
+              "name": "flush-x",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushX"
+            },
+            {
+              "name": "flush-y",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushY"
+            },
+            {
+              "name": "flush-footer",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushFooter"
+            },
+            {
+              "name": "transparent",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "transparent"
+            },
+            {
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "shadow"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.",
+          "tagNameWithoutPrefix": "panel",
+          "tagName": "zn-panel",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n * @documentation https://zinc.style/components/panel\n * @status experimental\n * @since 1.0\n *\n * @slot - The panel's main content.\n * @slot actions - Actions displayed in the panel header (buttons, chips, etc).\n * @slot footer - Content displayed in the panel footer.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.\n */",
+          "documentation": "https://zinc.style/components/panel",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnPanel",
+            "module": "components/panel/panel.js"
           }
         }
       ]
@@ -33578,6 +33616,16 @@
             },
             {
               "kind": "field",
+              "name": "slashRecentKey",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Lists the blocks most recently inserted here above the rest of the slash menu, remembered in\n`localStorage` under this key. Leave unset to offer no recently used section.",
+              "attribute": "slash-recent-key"
+            },
+            {
+              "kind": "field",
               "name": "hasSlashMenu",
               "type": {
                 "text": "boolean"
@@ -34562,6 +34610,15 @@
             }
           ],
           "attributes": [
+            {
+              "name": "slash-recent-key",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Lists the blocks most recently inserted here above the rest of the slash menu, remembered in\n`localStorage` under this key. Leave unset to offer no recently used section.",
+              "fieldName": "slashRecentKey"
+            },
             {
               "name": "name",
               "type": {
@@ -39134,6 +39191,14 @@
               "name": "--slash-menu-width"
             },
             {
+              "description": "The corner radius of the panel.",
+              "name": "--slash-menu-border-radius"
+            },
+            {
+              "description": "The corner radius of the items and their icon chips.",
+              "name": "--slash-menu-item-border-radius"
+            },
+            {
               "description": "The maximum height of the panel before it scrolls.",
               "name": "--slash-menu-max-height"
             }
@@ -39144,20 +39209,40 @@
               "name": "panel"
             },
             {
-              "description": "The panel's heading.",
-              "name": "heading"
+              "description": "The scrolling list of items.",
+              "name": "list"
             },
             {
               "description": "An item in the list.",
               "name": "item"
             },
             {
+              "description": "The chip holding an item's icon.",
+              "name": "icon"
+            },
+            {
               "description": "A group heading between items.",
               "name": "group-heading"
             },
             {
+              "description": "The rule closing the recently used section, when the items below it have no heading of their own.",
+              "name": "divider"
+            },
+            {
               "description": "The truncation footer, shown when not every match fits.",
               "name": "footer"
+            },
+            {
+              "description": "The pinned footer of keyboard hints.",
+              "name": "hints"
+            },
+            {
+              "description": "A single keyboard hint within the footer.",
+              "name": "hint"
+            },
+            {
+              "description": "The key shown against a hint.",
+              "name": "hint-key"
             }
           ],
           "members": [
@@ -39173,6 +39258,14 @@
             {
               "kind": "field",
               "name": "panel",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "list",
               "type": {
                 "text": "HTMLElement"
               },
@@ -39224,7 +39317,7 @@
                 "text": "string"
               },
               "default": "'Insert'",
-              "description": "The heading shown when there is no query.",
+              "description": "The name the list is announced by when there is no query.",
               "attribute": "heading"
             },
             {
@@ -39256,6 +39349,46 @@
               "default": "false",
               "description": "Hides the insertion key (the item's value) normally shown against each item.",
               "attribute": "hide-keys"
+            },
+            {
+              "kind": "field",
+              "name": "hideHints",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the pinned footer of keyboard hints.",
+              "attribute": "hide-hints"
+            },
+            {
+              "kind": "field",
+              "name": "recentKey",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Remembers the items chosen here and lists the most recent of them first, under their own heading.\nThe key scopes the list to where the menu is used, so each place keeps its own history in\n`localStorage`. Leave unset to offer no recently used section.",
+              "attribute": "recent-key"
+            },
+            {
+              "kind": "field",
+              "name": "maxRecent",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "The most recently used items to list.",
+              "attribute": "max-recent"
+            },
+            {
+              "kind": "field",
+              "name": "recentHeading",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Recently used'",
+              "description": "The heading shown above the recently used items.",
+              "attribute": "recent-heading"
             },
             {
               "kind": "field",
@@ -39297,6 +39430,44 @@
             },
             {
               "kind": "field",
+              "name": "recentKeys",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "recentCount",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0",
+              "description": "How many recently used items the last update listed, to spot the list appearing or reordering."
+            },
+            {
+              "kind": "field",
+              "name": "listItems",
+              "type": {
+                "text": "SlashMenuItem[]"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "recentItems",
+              "type": {
+                "text": "SlashMenuItem[]"
+              },
+              "privacy": "private",
+              "description": "The remembered items that are in the current list, newest first. Only offered without a query —\nonce the user is searching, the ranked matches are the better answer.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "visibleItems",
               "type": {
                 "text": "SlashMenuItem[]"
@@ -39320,6 +39491,11 @@
             {
               "kind": "method",
               "name": "hide"
+            },
+            {
+              "kind": "method",
+              "name": "clearRecent",
+              "description": "Forgets the items remembered under `recent-key`."
             },
             {
               "kind": "method",
@@ -39435,6 +39611,30 @@
               "kind": "method",
               "name": "renderItems",
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "renderHint",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "keys",
+                  "type": {
+                    "text": "(TemplateResult | string)[]"
+                  }
+                },
+                {
+                  "name": "label",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderHints",
+              "privacy": "private"
             }
           ],
           "events": [
@@ -39483,7 +39683,7 @@
                 "text": "string"
               },
               "default": "'Insert'",
-              "description": "The heading shown when there is no query.",
+              "description": "The name the list is announced by when there is no query.",
               "fieldName": "heading"
             },
             {
@@ -39514,6 +39714,42 @@
               "fieldName": "hideKeys"
             },
             {
+              "name": "hide-hints",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the pinned footer of keyboard hints.",
+              "fieldName": "hideHints"
+            },
+            {
+              "name": "recent-key",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Remembers the items chosen here and lists the most recent of them first, under their own heading.\nThe key scopes the list to where the menu is used, so each place keeps its own history in\n`localStorage`. Leave unset to offer no recently used section.",
+              "fieldName": "recentKey"
+            },
+            {
+              "name": "max-recent",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "The most recently used items to list.",
+              "fieldName": "maxRecent"
+            },
+            {
+              "name": "recent-heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Recently used'",
+              "description": "The heading shown above the recently used items.",
+              "fieldName": "recentHeading"
+            },
+            {
               "name": "placement",
               "type": {
                 "text": "Placement"
@@ -39540,7 +39776,7 @@
           "tagNameWithoutPrefix": "slash-menu",
           "tagName": "zn-slash-menu",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A keyboard-driven list of insertions, anchored to the caret of the field that opened it.\n * @documentation https://zinc.style/components/slash-menu\n * @status experimental\n * @since 1.1\n *\n * @dependency zn-icon\n *\n * @event zn-slash-item-select - Emitted when an item is chosen. Does not cross shadow boundaries; the\n *  component driving the menu (e.g. `zn-textarea`) re-emits it as `zn-slash-select`.\n *\n * @csspart panel - The floating panel that holds the list.\n * @csspart heading - The panel's heading.\n * @csspart item - An item in the list.\n * @csspart group-heading - A group heading between items.\n * @csspart footer - The truncation footer, shown when not every match fits.\n *\n * @cssproperty --slash-menu-width - The width of the panel.\n * @cssproperty --slash-menu-max-height - The maximum height of the panel before it scrolls.\n */",
+          "jsDoc": "/**\n * @summary A keyboard-driven list of insertions, anchored to the caret of the field that opened it.\n * @documentation https://zinc.style/components/slash-menu\n * @status experimental\n * @since 1.1\n *\n * @dependency zn-icon\n *\n * @event zn-slash-item-select - Emitted when an item is chosen. Does not cross shadow boundaries; the\n *  component driving the menu (e.g. `zn-textarea`) re-emits it as `zn-slash-select`.\n *\n * @csspart panel - The floating panel that holds the list.\n * @csspart list - The scrolling list of items.\n * @csspart item - An item in the list.\n * @csspart icon - The chip holding an item's icon.\n * @csspart group-heading - A group heading between items.\n * @csspart divider - The rule closing the recently used section, when the items below it have no heading of their own.\n * @csspart footer - The truncation footer, shown when not every match fits.\n * @csspart hints - The pinned footer of keyboard hints.\n * @csspart hint - A single keyboard hint within the footer.\n * @csspart hint-key - The key shown against a hint.\n *\n * @cssproperty --slash-menu-width - The width of the panel.\n * @cssproperty --slash-menu-border-radius - The corner radius of the panel.\n * @cssproperty --slash-menu-item-border-radius - The corner radius of the items and their icon chips.\n * @cssproperty --slash-menu-max-height - The maximum height of the panel before it scrolls.\n */",
           "documentation": "https://zinc.style/components/slash-menu",
           "status": "experimental",
           "since": "1.1",
@@ -43634,7 +43870,7 @@
                 "text": "string"
               },
               "default": "'Insert'",
-              "description": "The heading shown above the slash menu's items.",
+              "description": "The name the slash menu's list is announced by.",
               "attribute": "slash-heading"
             },
             {
@@ -43646,6 +43882,16 @@
               "default": "false",
               "description": "Hides the insertion keys normally shown against the slash menu's items.",
               "attribute": "slash-hide-keys"
+            },
+            {
+              "kind": "field",
+              "name": "slashRecentKey",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Lists the items most recently chosen here above the rest, remembered in `localStorage` under this\nkey. Share a key between the fields that should share a history; leave unset to offer no such list.",
+              "attribute": "slash-recent-key"
             },
             {
               "kind": "field",
@@ -44210,7 +44456,7 @@
                 "text": "string"
               },
               "default": "'Insert'",
-              "description": "The heading shown above the slash menu's items.",
+              "description": "The name the slash menu's list is announced by.",
               "fieldName": "slashHeading"
             },
             {
@@ -44221,6 +44467,15 @@
               "default": "false",
               "description": "Hides the insertion keys normally shown against the slash menu's items.",
               "fieldName": "slashHideKeys"
+            },
+            {
+              "name": "slash-recent-key",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Lists the items most recently chosen here above the rest, remembered in `localStorage` under this\nkey. Share a key between the fields that should share a history; leave unset to offer no such list.",
+              "fieldName": "slashRecentKey"
             },
             {
               "name": "transparent",
@@ -47502,7 +47757,7 @@
                 "text": "string"
               },
               "default": "'Insert'",
-              "description": "The heading shown above the slash menu's items.",
+              "description": "The name the slash menu's list is announced by.",
               "attribute": "slash-heading"
             },
             {
@@ -47514,6 +47769,16 @@
               "default": "false",
               "description": "Hides the insertion keys normally shown against the slash menu's items.",
               "attribute": "slash-hide-keys"
+            },
+            {
+              "kind": "field",
+              "name": "slashRecentKey",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Lists the slash menu items most recently chosen here above the rest, remembered under this key.",
+              "attribute": "slash-recent-key"
             },
             {
               "kind": "field",
@@ -47837,7 +48102,7 @@
                 "text": "string"
               },
               "default": "'Insert'",
-              "description": "The heading shown above the slash menu's items.",
+              "description": "The name the slash menu's list is announced by.",
               "fieldName": "slashHeading"
             },
             {
@@ -47848,6 +48113,15 @@
               "default": "false",
               "description": "Hides the insertion keys normally shown against the slash menu's items.",
               "fieldName": "slashHideKeys"
+            },
+            {
+              "name": "slash-recent-key",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Lists the slash menu items most recently chosen here above the rest, remembered under this key.",
+              "fieldName": "slashRecentKey"
             },
             {
               "name": "grouped",
@@ -48151,7 +48425,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.94",
+    "version": "1.1.95",
     "author": "",
     "license": "MIT"
   }

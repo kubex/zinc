@@ -1901,6 +1901,14 @@ declare module "components/slash-menu/slash-menu-items" {
     export function parseSlashItems(value: string | null | undefined): SlashMenuItem[];
     /** Filters and ranks items against a query. An empty query keeps every item in its declared order. */
     export function filterSlashItems(items: SlashMenuItem[], query: string): SlashMenuItem[];
+    /** The identity an item is remembered by in a menu's recently used list. */
+    export function slashItemKey(item: SlashMenuItem): string;
+    /** The keys of the items most recently chosen from the menu stored under `key`, newest first. */
+    export function readRecentSlashItems(key: string): string[];
+    /** Moves an item to the front of the recently used list stored under `key`, and returns the list. */
+    export function recordRecentSlashItem(key: string, item: SlashMenuItem): string[];
+    /** Forgets the recently used items stored under `key`. */
+    export function clearRecentSlashItems(key: string): void;
 }
 declare module "utilities/caret-position" {
     export interface CaretCoordinates {
@@ -1927,7 +1935,7 @@ declare module "utilities/caret-position" {
 declare module "components/slash-menu/slash-menu.component" {
     import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
-    import type { CSSResultGroup, PropertyValues } from 'lit';
+    import type { CSSResultGroup, PropertyValues, TemplateResult } from 'lit';
     import type { Placement, VirtualElement } from '@floating-ui/dom';
     import type { SlashMenuItem } from "components/slash-menu/slash-menu-items";
     export const SLASH_ITEM_SELECT = "zn-slash-item-select";
@@ -1943,12 +1951,19 @@ declare module "components/slash-menu/slash-menu.component" {
      *  component driving the menu (e.g. `zn-textarea`) re-emits it as `zn-slash-select`.
      *
      * @csspart panel - The floating panel that holds the list.
-     * @csspart heading - The panel's heading.
+     * @csspart list - The scrolling list of items.
      * @csspart item - An item in the list.
+     * @csspart icon - The chip holding an item's icon.
      * @csspart group-heading - A group heading between items.
+     * @csspart divider - The rule closing the recently used section, when the items below it have no heading of their own.
      * @csspart footer - The truncation footer, shown when not every match fits.
+     * @csspart hints - The pinned footer of keyboard hints.
+     * @csspart hint - A single keyboard hint within the footer.
+     * @csspart hint-key - The key shown against a hint.
      *
      * @cssproperty --slash-menu-width - The width of the panel.
+     * @cssproperty --slash-menu-border-radius - The corner radius of the panel.
+     * @cssproperty --slash-menu-item-border-radius - The corner radius of the items and their icon chips.
      * @cssproperty --slash-menu-max-height - The maximum height of the panel before it scrolls.
      */
     export default class ZnSlashMenu extends ZincElement {
@@ -1957,6 +1972,7 @@ declare module "components/slash-menu/slash-menu.component" {
             'zn-icon': typeof ZnIcon;
         };
         private panel;
+        private list;
         private stopAutoUpdate?;
         /** Whether the menu is showing. */
         open: boolean;
@@ -1964,7 +1980,7 @@ declare module "components/slash-menu/slash-menu.component" {
         items: SlashMenuItem[];
         /** The query the items were matched against, shown in the heading. */
         query: string;
-        /** The heading shown when there is no query. */
+        /** The name the list is announced by when there is no query. */
         heading: string;
         /** Shown in place of the list when there are no items. */
         emptyText: string;
@@ -1972,6 +1988,18 @@ declare module "components/slash-menu/slash-menu.component" {
         maxItems: number;
         /** Hides the insertion key (the item's value) normally shown against each item. */
         hideKeys: boolean;
+        /** Hides the pinned footer of keyboard hints. */
+        hideHints: boolean;
+        /**
+         * Remembers the items chosen here and lists the most recent of them first, under their own heading.
+         * The key scopes the list to where the menu is used, so each place keeps its own history in
+         * `localStorage`. Leave unset to offer no recently used section.
+         */
+        recentKey: string;
+        /** The most recently used items to list. */
+        maxRecent: number;
+        /** The heading shown above the recently used items. */
+        recentHeading: string;
         /** The element or caret rect the panel is positioned against. */
         anchor: Element | VirtualElement | null;
         /** The preferred placement of the panel. */
@@ -1979,11 +2007,22 @@ declare module "components/slash-menu/slash-menu.component" {
         /** The gap between the caret and the panel. */
         distance: number;
         private activeIndex;
+        private recentKeys;
+        /** How many recently used items the last update listed, to spot the list appearing or reordering. */
+        private recentCount;
+        private get listItems();
+        /**
+         * The remembered items that are in the current list, newest first. Only offered without a query —
+         * once the user is searching, the ranked matches are the better answer.
+         */
+        private get recentItems();
         private get visibleItems();
         /** The item that Enter would insert. */
         get activeItem(): SlashMenuItem | undefined;
         show(): void;
         hide(): void;
+        /** Forgets the items remembered under `recent-key`. */
+        clearRecent(): void;
         /** Sets the active item by index, wrapping at both ends and skipping disabled items. */
         setActiveIndex(index: number): void;
         /** Moves the active item by `delta` places. */
@@ -2006,7 +2045,9 @@ declare module "components/slash-menu/slash-menu.component" {
         protected updated(changed: PropertyValues): void;
         private renderItem;
         private renderItems;
-        render(): import("lit-html").TemplateResult<1>;
+        private renderHint;
+        private renderHints;
+        render(): TemplateResult<1>;
     }
 }
 declare module "components/slash-menu/slash-menu-controller" {
@@ -2080,10 +2121,22 @@ declare module "components/slash-menu/slash-menu-controller" {
         private replace;
     }
 }
+declare module "components/slash-menu/index" {
+    import ZnSlashMenu from "components/slash-menu/slash-menu.component";
+    export * from "components/slash-menu/slash-menu.component";
+    export * from "components/slash-menu/slash-menu-controller";
+    export * from "components/slash-menu/slash-menu-items";
+    export default ZnSlashMenu;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-slash-menu': ZnSlashMenu;
+        }
+    }
+}
 declare module "components/slash-item/slash-item.component" {
     import ZincElement from "internal/zinc-element";
     import type { CSSResultGroup } from 'lit';
-    import type { SlashMenuItem } from "components/slash-menu/slash-menu-items";
+    import type { SlashMenuItem } from "components/slash-menu/index";
     /**
      * @summary Declares a single insertion for a slash menu. Renders nothing itself — it describes an
      *  entry for the component it is slotted into, e.g. `<zn-textarea>`'s `slash-items` slot.
@@ -2129,18 +2182,6 @@ declare module "components/slash-item/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-slash-item': ZnSlashItem;
-        }
-    }
-}
-declare module "components/slash-menu/index" {
-    import ZnSlashMenu from "components/slash-menu/slash-menu.component";
-    export * from "components/slash-menu/slash-menu.component";
-    export * from "components/slash-menu/slash-menu-controller";
-    export * from "components/slash-menu/slash-menu-items";
-    export default ZnSlashMenu;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-slash-menu': ZnSlashMenu;
         }
     }
 }
@@ -2337,10 +2378,15 @@ declare module "components/input/input.component" {
         slashPreset: string;
         /** The characters that open the slash menu. */
         slashTrigger: string;
-        /** The heading shown above the slash menu's items. */
+        /** The name the slash menu's list is announced by. */
         slashHeading: string;
         /** Hides the insertion keys normally shown against the slash menu's items. */
         slashHideKeys: boolean;
+        /**
+         * Lists the items most recently chosen here above the rest, remembered in `localStorage` under this
+         * key. Share a key between the fields that should share a history; leave unset to offer no such list.
+         */
+        slashRecentKey: string;
         /**
          * Resolves additional items each time the menu opens, for lists that come from elsewhere (e.g. an
          * API). Receives the current query and may return a promise. JavaScript only.
@@ -5233,10 +5279,12 @@ declare module "components/inline-edit/inline-edit.component" {
         slashPreset: string;
         /** The characters that open the slash menu. */
         slashTrigger: string;
-        /** The heading shown above the slash menu's items. */
+        /** The name the slash menu's list is announced by. */
         slashHeading: string;
         /** Hides the insertion keys normally shown against the slash menu's items. */
         slashHideKeys: boolean;
+        /** Lists the slash menu items most recently chosen here above the rest, remembered under this key. */
+        slashRecentKey: string;
         /** Resolves additional slash menu items each time the menu opens. JavaScript only. */
         slashItemsProvider?: (query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]>;
         options: {
@@ -6680,10 +6728,15 @@ declare module "components/textarea/textarea.component" {
         slashPreset: string;
         /** The characters that open the slash menu. */
         slashTrigger: string;
-        /** The heading shown above the slash menu's items. */
+        /** The name the slash menu's list is announced by. */
         slashHeading: string;
         /** Hides the insertion keys normally shown against the slash menu's items. */
         slashHideKeys: boolean;
+        /**
+         * Lists the items most recently chosen here above the rest, remembered in `localStorage` under this
+         * key. Share a key between the fields that should share a history; leave unset to offer no such list.
+         */
+        slashRecentKey: string;
         /**
          * Resolves additional items each time the menu opens, for lists that come from elsewhere (e.g. an
          * API). Receives the current query and may return a promise. JavaScript only.
@@ -8724,10 +8777,12 @@ declare module "components/translations/translations.component" {
         slashPreset: string;
         /** The characters that open the slash menu. */
         slashTrigger: string;
-        /** The heading shown above the slash menu's items. */
+        /** The name the slash menu's list is announced by. */
         slashHeading: string;
         /** Hides the insertion keys normally shown against the slash menu's items. */
         slashHideKeys: boolean;
+        /** Lists the slash menu items most recently chosen here above the rest, remembered under this key. */
+        slashRecentKey: string;
         /** Resolves additional slash menu items each time the menu opens. JavaScript only. */
         slashItemsProvider?: (query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]>;
         /** When true, hides the individual language navbar and defers language control to a parent zn-translation-group. */
@@ -9297,6 +9352,11 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private slashMenuElement;
         private blocks;
         private editingIndex;
+        /**
+         * Lists the blocks most recently inserted here above the rest of the slash menu, remembered in
+         * `localStorage` under this key. Leave unset to offer no recently used section.
+         */
+        slashRecentKey: string;
         /** Renders the slash menu only once it has been needed. */
         private hasSlashMenu;
         private imagePickerIndex;

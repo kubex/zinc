@@ -14,6 +14,17 @@
       ]
     },
     {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
+        }
+      ]
+    },
+    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -50,17 +61,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
-        }
-      ]
-    },
-    {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -1961,12 +1961,17 @@
         },
         {
           "name": "slash-heading",
-          "description": "The heading shown above the slash menu's items.",
+          "description": "The name the slash menu's list is announced by.",
           "values": []
         },
         {
           "name": "slash-hide-keys",
           "description": "Hides the insertion keys normally shown against the slash menu's items.",
+          "values": []
+        },
+        {
+          "name": "slash-recent-key",
+          "description": "Lists the slash menu items most recently chosen here above the rest, remembered under this key.",
           "values": []
         },
         {
@@ -2266,12 +2271,17 @@
         },
         {
           "name": "slash-heading",
-          "description": "The heading shown above the slash menu's items.",
+          "description": "The name the slash menu's list is announced by.",
           "values": []
         },
         {
           "name": "slash-hide-keys",
           "description": "Hides the insertion keys normally shown against the slash menu's items.",
+          "values": []
+        },
+        {
+          "name": "slash-recent-key",
+          "description": "Lists the items most recently chosen here above the rest, remembered in `localStorage` under this\nkey. Share a key between the fields that should share a history; leave unset to offer no such list.",
           "values": []
         },
         {
@@ -2855,30 +2865,6 @@
       ]
     },
     {
-      "name": "zn-panel",
-      "description": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n---\n\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "basis-px", "values": [] },
-        { "name": "caption", "values": [] },
-        { "name": "icon", "values": [] },
-        { "name": "tabbed", "values": [] },
-        { "name": "header-borderless", "values": [] },
-        { "name": "cosmic", "values": [] },
-        { "name": "flush", "values": [] },
-        { "name": "flush-x", "values": [] },
-        { "name": "flush-y", "values": [] },
-        { "name": "flush-footer", "values": [] },
-        { "name": "transparent", "values": [] },
-        { "name": "shadow", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/panel"
-        }
-      ]
-    },
-    {
       "name": "zn-popup",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **reposition()** - Forces the popup to recalculate and reposition itself.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -3024,6 +3010,30 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/popup"
+        }
+      ]
+    },
+    {
+      "name": "zn-panel",
+      "description": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n---\n\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "basis-px", "values": [] },
+        { "name": "caption", "values": [] },
+        { "name": "icon", "values": [] },
+        { "name": "tabbed", "values": [] },
+        { "name": "header-borderless", "values": [] },
+        { "name": "cosmic", "values": [] },
+        { "name": "flush", "values": [] },
+        { "name": "flush-x", "values": [] },
+        { "name": "flush-y", "values": [] },
+        { "name": "flush-footer", "values": [] },
+        { "name": "transparent", "values": [] },
+        { "name": "shadow", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/panel"
         }
       ]
     },
@@ -3410,6 +3420,11 @@
       "name": "zn-remarkd-editor",
       "description": "A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted on each keystroke while editing a block.\n- **zn-change** - Emitted when a block edit is committed and the value changes.\n\n### **Methods:**\n - **focus()** - Starts editing the first block, or a new block if the document is empty.\n- **blur()** - Commits any in-progress block or raw edit.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The always-visible block-insert toolbar.\n- **raw-toggle** - The button that switches between the block view and the raw source view.\n- **block** - A rendered block wrapper.\n- **rendered** - The rendered remarkd output of a block.\n- **input** - The textarea shown while editing a block.\n- **raw** - The full-document textarea shown in raw source mode.\n- **slash-menu** - The `zn-slash-menu` opened by typing \"/\" in an empty block.\n- **image-controls** - The caption / alignment / size panel shown when an image block is clicked.\n- **include** - The chip rendered in place of an `include::` directive.\n- **include-picker** - The inline Include picker opened from the toolbar or \"/include\".",
       "attributes": [
+        {
+          "name": "slash-recent-key",
+          "description": "Lists the blocks most recently inserted here above the rest of the slash menu, remembered in\n`localStorage` under this key. Leave unset to offer no recently used section.",
+          "values": []
+        },
         {
           "name": "name",
           "description": "The name of the control, submitted as part of form data.",
@@ -3943,7 +3958,7 @@
     },
     {
       "name": "zn-slash-menu",
-      "description": "A keyboard-driven list of insertions, anchored to the caret of the field that opened it.\n---\n\n\n### **Events:**\n - **SLASH_ITEM_SELECT**\n- **zn-slash-item-select** - Emitted when an item is chosen. Does not cross shadow boundaries; the component driving the menu (e.g. `zn-textarea`) re-emits it as `zn-slash-select`.\n\n### **Methods:**\n - **setActiveIndex(index: _number_)** - Sets the active item by index, wrapping at both ends and skipping disabled items.\n- **moveActive(delta: _number_)** - Moves the active item by `delta` places.\n- **selectActive()** - Chooses the active item, as pressing Enter would.\n- **reposition()** - Recalculates the panel's position against its anchor.\n\n### **CSS Properties:**\n - **--slash-menu-width** - The width of the panel. _(default: undefined)_\n- **--slash-menu-max-height** - The maximum height of the panel before it scrolls. _(default: undefined)_\n\n### **CSS Parts:**\n - **panel** - The floating panel that holds the list.\n- **heading** - The panel's heading.\n- **item** - An item in the list.\n- **group-heading** - A group heading between items.\n- **footer** - The truncation footer, shown when not every match fits.",
+      "description": "A keyboard-driven list of insertions, anchored to the caret of the field that opened it.\n---\n\n\n### **Events:**\n - **SLASH_ITEM_SELECT**\n- **zn-slash-item-select** - Emitted when an item is chosen. Does not cross shadow boundaries; the component driving the menu (e.g. `zn-textarea`) re-emits it as `zn-slash-select`.\n\n### **Methods:**\n - **clearRecent()** - Forgets the items remembered under `recent-key`.\n- **setActiveIndex(index: _number_)** - Sets the active item by index, wrapping at both ends and skipping disabled items.\n- **moveActive(delta: _number_)** - Moves the active item by `delta` places.\n- **selectActive()** - Chooses the active item, as pressing Enter would.\n- **reposition()** - Recalculates the panel's position against its anchor.\n\n### **CSS Properties:**\n - **--slash-menu-width** - The width of the panel. _(default: undefined)_\n- **--slash-menu-border-radius** - The corner radius of the panel. _(default: undefined)_\n- **--slash-menu-item-border-radius** - The corner radius of the items and their icon chips. _(default: undefined)_\n- **--slash-menu-max-height** - The maximum height of the panel before it scrolls. _(default: undefined)_\n\n### **CSS Parts:**\n - **panel** - The floating panel that holds the list.\n- **list** - The scrolling list of items.\n- **item** - An item in the list.\n- **icon** - The chip holding an item's icon.\n- **group-heading** - A group heading between items.\n- **divider** - The rule closing the recently used section, when the items below it have no heading of their own.\n- **footer** - The truncation footer, shown when not every match fits.\n- **hints** - The pinned footer of keyboard hints.\n- **hint** - A single keyboard hint within the footer.\n- **hint-key** - The key shown against a hint.",
       "attributes": [
         {
           "name": "open",
@@ -3962,7 +3977,7 @@
         },
         {
           "name": "heading",
-          "description": "The heading shown when there is no query.",
+          "description": "The name the list is announced by when there is no query.",
           "values": []
         },
         {
@@ -3978,6 +3993,26 @@
         {
           "name": "hide-keys",
           "description": "Hides the insertion key (the item's value) normally shown against each item.",
+          "values": []
+        },
+        {
+          "name": "hide-hints",
+          "description": "Hides the pinned footer of keyboard hints.",
+          "values": []
+        },
+        {
+          "name": "recent-key",
+          "description": "Remembers the items chosen here and lists the most recent of them first, under their own heading.\nThe key scopes the list to where the menu is used, so each place keeps its own history in\n`localStorage`. Leave unset to offer no recently used section.",
+          "values": []
+        },
+        {
+          "name": "max-recent",
+          "description": "The most recently used items to list.",
+          "values": []
+        },
+        {
+          "name": "recent-heading",
+          "description": "The heading shown above the recently used items.",
           "values": []
         },
         {
@@ -4492,12 +4527,17 @@
         },
         {
           "name": "slash-heading",
-          "description": "The heading shown above the slash menu's items.",
+          "description": "The name the slash menu's list is announced by.",
           "values": []
         },
         {
           "name": "slash-hide-keys",
           "description": "Hides the insertion keys normally shown against the slash menu's items.",
+          "values": []
+        },
+        {
+          "name": "slash-recent-key",
+          "description": "Lists the items most recently chosen here above the rest, remembered in `localStorage` under this\nkey. Share a key between the fields that should share a history; leave unset to offer no such list.",
           "values": []
         },
         { "name": "transparent", "values": [] }
@@ -4843,12 +4883,17 @@
         },
         {
           "name": "slash-heading",
-          "description": "The heading shown above the slash menu's items.",
+          "description": "The name the slash menu's list is announced by.",
           "values": []
         },
         {
           "name": "slash-hide-keys",
           "description": "Hides the insertion keys normally shown against the slash menu's items.",
+          "values": []
+        },
+        {
+          "name": "slash-recent-key",
+          "description": "Lists the slash menu items most recently chosen here above the rest, remembered under this key.",
           "values": []
         },
         {

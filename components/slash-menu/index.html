@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.94">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.95">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -79,7 +79,7 @@
         <a href="/">
           <img src="/assets/images/watermark.svg" alt="zinc" />
         </a>
-        <div class="sidebar-version">1.1.94</div>
+        <div class="sidebar-version">1.1.95</div>
       </header>
 
       <div class="sidebar-buttons">
@@ -573,6 +573,9 @@
             <li data-level="2"><a href="#examples">Examples</a></li>
             <li data-level="3"><a href="#driving-it-directly">Driving It Directly</a></li>
             <li data-level="3"><a href="#keyboard-navigation">Keyboard Navigation</a></li>
+            <li data-level="3"><a href="#grouping-items">Grouping Items</a></li>
+            <li data-level="3"><a href="#keyboard-hints">Keyboard Hints</a></li>
+            <li data-level="3"><a href="#recently-used">Recently Used</a></li>
             <li data-level="3"><a href="#truncating-long-lists">Truncating Long Lists</a></li>
             <li data-level="3"><a href="#attaching-it-to-your-own-field">Attaching It To Your Own Field</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
@@ -653,9 +656,9 @@
             </div>
           </div>
           <p>
-            Slot one into a textarea when you want the panel’s own settings — <code>heading</code>,
-            <code>max-items</code>, <code>placement</code>, <code>empty-text</code>, or its width — declared in markup.
-            The textarea then drives your menu instead of building its own:
+            Slot one into a textarea when you want the panel’s own settings — <code>max-items</code>,
+            <code>placement</code>, <code>empty-text</code>, its width, or the <code>heading</code> the list is
+            announced by — declared in markup. The textarea then drives your menu instead of building its own:
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -666,9 +669,24 @@
                   max-items="6"
                   style="--slash-menu-width: 360px"
                 >
-                  <zn-slash-item icon="tag@lu" label="Brand name" value="{{BRAND_NAME}}"></zn-slash-item>
-                  <zn-slash-item icon="building@lu" label="Legal entity" value="{{LEGAL_ENTITY}}"></zn-slash-item>
-                  <zn-slash-item icon="scale@lu" label="Jurisdiction" value="{{JURISDICTION}}"></zn-slash-item>
+                  <zn-slash-item
+                    group="Merchant"
+                    icon="tag@lu"
+                    label="Brand name"
+                    value="{{BRAND_NAME}}"
+                  ></zn-slash-item>
+                  <zn-slash-item
+                    group="Merchant"
+                    icon="building@lu"
+                    label="Legal entity"
+                    value="{{LEGAL_ENTITY}}"
+                  ></zn-slash-item>
+                  <zn-slash-item
+                    group="Policy"
+                    icon="scale@lu"
+                    label="Jurisdiction"
+                    value="{{JURISDICTION}}"
+                  ></zn-slash-item>
                 </zn-slash-menu>
               </zn-textarea>
 
@@ -681,9 +699,9 @@
               <div class="code-preview__source code-preview__source--html">
                 <pre><code class="language-html" id="code-block-1360"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-textarea</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Terms and conditions<span class="token punctuation">"</span></span> <span class="token attr-name">rows</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>6<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Type / to insert<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-menu</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>slash-menu<span class="token punctuation">"</span></span> <span class="token attr-name">heading</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Replacement strings<span class="token punctuation">"</span></span> <span class="token attr-name">max-items</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>6<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">--slash-menu-width</span><span class="token punctuation">:</span> 360px</span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-item</span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tag@lu<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Brand name<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>{{BRAND_NAME}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-item</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-item</span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>building@lu<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Legal entity<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>{{LEGAL_ENTITY}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-item</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-item</span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>scale@lu<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Jurisdiction<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>{{JURISDICTION}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-item</span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Merchant<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tag@lu<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Brand name<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>{{BRAND_NAME}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-item</span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Merchant<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>building@lu<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Legal entity<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>{{LEGAL_ENTITY}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-item</span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Policy<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>scale@lu<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Jurisdiction<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>{{JURISDICTION}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-item</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-menu</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-textarea</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-1360"></zn-copy-button></pre>
@@ -922,28 +940,63 @@
               </button>
             </div>
           </div>
-          <h3 id="truncating-long-lists" class="anchor-heading">
-            Truncating Long Lists<a
-              href="#truncating-long-lists"
-              aria-label='Direct link to "Truncating Long Lists"'
-            ></a>
+          <h3 id="grouping-items" class="anchor-heading">
+            Grouping Items<a href="#grouping-items" aria-label='Direct link to "Grouping Items"'></a>
           </h3>
           <p>
-            <code>max-items</code> caps how many items are rendered; the rest are reported in a footer rather than
-            silently dropped. The panel scrolls when its content exceeds <code>--slash-menu-max-height</code>.
+            An item’s <code>group</code> puts a heading above it. The heading is drawn whenever the group changes going
+            down the list, so items sharing a group must be declared together — the menu lists them in the order it is
+            given rather than gathering them for you. Leave the group off and an item is listed under no heading at all;
+            declared first, those lead the list, which is how a handful of favourites can sit above named sections.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-textarea
-                label="Terms and conditions"
-                rows="5"
-                help-text="Type / to see 3 of 9, then keep typing to narrow"
-                slash-items="Brand name={{BRAND_NAME}}, Legal entity={{LEGAL_ENTITY}}, Jurisdiction={{JURISDICTION}},
-                          Customer name={{CUSTOMER_NAME}}, Customer email={{CUSTOMER_EMAIL}},
-                          Invoice number={{INVOICE_NUMBER}}, Invoice date={{INVOICE_DATE}},
-                          Support email={{SUPPORT_EMAIL}}, Support phone={{SUPPORT_PHONE}}"
+                label="Privacy policy"
+                rows="7"
+                help-text="Type / to see the sections, or 'company' to search across them"
               >
-                <zn-slash-menu slot="slash-menu" heading="Replacement strings" max-items="3"></zn-slash-menu>
+                <zn-slash-menu slot="slash-menu" style="--slash-menu-width: 340px">
+                  <zn-slash-item icon="star@lu" label="Merchant block" value="{{MERCHANT_BLOCK}}"></zn-slash-item>
+                  <zn-slash-item
+                    group="Merchant"
+                    icon="tag@lu"
+                    label="Brand name"
+                    keywords="company"
+                    value="{{BRAND_NAME}}"
+                  ></zn-slash-item>
+                  <zn-slash-item
+                    group="Merchant"
+                    icon="building@lu"
+                    label="Legal entity"
+                    keywords="company"
+                    value="{{LEGAL_ENTITY}}"
+                  ></zn-slash-item>
+                  <zn-slash-item
+                    group="Customer"
+                    icon="user@lu"
+                    label="Customer name"
+                    value="{{CUSTOMER_NAME}}"
+                  ></zn-slash-item>
+                  <zn-slash-item
+                    group="Customer"
+                    icon="mail@lu"
+                    label="Customer email"
+                    value="{{CUSTOMER_EMAIL}}"
+                  ></zn-slash-item>
+                  <zn-slash-item
+                    group="Policy"
+                    icon="scale@lu"
+                    label="Jurisdiction"
+                    value="{{JURISDICTION}}"
+                  ></zn-slash-item>
+                  <zn-slash-item
+                    group="Policy"
+                    icon="calendar@lu"
+                    label="Refund window"
+                    value="{{REFUND_DAYS}} days"
+                  ></zn-slash-item>
+                </zn-slash-menu>
               </zn-textarea>
 
               <div class="code-preview__resizer">
@@ -953,12 +1006,16 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-1072">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1363"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-textarea</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Terms and conditions<span class="token punctuation">"</span></span> <span class="token attr-name">rows</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Type / to see 3 of 9, then keep typing to narrow<span class="token punctuation">"</span></span>
-             <span class="token attr-name">slash-items</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Brand name={{BRAND_NAME}}, Legal entity={{LEGAL_ENTITY}}, Jurisdiction={{JURISDICTION}},
-                          Customer name={{CUSTOMER_NAME}}, Customer email={{CUSTOMER_EMAIL}},
-                          Invoice number={{INVOICE_NUMBER}}, Invoice date={{INVOICE_DATE}},
-                          Support email={{SUPPORT_EMAIL}}, Support phone={{SUPPORT_PHONE}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-menu</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>slash-menu<span class="token punctuation">"</span></span> <span class="token attr-name">heading</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Replacement strings<span class="token punctuation">"</span></span> <span class="token attr-name">max-items</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-menu</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1363"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-textarea</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Privacy policy<span class="token punctuation">"</span></span> <span class="token attr-name">rows</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>7<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Type / to see the sections, or 'company' to search across them<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-menu</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>slash-menu<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">--slash-menu-width</span><span class="token punctuation">:</span> 340px</span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-item</span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>star@lu<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Merchant block<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>{{MERCHANT_BLOCK}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-item</span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Merchant<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tag@lu<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Brand name<span class="token punctuation">"</span></span> <span class="token attr-name">keywords</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>company<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>{{BRAND_NAME}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-item</span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Merchant<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>building@lu<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Legal entity<span class="token punctuation">"</span></span> <span class="token attr-name">keywords</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>company<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>{{LEGAL_ENTITY}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-item</span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Customer<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>user@lu<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Customer name<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>{{CUSTOMER_NAME}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-item</span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Customer<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>mail@lu<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Customer email<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>{{CUSTOMER_EMAIL}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-item</span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Policy<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>scale@lu<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Jurisdiction<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>{{JURISDICTION}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-item</span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Policy<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>calendar@lu<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Refund window<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>{{REFUND_DAYS}} days<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-item</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-menu</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-textarea</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-1363"></zn-copy-button></pre>
               </div>
@@ -985,6 +1042,416 @@
               </button>
             </div>
           </div>
+          <p>
+            Group headings are only a structure for browsing: a query ranks every match on merit, and the headings
+            follow whatever order that leaves. Set <code>order</code> on an item to pin its place within a match band,
+            and use <code>keywords</code> to make it findable by terms that aren’t in its label.
+          </p>
+          <p>Driving the menu yourself, the same thing is a <code>group</code> on each item:</p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-button id="grouped-anchor">Open the menu</zn-button>
+              <zn-slash-menu id="grouped-menu"></zn-slash-menu>
+              <div id="grouped-log" style="margin-top: 1rem; font-family: monospace; font-size: 0.875rem"></div>
+
+              <script type="module">
+                const anchor = document.getElementById('grouped-anchor');
+                const menu = document.getElementById('grouped-menu');
+                const log = document.getElementById('grouped-log');
+
+                await customElements.whenDefined('zn-slash-menu');
+
+                menu.items = [
+                  { label: 'Paragraph', value: '', icon: 'type@lu', group: 'Basic blocks' },
+                  { label: 'Heading 1', value: '# ', icon: 'heading-1@lu', group: 'Basic blocks' },
+                  { label: 'Heading 2', value: '## ', icon: 'heading-2@lu', group: 'Basic blocks' },
+                  { label: 'To-do list', value: '- [ ] ', icon: 'square-check@lu', group: 'Lists' },
+                  { label: 'Bulleted list', value: '- ', icon: 'list@lu', group: 'Lists' },
+                  { label: 'Callout', value: 'NOTE: ', icon: 'info@lu', group: 'Advanced' },
+                  { label: 'Quote', value: '> ', icon: 'quote@lu', group: 'Advanced' }
+                ];
+                menu.hideKeys = true;
+                menu.anchor = anchor;
+
+                anchor.addEventListener('click', () => (menu.open ? menu.hide() : menu.show()));
+
+                menu.addEventListener('zn-slash-item-select', event => {
+                  log.textContent = `selected ${event.detail.item.label} from ${event.detail.item.group}`;
+                  menu.hide();
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1073">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1364"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>grouped-anchor<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Open the menu<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-menu</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>grouped-menu<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-menu</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>grouped-log<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin-top</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span> <span class="token property">font-family</span><span class="token punctuation">:</span> monospace<span class="token punctuation">;</span> <span class="token property">font-size</span><span class="token punctuation">:</span> 0.875rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> anchor <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'grouped-anchor'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> menu <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'grouped-menu'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> log <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'grouped-log'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">await</span> customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-slash-menu'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  menu<span class="token punctuation">.</span>items <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span><span class="token literal-property property">label</span><span class="token operator">:</span> <span class="token string">'Paragraph'</span><span class="token punctuation">,</span> <span class="token literal-property property">value</span><span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">,</span> <span class="token literal-property property">icon</span><span class="token operator">:</span> <span class="token string">'type@lu'</span><span class="token punctuation">,</span> <span class="token literal-property property">group</span><span class="token operator">:</span> <span class="token string">'Basic blocks'</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span><span class="token literal-property property">label</span><span class="token operator">:</span> <span class="token string">'Heading 1'</span><span class="token punctuation">,</span> <span class="token literal-property property">value</span><span class="token operator">:</span> <span class="token string">'# '</span><span class="token punctuation">,</span> <span class="token literal-property property">icon</span><span class="token operator">:</span> <span class="token string">'heading-1@lu'</span><span class="token punctuation">,</span> <span class="token literal-property property">group</span><span class="token operator">:</span> <span class="token string">'Basic blocks'</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span><span class="token literal-property property">label</span><span class="token operator">:</span> <span class="token string">'Heading 2'</span><span class="token punctuation">,</span> <span class="token literal-property property">value</span><span class="token operator">:</span> <span class="token string">'## '</span><span class="token punctuation">,</span> <span class="token literal-property property">icon</span><span class="token operator">:</span> <span class="token string">'heading-2@lu'</span><span class="token punctuation">,</span> <span class="token literal-property property">group</span><span class="token operator">:</span> <span class="token string">'Basic blocks'</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span><span class="token literal-property property">label</span><span class="token operator">:</span> <span class="token string">'To-do list'</span><span class="token punctuation">,</span> <span class="token literal-property property">value</span><span class="token operator">:</span> <span class="token string">'- [ ] '</span><span class="token punctuation">,</span> <span class="token literal-property property">icon</span><span class="token operator">:</span> <span class="token string">'square-check@lu'</span><span class="token punctuation">,</span> <span class="token literal-property property">group</span><span class="token operator">:</span> <span class="token string">'Lists'</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span><span class="token literal-property property">label</span><span class="token operator">:</span> <span class="token string">'Bulleted list'</span><span class="token punctuation">,</span> <span class="token literal-property property">value</span><span class="token operator">:</span> <span class="token string">'- '</span><span class="token punctuation">,</span> <span class="token literal-property property">icon</span><span class="token operator">:</span> <span class="token string">'list@lu'</span><span class="token punctuation">,</span> <span class="token literal-property property">group</span><span class="token operator">:</span> <span class="token string">'Lists'</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span><span class="token literal-property property">label</span><span class="token operator">:</span> <span class="token string">'Callout'</span><span class="token punctuation">,</span> <span class="token literal-property property">value</span><span class="token operator">:</span> <span class="token string">'NOTE: '</span><span class="token punctuation">,</span> <span class="token literal-property property">icon</span><span class="token operator">:</span> <span class="token string">'info@lu'</span><span class="token punctuation">,</span> <span class="token literal-property property">group</span><span class="token operator">:</span> <span class="token string">'Advanced'</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span><span class="token literal-property property">label</span><span class="token operator">:</span> <span class="token string">'Quote'</span><span class="token punctuation">,</span> <span class="token literal-property property">value</span><span class="token operator">:</span> <span class="token string">'&gt; '</span><span class="token punctuation">,</span> <span class="token literal-property property">icon</span><span class="token operator">:</span> <span class="token string">'quote@lu'</span><span class="token punctuation">,</span> <span class="token literal-property property">group</span><span class="token operator">:</span> <span class="token string">'Advanced'</span><span class="token punctuation">}</span>
+  <span class="token punctuation">]</span><span class="token punctuation">;</span>
+  menu<span class="token punctuation">.</span>hideKeys <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+  menu<span class="token punctuation">.</span>anchor <span class="token operator">=</span> anchor<span class="token punctuation">;</span>
+
+  anchor<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> menu<span class="token punctuation">.</span>open <span class="token operator">?</span> menu<span class="token punctuation">.</span><span class="token function">hide</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> menu<span class="token punctuation">.</span><span class="token function">show</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  menu<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'zn-slash-item-select'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    log<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">selected </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>event<span class="token punctuation">.</span>detail<span class="token punctuation">.</span>item<span class="token punctuation">.</span>label<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> from </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>event<span class="token punctuation">.</span>detail<span class="token punctuation">.</span>item<span class="token punctuation">.</span>group<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+    menu<span class="token punctuation">.</span><span class="token function">hide</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1364"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1073"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="keyboard-hints" class="anchor-heading">
+            Keyboard Hints<a href="#keyboard-hints" aria-label='Direct link to "Keyboard Hints"'></a>
+          </h3>
+          <p>
+            A footer pinned to the bottom of the panel spells out the keys the menu answers to. The list scrolls beneath
+            it, so the hints stay in view. Use <code>hide-hints</code> on menus driven entirely by the mouse, or where
+            the surrounding UI already explains the shortcuts.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-textarea
+                label="Terms and conditions"
+                rows="4"
+                help-text="Type / to see the hints"
+                slash-items="Brand name={{BRAND_NAME}}, Legal entity={{LEGAL_ENTITY}}, Jurisdiction={{JURISDICTION}}"
+              >
+                <zn-slash-menu slot="slash-menu" heading="Replacement strings"></zn-slash-menu>
+              </zn-textarea>
+
+              <zn-textarea
+                label="Internal note"
+                rows="4"
+                help-text="Type / — no hints"
+                slash-items="Brand name={{BRAND_NAME}}, Legal entity={{LEGAL_ENTITY}}, Jurisdiction={{JURISDICTION}}"
+              >
+                <zn-slash-menu slot="slash-menu" heading="Replacement strings" hide-hints=""></zn-slash-menu>
+              </zn-textarea>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1074">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1365"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-textarea</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Terms and conditions<span class="token punctuation">"</span></span> <span class="token attr-name">rows</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Type / to see the hints<span class="token punctuation">"</span></span>
+             <span class="token attr-name">slash-items</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Brand name={{BRAND_NAME}}, Legal entity={{LEGAL_ENTITY}}, Jurisdiction={{JURISDICTION}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-menu</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>slash-menu<span class="token punctuation">"</span></span> <span class="token attr-name">heading</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Replacement strings<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-menu</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-textarea</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-textarea</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Internal note<span class="token punctuation">"</span></span> <span class="token attr-name">rows</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Type / — no hints<span class="token punctuation">"</span></span>
+             <span class="token attr-name">slash-items</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Brand name={{BRAND_NAME}}, Legal entity={{LEGAL_ENTITY}}, Jurisdiction={{JURISDICTION}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-menu</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>slash-menu<span class="token punctuation">"</span></span> <span class="token attr-name">heading</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Replacement strings<span class="token punctuation">"</span></span> <span class="token attr-name">hide-hints</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-menu</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-textarea</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1365"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1074"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="recently-used" class="anchor-heading">
+            Recently Used<a href="#recently-used" aria-label='Direct link to "Recently Used"'></a>
+          </h3>
+          <p>
+            Set <code>recent-key</code> and the menu remembers what was chosen there, listing the most recent of those
+            items above the rest under their own heading. The key is where the menu is used — <code>page-body</code>,
+            <code>ticket-reply</code> — so each place keeps its own history in <code>localStorage</code>, and two fields
+            that should share one can share a key. <code>max-recent</code> caps the section (3 by default),
+            <code>recent-heading</code> names it, and <code>clearRecent()</code> forgets the lot. The section stands
+            aside as soon as there is a query, when the ranked matches are the better answer.
+          </p>
+          <p>
+            It reads as one more group, so it sits naturally above <a href="#grouping-items">grouped items</a> — the
+            section’s own heading, then the sections the list already had. Insert a few from the first field below to
+            see it fill:
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-textarea
+                label="Privacy policy"
+                rows="6"
+                help-text="Type / and insert a few — they come back to the top"
+              >
+                <zn-slash-menu slot="slash-menu" recent-key="docs-grouped" style="--slash-menu-width: 340px">
+                  <zn-slash-item
+                    group="Merchant"
+                    icon="tag@lu"
+                    label="Brand name"
+                    value="{{BRAND_NAME}}"
+                  ></zn-slash-item>
+                  <zn-slash-item
+                    group="Merchant"
+                    icon="building@lu"
+                    label="Legal entity"
+                    value="{{LEGAL_ENTITY}}"
+                  ></zn-slash-item>
+                  <zn-slash-item
+                    group="Customer"
+                    icon="user@lu"
+                    label="Customer name"
+                    value="{{CUSTOMER_NAME}}"
+                  ></zn-slash-item>
+                  <zn-slash-item
+                    group="Customer"
+                    icon="mail@lu"
+                    label="Customer email"
+                    value="{{CUSTOMER_EMAIL}}"
+                  ></zn-slash-item>
+                  <zn-slash-item
+                    group="Policy"
+                    icon="scale@lu"
+                    label="Jurisdiction"
+                    value="{{JURISDICTION}}"
+                  ></zn-slash-item>
+                </zn-slash-menu>
+              </zn-textarea>
+
+              <zn-button id="forget-recent" style="margin-top: 1rem">Forget them</zn-button>
+
+              <script type="module">
+                import { clearRecentSlashItems } from '/dist/zn.min.js';
+
+                document.getElementById('forget-recent').addEventListener('click', () => {
+                  clearRecentSlashItems('docs-grouped');
+                  clearRecentSlashItems('docs-terms');
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1075">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1366"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-textarea</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Privacy policy<span class="token punctuation">"</span></span> <span class="token attr-name">rows</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>6<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Type / and insert a few — they come back to the top<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-menu</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>slash-menu<span class="token punctuation">"</span></span> <span class="token attr-name">recent-key</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>docs-grouped<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">--slash-menu-width</span><span class="token punctuation">:</span> 340px</span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-item</span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Merchant<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tag@lu<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Brand name<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>{{BRAND_NAME}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-item</span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Merchant<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>building@lu<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Legal entity<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>{{LEGAL_ENTITY}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-item</span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Customer<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>user@lu<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Customer name<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>{{CUSTOMER_NAME}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-item</span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Customer<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>mail@lu<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Customer email<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>{{CUSTOMER_EMAIL}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-item</span> <span class="token attr-name">group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Policy<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>scale@lu<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Jurisdiction<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>{{JURISDICTION}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-item</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-menu</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-textarea</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>forget-recent<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin-top</span><span class="token punctuation">:</span> 1rem</span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>Forget them<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">import</span> <span class="token punctuation">{</span>clearRecentSlashItems<span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'/dist/zn.min.js'</span><span class="token punctuation">;</span>
+
+  document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'forget-recent'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token function">clearRecentSlashItems</span><span class="token punctuation">(</span><span class="token string">'docs-grouped'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">clearRecentSlashItems</span><span class="token punctuation">(</span><span class="token string">'docs-terms'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1366"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1075"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <p>
+            Where the items below carry no heading of their own, a rule closes the section off instead. This field
+            shares nothing with the one above — each key is its own history:
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-textarea
+                label="Terms and conditions"
+                rows="5"
+                help-text="Type / and insert a few — the rule marks where they end"
+                slash-recent-key="docs-terms"
+                slash-items="Brand name={{BRAND_NAME}}, Legal entity={{LEGAL_ENTITY}}, Jurisdiction={{JURISDICTION}},
+                          Customer name={{CUSTOMER_NAME}}, Support email={{SUPPORT_EMAIL}}"
+              ></zn-textarea>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1076">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1367"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-textarea</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Terms and conditions<span class="token punctuation">"</span></span> <span class="token attr-name">rows</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Type / and insert a few — the rule marks where they end<span class="token punctuation">"</span></span>
+             <span class="token attr-name">slash-recent-key</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>docs-terms<span class="token punctuation">"</span></span>
+             <span class="token attr-name">slash-items</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Brand name={{BRAND_NAME}}, Legal entity={{LEGAL_ENTITY}}, Jurisdiction={{JURISDICTION}},
+                          Customer name={{CUSTOMER_NAME}}, Support email={{SUPPORT_EMAIL}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-textarea</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1367"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1076"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <p>
+            <code>zn-input</code>, <code>zn-inline-edit</code>, <code>zn-translations</code> and
+            <code>zn-remarkd-editor</code> take the same <code>slash-recent-key</code>. On a menu you slot in yourself,
+            or drive with <code>SlashMenuController</code>, set <code>recent-key</code> on the
+            <code>zn-slash-menu</code> directly.
+          </p>
+          <h3 id="truncating-long-lists" class="anchor-heading">
+            Truncating Long Lists<a
+              href="#truncating-long-lists"
+              aria-label='Direct link to "Truncating Long Lists"'
+            ></a>
+          </h3>
+          <p>
+            <code>max-items</code> caps how many items are rendered; the rest are reported in a footer rather than
+            silently dropped. The list scrolls when its content exceeds <code>--slash-menu-max-height</code>.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-textarea
+                label="Terms and conditions"
+                rows="5"
+                help-text="Type / to see 3 of 9, then keep typing to narrow"
+                slash-items="Brand name={{BRAND_NAME}}, Legal entity={{LEGAL_ENTITY}}, Jurisdiction={{JURISDICTION}},
+                          Customer name={{CUSTOMER_NAME}}, Customer email={{CUSTOMER_EMAIL}},
+                          Invoice number={{INVOICE_NUMBER}}, Invoice date={{INVOICE_DATE}},
+                          Support email={{SUPPORT_EMAIL}}, Support phone={{SUPPORT_PHONE}}"
+              >
+                <zn-slash-menu slot="slash-menu" heading="Replacement strings" max-items="3"></zn-slash-menu>
+              </zn-textarea>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1077">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1368"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-textarea</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Terms and conditions<span class="token punctuation">"</span></span> <span class="token attr-name">rows</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Type / to see 3 of 9, then keep typing to narrow<span class="token punctuation">"</span></span>
+             <span class="token attr-name">slash-items</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Brand name={{BRAND_NAME}}, Legal entity={{LEGAL_ENTITY}}, Jurisdiction={{JURISDICTION}},
+                          Customer name={{CUSTOMER_NAME}}, Customer email={{CUSTOMER_EMAIL}},
+                          Invoice number={{INVOICE_NUMBER}}, Invoice date={{INVOICE_DATE}},
+                          Support email={{SUPPORT_EMAIL}}, Support phone={{SUPPORT_PHONE}}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slash-menu</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>slash-menu<span class="token punctuation">"</span></span> <span class="token attr-name">heading</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Replacement strings<span class="token punctuation">"</span></span> <span class="token attr-name">max-items</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slash-menu</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-textarea</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1368"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1077"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
           <h3 id="attaching-it-to-your-own-field" class="anchor-heading">
             Attaching It To Your Own Field<a
               href="#attaching-it-to-your-own-field"
@@ -995,7 +1462,7 @@
             <code>SlashMenuController</code> is the reusable half. Give it the field, the menu, and the items; it
             handles trigger detection, filtering, keyboard handling and insertion.
           </p>
-          <pre><code class="language-js" id="code-block-1364"><span class="token keyword">import</span> <span class="token punctuation">{</span>SlashMenuController<span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@kubex/zinc'</span><span class="token punctuation">;</span>
+          <pre><code class="language-js" id="code-block-1369"><span class="token keyword">import</span> <span class="token punctuation">{</span>SlashMenuController<span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@kubex/zinc'</span><span class="token punctuation">;</span>
 
 <span class="token keyword">class</span> <span class="token class-name">MyEditor</span> <span class="token keyword">extends</span> <span class="token class-name">ZincElement</span> <span class="token punctuation">{</span>
   <span class="token keyword">private</span> slash <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SlashMenuController</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
@@ -1010,15 +1477,15 @@
     <span class="token keyword">this</span><span class="token punctuation">.</span>slash<span class="token punctuation">.</span><span class="token function">attach</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>shadowRoot<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'textarea'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1364"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1369"></zn-copy-button></pre>
           <p>Items can be shared between fields by registering them once as a preset:</p>
-          <pre><code class="language-js" id="code-block-1365"><span class="token keyword">import</span> <span class="token punctuation">{</span>registerSlashMenuPreset<span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@kubex/zinc'</span><span class="token punctuation">;</span>
+          <pre><code class="language-js" id="code-block-1370"><span class="token keyword">import</span> <span class="token punctuation">{</span>registerSlashMenuPreset<span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@kubex/zinc'</span><span class="token punctuation">;</span>
 
 <span class="token function">registerSlashMenuPreset</span><span class="token punctuation">(</span><span class="token string">'legal'</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>
   <span class="token punctuation">{</span><span class="token literal-property property">label</span><span class="token operator">:</span> <span class="token string">'Brand name'</span><span class="token punctuation">,</span> <span class="token literal-property property">value</span><span class="token operator">:</span> <span class="token string">'{{BRAND_NAME}}'</span><span class="token punctuation">,</span> <span class="token literal-property property">icon</span><span class="token operator">:</span> <span class="token string">'tag@lu'</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
   <span class="token punctuation">{</span><span class="token literal-property property">label</span><span class="token operator">:</span> <span class="token string">'Jurisdiction'</span><span class="token punctuation">,</span> <span class="token literal-property property">value</span><span class="token operator">:</span> <span class="token string">'{{JURISDICTION}}'</span><span class="token punctuation">,</span> <span class="token literal-property property">icon</span><span class="token operator">:</span> <span class="token string">'scale@lu'</span><span class="token punctuation">}</span>
 <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1365"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1370"></zn-copy-button></pre>
           <p>
             Any component that reads presets — <code>zn-textarea</code> via <code>slash-preset="legal"</code> — then
             offers the same list.
@@ -1045,7 +1512,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-1366"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.94/dist/components/slash-menu/slash-menu.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1366"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-1371"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.95/dist/components/slash-menu/slash-menu.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1371"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1060,12 +1527,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-1367"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.94/dist/components/slash-menu/slash-menu.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1367"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1372"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.95/dist/components/slash-menu/slash-menu.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1372"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-1368"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/slash-menu/slash-menu.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1368"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1373"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/slash-menu/slash-menu.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1373"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="properties" class="anchor-heading">
@@ -1132,7 +1599,7 @@
                   <td>
                     <code class="nowrap">heading</code>
                   </td>
-                  <td>The heading shown when there is no query.</td>
+                  <td>The name the list is announced by when there is no query.</td>
                   <td style="text-align: center"></td>
                   <td>
                     <code>string</code>
@@ -1202,6 +1669,94 @@
                   </td>
                   <td>
                     <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">hideHints</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> hide-hints </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>Hides the pinned footer of keyboard hints.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">recentKey</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> recent-key </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    Remembers the items chosen here and lists the most recent of them first, under their own heading.
+                    The key scopes the list to where the menu is used, so each place keeps its own history in
+                    <code>localStorage</code>. Leave unset to offer no recently used section.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">maxRecent</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> max-recent </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>The most recently used items to list.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>number</code>
+                  </td>
+                  <td>
+                    <code>3</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">recentHeading</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> recent-heading </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>The heading shown above the recently used items.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>'Recently used'</code>
                   </td>
                 </tr>
 
@@ -1334,6 +1889,12 @@
               </thead>
               <tbody>
                 <tr>
+                  <td class="nowrap"><code>clearRecent()</code></td>
+                  <td>Forgets the items remembered under <code>recent-key</code>.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
                   <td class="nowrap"><code>setActiveIndex()</code></td>
                   <td>Sets the active item by index, wrapping at both ends and skipping disabled items.</td>
                   <td>
@@ -1389,6 +1950,18 @@
                 </tr>
 
                 <tr>
+                  <td class="nowrap"><code>--slash-menu-border-radius</code></td>
+                  <td>The corner radius of the panel.</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--slash-menu-item-border-radius</code></td>
+                  <td>The corner radius of the items and their icon chips.</td>
+                  <td></td>
+                </tr>
+
+                <tr>
                   <td class="nowrap"><code>--slash-menu-max-height</code></td>
                   <td>The maximum height of the panel before it scrolls.</td>
                   <td></td>
@@ -1421,8 +1994,8 @@
                 </tr>
 
                 <tr>
-                  <td class="nowrap"><code>heading</code></td>
-                  <td>The panel’s heading.</td>
+                  <td class="nowrap"><code>list</code></td>
+                  <td>The scrolling list of items.</td>
                 </tr>
 
                 <tr>
@@ -1431,13 +2004,40 @@
                 </tr>
 
                 <tr>
+                  <td class="nowrap"><code>icon</code></td>
+                  <td>The chip holding an item’s icon.</td>
+                </tr>
+
+                <tr>
                   <td class="nowrap"><code>group-heading</code></td>
                   <td>A group heading between items.</td>
                 </tr>
 
                 <tr>
+                  <td class="nowrap"><code>divider</code></td>
+                  <td>
+                    The rule closing the recently used section, when the items below it have no heading of their own.
+                  </td>
+                </tr>
+
+                <tr>
                   <td class="nowrap"><code>footer</code></td>
                   <td>The truncation footer, shown when not every match fits.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>hints</code></td>
+                  <td>The pinned footer of keyboard hints.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>hint</code></td>
+                  <td>A single keyboard hint within the footer.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>hint-key</code></td>
+                  <td>The key shown against a hint.</td>
                 </tr>
               </tbody>
             </table>

@@ -145,6 +145,37 @@ through the `config` attribute. Sections appear in page order; container section
 }
 ```
 
+## A required first section
+
+Pages that must always open with a particular section — a hero banner, a masthead — set
+`required-first` to that section type. The builder hoists an existing section of the type to
+the top of the page, or inserts an empty one when there is none, and pins it there: it has no
+remove action, ignores <kbd>Delete</kbd>, can't be dragged or moved into a container slot, and
+nothing can be dropped above it. Its content stays fully editable in the inspector, and the
+type stays in the palette, so further sections of it can still be added below.
+
+Which section is pinned is derived from the state — `sections[0]` when its type matches — so
+nothing about the lock is written into the persisted config.
+
+```html:preview
+<zn-page-builder heading="KB Homepage" required-first="hero" style="height: 420px"
+  config='{"sections":[{"id":"t1","type":"rich-text","data":{"content":"Welcome"}}]}'>
+  <template type="hero" slot="config" label="Hero" icon="star" category="Headers"
+            description="Banner with a heading and optional search">
+    <zn-input name="title" label="Title"></zn-input>
+    <zn-toggle name="showSearch" label="Show search"></zn-toggle>
+  </template>
+  <template type="rich-text" slot="config" label="Rich Text" icon="notes" category="Content"
+            description="A block of markdown content">
+    <zn-input name="content" label="Content"></zn-input>
+  </template>
+</zn-page-builder>
+```
+
+The config above declares only a rich-text section, so the hero is inserted above it — loading a
+page that lacks the required section normalises it rather than rejecting it. The guard is
+client-side, so a host that persists the config should still enforce the same rule on save.
+
 ## Container tiles
 
 A section type with a `slots` attribute becomes a full-row container: its card renders a

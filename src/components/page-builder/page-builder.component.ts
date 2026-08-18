@@ -105,6 +105,14 @@ export default class ZnPageBuilder extends ZincElement {
   @property({ reflect: true }) heading = '';
   @property({ reflect: true }) subheading = '';
 
+  /**
+   * Section type key that must lead the page. The builder hoists an existing section of
+   * that type to the top, or inserts an empty one, and pins it there: it can't be
+   * removed, reordered or dragged into a slot, and nothing can be dropped above it.
+   * Its content stays fully editable in the inspector.
+   */
+  @property({ attribute: 'required-first', reflect: true }) requiredFirst = '';
+
   /** Section types to make available, registered into the internal registry. */
   @property({ attribute: false }) sectionTypes: PageSectionType[] = [];
 
@@ -222,6 +230,15 @@ export default class ZnPageBuilder extends ZincElement {
     } catch {
       console.warn('<zn-page-builder> invalid config JSON');
     }
+  }
+
+  // Idempotent, so it does not matter whether this or handleConfigChange runs first.
+  @watch('requiredFirst')
+  handleRequiredFirstChange() {
+    const sections = this._requireFirst(this._state.sections);
+    if (sections === this._state.sections) return;
+    this._state = { sections };
+    this.defaultValue = JSON.stringify(this._state);
   }
 
   @watch('sectionTypes')
@@ -450,11 +467,46 @@ export default class ZnPageBuilder extends ZincElement {
     }
     this._history = [];
     this._redoStack = [];
-    this._state = { sections };
+    this._state = { sections: this._requireFirst(sections) };
     this.defaultValue = JSON.stringify(this._state);
     this._selectedId = null;
     this._pickerIndex = null;
     this._offerRestoreIfNewer();
+  }
+
+  // --- The pinned leading section (`required-first`) ---------------------------
+
+  /**
+   * Id of the section pinned to the top of the page, or null when `required-first`
+   * is unset. Derived from the state rather than stored on it, so nothing about the
+   * lock leaks into the persisted config.
+   */
+  private get _pinnedId(): string | null {
+    const first = this._state.sections[0];
+    return this.requiredFirst && first?.type === this.requiredFirst ? first.id : null;
+  }
+
+  private _isPinned(id: string): boolean {
+    return this._pinnedId === id;
+  }
+
+  /** Lowest top-level index a section may be added or moved to. */
+  private get _firstFreeIndex(): number {
+    return this._pinnedId === null ? 0 : 1;
+  }
+
+  /**
+   * Sections reordered so `required-first` leads the page: an existing section of that
+   * type is hoisted to the front, otherwise an empty one is prepended. Returns the
+   * argument unchanged when there is nothing to do, so callers can compare by identity.
+   */
+  private _requireFirst(sections: PageSection[]): PageSection[] {
+    if (!this.requiredFirst || sections[0]?.type === this.requiredFirst) return sections;
+    const at = sections.findIndex(s => s.type === this.requiredFirst);
+    if (at === -1) return [{ id: generateSectionId(), type: this.requiredFirst, data: {} }, ...sections];
+    const hoisted = [...sections];
+    hoisted.unshift(...hoisted.splice(at, 1));
+    return hoisted;
   }
 
   /** Finds a section by id, searching top-level sections and slotted children. */
@@ -551,7 +603,7 @@ export default class ZnPageBuilder extends ZincElement {
     this._pushHistory();
     const section: PageSection = { id: generateSectionId(), type, data: {} };
     const sections = [...this._state.sections];
-    sections.splice(index ?? sections.length, 0, section);
+    sections.splice(Math.max(index ?? sections.length, this._firstFreeIndex), 0, section);
     this._commit({ sections });
     this._select(section.id);
     return section;
@@ -576,6 +628,7 @@ export default class ZnPageBuilder extends ZincElement {
   }
 
   private _removeSection(id: string) {
+    if (this._isPinned(id)) return;
     const [removed, sections] = this._extract(id);
     if (!removed) return;
     this._pushHistory();
@@ -620,6 +673,8 @@ export default class ZnPageBuilder extends ZincElement {
 
   /** Moves a section (top-level or slotted) to a top-level position. */
   private _moveSection(id: string, index: number) {
+    if (this._isPinned(id)) return;
+    index = Math.max(index, this._firstFreeIndex);
     const from = this._state.sections.findIndex(s => s.id === id);
     if (from !== -1) {
       const to = index > from ? index - 1 : index;
@@ -648,6 +703,7 @@ export default class ZnPageBuilder extends ZincElement {
     const container = this._findSection(containerId);
     const containerType = container ? this.registry.get(container.type) : undefined;
     if (!moved || !container || !containerType?.slots || id === containerId) return;
+    if (this._isPinned(id)) return; // the pinned section stays at the top of the page
     if (this.registry.get(moved.type)?.slots) return; // no containers inside slots
     if (containerType.accepts && !containerType.accepts.includes(moved.type)) return;
     if (slotIndex < 0 || slotIndex >= containerType.slots) return;
@@ -866,7 +922,7 @@ export default class ZnPageBuilder extends ZincElement {
               Drag sections here to build your page
             </div>` : ''}
           ${sections.map((section, i) => html`
-            ${this._renderDropZone(i)}
+            ${i === 0 && this._pinnedId !== null ? '' : this._renderDropZone(i)}
             ${this._renderCard(section, i)}
           `)}
           ${this._renderDropZone(sections.length)}
@@ -881,10 +937,11 @@ export default class ZnPageBuilder extends ZincElement {
     extraClass = ''
   ) {
     const type = this.registry.get(section.type);
+    const pinned = this._isPinned(section.id);
     return html`
       <zn-page-section-card
         class="${extraClass}"
-        draggable="true"
+        draggable="${pinned ? 'false' : 'true'}"
         tabindex="0"
         label="${section.label ?? type?.label ?? section.type}"
         summary="${type ? sectionSummary(section, type) : `Unknown type "${section.type}"`}"
@@ -893,6 +950,7 @@ export default class ZnPageBuilder extends ZincElement {
         color="${ifDefined(type?.color)}"
         ?selected="${this._selectedId === section.id}"
         ?unknown="${!type}"
+        ?locked="${pinned}"
         @click="${(e: Event) => {
           e.stopPropagation();
           this._select(section.id);

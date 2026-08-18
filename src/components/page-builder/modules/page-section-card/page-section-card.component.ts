@@ -39,6 +39,8 @@ export default class ZnPageSectionCard extends ZincElement {
   @property({type: Boolean, reflect: true}) selected = false;
   /** Set when the section's type has no registered template — renders greyed. */
   @property({type: Boolean, reflect: true}) unknown = false;
+  /** Set when the builder pins this section to the page — drops the remove action. */
+  @property({type: Boolean, reflect: true}) locked = false;
 
   protected updated(changed: PropertyValues) {
     super.updated(changed);
@@ -67,6 +69,10 @@ export default class ZnPageSectionCard extends ZincElement {
           <span class="card__label">${this.label}</span>
           ${this.summary ? html`<span class="card__summary">${this.summary}</span>` : ''}
         </span>
+        ${this.locked ? html`
+          <span class="card__lock" title="This section cannot be removed">
+            <zn-icon src="lock" size="14"></zn-icon>
+          </span>` : ''}
         <span class="card__actions" @keydown="${this._actionKeydown}">
           <zn-button
             class="card__action"
@@ -77,15 +83,16 @@ export default class ZnPageSectionCard extends ZincElement {
             title="Duplicate section"
             aria-label="Duplicate section"
             @click="${(e: Event) => this._action(e, 'page-card-duplicate')}"></zn-button>
-          <zn-button
-            class="card__action"
-            icon-button="small"
-            plain
-            icon="delete"
-            icon-size="14"
-            title="Remove section"
-            aria-label="Remove section"
-            @click="${(e: Event) => this._action(e, 'page-card-remove')}"></zn-button>
+          ${this.locked ? '' : html`
+            <zn-button
+              class="card__action"
+              icon-button="small"
+              plain
+              icon="delete"
+              icon-size="14"
+              title="Remove section"
+              aria-label="Remove section"
+              @click="${(e: Event) => this._action(e, 'page-card-remove')}"></zn-button>`}
         </span>
       </div>
     `;

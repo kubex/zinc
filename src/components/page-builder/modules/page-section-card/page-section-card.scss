@@ -15,6 +15,11 @@
   cursor: grabbing;
 }
 
+:host([locked]),
+:host([locked]:active) {
+  cursor: default;
+}
+
 .card {
   display: flex;
   align-items: center;
@@ -75,6 +80,14 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+// Always visible, unlike the hover actions — it is what explains their absence.
+.card__lock {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  opacity: 0.45;
 }
 
 // Space is always reserved (visibility, not display) so the card never

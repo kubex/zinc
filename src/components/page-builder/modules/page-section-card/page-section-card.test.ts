@@ -41,6 +41,15 @@ describe('<zn-page-section-card>', () => {
     expect(hostSawKeydown, 'host keydown suppressed for button activation keys').to.be.false;
   });
 
+  it('should drop the remove action and show a lock when locked', async () => {
+    const el = await fixture<ZnPageSectionCard>(html`
+      <zn-page-section-card label="Hero" locked></zn-page-section-card>`);
+    expect(el.hasAttribute('locked')).to.be.true;
+    expect(el.shadowRoot!.querySelector('zn-button[title="Remove section"]'), 'remove gone').to.not.exist;
+    expect(el.shadowRoot!.querySelector('zn-button[title="Duplicate section"]'), 'duplicate kept').to.exist;
+    expect(el.shadowRoot!.querySelector('.card__lock'), 'lock indicator').to.exist;
+  });
+
   it('should reflect selected and unknown states', async () => {
     const el = await fixture<ZnPageSectionCard>(html`
       <zn-page-section-card label="Hero" selected unknown></zn-page-section-card>`);

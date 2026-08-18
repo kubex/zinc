@@ -1,5 +1,6 @@
 import '../../../dist/zn.min.js';
 import {expect, fixture, html} from '@open-wc/testing';
+import type {PageState} from './page.types';
 import type ZnPageBuilder from './page-builder.component';
 
 describe('<zn-page-builder>', () => {
@@ -573,6 +574,99 @@ describe('<zn-page-builder>', () => {
     childCard.dispatchEvent(new KeyboardEvent('keydown', {key: 'Delete', bubbles: true, cancelable: true}));
     await el.updateComplete;
     expect(el.state.sections[0].children?.[0] ?? null, 'Delete removes the child').to.be.null;
+  });
+
+  it('should pin a required-first section, inserting one when the page has none', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder required-first="hero">
+        <template type="hero" slot="config" label="Hero"></template>
+        <template type="rich-text" slot="config" label="Rich Text"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    expect(el.state.sections.map(s => s.type), 'inserted into an empty page').to.deep.equal(['hero']);
+    // The submitted value carries the pinned section, so a save can't miss it.
+    expect((JSON.parse(el.value) as PageState).sections).to.have.length(1);
+
+    const card = el.shadowRoot!.querySelector('zn-page-section-card')!;
+    expect(card.hasAttribute('locked'), 'card is locked').to.be.true;
+    expect(card.getAttribute('draggable'), 'card is not draggable').to.equal('false');
+    // No "+" strip above it — the first drop zone follows the pinned card.
+    expect(el.shadowRoot!.querySelector('.canvas > *')?.tagName.toLowerCase()).to.equal('zn-page-section-card');
+  });
+
+  it('should hoist an existing required-first section to the top of the page', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder required-first="hero"
+                       config='{"sections":[{"id":"t","type":"rich-text","data":{}},{"id":"h","type":"hero","data":{"title":"Help"}}]}'>
+        <template type="hero" slot="config" label="Hero"></template>
+        <template type="rich-text" slot="config" label="Rich Text"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    expect(el.state.sections.map(s => s.id)).to.deep.equal(['h', 't']);
+    expect(el.state.sections[0].data, 'hoisted with its data intact').to.deep.equal({title: 'Help'});
+  });
+
+  it('should refuse to remove, reorder or displace the pinned section', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder required-first="hero"
+                       config='{"sections":[{"id":"h","type":"hero","data":{}},{"id":"t","type":"rich-text","data":{}}]}'>
+        <template type="hero" slot="config" label="Hero"></template>
+        <template type="rich-text" slot="config" label="Rich Text"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    const pinnedCard = el.shadowRoot!.querySelector('zn-page-section-card')!;
+    expect(pinnedCard.shadowRoot!.querySelector('zn-button[title="Remove section"]'), 'no remove action').to.not.exist;
+
+    pinnedCard.dispatchEvent(new CustomEvent('page-card-remove', {bubbles: true, composed: true}));
+    pinnedCard.dispatchEvent(new KeyboardEvent('keydown', {key: 'Delete', bubbles: true, cancelable: true}));
+    await el.updateComplete;
+    expect(el.state.sections.map(s => s.id), 'survives remove and Delete').to.deep.equal(['h', 't']);
+
+    // Dropping another section on the topmost zone lands it below the pinned one.
+    const dataTransfer = new DataTransfer();
+    dataTransfer.setData('application/x-zn-page-section', 't');
+    el.shadowRoot!.querySelector('.drop')!
+      .dispatchEvent(new DragEvent('drop', {dataTransfer, bubbles: true, cancelable: true}));
+    await el.updateComplete;
+    expect(el.state.sections.map(s => s.id), 'nothing lands above the pinned section').to.deep.equal(['h', 't']);
+
+    expect(el.addSection('rich-text', 0)).to.not.be.null;
+    expect(el.state.sections[0].id, 'addSection index 0 is clamped').to.equal('h');
+  });
+
+  it('should keep the pinned section out of container slots', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder required-first="hero"
+                       config='{"sections":[{"id":"h","type":"hero","data":{}},{"id":"grid","type":"article-grid","data":{}}]}'>
+        <template type="hero" slot="config" label="Hero"></template>
+        <template type="article-grid" slot="config" label="Article Grid" slots="2"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    const dataTransfer = new DataTransfer();
+    dataTransfer.setData('application/x-zn-page-section', 'h');
+    el.shadowRoot!.querySelector('.slot--empty')!
+      .dispatchEvent(new DragEvent('drop', {dataTransfer, bubbles: true, cancelable: true}));
+    await el.updateComplete;
+
+    expect(el.state.sections[0].id, 'still leading the page').to.equal('h');
+    expect(el.state.sections[1].children?.[0] ?? null, 'slot left empty').to.be.null;
+  });
+
+  it('should leave the page alone without required-first', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder config='{"sections":[{"id":"t","type":"rich-text","data":{}}]}'>
+        <template type="rich-text" slot="config" label="Rich Text"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    expect(el.state.sections.map(s => s.type)).to.deep.equal(['rich-text']);
+    const card = el.shadowRoot!.querySelector('zn-page-section-card')!;
+    expect(card.hasAttribute('locked')).to.be.false;
+    expect(card.getAttribute('draggable')).to.equal('true');
   });
 
   it('should accept a palette drop anywhere on the empty canvas', async () => {

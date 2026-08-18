@@ -144,6 +144,12 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
 
   @state() private blocks: string[] = [];
   @state() private editingIndex: number | null = null;
+  /**
+   * Lists the blocks most recently inserted here above the rest of the slash menu, remembered in
+   * `localStorage` under this key. Leave unset to offer no recently used section.
+   */
+  @property({attribute: 'slash-recent-key'}) slashRecentKey = '';
+
   /** Renders the slash menu only once it has been needed. */
   @state() private hasSlashMenu = false;
   @state() private imagePickerIndex: number | null = null;
@@ -1099,7 +1105,10 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
             </div>`}
         </div>
         ${this.hasSlashMenu ? html`
-          <zn-slash-menu part="slash-menu" heading="Insert block"></zn-slash-menu>` : ''}
+          <zn-slash-menu
+            part="slash-menu"
+            heading="Insert block"
+            recent-key=${this.slashRecentKey}></zn-slash-menu>` : ''}
         <textarea class="remarkd-editor__validation"
                   .value=${this.value}
                   ?required=${this.required}

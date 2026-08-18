@@ -501,6 +501,22 @@ the merge fields an application allows.
 </script>
 ```
 
+#### Recently Used Items
+
+`slash-recent-key` remembers what was inserted here and lists those items above the rest next time, under a
+"Recently used" heading. The key names the place the field is used, so each keeps its own history — see
+[`zn-slash-menu`](/components/slash-menu#recently-used) for the menu's own settings.
+
+```html:preview
+<zn-textarea
+  label="Refund policy"
+  rows="5"
+  slash-recent-key="docs-textarea-refunds"
+  help-text="Type / and insert a couple — they come back to the top"
+  slash-items="Brand name={{BRAND_NAME}}, Legal entity={{LEGAL_ENTITY}}, Jurisdiction={{JURISDICTION}},
+               Refund window={{REFUND_DAYS}}, Support email={{SUPPORT_EMAIL}}"></zn-textarea>
+```
+
 #### Changing the Trigger
 
 Set `slash-trigger` to any characters. Using `{{` lets someone who already knows the token they want type it directly

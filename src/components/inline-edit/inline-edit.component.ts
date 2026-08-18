@@ -117,11 +117,14 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   /** The characters that open the slash menu. */
   @property({ attribute: 'slash-trigger' }) slashTrigger = '/';
 
-  /** The heading shown above the slash menu's items. */
+  /** The name the slash menu's list is announced by. */
   @property({ attribute: 'slash-heading' }) slashHeading = 'Insert';
 
   /** Hides the insertion keys normally shown against the slash menu's items. */
   @property({ attribute: 'slash-hide-keys', type: Boolean }) slashHideKeys = false;
+
+  /** Lists the slash menu items most recently chosen here above the rest, remembered under this key. */
+  @property({ attribute: 'slash-recent-key' }) slashRecentKey = '';
 
   /** Resolves additional slash menu items each time the menu opens. JavaScript only. */
   @property({ attribute: false }) slashItemsProvider?: (query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]>;
@@ -466,6 +469,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
         slash-trigger="${this.slashTrigger}"
         slash-heading="${this.slashHeading}"
         slash-preset="${this.slashPreset}"
+        slash-recent-key="${this.slashRecentKey}"
         ?slash-hide-keys="${this.slashHideKeys}"
         .slashItems="${this.slashItems}"
         .slashItemsProvider="${this.slashItemsProvider}"
@@ -489,6 +493,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                 slash-trigger="${this.slashTrigger}"
                 slash-heading="${this.slashHeading}"
                 slash-preset="${this.slashPreset}"
+                slash-recent-key="${this.slashRecentKey}"
                 ?slash-hide-keys="${this.slashHideKeys}"
                 .slashItems="${this.slashItems}"
                 .slashItemsProvider="${this.slashItemsProvider}"

@@ -1,10 +1,11 @@
 import {autoUpdate, computePosition, flip, offset, shift, size} from '@floating-ui/dom';
 import {classMap} from 'lit/directives/class-map.js';
+import {clearRecentSlashItems, readRecentSlashItems, recordRecentSlashItem, slashItemKey} from './slash-menu-items';
 import {html, unsafeCSS} from 'lit';
 import {property, query, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnIcon from '../icon';
-import type {CSSResultGroup, PropertyValues} from 'lit';
+import type {CSSResultGroup, PropertyValues, TemplateResult} from 'lit';
 import type {Placement, VirtualElement} from '@floating-ui/dom';
 import type {SlashMenuItem} from './slash-menu-items';
 
@@ -29,12 +30,19 @@ function sameItems(a: SlashMenuItem[] | undefined, b: SlashMenuItem[]): boolean 
  *  component driving the menu (e.g. `zn-textarea`) re-emits it as `zn-slash-select`.
  *
  * @csspart panel - The floating panel that holds the list.
- * @csspart heading - The panel's heading.
+ * @csspart list - The scrolling list of items.
  * @csspart item - An item in the list.
+ * @csspart icon - The chip holding an item's icon.
  * @csspart group-heading - A group heading between items.
+ * @csspart divider - The rule closing the recently used section, when the items below it have no heading of their own.
  * @csspart footer - The truncation footer, shown when not every match fits.
+ * @csspart hints - The pinned footer of keyboard hints.
+ * @csspart hint - A single keyboard hint within the footer.
+ * @csspart hint-key - The key shown against a hint.
  *
  * @cssproperty --slash-menu-width - The width of the panel.
+ * @cssproperty --slash-menu-border-radius - The corner radius of the panel.
+ * @cssproperty --slash-menu-item-border-radius - The corner radius of the items and their icon chips.
  * @cssproperty --slash-menu-max-height - The maximum height of the panel before it scrolls.
  */
 export default class ZnSlashMenu extends ZincElement {
@@ -44,6 +52,7 @@ export default class ZnSlashMenu extends ZincElement {
   };
 
   @query('.slash-menu__panel') private panel: HTMLElement;
+  @query('.slash-menu__list') private list: HTMLElement;
 
   private stopAutoUpdate?: () => void;
 
@@ -56,7 +65,7 @@ export default class ZnSlashMenu extends ZincElement {
   /** The query the items were matched against, shown in the heading. */
   @property() query = '';
 
-  /** The heading shown when there is no query. */
+  /** The name the list is announced by when there is no query. */
   @property() heading = 'Insert';
 
   /** Shown in place of the list when there are no items. */
@@ -68,6 +77,22 @@ export default class ZnSlashMenu extends ZincElement {
   /** Hides the insertion key (the item's value) normally shown against each item. */
   @property({attribute: 'hide-keys', type: Boolean}) hideKeys = false;
 
+  /** Hides the pinned footer of keyboard hints. */
+  @property({attribute: 'hide-hints', type: Boolean}) hideHints = false;
+
+  /**
+   * Remembers the items chosen here and lists the most recent of them first, under their own heading.
+   * The key scopes the list to where the menu is used, so each place keeps its own history in
+   * `localStorage`. Leave unset to offer no recently used section.
+   */
+  @property({attribute: 'recent-key'}) recentKey = '';
+
+  /** The most recently used items to list. */
+  @property({attribute: 'max-recent', type: Number}) maxRecent = 3;
+
+  /** The heading shown above the recently used items. */
+  @property({attribute: 'recent-heading'}) recentHeading = 'Recently used';
+
   /** The element or caret rect the panel is positioned against. */
   @property({attribute: false}) anchor: Element | VirtualElement | null = null;
 
@@ -78,9 +103,39 @@ export default class ZnSlashMenu extends ZincElement {
   @property({type: Number}) distance = 4;
 
   @state() private activeIndex = 0;
+  @state() private recentKeys: string[] = [];
+
+  /** How many recently used items the last update listed, to spot the list appearing or reordering. */
+  private recentCount = 0;
+
+  private get listItems(): SlashMenuItem[] {
+    return this.maxItems > 0 ? this.items.slice(0, this.maxItems) : this.items;
+  }
+
+  /**
+   * The remembered items that are in the current list, newest first. Only offered without a query —
+   * once the user is searching, the ranked matches are the better answer.
+   */
+  private get recentItems(): SlashMenuItem[] {
+    if (!this.recentKey || this.maxRecent < 1 || this.query.trim() !== '') return [];
+
+    const available = new Map<string, SlashMenuItem>();
+    for (const item of this.items) {
+      const key = slashItemKey(item);
+      if (!item.disabled && !available.has(key)) available.set(key, item);
+    }
+
+    const recent = this.recentKeys
+      .map(key => available.get(key))
+      .filter((item): item is SlashMenuItem => item !== undefined)
+      .slice(0, this.maxRecent);
+
+    // A section holding everything on offer is nothing but a second copy of the list
+    return recent.length < this.items.length ? recent : [];
+  }
 
   private get visibleItems(): SlashMenuItem[] {
-    return this.maxItems > 0 ? this.items.slice(0, this.maxItems) : this.items;
+    return [...this.recentItems, ...this.listItems];
   }
 
   /** The item that Enter would insert. */
@@ -94,6 +149,12 @@ export default class ZnSlashMenu extends ZincElement {
 
   hide() {
     this.open = false;
+  }
+
+  /** Forgets the items remembered under `recent-key`. */
+  clearRecent() {
+    clearRecentSlashItems(this.recentKey);
+    this.recentKeys = [];
   }
 
   /** Sets the active item by index, wrapping at both ends and skipping disabled items. */
@@ -198,6 +259,8 @@ export default class ZnSlashMenu extends ZincElement {
   private selectItem(item: SlashMenuItem) {
     if (item.disabled) return;
 
+    if (this.recentKey) this.recentKeys = recordRecentSlashItem(this.recentKey, item);
+
     this.dispatchEvent(new CustomEvent(SLASH_ITEM_SELECT, {
       bubbles: true,
       cancelable: true,
@@ -211,17 +274,17 @@ export default class ZnSlashMenu extends ZincElement {
     if (!active) return;
 
     const items = this.visibleItems;
-    const panel = this.panel;
+    const list = this.list;
 
-    // The heading and footer scroll with the list, and `nearest` stops at the item's own box — so
-    // landing on the first or last item goes all the way to the panel's edge to bring them back
-    if (panel && items.slice(0, this.activeIndex).every(item => item.disabled)) {
-      panel.scrollTop = 0;
+    // Group headings scroll with the items, and `nearest` stops at the item's own box — so landing
+    // on the first or last item goes all the way to the list's edge to bring them back
+    if (list && items.slice(0, this.activeIndex).every(item => item.disabled)) {
+      list.scrollTop = 0;
       return;
     }
 
-    if (panel && items.slice(this.activeIndex + 1).every(item => item.disabled)) {
-      panel.scrollTop = panel.scrollHeight;
+    if (list && items.slice(this.activeIndex + 1).every(item => item.disabled)) {
+      list.scrollTop = list.scrollHeight;
       return;
     }
 
@@ -244,9 +307,20 @@ export default class ZnSlashMenu extends ZincElement {
   protected willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
 
+    // Another field may share the key, so the list is re-read each time the menu is shown
+    if (changed.has('recentKey') || (changed.has('open') && this.open)) {
+      this.recentKeys = readRecentSlashItems(this.recentKey);
+    }
+
     // A genuinely new result set starts on its first selectable item. Re-resolving the same query
     // hands over an equal-but-new array, which must not move the user's place in the list.
-    if (changed.has('items') && !sameItems(changed.get('items') as SlashMenuItem[] | undefined, this.items)) {
+    const isNewList = changed.has('items')
+      && !sameItems(changed.get('items') as SlashMenuItem[] | undefined, this.items);
+
+    // Items above the list shift every index below them, so the place is given up either way
+    const recentCount = this.recentItems.length;
+    if (isNewList || recentCount !== this.recentCount) {
+      this.recentCount = recentCount;
       this.activeIndex = this.visibleItems.findIndex(item => !item.disabled);
     }
   }
@@ -292,7 +366,9 @@ export default class ZnSlashMenu extends ZincElement {
         @mousedown=${this.handleItemMouseDown}>
         ${showIcons
           ? html`
-            <span class="slash-menu__icon">
+            <span
+              part="icon"
+              class=${classMap({'slash-menu__icon': true, 'slash-menu__icon--empty': !item.icon})}>
               ${item.icon ? html`
                 <zn-icon src=${item.icon} size="16"></zn-icon>` : ''}
             </span>`
@@ -309,41 +385,72 @@ export default class ZnSlashMenu extends ZincElement {
 
   private renderItems() {
     const items = this.visibleItems;
+    const recentCount = this.recentItems.length;
     const showIcons = items.some(item => item.icon);
     let lastGroup: string | undefined;
 
     return items.map((item, index) => {
-      const group = item.group;
+      const group = index < recentCount ? this.recentHeading : item.group;
       const heading = group && group !== lastGroup
         ? html`
           <div part="group-heading" class="slash-menu__group-heading">${group}</div>`
         : '';
       lastGroup = group;
 
-      return html`${heading}${this.renderItem(item, index, showIcons)}`;
+      // The recently used section needs closing off; a heading of its own does that for the items
+      // below it, and where they have none, a rule does it instead
+      const divider = index === recentCount && recentCount > 0 && !heading
+        ? html`
+          <div part="divider" class="slash-menu__divider"></div>`
+        : '';
+
+      return html`${divider}${heading}${this.renderItem(item, index, showIcons)}`;
     });
   }
 
+  private renderHint(keys: (TemplateResult | string)[], label: string) {
+    return html`
+      <span part="hint" class="slash-menu__hint">
+        ${keys.map(key => html`
+          <kbd part="hint-key" class="slash-menu__key">${key}</kbd>`)}
+        ${label}
+      </span>`;
+  }
+
+  private renderHints() {
+    const key = (icon: string) => html`
+      <zn-icon src="${icon}@lu" size="12"></zn-icon>`;
+
+    return html`
+      <div part="hints" class="slash-menu__hints">
+        ${this.renderHint([key('arrow-up'), key('arrow-down')], 'navigate')}
+        ${this.renderHint([key('corner-down-left')], 'select')}
+        ${this.renderHint(['esc'], 'dismiss')}
+      </div>`;
+  }
+
   render() {
-    const hidden = this.items.length - this.visibleItems.length;
+    const hidden = this.items.length - this.listItems.length;
 
     return html`
       <div
         part="panel"
         class="slash-menu__panel"
         popover="manual"
-        role="listbox"
-        aria-hidden=${this.open ? 'false' : 'true'}
-        aria-label=${this.query ? `Matches for ${this.query}` : this.heading}>
-        <div part="heading" class="slash-menu__heading">
-          ${this.query ? html`Matching <strong>${this.query}</strong>` : this.heading}
+        aria-hidden=${this.open ? 'false' : 'true'}>
+        <div
+          part="list"
+          class="slash-menu__list"
+          role="listbox"
+          aria-label=${this.query ? `Matches for ${this.query}` : this.heading}>
+          ${this.items.length
+            ? this.renderItems()
+            : html`
+              <div class="slash-menu__empty">${this.emptyText}</div>`}
+          ${hidden > 0 ? html`
+            <div part="footer" class="slash-menu__footer">${hidden} more — keep typing to narrow</div>` : ''}
         </div>
-        ${this.items.length
-          ? this.renderItems()
-          : html`
-            <div class="slash-menu__empty">${this.emptyText}</div>`}
-        ${hidden > 0 ? html`
-          <div part="footer" class="slash-menu__footer">${hidden} more — keep typing to narrow</div>` : ''}
+        ${this.hideHints ? '' : this.renderHints()}
       </div>`;
   }
 }

@@ -151,8 +151,8 @@ describe('<zn-textarea>', () => {
 
       expect(el.shadowRoot!.querySelector('zn-slash-menu'), 'no second menu is created').to.be.null;
       expect(slotted.items.map(item => item.label)).to.deep.equal(['Brand name', 'Support email']);
-      expect(slotted.shadowRoot!.querySelector('[part="heading"]')?.textContent?.trim())
-        .to.contain('Replacements');
+      expect(slotted.shadowRoot!.querySelector('[part="list"]')?.getAttribute('aria-label'))
+        .to.equal('Replacements');
       expect(menuItemLabels(slotted), 'the author\'s max-items is respected').to.deep.equal(['Brand name']);
 
       press(el, 'Enter');

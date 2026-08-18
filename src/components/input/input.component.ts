@@ -276,11 +276,17 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
   /** The characters that open the slash menu. */
   @property({attribute: 'slash-trigger'}) slashTrigger = '/';
 
-  /** The heading shown above the slash menu's items. */
+  /** The name the slash menu's list is announced by. */
   @property({attribute: 'slash-heading'}) slashHeading = 'Insert';
 
   /** Hides the insertion keys normally shown against the slash menu's items. */
   @property({attribute: 'slash-hide-keys', type: Boolean}) slashHideKeys = false;
+
+  /**
+   * Lists the items most recently chosen here above the rest, remembered in `localStorage` under this
+   * key. Share a key between the fields that should share a history; leave unset to offer no such list.
+   */
+  @property({attribute: 'slash-recent-key'}) slashRecentKey = '';
 
   /**
    * Resolves additional items each time the menu opens, for lists that come from elsewhere (e.g. an
@@ -1100,7 +1106,11 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
           </div>
           ${this.hasSlashMenu
             ? html`
-              <zn-slash-menu part="slash-menu" heading=${this.slashHeading} ?hide-keys=${this.slashHideKeys}></zn-slash-menu>`
+              <zn-slash-menu
+                part="slash-menu"
+                heading=${this.slashHeading}
+                recent-key=${this.slashRecentKey}
+                ?hide-keys=${this.slashHideKeys}></zn-slash-menu>`
             : ''}
           <slot name="slash-menu"></slot>
           <slot name="slash-items" hidden></slot>

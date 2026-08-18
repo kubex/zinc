@@ -120,3 +120,51 @@ export function filterSlashItems(items: SlashMenuItem[], query: string): SlashMe
       a.index - b.index)
     .map(entry => entry.item);
 }
+
+const RECENT_PREFIX = 'zn-slash-recent:';
+/** Kept deeper than any menu shows, so history survives items that aren't in the current list. */
+const RECENT_LIMIT = 10;
+
+/** The identity an item is remembered by in a menu's recently used list. */
+export function slashItemKey(item: SlashMenuItem): string {
+  return item.action ? `action:${item.action}` : `value:${item.value || item.label}`;
+}
+
+/** The keys of the items most recently chosen from the menu stored under `key`, newest first. */
+export function readRecentSlashItems(key: string): string[] {
+  if (!key) return [];
+
+  try {
+    const parsed: unknown = JSON.parse(localStorage.getItem(RECENT_PREFIX + key) ?? '[]');
+    return Array.isArray(parsed) ? parsed.filter((entry): entry is string => typeof entry === 'string') : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Moves an item to the front of the recently used list stored under `key`, and returns the list. */
+export function recordRecentSlashItem(key: string, item: SlashMenuItem): string[] {
+  if (!key) return [];
+
+  const itemKey = slashItemKey(item);
+  const keys = [itemKey, ...readRecentSlashItems(key).filter(entry => entry !== itemKey)].slice(0, RECENT_LIMIT);
+
+  try {
+    localStorage.setItem(RECENT_PREFIX + key, JSON.stringify(keys));
+  } catch {
+    // No storage (private browsing, quota) — the list just doesn't outlive the page
+  }
+
+  return keys;
+}
+
+/** Forgets the recently used items stored under `key`. */
+export function clearRecentSlashItems(key: string) {
+  if (!key) return;
+
+  try {
+    localStorage.removeItem(RECENT_PREFIX + key);
+  } catch {
+    // As above
+  }
+}

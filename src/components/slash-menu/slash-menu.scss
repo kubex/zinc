@@ -3,6 +3,8 @@
 :host {
   --slash-menu-width: 320px;
   --slash-menu-max-height: 260px;
+  --slash-menu-border-radius: 12px;
+  --slash-menu-item-border-radius: 8px;
 
   display: contents;
 }
@@ -20,24 +22,32 @@
   width: var(--slash-menu-width);
   max-width: var(--auto-size-available-width, none);
   max-height: min(var(--slash-menu-max-height), var(--auto-size-available-height, 100vh));
-  overflow-y: auto;
-  overscroll-behavior: none;
   z-index: var(--zn-z-index-dropdown);
-  padding: var(--zn-spacing-2x-small, 4px) 0;
+  overflow: hidden;
   background: var(--zn-panel-background-color);
   border: solid var(--zn-panel-border-width, 1px) var(--zn-panel-border-color);
-  border-radius: var(--zn-border-radius, 6px);
+  border-radius: var(--slash-menu-border-radius);
   box-shadow: var(--zn-shadow-medium);
   font-family: var(--zn-font-sans);
   font-size: var(--zn-font-size-medium);
   color: rgb(var(--zn-text));
 }
 
-.slash-menu__heading,
+.slash-menu__list {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--zn-spacing-3x-small, 2px);
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: none;
+  padding: var(--zn-spacing-2x-small, 4px) var(--zn-spacing-x-small, 8px);
+}
+
 .slash-menu__group-heading,
 .slash-menu__footer,
 .slash-menu__empty {
-  padding: var(--zn-spacing-2x-small, 4px) var(--zn-spacing-small, 12px);
+  padding: var(--zn-spacing-2x-small, 4px) var(--zn-spacing-x-small, 8px);
   font-size: var(--zn-font-size-x-small);
   color: var(--zn-color-neutral-500);
   user-select: none;
@@ -45,9 +55,11 @@
 }
 
 .slash-menu__group-heading {
+  padding-top: var(--zn-spacing-x-small, 8px);
   font-weight: var(--zn-font-weight-semibold);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
+  color: var(--zn-color-neutral-400);
 }
 
 .slash-menu__footer {
@@ -55,22 +67,70 @@
   margin-top: var(--zn-spacing-2x-small, 4px);
 }
 
+.slash-menu__divider {
+  height: var(--zn-panel-border-width, 1px);
+  margin: var(--zn-spacing-2x-small, 4px) 0;
+  background: var(--zn-panel-border-color);
+}
+
+.slash-menu__hints {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--zn-spacing-small, 12px);
+  padding: var(--zn-spacing-x-small, 8px) var(--zn-spacing-small, 12px);
+  border-top: solid var(--zn-panel-border-width, 1px) var(--zn-panel-border-color);
+  font-size: var(--zn-font-size-x-small);
+  color: var(--zn-color-neutral-500);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.slash-menu__hint {
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-2x-small, 4px);
+}
+
+.slash-menu__key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 var(--zn-spacing-2x-small, 4px);
+  border: solid var(--zn-panel-border-width, 1px) var(--zn-panel-border-color);
+  border-radius: var(--zn-border-radius, 6px);
+  background: var(--zn-panel-background-color);
+  font-family: var(--zn-font-sans);
+  font-size: var(--zn-font-size-2x-small);
+  line-height: 1;
+  color: var(--zn-color-neutral-600);
+}
+
 .slash-menu__item {
   display: flex;
   align-items: center;
-  gap: var(--zn-spacing-x-small, 8px);
+  gap: var(--zn-spacing-small, 12px);
   width: 100%;
-  padding: var(--zn-spacing-x-small, 8px) var(--zn-spacing-small, 12px);
+  padding: var(--zn-spacing-2x-small, 4px) var(--zn-spacing-x-small, 8px);
   border: none;
+  border-radius: var(--slash-menu-item-border-radius);
   background: transparent;
   color: inherit;
   font: inherit;
   text-align: left;
   cursor: pointer;
 
-  &--active,
   &:hover:not(&--disabled) {
     background: var(--zn-input-background-color-hover);
+  }
+
+  // The active item is where Enter lands, so it is tinted rather than merely shaded like a hover.
+  // The tints throughout are translucent, so one set of them suits a light and a dark panel alike.
+  &--active,
+  &--active:hover:not(&--disabled) {
+    background: rgba(var(--zn-color-primary), 0.08);
   }
 
   &--disabled {
@@ -83,8 +143,25 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 16px;
-  color: var(--zn-color-neutral-500);
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  border: solid var(--zn-panel-border-width, 1px) rgba(var(--zn-color-primary), 0.18);
+  border-radius: var(--slash-menu-item-border-radius);
+  background: rgba(var(--zn-color-primary), 0.06);
+  color: var(--zn-color-neutral-700);
+
+  // Icons are all-or-nothing across a list, so an item without one still holds the column
+  &--empty {
+    border-color: transparent;
+    background: none;
+  }
+
+  .slash-menu__item--active & {
+    border-color: rgba(var(--zn-color-primary), 0.3);
+    background: rgba(var(--zn-color-primary), 0.14);
+    color: rgb(var(--zn-color-primary));
+  }
 }
 
 .slash-menu__text {
@@ -95,6 +172,7 @@
 }
 
 .slash-menu__label {
+  font-weight: var(--zn-font-weight-semibold);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

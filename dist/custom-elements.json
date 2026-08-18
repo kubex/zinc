@@ -25853,6 +25853,17 @@
             },
             {
               "kind": "field",
+              "name": "requiredFirst",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Section type key that must lead the page. The builder hoists an existing section of\nthat type to the top, or inserts an empty one, and pins it there: it can't be\nremoved, reordered or dragged into a slot, and nothing can be dropped above it.\nIts content stays fully editable in the inspector.",
+              "attribute": "required-first",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "sectionTypes",
               "type": {
                 "text": "PageSectionType[]"
@@ -26084,6 +26095,10 @@
             },
             {
               "kind": "method",
+              "name": "handleRequiredFirstChange"
+            },
+            {
+              "kind": "method",
               "name": "handleSectionTypesChange"
             },
             {
@@ -26293,6 +26308,63 @@
                 }
               ],
               "description": "Normalises and installs an externally provided state; resets selection."
+            },
+            {
+              "kind": "field",
+              "name": "_pinnedId",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "description": "Id of the section pinned to the top of the page, or null when `required-first`\nis unset. Derived from the state rather than stored on it, so nothing about the\nlock leaks into the persisted config.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_isPinned",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_firstFreeIndex",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "description": "Lowest top-level index a section may be added or moved to.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_requireFirst",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "PageSection[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "sections",
+                  "type": {
+                    "text": "PageSection[]"
+                  }
+                }
+              ],
+              "description": "Sections reordered so `required-first` leads the page: an existing section of that\ntype is hoisted to the front, otherwise an empty one is prepended. Returns the\nargument unchanged when there is nothing to do, so callers can compare by identity."
             },
             {
               "kind": "method",
@@ -26975,6 +27047,15 @@
               },
               "default": "''",
               "fieldName": "subheading"
+            },
+            {
+              "name": "required-first",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Section type key that must lead the page. The builder hoists an existing section of\nthat type to the top, or inserts an empty one, and pins it there: it can't be\nremoved, reordered or dragged into a slot, and nothing can be dropped above it.\nIts content stays fully editable in the inspector.",
+              "fieldName": "requiredFirst"
             },
             {
               "name": "palette-collapsed",

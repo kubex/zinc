@@ -10683,6 +10683,8 @@ declare module "components/page-builder/modules/page-section-card/page-section-c
         selected: boolean;
         /** Set when the section's type has no registered template — renders greyed. */
         unknown: boolean;
+        /** Set when the builder pins this section to the page — drops the remove action. */
+        locked: boolean;
         protected updated(changed: PropertyValues): void;
         private _action;
         private _actionKeydown;
@@ -10758,6 +10760,13 @@ declare module "components/page-builder/page-builder.component" {
         config: string;
         heading: string;
         subheading: string;
+        /**
+         * Section type key that must lead the page. The builder hoists an existing section of
+         * that type to the top, or inserts an empty one, and pins it there: it can't be
+         * removed, reordered or dragged into a slot, and nothing can be dropped above it.
+         * Its content stays fully editable in the inspector.
+         */
+        requiredFirst: string;
         /** Section types to make available, registered into the internal registry. */
         sectionTypes: PageSectionType[];
         /** Collapses the left palette. Auto-set when the builder becomes narrow. */
@@ -10809,6 +10818,7 @@ declare module "components/page-builder/page-builder.component" {
         /** Sets a custom validation message. Pass an empty string to restore validity. */
         setCustomValidity(_message?: string): void;
         handleConfigChange(): void;
+        handleRequiredFirstChange(): void;
         handleSectionTypesChange(): void;
         registerSectionType(type: PageSectionType): this;
         registerSectionTypes(types: PageSectionType[]): this;
@@ -10854,6 +10864,21 @@ declare module "components/page-builder/page-builder.component" {
         private _registerSlottedTemplates;
         /** Normalises and installs an externally provided state; resets selection. */
         private _applyExternalState;
+        /**
+         * Id of the section pinned to the top of the page, or null when `required-first`
+         * is unset. Derived from the state rather than stored on it, so nothing about the
+         * lock leaks into the persisted config.
+         */
+        private get _pinnedId();
+        private _isPinned;
+        /** Lowest top-level index a section may be added or moved to. */
+        private get _firstFreeIndex();
+        /**
+         * Sections reordered so `required-first` leads the page: an existing section of that
+         * type is hoisted to the front, otherwise an empty one is prepended. Returns the
+         * argument unchanged when there is nothing to do, so callers can compare by identity.
+         */
+        private _requireFirst;
         /** Finds a section by id, searching top-level sections and slotted children. */
         private _findSection;
         /** New sections array with the section patched wherever it lives (top level or slot). */

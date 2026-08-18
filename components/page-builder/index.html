@@ -574,6 +574,7 @@
             <li data-level="2"><a href="#javascript-api">JavaScript API</a></li>
             <li data-level="2"><a href="#saving">Saving</a></li>
             <li data-level="2"><a href="#the-config">The config</a></li>
+            <li data-level="2"><a href="#a-required-first-section">A required first section</a></li>
             <li data-level="2"><a href="#container-tiles">Container tiles</a></li>
             <li data-level="2"><a href="#list-sections">List sections</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
@@ -850,6 +851,104 @@
   <span class="token punctuation">]</span>
 <span class="token punctuation">}</span>
 </code><zn-copy-button class="copy-code-button" from="code-block-988"></zn-copy-button></pre>
+          <h2 id="a-required-first-section" class="anchor-heading">
+            A required first section<a
+              href="#a-required-first-section"
+              aria-label='Direct link to "A required first section"'
+            ></a>
+          </h2>
+          <p>
+            Pages that must always open with a particular section — a hero banner, a masthead — set
+            <code>required-first</code> to that section type. The builder hoists an existing section of the type to the
+            top of the page, or inserts an empty one when there is none, and pins it there: it has no remove action,
+            ignores <kbd>Delete</kbd>, can’t be dragged or moved into a container slot, and nothing can be dropped above
+            it. Its content stays fully editable in the inspector, and the type stays in the palette, so further
+            sections of it can still be added below.
+          </p>
+          <p>
+            Which section is pinned is derived from the state — <code>sections[0]</code> when its type matches — so
+            nothing about the lock is written into the persisted config.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-page-builder
+                heading="KB Homepage"
+                required-first="hero"
+                style="height: 420px"
+                config='{"sections":[{"id":"t1","type":"rich-text","data":{"content":"Welcome"}}]}'
+              >
+                <template
+                  type="hero"
+                  slot="config"
+                  label="Hero"
+                  icon="star"
+                  category="Headers"
+                  description="Banner with a heading and optional search"
+                >
+                  <zn-input name="title" label="Title"></zn-input>
+                  <zn-toggle name="showSearch" label="Show search"></zn-toggle>
+                </template>
+                <template
+                  type="rich-text"
+                  slot="config"
+                  label="Rich Text"
+                  icon="notes"
+                  category="Content"
+                  description="A block of markdown content"
+                >
+                  <zn-input name="content" label="Content"></zn-input>
+                </template>
+              </zn-page-builder>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-780">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-989"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-page-builder</span> <span class="token attr-name">heading</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>KB Homepage<span class="token punctuation">"</span></span> <span class="token attr-name">required-first</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>hero<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 420px</span><span class="token punctuation">"</span></span></span>
+  <span class="token attr-name">config</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"sections":[{"id":"t1","type":"rich-text","data":{"content":"Welcome"}}]}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>hero<span class="token punctuation">"</span></span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>config<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Hero<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>star<span class="token punctuation">"</span></span> <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Headers<span class="token punctuation">"</span></span>
+            <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Banner with a heading and optional search<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>title<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Title<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>showSearch<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Show search<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>rich-text<span class="token punctuation">"</span></span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>config<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Rich Text<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>notes<span class="token punctuation">"</span></span> <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Content<span class="token punctuation">"</span></span>
+            <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>A block of markdown content<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Content<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-page-builder</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-989"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-780"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <p>
+            The config above declares only a rich-text section, so the hero is inserted above it — loading a page that
+            lacks the required section normalises it rather than rejecting it. The guard is client-side, so a host that
+            persists the config should still enforce the same rule on save.
+          </p>
           <h2 id="container-tiles" class="anchor-heading">
             Container tiles<a href="#container-tiles" aria-label='Direct link to "Container tiles"'></a>
           </h2>
@@ -896,9 +995,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-780">
+            <div class="code-preview__source-group" id="code-preview-source-group-781">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-989"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-page-builder</span> <span class="token attr-name">heading</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>KB Homepage<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 560px</span><span class="token punctuation">"</span></span></span>
+                <pre><code class="language-html" id="code-block-990"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-page-builder</span> <span class="token attr-name">heading</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>KB Homepage<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 560px</span><span class="token punctuation">"</span></span></span>
   <span class="token attr-name">config</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"sections":[{"id":"g1","type":"article-grid","data":{}}]}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>article-grid<span class="token punctuation">"</span></span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>config<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Article Grid<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>grid_view<span class="token punctuation">"</span></span>
             <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Layout<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>A 3x2 grid of article tiles<span class="token punctuation">"</span></span>
@@ -910,7 +1009,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>article<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Article id<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-page-builder</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-989"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-990"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -919,7 +1018,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-780"
+                aria-controls="code-preview-source-group-781"
               >
                 Source
                 <svg
@@ -967,9 +1066,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-781">
+            <div class="code-preview__source-group" id="code-preview-source-group-782">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-990"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-page-builder</span> <span class="token attr-name">heading</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>KB Category Page<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 420px</span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-991"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-page-builder</span> <span class="token attr-name">heading</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>KB Category Page<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 420px</span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>article-list<span class="token punctuation">"</span></span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>config<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Article List<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>list<span class="token punctuation">"</span></span>
             <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Shows a chosen set of KB articles<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-select</span> <span class="token attr-name">multiple</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>articles<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Articles to show<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
@@ -979,7 +1078,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-select</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-page-builder</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-990"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-991"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -988,7 +1087,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-781"
+                aria-controls="code-preview-source-group-782"
               >
                 Source
                 <svg
@@ -1026,7 +1125,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-991"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.94/dist/components/page-builder/page-builder.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-991"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-992"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.94/dist/components/page-builder/page-builder.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-992"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1041,12 +1140,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-992"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.94/dist/components/page-builder/page-builder.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-992"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-993"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.94/dist/components/page-builder/page-builder.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-993"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-993"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/page-builder/page-builder.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-993"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-994"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/page-builder/page-builder.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-994"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -1148,6 +1247,33 @@
                   </td>
                   <td>The page state as a JSON string. Parsed on set; invalid JSON is ignored with a warning.</td>
                   <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">requiredFirst</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> required-first </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    Section type key that must lead the page. The builder hoists an existing section of that type to the
+                    top, or inserts an empty one, and pins it there: it can’t be removed, reordered or dragged into a
+                    slot, and nothing can be dropped above it. Its content stays fully editable in the inspector.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
                   <td>
                     <code>string</code>
                   </td>

@@ -8,8 +8,23 @@ export interface PageSection {
   label?: string;
   /** Section content, keyed by field name (the inspector's `name` attributes). */
   data: Record<string, unknown>;
-  /** Slot contents for container sections, sized to the type's `slots`. Empty slots are null. */
+  /** Container instances only: the editor-chosen layout. */
+  layout?: PageContainerLayout;
+  /** Container instances only: one ordered stack per cell, row-major. */
+  cells?: PageSection[][];
+  /**
+   * @deprecated The pre-cells fixed-slot shape. Read on load and migrated to
+   * `cells`; never written back.
+   */
   children?: (PageSection | null)[];
+}
+
+/** A container instance's editor-chosen layout. */
+export interface PageContainerLayout {
+  /** One weight per column; the array length IS the column count. */
+  widths: number[];
+  /** When true the builder offers a trailing empty row instead of a pinned cell count. */
+  grow: boolean;
 }
 
 /** The complete serialisable state of a page. Order = render order. */
@@ -38,18 +53,65 @@ export interface PageSectionType {
   configTemplate?: HTMLTemplateElement;
   /** Programmatic inspector body — takes precedence over `configTemplate`. */
   renderConfig?: (section: PageSection, update: (data: Record<string, unknown>) => void) => TemplateResult;
+  /** Marks this type a container: its card renders a grid of cells on the canvas. */
+  container?: boolean;
   /**
-   * Number of child slots this section offers on the canvas (a container tile);
-   * rendered as a 3-column grid. Containers cannot be placed inside other containers.
+   * Column weights a new instance of this container starts with. Stored as parsed, not
+   * guaranteed sanitised — route through `sanitiseWidths`/`defaultLayout` before use.
+   */
+  defaultWidths?: number[];
+  /** Whether a new instance of this container starts growable. */
+  defaultGrow?: boolean;
+  /**
+   * @deprecated Use `container` with `columns`/`widths`. Read as a container of
+   * `DEFAULT_WIDTHS` columns with the cell count pinned to this number.
    */
   slots?: number;
-  /** Section type keys allowed in this container's slots. Omit to allow any non-container type. */
+  /**
+   * Section type keys allowed in this container's cells. On a `container` type,
+   * omitting it allows any type, subject to the nesting cap — that is how nesting
+   * is reachable without enumerating types. The deprecated `slots=` alias keeps the
+   * old rule instead: omitting it there allows any non-container type.
+   */
   accepts?: string[];
 }
 
-/** A container section's slot contents, padded/truncated to the type's slot count. */
-export function sectionChildren(section: PageSection, type: PageSectionType): (PageSection | null)[] {
-  return Array.from({length: type.slots ?? 0}, (_, i) => section.children?.[i] ?? null);
+/** Beyond 6 columns a card is under ~170px on the 1024px canvas — unreadable. */
+export const MAX_COLUMNS = 6;
+/** A single weight beyond 12 makes the other columns unusably thin. */
+export const MAX_WIDTH = 12;
+/** Container nesting levels: a top-level container is 1, one inside a cell is 2. */
+export const MAX_CONTAINER_LEVELS = 2;
+/** Global section budget; also the sanity clamp on an incoming `cells` length. */
+export const MAX_SECTIONS = 500;
+/** What a bare `container` declaration seeds. */
+export const DEFAULT_WIDTHS: readonly number[] = [1, 1, 1];
+
+/** Container-ness is a property of the registered type, never of the instance. */
+export function isContainer(type: PageSectionType | undefined): boolean {
+  return Boolean(type?.container ?? (type?.slots !== undefined && type.slots > 0));
+}
+
+/**
+ * Coerces a weights list into a usable one: each entry a whole number from 1 to
+ * MAX_WIDTH (anything unusable becomes 1), at most MAX_COLUMNS entries, falling
+ * back to DEFAULT_WIDTHS only when nothing usable remains.
+ */
+export function sanitiseWidths(raw: unknown): number[] {
+  const list = Array.isArray(raw) ? raw.slice(0, MAX_COLUMNS) : [];
+  const clean = list.map(entry => {
+    const n = typeof entry === 'number' && Number.isFinite(entry) ? Math.floor(entry) : 1;
+    return Math.min(Math.max(n, 1), MAX_WIDTH);
+  });
+  return clean.length ? clean : [...DEFAULT_WIDTHS];
+}
+
+/** The layout a newly placed instance of a container type starts with. */
+export function defaultLayout(type: PageSectionType | undefined): PageContainerLayout {
+  return {
+    widths: sanitiseWidths(type?.defaultWidths ?? [...DEFAULT_WIDTHS]),
+    grow: Boolean(type?.defaultGrow),
+  };
 }
 
 /** Drag-and-drop MIME carrying a section type id from the palette to the canvas. */
@@ -85,6 +147,12 @@ function optionLabel(type: PageSectionType | undefined, name: string, value: str
  * so a tile reads as its linked item however its other fields were filled in.
  */
 export function sectionSummary(section: PageSection, type?: PageSectionType): string {
+  if (isContainer(type)) {
+    const columns = sanitiseWidths(section.layout?.widths ?? type?.defaultWidths).length;
+    const count = (section.cells ?? []).reduce((n, cell) => n + cell.length, 0);
+    const col = `${columns} column${columns === 1 ? '' : 's'}`;
+    return `${col} · ${count} section${count === 1 ? '' : 's'}`;
+  }
   const strings = Object.entries(section.data)
     .filter((entry): entry is [string, string] => typeof entry[1] === 'string' && entry[1].trim() !== '');
   for (const [name, value] of strings) {

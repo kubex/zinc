@@ -9366,6 +9366,7 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private editShell;
         private rawMode;
         private includeOptions;
+        private includeLoadFailed;
         private includePickerIndex;
         private includeQuery;
         private pendingDragHandle;
@@ -9480,6 +9481,14 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private handleImagePicked;
         private insertImage;
         private uploadImage;
+        /**
+         * Resolves an app-relative path the way the console's pagelet handler does:
+         * an app fragment's URLs sit under the app base, and the console puts the app's
+         * `gaid` on the host element. Links rendered here live in the shadow root,
+         * where a click retargets to the host, so that handler never sees them — the
+         * href has to carry the base itself.
+         */
+        private appPath;
         private hasIncludeBlock;
         /** Fetches the include list once; every later caller shares the same promise. */
         private loadIncludeOptions;

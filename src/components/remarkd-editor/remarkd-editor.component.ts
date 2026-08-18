@@ -4,12 +4,10 @@ import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
 import {property, query, state} from 'lit/decorators.js';
 import {parse as remarkdParse} from "remarkd-js";
-import {SlashMenuController} from "../slash-menu/slash-menu-controller";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
-import ZnSlashMenu from "../slash-menu";
-import type {SlashMenuItem} from "../slash-menu/slash-menu-items";
+import ZnSlashMenu, {SlashMenuController, type SlashMenuItem} from "../slash-menu";
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type ZnFile from "../file";
 

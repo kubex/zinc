@@ -575,9 +575,7 @@
             <li data-level="2"><a href="#saving">Saving</a></li>
             <li data-level="2"><a href="#the-config">The config</a></li>
             <li data-level="2"><a href="#a-required-first-section">A required first section</a></li>
-            <li data-level="2"><a href="#containers">Containers</a></li>
-            <li data-level="3"><a href="#the-container-config">The container config</a></li>
-            <li data-level="3"><a href="#legacy-slots">Legacy slots</a></li>
+            <li data-level="2"><a href="#container-tiles">Container tiles</a></li>
             <li data-level="2"><a href="#list-sections">List sections</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
@@ -757,14 +755,6 @@
             Style the panel through <code>inspector</code>, <code>inspector-header</code> and
             <code>inspector-body</code> parts.
           </p>
-          <p>
-            A container section additionally gets a <strong>Layout</strong> group at the top of the inspector: a column
-            count, a weight per column, a “Keep adding rows” toggle, and — when growing is off — a row count. Every edit
-            here is lossless: changing the column count re-chunks the same ordered list of stacks into the new shape,
-            changing the row count only pads or trims trailing empty rows (clamping at the last row that still holds
-            content), and changing a column’s weight leaves every cell’s contents untouched. All of it is undoable like
-            any other edit.
-          </p>
           <h2 id="javascript-api" class="anchor-heading">
             JavaScript API<a href="#javascript-api" aria-label='Direct link to "JavaScript API"'></a>
           </h2>
@@ -778,12 +768,8 @@
               <code>addSection(type, index?)</code> — insert a new section of a registered type (default: at the end).
             </li>
             <li>
-              <code>addSectionToCell(type, containerId, cellIndex, insertIndex?)</code> — insert a new section of a
-              registered type into a container’s cell. <code>cellIndex</code> is the position in the container’s flat,
-              row-major <code>cells</code> list; <code>insertIndex</code> (default <code>0</code>, the top of the stack)
-              is where in that cell’s stack it lands. Returns the new section, or <code>null</code> if the drop isn’t
-              allowed — because the type isn’t in the container’s <code>accepts</code> list, or because it would exceed
-              the two-level nesting cap.
+              <code>addSectionToSlot(type, containerId, slotIndex)</code> — insert into a container’s empty slot,
+              honouring its <code>accepts</code> list. Returns the new section, or <code>null</code> if not allowed.
             </li>
             <li>
               <code>undo()</code> / <code>redo()</code> — step through edit history (bounded at 50 entries). There is no
@@ -836,8 +822,8 @@
           <p>
             Every edit emits <code>zn-page-change</code> with the full page state (<code>event.detail.state</code>, also
             readable via the <code>state</code> property) — plain JSON the host persists and later feeds back in through
-            the <code>config</code> attribute. Sections appear in page order; a container section additionally carries
-            <code>layout</code> and <code>cells</code>, per the Containers section below:
+            the <code>config</code> attribute. Sections appear in page order; container sections carry a
+            <code>children</code> array sized to their slot count, with <code>null</code> for empty slots:
           </p>
           <pre><code class="language-json" id="code-block-988"><span class="token punctuation">{</span>
   <span class="token property">"sections"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
@@ -851,11 +837,10 @@
       <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"article-grid"</span><span class="token punctuation">,</span>
       <span class="token property">"label"</span><span class="token operator">:</span> <span class="token string">"Popular articles"</span><span class="token punctuation">,</span>
       <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token property">"title"</span><span class="token operator">:</span> <span class="token string">"Popular"</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
-      <span class="token property">"layout"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token property">"widths"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token property">"grow"</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
-      <span class="token property">"cells"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-        <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"s-mc42h-2"</span><span class="token punctuation">,</span> <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"article-tile"</span><span class="token punctuation">,</span> <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token property">"article"</span><span class="token operator">:</span> <span class="token string">"art_42"</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-        <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"s-mc42p-3"</span><span class="token punctuation">,</span> <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"article-tile"</span><span class="token punctuation">,</span> <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token property">"article"</span><span class="token operator">:</span> <span class="token string">"art_7"</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-        <span class="token punctuation">[</span><span class="token punctuation">]</span>
+      <span class="token property">"children"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span><span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"s-mc42h-2"</span><span class="token punctuation">,</span> <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"article-tile"</span><span class="token punctuation">,</span> <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token property">"article"</span><span class="token operator">:</span> <span class="token string">"art_42"</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span><span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"s-mc42p-3"</span><span class="token punctuation">,</span> <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"article-tile"</span><span class="token punctuation">,</span> <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token property">"article"</span><span class="token operator">:</span> <span class="token string">"art_7"</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token null keyword">null</span><span class="token punctuation">,</span> <span class="token null keyword">null</span><span class="token punctuation">,</span> <span class="token null keyword">null</span><span class="token punctuation">,</span> <span class="token null keyword">null</span>
       <span class="token punctuation">]</span>
     <span class="token punctuation">}</span><span class="token punctuation">,</span>
     <span class="token punctuation">{</span>
@@ -866,11 +851,6 @@
   <span class="token punctuation">]</span>
 <span class="token punctuation">}</span>
 </code><zn-copy-button class="copy-code-button" from="code-block-988"></zn-copy-button></pre>
-          <p>
-            A host loading a config saved before this model — the old flat, null-padded <code>children</code> array —
-            still has it accepted and migrated on load; see “Legacy <code>slots</code>” further down for what that older
-            shape looked like and how it’s converted.
-          </p>
           <h2 id="a-required-first-section" class="anchor-heading">
             A required first section<a
               href="#a-required-first-section"
@@ -966,100 +946,40 @@
           </div>
           <p>
             The config above declares only a rich-text section, so the hero is inserted above it — loading a page that
-            lacks the required section normalises it rather than rejecting it. Two things follow from that. The inserted
-            section’s <code>data</code> is empty, so a host that wants the pinned section prefilled should put it into
-            the <code>config</code> it hands over rather than rely on the insert. And the guard is client-side, so a
-            host that persists the config should enforce the same rule on save.
+            lacks the required section normalises it rather than rejecting it. The guard is client-side, so a host that
+            persists the config should still enforce the same rule on save.
           </p>
-          <h2 id="containers" class="anchor-heading">
-            Containers<a href="#containers" aria-label='Direct link to "Containers"'></a>
+          <h2 id="container-tiles" class="anchor-heading">
+            Container tiles<a href="#container-tiles" aria-label='Direct link to "Container tiles"'></a>
           </h2>
           <p>
-            A section type with the <code>container</code> attribute becomes a full-row container: its card renders a
-            grid of <strong>cells</strong> beneath it, and each cell holds an ordered <strong>stack</strong> of
-            sections. The type author only declares that it’s a container and what it starts as; the editor reshapes it
-            after placing it, from the inspector’s Layout group.
-          </p>
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th>Attribute</th>
-                  <th>Meaning</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><code>container</code></td>
-                  <td>Marks the type a container. Required.</td>
-                </tr>
-                <tr>
-                  <td><code>columns="4"</code></td>
-                  <td>Seeds a new instance with 4 equal columns.</td>
-                </tr>
-                <tr>
-                  <td><code>widths="1 2 1"</code></td>
-                  <td>
-                    Seeds the column weights directly (comma- or whitespace-separated). Wins over <code>columns</code>.
-                  </td>
-                </tr>
-                <tr>
-                  <td><code>grow</code></td>
-                  <td>Seeds the instance growable — it always offers a further empty row.</td>
-                </tr>
-                <tr>
-                  <td><code>accepts="a,b"</code></td>
-                  <td>Restricts which types the cells take. Omit to allow any type, within the nesting cap below.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <p>
-            If <code>widths</code> is present but unparsable — non-numeric tokens are discarded rather than kept as
-            columns — the container falls back to <code>columns</code>, and if that’s absent too, to three equal columns
-            (<code>[1, 1, 1]</code>).
-          </p>
-          <p>
-            Drag sections from the palette into a cell, stack several sections in one cell, or drag them between cells
-            or out onto the page. Containers may nest <strong>two levels deep</strong> — a container inside a cell,
-            itself holding another container — and a drop that would nest a third level is refused. That cap holds even
-            when a container’s <code>accepts</code> list names another container type: <code>accepts</code> can’t be
-            used to bypass it.
+            A section type with a <code>slots</code> attribute becomes a full-row container: its card renders a 3-column
+            grid of that many child slots beneath it. Drag sections from the palette into empty cells, drag children
+            <strong>between cells to reorder</strong>, or out onto the page. <code>accepts</code> restricts which types
+            the slots take. Containers can’t be placed inside other containers, and slot contents persist as
+            <code>children</code> on the section (empty slots are <code>null</code>).
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-page-builder
                 heading="KB Homepage"
                 style="height: 560px"
-                config='{"sections":[{"id":"g1","type":"row","data":{},"layout":{"widths":[1,2,1],"grow":false},"cells":[[],[],[]]}]}'
+                config='{"sections":[{"id":"g1","type":"article-grid","data":{}}]}'
               >
                 <template
-                  type="row"
+                  type="article-grid"
                   slot="config"
-                  label="Row"
-                  icon="view_column"
-                  category="Layout"
-                  description="A row of columns you can weight"
-                  container=""
-                  widths="1 2 1"
-                >
-                  <zn-input name="title" label="Row title"></zn-input>
-                </template>
-                <template
-                  type="grid"
-                  slot="config"
-                  label="Tile Grid"
+                  label="Article Grid"
                   icon="grid_view"
                   category="Layout"
-                  description="Keeps adding rows as you fill it"
-                  container=""
-                  columns="3"
-                  grow=""
+                  description="A 3x2 grid of article tiles"
+                  slots="6"
+                  accepts="article-tile"
                 >
                   <zn-input name="title" label="Grid title"></zn-input>
                 </template>
                 <template
-                  type="article"
+                  type="article-tile"
                   slot="config"
                   label="Article"
                   icon="article"
@@ -1078,16 +998,13 @@
             <div class="code-preview__source-group" id="code-preview-source-group-781">
               <div class="code-preview__source code-preview__source--html">
                 <pre><code class="language-html" id="code-block-990"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-page-builder</span> <span class="token attr-name">heading</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>KB Homepage<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 560px</span><span class="token punctuation">"</span></span></span>
-  <span class="token attr-name">config</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"sections":[{"id":"g1","type":"row","data":{},"layout":{"widths":[1,2,1],"grow":false},"cells":[[],[],[]]}]}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>row<span class="token punctuation">"</span></span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>config<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Row<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>view_column<span class="token punctuation">"</span></span> <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Layout<span class="token punctuation">"</span></span>
-            <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>A row of columns you can weight<span class="token punctuation">"</span></span> <span class="token attr-name">container</span> <span class="token attr-name">widths</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1 2 1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>title<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Row title<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>grid<span class="token punctuation">"</span></span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>config<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Tile Grid<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>grid_view<span class="token punctuation">"</span></span> <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Layout<span class="token punctuation">"</span></span>
-            <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Keeps adding rows as you fill it<span class="token punctuation">"</span></span> <span class="token attr-name">container</span> <span class="token attr-name">columns</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span> <span class="token attr-name">grow</span><span class="token punctuation">&gt;</span></span>
+  <span class="token attr-name">config</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"sections":[{"id":"g1","type":"article-grid","data":{}}]}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>article-grid<span class="token punctuation">"</span></span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>config<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Article Grid<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>grid_view<span class="token punctuation">"</span></span>
+            <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Layout<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>A 3x2 grid of article tiles<span class="token punctuation">"</span></span>
+            <span class="token attr-name">slots</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>6<span class="token punctuation">"</span></span> <span class="token attr-name">accepts</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>article-tile<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>title<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Grid title<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>article<span class="token punctuation">"</span></span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>config<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Article<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>article<span class="token punctuation">"</span></span> <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Content<span class="token punctuation">"</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>article-tile<span class="token punctuation">"</span></span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>config<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Article<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>article<span class="token punctuation">"</span></span> <span class="token attr-name">category</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Content<span class="token punctuation">"</span></span>
             <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>A single article tile<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>article<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Article id<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
@@ -1117,44 +1034,6 @@
               </button>
             </div>
           </div>
-          <h3 id="the-container-config" class="anchor-heading">
-            The container config<a href="#the-container-config" aria-label='Direct link to "The container config"'></a>
-          </h3>
-          <p>
-            A container persists its <code>layout</code> and its <code>cells</code> — a flat, row-major list of stacks
-            whose length is always a whole multiple of <code>layout.widths.length</code>. Rows are implicit (<code
-              >cells.length / layout.widths.length</code
-            >), so there’s no row count to keep in sync:
-          </p>
-          <pre><code class="language-json" id="code-block-991"><span class="token punctuation">{</span>
-  <span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"s-mc42a-1"</span><span class="token punctuation">,</span>
-  <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"row"</span><span class="token punctuation">,</span>
-  <span class="token property">"layout"</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token property">"widths"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token property">"grow"</span><span class="token operator">:</span> <span class="token boolean">false</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
-  <span class="token property">"cells"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-    <span class="token punctuation">[</span> <span class="token punctuation">{</span> <span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"s-1"</span><span class="token punctuation">,</span> <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"nav"</span><span class="token punctuation">,</span> <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
-      <span class="token punctuation">{</span> <span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"s-2"</span><span class="token punctuation">,</span> <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"links"</span><span class="token punctuation">,</span> <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span> <span class="token punctuation">}</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
-    <span class="token punctuation">[</span> <span class="token punctuation">{</span> <span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"s-3"</span><span class="token punctuation">,</span> <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"hero"</span><span class="token punctuation">,</span> <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span> <span class="token punctuation">}</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
-    <span class="token punctuation">[</span><span class="token punctuation">]</span>
-  <span class="token punctuation">]</span>
-<span class="token punctuation">}</span>
-</code><zn-copy-button class="copy-code-button" from="code-block-991"></zn-copy-button></pre>
-          <p>
-            Render it by mapping each weight to a grid track and each cell to a stack. A
-            <strong>growable</strong> container never persists a trailing all-empty row — the builder adds that row
-            itself at render time, so don’t expect it in the JSON. A <strong>fixed</strong> container’s trailing empty
-            row, by contrast, is part of its layout and does persist.
-          </p>
-          <h3 id="legacy-slots" class="anchor-heading">
-            Legacy <code>slots</code><a href="#legacy-slots" aria-label='Direct link to "Legacy slots"'></a>
-          </h3>
-          <p>
-            <code>slots="6"</code> still declares a container, and pages persisted with the old flat, null-padded
-            <code>children</code> array still load: they’re migrated to <code>layout</code> + <code>cells</code> on load
-            and re-saved in the new shape — <code>children</code> is never written back. A <code>slots</code>-declared
-            container that has no explicit <code>accepts</code> also keeps its older, stricter rule of refusing
-            container types in its cells (rather than allowing anything up to the nesting cap). Prefer
-            <code>container</code> going forward.
-          </p>
           <h2 id="list-sections" class="anchor-heading">
             List sections<a href="#list-sections" aria-label='Direct link to "List sections"'></a>
           </h2>
@@ -1189,7 +1068,7 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-782">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-992"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-page-builder</span> <span class="token attr-name">heading</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>KB Category Page<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 420px</span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-991"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-page-builder</span> <span class="token attr-name">heading</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>KB Category Page<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 420px</span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>article-list<span class="token punctuation">"</span></span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>config<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Article List<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>list<span class="token punctuation">"</span></span>
             <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Shows a chosen set of KB articles<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-select</span> <span class="token attr-name">multiple</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>articles<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Articles to show<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
@@ -1199,7 +1078,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-select</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-page-builder</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-992"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-991"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1246,7 +1125,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-993"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.95/dist/components/page-builder/page-builder.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-993"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-992"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.95/dist/components/page-builder/page-builder.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-992"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1261,12 +1140,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-994"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.95/dist/components/page-builder/page-builder.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-994"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-993"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.95/dist/components/page-builder/page-builder.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-993"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-995"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/page-builder/page-builder.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-995"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-994"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/page-builder/page-builder.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-994"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -1286,13 +1165,10 @@
                   </td>
                   <td>
                     <code>&lt;template type="…"&gt;</code> declarations; never displayed. Each template’s attributes
-                    (type, label, icon, icon-library, color, category, description, container, columns, widths, grow,
-                    slots, accepts) declare a palette entry and its content declares the inspector form for that type.
-                    <code>container</code> makes the type a container whose editor-configurable layout starts from
-                    <code>columns</code> (seeds equal widths) or <code>widths</code> (explicit weights, wins over
-                    <code>columns</code>); <code>grow</code> seeds a growable instance. <code>accepts</code> is a
-                    comma-separated list of the type keys its cells allow — omitted on a <code>container</code> type,
-                    any type is allowed subject to the nesting cap. <code>slots</code> is
+                    (type, label, icon, icon-library, color, category, description, slots, accepts) declare a palette
+                    entry and its content declares the inspector form for that type. <code>slots</code> makes the
+                    section a container with that many child slots; <code>accepts</code> is a comma-separated list of
+                    the type keys its slots allow.
                   </td>
                 </tr>
 
@@ -1668,10 +1544,10 @@
                 </tr>
 
                 <tr>
-                  <td class="nowrap"><code>addSectionToCell()</code></td>
-                  <td>Adds a new section of a registered type into a container cell.</td>
+                  <td class="nowrap"><code>addSectionToSlot()</code></td>
+                  <td>Adds a new section of a registered type into a container’s slot. Returns null if not allowed.</td>
                   <td>
-                    <code> type: string, containerId: string, cellIndex: number, insertIndex: </code>
+                    <code> type: string, containerId: string, slotIndex: number </code>
                   </td>
                 </tr>
               </tbody>

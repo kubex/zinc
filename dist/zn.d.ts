@@ -10624,22 +10624,8 @@ declare module "components/page-builder/page.types" {
         label?: string;
         /** Section content, keyed by field name (the inspector's `name` attributes). */
         data: Record<string, unknown>;
-        /** Container instances only: the editor-chosen layout. */
-        layout?: PageContainerLayout;
-        /** Container instances only: one ordered stack per cell, row-major. */
-        cells?: PageSection[][];
-        /**
-         * @deprecated The pre-cells fixed-slot shape. Read on load and migrated to
-         * `cells`; never written back.
-         */
+        /** Slot contents for container sections, sized to the type's `slots`. Empty slots are null. */
         children?: (PageSection | null)[];
-    }
-    /** A container instance's editor-chosen layout. */
-    export interface PageContainerLayout {
-        /** One weight per column; the array length IS the column count. */
-        widths: number[];
-        /** When true the builder offers a trailing empty row instead of a pinned cell count. */
-        grow: boolean;
     }
     /** The complete serialisable state of a page. Order = render order. */
     export interface PageState {
@@ -10666,48 +10652,16 @@ declare module "components/page-builder/page.types" {
         configTemplate?: HTMLTemplateElement;
         /** Programmatic inspector body — takes precedence over `configTemplate`. */
         renderConfig?: (section: PageSection, update: (data: Record<string, unknown>) => void) => TemplateResult;
-        /** Marks this type a container: its card renders a grid of cells on the canvas. */
-        container?: boolean;
         /**
-         * Column weights a new instance of this container starts with. Stored as parsed, not
-         * guaranteed sanitised — route through `sanitiseWidths`/`defaultLayout` before use.
-         */
-        defaultWidths?: number[];
-        /** Whether a new instance of this container starts growable. */
-        defaultGrow?: boolean;
-        /**
-         * @deprecated Use `container` with `columns`/`widths`. Read as a container of
-         * `DEFAULT_WIDTHS` columns with the cell count pinned to this number.
+         * Number of child slots this section offers on the canvas (a container tile);
+         * rendered as a 3-column grid. Containers cannot be placed inside other containers.
          */
         slots?: number;
-        /**
-         * Section type keys allowed in this container's cells. On a `container` type,
-         * omitting it allows any type, subject to the nesting cap — that is how nesting
-         * is reachable without enumerating types. The deprecated `slots=` alias keeps the
-         * old rule instead: omitting it there allows any non-container type.
-         */
+        /** Section type keys allowed in this container's slots. Omit to allow any non-container type. */
         accepts?: string[];
     }
-    /** Beyond 6 columns a card is under ~170px on the 1024px canvas — unreadable. */
-    export const MAX_COLUMNS = 6;
-    /** A single weight beyond 12 makes the other columns unusably thin. */
-    export const MAX_WIDTH = 12;
-    /** Container nesting levels: a top-level container is 1, one inside a cell is 2. */
-    export const MAX_CONTAINER_LEVELS = 2;
-    /** Global section budget; also the sanity clamp on an incoming `cells` length. */
-    export const MAX_SECTIONS = 500;
-    /** What a bare `container` declaration seeds. */
-    export const DEFAULT_WIDTHS: readonly number[];
-    /** Container-ness is a property of the registered type, never of the instance. */
-    export function isContainer(type: PageSectionType | undefined): boolean;
-    /**
-     * Coerces a weights list into a usable one: each entry a whole number from 1 to
-     * MAX_WIDTH (anything unusable becomes 1), at most MAX_COLUMNS entries, falling
-     * back to DEFAULT_WIDTHS only when nothing usable remains.
-     */
-    export function sanitiseWidths(raw: unknown): number[];
-    /** The layout a newly placed instance of a container type starts with. */
-    export function defaultLayout(type: PageSectionType | undefined): PageContainerLayout;
+    /** A container section's slot contents, padded/truncated to the type's slot count. */
+    export function sectionChildren(section: PageSection, type: PageSectionType): (PageSection | null)[];
     /** Drag-and-drop MIME carrying a section type id from the palette to the canvas. */
     export const PAGE_TYPE_MIME = "application/x-zn-page-type";
     /** Drag-and-drop MIME carrying a placed section's id when reordering. */
@@ -10721,82 +10675,6 @@ declare module "components/page-builder/page.types" {
      * so a tile reads as its linked item however its other fields were filled in.
      */
     export function sectionSummary(section: PageSection, type?: PageSectionType): string;
-}
-declare module "components/page-builder/page-tree" {
-    import { type PageSection, type PageSectionType } from "components/page-builder/page.types";
-    /** Drops trailing cells that hold nothing. Interior empties are meaningful and kept. */
-    export function trimTrailingEmptyCells(cells: PageSection[][]): PageSection[][];
-    /** Pads to a whole number of rows, always leaving at least one row to drop into. */
-    export function padCells(cells: PageSection[][], columns: number): PageSection[][];
-    /**
-     * The canonical cell list for a container. A growable container never keeps a
-     * trailing all-empty row (the renderer supplies the `+` row itself, so keeping
-     * one would show two); a fixed container's trailing empty row is its layout and
-     * survives untouched.
-     */
-    export function normaliseCells(cells: PageSection[][], columns: number, grow: boolean): PageSection[][];
-    /**
-     * Re-chunks the same ordered list of stacks into a different column count. Only
-     * trailing empties are dropped, so no section can be lost by a column change.
-     */
-    export function recolumnCells(cells: PageSection[][], columns: number): PageSection[][];
-    /** Row-major view of the flat cell list, for rendering. */
-    export function cellRows(cells: PageSection[][], columns: number): PageSection[][][];
-    export function containerWidths(section: PageSection, type?: PageSectionType): number[];
-    export function containerColumns(section: PageSection, type?: PageSectionType): number;
-    export function containerGrow(section: PageSection, type?: PageSectionType): boolean;
-    /** A container's cells, normalised. Empty for a non-container. */
-    export function containerCells(section: PageSection, type?: PageSectionType): PageSection[][];
-    /** Depth-first search across top-level sections and every cell stack. */
-    export function findSection(sections: PageSection[], id: string | null): PageSection | undefined;
-    /** New section array with `id` replaced by `patch(section)`, wherever it lives. */
-    export function patchSection(sections: PageSection[], id: string, patch: (section: PageSection) => PageSection): PageSection[];
-    /** Detaches a section from wherever it lives, returning it and the remaining tree. */
-    export function extractSection(sections: PageSection[], id: string): [PageSection | undefined, PageSection[]];
-    /** Inserts a section into a container's cell at a stack position. */
-    export function insertIntoCell(sections: PageSection[], containerId: string, cellIndex: number, insertIndex: number, section: PageSection, columns: number): PageSection[];
-    /**
-     * Nesting level of the container with this id: 1 at the top level, 2 inside a
-     * cell, 0 when not found. Only containers have cells, so every cell level is a
-     * container level.
-     */
-    export function containerDepth(sections: PageSection[], containerId: string, depth?: number): number;
-    /** Deep copy with a fresh id for the section and every descendant. */
-    export function cloneWithNewIds(section: PageSection): PageSection;
-    /** Resolves a type key to its registered type — the registry's `get`. */
-    export type TypeLookup = (type: string) => PageSectionType | undefined;
-    /**
-     * Height of a container's subtree: 1 for a container with no nested containers,
-     * otherwise 1 + the tallest nested container's height. 0 for a non-container, so
-     * it composes with containerDepth to bound how deep a moved subtree would reach:
-     * dropping a section into a container at depth d puts the section's own deepest
-     * descendant at d + containerHeight(section).
-     */
-    export function containerHeight(section: PageSection): number;
-    /**
-     * Re-applies each container's own grow/columns normalisation throughout the
-     * tree, so a growable container never carries a trailing all-empty row once
-     * committed — not only when read out via containerCells. A section whose
-     * current type isn't a registered container is left untouched, preserving its
-     * cells verbatim per the unknown-type contract.
-     */
-    export function normaliseGrowth(sections: PageSection[], lookup: TypeLookup): PageSection[];
-    /**
-     * Rewrites the pre-cells `children` shape as `cells`. The old grid was always
-     * DEFAULT_WIDTHS wide, and the slot count was the layout, so cells are padded
-     * out to the declared slot count, then rounded up to a whole number of
-     * DEFAULT_WIDTHS-wide rows; never trimmed.
-     */
-    export function migrateSection(section: PageSection, type?: PageSectionType): PageSection;
-    /**
-     * Normalises externally supplied sections: migrates the old shape, gives every
-     * section a unique id, drops malformed entries, sanitises layouts, caps nesting
-     * and clamps sizes. Pure — warnings are returned for the caller to log.
-     */
-    export function normaliseSections(sections: unknown, lookup: TypeLookup): {
-        sections: PageSection[];
-        warnings: string[];
-    };
 }
 declare module "components/page-builder/page-registry" {
     import type { PageSectionType } from "components/page-builder/page.types";
@@ -10916,7 +10794,7 @@ declare module "components/page-builder/modules/page-section-card/index" {
     }
 }
 declare module "components/page-builder/page-builder.component" {
-    import { type CSSResultGroup, type PropertyValues, type TemplateResult } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import { type PageSection, type PageSectionType, type PageState } from "components/page-builder/page.types";
     import ZincElement from "internal/zinc-element";
     import ZnCollapsible from "components/collapsible/index";
@@ -10924,7 +10802,6 @@ declare module "components/page-builder/page-builder.component" {
     import ZnInput from "components/input/index";
     import ZnPagePaletteItem from "components/page-builder/modules/page-palette-item/index";
     import ZnPageSectionCard from "components/page-builder/modules/page-section-card/index";
-    import ZnToggle from "components/toggle/index";
     /**
      * @summary A config-driven page composer: a palette of predefined section types, a linear
      *   canvas of section cards, and an inspector for editing each section's content.
@@ -10942,14 +10819,10 @@ declare module "components/page-builder/page-builder.component" {
      * @event zn-page-selection-change - Emitted when the selected section changes. `event.detail.sectionId`.
      *
      * @slot config - `<template type="…">` declarations; never displayed. Each template's attributes
-     *   (type, label, icon, icon-library, color, category, description, container, columns, widths,
-     *   grow, slots, accepts) declare a palette entry and its content declares the inspector form for
-     *   that type. `container` makes the type a container whose editor-configurable layout starts from
-     *   `columns` (seeds equal widths) or `widths` (explicit weights, wins over `columns`); `grow` seeds
-     *   a growable instance. `accepts` is a comma-separated list of the type keys its cells allow —
-     *   omitted on a `container` type, any type is allowed subject to the nesting cap. `slots` is
-     *   @deprecated: it declares a fixed-slot container of `DEFAULT_WIDTHS` columns pinned to that many
-     *   cells, and keeps the old any-non-container-type rule when `accepts` is omitted.
+     *   (type, label, icon, icon-library, color, category, description, slots, accepts) declare a
+     *   palette entry and its content declares the inspector form for that type. `slots` makes the
+     *   section a container with that many child slots; `accepts` is a comma-separated list of the
+     *   type keys its slots allow.
      * @slot header-left - Actions shown on the left of the header bar.
      * @slot header-right - Actions shown on the right of the header bar.
      *
@@ -10969,7 +10842,6 @@ declare module "components/page-builder/page-builder.component" {
             'zn-input': typeof ZnInput;
             'zn-page-palette-item': typeof ZnPagePaletteItem;
             'zn-page-section-card': typeof ZnPageSectionCard;
-            'zn-toggle': typeof ZnToggle;
         };
         private readonly formControlController;
         /** The name of the control, submitted as a name/value pair with form data. */
@@ -11006,10 +10878,10 @@ declare module "components/page-builder/page-builder.component" {
         /** Index of the drop zone whose "+" type picker is open, if any. */
         private _pickerIndex;
         private _dragOverIndex;
-        /** The cell a drag is currently over, if any. */
-        private _cellDragOver;
-        /** The cell whose "+" type picker is open, if any. */
-        private _cellPicker;
+        /** The container slot a drag is currently over, if any. */
+        private _slotDragOver;
+        /** The container slot whose "+" type picker is open, if any. */
+        private _slotPicker;
         /** The stamped config form for the selected section; rebuilt on selection change. */
         private _form;
         private readonly _hasSlot;
@@ -11099,67 +10971,42 @@ declare module "components/page-builder/page-builder.component" {
          * argument unchanged when there is nothing to do, so callers can compare by identity.
          */
         private _requireFirst;
-        /**
-         * Installs a new state from a user edit and notifies listeners. Re-applies
-         * growth normalisation across the tree first, so a growable container never
-         * carries a trailing empty row past this point — the read path (`containerCells`)
-         * already hides it, but state/value/zn-page-change/auto-save must not diverge
-         * from what the canvas renders.
-         */
+        /** Finds a section by id, searching top-level sections and slotted children. */
+        private _findSection;
+        /** New sections array with the section patched wherever it lives (top level or slot). */
+        private _patchSection;
+        /** Detaches a section wherever it lives: removed from the top level, or its slot nulled. */
+        private _extract;
+        /** Installs a new state from a user edit and notifies listeners. */
         private _commit;
         private _selectedSection;
         private _select;
         private _pushHistory;
         undo: () => void;
         redo: () => void;
-        /** A fresh section of a registered type, seeded with layout/cells when it's a container. */
-        private _newSection;
         /** Adds a section of a registered type at `index` (default: end). Returns null for unknown types. */
         addSection(type: string, index?: number): PageSection | null;
+        /** Adds a new section of a registered type into a container's slot. Returns null if not allowed. */
+        addSectionToSlot(type: string, containerId: string, slotIndex: number): PageSection | null;
         private _removeSection;
         private _duplicateSection;
-        /** Locates a section living inside a container cell. */
-        private _findCellOwner;
-        /** Moves a section (top-level or inside a cell) to a top-level position. */
+        /** Moves a section (top-level or slotted) to a top-level position. */
         private _moveSection;
-        /** Id of the section currently being dragged — dataTransfer is unreadable during dragover. */
-        private _draggingId;
+        /**
+         * Moves a section into a container's slot. Dropping onto an occupied slot swaps
+         * the two children (slot-to-slot reordering); top-level sections and containers
+         * only enter empty slots / never enter slots respectively.
+         */
+        private _moveToSlot;
         private _onCardDragStart;
         /** Whether a drag carries one of the builder's own payloads. */
         private _isPageDrag;
+        private _onSlotDragOver;
+        private _onSlotDrop;
         private _onZoneDragOver;
         private _onZoneDrop;
         private _onCanvasDragOver;
         private _onCanvasDrop;
-        /**
-         * Whether `typeKey`'s registered type is allowed into this container by its
-         * `accepts`/`slots=` rule — the nesting depth cap is a separate concern,
-         * checked by each caller against its own notion of how tall the dropped
-         * subtree is.
-         */
-        private _acceptsType;
-        /**
-         * Whether `typeKey` may be dropped into this container's cells from the
-         * palette. A newly created section always has height 1, so the depth cap
-         * only needs the target's own depth.
-         */
-        private _acceptsInCell;
-        /**
-         * Whether a dragged, already-placed section may land in this container's
-         * cells. Unlike a palette drop, the moved subtree can already be several
-         * containers tall (it may itself hold a nested container), so the cap has to
-         * account for that height, not just the target's depth: dropping `moved` at
-         * a new depth of `containerDepth(container) + 1` puts its own deepest
-         * descendant at `containerDepth(container) + containerHeight(moved)`.
-         */
-        private _canMoveIntoCell;
-        private _onCellDragOver;
-        private _onCellDrop;
-        /** Adds a new section of a registered type into a container cell. */
-        addSectionToCell(type: string, containerId: string, cellIndex: number, insertIndex?: number): PageSection | null;
-        private _moveToCell;
-        /** Types offerable in a container's cells. */
-        private _cellTypes;
         private _onCardKeydown;
         private _renderPalette;
         private _renderPaletteItem;
@@ -11169,17 +11016,10 @@ declare module "components/page-builder/page-builder.component" {
         /** The one card template both the page list and slot cells render. */
         private _renderSectionCard;
         private _renderCard;
-        /**
-         * A card, or — for a container — its card plus its own cell grid. Shared by the
-         * top-level section list and container-cell stacks, so nesting renders at every level.
-         */
-        private _renderNode;
-        /** A container's cell grid: one track per width, one stack per cell. */
-        private _renderCells;
-        private _renderCell;
-        /** Thin insertion target between two cards in a stack. */
-        private _renderCellStrip;
-        /** The one type-picker template both drop zones and container cells render. */
+        private _renderSlot;
+        /** Types allowed in a container's slots: non-containers, filtered by its accepts list. */
+        private _slotTypes;
+        /** The one type-picker template both drop zones and slot cells render. */
         private _renderTypePicker;
         private _renderDropZone;
         /**
@@ -11193,16 +11033,8 @@ declare module "components/page-builder/page-builder.component" {
         private _onInspectorInput;
         private _updateSectionData;
         private _renameSection;
-        /** Replaces a container's layout, keeping cells consistent with it. */
-        private _setLayout;
-        private _setColumns;
-        private _setWidth;
-        private _setGrow;
-        /** Pads with empty rows, or trims trailing empty rows down to the last occupied one. */
-        private _setRows;
-        private _renderLayoutGroup;
         private _renderInspector;
-        render(): TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/page-builder/index" {

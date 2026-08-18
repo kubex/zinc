@@ -2,7 +2,7 @@ import {html, unsafeCSS} from 'lit';
 import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import type {CSSResultGroup} from 'lit';
-import type {SlashMenuItem} from '../slash-menu/slash-menu-items';
+import type {SlashMenuItem} from '../slash-menu';
 
 import styles from './slash-item.scss';
 

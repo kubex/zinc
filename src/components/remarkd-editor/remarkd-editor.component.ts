@@ -157,6 +157,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   @state() private editShell = '';
   @state() private rawMode = false;
   @state() private includeOptions: IncludeOption[] | null = null;
+  @state() private includeLoadFailed = false;
   @state() private includePickerIndex: number | null = null;
   @state() private includeQuery = '';
 
@@ -272,6 +273,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   handleIncludeUrlChange() {
     this.includeRequest = null;
     this.includeOptions = null;
+    this.includeLoadFailed = false;
     if (this.hasIncludeBlock()) void this.loadIncludeOptions();
   }
 
@@ -825,6 +827,20 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     return data.uploadPath;
   }
 
+  /**
+   * Resolves an app-relative path the way the console's pagelet handler does:
+   * an app fragment's URLs sit under the app base, and the console puts the app's
+   * `gaid` on the host element. Links rendered here live in the shadow root,
+   * where a click retargets to the host, so that handler never sees them — the
+   * href has to carry the base itself.
+   */
+  private appPath(path: string): string {
+    const gaid = this.getAttribute('gaid') ?? '';
+    const trimmed = path.replace(/^\/+/, '');
+    if (!gaid || trimmed.startsWith(gaid)) return path;
+    return `/${gaid}/${trimmed}`;
+  }
+
   private hasIncludeBlock(): boolean {
     return this.blocks.some(block => this.parseIncludeBlock(block) !== null);
   }
@@ -834,15 +850,25 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     if (!this.includeUrl) return Promise.resolve([]);
     if (!this.includeRequest) {
       this.includeRequest = fetch(this.includeUrl, {headers: {Accept: 'application/json'}})
-        .then(res => res.ok ? res.json() as Promise<{items?: IncludeOption[]}> : {items: []})
-        .then(data => data.items ?? [])
-        .catch(error => {
-          console.error('[zn-remarkd-editor] include list failed', error);
-          return [] as IncludeOption[];
+        .then(res => {
+          if (!res.ok) throw new Error(`include list request failed: ${res.status}`);
+          return res.json() as Promise<{items?: IncludeOption[]}>;
         })
-        .then(items => {
+        .then(data => {
+          const items = data.items ?? [];
           this.includeOptions = items;
+          this.includeLoadFailed = false;
           return items;
+        })
+        .catch(error => {
+          // A list that never arrived is not evidence an embed is broken: leave
+          // the options unresolved so chips keep their marker labels, and let
+          // the next picker open try again.
+          console.error('[zn-remarkd-editor] include list failed', error);
+          this.includeOptions = null;
+          this.includeLoadFailed = true;
+          this.includeRequest = null;
+          return [] as IncludeOption[];
         });
     }
     return this.includeRequest;
@@ -1007,7 +1033,8 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
           ? `Include not found · ${data.target}`
           : !option && filePath ? 'File include' : 'Included content'}</span>
         ${option?.url ? html`
-          <a class="remarkd-editor__include-link" href=${option.url} target="_blank" rel="noreferrer"
+          <a class="remarkd-editor__include-link" href=${this.appPath(option.url)}
+             target="_blank" rel="noreferrer"
              @click=${(e: MouseEvent) => e.stopPropagation()}>Open</a>` : ''}
       </div>`;
   }
@@ -1156,7 +1183,8 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                      tooltip="Cancel" @click=${this.closeIncludePicker}></zn-button>
         </div>
         ${this.includeOptions === null
-          ? html`<div class="remarkd-editor__include-picker-empty">Loading…</div>`
+          ? html`<div class="remarkd-editor__include-picker-empty">${
+            this.includeLoadFailed ? 'Could not load Includes' : 'Loading…'}</div>`
           : items.length
             ? items.map(item => html`
               <button type="button" class="remarkd-editor__include-option"

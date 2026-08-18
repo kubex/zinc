@@ -461,4 +461,83 @@ include::inc-1[Payment Terms]"></zn-remarkd-editor>`);
       .map(button => button.getAttribute('tooltip'));
     expect(tooltips).to.not.contain('Include');
   });
+  // A list that never arrived is not evidence an embed is broken: flagging every
+  // chip "not found" on a failed request sends people hunting for the wrong bug.
+  it('should not flag includes when the list request fails', async () => {
+    const original = window.fetch;
+    window.fetch = () => Promise.resolve(new Response('nope', {status: 404}));
+    try {
+      const el = await fixture<ZnRemarkdEditor>(html`
+        <zn-remarkd-editor include-url="/options"
+                           value="include::inc-1[Payment Terms]"></zn-remarkd-editor>`);
+      await el.updateComplete;
+      await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__include'),
+        'the chip never rendered');
+
+      const chip = el.shadowRoot!.querySelector('.remarkd-editor__include')!;
+      expect(chip.classList.contains('remarkd-editor__include--missing')).to.be.false;
+      expect(chip.querySelector('.remarkd-editor__include-title')!.textContent).to.contain('Payment Terms');
+    } finally {
+      window.fetch = original;
+    }
+  });
+
+  it('should say so in the picker when the list request fails', async () => {
+    const original = window.fetch;
+    window.fetch = () => Promise.resolve(new Response('nope', {status: 500}));
+    try {
+      const el = await fixture<ZnRemarkdEditor>(html`
+        <zn-remarkd-editor include-url="/options" value="# Title"></zn-remarkd-editor>`);
+      const buttons = el.shadowRoot!.querySelectorAll<HTMLElement>('.remarkd-editor__toolbar zn-button');
+      buttons[buttons.length - 1].dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+
+      await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__include-picker-empty')?.textContent
+        ?.includes('Could not load'), 'the picker never reported the failure');
+    } finally {
+      window.fetch = original;
+    }
+  });
+  // An app fragment's URLs are relative to its app base, and the console puts the
+  // app's gaid on the host element. A link built client-side from JSON is inside
+  // the shadow root, where a click retargets to the host, so the pagelet handler
+  // never sees it — the href has to carry the base itself.
+  it('should resolve an include link against the app base from gaid', async () => {
+    stubIncludeList([{id: 'inc-1', title: 'Payment Terms', scope: 'Global',
+      languages: 'English', url: '/global/includes/inc-1'}]);
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor include-url="/ch/kb/kb/kb1/documents/doc1/includes/options"
+                         gaid="ch/kb"
+                         value="include::inc-1[Payment Terms]"></zn-remarkd-editor>`);
+
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__include-link'),
+      'the include list never resolved');
+    expect(el.shadowRoot!.querySelector<HTMLAnchorElement>('.remarkd-editor__include-link')!
+      .getAttribute('href')).to.equal('/ch/kb/global/includes/inc-1');
+  });
+
+  it('should leave an include link alone when it already carries the app base', async () => {
+    stubIncludeList([{id: 'inc-1', title: 'Payment Terms', languages: 'English',
+      url: '/ch/kb/global/includes/inc-1'}]);
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor include-url="/options" gaid="ch/kb"
+                         value="include::inc-1[Payment Terms]"></zn-remarkd-editor>`);
+
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__include-link'),
+      'the include list never resolved');
+    expect(el.shadowRoot!.querySelector<HTMLAnchorElement>('.remarkd-editor__include-link')!
+      .getAttribute('href')).to.equal('/ch/kb/global/includes/inc-1');
+  });
+
+  it('should leave an include link alone without a gaid', async () => {
+    stubIncludeList([{id: 'inc-1', title: 'Payment Terms', languages: 'English',
+      url: '/global/includes/inc-1'}]);
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor include-url="/options"
+                         value="include::inc-1[Payment Terms]"></zn-remarkd-editor>`);
+
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__include-link'),
+      'the include list never resolved');
+    expect(el.shadowRoot!.querySelector<HTMLAnchorElement>('.remarkd-editor__include-link')!
+      .getAttribute('href')).to.equal('/global/includes/inc-1');
+  });
 });

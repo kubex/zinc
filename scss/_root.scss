@@ -350,8 +350,14 @@ ul.square {
 
   // Frosted-glass inactive tabs for the zn-page tab navbar (consumed in
   // components/navbar/navbar.scss, scoped there to :host-context(zn-page)).
+  //
+  // The translucent background carries the frosted look on its own. Do NOT put a
+  // backdrop-filter here: navbar.scss applies it per inactive tab, so each tab
+  // becomes its own render surface and re-samples + re-blurs its backdrop every
+  // frame. On a page with a normal number of tabs that alone pushed GPU draw to
+  // ~8ms/frame and dropped frames on every scroll.
   --navbar-page-inactive-tab-background: rgba(255, 255, 255, 0.5);
-  --navbar-page-inactive-tab-filter: blur(2px);
+  --navbar-page-inactive-tab-filter: none;
 
   .zn-primary {
     color: rgb(var(--zn-color-primary));

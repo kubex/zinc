@@ -105,7 +105,8 @@ zn-button {
     border-bottom-width: 0;
     border-radius: 0 0 0 var(--zn-border-radius);
     transition: grid-template-rows 0.22s ease, border-bottom-width 0s linear 0.22s;
-    will-change: grid-template-rows;
+    // PERF: grid-template-rows is not a compositable property, so will-change
+    // cannot help it — it only promoted a layer per settings container for free.
   }
 
   &--open &__panel {

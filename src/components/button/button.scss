@@ -456,8 +456,11 @@
     inset-inline-start: 0;
     bottom: 0;
     border-left: solid 1px;
-    mix-blend-mode: multiply;
-    color: rgb(var(--zn-border-color));
+    // PERF: a blend mode here gave every non-first button in every group its own
+    // render surface, and the :not(:hover) above meant hovering a group added and
+    // removed surfaces — re-running layerize and re-compositing on pointer move.
+    // A semi-transparent border reads the same over the button fills.
+    color: rgba(var(--zn-border-color), 0.85);
   }
 }
 

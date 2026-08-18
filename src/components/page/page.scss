@@ -93,8 +93,13 @@
     background-repeat: no-repeat;
     background-position: bottom center;
     background-size: cover;
-    mix-blend-mode: color-burn;
-    opacity: 0.2;
+    // PERF: mix-blend-mode forces .page__header .header — which contains the tab
+    // navbar — into its own render surface with a backdrop readback. Dropped in
+    // favour of plain alpha compositing. This is a small visual change to the
+    // aurora wave (it no longer darkens what it sits on); restore the blend mode
+    // if the look regresses, but expect the GPU cost back with it.
+    //mix-blend-mode: color-burn;
+    opacity: 0.04;
     pointer-events: none;
   }
 

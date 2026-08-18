@@ -381,41 +381,6 @@ zn-page-palette-item {
       flex-direction: column;
       gap: var(--pb-field-gap);
     }
-
-    // Its children are whole fields, so they take the field gap — not the
-    // label gap, which is the space between a label and its own control.
-    .layout-group {
-      display: flex;
-      flex-direction: column;
-      gap: var(--pb-field-gap);
-      padding-bottom: var(--pb-field-gap);
-      border-bottom: 1px solid rgb(var(--zn-border-color));
-
-      &__title {
-        font-size: var(--pb-field-label-size);
-        font-weight: 600;
-        color: rgb(var(--zn-color-muted-text));
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-      }
-
-      &__label {
-        display: block;
-        margin-bottom: var(--pb-label-gap);
-        font-size: var(--pb-field-label-size);
-        font-weight: 600;
-      }
-
-      &__weights {
-        display: flex;
-        gap: 6px;
-
-        zn-input {
-          flex: 1 1 0;
-          min-width: 0;
-        }
-      }
-    }
   }
 
   &-hint {
@@ -541,26 +506,27 @@ zn-page-palette-item {
   gap: 8px;
 }
 
-.cells {
+.slots {
   display: grid;
-  // grid-template-columns is set inline from the instance's widths.
+  // minmax(0) lets cells shrink below their content's min width — otherwise a
+  // child card's text forces the tracks wider than the parent tile.
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
 }
 
-.cell {
+.slot {
   position: relative;
-  display: flex;
-  flex-direction: column;
   min-height: 64px;
-  border-radius: 8px;
-  transition: border-color 0.12s ease, background 0.12s ease;
 
   &--empty {
+    display: flex;
     align-items: center;
     justify-content: center;
     border: 1px dashed rgb(var(--zn-border-color));
+    border-radius: 8px;
     color: rgba(var(--zn-text), 0.4);
     cursor: pointer;
+    transition: border-color 0.12s ease, background 0.12s ease;
 
     &:hover {
       border-color: rgb(var(--zn-color-border-active));
@@ -569,28 +535,8 @@ zn-page-palette-item {
   }
 
   &--active {
-    border: 1px dashed rgb(var(--zn-color-primary));
-    background: rgba(var(--zn-color-primary), 0.06);
-  }
-
-  // A nested container sits inside a cell; inset it so the nesting reads.
-  .container {
-    max-width: none;
-    padding: 4px;
-  }
-}
-
-.cell__card {
-  max-width: none;
-}
-
-.cell__strip {
-  min-height: 6px;
-  border-radius: 3px;
-
-  &--active {
-    min-height: 20px;
-    border: 2px dashed rgb(var(--zn-color-primary));
+    border-color: rgb(var(--zn-color-primary));
+    border-style: dashed;
     background: rgba(var(--zn-color-primary), 0.06);
   }
 }

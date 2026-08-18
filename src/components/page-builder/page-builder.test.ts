@@ -1,36 +1,7 @@
 import '../../../dist/zn.min.js';
 import {expect, fixture, html} from '@open-wc/testing';
-import {PAGE_SECTION_MIME, PAGE_TYPE_MIME} from './page.types';
-import type {PageSectionType, PageState} from './page.types';
+import type {PageState} from './page.types';
 import type ZnPageBuilder from './page-builder.component';
-
-/** Reaches the private registry to inspect a parsed template's PageSectionType. */
-const registryOf = (el: ZnPageBuilder) =>
-  (el as unknown as { registry: { get: (type: string) => PageSectionType | undefined } }).registry;
-
-const containerConfig = (over = {}) => JSON.stringify({
-  sections: [{
-    id: 'outer', type: 'row', data: {},
-    layout: {widths: [1, 2, 1], grow: false},
-    cells: [[{id: 'a', type: 'hero', data: {}}], [], []],
-    ...over,
-  }],
-});
-
-const selectFirst = async (el: ZnPageBuilder) => {
-  el.shadowRoot?.querySelector('zn-page-section-card')?.dispatchEvent(new Event('click'));
-  await el.updateComplete;
-};
-
-const dragTo = (el: Element, mime: string, payload: string, kind: 'dragover' | 'drop') => {
-  const data = new Map([[mime, payload]]);
-  const event = new DragEvent(kind, {bubbles: true, cancelable: true, composed: true});
-  Object.defineProperty(event, 'dataTransfer', {
-    value: {types: [...data.keys()], getData: (k: string) => data.get(k) ?? '', setData: () => {}},
-  });
-  el.dispatchEvent(event);
-  return event;
-};
 
 describe('<zn-page-builder>', () => {
   it('should render the shell', async () => {
@@ -55,58 +26,6 @@ describe('<zn-page-builder>', () => {
     const categories = [...(el.shadowRoot?.querySelectorAll('zn-collapsible.palette__category') ?? [])]
       .map(c => c.getAttribute('caption'));
     expect(categories).to.deep.equal(['Headers', 'Content']);
-  });
-
-  it('should parse container/columns/widths/grow template attributes', async () => {
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder>
-        <template type="row" slot="config" label="Row" container widths="1, 2 1" grow></template>
-        <template type="cols" slot="config" label="Cols" container columns="4"></template>
-        <template type="bare" slot="config" label="Bare" container></template>
-        <template type="legacy" slot="config" label="Legacy" slots="6"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-    const registry = registryOf(el);
-
-    // widths beats columns and tolerates mixed comma/whitespace separators.
-    const row = registry.get('row');
-    expect(row?.container).to.be.true;
-    expect(row?.defaultWidths).to.deep.equal([1, 2, 1]);
-    expect(row?.defaultGrow).to.be.true;
-
-    expect(registry.get('cols')?.defaultWidths).to.deep.equal([1, 1, 1, 1]);
-    expect(registry.get('cols')?.defaultGrow).to.be.false;
-
-    // bare `container` seeds DEFAULT_WIDTHS.
-    expect(registry.get('bare')?.defaultWidths).to.deep.equal([1, 1, 1]);
-    expect(registry.get('bare')?.defaultGrow).to.be.false;
-
-    // legacy `slots` keeps working, untouched by the new fields.
-    const legacy = registry.get('legacy');
-    expect(legacy?.slots).to.equal(6);
-    expect(legacy?.container).to.be.undefined;
-    expect(legacy?.defaultWidths).to.be.undefined;
-    expect(legacy?.defaultGrow).to.be.undefined;
-  });
-
-  it('should filter non-numeric widths tokens before falling back to columns/DEFAULT_WIDTHS', async () => {
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder>
-        <template type="typo" slot="config" label="Typo" container widths="1 x 2"></template>
-        <template type="rescue" slot="config" label="Rescue" container widths="abc" columns="4"></template>
-        <template type="garbage" slot="config" label="Garbage" container widths="abc"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-    const registry = registryOf(el);
-
-    // A stray non-numeric token is dropped, not coerced to a column via sanitiseWidths.
-    expect(registry.get('typo')?.defaultWidths).to.deep.equal([1, 2]);
-
-    // A wholly non-numeric widths falls through to columns, not to a single column.
-    expect(registry.get('rescue')?.defaultWidths).to.deep.equal([1, 1, 1, 1]);
-
-    // A wholly non-numeric widths with no columns falls through to DEFAULT_WIDTHS.
-    expect(registry.get('garbage')?.defaultWidths).to.deep.equal([1, 1, 1]);
   });
 
   it('should tuck the palette away via the canvas-edge chevron', async () => {
@@ -473,6 +392,190 @@ describe('<zn-page-builder>', () => {
     await expect(el).to.be.accessible();
   });
 
+  it('should render a slot grid for container sections and fill slots via addSectionToSlot', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder config='{"sections":[{"id":"grid","type":"article-grid","data":{}}]}'>
+        <template type="article-grid" slot="config" label="Article Grid" slots="6" accepts="article-tile"></template>
+        <template type="article-tile" slot="config" label="Article"></template>
+        <template type="hero" slot="config" label="Hero"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    expect(el.shadowRoot?.querySelectorAll('.slot--empty')).to.have.length(6);
+
+    expect(el.addSectionToSlot('hero', 'grid', 0), 'not in accepts').to.be.null;
+    expect(el.addSectionToSlot('article-grid', 'grid', 0), 'no nested containers').to.be.null;
+
+    const child = el.addSectionToSlot('article-tile', 'grid', 1);
+    await el.updateComplete;
+    expect(child?.type).to.equal('article-tile');
+    expect(el.state.sections[0].children?.[1]?.id).to.equal(child?.id);
+    expect(el.shadowRoot?.querySelectorAll('.slot--empty')).to.have.length(5);
+    expect(el.shadowRoot?.querySelectorAll('.slots zn-page-section-card')).to.have.length(1);
+
+    expect(el.addSectionToSlot('article-tile', 'grid', 1), 'occupied slot').to.be.null;
+  });
+
+  it('should swap children when dropping one filled slot onto another', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder config='{"sections":[{"id":"grid","type":"article-grid","data":{}}]}'>
+        <template type="article-grid" slot="config" label="Article Grid" slots="4"></template>
+        <template type="article-tile" slot="config" label="Article"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    const a = el.addSectionToSlot('article-tile', 'grid', 0)!;
+    const b = el.addSectionToSlot('article-tile', 'grid', 1)!;
+    await el.updateComplete;
+
+    // Drag child A onto child B's card (slot 1) — they swap places.
+    const cards = el.shadowRoot!.querySelectorAll('.slots zn-page-section-card');
+    const dataTransfer = new DataTransfer();
+    dataTransfer.setData('application/x-zn-page-section', a.id);
+    cards[1].dispatchEvent(new DragEvent('drop', {dataTransfer, bubbles: true, cancelable: true}));
+    await el.updateComplete;
+
+    expect(el.state.sections[0].children?.[0]?.id).to.equal(b.id);
+    expect(el.state.sections[0].children?.[1]?.id).to.equal(a.id);
+  });
+
+  it('should edit a slotted child through the inspector', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder config='{"sections":[{"id":"grid","type":"article-grid","data":{},"children":[{"id":"c1","type":"article-tile","data":{"title":"Old"}}]}]}'>
+        <template type="article-grid" slot="config" label="Article Grid" slots="2"></template>
+        <template type="article-tile" slot="config" label="Article">
+          <input name="title">
+        </template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    el.shadowRoot?.querySelector('.slots zn-page-section-card')?.dispatchEvent(new Event('click'));
+    await el.updateComplete;
+
+    const input = el.shadowRoot?.querySelector<HTMLInputElement>('.inspector__form input[name="title"]');
+    expect(input, 'stamped input for child').to.exist;
+    expect(input!.value).to.equal('Old');
+
+    input!.value = 'New';
+    input!.dispatchEvent(new Event('change', {bubbles: true}));
+    await el.updateComplete;
+
+    expect(el.state.sections[0].children?.[0]?.data.title).to.equal('New');
+  });
+
+  it('should clear selection when removing a container holding the selected child', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder config='{"sections":[{"id":"grid","type":"article-grid","data":{},"children":[{"id":"c1","type":"article-tile","data":{}}]}]}'>
+        <template type="article-grid" slot="config" label="Article Grid" slots="2"></template>
+        <template type="article-tile" slot="config" label="Article"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    let lastSelection: string | null | undefined;
+    el.addEventListener('zn-page-selection-change', e =>
+      (lastSelection = (e as CustomEvent<{sectionId: string | null}>).detail.sectionId));
+
+    // Select the child, then remove its parent container.
+    el.shadowRoot?.querySelector('.slots zn-page-section-card')?.dispatchEvent(new Event('click'));
+    await el.updateComplete;
+    expect(lastSelection).to.equal('c1');
+
+    el.shadowRoot?.querySelector('.container > zn-page-section-card')
+      ?.dispatchEvent(new CustomEvent('page-card-remove'));
+    await el.updateComplete;
+
+    expect(lastSelection, 'selection cleared').to.be.null;
+    expect(el.shadowRoot?.querySelector('[part="inspector"]'), 'no ghost inspector').to.not.exist;
+  });
+
+  it('should move a top-level section into an empty slot but not an occupied one', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder config='{"sections":[{"id":"grid","type":"article-grid","data":{}},{"id":"t1","type":"article-tile","data":{}},{"id":"t2","type":"article-tile","data":{}}]}'>
+        <template type="article-grid" slot="config" label="Article Grid" slots="2"></template>
+        <template type="article-tile" slot="config" label="Article"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    const dropOnSlot = (sectionId: string, slotSelector: string) => {
+      const dataTransfer = new DataTransfer();
+      dataTransfer.setData('application/x-zn-page-section', sectionId);
+      el.shadowRoot!.querySelector(slotSelector)!
+        .dispatchEvent(new DragEvent('drop', {dataTransfer, bubbles: true, cancelable: true}));
+    };
+
+    dropOnSlot('t1', '.slot--empty'); // into first empty slot
+    await el.updateComplete;
+    expect(el.state.sections.map(s => s.id)).to.deep.equal(['grid', 't2']);
+    expect(el.state.sections[0].children?.[0]?.id).to.equal('t1');
+
+    dropOnSlot('t2', '.slots zn-page-section-card'); // onto the occupied slot — rejected
+    await el.updateComplete;
+    expect(el.state.sections.map(s => s.id)).to.deep.equal(['grid', 't2']);
+    expect(el.state.sections[0].children?.[0]?.id).to.equal('t1');
+  });
+
+  it('should swap children across different containers', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder
+        config='{"sections":[{"id":"g1","type":"article-grid","data":{},"children":[{"id":"a1","type":"article-tile","data":{}}]},{"id":"g2","type":"article-grid","data":{},"children":[{"id":"b1","type":"article-tile","data":{}}]}]}'>
+        <template type="article-grid" slot="config" label="Article Grid" slots="2"></template>
+        <template type="article-tile" slot="config" label="Article"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    // Drag a1 (in g1) onto b1's card (slot 0 of g2) — they trade containers.
+    const dataTransfer = new DataTransfer();
+    dataTransfer.setData('application/x-zn-page-section', 'a1');
+    const g2Card = el.shadowRoot!.querySelectorAll('.slots zn-page-section-card')[1];
+    g2Card.dispatchEvent(new DragEvent('drop', {dataTransfer, bubbles: true, cancelable: true}));
+    await el.updateComplete;
+
+    expect(el.state.sections[0].children?.[0]?.id).to.equal('b1');
+    expect(el.state.sections[1].children?.[0]?.id).to.equal('a1');
+  });
+
+  it('should undo a slot mutation and duplicate a child into the next empty slot', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder config='{"sections":[{"id":"grid","type":"article-grid","data":{}}]}'>
+        <template type="article-grid" slot="config" label="Article Grid" slots="3"></template>
+        <template type="article-tile" slot="config" label="Article"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    const child = el.addSectionToSlot('article-tile', 'grid', 0)!;
+    el.undo();
+    expect(el.state.sections[0].children?.[0] ?? null, 'undo empties the slot').to.be.null;
+    el.redo();
+    expect(el.state.sections[0].children?.[0]?.id).to.equal(child.id);
+
+    // Duplicate the child: the copy takes the next empty slot with a fresh id.
+    await el.updateComplete;
+    el.shadowRoot?.querySelector('.slots zn-page-section-card')
+      ?.dispatchEvent(new CustomEvent('page-card-duplicate'));
+    await el.updateComplete;
+    const children = el.state.sections[0].children ?? [];
+    expect(children[1]?.type).to.equal('article-tile');
+    expect(children[1]?.id).to.not.equal(children[0]?.id);
+  });
+
+  it('should select a card with Enter and delete a child with Delete via keyboard', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder config='{"sections":[{"id":"grid","type":"article-grid","data":{},"children":[{"id":"c1","type":"article-tile","data":{}}]}]}'>
+        <template type="article-grid" slot="config" label="Article Grid" slots="2"></template>
+        <template type="article-tile" slot="config" label="Article"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    const childCard = el.shadowRoot!.querySelector('.slots zn-page-section-card')!;
+    childCard.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true, cancelable: true}));
+    await el.updateComplete;
+    expect(el.shadowRoot?.querySelector('[part="inspector"]'), 'Enter selects').to.exist;
+
+    childCard.dispatchEvent(new KeyboardEvent('keydown', {key: 'Delete', bubbles: true, cancelable: true}));
+    await el.updateComplete;
+    expect(el.state.sections[0].children?.[0] ?? null, 'Delete removes the child').to.be.null;
+  });
+
   it('should pin a required-first section, inserting one when the page has none', async () => {
     const el = await fixture<ZnPageBuilder>(html`
       <zn-page-builder required-first="hero">
@@ -534,17 +637,23 @@ describe('<zn-page-builder>', () => {
     expect(el.state.sections[0].id, 'addSection index 0 is clamped').to.equal('h');
   });
 
-  it('should seed layout and cells for an inserted required-first container', async () => {
+  it('should keep the pinned section out of container slots', async () => {
     const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder required-first="row">
-        <template type="row" slot="config" label="Row" container widths="1 2 1"></template>
+      <zn-page-builder required-first="hero"
+                       config='{"sections":[{"id":"h","type":"hero","data":{}},{"id":"grid","type":"article-grid","data":{}}]}'>
+        <template type="hero" slot="config" label="Hero"></template>
+        <template type="article-grid" slot="config" label="Article Grid" slots="2"></template>
       </zn-page-builder>`);
     await el.updateComplete;
 
-    const row = el.state.sections[0];
-    expect(row.type).to.equal('row');
-    expect(row.layout, 'the one guaranteed section is seeded like any other container').to.deep.equal({widths: [1, 2, 1], grow: false});
-    expect(row.cells).to.have.lengthOf(3);
+    const dataTransfer = new DataTransfer();
+    dataTransfer.setData('application/x-zn-page-section', 'h');
+    el.shadowRoot!.querySelector('.slot--empty')!
+      .dispatchEvent(new DragEvent('drop', {dataTransfer, bubbles: true, cancelable: true}));
+    await el.updateComplete;
+
+    expect(el.state.sections[0].id, 'still leading the page').to.equal('h');
+    expect(el.state.sections[1].children?.[0] ?? null, 'slot left empty').to.be.null;
   });
 
   it('should leave the page alone without required-first', async () => {
@@ -579,566 +688,5 @@ describe('<zn-page-builder>', () => {
     await el.updateComplete;
     expect(el.state.sections).to.have.length(1);
     expect(el.state.sections[0].type).to.equal('hero');
-  });
-
-  it('round-trips an old-shape config into the new cells shape', async () => {
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config='{"sections":[{"id":"g1","type":"grid","data":{},"children":[{"id":"a","type":"hero","data":{"title":"Kept"}},null,null]}]}'>
-        <template type="grid" slot="config" label="Grid" slots="6"></template>
-        <template type="hero" slot="config" label="Hero"><zn-input name="title" label="Title"></zn-input></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    const grid = el.state.sections[0];
-    expect(grid.children, 'legacy shape not written back').to.be.undefined;
-    expect(grid.layout).to.deep.equal({widths: [1, 1, 1], grow: false});
-    expect(grid.cells).to.have.lengthOf(6);
-    expect(grid.cells?.[0][0].data.title).to.equal('Kept');
-  });
-
-  it('seeds layout and cells when a container is added', async () => {
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder>
-        <template type="row" slot="config" label="Row" container widths="1 2 1"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    el.addSection('row');
-    await el.updateComplete;
-
-    const row = el.state.sections[0];
-    expect(row.layout).to.deep.equal({widths: [1, 2, 1], grow: false});
-    expect(row.cells).to.have.lengthOf(3);
-  });
-
-  it('renames and edits a section nested two container levels deep', async () => {
-    const config = JSON.stringify({
-      sections: [{
-        id: 'outer', type: 'row', data: {}, layout: {widths: [1, 1], grow: false},
-        cells: [[{
-          id: 'inner', type: 'row', data: {}, layout: {widths: [1, 1], grow: false},
-          cells: [[{id: 'deep', type: 'hero', data: {}}], []],
-        }], []],
-      }],
-    });
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${config}>
-        <template type="row" slot="config" label="Row" container></template>
-        <template type="hero" slot="config" label="Hero"><input name="title"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    (el as unknown as {_select(id: string): void})._select('deep');
-    await el.updateComplete;
-
-    const input = el.shadowRoot?.querySelector<HTMLInputElement>('.inspector__form input[name="title"]');
-    expect(input, 'inspector stamped for the nested section').to.exist;
-    input!.value = 'Deep title';
-    input!.dispatchEvent(new Event('input', {bubbles: true, composed: true}));
-    await el.updateComplete;
-
-    const deep = el.state.sections[0].cells![0][0].cells![0][0];
-    expect(deep.data.title).to.equal('Deep title');
-  });
-
-  it('duplicates a container with fresh ids throughout', async () => {
-    const config = JSON.stringify({
-      sections: [{
-        id: 'outer', type: 'row', data: {}, layout: {widths: [1, 1], grow: false},
-        cells: [[{id: 'a', type: 'hero', data: {}}], []],
-      }],
-    });
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${config}>
-        <template type="row" slot="config" label="Row" container></template>
-        <template type="hero" slot="config" label="Hero"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    el.shadowRoot?.querySelector('zn-page-section-card')
-      ?.dispatchEvent(new CustomEvent('page-card-duplicate', {bubbles: true, composed: true}));
-    await el.updateComplete;
-
-    expect(el.state.sections).to.have.lengthOf(2);
-    const ids = el.state.sections.flatMap(s => [s.id, ...(s.cells ?? []).flat().map(c => c.id)]);
-    expect(new Set(ids).size, 'every id unique').to.equal(ids.length);
-  });
-
-  it('removes a section from inside a cell', async () => {
-    const config = JSON.stringify({
-      sections: [{
-        id: 'outer', type: 'row', data: {}, layout: {widths: [1, 1], grow: false},
-        cells: [[{id: 'a', type: 'hero', data: {}}], []],
-      }],
-    });
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${config}>
-        <template type="row" slot="config" label="Row" container></template>
-        <template type="hero" slot="config" label="Hero"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    let lastSelection: string | null | undefined;
-    el.addEventListener('zn-page-selection-change', e =>
-      (lastSelection = (e as CustomEvent<{sectionId: string | null}>).detail.sectionId));
-
-    (el as unknown as {_select(id: string): void})._select('a');
-    await el.updateComplete;
-    expect(lastSelection).to.equal('a');
-
-    (el as unknown as {_removeSection(id: string): void})._removeSection('a');
-    await el.updateComplete;
-
-    expect(el.state.sections[0].cells?.[0]).to.deep.equal([]);
-    expect(lastSelection, 'selection cleared').to.be.null;
-  });
-
-  it('trims a growable container trailing empty row on commit, not only on read', async () => {
-    const config = JSON.stringify({
-      sections: [{
-        id: 'outer', type: 'row', data: {}, layout: {widths: [1, 1], grow: true},
-        cells: [
-          [{id: 'a', type: 'hero', data: {}}], [{id: 'b', type: 'hero', data: {}}],
-          [{id: 'c', type: 'hero', data: {}}], [],
-        ],
-      }],
-    });
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${config}>
-        <template type="row" slot="config" label="Row" container grow></template>
-        <template type="hero" slot="config" label="Hero"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    (el as unknown as {_removeSection(id: string): void})._removeSection('c');
-    await el.updateComplete;
-
-    // Removing "c" leaves the last row (cells 2 and 3) all-empty — trimmed immediately,
-    // not only the next time the container is read out.
-    expect(el.state.sections[0].cells, 'trailing empty row trimmed on commit').to.have.lengthOf(2);
-    expect(el.state.sections[0].cells?.flat().map(c => c.id)).to.deep.equal(['a', 'b']);
-  });
-
-  it('leaves a fixed container trailing empty row untouched after a commit', async () => {
-    const config = JSON.stringify({
-      sections: [{
-        id: 'outer', type: 'row', data: {}, layout: {widths: [1, 1], grow: false},
-        cells: [
-          [{id: 'a', type: 'hero', data: {}}], [{id: 'b', type: 'hero', data: {}}],
-          [{id: 'c', type: 'hero', data: {}}], [],
-        ],
-      }],
-    });
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${config}>
-        <template type="row" slot="config" label="Row" container></template>
-        <template type="hero" slot="config" label="Hero"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    (el as unknown as {_removeSection(id: string): void})._removeSection('c');
-    await el.updateComplete;
-
-    // A fixed container's trailing empty row is its chosen layout — it must survive.
-    expect(el.state.sections[0].cells, 'trailing empty row survives').to.have.lengthOf(4);
-    expect(el.state.sections[0].cells?.[3]).to.deep.equal([]);
-  });
-
-  it('clears selection when removing an ancestor of the selected grandchild', async () => {
-    const config = JSON.stringify({
-      sections: [{
-        id: 'outer', type: 'row', data: {}, layout: {widths: [1, 1], grow: false},
-        cells: [[{
-          id: 'inner', type: 'row', data: {}, layout: {widths: [1, 1], grow: false},
-          cells: [[{id: 'deep', type: 'hero', data: {}}], []],
-        }], []],
-      }],
-    });
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${config}>
-        <template type="row" slot="config" label="Row" container></template>
-        <template type="hero" slot="config" label="Hero"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    let lastSelection: string | null | undefined;
-    el.addEventListener('zn-page-selection-change', e =>
-      (lastSelection = (e as CustomEvent<{sectionId: string | null}>).detail.sectionId));
-
-    (el as unknown as {_select(id: string): void})._select('deep');
-    await el.updateComplete;
-    expect(lastSelection).to.equal('deep');
-
-    // Removing the top-level ancestor must clear selection of a grandchild two cell levels down.
-    (el as unknown as {_removeSection(id: string): void})._removeSection('outer');
-    await el.updateComplete;
-
-    expect(el.state.sections).to.have.lengthOf(0);
-    expect(lastSelection, 'selection cleared at depth 2').to.be.null;
-  });
-
-  it('duplicates a section living in a cell directly below itself in the same stack', async () => {
-    const config = JSON.stringify({
-      sections: [{
-        id: 'outer', type: 'row', data: {}, layout: {widths: [1, 1], grow: false},
-        cells: [[{id: 'a', type: 'hero', data: {}}], []],
-      }],
-    });
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${config}>
-        <template type="row" slot="config" label="Row" container></template>
-        <template type="hero" slot="config" label="Hero"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    (el as unknown as {_duplicateSection(id: string): void})._duplicateSection('a');
-    await el.updateComplete;
-
-    const stack = el.state.sections[0].cells?.[0] ?? [];
-    expect(stack, 'copy lands right after the original in the same stack').to.have.lengthOf(2);
-    expect(stack[0].id).to.equal('a');
-    expect(stack[1].id, 'fresh id').to.not.equal('a');
-    expect(stack[1].type).to.equal('hero');
-  });
-
-  it('renders one column per width with the weights as fr units', async () => {
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${containerConfig()}>
-        <template type="row" slot="config" label="Row" container></template>
-        <template type="hero" slot="config" label="Hero"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    const grid = el.shadowRoot?.querySelector<HTMLElement>('.cells');
-    expect(grid, 'cell grid').to.exist;
-    expect(grid!.style.gridTemplateColumns).to.equal('1fr 2fr 1fr');
-    expect(el.shadowRoot?.querySelectorAll('.cell')).to.have.lengthOf(3);
-  });
-
-  it('inserts a palette drop into a cell stack', async () => {
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${containerConfig()}>
-        <template type="row" slot="config" label="Row" container></template>
-        <template type="hero" slot="config" label="Hero"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    const cell = el.shadowRoot!.querySelectorAll('.cell')[1]!;
-    dragTo(cell, PAGE_TYPE_MIME, 'hero', 'drop');
-    await el.updateComplete;
-
-    expect(el.state.sections[0].cells?.[1].map(c => c.type)).to.deep.equal(['hero']);
-  });
-
-  it('stacks a second section into the same cell', async () => {
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${containerConfig()}>
-        <template type="row" slot="config" label="Row" container></template>
-        <template type="hero" slot="config" label="Hero"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    const cell = el.shadowRoot!.querySelectorAll('.cell')[0]!;
-    dragTo(cell, PAGE_TYPE_MIME, 'hero', 'drop');
-    await el.updateComplete;
-
-    expect(el.state.sections[0].cells?.[0]).to.have.lengthOf(2);
-  });
-
-  it('accepts a container into a cell at level 1 and refuses one at level 2', async () => {
-    const nestedConfig = JSON.stringify({
-      sections: [{
-        id: 'outer', type: 'row', data: {}, layout: {widths: [1, 1], grow: false},
-        cells: [[{id: 'inner', type: 'row', data: {}, layout: {widths: [1, 1], grow: false}, cells: [[], []]}], []],
-      }],
-    });
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${nestedConfig}>
-        <template type="row" slot="config" label="Row" container></template>
-        <template type="hero" slot="config" label="Hero"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    const outerCell = el.shadowRoot!.querySelector('.cell')!;
-    const accepted = dragTo(outerCell, PAGE_TYPE_MIME, 'row', 'dragover');
-    expect(accepted.defaultPrevented, 'level 2 accepted').to.be.true;
-
-    // The inner "row" is itself a container, so its own cells render nested inside
-    // the outer cell — a `.cell` inside a `.cell` is deterministically the inner one.
-    const innerCell = el.shadowRoot?.querySelectorAll('.cell .cell')[0];
-    expect(innerCell, 'nested cell found').to.exist;
-    const refused = dragTo(innerCell!, PAGE_TYPE_MIME, 'row', 'dragover');
-    expect(refused.defaultPrevented, 'level 3 refused').to.be.false;
-  });
-
-  it('does not let accepts override the nesting depth cap', async () => {
-    const nestedConfig = JSON.stringify({
-      sections: [{
-        id: 'outer', type: 'row', data: {}, layout: {widths: [1, 1], grow: false},
-        cells: [[{id: 'inner', type: 'row', data: {}, layout: {widths: [1, 1], grow: false}, cells: [[], []]}], []],
-      }],
-    });
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${nestedConfig}>
-        <template type="row" slot="config" label="Row" container accepts="row"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    // The inner "row" is itself a container at level 2; "row" also being in its own
-    // `accepts` list must not let a level-3 drop through.
-    const innerCell = el.shadowRoot?.querySelectorAll('.cell .cell')[0];
-    expect(innerCell, 'nested cell found').to.exist;
-    dragTo(innerCell!, PAGE_TYPE_MIME, 'row', 'drop');
-    await el.updateComplete;
-
-    const inner = el.state.sections[0].cells![0][0];
-    expect(inner.cells?.[0], 'level 3 drop refused despite accepts listing its own type').to.deep.equal([]);
-  });
-
-  // Both caps above drive only PAGE_TYPE_MIME, where a freshly created section always
-  // has height 1 — a moved section can already carry nested containers of its own,
-  // which is exactly what this exercises via PAGE_SECTION_MIME.
-  it('refuses moving an already-placed container whose own nesting would push past the cap', async () => {
-    const config = JSON.stringify({
-      sections: [
-        {
-          id: 'A', type: 'row', data: {}, layout: {widths: [1, 1], grow: false},
-          cells: [[{
-            id: 'B', type: 'row', data: {}, layout: {widths: [1, 1], grow: false},
-            cells: [[{id: 'article', type: 'hero', data: {}}], []],
-          }], []],
-        },
-        {id: 'C', type: 'row', data: {}, layout: {widths: [1, 1], grow: false}, cells: [[], []]},
-      ],
-    });
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${config}>
-        <template type="row" slot="config" label="Row" container></template>
-        <template type="hero" slot="config" label="Hero"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    // Document order for a top-level container "A" (nesting container "B" in its
-    // first cell) followed by sibling top-level container "C": [A0, B0, B1, A1, C0, C1].
-    const cCell0 = el.shadowRoot!.querySelectorAll('.cell')[4];
-    dragTo(cCell0, PAGE_SECTION_MIME, 'A', 'drop');
-    await el.updateComplete;
-
-    expect(el.state.sections.map(s => s.id), 'A stays top-level, C stays untouched').to.deep.equal(['A', 'C']);
-    expect(el.state.sections[1].cells).to.deep.equal([[], []]);
-  });
-
-  it('still moves an already-placed flat container into another container cell', async () => {
-    const config = JSON.stringify({
-      sections: [
-        {id: 'flat', type: 'row', data: {}, layout: {widths: [1], grow: false}, cells: [[]]},
-        {id: 'target', type: 'row', data: {}, layout: {widths: [1, 1], grow: false}, cells: [[], []]},
-      ],
-    });
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${config}>
-        <template type="row" slot="config" label="Row" container></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    // Document order: [flat0, target0, target1].
-    const targetCell0 = el.shadowRoot!.querySelectorAll('.cell')[1];
-    dragTo(targetCell0, PAGE_SECTION_MIME, 'flat', 'drop');
-    await el.updateComplete;
-
-    expect(el.state.sections.map(s => s.id), 'flat is no longer top-level').to.deep.equal(['target']);
-    expect(el.state.sections[0].cells?.[0].map(c => c.id)).to.deep.equal(['flat']);
-  });
-
-  it('refuses a container type into a legacy slots= container with no explicit accepts', async () => {
-    const config = JSON.stringify({
-      sections: [{id: 'g1', type: 'grid', data: {}, cells: [[], [], []]}],
-    });
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${config}>
-        <template type="grid" slot="config" label="Grid" slots="3"></template>
-        <template type="row" slot="config" label="Row" container></template>
-        <template type="hero" slot="config" label="Hero"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    const cell = el.shadowRoot!.querySelectorAll('.cell')[0]!;
-    dragTo(cell, PAGE_TYPE_MIME, 'row', 'drop');
-    await el.updateComplete;
-    expect(el.state.sections[0].cells?.[0], 'container refused by legacy slots alias').to.deep.equal([]);
-
-    dragTo(cell, PAGE_TYPE_MIME, 'hero', 'drop');
-    await el.updateComplete;
-    expect(el.state.sections[0].cells?.[0].map(c => c.type), 'non-container still accepted').to.deep.equal(['hero']);
-  });
-
-  it('keeps enforcing accepts', async () => {
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${containerConfig()}>
-        <template type="row" slot="config" label="Row" container accepts="tile"></template>
-        <template type="hero" slot="config" label="Hero"></template>
-        <template type="tile" slot="config" label="Tile"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    const cell = el.shadowRoot!.querySelectorAll('.cell')[1]!;
-    dragTo(cell, PAGE_TYPE_MIME, 'hero', 'drop');
-    await el.updateComplete;
-    expect(el.state.sections[0].cells?.[1], 'hero refused').to.deep.equal([]);
-
-    dragTo(cell, PAGE_TYPE_MIME, 'tile', 'drop');
-    await el.updateComplete;
-    expect(el.state.sections[0].cells?.[1].map(c => c.type)).to.deep.equal(['tile']);
-  });
-
-  it('offers a trailing row for a growable container and extends on drop', async () => {
-    const growConfig = JSON.stringify({
-      sections: [{
-        id: 'outer', type: 'row', data: {},
-        layout: {widths: [1, 1], grow: true},
-        cells: [[{id: 'a', type: 'hero', data: {}}], []],
-      }],
-    });
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${growConfig}>
-        <template type="row" slot="config" label="Row" container grow></template>
-        <template type="hero" slot="config" label="Hero"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    expect(el.state.sections[0].cells, 'no trailing empty row persisted').to.have.lengthOf(2);
-    const cells = el.shadowRoot?.querySelectorAll('.cell');
-    expect(cells!.length, 'a trailing row is rendered').to.equal(4);
-
-    dragTo(cells![2], PAGE_TYPE_MIME, 'hero', 'drop');
-    await el.updateComplete;
-    expect(el.state.sections[0].cells).to.have.lengthOf(4);
-  });
-
-  it('shows layout controls only for containers', async () => {
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${containerConfig()}>
-        <template type="row" slot="config" label="Row" container></template>
-        <template type="hero" slot="config" label="Hero"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-    await selectFirst(el);
-    expect(el.shadowRoot?.querySelector('.layout-group'), 'container shows layout').to.exist;
-
-    const plain = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config='{"sections":[{"id":"h","type":"hero","data":{}}]}'>
-        <template type="hero" slot="config" label="Hero"></template>
-      </zn-page-builder>`);
-    await plain.updateComplete;
-    await selectFirst(plain);
-    expect(plain.shadowRoot?.querySelector('.layout-group'), 'non-container has none').to.not.exist;
-  });
-
-  it('re-chunks losslessly when the editor narrows the columns', async () => {
-    // Trailing empty cells on the pre-edit row are load-bearing for this test: with
-    // grow false, the downstream normaliseCells pass does not trim, so only
-    // recolumnCells's own trim-then-pad determines the final length. A passthrough
-    // that skips recolumnCells would carry all 5 stacks through and land on 6 cells
-    // after padding to 2 columns, not 4.
-    const config = JSON.stringify({
-      sections: [{
-        id: 'outer', type: 'row', data: {}, layout: {widths: [1, 1, 1, 1, 1], grow: false},
-        cells: [
-          [{id: 'a', type: 'hero', data: {}}],
-          [{id: 'b', type: 'hero', data: {}}],
-          [{id: 'c', type: 'hero', data: {}}],
-          [],
-          [],
-        ],
-      }],
-    });
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${config}>
-        <template type="row" slot="config" label="Row" container></template>
-        <template type="hero" slot="config" label="Hero"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    (el as unknown as {_setColumns(id: string, n: number): void})._setColumns('outer', 2);
-    await el.updateComplete;
-
-    const row = el.state.sections[0];
-    expect(row.layout?.widths).to.have.lengthOf(2);
-    expect(row.cells?.flat().map(c => c.id), 'nothing lost or reordered').to.deep.equal(['a', 'b', 'c']);
-    expect(row.cells, 'trailing empties trimmed before re-chunking, not carried through').to.have.lengthOf(4);
-  });
-
-  it('sets a per-column width', async () => {
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${containerConfig()}>
-        <template type="row" slot="config" label="Row" container></template>
-        <template type="hero" slot="config" label="Hero"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    (el as unknown as {_setWidth(id: string, col: number, w: number): void})._setWidth('outer', 1, 3);
-    await el.updateComplete;
-    expect(el.state.sections[0].layout?.widths).to.deep.equal([1, 3, 1]);
-  });
-
-  it('clamps a row reduction at the last occupied row', async () => {
-    const config = JSON.stringify({
-      sections: [{
-        id: 'outer', type: 'row', data: {}, layout: {widths: [2], grow: false},
-        cells: [[{id: 'a', type: 'hero', data: {}}], [{id: 'b', type: 'hero', data: {}}], []],
-      }],
-    });
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${config}>
-        <template type="row" slot="config" label="Row" container></template>
-        <template type="hero" slot="config" label="Hero"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    const api = el as unknown as {_setRows(id: string, n: number): void};
-    api._setRows('outer', 3);
-    await el.updateComplete;
-    expect(el.state.sections[0].cells).to.have.lengthOf(3);
-
-    api._setRows('outer', 1);
-    await el.updateComplete;
-    expect(el.state.sections[0].cells?.flat().map(c => c.id), 'content survives').to.deep.equal(['a', 'b']);
-  });
-
-  it('undoes a layout change', async () => {
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${containerConfig()}>
-        <template type="row" slot="config" label="Row" container></template>
-        <template type="hero" slot="config" label="Hero"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-
-    (el as unknown as {_setColumns(id: string, n: number): void})._setColumns('outer', 2);
-    await el.updateComplete;
-    expect(el.state.sections[0].layout?.widths).to.have.lengthOf(2);
-
-    el.undo();
-    await el.updateComplete;
-    expect(el.state.sections[0].layout?.widths).to.deep.equal([1, 2, 1]);
-  });
-
-  it('flips grow from the layout group toggle', async () => {
-    const el = await fixture<ZnPageBuilder>(html`
-      <zn-page-builder config=${containerConfig()}>
-        <template type="row" slot="config" label="Row" container></template>
-        <template type="hero" slot="config" label="Hero"></template>
-      </zn-page-builder>`);
-    await el.updateComplete;
-    await selectFirst(el);
-
-    const toggle = el.shadowRoot?.querySelector('.layout-group zn-toggle') as HTMLElement & { checked: boolean };
-    expect(toggle, 'grow toggle').to.exist;
-    toggle.checked = true;
-    // zn-toggle only ever emits zn-input (never zn-change) on interaction — this is the
-    // exact event the layout group's listener must be bound to.
-    toggle.dispatchEvent(new CustomEvent('zn-input', {bubbles: true}));
-    await el.updateComplete;
-
-    expect(el.state.sections[0].layout?.grow, 'toggle flips grow in state').to.be.true;
   });
 });

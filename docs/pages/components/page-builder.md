@@ -62,24 +62,13 @@ toggle to opt out.
 
 Style the panel through `inspector`, `inspector-header` and `inspector-body` parts.
 
-A container section additionally gets a **Layout** group at the top of the inspector: a column
-count, a weight per column, a "Keep adding rows" toggle, and — when growing is off — a row count.
-Every edit here is lossless: changing the column count re-chunks the same ordered list of
-stacks into the new shape, changing the row count only pads or trims trailing empty rows
-(clamping at the last row that still holds content), and changing a column's weight leaves
-every cell's contents untouched. All of it is undoable like any other edit.
-
 ## JavaScript API
 
 - `state` — get/set the current `PageState`. The getter returns a deep copy; the setter
   replaces the state wholesale (like the `config` attribute, it does not emit `zn-page-change`).
 - `addSection(type, index?)` — insert a new section of a registered type (default: at the end).
-- `addSectionToCell(type, containerId, cellIndex, insertIndex?)` — insert a new section of a
-  registered type into a container's cell. `cellIndex` is the position in the container's flat,
-  row-major `cells` list; `insertIndex` (default `0`, the top of the stack) is where in that
-  cell's stack it lands. Returns the new section, or `null` if the drop isn't allowed — because
-  the type isn't in the container's `accepts` list, or because it would exceed the two-level
-  nesting cap.
+- `addSectionToSlot(type, containerId, slotIndex)` — insert into a container's empty slot,
+  honouring its `accepts` list. Returns the new section, or `null` if not allowed.
 - `undo()` / `redo()` — step through edit history (bounded at 50 entries). There is no built-in
   toolbar: wire these to your own header buttons or keyboard shortcuts.
 - `registerSectionType(type)` / `registerSectionTypes(types)` — programmatic registration,
@@ -125,8 +114,8 @@ or call `restoreAutoSave()` yourself.
 
 Every edit emits `zn-page-change` with the full page state (`event.detail.state`, also
 readable via the `state` property) — plain JSON the host persists and later feeds back in
-through the `config` attribute. Sections appear in page order; a container section additionally
-carries `layout` and `cells`, per the Containers section below:
+through the `config` attribute. Sections appear in page order; container sections carry a
+`children` array sized to their slot count, with `null` for empty slots:
 
 ```json
 {
@@ -141,11 +130,10 @@ carries `layout` and `cells`, per the Containers section below:
       "type": "article-grid",
       "label": "Popular articles",
       "data": {"title": "Popular"},
-      "layout": {"widths": [1, 1, 1], "grow": false},
-      "cells": [
-        [{"id": "s-mc42h-2", "type": "article-tile", "data": {"article": "art_42"}}],
-        [{"id": "s-mc42p-3", "type": "article-tile", "data": {"article": "art_7"}}],
-        []
+      "children": [
+        {"id": "s-mc42h-2", "type": "article-tile", "data": {"article": "art_42"}},
+        {"id": "s-mc42p-3", "type": "article-tile", "data": {"article": "art_7"}},
+        null, null, null, null
       ]
     },
     {
@@ -156,10 +144,6 @@ carries `layout` and `cells`, per the Containers section below:
   ]
 }
 ```
-
-A host loading a config saved before this model — the old flat, null-padded `children` array —
-still has it accepted and migrated on load; see "Legacy `slots`" further down for what that
-older shape looked like and how it's converted.
 
 ## A required first section
 
@@ -189,86 +173,31 @@ nothing about the lock is written into the persisted config.
 ```
 
 The config above declares only a rich-text section, so the hero is inserted above it — loading a
-page that lacks the required section normalises it rather than rejecting it. Two things follow
-from that. The inserted section's `data` is empty, so a host that wants the pinned section
-prefilled should put it into the `config` it hands over rather than rely on the insert. And the
-guard is client-side, so a host that persists the config should enforce the same rule on save.
+page that lacks the required section normalises it rather than rejecting it. The guard is
+client-side, so a host that persists the config should still enforce the same rule on save.
 
-## Containers
+## Container tiles
 
-A section type with the `container` attribute becomes a full-row container: its card renders a
-grid of **cells** beneath it, and each cell holds an ordered **stack** of sections. The type
-author only declares that it's a container and what it starts as; the editor reshapes it after
-placing it, from the inspector's Layout group.
-
-| Attribute | Meaning |
-|---|---|
-| `container` | Marks the type a container. Required. |
-| `columns="4"` | Seeds a new instance with 4 equal columns. |
-| `widths="1 2 1"` | Seeds the column weights directly (comma- or whitespace-separated). Wins over `columns`. |
-| `grow` | Seeds the instance growable — it always offers a further empty row. |
-| `accepts="a,b"` | Restricts which types the cells take. Omit to allow any type, within the nesting cap below. |
-
-If `widths` is present but unparsable — non-numeric tokens are discarded rather than kept as
-columns — the container falls back to `columns`, and if that's absent too, to three equal
-columns (`[1, 1, 1]`).
-
-Drag sections from the palette into a cell, stack several sections in one cell, or drag them
-between cells or out onto the page. Containers may nest **two levels deep** — a container inside
-a cell, itself holding another container — and a drop that would nest a third level is refused.
-That cap holds even when a container's `accepts` list names another container type: `accepts`
-can't be used to bypass it.
+A section type with a `slots` attribute becomes a full-row container: its card renders a
+3-column grid of that many child slots beneath it. Drag sections from the palette into empty
+cells, drag children **between cells to reorder**, or out onto the page. `accepts` restricts
+which types the slots take. Containers can't be placed inside other containers, and slot
+contents persist as `children` on the section (empty slots are `null`).
 
 ```html:preview
 <zn-page-builder heading="KB Homepage" style="height: 560px"
-  config='{"sections":[{"id":"g1","type":"row","data":{},"layout":{"widths":[1,2,1],"grow":false},"cells":[[],[],[]]}]}'>
-  <template type="row" slot="config" label="Row" icon="view_column" category="Layout"
-            description="A row of columns you can weight" container widths="1 2 1">
-    <zn-input name="title" label="Row title"></zn-input>
-  </template>
-  <template type="grid" slot="config" label="Tile Grid" icon="grid_view" category="Layout"
-            description="Keeps adding rows as you fill it" container columns="3" grow>
+  config='{"sections":[{"id":"g1","type":"article-grid","data":{}}]}'>
+  <template type="article-grid" slot="config" label="Article Grid" icon="grid_view"
+            category="Layout" description="A 3x2 grid of article tiles"
+            slots="6" accepts="article-tile">
     <zn-input name="title" label="Grid title"></zn-input>
   </template>
-  <template type="article" slot="config" label="Article" icon="article" category="Content"
+  <template type="article-tile" slot="config" label="Article" icon="article" category="Content"
             description="A single article tile">
     <zn-input name="article" label="Article id"></zn-input>
   </template>
 </zn-page-builder>
 ```
-
-### The container config
-
-A container persists its `layout` and its `cells` — a flat, row-major list of stacks whose
-length is always a whole multiple of `layout.widths.length`. Rows are implicit
-(`cells.length / layout.widths.length`), so there's no row count to keep in sync:
-
-```json
-{
-  "id": "s-mc42a-1",
-  "type": "row",
-  "layout": { "widths": [1, 2, 1], "grow": false },
-  "cells": [
-    [ { "id": "s-1", "type": "nav", "data": {} },
-      { "id": "s-2", "type": "links", "data": {} } ],
-    [ { "id": "s-3", "type": "hero", "data": {} } ],
-    []
-  ]
-}
-```
-
-Render it by mapping each weight to a grid track and each cell to a stack. A **growable**
-container never persists a trailing all-empty row — the builder adds that row itself at render
-time, so don't expect it in the JSON. A **fixed** container's trailing empty row, by contrast, is
-part of its layout and does persist.
-
-### Legacy `slots`
-
-`slots="6"` still declares a container, and pages persisted with the old flat, null-padded
-`children` array still load: they're migrated to `layout` + `cells` on load and re-saved in the
-new shape — `children` is never written back. A `slots`-declared container that has no explicit
-`accepts` also keeps its older, stricter rule of refusing container types in its cells (rather
-than allowing anything up to the nesting cap). Prefer `container` going forward.
 
 ## List sections
 

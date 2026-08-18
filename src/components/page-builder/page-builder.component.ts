@@ -1,36 +1,13 @@
+import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
 import {
-  cloneWithNewIds,
-  containerCells,
-  containerColumns,
-  containerDepth,
-  containerGrow,
-  containerHeight,
-  containerWidths,
-  extractSection,
-  findSection,
-  insertIntoCell,
-  normaliseCells,
-  normaliseGrowth,
-  normaliseSections,
-  patchSection,
-  recolumnCells,
-  trimTrailingEmptyCells,
-} from './page-tree';
-import { type CSSResultGroup, html, type PropertyValues, type TemplateResult, unsafeCSS } from 'lit';
-import {
-  DEFAULT_WIDTHS,
-  defaultLayout,
   emptyPageState,
   generateSectionId,
-  isContainer,
-  MAX_COLUMNS,
-  MAX_CONTAINER_LEVELS,
-  MAX_WIDTH,
   PAGE_SECTION_MIME,
   PAGE_TYPE_MIME,
   type PageSection,
   type PageSectionType,
   type PageState,
+  sectionChildren,
   sectionSummary,
 } from './page.types';
 import { FormControlController, validValidityState } from '../../internal/form';
@@ -45,11 +22,14 @@ import ZnIcon from '../icon';
 import ZnInput from '../input';
 import ZnPagePaletteItem from './modules/page-palette-item';
 import ZnPageSectionCard from './modules/page-section-card';
-import ZnToggle from '../toggle';
 
 import styles from './page-builder.scss';
 
 const HISTORY_LIMIT = 50;
+/** Sections beyond this are dropped (with a warning) when external state is applied. */
+const MAX_SECTIONS = 500;
+/** Per-container children beyond this are dropped when external state is applied. */
+const MAX_CHILDREN = 24;
 /** Builder width below which the palette auto-collapses — keep in sync with the @container query in page-builder.scss. */
 const NARROW_WIDTH = 768;
 
@@ -66,14 +46,6 @@ function timeAgo(ms: number): string {
   const h = Math.floor(m / 60);
   if (h < 24) return `${h}h ago`;
   return `${Math.floor(h / 24)}d ago`;
-}
-
-/** Where a section lives inside a container cell. */
-interface CellOwner {
-  containerId: string;
-  cellIndex: number;
-  index: number;
-  columns: number;
 }
 
 /**
@@ -93,14 +65,10 @@ interface CellOwner {
  * @event zn-page-selection-change - Emitted when the selected section changes. `event.detail.sectionId`.
  *
  * @slot config - `<template type="…">` declarations; never displayed. Each template's attributes
- *   (type, label, icon, icon-library, color, category, description, container, columns, widths,
- *   grow, slots, accepts) declare a palette entry and its content declares the inspector form for
- *   that type. `container` makes the type a container whose editor-configurable layout starts from
- *   `columns` (seeds equal widths) or `widths` (explicit weights, wins over `columns`); `grow` seeds
- *   a growable instance. `accepts` is a comma-separated list of the type keys its cells allow —
- *   omitted on a `container` type, any type is allowed subject to the nesting cap. `slots` is
- *   @deprecated: it declares a fixed-slot container of `DEFAULT_WIDTHS` columns pinned to that many
- *   cells, and keeps the old any-non-container-type rule when `accepts` is omitted.
+ *   (type, label, icon, icon-library, color, category, description, slots, accepts) declare a
+ *   palette entry and its content declares the inspector form for that type. `slots` makes the
+ *   section a container with that many child slots; `accepts` is a comma-separated list of the
+ *   type keys its slots allow.
  * @slot header-left - Actions shown on the left of the header bar.
  * @slot header-right - Actions shown on the right of the header bar.
  *
@@ -121,7 +89,6 @@ export default class ZnPageBuilder extends ZincElement {
     'zn-input': ZnInput,
     'zn-page-palette-item': ZnPagePaletteItem,
     'zn-page-section-card': ZnPageSectionCard,
-    'zn-toggle': ZnToggle,
   };
 
   private readonly formControlController = new FormControlController(this);
@@ -180,10 +147,10 @@ export default class ZnPageBuilder extends ZincElement {
   /** Index of the drop zone whose "+" type picker is open, if any. */
   @state() private _pickerIndex: number | null = null;
   @state() private _dragOverIndex: number | null = null;
-  /** The cell a drag is currently over, if any. */
-  @state() private _cellDragOver: { containerId: string; cellIndex: number; insertIndex: number } | null = null;
-  /** The cell whose "+" type picker is open, if any. */
-  @state() private _cellPicker: { containerId: string; cellIndex: number } | null = null;
+  /** The container slot a drag is currently over, if any. */
+  @state() private _slotDragOver: { containerId: string; index: number } | null = null;
+  /** The container slot whose "+" type picker is open, if any. */
+  @state() private _slotPicker: { containerId: string; index: number } | null = null;
   /** The stamped config form for the selected section; rebuilt on selection change. */
   @state() private _form: HTMLDivElement | null = null;
 
@@ -441,18 +408,6 @@ export default class ZnPageBuilder extends ZincElement {
     const type = el.getAttribute('type');
     if (!type) return null;
     const slots = parseInt(el.getAttribute('slots') ?? '', 10);
-    // `container` is the flag; `columns`/`widths`/`grow` only apply when it's present, so a
-    // legacy `slots`-only declaration is untouched by the new fields.
-    const container = el.hasAttribute('container');
-    let defaultWidths: number[] | undefined;
-    if (container) {
-      const widths = (el.getAttribute('widths') ?? '')
-        .trim().split(/[\s,]+/).filter(Boolean).map(Number).filter(n => !Number.isNaN(n));
-      const columns = parseInt(el.getAttribute('columns') ?? '', 10);
-      defaultWidths = widths.length
-        ? widths
-        : columns > 0 ? Array.from({ length: columns }, () => 1) : [...DEFAULT_WIDTHS];
-    }
     return {
       type,
       label: el.getAttribute('label') ?? type,
@@ -464,9 +419,6 @@ export default class ZnPageBuilder extends ZincElement {
       configTemplate: el,
       slots: slots > 0 ? slots : undefined,
       accepts: el.getAttribute('accepts')?.split(',').map(s => s.trim()).filter(Boolean),
-      container: container ? true : undefined,
-      defaultWidths,
-      defaultGrow: container ? el.hasAttribute('grow') : undefined,
     };
   }
 
@@ -484,15 +436,41 @@ export default class ZnPageBuilder extends ZincElement {
 
   /** Normalises and installs an externally provided state; resets selection. */
   private _applyExternalState(next: PageState) {
-    const { sections, warnings } = normaliseSections(next?.sections, key => this.registry.get(key));
-    warnings.forEach(warning => console.warn(`<zn-page-builder> ${warning}`));
+    const seen = new Set<string>();
+    let clippedChildren = false;
+    // Nesting is one level deep by design — grandchildren in malformed input are
+    // dropped, which also bounds the recursion. Duplicate ids get regenerated so
+    // selection/patching can never target two sections at once, and children are
+    // capped (slots are single-digit by design; MAX_SECTIONS alone would still
+    // admit one section with a huge children array).
+    const normalise = (s: PageSection, depth: number): PageSection => {
+      const id = !s.id || seen.has(s.id) ? generateSectionId() : s.id;
+      seen.add(id);
+      if (depth === 0 && (s.children?.length ?? 0) > MAX_CHILDREN) clippedChildren = true;
+      return {
+        id,
+        type: s.type,
+        label: s.label,
+        data: structuredClone(s.data ?? {}),
+        ...(s.children && depth === 0
+          ? { children: s.children.slice(0, MAX_CHILDREN).map(c => (c && typeof c.type === 'string' ? normalise(c, depth + 1) : null)) }
+          : {}),
+      };
+    };
+    const incoming = (next?.sections ?? []).filter(s => s && typeof s.type === 'string');
+    if (incoming.length > MAX_SECTIONS) {
+      console.warn(`<zn-page-builder> config has ${incoming.length} sections; keeping the first ${MAX_SECTIONS}`);
+    }
+    const sections = incoming.slice(0, MAX_SECTIONS).map(s => normalise(s, 0));
+    if (clippedChildren) {
+      console.warn(`<zn-page-builder> some sections had more than ${MAX_CHILDREN} children; extras were dropped`);
+    }
     this._history = [];
     this._redoStack = [];
     this._state = { sections: this._requireFirst(sections) };
     this.defaultValue = JSON.stringify(this._state);
     this._selectedId = null;
     this._pickerIndex = null;
-    this._cellPicker = null;
     this._offerRestoreIfNewer();
   }
 
@@ -525,33 +503,69 @@ export default class ZnPageBuilder extends ZincElement {
   private _requireFirst(sections: PageSection[]): PageSection[] {
     if (!this.requiredFirst || sections[0]?.type === this.requiredFirst) return sections;
     const at = sections.findIndex(s => s.type === this.requiredFirst);
-    if (at === -1) return [this._newSection(this.requiredFirst), ...sections];
+    if (at === -1) return [{ id: generateSectionId(), type: this.requiredFirst, data: {} }, ...sections];
     const hoisted = [...sections];
     hoisted.unshift(...hoisted.splice(at, 1));
     return hoisted;
   }
 
-  /**
-   * Installs a new state from a user edit and notifies listeners. Re-applies
-   * growth normalisation across the tree first, so a growable container never
-   * carries a trailing empty row past this point — the read path (`containerCells`)
-   * already hides it, but state/value/zn-page-change/auto-save must not diverge
-   * from what the canvas renders.
-   */
+  /** Finds a section by id, searching top-level sections and slotted children. */
+  private _findSection(id: string | null): PageSection | undefined {
+    if (!id) return undefined;
+    for (const s of this._state.sections) {
+      if (s.id === id) return s;
+      const child = s.children?.find(c => c?.id === id);
+      if (child) return child;
+    }
+    return undefined;
+  }
+
+  /** New sections array with the section patched wherever it lives (top level or slot). */
+  private _patchSection(id: string, patch: (s: PageSection) => PageSection): PageSection[] {
+    return this._state.sections.map(s => {
+      if (s.id === id) return patch(s);
+      if (s.children?.some(c => c?.id === id)) {
+        return { ...s, children: s.children.map(c => (c?.id === id ? patch(c) : c)) };
+      }
+      return s;
+    });
+  }
+
+  /** Detaches a section wherever it lives: removed from the top level, or its slot nulled. */
+  private _extract(id: string): [PageSection | undefined, PageSection[]] {
+    let removed: PageSection | undefined;
+    const sections: PageSection[] = [];
+    for (const s of this._state.sections) {
+      if (s.id === id) {
+        removed = s;
+        continue;
+      }
+      const slot = s.children?.findIndex(c => c?.id === id) ?? -1;
+      if (slot !== -1) {
+        removed = s.children![slot] ?? undefined;
+        sections.push({ ...s, children: s.children!.map((c, i) => (i === slot ? null : c)) });
+      } else {
+        sections.push(s);
+      }
+    }
+    return [removed, sections];
+  }
+
+  /** Installs a new state from a user edit and notifies listeners. */
   private _commit(next: PageState) {
-    this._state = { sections: normaliseGrowth(next.sections, key => this.registry.get(key)) };
+    this._state = next;
     this.emit('zn-page-change', { detail: { state: this.state } });
   }
 
   private _selectedSection(): PageSection | undefined {
-    return findSection(this._state.sections, this._selectedId);
+    return this._findSection(this._selectedId);
   }
 
   private _select(id: string | null) {
     if (this._selectedId === id) return;
     this._selectedId = id;
     this._pickerIndex = null;
-    this._cellPicker = null;
+    this._slotPicker = null;
     this.emit('zn-page-selection-change', { detail: { sectionId: id } });
   }
 
@@ -583,22 +597,11 @@ export default class ZnPageBuilder extends ZincElement {
 
   // --- Section mutations ------------------------------------------------------
 
-  /** A fresh section of a registered type, seeded with layout/cells when it's a container. */
-  private _newSection(type: string): PageSection {
-    const sectionType = this.registry.get(type);
-    const section: PageSection = { id: generateSectionId(), type, data: {} };
-    if (isContainer(sectionType)) {
-      section.layout = defaultLayout(sectionType);
-      section.cells = containerCells(section, sectionType);
-    }
-    return section;
-  }
-
   /** Adds a section of a registered type at `index` (default: end). Returns null for unknown types. */
   addSection(type: string, index?: number): PageSection | null {
     if (!this.registry.has(type)) return null;
     this._pushHistory();
-    const section = this._newSection(type);
+    const section: PageSection = { id: generateSectionId(), type, data: {} };
     const sections = [...this._state.sections];
     sections.splice(Math.max(index ?? sections.length, this._firstFreeIndex), 0, section);
     this._commit({ sections });
@@ -606,15 +609,33 @@ export default class ZnPageBuilder extends ZincElement {
     return section;
   }
 
+  /** Adds a new section of a registered type into a container's slot. Returns null if not allowed. */
+  addSectionToSlot(type: string, containerId: string, slotIndex: number): PageSection | null {
+    const sectionType = this.registry.get(type);
+    const container = this._findSection(containerId);
+    const containerType = container ? this.registry.get(container.type) : undefined;
+    if (!sectionType || sectionType.slots || !container || !containerType?.slots) return null;
+    if (slotIndex < 0 || slotIndex >= containerType.slots) return null;
+    if (containerType.accepts && !containerType.accepts.includes(type)) return null;
+    const children = sectionChildren(container, containerType);
+    if (children[slotIndex]) return null;
+    const section: PageSection = { id: generateSectionId(), type, data: {} };
+    children[slotIndex] = section;
+    this._pushHistory();
+    this._commit({ sections: this._patchSection(containerId, s => ({ ...s, children })) });
+    this._select(section.id);
+    return section;
+  }
+
   private _removeSection(id: string) {
     if (this._isPinned(id)) return;
-    const [removed, sections] = extractSection(this._state.sections, id);
+    const [removed, sections] = this._extract(id);
     if (!removed) return;
     this._pushHistory();
-    // Clear selection for the removed section AND anything inside it, at any depth.
-    const stillSelected = (s: PageSection): boolean =>
-      s.id === this._selectedId || (s.cells ?? []).some(cell => cell.some(stillSelected));
-    if (stillSelected(removed)) this._select(null);
+    // Clear selection for the removed section AND anything inside it.
+    if (this._selectedId === id || removed.children?.some(c => c?.id === this._selectedId)) {
+      this._select(null);
+    }
     this._commit({ sections });
   }
 
@@ -622,51 +643,35 @@ export default class ZnPageBuilder extends ZincElement {
     const index = this._state.sections.findIndex(s => s.id === id);
     if (index !== -1) {
       this._pushHistory();
-      const copy = cloneWithNewIds(this._state.sections[index]);
+      const copy = structuredClone(this._state.sections[index]);
+      copy.id = generateSectionId();
+      copy.children = copy.children?.map(c => (c ? { ...c, id: generateSectionId() } : null));
       const sections = [...this._state.sections];
       sections.splice(index + 1, 0, copy);
       this._commit({ sections });
       this._select(copy.id);
       return;
     }
-    // A section inside a cell duplicates directly below itself in that stack.
-    const owner = this._findCellOwner(id);
-    if (!owner) return;
-    const copy = cloneWithNewIds(findSection(this._state.sections, id)!);
-    this._pushHistory();
-    this._commit({
-      sections: insertIntoCell(
-        this._state.sections, owner.containerId, owner.cellIndex, owner.index + 1, copy, owner.columns
-      ),
-    });
-    this._select(copy.id);
+    // A slotted child duplicates into its container's next empty slot, if any.
+    for (const s of this._state.sections) {
+      const slot = s.children?.findIndex(c => c?.id === id) ?? -1;
+      if (slot === -1) continue;
+      const type = this.registry.get(s.type);
+      if (!type?.slots) return;
+      const children = sectionChildren(s, type);
+      const empty = children.findIndex(c => !c);
+      if (empty === -1) return;
+      const copy = structuredClone(children[slot]!);
+      copy.id = generateSectionId();
+      children[empty] = copy;
+      this._pushHistory();
+      this._commit({ sections: this._patchSection(s.id, x => ({ ...x, children })) });
+      this._select(copy.id);
+      return;
+    }
   }
 
-  /** Locates a section living inside a container cell. */
-  private _findCellOwner(id: string): CellOwner | undefined {
-    const search = (sections: PageSection[]): CellOwner | undefined => {
-      for (const section of sections) {
-        const cells = section.cells ?? [];
-        for (let cellIndex = 0; cellIndex < cells.length; cellIndex++) {
-          const index = cells[cellIndex].findIndex(child => child.id === id);
-          if (index !== -1) {
-            return {
-              containerId: section.id,
-              cellIndex,
-              index,
-              columns: containerColumns(section, this.registry.get(section.type)),
-            };
-          }
-          const deeper = search(cells[cellIndex]);
-          if (deeper) return deeper;
-        }
-      }
-      return undefined;
-    };
-    return search(this._state.sections);
-  }
-
-  /** Moves a section (top-level or inside a cell) to a top-level position. */
+  /** Moves a section (top-level or slotted) to a top-level position. */
   private _moveSection(id: string, index: number) {
     if (this._isPinned(id)) return;
     index = Math.max(index, this._firstFreeIndex);
@@ -681,22 +686,60 @@ export default class ZnPageBuilder extends ZincElement {
       this._commit({ sections });
       return;
     }
-    const [moved, sections] = extractSection(this._state.sections, id);
+    const [moved, sections] = this._extract(id);
     if (!moved) return;
     this._pushHistory();
     sections.splice(index, 0, moved);
     this._commit({ sections });
   }
 
-  // --- Canvas drag & drop -----------------------------------------------------
+  /**
+   * Moves a section into a container's slot. Dropping onto an occupied slot swaps
+   * the two children (slot-to-slot reordering); top-level sections and containers
+   * only enter empty slots / never enter slots respectively.
+   */
+  private _moveToSlot(id: string, containerId: string, slotIndex: number) {
+    const moved = this._findSection(id);
+    const container = this._findSection(containerId);
+    const containerType = container ? this.registry.get(container.type) : undefined;
+    if (!moved || !container || !containerType?.slots || id === containerId) return;
+    if (this._isPinned(id)) return; // the pinned section stays at the top of the page
+    if (this.registry.get(moved.type)?.slots) return; // no containers inside slots
+    if (containerType.accepts && !containerType.accepts.includes(moved.type)) return;
+    if (slotIndex < 0 || slotIndex >= containerType.slots) return;
 
-  /** Id of the section currently being dragged — dataTransfer is unreadable during dragover. */
-  private _draggingId: string | null = null;
+    const target = container.children?.[slotIndex] ?? null;
+    if (target?.id === id) return;
+    const fromTop = this._state.sections.some(s => s.id === id);
+    if (target && fromTop) return; // top-level sections only drop on empty slots
+
+    this._pushHistory();
+    const sections = structuredClone(this._state.sections);
+    const containerRef = sections.find(s => s.id === containerId)!;
+    containerRef.children = Array.from({ length: containerType.slots }, (_, i) => containerRef.children?.[i] ?? null);
+    const movedCopy = structuredClone(moved);
+
+    if (fromTop) {
+      sections.splice(sections.findIndex(s => s.id === id), 1);
+    } else {
+      // Swap: the occupant (or null) takes the source slot.
+      for (const s of sections) {
+        const slot = s.children?.findIndex(c => c?.id === id) ?? -1;
+        if (slot !== -1) {
+          s.children![slot] = target ? structuredClone(target) : null;
+          break;
+        }
+      }
+    }
+    containerRef.children[slotIndex] = movedCopy;
+    this._commit({ sections });
+  }
+
+  // --- Canvas drag & drop -----------------------------------------------------
 
   private _onCardDragStart(e: DragEvent, id: string) {
     if (!e.dataTransfer) return;
     e.stopPropagation(); // a child card's drag must not also start its container's
-    this._draggingId = id;
     e.dataTransfer.setData(PAGE_SECTION_MIME, id);
     e.dataTransfer.effectAllowed = 'move';
   }
@@ -705,6 +748,24 @@ export default class ZnPageBuilder extends ZincElement {
   private _isPageDrag(e: DragEvent): boolean {
     const types = e.dataTransfer ? Array.from(e.dataTransfer.types) : [];
     return types.includes(PAGE_TYPE_MIME) || types.includes(PAGE_SECTION_MIME);
+  }
+
+  private _onSlotDragOver(e: DragEvent, containerId: string, index: number) {
+    if (!this._isPageDrag(e)) return;
+    e.preventDefault();
+    e.stopPropagation();
+    this._dragOverIndex = null;
+    this._slotDragOver = { containerId, index };
+  }
+
+  private _onSlotDrop(e: DragEvent, containerId: string, index: number) {
+    e.preventDefault();
+    e.stopPropagation();
+    this._slotDragOver = null;
+    const typeKey = e.dataTransfer?.getData(PAGE_TYPE_MIME);
+    const sectionId = e.dataTransfer?.getData(PAGE_SECTION_MIME);
+    if (typeKey) this.addSectionToSlot(typeKey, containerId, index);
+    else if (sectionId) this._moveToSlot(sectionId, containerId, index);
   }
 
   private _onZoneDragOver(e: DragEvent, index: number) {
@@ -735,124 +796,6 @@ export default class ZnPageBuilder extends ZincElement {
   private _onCanvasDrop = (e: DragEvent) => {
     this._onZoneDrop(e, this._state.sections.length);
   };
-
-  // --- Container cell drag & drop ----------------------------------------------
-
-  /**
-   * Whether `typeKey`'s registered type is allowed into this container by its
-   * `accepts`/`slots=` rule — the nesting depth cap is a separate concern,
-   * checked by each caller against its own notion of how tall the dropped
-   * subtree is.
-   */
-  private _acceptsType(container: PageSection, typeKey: string): boolean {
-    const containerType = this.registry.get(container.type);
-    const dragged = this.registry.get(typeKey);
-    if (!dragged || !isContainer(containerType)) return false;
-    if (containerType!.accepts) return containerType!.accepts.includes(typeKey);
-    // The deprecated `slots=` alias keeps its stricter non-containers-only rule.
-    if (!containerType!.container) return !isContainer(dragged);
-    return true;
-  }
-
-  /**
-   * Whether `typeKey` may be dropped into this container's cells from the
-   * palette. A newly created section always has height 1, so the depth cap
-   * only needs the target's own depth.
-   */
-  private _acceptsInCell(container: PageSection, typeKey: string): boolean {
-    const dragged = this.registry.get(typeKey);
-    // The nesting depth cap is enforced independently of `accepts` — an explicit
-    // allow-list must not be able to punch through MAX_CONTAINER_LEVELS.
-    if (dragged && isContainer(dragged) && containerDepth(this._state.sections, container.id) >= MAX_CONTAINER_LEVELS) {
-      return false;
-    }
-    return this._acceptsType(container, typeKey);
-  }
-
-  /**
-   * Whether a dragged, already-placed section may land in this container's
-   * cells. Unlike a palette drop, the moved subtree can already be several
-   * containers tall (it may itself hold a nested container), so the cap has to
-   * account for that height, not just the target's depth: dropping `moved` at
-   * a new depth of `containerDepth(container) + 1` puts its own deepest
-   * descendant at `containerDepth(container) + containerHeight(moved)`.
-   */
-  private _canMoveIntoCell(container: PageSection, sectionId: string): boolean {
-    if (this._isPinned(sectionId)) return false;
-    if (sectionId === container.id) return false;
-    const moved = findSection(this._state.sections, sectionId);
-    if (!moved) return false;
-    // Refuse dropping a container into its own subtree.
-    if (findSection([moved], container.id)) return false;
-    if (containerDepth(this._state.sections, container.id) + containerHeight(moved) > MAX_CONTAINER_LEVELS) {
-      return false;
-    }
-    return this._acceptsType(container, moved.type);
-  }
-
-  private _onCellDragOver(e: DragEvent, containerId: string, cellIndex: number, insertIndex: number) {
-    if (!this._isPageDrag(e)) return;
-    const container = findSection(this._state.sections, containerId);
-    if (!container) return;
-    // Claim the event before deciding accept/refuse — a nested cell is the deepest
-    // target and must not let a refusal bubble up into an ancestor cell that accepts.
-    e.stopPropagation();
-    const types = e.dataTransfer ? Array.from(e.dataTransfer.types) : [];
-    // A section drag is validated here from its own tracked id, since dataTransfer
-    // values are unreadable during a real dragover (protected mode).
-    if (types.includes(PAGE_SECTION_MIME) && this._draggingId && !this._canMoveIntoCell(container, this._draggingId)) {
-      return;
-    }
-    // A type-key drag's payload is unreadable during a real dragover too, so this
-    // only enforces `accepts`/depth when the payload happens to be readable; the
-    // definitive check is on drop.
-    const typeKey = types.includes(PAGE_TYPE_MIME) ? e.dataTransfer?.getData(PAGE_TYPE_MIME) : '';
-    if (typeKey && !this._acceptsInCell(container, typeKey)) return;
-    e.preventDefault();
-    this._dragOverIndex = null;
-    this._cellDragOver = { containerId, cellIndex, insertIndex };
-  }
-
-  private _onCellDrop(e: DragEvent, containerId: string, cellIndex: number, insertIndex: number) {
-    e.preventDefault();
-    e.stopPropagation();
-    this._cellDragOver = null;
-    const typeKey = e.dataTransfer?.getData(PAGE_TYPE_MIME);
-    const sectionId = e.dataTransfer?.getData(PAGE_SECTION_MIME);
-    if (typeKey) this.addSectionToCell(typeKey, containerId, cellIndex, insertIndex);
-    else if (sectionId) this._moveToCell(sectionId, containerId, cellIndex, insertIndex);
-  }
-
-  /** Adds a new section of a registered type into a container cell. */
-  addSectionToCell(type: string, containerId: string, cellIndex: number, insertIndex = 0): PageSection | null {
-    const container = findSection(this._state.sections, containerId);
-    if (!container || !this._acceptsInCell(container, type)) return null;
-    const section = this._newSection(type);
-    this._pushHistory();
-    this._commit({
-      sections: insertIntoCell(
-        this._state.sections, containerId, cellIndex, insertIndex, section,
-        containerColumns(container, this.registry.get(container.type))
-      ),
-    });
-    this._select(section.id);
-    return section;
-  }
-
-  private _moveToCell(id: string, containerId: string, cellIndex: number, insertIndex: number) {
-    const container = findSection(this._state.sections, containerId);
-    if (!container || !this._canMoveIntoCell(container, id)) return;
-    const columns = containerColumns(container, this.registry.get(container.type));
-    const [moved, without] = extractSection(this._state.sections, id);
-    if (!moved) return;
-    this._pushHistory();
-    this._commit({ sections: insertIntoCell(without, containerId, cellIndex, insertIndex, moved, columns) });
-  }
-
-  /** Types offerable in a container's cells. */
-  private _cellTypes(container: PageSection): PageSectionType[] {
-    return this.registry.all().filter(t => this._acceptsInCell(container, t.type));
-  }
 
   private _onCardKeydown(e: KeyboardEvent, id: string) {
     if (e.key === 'Delete' || e.key === 'Backspace') {
@@ -1021,92 +964,59 @@ export default class ZnPageBuilder extends ZincElement {
   }
 
   private _renderCard(section: PageSection, index: number) {
-    return this._renderNode(section, {
+    const type = this.registry.get(section.type);
+    const card = this._renderSectionCard(section, {
       over: e => this._onZoneDragOver(e, index + 1),
       drop: e => this._onZoneDrop(e, index + 1),
     });
-  }
-
-  /**
-   * A card, or — for a container — its card plus its own cell grid. Shared by the
-   * top-level section list and container-cell stacks, so nesting renders at every level.
-   */
-  private _renderNode(
-    section: PageSection,
-    drop: { over: (e: DragEvent) => void; drop: (e: DragEvent) => void },
-    extraClass = ''
-  ): TemplateResult {
-    const type = this.registry.get(section.type);
-    const card = this._renderSectionCard(section, drop, extraClass);
-    if (!isContainer(type)) return card;
+    if (!type?.slots) return card;
     return html`
       <div class="container">
         ${card}
-        ${this._renderCells(section, type)}
+        <div class="slots">
+          ${sectionChildren(section, type).map((child, i) => this._renderSlot(section, child, i))}
+        </div>
       </div>`;
   }
 
-  /** A container's cell grid: one track per width, one stack per cell. */
-  private _renderCells(container: PageSection, type: PageSectionType | undefined): TemplateResult {
-    const widths = containerWidths(container, type);
-    const cells = containerCells(container, type);
-    const grow = containerGrow(container, type);
-    // A growable container never persists a trailing empty row, so the extra
-    // row of drop targets is added here at render time.
-    const rendered = grow ? [...cells, ...Array.from({ length: widths.length }, () => [] as PageSection[])] : cells;
-    return html`
-      <div class="cells" style="grid-template-columns:${widths.map(w => `${w}fr`).join(' ')}">
-        ${rendered.map((stack, cellIndex) => this._renderCell(container, stack, cellIndex))}
-      </div>`;
-  }
-
-  private _renderCell(container: PageSection, stack: PageSection[], cellIndex: number): TemplateResult {
-    const active = this._cellDragOver?.containerId === container.id
-      && this._cellDragOver.cellIndex === cellIndex;
-    const pickerOpen = this._cellPicker?.containerId === container.id
-      && this._cellPicker.cellIndex === cellIndex;
+  private _renderSlot(container: PageSection, child: PageSection | null, index: number) {
+    if (child) {
+      return this._renderSectionCard(child, {
+        over: e => this._onSlotDragOver(e, container.id, index),
+        drop: e => this._onSlotDrop(e, container.id, index),
+      }, 'slot__card');
+    }
+    const active = this._slotDragOver?.containerId === container.id && this._slotDragOver.index === index;
+    const pickerOpen = this._slotPicker?.containerId === container.id && this._slotPicker.index === index;
     return html`
       <div
-        class="cell ${active ? 'cell--active' : ''} ${stack.length ? '' : 'cell--empty'}"
-        @dragover="${(e: DragEvent) => this._onCellDragOver(e, container.id, cellIndex, stack.length)}"
+        class="slot slot--empty ${active ? 'slot--active' : ''}"
+        @dragover="${(e: DragEvent) => this._onSlotDragOver(e, container.id, index)}"
         @dragleave="${() => {
-          if (this._cellDragOver?.containerId === container.id && this._cellDragOver.cellIndex === cellIndex) {
-            this._cellDragOver = null;
+          if (this._slotDragOver?.containerId === container.id && this._slotDragOver.index === index) {
+            this._slotDragOver = null;
           }
         }}"
-        @drop="${(e: DragEvent) => this._onCellDrop(e, container.id, cellIndex, stack.length)}"
+        @drop="${(e: DragEvent) => this._onSlotDrop(e, container.id, index)}"
         @click="${(e: Event) => {
           e.stopPropagation();
-          this._cellPicker = pickerOpen ? null : { containerId: container.id, cellIndex };
+          this._slotPicker = pickerOpen ? null : { containerId: container.id, index };
         }}">
-        ${stack.map((child, i) => html`
-          ${this._renderCellStrip(container, cellIndex, i)}
-          ${this._renderNode(child, {
-            over: e => this._onCellDragOver(e, container.id, cellIndex, i),
-            drop: e => this._onCellDrop(e, container.id, cellIndex, i),
-          }, 'cell__card')}
-        `)}
-        ${this._renderCellStrip(container, cellIndex, stack.length)}
-        ${stack.length === 0 ? html`<zn-icon src="add" size="16"></zn-icon>` : ''}
+        <zn-icon src="add" size="16"></zn-icon>
         ${pickerOpen
-          ? this._renderTypePicker(this._cellTypes(container), t => this.addSectionToCell(t, container.id, cellIndex))
+          ? this._renderTypePicker(this._slotTypes(container), t => this.addSectionToSlot(t, container.id, index))
           : ''}
       </div>`;
   }
 
-  /** Thin insertion target between two cards in a stack. */
-  private _renderCellStrip(container: PageSection, cellIndex: number, insertIndex: number) {
-    const active = this._cellDragOver?.containerId === container.id
-      && this._cellDragOver.cellIndex === cellIndex
-      && this._cellDragOver.insertIndex === insertIndex;
-    return html`
-      <div
-        class="cell__strip ${active ? 'cell__strip--active' : ''}"
-        @dragover="${(e: DragEvent) => this._onCellDragOver(e, container.id, cellIndex, insertIndex)}"
-        @drop="${(e: DragEvent) => this._onCellDrop(e, container.id, cellIndex, insertIndex)}"></div>`;
+  /** Types allowed in a container's slots: non-containers, filtered by its accepts list. */
+  private _slotTypes(container: PageSection): PageSectionType[] {
+    const containerType = this.registry.get(container.type);
+    return this.registry.all().filter(t =>
+      !t.slots && (!containerType?.accepts || containerType.accepts.includes(t.type)));
   }
 
-  /** The one type-picker template both drop zones and container cells render. */
+  /** The one type-picker template both drop zones and slot cells render. */
   private _renderTypePicker(types: PageSectionType[], pick: (type: string) => void) {
     return html`
       <div class="picker" @click="${(e: Event) => e.stopPropagation()}">
@@ -1116,6 +1026,7 @@ export default class ZnPageBuilder extends ZincElement {
             class="picker__item"
             @click="${() => {
               this._pickerIndex = null;
+              this._slotPicker = null;
               pick(type.type);
             }}">
             <zn-icon src="${type.icon ?? 'widgets'}" library="${ifDefined(type.iconLibrary)}" size="14"></zn-icon>
@@ -1223,121 +1134,12 @@ export default class ZnPageBuilder extends ZincElement {
 
   private _updateSectionData(id: string, patch: Record<string, unknown>) {
     this._pushHistory();
-    this._commit({ sections: patchSection(this._state.sections, id, s => ({ ...s, data: { ...s.data, ...patch } })) });
+    this._commit({ sections: this._patchSection(id, s => ({ ...s, data: { ...s.data, ...patch } })) });
   }
 
   private _renameSection(id: string, label: string) {
     this._pushHistory();
-    this._commit({ sections: patchSection(this._state.sections, id, s => ({ ...s, label: label || undefined })) });
-  }
-
-  /** Replaces a container's layout, keeping cells consistent with it. */
-  private _setLayout(
-    id: string,
-    next: (current: { widths: number[]; grow: boolean; cells: PageSection[][] }) => {
-      widths: number[];
-      grow: boolean;
-      cells: PageSection[][];
-    }
-  ) {
-    const container = findSection(this._state.sections, id);
-    if (!container) return;
-    const type = this.registry.get(container.type);
-    const current = {
-      widths: containerWidths(container, type),
-      grow: containerGrow(container, type),
-      cells: containerCells(container, type),
-    };
-    const { widths, grow, cells } = next(current);
-    this._pushHistory();
-    this._commit({
-      sections: patchSection(this._state.sections, id, section => ({
-        ...section,
-        layout: { widths, grow },
-        cells: normaliseCells(cells, widths.length, grow),
-      })),
-    });
-  }
-
-  private _setColumns(id: string, columns: number) {
-    this._setLayout(id, current => {
-      const count = Math.min(Math.max(Math.floor(columns) || 1, 1), MAX_COLUMNS);
-      const widths = Array.from({ length: count }, (_, i) => current.widths[i] ?? 1);
-      return { widths, grow: current.grow, cells: recolumnCells(current.cells, count) };
-    });
-  }
-
-  private _setWidth(id: string, column: number, width: number) {
-    const container = findSection(this._state.sections, id);
-    if (!container) return;
-    const columns = containerWidths(container, this.registry.get(container.type)).length;
-    if (column < 0 || column >= columns) return;
-    this._setLayout(id, current => {
-      const widths = [...current.widths];
-      widths[column] = Math.min(Math.max(Math.floor(width) || 1, 1), MAX_WIDTH);
-      return { ...current, widths };
-    });
-  }
-
-  private _setGrow(id: string, grow: boolean) {
-    this._setLayout(id, current => ({ ...current, grow }));
-  }
-
-  /** Pads with empty rows, or trims trailing empty rows down to the last occupied one. */
-  private _setRows(id: string, rows: number) {
-    this._setLayout(id, current => {
-      const columns = current.widths.length;
-      const wanted = Math.max(Math.floor(rows) || 1, 1);
-      const target = wanted * columns;
-      const cells = trimTrailingEmptyCells(current.cells);
-      while (cells.length < target) cells.push([]);
-      return { ...current, cells };
-    });
-  }
-
-  private _renderLayoutGroup(section: PageSection, type: PageSectionType | undefined) {
-    if (!isContainer(type)) return '';
-    const widths = containerWidths(section, type);
-    const grow = containerGrow(section, type);
-    const rows = containerCells(section, type).length / widths.length;
-    return html`
-      <div class="layout-group" @click="${(e: Event) => e.stopPropagation()}">
-        <div class="layout-group__title">Layout</div>
-        <zn-input
-          class="layout-group__columns"
-          type="number"
-          label="Columns"
-          min="1"
-          max="${MAX_COLUMNS}"
-          .value="${String(widths.length)}"
-          @zn-change="${(e: Event) => this._setColumns(section.id, Number((e.target as ZnInput).value))}"></zn-input>
-        <div class="layout-group__widths">
-          <span class="layout-group__label">Widths</span>
-          <div class="layout-group__weights">
-            ${widths.map((width, column) => html`
-              <zn-input
-                type="number"
-                min="1"
-                max="${MAX_WIDTH}"
-                aria-label="Column ${column + 1} width"
-                .value="${String(width)}"
-                @zn-change="${(e: Event) => this._setWidth(section.id, column, Number((e.target as ZnInput).value))}"></zn-input>`)}
-          </div>
-        </div>
-        <zn-toggle
-          label="Keep adding rows"
-          label-position="left"
-          description="Offers a new row as the last one fills."
-          ?checked="${grow}"
-          @zn-input="${(e: Event) => this._setGrow(section.id, Boolean((e.target as HTMLInputElement).checked))}"></zn-toggle>
-        ${grow ? '' : html`
-          <zn-input
-            type="number"
-            label="Rows"
-            min="1"
-            .value="${String(rows)}"
-            @zn-change="${(e: Event) => this._setRows(section.id, Number((e.target as ZnInput).value))}"></zn-input>`}
-      </div>`;
+    this._commit({ sections: this._patchSection(id, s => ({ ...s, label: label || undefined })) });
   }
 
   private _renderInspector() {
@@ -1376,7 +1178,6 @@ export default class ZnPageBuilder extends ZincElement {
           @zn-change="${this._onInspectorInput}"
           @input="${this._onInspectorInput}"
           @zn-input="${this._onInspectorInput}">
-          ${this._renderLayoutGroup(section, type)}
           <zn-input
             class="inspector__rename"
             label="Section name"
@@ -1399,8 +1200,7 @@ export default class ZnPageBuilder extends ZincElement {
         class="builder ${this._selectedId ? 'builder--inspecting' : ''} ${this.paletteCollapsed ? 'builder--palette-collapsed' : ''} ${this.inspectorCollapsed ? 'builder--inspector-collapsed' : ''}"
         @dragend="${() => {
           this._dragOverIndex = null;
-          this._cellDragOver = null;
-          this._draggingId = null;
+          this._slotDragOver = null;
         }}">
         <header part="header" class="header" ?hidden="${!hasHeader}">
           <div class="header__group">

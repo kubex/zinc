@@ -821,12 +821,15 @@ export default class ZnDataTable extends ZincElement {
       <div class="table__footer__pagination-buttons">
         <zn-button @click="${this.page !== 1 ? this.goToFirstPage : undefined}"
                    ?disabled="${this.page === 1}"
-                   icon="arrow_left@lu"
-                   panel-bg>First
+                   icon="chevrons-left@lu"
+                   icon-button="small"
+                   panel-bg>
         </zn-button>
         <zn-button @click="${this.page !== 1 ? this.goToPreviousPage : undefined}"
                    ?disabled="${this.page === 1}"
-                   panel-bg>Back
+                   icon="chevron-left@lu"
+                   icon-button="small"
+                   panel-bg>
         </zn-button>
         ${this.getPageRange().map((p) => p === 'ellipsis'
           ? html`<span class="table__footer__pagination-ellipsis">…</span>`
@@ -838,13 +841,15 @@ export default class ZnDataTable extends ZincElement {
         )}
         <zn-button @click="${this.page !== this.totalPages ? this.goToNextPage : undefined}"
                    ?disabled="${this.page === this.totalPages}"
-                   panel-bg>Next
+                   icon="chevron-right@lu"
+                   icon-button="small"
+                   panel-bg>
         </zn-button>
         <zn-button @click="${this.page !== this.totalPages ? this.goToLastPage : undefined}"
                    ?disabled="${this.page === this.totalPages}"
-                   icon="arrow_right@lu"
-                   icon-position="right"
-                   panel-bg>Last
+                   icon="chevrons-right@lu"
+                   icon-button="small"
+                   panel-bg>
         </zn-button>
       </div>`;
   }
@@ -1039,7 +1044,7 @@ export default class ZnDataTable extends ZincElement {
     if (header?.cellTemplate !== undefined) {
       data = {...header.cellTemplate, ...data}
     }
-    
+
     let content: TemplateResult | ZincElement = html`${data.text}`;
 
     if (data.style || data.color) {

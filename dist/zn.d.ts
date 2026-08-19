@@ -9617,6 +9617,14 @@ declare module "components/flow-builder/flow.types" {
         inputs?: FlowPort[];
         /** Output ports. Defaults to a single unlabelled output. e.g. TRUE/FALSE for a split. */
         outputs?: FlowPort[];
+        /**
+         * The type's branches are the only ones it has: the canvas offers no delete
+         * on their pills, and clicking a fully-wired node's output adds nothing.
+         * For steps whose branches mirror fixed fields in the consumer's own model
+         * (a success / failure / skip triple, say), where an extra or missing branch
+         * has nowhere to be stored.
+         */
+        fixedOutputs?: boolean;
         /** Initial `data` for a freshly placed node. */
         defaultData?: Record<string, unknown>;
         /**
@@ -9703,12 +9711,17 @@ declare module "components/flow-builder/flow.types" {
     /** Extra pill height per wrapped line (matches the pill's CSS line-height). */
     export const PILL_LINE_HEIGHT = 20;
     /**
-     * Canvas y of a branch pill's top edge. A pill on a wire to a child below is
-     * centred along the run from its node's bottom to the child's top — equal wire
-     * above and below, however long or tight. A sole output's wire is a straight
-     * stem with no bus to respect, so its pill may rise above the bus line to stay
-     * centred; fan branches stop at the bus. Open branches and loop/side wires
-     * keep the fixed drop below the bus.
+     * Canvas y of a branch pill's top edge. A pill on a wire to a child in the next
+     * row down is centred along the run from its node's bottom to the child's top —
+     * equal wire above and below. A sole output's wire is a straight stem with no
+     * bus to respect, so its pill may rise above the bus line to stay centred; fan
+     * branches stop at the bus.
+     *
+     * A branch reaching past the next row sits right under the bus instead: it
+     * reads as belonging to the node it hangs from rather than to whatever it flies
+     * over, and it leaves the whole gap below free for the wire to route around
+     * what is in the way. Open branches and loop/side wires keep the fixed drop
+     * below the bus, where their "+" has room.
      */
     export function branchPillTop(node: Pick<FlowNodeInstance, 'y'>, pillH: number, child?: Pick<FlowNodeInstance, 'y'>, soleOutput?: boolean): number;
     /**
@@ -9735,13 +9748,19 @@ declare module "components/flow-builder/flow.types" {
     /** A function resolving a node type key to its registered type. */
     export type FlowTypeOf = (type: string) => FlowNodeType | undefined;
     /**
-     * Canvas x for each of a node's branch drops: the natural fan position under
-     * the source. Pills never shift sideways to chase their child — the wire into
-     * a pill is always a straight vertical, and any lateral offset to the child is
-     * taken up by the elbow below the pill (which still enters the child from
-     * straight above).
+     * Canvas x for each of a node's branch drops. Neighbours are spaced by what
+     * they actually occupy — two child lanes keep the full spread, while a branch
+     * with nothing wired to it needs only its pill — and the run is then shifted so
+     * the *wired* branches stay centred on the node. A step that declares branches
+     * it is not using therefore still runs straight down, instead of fanning empty
+     * lanes across the canvas; and a fully wired fan is spaced exactly as before.
+     *
+     * Pills never shift sideways to chase their child — the wire into a pill is
+     * always a straight vertical, and any lateral offset to the child is taken up
+     * by the elbow below the pill (which still enters the child from straight
+     * above).
      */
-    export function branchDropXs(node: FlowNodeInstance, typeOf: FlowTypeOf): number[];
+    export function branchDropXs(node: FlowNodeInstance, typeOf: FlowTypeOf, connections?: FlowConnection[]): number[];
     /**
      * The rects a node occupies on the canvas: its card plus each branch-name pill,
      * at the exact positions the canvas draws them.
@@ -10111,20 +10130,40 @@ declare module "components/flow-builder/modules/flow-canvas/flow-canvas.componen
          */
         private _elbowMidOffsets;
         /**
-         * Whether an orthogonal segment passes through any node card (with margin) —
-         * or the approach zone above one, where incoming arrows land. A foreign wire
-         * running just over a card's input port reads as connecting to it, so routes
-         * keep well clear of that strip too.
+         * Whether an orthogonal segment passes through any node card (with margin).
+         * With `keepApproachClear`, the strip above each card - where incoming arrows
+         * land - counts as occupied too: a foreign wire running just over a card's
+         * input port reads as connecting to it.
          */
         private _segmentBlocked;
         private _routeClear;
         /**
          * Orthogonal waypoints from a branch exit to a child's input. The wire always
          * enters the input from above (arrow pointing down), and never passes through
-         * a node card: each candidate route is checked against every card, scanning
-         * alternative lanes / side-steps / detours until one is clear.
+         * a node card.
+         *
+         * The search runs twice: first keeping clear of the strip above every card as
+         * well as the cards themselves, then - if the corridor is genuinely too tight
+         * for that - clear of the cards alone. Only when nothing at all fits does the
+         * wire fall back to the direct line, so a wire drawn over a card now means
+         * there was no way around it rather than that the search gave up.
          */
         private _routePoints;
+        /**
+         * Candidate routes to a child below, tidiest first: the straight drop or the
+         * single elbow, then the same elbow on neighbouring lines, then out around
+         * whatever sits between the two (the shape a loop-back uses - far more
+         * readable than threading a corridor when a wire skips a row it has nothing
+         * to do with), and finally a side-step that jogs out and back.
+         */
+        private _forwardRoutes;
+        /**
+         * Routes that leave the exit, run down the outside of everything they span
+         * vertically, and come back in above the input. Loop-backs always travel this
+         * way rather than squeezing through corridors inside the flow; a forward wire
+         * uses it when the corridor between it and its child is occupied.
+         */
+        private _aroundRoutes;
         private static _pathFrom;
         /**
          * Open output slots ("+" add-points) across all nodes — only rendered while
@@ -10436,6 +10475,13 @@ declare module "components/flow-builder/flow-builder.component" {
         /** Canvas position for a node newly placed off a source node's output. */
         private _positionBelowOutput;
         /**
+         * Whether a node refuses the branch being asked of it: a fixed-output type
+         * has only the branches it declares, so the "new branch" sentinel has nowhere
+         * to go. Checked before the history push, so a refused gesture is a no-op
+         * rather than an empty undo step.
+         */
+        private _refusesBranch;
+        /**
          * Resolve an output port id on a node: the "new branch" sentinel materialises a
          * fresh, labelled output port (per-instance), so it exists before connecting.
          */
@@ -10596,6 +10642,8 @@ declare module "components/flow-builder/modules/flow-step/flow-step.component" {
         inputs: string;
         /** JSON array of outputs (`"a"` or `{"id","label"}`), e.g. `'[{"id":"true","label":"TRUE"}]'`. Omit for one default output. */
         outputs: string;
+        /** The declared outputs are the only branches this step has — none can be deleted or added on the canvas. */
+        fixedOutputs: boolean;
         connectedCallback(): void;
         disconnectedCallback(): void;
         protected updated(changed: PropertyValues): void;

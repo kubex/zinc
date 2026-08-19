@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.95">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.96">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -79,7 +79,7 @@
         <a href="/">
           <img src="/assets/images/watermark.svg" alt="zinc" />
         </a>
-        <div class="sidebar-version">1.1.95</div>
+        <div class="sidebar-version">1.1.96</div>
       </header>
 
       <div class="sidebar-buttons">
@@ -614,16 +614,20 @@
             </li>
             <li><strong>Left panel</strong> — the steps panel (searchable, tabbed by step group).</li>
             <li>
-              <strong>Canvas</strong> (center) — a pannable, zoomable surface. Connections are
-              <strong>append-only</strong>: click any <strong>output port</strong> on a node to start a
-              <strong>stray branch</strong> — the wire follows your cursor until you click a node (or its output port)
-              to attach it. Fan-in is allowed, and so are <strong>loops</strong> — a branch may point back to an earlier
-              step (e.g. an answer that restarts the questioning); only wiring a node directly to itself is refused.
-              Cancel by clicking empty canvas, pressing Esc, or leaving the window. A connected output port spawns a
-              brand-new branch on click, so extra arrows never require config forms. Open outputs draw nothing while
-              idle — their <strong><code>+</code></strong> targets appear only while dragging a step in or moving one.
-              Every existing wire has a <strong><code>+</code></strong> at its midpoint to insert a step between two
-              nodes. New steps are created by dragging them from the panel onto the canvas or a <code>+</code>.
+              <strong>Canvas</strong> (center) — a pannable, zoomable surface. A node’s branches fan out along a bus
+              below it, spaced by what they actually hold: two branches with children keep a full card lane apart, while
+              a branch that is only a pill sits close in, so declaring branches you have not wired costs little room.
+              Wires never run through a card: a branch that reaches past the next row keeps its pill on its own bus and
+              takes its wire out around the outside of whatever it flies over, so it always reads as ending where it
+              ends. Connections are <strong>append-only</strong>: click any <strong>output port</strong> on a node to
+              start a <strong>stray branch</strong> — the wire follows your cursor until you click a node (or its output
+              port) to attach it. Fan-in is allowed, and so are <strong>loops</strong> — a branch may point back to an
+              earlier step (e.g. an answer that restarts the questioning); only wiring a node directly to itself is
+              refused. Cancel by clicking empty canvas, pressing Esc, or leaving the window. A connected output port
+              spawns a brand-new branch on click, so extra arrows never require config forms. Open outputs draw nothing
+              while idle — their <strong><code>+</code></strong> targets appear only while dragging a step in or moving
+              one. Every existing wire has a <strong><code>+</code></strong> at its midpoint to insert a step between
+              two nodes. New steps are created by dragging them from the panel onto the canvas or a <code>+</code>.
               Reposition nodes by dragging, and add resizable sticky notes. Scroll to pan (side-scroll or Shift+scroll
               pans horizontally); Ctrl/Cmd+scroll or trackpad pinch zooms toward the cursor. Toolbar: undo, redo,
               add-note, <strong>untangle</strong> (auto-arranges a messy flow into evenly spaced layers that follow the
@@ -1375,6 +1379,14 @@
               (e.g. <code>outputs='[{"id":"true","label":"TRUE"},{"id":"false","label":"FALSE"}]'</code>). Omit for a
               single default output.
             </li>
+            <li>
+              <code>fixed-outputs</code> — the declared outputs are the <em>only</em> branches this step has: their
+              pills carry no delete, and clicking a fully-wired node’s output adds nothing. Use it when the branches
+              mirror fixed fields in your own model (a success / failure / skip triple, say), where an extra or missing
+              branch has nowhere to be stored. Branches a step declares but has not wired cost almost no room — they are
+              spaced by their pill rather than by a whole child lane — so a step can offer every branch it supports
+              without fanning empty lanes across the canvas.
+            </li>
           </ul>
           <p>
             Set an optional per-tab hint with the <code>triggers-hint</code> / <code>actions-hint</code> /
@@ -1850,6 +1862,12 @@ builder<span class="token punctuation">.</span><span class="token function">regi
             multiple <code>outputs</code> renders one labeled port per output, so a branch can fan out to different
             steps.
           </p>
+          <p>
+            Add <strong><code>fixedOutputs: true</code></strong> when those outputs are the only branches the type can
+            have — the canvas drops the delete on their pills and refuses to materialise an extra one. Unwired branches
+            are spaced by their pill rather than a child lane, so a type can declare its full set of branches up front
+            without the canvas fanning empty lanes for the ones a given node is not using.
+          </p>
           <h4 id="user-configurable-outputs" class="anchor-heading">
             User-configurable outputs<a
               href="#user-configurable-outputs"
@@ -2088,7 +2106,7 @@ builder<span class="token punctuation">.</span>value <span class="token operator
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-678"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.95/dist/components/flow-builder/flow-builder.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-678"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-678"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.96/dist/components/flow-builder/flow-builder.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-678"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -2103,7 +2121,7 @@ builder<span class="token punctuation">.</span>value <span class="token operator
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-679"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.95/dist/components/flow-builder/flow-builder.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-679"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-679"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.96/dist/components/flow-builder/flow-builder.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-679"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">

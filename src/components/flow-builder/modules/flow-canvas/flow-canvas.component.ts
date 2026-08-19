@@ -46,6 +46,8 @@ const ADD_POINT_OFFSET = 40;
 // input, and how far a detour clears a node card when routing around it. All
 // whole grid units so wire runs sit on grid lines.
 const WIRE_STUB = 20;
+/** Strip above a card where incoming arrows land; foreign wires keep out of it. */
+const APPROACH_ZONE = 48;
 const WIRE_APPROACH = 20;
 // Half the wire "+"'s footprint.
 const WIRE_PLUS_RADIUS = 10;
@@ -312,6 +314,9 @@ export default class ZnFlowCanvas extends ZincElement {
     const open = nodeOutputs(node, this._typeFor(node)).find(
       p => !this.connections.some(c => c.source.node === nodeId && c.source.port === p.id)
     );
+    // A fixed-output node has no spare branch to start once all of its own are
+    // wired — wire one of those instead, from its pill.
+    if (!open && this._typeFor(node)?.fixedOutputs) return;
     this._startLink(nodeId, open?.id ?? NEW_OUTPUT_PORT);
   };
 
@@ -531,7 +536,7 @@ export default class ZnFlowCanvas extends ZincElement {
     // Drops always sit at the natural fan position under the source, so the
     // arrow into a pill is a straight vertical; the wire below the pill takes
     // up any lateral offset to the child.
-    const dropXs = branchDropXs(node, t => this.registry?.get(t));
+    const dropXs = branchDropXs(node, t => this.registry?.get(t), this.connections);
     const branches = outputs.map((port, i) => {
       const conn = this.connections.find(c => c.source.node === node.id && c.source.port === port.id);
       const child = conn ? this.nodes.find(n => n.id === conn.target.node) : undefined;
@@ -590,14 +595,19 @@ export default class ZnFlowCanvas extends ZincElement {
   }
 
   /**
-   * Whether an orthogonal segment passes through any node card (with margin) —
-   * or the approach zone above one, where incoming arrows land. A foreign wire
-   * running just over a card's input port reads as connecting to it, so routes
-   * keep well clear of that strip too.
+   * Whether an orthogonal segment passes through any node card (with margin).
+   * With `keepApproachClear`, the strip above each card - where incoming arrows
+   * land - counts as occupied too: a foreign wire running just over a card's
+   * input port reads as connecting to it.
    */
-  private _segmentBlocked(a: { x: number; y: number }, b: { x: number; y: number }, ignore: Set<string>): boolean {
+  private _segmentBlocked(
+    a: { x: number; y: number },
+    b: { x: number; y: number },
+    ignore: Set<string>,
+    keepApproachClear = true
+  ): boolean {
     const M = 8;
-    const APPROACH_ZONE = 48;
+    const approach = keepApproachClear ? APPROACH_ZONE : M;
     const minX = Math.min(a.x, b.x);
     const maxX = Math.max(a.x, b.x);
     const minY = Math.min(a.y, b.y);
@@ -605,13 +615,17 @@ export default class ZnFlowCanvas extends ZincElement {
     return this.nodes.some(n =>
       !ignore.has(n.id)
       && minX < n.x + NODE_WIDTH + M && maxX > n.x - M
-      && minY < n.y + NODE_HEIGHT + M && maxY > n.y - APPROACH_ZONE
+      && minY < n.y + NODE_HEIGHT + M && maxY > n.y - approach
     );
   }
 
-  private _routeClear(points: { x: number; y: number }[], ignore: Set<string>): boolean {
+  private _routeClear(
+    points: { x: number; y: number }[],
+    ignore: Set<string>,
+    keepApproachClear = true
+  ): boolean {
     for (let i = 0; i < points.length - 1; i++) {
-      if (this._segmentBlocked(points[i], points[i + 1], ignore)) return false;
+      if (this._segmentBlocked(points[i], points[i + 1], ignore, keepApproachClear)) return false;
     }
     return true;
   }
@@ -619,8 +633,13 @@ export default class ZnFlowCanvas extends ZincElement {
   /**
    * Orthogonal waypoints from a branch exit to a child's input. The wire always
    * enters the input from above (arrow pointing down), and never passes through
-   * a node card: each candidate route is checked against every card, scanning
-   * alternative lanes / side-steps / detours until one is clear.
+   * a node card.
+   *
+   * The search runs twice: first keeping clear of the strip above every card as
+   * well as the cards themselves, then - if the corridor is genuinely too tight
+   * for that - clear of the cards alone. Only when nothing at all fits does the
+   * wire fall back to the direct line, so a wire drawn over a card now means
+   * there was no way around it rather than that the search gave up.
    */
   private _routePoints(
     from: { x: number; y: number },
@@ -632,101 +651,134 @@ export default class ZnFlowCanvas extends ZincElement {
   ) {
     const {x: tx, y: ty} = this._inputAnchor(child, targetPort);
     const ignore = new Set(sourceId ? [child.id, sourceId] : [child.id]);
+    const candidates = ty - WIRE_APPROACH >= from.y
+      ? this._forwardRoutes(from, tx, ty, midOffset, ignore)
+      : this._aroundRoutes(from, tx, ty, ignore, loop);
 
-    if (ty - WIRE_APPROACH >= from.y) {
-      // The exact midpoint, not grid-snapped: both endpoints sit on the grid,
-      // so the midpoint is always a half-tile multiple — snapping it to full
-      // tiles made the two verticals grow alternately as a node was dragged.
-      const base = Math.round((from.y + ty) / 2) + midOffset;
-      // The horizontal run stays within the middle half of the gap, so the
-      // drop and the final approach grow in proportion to the distance —
-      // lane offsets can't shove the run right up against either end.
-      const span = ty - from.y;
-      const lo = Math.min(ty - 12, Math.ceil((from.y + span / 4) / GRID_SIZE) * GRID_SIZE);
-      const hi = Math.max(lo, Math.floor((ty - span / 4) / GRID_SIZE) * GRID_SIZE);
-      const clampY = (v: number) => Math.max(lo, Math.min(hi, v));
-      let fallback: { x: number; y: number }[] | null = null;
+    for (const keepApproachClear of [true, false]) {
+      for (const route of candidates) {
+        if (this._routeClear(route, ignore, keepApproachClear)) return route;
+      }
+    }
+    return candidates[0];
+  }
 
-      if (tx === from.x) {
-        const straight = [from, {x: tx, y: ty}];
-        if (this._routeClear(straight, ignore)) return straight;
-        fallback = straight;
-      } else {
-        // Elbow: try the lane midY first, then scan outward for a clear line.
-        for (let step = 0; step <= 20; step++) {
-          for (const cand of step === 0 ? [base] : [base + step * GRID_SIZE, base - step * GRID_SIZE]) {
-            const my = clampY(cand);
-            if (my !== cand && step > 0) continue; // out of range
-            const route = [from, {x: from.x, y: my}, {x: tx, y: my}, {x: tx, y: ty}];
-            fallback ??= route;
-            if (this._routeClear(route, ignore)) return route;
-          }
+  /**
+   * Candidate routes to a child below, tidiest first: the straight drop or the
+   * single elbow, then the same elbow on neighbouring lines, then out around
+   * whatever sits between the two (the shape a loop-back uses - far more
+   * readable than threading a corridor when a wire skips a row it has nothing
+   * to do with), and finally a side-step that jogs out and back.
+   */
+  private _forwardRoutes(
+    from: { x: number; y: number },
+    tx: number,
+    ty: number,
+    midOffset: number,
+    ignore: Set<string>
+  ): { x: number; y: number }[][] {
+    const routes: { x: number; y: number }[][] = [];
+
+    // The exact midpoint, not grid-snapped: both endpoints sit on the grid, so
+    // the midpoint is always a half-tile multiple — snapping it to full tiles
+    // made the two verticals grow alternately as a node was dragged.
+    const base = Math.round((from.y + ty) / 2) + midOffset;
+    // The horizontal run stays within the middle half of the gap, so the drop
+    // and the final approach grow in proportion to the distance — lane offsets
+    // can't shove the run right up against either end.
+    const span = ty - from.y;
+    const lo = Math.min(ty - 12, Math.ceil((from.y + span / 4) / GRID_SIZE) * GRID_SIZE);
+    const hi = Math.max(lo, Math.floor((ty - span / 4) / GRID_SIZE) * GRID_SIZE);
+    const clampY = (v: number) => Math.max(lo, Math.min(hi, v));
+
+    if (tx === from.x) {
+      routes.push([from, {x: tx, y: ty}]);
+    } else {
+      for (let step = 0; step <= 20; step++) {
+        for (const cand of step === 0 ? [base] : [base + step * GRID_SIZE, base - step * GRID_SIZE]) {
+          const my = clampY(cand);
+          if (my !== cand && step > 0) continue; // out of range
+          routes.push([from, {x: from.x, y: my}, {x: tx, y: my}, {x: tx, y: ty}]);
         }
       }
-
-      // No simple route is clear (e.g. a card sits right under the exit) —
-      // side-step: drop to m1, jog sideways to sx, descend, and approach the
-      // input from above. The drop and the final approach share one run-in
-      // depth (equal lengths by construction); scan that depth and the jog.
-      const half = Math.floor(span / 2 / 10) * 10;
-      const baseDepth = Math.max(10, Math.round(span / 4 / 10) * 10);
-      for (let dStep = 0; dStep <= 12; dStep++) {
-        for (const depth of dStep === 0 ? [baseDepth] : [baseDepth + dStep * 10, baseDepth - dStep * 10]) {
-          if (depth < 10 || depth > half) continue;
-          const m1 = from.y + depth;
-          const m2 = ty - depth;
-          if (m2 < m1) continue;
-          for (let sStep = 1; sStep <= 14; sStep++) {
-            for (const dir of [1, -1]) {
-              const sx = from.x + dir * sStep * GRID_SIZE;
-              const route = [
-                from,
-                {x: from.x, y: m1},
-                {x: sx, y: m1},
-                {x: sx, y: m2},
-                {x: tx, y: m2},
-                {x: tx, y: ty},
-              ];
-              if (this._routeClear(route, ignore)) return route;
-            }
-          }
-        }
-      }
-      return fallback!;
     }
 
-    // Child is beside/above: stub down, clear the card, rise above the input,
-    // then approach it from the top — widening the detour until nothing is
-    // crossed.
+    routes.push(...this._aroundRoutes(from, tx, ty, ignore, false));
+
+    // Side-step: drop to m1, jog sideways to sx, descend, and approach the
+    // input from above. The drop and the final approach share one run-in depth
+    // (equal lengths by construction); scan that depth and the jog.
+    const half = Math.floor(span / 2 / 10) * 10;
+    const baseDepth = Math.max(10, Math.round(span / 4 / 10) * 10);
+    for (let dStep = 0; dStep <= 12; dStep++) {
+      for (const depth of dStep === 0 ? [baseDepth] : [baseDepth + dStep * 10, baseDepth - dStep * 10]) {
+        if (depth < 10 || depth > half) continue;
+        const m1 = from.y + depth;
+        const m2 = ty - depth;
+        if (m2 < m1) continue;
+        for (let sStep = 1; sStep <= 14; sStep++) {
+          for (const dir of [1, -1]) {
+            const sx = from.x + dir * sStep * GRID_SIZE;
+            routes.push([
+              from,
+              {x: from.x, y: m1},
+              {x: sx, y: m1},
+              {x: sx, y: m2},
+              {x: tx, y: m2},
+              {x: tx, y: ty},
+            ]);
+          }
+        }
+      }
+    }
+
+    return routes;
+  }
+
+  /**
+   * Routes that leave the exit, run down the outside of everything they span
+   * vertically, and come back in above the input. Loop-backs always travel this
+   * way rather than squeezing through corridors inside the flow; a forward wire
+   * uses it when the corridor between it and its child is occupied.
+   */
+  private _aroundRoutes(
+    from: { x: number; y: number },
+    tx: number,
+    ty: number,
+    ignore: Set<string>,
+    loop: boolean
+  ): { x: number; y: number }[][] {
     const stubY = from.y + WIRE_STUB;
     const overY = ty - WIRE_APPROACH;
-    let rightSide: boolean;
-    let baseDetour: number;
-    if (loop) {
-      // Loop-backs travel around the OUTSIDE of everything they span
-      // vertically, instead of squeezing through corridors inside the flow —
-      // on whichever side costs less horizontal travel.
-      const spanned = this.nodes.filter(
-        n => n.y + NODE_HEIGHT > overY - GRID_SIZE && n.y < stubY + GRID_SIZE
-      );
-      const rightEdge = Math.max(...spanned.map(n => n.x + NODE_WIDTH)) + WIRE_DETOUR;
-      const leftEdge = Math.min(...spanned.map(n => n.x)) - WIRE_DETOUR;
-      const costRight = Math.abs(rightEdge - from.x) + Math.abs(rightEdge - tx);
-      const costLeft = Math.abs(from.x - leftEdge) + Math.abs(tx - leftEdge);
-      rightSide = costRight <= costLeft;
-      baseDetour = rightSide ? rightEdge : leftEdge;
-    } else {
-      rightSide = from.x >= child.x + NODE_WIDTH / 2;
-      baseDetour = rightSide ? child.x + NODE_WIDTH + WIRE_DETOUR : child.x - WIRE_DETOUR;
+    const spanned = this.nodes.filter(
+      n => !ignore.has(n.id) && n.y + NODE_HEIGHT > Math.min(stubY, overY) - GRID_SIZE
+        && n.y < Math.max(stubY, overY) + GRID_SIZE
+    );
+    if (!spanned.length) return [];
+
+    const rightEdge = Math.max(...spanned.map(n => n.x + NODE_WIDTH)) + WIRE_DETOUR;
+    const leftEdge = Math.min(...spanned.map(n => n.x)) - WIRE_DETOUR;
+    const cost = (x: number) => Math.abs(x - from.x) + Math.abs(x - tx);
+    // A loop weighs both outsides; a forward wire hugs the side its child is
+    // already on, so the detour reads as a lean rather than a lap of the flow.
+    const preferRight = loop ? cost(rightEdge) <= cost(leftEdge) : tx >= (leftEdge + rightEdge) / 2;
+
+    const routes: { x: number; y: number }[][] = [];
+    for (const dir of preferRight ? [1, -1] : [-1, 1]) {
+      const edge = dir > 0 ? rightEdge : leftEdge;
+      for (let step = 0; step <= 20; step++) {
+        const dx = edge + dir * step * GRID_SIZE;
+        routes.push([
+          from,
+          {x: from.x, y: stubY},
+          {x: dx, y: stubY},
+          {x: dx, y: overY},
+          {x: tx, y: overY},
+          {x: tx, y: ty},
+        ]);
+      }
     }
-    let fallback: { x: number; y: number }[] | null = null;
-    for (let step = 0; step <= 20; step++) {
-      const dx = baseDetour + (rightSide ? 1 : -1) * step * GRID_SIZE;
-      const route = [from, {x: from.x, y: stubY}, {x: dx, y: stubY}, {x: dx, y: overY}, {x: tx, y: overY}, {x: tx, y: ty}];
-      fallback ??= route;
-      if (this._routeClear(route, ignore)) return route;
-    }
-    return fallback!;
+    return routes;
   }
 
   private static _pathFrom(points: { x: number; y: number }[]): string {
@@ -1018,7 +1070,7 @@ export default class ZnFlowCanvas extends ZincElement {
           const loop = loops.has(b.conn);
           const pts = this._routePoints({x: b.x, y: b.exitY}, b.child, b.conn.target.port, offset, node.id, loop);
           paths.push(svg`<path
-            class="wire ${loop ? 'wire--loop' : ''}"
+            class="wire wire--link ${loop ? 'wire--loop' : ''}"
             d="${ZnFlowCanvas._pathFrom(pts)}"
             marker-end="url(#${loop ? 'flow-arrow-loop' : 'flow-arrow'})"
           ></path>`);
@@ -1075,10 +1127,11 @@ export default class ZnFlowCanvas extends ZincElement {
     const loops = loopConnections(this.nodes, this.connections);
     const items: {
       key: string; nodeId: string; portId: string; label: string; x: number; top: number; height: number;
-      loop: boolean; open: boolean;
+      loop: boolean; open: boolean; fixed: boolean;
     }[] = [];
     for (const node of this.nodes) {
       const {branches} = this._outputLayout(node);
+      const fixed = !!this._typeFor(node)?.fixedOutputs;
       for (const b of branches) {
         if (b.pillTop === null) continue;
         items.push({
@@ -1091,6 +1144,7 @@ export default class ZnFlowCanvas extends ZincElement {
           height: b.pillH,
           loop: !!b.conn && loops.has(b.conn),
           open: !b.conn,
+          fixed,
         });
       }
     }
@@ -1111,17 +1165,18 @@ export default class ZnFlowCanvas extends ZincElement {
               this._emit('flow-branch-pick', {nodeId: i.nodeId, port: i.portId});
             }}"
           >${i.label}</button>
-          <button
-            class="branch-pill-delete"
-            title="Delete branch"
-            @pointerdown="${(e: PointerEvent) => e.button === 0 && e.stopPropagation()}"
-            @click="${(e: Event) => {
-              e.stopPropagation();
-              this._emit('flow-branch-delete', {nodeId: i.nodeId, port: i.portId});
-            }}"
-          >
-            <zn-icon src="x@lu" size="14"></zn-icon>
-          </button>
+          ${i.fixed ? '' : html`
+            <button
+              class="branch-pill-delete"
+              title="Delete branch"
+              @pointerdown="${(e: PointerEvent) => e.button === 0 && e.stopPropagation()}"
+              @click="${(e: Event) => {
+                e.stopPropagation();
+                this._emit('flow-branch-delete', {nodeId: i.nodeId, port: i.portId});
+              }}"
+            >
+              <zn-icon src="x@lu" size="14"></zn-icon>
+            </button>`}
           ${i.open ? html`
             <span
               class="branch-pill-port"

@@ -42,6 +42,8 @@ export default class ZnFlowStep extends ZincElement {
   @property() inputs: string;
   /** JSON array of outputs (`"a"` or `{"id","label"}`), e.g. `'[{"id":"true","label":"TRUE"}]'`. Omit for one default output. */
   @property() outputs: string;
+  /** The declared outputs are the only branches this step has — none can be deleted or added on the canvas. */
+  @property({attribute: 'fixed-outputs', type: Boolean}) fixedOutputs = false;
 
   connectedCallback() {
     super.connectedCallback();

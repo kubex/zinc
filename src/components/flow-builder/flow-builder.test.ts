@@ -1,6 +1,6 @@
 import '../../../dist/zn.min.js';
 import {expect, fixture, html} from '@open-wc/testing';
-import type {FlowNodeType, FlowState} from './flow.types';
+import {type FlowNodeType, type FlowState, NEW_OUTPUT_PORT, NODE_HEIGHT, NODE_WIDTH} from './flow.types';
 import type ZnFlowBuilder from './flow-builder.component';
 
 const TRIGGER: FlowNodeType = {type: 'webhook', label: 'Webhook', group: 'trigger', category: 'Contacts'};
@@ -291,6 +291,211 @@ describe('<zn-flow-builder>', () => {
       expect(editor?.filters).to.deep.equal([
         {id: 'plan', label: 'Plan', fields: [{id: 'name', options: [{value: 'Basic'}, {value: 'Pro'}]}]},
       ]);
+    });
+  });
+  describe('fixed outputs', () => {
+    const FIXED: FlowNodeType = {
+      type: 'step',
+      label: 'Step',
+      group: 'action',
+      fixedOutputs: true,
+      outputs: [
+        {id: 'success', label: 'Success'},
+        {id: 'failure', label: 'Failure'},
+        {id: 'skip', label: 'Skip'},
+      ],
+    };
+
+    const wiredState: FlowState = {
+      nodes: [
+        {id: 'n1', type: 'step', x: 0, y: 0, data: {}},
+        {id: 'n2', type: 'step', x: 0, y: 220, data: {}},
+      ],
+      connections: [
+        {id: 'c1', source: {node: 'n1', port: 'success'}, target: {node: 'n2', port: 'in'}},
+        {id: 'c2', source: {node: 'n1', port: 'failure'}, target: {node: 'n2', port: 'in'}},
+        {id: 'c3', source: {node: 'n1', port: 'skip'}, target: {node: 'n2', port: 'in'}},
+      ],
+      notes: [],
+    };
+
+    const makeFixed = async (state: FlowState) => {
+      const el = await fixture<ZnFlowBuilder>(html`
+        <zn-flow-builder></zn-flow-builder>`);
+      el.registerNodeTypes([FIXED]);
+      el.setState(state);
+      await el.updateComplete;
+      return el;
+    };
+
+    it('should refuse to delete one of a fixed type\'s branches', async () => {
+      const el = await makeFixed(wiredState);
+      el.dispatchEvent(new CustomEvent('flow-branch-delete', {detail: {nodeId: 'n1', port: 'failure'}}));
+      await el.updateComplete;
+
+      const node = el.getState().nodes[0];
+      expect(node.outputs ?? FIXED.outputs).to.have.length(3);
+      expect(el.getState().connections).to.have.length(3);
+    });
+
+    it('should not offer a delete on a fixed type\'s branch pills', async () => {
+      const el = await makeFixed(wiredState);
+      const canvas = el.shadowRoot?.querySelector('zn-flow-canvas');
+      expect(canvas?.shadowRoot?.querySelector('.branch-pill')).to.exist;
+      expect(canvas?.shadowRoot?.querySelector('.branch-pill-delete')).to.not.exist;
+    });
+
+    it('should not grow a fixed type an extra branch when every one is wired', async () => {
+      const el = await makeFixed(wiredState);
+      el.dispatchEvent(new CustomEvent('flow-link-assign', {
+        detail: {nodeId: 'n1', port: NEW_OUTPUT_PORT, targetId: 'n2'},
+      }));
+      await el.updateComplete;
+
+      const node = el.getState().nodes[0];
+      expect(node.outputs ?? FIXED.outputs).to.have.length(3);
+      expect(el.getState().connections).to.have.length(3);
+    });
+
+    it('should still let an ordinary type grow a branch', async () => {
+      const el = await fixture<ZnFlowBuilder>(html`
+        <zn-flow-builder></zn-flow-builder>`);
+      el.registerNodeTypes([{...FIXED, fixedOutputs: false}]);
+      el.setState(wiredState);
+      await el.updateComplete;
+
+      el.dispatchEvent(new CustomEvent('flow-link-assign', {
+        detail: {nodeId: 'n1', port: NEW_OUTPUT_PORT, targetId: 'n2'},
+      }));
+      await el.updateComplete;
+
+      expect(el.getState().nodes[0].outputs).to.have.length(4);
+    });
+
+    it('should read fixed-outputs off a declared step', async () => {
+      const el = await fixture<ZnFlowBuilder>(html`
+        <zn-flow-builder>
+          <zn-flow-step type="step" group="action" label="Step" fixed-outputs
+                        outputs='[{"id":"success","label":"Success"},{"id":"failure","label":"Failure"}]'>
+          </zn-flow-step>
+        </zn-flow-builder>`);
+      el.setState({
+        nodes: [{id: 'n1', type: 'step', x: 0, y: 0, data: {}}],
+        connections: [],
+        notes: [],
+      });
+      await el.updateComplete;
+
+      el.dispatchEvent(new CustomEvent('flow-branch-delete', {detail: {nodeId: 'n1', port: 'failure'}}));
+      await el.updateComplete;
+      expect(el.getState().nodes[0].outputs).to.be.undefined; // untouched: still the type's two
+    });
+  });
+  describe('wire routing', () => {
+    const TRIPLE: FlowNodeType = {
+      type: 'step',
+      label: 'Step',
+      group: 'action',
+      fixedOutputs: true,
+      outputs: [
+        {id: 'success', label: 'Success'},
+        {id: 'failure', label: 'Failure'},
+        {id: 'skip', label: 'Skip'},
+      ],
+    };
+
+    // A's failure skips the middle row entirely and lands on C, while A's other
+    // branches and B's success feed the rows in between — the arrangement that
+    // drew A's failure wire straight down through B, so it read as though the
+    // branch ended at B.
+    const SKIP_A_ROW: FlowState = {
+      nodes: [
+        {id: 'a', type: 'step', x: 200, y: 700, data: {}},
+        {id: 'b', type: 'step', x: 200, y: 920, data: {}},
+        {id: 'c', type: 'step', x: 200, y: 1140, data: {}},
+      ],
+      connections: [
+        {id: 'c1', source: {node: 'a', port: 'success'}, target: {node: 'b', port: 'in'}},
+        {id: 'c2', source: {node: 'a', port: 'skip'}, target: {node: 'b', port: 'in'}},
+        {id: 'c3', source: {node: 'a', port: 'failure'}, target: {node: 'c', port: 'in'}},
+        {id: 'c4', source: {node: 'b', port: 'success'}, target: {node: 'c', port: 'in'}},
+      ],
+      notes: [],
+    };
+
+    const points = (d: string) => {
+      const numbers = d.match(/-?\d+(\.\d+)?/g)?.map(Number) ?? [];
+      const out: { x: number; y: number }[] = [];
+      for (let i = 0; i + 1 < numbers.length; i += 2) out.push({x: numbers[i], y: numbers[i + 1]});
+      return out;
+    };
+
+    const wirePaths = async (state: FlowState) => {
+      const el = await fixture<ZnFlowBuilder>(html`
+        <zn-flow-builder></zn-flow-builder>`);
+      el.registerNodeTypes([TRIPLE]);
+      el.setState(state);
+      await el.updateComplete;
+      const canvas = el.shadowRoot?.querySelector('zn-flow-canvas');
+      await canvas?.updateComplete;
+      return Array.from(canvas?.shadowRoot?.querySelectorAll('path.wire--link') ?? [])
+        .map(p => points(p.getAttribute('d') ?? ''))
+        .filter(pts => pts.length > 1);
+    };
+
+    // Segments are orthogonal, so a crossing is a plain rect overlap. The card's
+    // own edges are fair game: wires legitimately end on the top one.
+    const crossesCard = (pts: { x: number; y: number }[], card: { x: number; y: number }) => {
+      const E = 1;
+      for (let i = 0; i < pts.length - 1; i++) {
+        const minX = Math.min(pts[i].x, pts[i + 1].x);
+        const maxX = Math.max(pts[i].x, pts[i + 1].x);
+        const minY = Math.min(pts[i].y, pts[i + 1].y);
+        const maxY = Math.max(pts[i].y, pts[i + 1].y);
+        if (minX < card.x + NODE_WIDTH - E && maxX > card.x + E
+          && minY < card.y + NODE_HEIGHT - E && maxY > card.y + E) {
+          return true;
+        }
+      }
+      return false;
+    };
+
+    it('should route a row-skipping wire around the card it flies over', async () => {
+      const paths = await wirePaths(SKIP_A_ROW);
+      const middle = {x: 200, y: 920};
+
+      expect(paths.length).to.be.greaterThan(0);
+      paths.forEach(pts => {
+        expect(crossesCard(pts, middle), `wire ${JSON.stringify(pts)} crosses the middle card`)
+          .to.equal(false);
+      });
+    });
+
+    it('should take the row-skipping wire out to the side, not through the column', async () => {
+      const paths = await wirePaths(SKIP_A_ROW);
+      // A's failure pill sits on A's bus, so its wire is the one leaving highest.
+      const skipping = paths.reduce((lowestY, pts) => (pts[0].y < lowestY[0].y ? pts : lowestY));
+
+      expect(skipping[skipping.length - 1].y).to.equal(1140); // ends on C's input
+      expect(skipping.length).to.be.greaterThan(2); // not the straight drop
+      // It leaves the corridor the cards occupy (200..440) on its way past.
+      const outside = skipping.some(p => p.x > 440 || p.x < 200);
+      expect(outside, `expected a detour outside the column, got ${JSON.stringify(skipping)}`).to.equal(true);
+    });
+
+    it('should still draw a straight wire when the corridor is clear', async () => {
+      const paths = await wirePaths({
+        nodes: [
+          {id: 'a', type: 'step', x: 200, y: 700, data: {}},
+          {id: 'b', type: 'step', x: 200, y: 920, data: {}},
+        ],
+        connections: [{id: 'c1', source: {node: 'a', port: 'success'}, target: {node: 'b', port: 'in'}}],
+        notes: [],
+      });
+
+      expect(paths).to.have.length(1);
+      expect(paths[0]).to.have.length(2);
+      expect(paths[0][0].x).to.equal(paths[0][1].x);
     });
   });
 });

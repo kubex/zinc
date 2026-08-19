@@ -493,6 +493,7 @@ export default class ZnFlowBuilder extends ZincElement {
       description: el.getAttribute('description') ?? undefined,
       inputs: ZnFlowBuilder._parsePorts(el.getAttribute('inputs')),
       outputs: ZnFlowBuilder._parsePorts(el.getAttribute('outputs')),
+      fixedOutputs: el.hasAttribute('fixed-outputs'),
       branchFilters: ZnFlowBuilder._parseBranchFilters(el),
     };
   }
@@ -810,8 +811,18 @@ export default class ZnFlowBuilder extends ZincElement {
     // Centred under the branch drop (where the pill hangs), a full layer below
     // the source (same rhythm as untangle) — the child lands in a straight
     // line under the branch instead of being shoved sideways by collision.
-    const x = branchDropXs(source, t => this.registry.get(t))[idx];
+    const x = branchDropXs(source, t => this.registry.get(t), this._state.connections)[idx];
     return {x: Math.round(x - NODE_WIDTH / 2), y: source.y + LAYOUT_V_GAP};
+  }
+
+  /**
+   * Whether a node refuses the branch being asked of it: a fixed-output type
+   * has only the branches it declares, so the "new branch" sentinel has nowhere
+   * to go. Checked before the history push, so a refused gesture is a no-op
+   * rather than an empty undo step.
+   */
+  private _refusesBranch(node: FlowNodeInstance, port: string): boolean {
+    return port === NEW_OUTPUT_PORT && !!this.registry.get(node.type)?.fixedOutputs;
   }
 
   /**
@@ -847,6 +858,7 @@ export default class ZnFlowBuilder extends ZincElement {
     if (!source || !type) return;
     const inPort = typeInputs(type)[0]?.id;
     if (!inPort) return; // an entrypoint takes no inputs, so it can't be attached
+    if (this._refusesBranch(source, port)) return;
     this._pushHistory();
     port = this._ensureOutput(source, port);
     this._ensureBranchLabel(source, port);
@@ -882,6 +894,7 @@ export default class ZnFlowBuilder extends ZincElement {
     if (!source || !target || sourceId === targetId) return;
     const inPort = firstInputId(target, this.registry.get(target.type));
     if (inPort === null) return;
+    if (this._refusesBranch(source, port)) return;
     this._pushHistory();
     port = this._ensureOutput(source, port);
     this._ensureBranchLabel(source, port);
@@ -970,6 +983,7 @@ export default class ZnFlowBuilder extends ZincElement {
   private _onBranchDelete = (e: CustomEvent<{ nodeId: string; port: string }>) => {
     const node = this._state.nodes.find(n => n.id === e.detail.nodeId);
     if (!node) return;
+    if (this.registry.get(node.type)?.fixedOutputs) return; // its branches are the only ones it has
     this._pushHistory();
     const outputs = nodeOutputs(node, this.registry.get(node.type)).filter(p => p.id !== e.detail.port);
     // Deleting the last branch leaves a plain open output, so the node stays extensible.
@@ -1041,6 +1055,7 @@ export default class ZnFlowBuilder extends ZincElement {
     if (!owner || !moving) return;
     const inPort = firstInputId(moving, this.registry.get(moving.type));
     if (inPort === null) return;
+    if (this._refusesBranch(owner, e.detail.port)) return;
 
     this._pushHistory();
     const outPort = this._ensureOutput(owner, e.detail.port);

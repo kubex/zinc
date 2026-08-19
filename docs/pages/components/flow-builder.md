@@ -11,7 +11,12 @@ The Flow Builder is a three-panel editor for visual automations, with an optiona
 - **Header** (optional) — a full-width action bar rendered only when `slot="header-left"` / `slot="header-right"`
   content is provided (e.g. Close / Undo All Changes on the left, Apply Changes on the right).
 - **Left panel** — the steps panel (searchable, tabbed by step group).
-- **Canvas** (center) — a pannable, zoomable surface. Connections are **append-only**: click any **output port**
+- **Canvas** (center) — a pannable, zoomable surface. A node's branches fan out along a bus below it,
+  spaced by what they actually hold: two branches with children keep a full card lane apart, while a
+  branch that is only a pill sits close in, so declaring branches you have not wired costs little room.
+  Wires never run through a card: a branch that reaches past the next row keeps its pill on its own bus
+  and takes its wire out around the outside of whatever it flies over, so it always reads as ending where
+  it ends. Connections are **append-only**: click any **output port**
   on a node to start a **stray branch** — the wire follows your cursor until you click a node (or its output
   port) to attach it. Fan-in is allowed, and so are **loops** — a branch may point back to an earlier step (e.g.
   an answer that restarts the questioning); only wiring a node directly to itself is refused. Cancel by clicking
@@ -359,6 +364,12 @@ they're declarations that drive the rendered panel):
   trigger with no input.
 - `outputs` — a JSON array of ports, each a string id or a `{"id","label"}` object (e.g.
   `outputs='[{"id":"true","label":"TRUE"},{"id":"false","label":"FALSE"}]'`). Omit for a single default output.
+- `fixed-outputs` — the declared outputs are the *only* branches this step has: their pills carry no
+  delete, and clicking a fully-wired node's output adds nothing. Use it when the branches mirror fixed
+  fields in your own model (a success / failure / skip triple, say), where an extra or missing branch has
+  nowhere to be stored. Branches a step declares but has not wired cost almost no room — they are spaced
+  by their pill rather than by a whole child lane — so a step can offer every branch it supports without
+  fanning empty lanes across the canvas.
 
 Set an optional per-tab hint with the `triggers-hint` / `actions-hint` / `rules-hint` attributes on the
 builder. (A node's inspector `renderConfig` can't be expressed in markup — supply it via
@@ -603,6 +614,11 @@ builder.registerNodeTypes([
 
 A node type with `inputs: []` is a starting point (a trigger) with no incoming port. A type with
 multiple `outputs` renders one labeled port per output, so a branch can fan out to different steps.
+
+Add **`fixedOutputs: true`** when those outputs are the only branches the type can have — the canvas
+drops the delete on their pills and refuses to materialise an extra one. Unwired branches are spaced by
+their pill rather than a child lane, so a type can declare its full set of branches up front without the
+canvas fanning empty lanes for the ones a given node is not using.
 
 #### User-configurable outputs
 

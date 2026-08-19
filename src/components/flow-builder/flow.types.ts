@@ -125,6 +125,14 @@ export interface FlowNodeType {
   inputs?: FlowPort[];
   /** Output ports. Defaults to a single unlabelled output. e.g. TRUE/FALSE for a split. */
   outputs?: FlowPort[];
+  /**
+   * The type's branches are the only ones it has: the canvas offers no delete
+   * on their pills, and clicking a fully-wired node's output adds nothing.
+   * For steps whose branches mirror fixed fields in the consumer's own model
+   * (a success / failure / skip triple, say), where an extra or missing branch
+   * has nowhere to be stored.
+   */
+  fixedOutputs?: boolean;
   /** Initial `data` for a freshly placed node. */
   defaultData?: Record<string, unknown>;
   /**
@@ -230,6 +238,18 @@ export const NODE_HEIGHT = 60;
  */
 export const BRANCH_SPREAD = NODE_WIDTH + 80;
 
+/** Clearance between two branches that both carry a child card. */
+const BRANCH_CARD_GAP = BRANCH_SPREAD - NODE_WIDTH;
+
+/**
+ * Clearance beside a branch with nothing under it but its own pill. A pill is a
+ * chip, not a card, so its neighbours can sit far closer than two child lanes.
+ */
+const BRANCH_PILL_GAP = 40;
+
+/** Half-width claimed by an open branch with no pill — room for its "+" target. */
+const OPEN_BRANCH_MIN_HALF = 20;
+
 // Branch geometry below a node: outputs fork from a stem onto a horizontal bus,
 // and labelled outputs drop from it into a name pill.
 export const BUS_OFFSET = 40;
@@ -243,14 +263,25 @@ export const PILL_LINE_HEIGHT = 20;
 const PILL_APPROACH = 20;
 /** The least wire kept above a sole output's pill in a tight gap. */
 const PILL_MIN_STUB = 20;
+/**
+ * The longest run a pill will centre itself along. A branch reaching past the
+ * next row would otherwise park its pill halfway down, in among nodes it has
+ * nothing to do with; beyond this it keeps the fixed drop under its own node.
+ */
+const PILL_CENTRE_MAX_RUN = 240;
 
 /**
- * Canvas y of a branch pill's top edge. A pill on a wire to a child below is
- * centred along the run from its node's bottom to the child's top — equal wire
- * above and below, however long or tight. A sole output's wire is a straight
- * stem with no bus to respect, so its pill may rise above the bus line to stay
- * centred; fan branches stop at the bus. Open branches and loop/side wires
- * keep the fixed drop below the bus.
+ * Canvas y of a branch pill's top edge. A pill on a wire to a child in the next
+ * row down is centred along the run from its node's bottom to the child's top —
+ * equal wire above and below. A sole output's wire is a straight stem with no
+ * bus to respect, so its pill may rise above the bus line to stay centred; fan
+ * branches stop at the bus.
+ *
+ * A branch reaching past the next row sits right under the bus instead: it
+ * reads as belonging to the node it hangs from rather than to whatever it flies
+ * over, and it leaves the whole gap below free for the wire to route around
+ * what is in the way. Open branches and loop/side wires keep the fixed drop
+ * below the bus, where their "+" has room.
  */
 export function branchPillTop(
   node: Pick<FlowNodeInstance, 'y'>,
@@ -261,6 +292,7 @@ export function branchPillTop(
   const bottom = node.y + NODE_HEIGHT;
   const busY = bottom + BUS_OFFSET;
   if (child && child.y >= bottom) {
+    if (child.y - bottom > PILL_CENTRE_MAX_RUN) return busY;
     const minTop = soleOutput ? bottom + PILL_MIN_STUB : busY;
     const centered = Math.round((bottom + child.y) / 2 - pillH / 2);
     return Math.max(minTop, Math.min(centered, child.y - PILL_APPROACH - pillH));
@@ -321,17 +353,52 @@ function rectsOverlap(a: Rect, b: Rect): boolean {
 export type FlowTypeOf = (type: string) => FlowNodeType | undefined;
 
 /**
- * Canvas x for each of a node's branch drops: the natural fan position under
- * the source. Pills never shift sideways to chase their child — the wire into
- * a pill is always a straight vertical, and any lateral offset to the child is
- * taken up by the elbow below the pill (which still enters the child from
- * straight above).
+ * Half the room a branch needs either side of its drop: a wired branch has to
+ * clear the child card hanging under it, an open one only its own pill.
  */
-export function branchDropXs(node: FlowNodeInstance, typeOf: FlowTypeOf): number[] {
+function branchHalfWidth(port: FlowPort, wired: boolean): number {
+  if (wired) return NODE_WIDTH / 2;
+  return port.label ? pillSize(port.label).w / 2 : OPEN_BRANCH_MIN_HALF;
+}
+
+/**
+ * Canvas x for each of a node's branch drops. Neighbours are spaced by what
+ * they actually occupy — two child lanes keep the full spread, while a branch
+ * with nothing wired to it needs only its pill — and the run is then shifted so
+ * the *wired* branches stay centred on the node. A step that declares branches
+ * it is not using therefore still runs straight down, instead of fanning empty
+ * lanes across the canvas; and a fully wired fan is spaced exactly as before.
+ *
+ * Pills never shift sideways to chase their child — the wire into a pill is
+ * always a straight vertical, and any lateral offset to the child is taken up
+ * by the elbow below the pill (which still enters the child from straight
+ * above).
+ */
+export function branchDropXs(
+  node: FlowNodeInstance,
+  typeOf: FlowTypeOf,
+  connections: FlowConnection[] = []
+): number[] {
   const outputs = nodeOutputs(node, typeOf(node.type));
   const cx = node.x + NODE_WIDTH / 2;
-  return outputs.map((_, i) =>
-    Math.round(cx + (outputs.length === 1 ? 0 : (i - (outputs.length - 1) / 2) * BRANCH_SPREAD)));
+  if (outputs.length < 2) return outputs.map(() => cx);
+
+  const wired = outputs.map(p => connections.some(c => c.source.node === node.id && c.source.port === p.id));
+
+  const offsets = [0];
+  for (let i = 1; i < outputs.length; i++) {
+    const clearance = wired[i - 1] && wired[i] ? BRANCH_CARD_GAP : BRANCH_PILL_GAP;
+    const gap = branchHalfWidth(outputs[i - 1], wired[i - 1]) + branchHalfWidth(outputs[i], wired[i]) + clearance;
+    offsets.push(offsets[i - 1] + snapToGrid(gap));
+  }
+
+  // Anchor on the branches carrying children, so wiring or unwiring a spare
+  // branch never drags the cards below the others sideways.
+  const anchored = offsets.filter((_, i) => wired[i]);
+  const span = anchored.length ? anchored : offsets;
+  const anchor = (Math.min(...span) + Math.max(...span)) / 2;
+
+  return offsets.map(o => Math.round(cx + o - anchor));
 }
 
 /**
@@ -346,7 +413,7 @@ export function nodeObstacles(
 ): Rect[] {
   const rects: Rect[] = [{x: node.x, y: node.y, w: NODE_WIDTH, h: NODE_HEIGHT, m: CARD_MARGIN}];
   const ports = nodeOutputs(node, typeOf(node.type));
-  const xs = branchDropXs(node, typeOf);
+  const xs = branchDropXs(node, typeOf, connections);
   ports.forEach((port, i) => {
     if (!port.label) return;
     const size = pillSize(port.label);

@@ -121,6 +121,9 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   // Tooltip Specific
   @property() tooltip: string;
 
+  /** Accessible name for the button. Icon-only buttons fall back to `tooltip`. */
+  @property() label: string;
+
   // Auto Click Specific
   @property({type: Boolean, attribute: 'auto-click'}) autoClick = false;
   @property({type: Number, attribute: 'auto-click-delay'}) autoClickDelay = 2000;
@@ -369,6 +372,10 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
                  library="${ifDefined(this.iconLibrary)}"></zn-icon>`
       : '';
     const tag = isLink ? literal`a` : literal`button`;
+    // An icon-only button has no text to name it, so the tooltip doubles as the
+    // accessible name. Buttons with content keep their text as the name.
+    const hasContent = this.hasSlotController.test('[default]') || !!this.content;
+    const ariaLabel = this.label || (hasContent ? undefined : this.tooltip);
     const iconButtonStyles = this.iconButton ? {
       '--icon-button-color': this.getIconButtonColor(this.color),
       '--icon-button-hover-color': this.getIconButtonColor(this.hoverColor || 'primary')
@@ -412,6 +419,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         data-target="${ifDefined(isLink ? this.dataTarget : undefined)}"
         rel="${ifDefined(isLink ? this.rel : undefined)}"
         gaid="${ifDefined(this.gaid)}"
+        aria-label="${ifDefined(ariaLabel)}"
         data-notification="${ifDefined(this.notification)}"
         disabled="${this.disabled || nothing}"
         style=${styleMap(iconButtonStyles)}

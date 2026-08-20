@@ -131,6 +131,8 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
           return (await import('./brand-icons')).brandIcons;
         case 'line':
           return (await import('./line-icons')).lineIcons;
+        case 'lucide':
+          return (await import('./lucide-icons')).lucideIcons;
         default: {
           const lists = await import('./material-icons');
           switch (library) {
@@ -438,6 +440,7 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
                       <zn-option value="material-symbols-outlined">Material Symbols Outlined</zn-option>
                       <zn-option value="brands">Brands</zn-option>
                       <zn-option value="line">Line</zn-option>
+                      <zn-option value="lucide">Lucide</zn-option>
                       <zn-option value="gravatar">Gravatar</zn-option>
                       <zn-option value="libravatar">Libravatar</zn-option>
                       <zn-option value="avatar">Avatar</zn-option>

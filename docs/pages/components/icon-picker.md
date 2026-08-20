@@ -71,6 +71,14 @@ Use the `line` library for Lineicons.
 <zn-icon-picker name="line" label="Line Icon" icon="heart" library="line"></zn-icon-picker>
 ```
 
+### Lucide Icons
+
+Use the `lucide` library for [Lucide](https://lucide.dev/icons) icons, rendered as inline SVGs. Icon names use kebab-case.
+
+```html:preview
+<zn-icon-picker name="lucide" label="Lucide Icon" icon="rocket" library="lucide"></zn-icon-picker>
+```
+
 ### Gravatar
 
 Use the `gravatar` library to display a Gravatar from an email address.

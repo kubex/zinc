@@ -117,6 +117,15 @@ Buttons can be used with just an icon and no text by omitting the button label.
 <zn-button icon="add" color="info"></zn-button>
 ```
 
+An icon-only button has no text for assistive technology to read, so give it a name
+with the `label` attribute. A `tooltip` is used as the name when no `label` is set,
+which covers most icon-only buttons without extra markup.
+
+```html:preview
+<zn-button icon="settings" label="Settings"></zn-button>
+<zn-button icon="delete" color="error" tooltip="Delete"></zn-button>
+```
+
 ### Icon Buttons
 
 Use `icon-button` to render a chromed icon button: a 40x36 white button with a border, a 6px radius, and a centred 20px icon. Pass `small` for the 36x36 variant or `round` for a 36x36 circle on the tab tint. The icon button style takes precedence over color variants like `secondary` — the `color` attribute only tints the icon.
@@ -216,7 +225,8 @@ Use `muted-notifications` for a subtle notification style.
 
 ### Tooltip
 
-Use the `tooltip` attribute to add a tooltip to the button.
+Use the `tooltip` attribute to add a tooltip to the button. On a button with no text,
+the tooltip also becomes the accessible name — see [Icon-Only Buttons](#icon-only-buttons).
 
 ```html:preview
 <zn-button icon="info" tooltip="This button provides additional information"></zn-button>

@@ -1,5 +1,6 @@
 import '../../../dist/zn.min.js';
 import {expect, fixture, html, waitUntil} from '@open-wc/testing';
+import type ZnButton from '../button';
 import type ZnRemarkdEditor from './remarkd-editor.component';
 import type ZnSlashMenu from '../slash-menu';
 
@@ -77,6 +78,44 @@ Second"></zn-remarkd-editor>`);
     const el = await fixture<ZnRemarkdEditor>(html`
       <zn-remarkd-editor></zn-remarkd-editor>`);
     expect(el.shadowRoot!.querySelector('.remarkd-editor__toolbar')).to.exist;
+  });
+
+  /** Every icon-only button needs a name of its own — it has no text for a screen reader to read. */
+  async function expectNamedIconButtons(el: ZnRemarkdEditor, root: ParentNode = el.shadowRoot!) {
+    const iconOnly = [...root.querySelectorAll<ZnButton>('zn-button')].filter(b => !b.textContent!.trim());
+    expect(iconOnly.length).to.be.greaterThan(0);
+
+    for (const button of iconOnly) {
+      await button.updateComplete;
+      const name = button.shadowRoot!.querySelector('button')!.getAttribute('aria-label');
+      expect(name, `the ${button.getAttribute('icon')} button has no accessible name`)
+        .to.be.a('string').and.not.empty;
+    }
+  }
+
+  it('should give every toolbar icon button an accessible name', async () => {
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor allow-raw include-url="/includes"></zn-remarkd-editor>`);
+    const toolbar = el.shadowRoot!.querySelector('.remarkd-editor__toolbar')!;
+    expect(toolbar.querySelectorAll('zn-button').length).to.be.greaterThan(1);
+    await expectNamedIconButtons(el, toolbar);
+    // color-contrast is a pre-existing failure on the placeholder's shared
+    // --zn-color-neutral-400 token, unrelated to the buttons under test.
+    await expect(el).to.be.accessible({ignoredRules: ['color-contrast']});
+  });
+
+  it('should give every block action icon button an accessible name', async () => {
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="# Title"></zn-remarkd-editor>`);
+    await expectNamedIconButtons(el, el.shadowRoot!.querySelector('.remarkd-editor__block')!);
+  });
+
+  it('should give every image control icon button an accessible name', async () => {
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="image::photo.png[Alt,640,480]"></zn-remarkd-editor>`);
+    el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
+    await el.updateComplete;
+    await expectNamedIconButtons(el, el.shadowRoot!.querySelector('.remarkd-editor__image-controls')!);
   });
 
   it('should open zn-slash-menu with the block types when "/" starts an empty block', async () => {

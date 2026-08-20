@@ -15,13 +15,23 @@ export function loadECharts(): Promise<EChartsModule> {
     ]);
     core.use([
       charts.BarChart,
+      charts.FunnelChart,
+      charts.GaugeChart,
+      charts.HeatmapChart,
       charts.LineChart,
+      charts.PieChart,
+      charts.RadarChart,
       charts.SankeyChart,
+      charts.ScatterChart,
+      charts.SunburstChart,
+      charts.TreemapChart,
       components.GridComponent,
       components.TooltipComponent,
       components.LegendComponent,
       components.TitleComponent,
       components.DataZoomComponent,
+      components.RadarComponent,
+      components.VisualMapComponent,
       renderers.CanvasRenderer,
     ]);
     return core;

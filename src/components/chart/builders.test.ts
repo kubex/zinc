@@ -3,8 +3,16 @@ import {
   buildAreaOption,
   buildBarOption,
   type BuilderProps,
+  buildFunnelOption,
+  buildGaugeOption,
+  buildHeatmapOption,
   buildLineOption,
+  buildPieOption,
+  buildRadarOption,
   buildSankeyOption,
+  buildScatterOption,
+  buildSunburstOption,
+  buildTreemapOption,
 } from './builders';
 import { expect } from '@open-wc/testing';
 
@@ -142,6 +150,187 @@ describe('buildAreaOption', () => {
       ],
     });
     expect((opt.series as any[])[0].stack).to.equal('total');
+  });
+});
+
+describe('buildPieOption', () => {
+  const pieProps: BuilderProps = {
+    type: 'pie',
+    data: [{ name: 'Insights', data: [8, 1] }],
+    categories: ['Configuration suggestion', 'Insecure configuration'],
+    stacked: false,
+    enableAnimations: false,
+    datapointSize: 1,
+    theme: 'light',
+  };
+
+  it('maps categories and numeric values into pie slices', () => {
+    const opt = buildPieOption(pieProps);
+    const series = (opt.series as any[])[0];
+    expect(series.type).to.equal('pie');
+    expect(series.name).to.equal('Insights');
+    expect(series.data).to.deep.equal([
+      { name: 'Configuration suggestion', value: 8 },
+      { name: 'Insecure configuration', value: 1 },
+    ]);
+    expect(series.radius).to.deep.equal([0, '70%']);
+  });
+
+  it('uses inner and outer radii for a donut', () => {
+    const opt = buildPieOption({
+      ...pieProps,
+      type: 'donut',
+      innerRadius: '45%',
+      outerRadius: '80%',
+    });
+    expect((opt.series as any[])[0].radius).to.deep.equal(['45%', '80%']);
+  });
+
+  it('accepts named ECharts-style slices and maps their colors', () => {
+    const opt = buildPieOption({
+      ...pieProps,
+      data: [{
+        name: 'Insights',
+        data: [
+          { name: 'Moderate', value: 4, color: '#f5a623' },
+          { name: 'Low', value: 5 },
+        ],
+      }],
+    });
+    expect((opt.series as any[])[0].data).to.deep.equal([
+      { name: 'Moderate', value: 4, itemStyle: { color: '#f5a623' } },
+      { name: 'Low', value: 5 },
+    ]);
+  });
+
+  it('uses item tooltips, optional labels, and value suffixes', () => {
+    const opt = buildPieOption({ ...pieProps, showLabels: true, yAxisAppend: '%' });
+    const formatter = (opt.tooltip as any).valueFormatter as (value: number) => string;
+    expect((opt.tooltip as any).trigger).to.equal('item');
+    expect((opt.series as any[])[0].label.show).to.equal(true);
+    expect(formatter(42)).to.equal('42%');
+  });
+
+  it('has no cartesian axes or grid', () => {
+    const opt = buildPieOption(pieProps);
+    expect(opt.xAxis).to.be.undefined;
+    expect(opt.yAxis).to.be.undefined;
+    expect(opt.grid).to.be.undefined;
+  });
+});
+
+describe('additional native chart builders', () => {
+  it('builds a scatter chart with numeric axes and coordinate normalization', () => {
+    const opt = buildScatterOption({
+      ...baseProps,
+      type: 'scatter',
+      datapointSize: 12,
+      data: [{ name: 'Latency', data: [[1, 20], { x: 2, y: 35 }] }],
+    });
+    expect((opt.series as any[])[0]).to.include({ type: 'scatter', symbolSize: 12 });
+    expect((opt.series as any[])[0].data).to.deep.equal([[1, 20], [2, 35]]);
+    expect((opt.xAxis as any).type).to.equal('value');
+    expect((opt.yAxis as any).type).to.equal('value');
+  });
+
+  it('builds radar indicators and values from categories and series', () => {
+    const opt = buildRadarOption({
+      ...baseProps,
+      type: 'radar',
+      categories: ['Security', 'Performance', 'Reliability'],
+      data: [
+        { name: 'Current', data: [80, 65, 90] },
+        { name: 'Target', data: [90, 90, 95] },
+      ],
+    });
+    expect((opt.radar as any).indicator).to.deep.equal([
+      { name: 'Security' },
+      { name: 'Performance' },
+      { name: 'Reliability' },
+    ]);
+    expect((opt.series as any[])[0].data[0]).to.deep.equal({
+      name: 'Current',
+      value: [80, 65, 90],
+    });
+  });
+
+  it('uses explicit radar indicators when supplied', () => {
+    const indicators = [
+      { name: 'Security', max: 100 },
+      { name: 'Latency', max: 500, min: 0 },
+    ];
+    const opt = buildRadarOption({ ...baseProps, type: 'radar', indicators });
+    expect((opt.radar as any).indicator).to.deep.equal(indicators);
+  });
+
+  it('builds a gauge with bounds, progress, and a value suffix', () => {
+    const opt = buildGaugeOption({
+      ...baseProps,
+      type: 'gauge',
+      data: [{ name: 'Health', data: [82] }],
+      minValue: 20,
+      maxValue: 120,
+      yAxisAppend: '%',
+    });
+    const series = (opt.series as any[])[0];
+    expect(series).to.include({ type: 'gauge', min: 20, max: 120 });
+    expect(series.data).to.deep.equal([{ name: 'Health', value: 82 }]);
+    expect(series.detail.formatter(82)).to.equal('82%');
+  });
+
+  it('builds funnel stages from categories and numeric values', () => {
+    const opt = buildFunnelOption({
+      ...baseProps,
+      type: 'funnel',
+      categories: ['Visitors', 'Trials', 'Customers'],
+      data: [{ name: 'Conversion', data: [1000, 320, 85] }],
+    });
+    const series = (opt.series as any[])[0];
+    expect(series.type).to.equal('funnel');
+    expect(series.data).to.deep.equal([
+      { name: 'Visitors', value: 1000 },
+      { name: 'Trials', value: 320 },
+      { name: 'Customers', value: 85 },
+    ]);
+    expect(series.label.show).to.equal(true);
+  });
+
+  it('builds a categorical heatmap and derives its visual range', () => {
+    const data = [[0, 0, 5], [1, 0, 12], [0, 1, 3], [1, 1, 9]];
+    const opt = buildHeatmapOption({
+      ...baseProps,
+      type: 'heatmap',
+      categories: ['Mon', 'Tue'],
+      yCategories: ['API', 'Web'],
+      data: [{ name: 'Requests', data }],
+    });
+    expect((opt.xAxis as any).data).to.deep.equal(['Mon', 'Tue']);
+    expect((opt.yAxis as any).data).to.deep.equal(['API', 'Web']);
+    expect((opt.visualMap as any)).to.include({ min: 3, max: 12 });
+    expect((opt.series as any[])[0].data).to.equal(data);
+  });
+
+  it('passes hierarchical data to treemap and sunburst charts', () => {
+    const hierarchy = [{
+      name: 'Security',
+      children: [
+        { name: 'Configuration', value: 8 },
+        { name: 'Insecure', value: 1 },
+      ],
+    }];
+    const data = [{ name: 'Insights', data: hierarchy }];
+    const treemap = buildTreemapOption({ ...baseProps, type: 'treemap', data });
+    const sunburst = buildSunburstOption({
+      ...baseProps,
+      type: 'sunburst',
+      data,
+      innerRadius: '10%',
+      outerRadius: '85%',
+    });
+    expect((treemap.series as any[])[0].data).to.equal(hierarchy);
+    expect((treemap.series as any[])[0].label.show).to.equal(true);
+    expect((sunburst.series as any[])[0].data).to.equal(hierarchy);
+    expect((sunburst.series as any[])[0].radius).to.deep.equal(['10%', '85%']);
   });
 });
 

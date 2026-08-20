@@ -1,7 +1,20 @@
 // src/components/chart/builders.ts
 import type { EChartsOption } from 'echarts';
 
-export type ChartType = 'area' | 'bar' | 'line' | 'sankey';
+export type ChartType =
+  | 'area'
+  | 'bar'
+  | 'donut'
+  | 'funnel'
+  | 'gauge'
+  | 'heatmap'
+  | 'line'
+  | 'pie'
+  | 'radar'
+  | 'sankey'
+  | 'scatter'
+  | 'sunburst'
+  | 'treemap';
 
 export interface SeriesItem {
   name: string;
@@ -13,6 +26,20 @@ export interface SankeyEdge {
   source: string;
   target: string;
   value: number;
+}
+
+export interface PieDataItem {
+  name?: string;
+  value: number;
+  color?: string;
+  itemStyle?: Record<string, unknown>;
+}
+
+export interface RadarIndicator {
+  name: string;
+  max?: number;
+  min?: number;
+  color?: string;
 }
 
 export interface BuilderProps {
@@ -30,9 +57,16 @@ export interface BuilderProps {
   scale?: boolean | number;
   textColor?: string;
   borderColor?: string;
+  innerRadius?: number | string;
+  outerRadius?: number | string;
+  showLabels?: boolean;
+  yCategories?: string[];
+  indicators?: RadarIndicator[];
+  minValue?: number;
+  maxValue?: number;
 }
 
-function commonOption(props: BuilderProps): EChartsOption {
+function baseOption(props: BuilderProps, tooltipTrigger: 'axis' | 'item'): EChartsOption {
   const fallback = props.theme === 'dark' ? 'rgb(161, 161, 170)' : 'rgb(113, 113, 122)';
   const textColor = props.textColor ?? fallback;
   const animEnabled = props.enableAnimations !== false && props.enableAnimations !== 0;
@@ -44,7 +78,7 @@ function commonOption(props: BuilderProps): EChartsOption {
     ...(props.colors ? { color: props.colors } : {}),
     textStyle: { color: textColor },
     tooltip: {
-      trigger: 'axis',
+      trigger: tooltipTrigger,
       appendTo: 'body',
       valueFormatter: props.yAxisAppend
         ? (v: number | string) => `${v}${props.yAxisAppend}`
@@ -56,6 +90,12 @@ function commonOption(props: BuilderProps): EChartsOption {
       icon: 'circle',
       textStyle: { color: textColor },
     },
+  };
+}
+
+function commonOption(props: BuilderProps): EChartsOption {
+  return {
+    ...baseOption(props, 'axis'),
     grid: {
       left: 40,
       right: 20,
@@ -120,7 +160,7 @@ function normalizeData(data: any[]): any[] {
 
 function seriesFromProps(
   props: BuilderProps,
-  seriesType: 'bar' | 'line',
+  seriesType: 'bar' | 'line' | 'scatter',
   extra: (s: SeriesItem) => Record<string, unknown> = () => ({}),
 ) {
   return props.data.map((s) => ({
@@ -167,6 +207,208 @@ export function buildAreaOption(props: BuilderProps): EChartsOption {
       smooth: props.smooth,
       areaStyle: { opacity: 0.1 },
     })),
+  };
+}
+
+export function buildScatterOption(props: BuilderProps): EChartsOption {
+  return {
+    ...commonOption(props),
+    xAxis: buildXAxis({ ...props, xAxisType: props.xAxisType ?? 'numeric' }),
+    yAxis: buildYAxis(props),
+    series: seriesFromProps(props, 'scatter', () => ({
+      symbolSize: props.datapointSize,
+    })),
+  };
+}
+
+function normalizePieData(data: any[], categories: string[]): PieDataItem[] {
+  return data.map((item: number | PieDataItem, index) => {
+    if (typeof item === 'number') {
+      return { name: categories[index] ?? `${index + 1}`, value: item };
+    }
+
+    const { color, itemStyle, ...rest } = item;
+    return {
+      ...rest,
+      name: item.name ?? categories[index] ?? `${index + 1}`,
+      ...(color ? { itemStyle: { ...itemStyle, color } } : itemStyle ? { itemStyle } : {}),
+    };
+  });
+}
+
+export function buildPieOption(props: BuilderProps): EChartsOption {
+  const first = props.data[0] ?? { name: '', data: [] };
+  const textColor = props.textColor
+    ?? (props.theme === 'dark' ? 'rgb(161, 161, 170)' : 'rgb(113, 113, 122)');
+  const innerRadius = props.type === 'donut' ? (props.innerRadius ?? '50%') : 0;
+  const outerRadius = props.outerRadius ?? '70%';
+
+  return {
+    ...baseOption(props, 'item'),
+    series: [{
+      type: 'pie',
+      name: first.name,
+      data: normalizePieData(first.data ?? [], props.categories),
+      radius: [innerRadius, outerRadius],
+      center: ['50%', '55%'],
+      avoidLabelOverlap: true,
+      label: {
+        show: props.showLabels ?? false,
+        color: textColor,
+      },
+      labelLine: {
+        show: props.showLabels ?? false,
+        ...(props.borderColor ? { lineStyle: { color: props.borderColor } } : {}),
+      },
+      emphasis: {
+        label: { show: props.showLabels ?? false },
+      },
+    }],
+  };
+}
+
+export function buildRadarOption(props: BuilderProps): EChartsOption {
+  const indicators = props.indicators?.length
+    ? props.indicators
+    : props.categories.map((name) => ({ name }));
+
+  return {
+    ...baseOption(props, 'item'),
+    radar: { indicator: indicators },
+    series: [{
+      type: 'radar',
+      data: props.data.map((series) => ({
+        name: series.name,
+        value: normalizeData(series.data),
+        ...(series.color ? {
+          itemStyle: { color: series.color },
+          lineStyle: { color: series.color },
+        } : {}),
+      })),
+    }],
+  };
+}
+
+export function buildGaugeOption(props: BuilderProps): EChartsOption {
+  const first = props.data[0] ?? { name: '', data: [] };
+  const [firstValue] = first.data as unknown[];
+  const data = typeof firstValue === 'number'
+    ? [{ name: first.name, value: firstValue }]
+    : normalizePieData(first.data ?? [], props.categories);
+
+  return {
+    ...baseOption(props, 'item'),
+    series: [{
+      type: 'gauge',
+      name: first.name,
+      min: props.minValue ?? 0,
+      max: props.maxValue ?? 100,
+      data,
+      progress: { show: true },
+      detail: {
+        valueAnimation: props.enableAnimations !== false && props.enableAnimations !== 0,
+        formatter: props.yAxisAppend
+          ? (value: number) => `${value}${props.yAxisAppend}`
+          : '{value}',
+      },
+    }],
+  };
+}
+
+export function buildFunnelOption(props: BuilderProps): EChartsOption {
+  const first = props.data[0] ?? { name: '', data: [] };
+  return {
+    ...baseOption(props, 'item'),
+    series: [{
+      type: 'funnel',
+      name: first.name,
+      min: props.minValue,
+      max: props.maxValue,
+      data: normalizePieData(first.data ?? [], props.categories),
+      label: { show: props.showLabels ?? true },
+      emphasis: { label: { fontWeight: 'bold' } },
+    }],
+  };
+}
+
+function isHeatmapPoint(item: unknown): item is [unknown, unknown, number] {
+  if (!Array.isArray(item)) return false;
+  const point = item as unknown[];
+  return typeof point[2] === 'number';
+}
+
+function heatmapExtent(data: unknown[], operation: 'max' | 'min', fallback: number): number {
+  const values = data
+    .filter(isHeatmapPoint)
+    .map((item) => item[2]);
+  return values.length ? Math[operation](...values) : fallback;
+}
+
+export function buildHeatmapOption(props: BuilderProps): EChartsOption {
+  const first = props.data[0] ?? { name: '', data: [] };
+  const data = first.data ?? [];
+  return {
+    ...baseOption(props, 'item'),
+    grid: { left: 60, right: 20, top: 40, bottom: 70 },
+    xAxis: {
+      type: 'category',
+      data: props.categories,
+      splitArea: { show: true },
+    },
+    yAxis: {
+      type: 'category',
+      data: props.yCategories ?? [],
+      splitArea: { show: true },
+    },
+    visualMap: {
+      min: props.minValue ?? heatmapExtent(data, 'min', 0),
+      max: props.maxValue ?? heatmapExtent(data, 'max', 100),
+      calculable: true,
+      orient: 'horizontal',
+      left: 'center',
+      bottom: 0,
+    },
+    series: [{
+      type: 'heatmap',
+      name: first.name,
+      data,
+      label: { show: props.showLabels ?? false },
+      emphasis: {
+        itemStyle: {
+          shadowBlur: 10,
+          shadowColor: 'rgba(0, 0, 0, 0.35)',
+        },
+      },
+    }],
+  };
+}
+
+export function buildTreemapOption(props: BuilderProps): EChartsOption {
+  const first = props.data[0] ?? { name: '', data: [] };
+  return {
+    ...baseOption(props, 'item'),
+    series: [{
+      type: 'treemap',
+      name: first.name,
+      data: first.data ?? [],
+      label: { show: props.showLabels ?? true },
+      upperLabel: { show: props.showLabels ?? true },
+    }],
+  };
+}
+
+export function buildSunburstOption(props: BuilderProps): EChartsOption {
+  const first = props.data[0] ?? { name: '', data: [] };
+  return {
+    ...baseOption(props, 'item'),
+    series: [{
+      type: 'sunburst',
+      name: first.name,
+      data: first.data ?? [],
+      radius: [props.innerRadius ?? 0, props.outerRadius ?? '90%'],
+      label: { show: props.showLabels ?? true },
+      emphasis: { focus: 'ancestor' },
+    }],
   };
 }
 

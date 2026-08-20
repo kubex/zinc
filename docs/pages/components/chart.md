@@ -1,7 +1,7 @@
 ---
 meta:
   title: Data Chart
-  description: Charts visualize data using various chart types powered by Apache ECharts. Display line charts, bar charts, area charts, sankey diagrams, and more with full customization options.
+  description: Charts visualize data using line, bar, area, circular, statistical, hierarchical, and flow layouts powered by Apache ECharts.
 layout: component
 ---
 
@@ -281,6 +281,135 @@ Use `type="sankey"` to render a Sankey flow diagram. Each item in the series `da
 </zn-chart>
 ```
 
+### Pie Chart
+
+Use `type="pie"` for part-to-whole data. The first series supplies the slice values and `categories` supplies their
+names.
+
+```html:preview
+<zn-chart
+  type="pie"
+  categories="[&quot;Configuration suggestion&quot;,&quot;Insecure configuration&quot;]"
+  data="[{&quot;name&quot;:&quot;Insights&quot;,&quot;data&quot;:[8,1]}]"
+  height="300">
+</zn-chart>
+```
+
+### Donut Chart
+
+Use `type="donut"` for a pie chart with a hollow centre. Adjust the ring with `inner-radius` and `outer-radius`; both
+accept an ECharts pixel value or percentage. Add `show-labels` to render labels beside the slices.
+
+```html:preview
+<zn-chart
+  type="donut"
+  inner-radius="45%"
+  outer-radius="75%"
+  colors="[&quot;#ffe29a&quot;,&quot;#f78ab3&quot;]"
+  categories="[&quot;Configuration suggestion&quot;,&quot;Insecure configuration&quot;]"
+  data="[{&quot;name&quot;:&quot;Insights&quot;,&quot;data&quot;:[8,1]}]"
+  height="300">
+</zn-chart>
+```
+
+### Scatter Chart
+
+Use `type="scatter"` with `[x, y]` coordinate pairs. `d-size` controls point size, and `xaxis="datetime"` can be used
+for time-based scatter plots.
+
+```html:preview
+<zn-chart
+  type="scatter"
+  d-size="14"
+  data="[{&quot;name&quot;:&quot;Latency&quot;,&quot;data&quot;:[[12,110],[24,180],[38,140],[52,260],[70,220]]}]"
+  height="300">
+</zn-chart>
+```
+
+### Radar Chart
+
+Use `type="radar"` with an `indicators` array describing each axis. Each normal series becomes one radar shape.
+
+```html:preview
+<zn-chart
+  type="radar"
+  indicators="[{&quot;name&quot;:&quot;Security&quot;,&quot;max&quot;:100},{&quot;name&quot;:&quot;Performance&quot;,&quot;max&quot;:100},{&quot;name&quot;:&quot;Reliability&quot;,&quot;max&quot;:100},{&quot;name&quot;:&quot;Usability&quot;,&quot;max&quot;:100}]"
+  data="[{&quot;name&quot;:&quot;Current&quot;,&quot;data&quot;:[82,71,94,76]},{&quot;name&quot;:&quot;Target&quot;,&quot;data&quot;:[95,90,98,90]}]"
+  height="320">
+</zn-chart>
+```
+
+### Gauge Chart
+
+Use `type="gauge"` for a single current value. `min-value`, `max-value`, and `y-axis-append` configure its range and
+displayed unit.
+
+```html:preview
+<zn-chart
+  type="gauge"
+  min-value="0"
+  max-value="100"
+  y-axis-append="%"
+  data="[{&quot;name&quot;:&quot;Security score&quot;,&quot;data&quot;:[82]}]"
+  height="300">
+</zn-chart>
+```
+
+### Funnel Chart
+
+Use `type="funnel"` for ordered stages. Numeric values pair with `categories`, using the same compact format as pie
+charts.
+
+```html:preview
+<zn-chart
+  type="funnel"
+  categories="[&quot;Visitors&quot;,&quot;Trials&quot;,&quot;Customers&quot;]"
+  data="[{&quot;name&quot;:&quot;Conversion&quot;,&quot;data&quot;:[1000,320,85]}]"
+  height="320">
+</zn-chart>
+```
+
+### Heatmap Chart
+
+Use `type="heatmap"` with x-axis `categories`, `y-categories`, and `[xIndex, yIndex, value]` data points. The visual
+range is derived from the values unless `min-value` or `max-value` is provided.
+
+```html:preview
+<zn-chart
+  type="heatmap"
+  show-labels
+  categories="[&quot;Mon&quot;,&quot;Tue&quot;,&quot;Wed&quot;,&quot;Thu&quot;,&quot;Fri&quot;]"
+  y-categories="[&quot;API&quot;,&quot;Web&quot;,&quot;Worker&quot;]"
+  data="[{&quot;name&quot;:&quot;Requests&quot;,&quot;data&quot;:[[0,0,5],[1,0,12],[2,0,8],[3,0,16],[4,0,11],[0,1,9],[1,1,15],[2,1,12],[3,1,20],[4,1,14],[0,2,3],[1,2,7],[2,2,5],[3,2,10],[4,2,8]]}]"
+  height="320">
+</zn-chart>
+```
+
+### Treemap Chart
+
+Use `type="treemap"` with hierarchical `children` data to compare nested values by area.
+
+```html:preview
+<zn-chart
+  type="treemap"
+  data="[{&quot;name&quot;:&quot;Insights&quot;,&quot;data&quot;:[{&quot;name&quot;:&quot;Security&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;Configuration&quot;,&quot;value&quot;:8},{&quot;name&quot;:&quot;Insecure&quot;,&quot;value&quot;:1}]},{&quot;name&quot;:&quot;Performance&quot;,&quot;value&quot;:4}]}]"
+  height="320">
+</zn-chart>
+```
+
+### Sunburst Chart
+
+Use `type="sunburst"` for radial hierarchical data. `inner-radius` and `outer-radius` adjust the occupied area.
+
+```html:preview
+<zn-chart
+  type="sunburst"
+  outer-radius="90%"
+  data="[{&quot;name&quot;:&quot;Insights&quot;,&quot;data&quot;:[{&quot;name&quot;:&quot;Security&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;Configuration&quot;,&quot;value&quot;:8},{&quot;name&quot;:&quot;Insecure&quot;,&quot;value&quot;:1}]},{&quot;name&quot;:&quot;Performance&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;Latency&quot;,&quot;value&quot;:4}]}]}]"
+  height="340">
+</zn-chart>
+```
+
 ### Cross-Chart Tooltip Sync
 
 Use `sync-group="<id>"` on two or more charts to synchronise hover tooltips, zoom, and legend selection across them.
@@ -439,6 +568,32 @@ When `type="sankey"`, each item in the series `data` array is an edge:
 
 Nodes are auto-derived from unique source/target values. To customise node appearance or ordering, include an explicit `nodes` key on the series object.
 
+### Pie and Donut Data
+
+Pie and donut charts use the first series. The standard numeric format pairs each value with the category at the same
+index. You can alternatively pass ECharts-style named slices when each slice needs its own metadata or colour:
+
+```json
+[{
+  "name": "Insights",
+  "data": [
+    {"name": "Configuration suggestion", "value": 8, "color": "#ffe29a"},
+    {"name": "Insecure configuration", "value": 1, "color": "#f78ab3"}
+  ]
+}]
+```
+
+### Specialized Data Formats
+
+- Scatter points use `[x, y]` or `{ "x": value, "y": value }`.
+- Radar charts accept an `indicators` array of `{ "name": string, "min"?: number, "max"?: number }`; each series
+  contains one value per indicator.
+- Gauge charts use the first value in the first series.
+- Funnel charts accept the same numeric/category or named-value formats as pie charts.
+- Heatmaps use `[xIndex, yIndex, value]` points with `categories` and `y-categories`.
+- Treemaps and sunbursts accept hierarchical nodes containing `name`, optional `value`, and optional recursive
+  `children`.
+
 ### HTML Encoding
 
 When using the data attribute in HTML, JSON must be properly encoded. Use `&quot;` for quotes:
@@ -483,6 +638,15 @@ chart.enableAnimations = true;
 - **Line Charts**: Best for showing trends over time or continuous data
 - **Bar Charts**: Ideal for comparing discrete categories or values
 - **Area Charts**: Good for showing cumulative totals or part-to-whole relationships over time
+- **Pie Charts**: Useful for compact part-to-whole comparisons with a small number of slices
+- **Donut Charts**: Useful when a pie chart needs a lighter visual weight or centred annotation space
+- **Scatter Charts**: Show relationships, distributions, and clusters between two numeric dimensions
+- **Radar Charts**: Compare a small number of entities across a shared set of metrics
+- **Gauge Charts**: Display one value against a meaningful bounded range
+- **Funnel Charts**: Show progressive reduction through ordered stages
+- **Heatmaps**: Reveal density and patterns across two categorical dimensions
+- **Treemaps**: Compare hierarchical values by area
+- **Sunburst Charts**: Explore hierarchical proportions across radial levels
 - **Stacked Charts**: Use when showing how categories contribute to a total
 
 ### Performance Considerations
@@ -505,5 +669,3 @@ chart.enableAnimations = true;
 - Round values appropriately for readability
 - Use `y-axis-append` to add units or symbols to values
 - Format dates consistently when using time series data
-
-

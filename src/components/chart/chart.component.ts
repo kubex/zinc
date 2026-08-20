@@ -2,9 +2,18 @@ import {
   buildAreaOption,
   buildBarOption,
   type BuilderProps,
+  buildFunnelOption,
+  buildGaugeOption,
+  buildHeatmapOption,
   buildLineOption,
+  buildPieOption,
+  buildRadarOption,
   buildSankeyOption,
+  buildScatterOption,
+  buildSunburstOption,
+  buildTreemapOption,
   type ChartType,
+  type RadarIndicator,
   type SeriesItem,
 } from './builders';
 import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
@@ -29,6 +38,8 @@ export default class ZnChart extends ZincElement {
   @property() type: ChartType = 'bar';
   @property({ type: Array }) data: SeriesItem[] = [];
   @property({ type: Array }) categories: string[] = [];
+  @property({ attribute: 'y-categories', type: Array }) yCategories: string[] = [];
+  @property({ type: Array }) indicators: RadarIndicator[] = [];
 
   @property({ attribute: 'xaxis' }) xAxis: 'datetime' | 'category' | 'numeric';
   @property({ type: Number, attribute: 'd-size' }) datapointSize: number = 1;
@@ -55,6 +66,11 @@ export default class ZnChart extends ZincElement {
   @property({ type: Array }) colors?: string[];
   @property({ attribute: 'sync-group' }) syncGroup?: string;
   @property({ type: Boolean }) smooth = false;
+  @property({ attribute: 'inner-radius' }) innerRadius?: number | string;
+  @property({ attribute: 'outer-radius' }) outerRadius?: number | string;
+  @property({ attribute: 'show-labels', type: Boolean }) showLabels?: boolean;
+  @property({ attribute: 'min-value', type: Number }) minValue?: number;
+  @property({ attribute: 'max-value', type: Number }) maxValue?: number;
   @property({
     converter: {
       fromAttribute: (value: string | null) => {
@@ -122,12 +138,28 @@ export default class ZnChart extends ZincElement {
       scale: this.scale,
       textColor: this.getTextColor(),
       borderColor: this.getBorderColor(),
+      innerRadius: this.innerRadius,
+      outerRadius: this.outerRadius,
+      showLabels: this.showLabels,
+      yCategories: Array.isArray(this.yCategories) ? this.yCategories : [],
+      indicators: Array.isArray(this.indicators) ? this.indicators : [],
+      minValue: this.minValue,
+      maxValue: this.maxValue,
     };
     switch (this.type) {
       case 'bar': return buildBarOption(props);
       case 'line': return buildLineOption(props);
       case 'area': return buildAreaOption(props);
+      case 'funnel': return buildFunnelOption(props);
+      case 'gauge': return buildGaugeOption(props);
+      case 'heatmap': return buildHeatmapOption(props);
+      case 'donut':
+      case 'pie': return buildPieOption(props);
+      case 'radar': return buildRadarOption(props);
       case 'sankey': return buildSankeyOption(props);
+      case 'scatter': return buildScatterOption(props);
+      case 'sunburst': return buildSunburstOption(props);
+      case 'treemap': return buildTreemapOption(props);
       default: return buildBarOption(props);
     }
   }

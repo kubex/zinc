@@ -899,6 +899,14 @@
               "value": { "type": "string[]", "default": "[]" }
             },
             {
+              "name": "y-categories",
+              "value": { "type": "string[]", "default": "[]" }
+            },
+            {
+              "name": "indicators",
+              "value": { "type": "RadarIndicator[]", "default": "[]" }
+            },
+            {
               "name": "xaxis",
               "value": { "type": "'datetime' | 'category' | 'numeric'" }
             },
@@ -935,6 +943,20 @@
               "value": { "type": "boolean", "default": "false" }
             },
             {
+              "name": "inner-radius",
+              "value": { "type": "number | string | undefined" }
+            },
+            {
+              "name": "outer-radius",
+              "value": { "type": "number | string | undefined" }
+            },
+            {
+              "name": "show-labels",
+              "value": { "type": "boolean | undefined" }
+            },
+            { "name": "min-value", "value": { "type": "number | undefined" } },
+            { "name": "max-value", "value": { "type": "number | undefined" } },
+            {
               "name": "scale",
               "value": { "type": "boolean | number", "default": "false" }
             }
@@ -945,6 +967,8 @@
               { "name": "type", "type": "ChartType" },
               { "name": "data", "type": "SeriesItem[]" },
               { "name": "categories", "type": "string[]" },
+              { "name": "yCategories", "type": "string[]" },
+              { "name": "indicators", "type": "RadarIndicator[]" },
               {
                 "name": "xAxis",
                 "type": "'datetime' | 'category' | 'numeric'"
@@ -960,6 +984,11 @@
               { "name": "colors", "type": "string[] | undefined" },
               { "name": "syncGroup", "type": "string | undefined" },
               { "name": "smooth", "type": "boolean" },
+              { "name": "innerRadius", "type": "number | string | undefined" },
+              { "name": "outerRadius", "type": "number | string | undefined" },
+              { "name": "showLabels", "type": "boolean | undefined" },
+              { "name": "minValue", "type": "number | undefined" },
+              { "name": "maxValue", "type": "number | undefined" },
               { "name": "scale", "type": "boolean | number" }
             ],
             "events": []
@@ -6816,54 +6845,6 @@
           }
         },
         {
-          "name": "zn-panel",
-          "description": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n---\n\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "basis-px", "value": { "type": "number" } },
-            { "name": "caption", "value": { "type": "string" } },
-            { "name": "icon", "value": { "type": "string" } },
-            { "name": "tabbed", "value": { "type": "boolean" } },
-            { "name": "header-borderless", "value": { "type": "boolean" } },
-            { "name": "cosmic", "value": { "type": "boolean" } },
-            { "name": "flush", "value": { "type": "boolean" } },
-            { "name": "flush-x", "value": { "type": "boolean" } },
-            { "name": "flush-y", "value": { "type": "boolean" } },
-            { "name": "flush-footer", "value": { "type": "boolean" } },
-            { "name": "transparent", "value": { "type": "boolean" } },
-            { "name": "shadow", "value": { "type": "boolean" } }
-          ],
-          "slots": [
-            { "name": "", "description": "The panel's main content." },
-            {
-              "name": "actions",
-              "description": "Actions displayed in the panel header (buttons, chips, etc)."
-            },
-            {
-              "name": "footer",
-              "description": "Content displayed in the panel footer."
-            }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              { "name": "basis", "type": "number" },
-              { "name": "caption", "type": "string" },
-              { "name": "icon", "type": "string" },
-              { "name": "tabbed", "type": "boolean" },
-              { "name": "headerBorderless", "type": "boolean" },
-              { "name": "cosmic", "type": "boolean" },
-              { "name": "flush", "type": "boolean" },
-              { "name": "flushX", "type": "boolean" },
-              { "name": "flushY", "type": "boolean" },
-              { "name": "flushFooter", "type": "boolean" },
-              { "name": "transparent", "type": "boolean" },
-              { "name": "shadow", "type": "boolean" }
-            ],
-            "events": []
-          }
-        },
-        {
           "name": "zn-popup",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **reposition()** - Forces the popup to recalculate and reposition itself.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -7120,6 +7101,54 @@
                 "description": "Emitted as an example."
               }
             ]
+          }
+        },
+        {
+          "name": "zn-panel",
+          "description": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n---\n\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "basis-px", "value": { "type": "number" } },
+            { "name": "caption", "value": { "type": "string" } },
+            { "name": "icon", "value": { "type": "string" } },
+            { "name": "tabbed", "value": { "type": "boolean" } },
+            { "name": "header-borderless", "value": { "type": "boolean" } },
+            { "name": "cosmic", "value": { "type": "boolean" } },
+            { "name": "flush", "value": { "type": "boolean" } },
+            { "name": "flush-x", "value": { "type": "boolean" } },
+            { "name": "flush-y", "value": { "type": "boolean" } },
+            { "name": "flush-footer", "value": { "type": "boolean" } },
+            { "name": "transparent", "value": { "type": "boolean" } },
+            { "name": "shadow", "value": { "type": "boolean" } }
+          ],
+          "slots": [
+            { "name": "", "description": "The panel's main content." },
+            {
+              "name": "actions",
+              "description": "Actions displayed in the panel header (buttons, chips, etc)."
+            },
+            {
+              "name": "footer",
+              "description": "Content displayed in the panel footer."
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "basis", "type": "number" },
+              { "name": "caption", "type": "string" },
+              { "name": "icon", "type": "string" },
+              { "name": "tabbed", "type": "boolean" },
+              { "name": "headerBorderless", "type": "boolean" },
+              { "name": "cosmic", "type": "boolean" },
+              { "name": "flush", "type": "boolean" },
+              { "name": "flushX", "type": "boolean" },
+              { "name": "flushY", "type": "boolean" },
+              { "name": "flushFooter", "type": "boolean" },
+              { "name": "transparent", "type": "boolean" },
+              { "name": "shadow", "type": "boolean" }
+            ],
+            "events": []
           }
         },
         {

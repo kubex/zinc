@@ -435,6 +435,8 @@
         { "name": "type", "values": [{ "name": "ChartType" }] },
         { "name": "data", "values": [{ "name": "SeriesItem[]" }] },
         { "name": "categories", "values": [{ "name": "string[]" }] },
+        { "name": "y-categories", "values": [{ "name": "string[]" }] },
+        { "name": "indicators", "values": [{ "name": "RadarIndicator[]" }] },
         {
           "name": "xaxis",
           "values": [
@@ -454,6 +456,11 @@
         { "name": "colors", "values": [{ "name": "string[]" }] },
         { "name": "sync-group", "values": [] },
         { "name": "smooth", "values": [] },
+        { "name": "inner-radius", "values": [] },
+        { "name": "outer-radius", "values": [] },
+        { "name": "show-labels", "values": [] },
+        { "name": "min-value", "values": [] },
+        { "name": "max-value", "values": [] },
         { "name": "scale", "values": [] }
       ],
       "references": [
@@ -2865,30 +2872,6 @@
       ]
     },
     {
-      "name": "zn-panel",
-      "description": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n---\n\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "basis-px", "values": [] },
-        { "name": "caption", "values": [] },
-        { "name": "icon", "values": [] },
-        { "name": "tabbed", "values": [] },
-        { "name": "header-borderless", "values": [] },
-        { "name": "cosmic", "values": [] },
-        { "name": "flush", "values": [] },
-        { "name": "flush-x", "values": [] },
-        { "name": "flush-y", "values": [] },
-        { "name": "flush-footer", "values": [] },
-        { "name": "transparent", "values": [] },
-        { "name": "shadow", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/panel"
-        }
-      ]
-    },
-    {
       "name": "zn-popup",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **reposition()** - Forces the popup to recalculate and reposition itself.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -3034,6 +3017,30 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/popup"
+        }
+      ]
+    },
+    {
+      "name": "zn-panel",
+      "description": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n---\n\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "basis-px", "values": [] },
+        { "name": "caption", "values": [] },
+        { "name": "icon", "values": [] },
+        { "name": "tabbed", "values": [] },
+        { "name": "header-borderless", "values": [] },
+        { "name": "cosmic", "values": [] },
+        { "name": "flush", "values": [] },
+        { "name": "flush-x", "values": [] },
+        { "name": "flush-y", "values": [] },
+        { "name": "flush-footer", "values": [] },
+        { "name": "transparent", "values": [] },
+        { "name": "shadow", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/panel"
         }
       ]
     },

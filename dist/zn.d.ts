@@ -4477,7 +4477,7 @@ declare module "components/channel-tile/index" {
 }
 declare module "components/chart/builders" {
     import type { EChartsOption } from 'echarts';
-    export type ChartType = 'area' | 'bar' | 'line' | 'sankey';
+    export type ChartType = 'area' | 'bar' | 'donut' | 'funnel' | 'gauge' | 'heatmap' | 'line' | 'pie' | 'radar' | 'sankey' | 'scatter' | 'sunburst' | 'treemap';
     export interface SeriesItem {
         name: string;
         data: any[];
@@ -4487,6 +4487,18 @@ declare module "components/chart/builders" {
         source: string;
         target: string;
         value: number;
+    }
+    export interface PieDataItem {
+        name?: string;
+        value: number;
+        color?: string;
+        itemStyle?: Record<string, unknown>;
+    }
+    export interface RadarIndicator {
+        name: string;
+        max?: number;
+        min?: number;
+        color?: string;
     }
     export interface BuilderProps {
         type: ChartType;
@@ -4503,10 +4515,25 @@ declare module "components/chart/builders" {
         scale?: boolean | number;
         textColor?: string;
         borderColor?: string;
+        innerRadius?: number | string;
+        outerRadius?: number | string;
+        showLabels?: boolean;
+        yCategories?: string[];
+        indicators?: RadarIndicator[];
+        minValue?: number;
+        maxValue?: number;
     }
     export function buildBarOption(props: BuilderProps): EChartsOption;
     export function buildLineOption(props: BuilderProps): EChartsOption;
     export function buildAreaOption(props: BuilderProps): EChartsOption;
+    export function buildScatterOption(props: BuilderProps): EChartsOption;
+    export function buildPieOption(props: BuilderProps): EChartsOption;
+    export function buildRadarOption(props: BuilderProps): EChartsOption;
+    export function buildGaugeOption(props: BuilderProps): EChartsOption;
+    export function buildFunnelOption(props: BuilderProps): EChartsOption;
+    export function buildHeatmapOption(props: BuilderProps): EChartsOption;
+    export function buildTreemapOption(props: BuilderProps): EChartsOption;
+    export function buildSunburstOption(props: BuilderProps): EChartsOption;
     export function buildSankeyOption(props: BuilderProps): EChartsOption;
 }
 declare module "components/chart/echarts-loader" {
@@ -4515,7 +4542,7 @@ declare module "components/chart/echarts-loader" {
     export function loadECharts(): Promise<EChartsModule>;
 }
 declare module "components/chart/chart.component" {
-    import { type ChartType, type SeriesItem } from "components/chart/builders";
+    import { type ChartType, type RadarIndicator, type SeriesItem } from "components/chart/builders";
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
@@ -4531,6 +4558,8 @@ declare module "components/chart/chart.component" {
         type: ChartType;
         data: SeriesItem[];
         categories: string[];
+        yCategories: string[];
+        indicators: RadarIndicator[];
         xAxis: 'datetime' | 'category' | 'numeric';
         datapointSize: number;
         stacked: boolean;
@@ -4543,6 +4572,11 @@ declare module "components/chart/chart.component" {
         colors?: string[];
         syncGroup?: string;
         smooth: boolean;
+        innerRadius?: number | string;
+        outerRadius?: number | string;
+        showLabels?: boolean;
+        minValue?: number;
+        maxValue?: number;
         scale: boolean | number;
         private chart?;
         private echarts?;

@@ -58,6 +58,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -246,79 +319,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -1624,6 +1624,15 @@
             },
             {
               "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Accessible name for the button. Icon-only buttons fall back to `tooltip`.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
               "name": "autoClick",
               "type": {
                 "text": "boolean"
@@ -2066,6 +2075,14 @@
                 "text": "string"
               },
               "fieldName": "tooltip"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Accessible name for the button. Icon-only buttons fall back to `tooltip`.",
+              "fieldName": "label"
             },
             {
               "name": "auto-click",
@@ -28793,6 +28810,256 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/panel/panel.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnPanel",
+          "cssProperties": [
+            {
+              "description": "The flex-basis of the panel. Can be set using the basis-px attribute.",
+              "name": "--zn-panel-basis"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The panel's main content.",
+              "name": ""
+            },
+            {
+              "description": "Actions displayed in the panel header (buttons, chips, etc).",
+              "name": "actions"
+            },
+            {
+              "description": "Content displayed in the panel footer.",
+              "name": "footer"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, '[default]', 'actions', 'footer')"
+            },
+            {
+              "kind": "field",
+              "name": "basis",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "basis-px"
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "tabbed",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "tabbed"
+            },
+            {
+              "kind": "field",
+              "name": "headerBorderless",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "header-borderless"
+            },
+            {
+              "kind": "field",
+              "name": "cosmic",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "cosmic"
+            },
+            {
+              "kind": "field",
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush"
+            },
+            {
+              "kind": "field",
+              "name": "flushX",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-x"
+            },
+            {
+              "kind": "field",
+              "name": "flushY",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-y"
+            },
+            {
+              "kind": "field",
+              "name": "flushFooter",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-footer"
+            },
+            {
+              "kind": "field",
+              "name": "transparent",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "transparent"
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "shadow"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "basis-px",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "basis"
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "caption"
+            },
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "icon"
+            },
+            {
+              "name": "tabbed",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "tabbed"
+            },
+            {
+              "name": "header-borderless",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "headerBorderless"
+            },
+            {
+              "name": "cosmic",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "cosmic"
+            },
+            {
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flush"
+            },
+            {
+              "name": "flush-x",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushX"
+            },
+            {
+              "name": "flush-y",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushY"
+            },
+            {
+              "name": "flush-footer",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushFooter"
+            },
+            {
+              "name": "transparent",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "transparent"
+            },
+            {
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "shadow"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.",
+          "tagNameWithoutPrefix": "panel",
+          "tagName": "zn-panel",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n * @documentation https://zinc.style/components/panel\n * @status experimental\n * @since 1.0\n *\n * @slot - The panel's main content.\n * @slot actions - Actions displayed in the panel header (buttons, chips, etc).\n * @slot footer - Content displayed in the panel footer.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.\n */",
+          "documentation": "https://zinc.style/components/panel",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnPanel",
+            "module": "components/panel/panel.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/popup/popup.js",
       "declarations": [
         {
@@ -29331,256 +29598,6 @@
           "declaration": {
             "name": "ZnPopup",
             "module": "components/popup/popup.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/panel/panel.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnPanel",
-          "cssProperties": [
-            {
-              "description": "The flex-basis of the panel. Can be set using the basis-px attribute.",
-              "name": "--zn-panel-basis"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The panel's main content.",
-              "name": ""
-            },
-            {
-              "description": "Actions displayed in the panel header (buttons, chips, etc).",
-              "name": "actions"
-            },
-            {
-              "description": "Content displayed in the panel footer.",
-              "name": "footer"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, '[default]', 'actions', 'footer')"
-            },
-            {
-              "kind": "field",
-              "name": "basis",
-              "type": {
-                "text": "number"
-              },
-              "attribute": "basis-px"
-            },
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "caption"
-            },
-            {
-              "kind": "field",
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "icon"
-            },
-            {
-              "kind": "field",
-              "name": "tabbed",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "tabbed"
-            },
-            {
-              "kind": "field",
-              "name": "headerBorderless",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "header-borderless"
-            },
-            {
-              "kind": "field",
-              "name": "cosmic",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "cosmic"
-            },
-            {
-              "kind": "field",
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush"
-            },
-            {
-              "kind": "field",
-              "name": "flushX",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush-x"
-            },
-            {
-              "kind": "field",
-              "name": "flushY",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush-y"
-            },
-            {
-              "kind": "field",
-              "name": "flushFooter",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush-footer"
-            },
-            {
-              "kind": "field",
-              "name": "transparent",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "transparent"
-            },
-            {
-              "kind": "field",
-              "name": "shadow",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "shadow"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "basis-px",
-              "type": {
-                "text": "number"
-              },
-              "fieldName": "basis"
-            },
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "caption"
-            },
-            {
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "icon"
-            },
-            {
-              "name": "tabbed",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "tabbed"
-            },
-            {
-              "name": "header-borderless",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "headerBorderless"
-            },
-            {
-              "name": "cosmic",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "cosmic"
-            },
-            {
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flush"
-            },
-            {
-              "name": "flush-x",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flushX"
-            },
-            {
-              "name": "flush-y",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flushY"
-            },
-            {
-              "name": "flush-footer",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flushFooter"
-            },
-            {
-              "name": "transparent",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "transparent"
-            },
-            {
-              "name": "shadow",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "shadow"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.",
-          "tagNameWithoutPrefix": "panel",
-          "tagName": "zn-panel",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n * @documentation https://zinc.style/components/panel\n * @status experimental\n * @since 1.0\n *\n * @slot - The panel's main content.\n * @slot actions - Actions displayed in the panel header (buttons, chips, etc).\n * @slot footer - Content displayed in the panel footer.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.\n */",
-          "documentation": "https://zinc.style/components/panel",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnPanel",
-            "module": "components/panel/panel.js"
           }
         }
       ]

@@ -1215,6 +1215,8 @@ declare module "components/button/button.component" {
         dataTarget: 'modal' | 'slide' | string;
         rel: string;
         tooltip: string;
+        /** Accessible name for the button. Icon-only buttons fall back to `tooltip`. */
+        label: string;
         autoClick: boolean;
         autoClickDelay: number;
         loadingText: string;
@@ -5142,6 +5144,9 @@ declare module "components/icon-picker/brand-icons" {
 }
 declare module "components/icon-picker/line-icons" {
     export const lineIcons: string[];
+}
+declare module "components/icon-picker/lucide-icons" {
+    export const lucideIcons: string[];
 }
 declare module "components/icon-picker/material-icons" {
     export const materialIcons: string[];

@@ -150,15 +150,30 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
 
   /** Adds a language key to this component's values if not already present. Used by zn-translation-group. */
   public addLanguageKey(languageCode: string) {
-    if (!Object.prototype.hasOwnProperty.call(this.values, languageCode)) {
-      this.values = {...this.values, [languageCode]: ''};
+    const values = this.pendingValues();
+    if (!Object.prototype.hasOwnProperty.call(values, languageCode)) {
+      this.values = {...values, [languageCode]: ''};
       this.updateValue();
     }
   }
 
   /** Returns all language codes that have values. */
   public getValueLanguages(): string[] {
-    return Object.keys(this.values);
+    return Object.keys(this.pendingValues());
+  }
+
+  /**
+   * `values`, falling back to the `value` attribute it is built from while that is still pending. A parent
+   * zn-translation-group syncs its children from its own first update, which runs before theirs, so reading
+   * `values` alone would see it empty and overwrite the value the server rendered.
+   */
+  private pendingValues(): Record<string, string> {
+    if (Object.keys(this.values).length > 0) return this.values;
+    try {
+      return JSON.parse(this.value || '{}') as Record<string, string>;
+    } catch {
+      return this.values;
+    }
   }
 
   disconnectedCallback() {

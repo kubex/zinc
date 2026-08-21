@@ -4,10 +4,16 @@
 
 :host {
   display: block;
+  overflow: hidden;
 }
 
 .remarkd-editor {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  // A long document scrolls the body instead of growing the page past one screenful,
+  // which also keeps the toolbar in reach.
+  max-height: var(--remarkd-editor-max-height, 100dvh);
   border: 1px solid rgb(var(--zn-border-color));
   border-radius: var(--zn-border-radius);
   background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
@@ -15,6 +21,7 @@
 
 .remarkd-editor__toolbar {
   display: flex;
+  flex: none;
   gap: 2px;
   flex-wrap: wrap;
   padding: var(--zn-spacing-x-small);
@@ -24,6 +31,7 @@
 .remarkd-editor__body {
   padding: var(--zn-spacing-large) var(--zn-spacing-large) var(--zn-spacing-large) 52px;
   min-height: 10rem;
+  overflow-y: auto;
 }
 
 // Raw mode has no gutter handles, so it reclaims the left padding.
@@ -90,7 +98,6 @@
 .remarkd-editor__delete:focus-within {
   opacity: 1;
 }
-
 
 
 .remarkd-editor__drag-handle {

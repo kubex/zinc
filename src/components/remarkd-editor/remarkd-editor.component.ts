@@ -110,6 +110,8 @@ const SLASH_ITEMS: SlashMenuItem[] = BLOCK_TYPES.map(item => item.image || item.
  * @csspart image-controls - The caption / alignment / size panel shown when an image block is clicked.
  * @csspart include - The chip rendered in place of an `include::` directive.
  * @csspart include-picker - The inline Include picker opened from the toolbar or "/include".
+ *
+ * @cssproperty --remarkd-editor-max-height - The tallest the editor grows before its body scrolls. Defaults to `100dvh`.
  */
 export default class ZnRemarkdEditor extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -165,6 +167,8 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   private dragStartX = 0;
   private dragStartY = 0;
   private dragGhost: HTMLElement | null = null;
+  private dragPointerY = 0;
+  private autoScrollFrame: number | null = null;
 
   /** The name of the control, submitted as part of form data. */
   @property() name = '';
@@ -440,14 +444,14 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     this.updateBlocks(blocks);
   }
 
-  private startEdit(index: number, draft?: string) {
+  private startEdit(index: number, draft?: string, align: 'nearest' | 'center' = 'nearest') {
     if (this.disabled || this.readonly) return;
     this.editingDraft = draft ?? this.blocks[index] ?? '';
     this.editingIndex = index;
     this.imageEdit = null;
     this.editShell = this.computeEditShell(this.editingDraft);
     this.slashController.close();
-    void this.focusInput();
+    void this.focusInput(align);
   }
 
   private updateImageEdit(patch: Partial<ImageBlockData>) {
@@ -507,17 +511,75 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     return '';
   }
 
-  private async focusInput() {
+  private async focusInput(align: 'nearest' | 'center' = 'nearest') {
     await this.updateComplete;
     const input = this.shadowRoot?.querySelector<HTMLTextAreaElement>('.remarkd-editor__input');
     if (input) {
       // Each edit renders its own textarea, so the slash menu is re-pointed at it.
       this.slashController.attach(input);
       this.autosize(input);
-      input.focus();
+      // preventScroll because the browser's own focus scroll walks every scrollable
+      // ancestor — including the surrounding page panel. reveal() stays in the editor.
+      input.focus({preventScroll: true});
       input.setSelectionRange(input.value.length, input.value.length);
+      this.reveal(input, align);
     }
     this.suppressBlurCommit = false;
+  }
+
+  /**
+   * Scrolls the editor's own body to bring `el` into view. Never `scrollIntoView()` and
+   * never `focus()` without preventScroll: both walk every scrollable ancestor, and an
+   * `overflow: hidden`/`auto` panel around the editor is scrollable too — that shifts a
+   * container the user never asked to move.
+   */
+  private reveal(el: Element | null | undefined, align: 'nearest' | 'center' = 'nearest') {
+    const body = this.shadowRoot?.querySelector('.remarkd-editor__body');
+    if (!el || !body) return;
+
+    const target = el.getBoundingClientRect();
+    const view = body.getBoundingClientRect();
+
+    // scrollTop clamps itself, so an overshoot at either end lands at the limit.
+    if (align === 'center') {
+      // Taller than the view — a large image, say — can't be centred without hiding its
+      // top, so anchor the top and let the rest run off the bottom.
+      body.scrollTop += target.height > view.height
+        ? target.top - view.top
+        : (target.top + target.height / 2) - (view.top + view.height / 2);
+    } else if (target.top < view.top) {
+      body.scrollTop += target.top - view.top;
+    } else if (target.bottom > view.bottom) {
+      body.scrollTop += target.bottom - view.bottom;
+    }
+  }
+
+  private async revealAfterUpdate(selector: string, align: 'nearest' | 'center' = 'nearest') {
+    await this.updateComplete;
+    this.reveal(this.shadowRoot?.querySelector(selector), align);
+  }
+
+  /**
+   * Centres a block added without opening an editor. An image has no height until it
+   * loads, so the first pass scrolls against a layout that is still short — the second
+   * pass corrects it once the real dimensions are in.
+   */
+  private async revealBlock(index: number) {
+    await this.updateComplete;
+    const blockAt = () => this.shadowRoot?.querySelectorAll('.remarkd-editor__block')[index];
+    const block = blockAt();
+    if (!block) return;
+    this.reveal(block, 'center');
+
+    const loading = [...block.querySelectorAll('img')].filter(img => !img.complete);
+    if (!loading.length) return;
+
+    await Promise.all(loading.map(img => new Promise<void>(resolve => {
+      img.addEventListener('load', () => resolve(), {once: true});
+      img.addEventListener('error', () => resolve(), {once: true});
+    })));
+    await new Promise(requestAnimationFrame);
+    this.reveal(blockAt(), 'center');
   }
 
   private addBlockAt(index: number, content: string) {
@@ -525,6 +587,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     const blocks = [...this.blocks];
     blocks.splice(index, 0, content);
     this.updateBlocks(blocks);
+    void this.revealBlock(index);
   }
 
   private deleteBlock(index: number) {
@@ -540,7 +603,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     const blocks = [...this.blocks];
     blocks.splice(index, 0, '');
     this.blocks = blocks;
-    this.startEdit(index, prefill);
+    this.startEdit(index, prefill, 'center');
   }
 
   /**
@@ -714,9 +777,55 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       document.body.style.cursor = 'grabbing';
     }
 
+    this.dragPointerY = e.clientY;
     this.moveDragGhost(e.clientX, e.clientY);
     this.dropIndicator = this.insertionIndexFromY(e.clientY);
+    this.autoScrollFrame ??= requestAnimationFrame(this.stepAutoScroll);
   };
+
+  /**
+   * Holding the pointer near a scroll edge keeps the content moving, so a block can
+   * be dragged past the visible slice of a long document. Runs per frame rather than
+   * per pointermove — a pointer parked at the edge stops emitting moves.
+   */
+  private stepAutoScroll = () => {
+    this.autoScrollFrame = null;
+    if (this.dragIndex === null || !this.autoScroll()) return;
+    // The content moved under a possibly stationary pointer, so the drop target shifts.
+    this.dropIndicator = this.insertionIndexFromY(this.dragPointerY);
+    this.autoScrollFrame = requestAnimationFrame(this.stepAutoScroll);
+  };
+
+  /** Scrolls the editor body, falling through to the page once the body is at its limit. */
+  private autoScroll(): boolean {
+    const body = this.shadowRoot?.querySelector('.remarkd-editor__body');
+    if (body) {
+      const {top, bottom} = body.getBoundingClientRect();
+      const delta = this.edgeScrollDelta(top, bottom);
+      const before = body.scrollTop;
+      if (delta) {
+        body.scrollTop += delta;
+        if (body.scrollTop !== before) return true;
+      }
+    }
+
+    const pageDelta = this.edgeScrollDelta(0, window.innerHeight);
+    if (!pageDelta) return false;
+    const before = window.scrollY;
+    window.scrollBy(0, pageDelta);
+    return window.scrollY !== before;
+  }
+
+  /** Scroll step for this frame: nothing until the pointer is within `edge` of a boundary. */
+  private edgeScrollDelta(top: number, bottom: number): number {
+    const edge = 56;
+    const max = 18;
+    const ramp = (depth: number) => Math.ceil((Math.min(depth, edge) / edge) * max);
+
+    if (this.dragPointerY < top + edge) return -ramp(top + edge - this.dragPointerY);
+    if (this.dragPointerY > bottom - edge) return ramp(this.dragPointerY - (bottom - edge));
+    return 0;
+  }
 
   private handleDragPointerUp = (e: PointerEvent) => {
     const from = this.dragIndex;
@@ -732,6 +841,8 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
 
   private cancelDrag = () => {
     this.pendingDragHandle = null;
+    if (this.autoScrollFrame !== null) cancelAnimationFrame(this.autoScrollFrame);
+    this.autoScrollFrame = null;
     document.removeEventListener('pointermove', this.handleDragPointerMove);
     document.removeEventListener('pointerup', this.handleDragPointerUp);
     document.removeEventListener('pointercancel', this.cancelDrag);
@@ -761,6 +872,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     if (this.disabled || this.readonly) return;
     this.includePickerIndex = null;
     this.imagePickerIndex = index;
+    void this.revealAfterUpdate('.remarkd-editor__image-picker', 'center');
   }
 
   private pickInclude(index: number) {
@@ -769,6 +881,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     this.includeQuery = '';
     this.includePickerIndex = index;
     void this.loadIncludeOptions();
+    void this.revealAfterUpdate('.remarkd-editor__include-picker', 'center');
   }
 
   private closeIncludePicker = () => {

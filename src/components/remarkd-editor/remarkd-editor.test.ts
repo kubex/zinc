@@ -118,6 +118,102 @@ Second"></zn-remarkd-editor>`);
     await expectNamedIconButtons(el, el.shadowRoot!.querySelector('.remarkd-editor__image-controls')!);
   });
 
+  /** A document tall enough to overflow the editor's max height. */
+  const longValue = Array.from({length: 60}, (_, i) => `Paragraph ${i}`).join('\n\n');
+
+  it('should not grow taller than the viewport', async () => {
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value=${longValue}></zn-remarkd-editor>`);
+    expect(el.getBoundingClientRect().height).to.be.at.most(window.innerHeight + 1);
+  });
+
+  /** Adds a block below the middle block via its gutter button. */
+  async function addBlockMidDocument(el: ZnRemarkdEditor) {
+    const blocks = el.shadowRoot!.querySelectorAll('.remarkd-editor__block');
+    blocks[Math.floor(blocks.length / 2)].querySelector('.remarkd-editor__actions zn-button')!
+      .dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__input'), 'no block opened');
+  }
+
+  it('should centre a newly added block in its own body', async () => {
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value=${longValue}></zn-remarkd-editor>`);
+    const body = el.shadowRoot!.querySelector('.remarkd-editor__body')!;
+    await addBlockMidDocument(el);
+
+    const bodyBox = body.getBoundingClientRect();
+    const inputBox = el.shadowRoot!.querySelector('.remarkd-editor__input')!.getBoundingClientRect();
+    expect(body.scrollTop, 'the body never scrolled').to.be.greaterThan(0);
+    expect(Math.abs((inputBox.top - bodyBox.top) - (bodyBox.bottom - inputBox.bottom)),
+      'the new block is not centred').to.be.lessThan(60);
+  });
+
+  it('should not scroll an enclosing panel when a block is added', async () => {
+    // An `overflow: hidden` panel has no scrollbar but is still scrollable in code, so
+    // scrollIntoView() or a plain focus() would shift it with no way to scroll back.
+    const panel = await fixture<HTMLDivElement>(html`
+      <div style="height: 200px; overflow: hidden">
+        <zn-remarkd-editor value=${longValue}></zn-remarkd-editor>
+        <div style="height: 900px"></div>
+      </div>`);
+    const el = panel.querySelector<ZnRemarkdEditor>('zn-remarkd-editor')!;
+    await el.updateComplete;
+    const body = el.shadowRoot!.querySelector('.remarkd-editor__body')!;
+    await addBlockMidDocument(el);
+
+    expect(body.scrollTop, 'the editor body should still scroll').to.be.greaterThan(0);
+    expect(panel.scrollTop, 'the enclosing panel was scrolled').to.equal(0);
+  });
+
+  it('should not scroll an enclosing scroller when an image block is added', async () => {
+    const panel = await fixture<HTMLDivElement>(html`
+      <div style="height: 200px; overflow: auto">
+        <zn-remarkd-editor value=${longValue}></zn-remarkd-editor>
+        <div style="height: 900px"></div>
+      </div>`);
+    const el = panel.querySelector<ZnRemarkdEditor>('zn-remarkd-editor')!;
+    await el.updateComplete;
+    const body = el.shadowRoot!.querySelector('.remarkd-editor__body')!;
+    expect(panel.scrollHeight - panel.clientHeight, 'the panel needs room to scroll')
+      .to.be.greaterThan(0);
+
+    // A 1x1 gif: an image block whose height only lands once it loads.
+    const src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+    el.value = `${longValue}\n\nimage::${src}[pixel]`;
+    await el.updateComplete;
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__block img'), 'no image block');
+
+    expect(panel.scrollTop, 'the enclosing scroller was scrolled').to.equal(0);
+    expect(body.scrollTop, 'the body should be scrollable').to.be.at.least(0);
+  });
+
+  it('should keep scrolling while a drag is held at the edge', async () => {
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value=${longValue}></zn-remarkd-editor>`);
+    const body = el.shadowRoot!.querySelector('.remarkd-editor__body')!;
+    const handle = el.shadowRoot!.querySelectorAll('.remarkd-editor__block')[1]
+      .querySelector('.remarkd-editor__drag-handle')!;
+    const from = handle.getBoundingClientRect();
+    const drag = (type: string, clientY: number, target: EventTarget, buttons = 1) =>
+      target.dispatchEvent(new PointerEvent(type, {
+        bubbles: true, composed: true, cancelable: true,
+        clientX: Math.round(from.left + 5), clientY, button: 0, buttons,
+      }));
+
+    drag('pointerdown', Math.round(from.top + 5), handle);
+    drag('pointermove', Math.round(from.top + 20), document);
+    expect(el.shadowRoot!.querySelector('.remarkd-editor__ghost'), 'the drag never started').to.exist;
+
+    // Park the pointer in the bottom edge zone — the frame loop scrolls without further moves.
+    drag('pointermove', Math.round(body.getBoundingClientRect().bottom - 20), document);
+    await waitUntil(() => body.scrollTop > 0, 'a drag held at the edge never scrolled');
+
+    drag('pointercancel', 0, document, 0);
+    const settled = body.scrollTop;
+    await new Promise(resolve => setTimeout(resolve, 100));
+    expect(body.scrollTop, 'scrolling continued after the drag ended').to.equal(settled);
+  });
+
   it('should open zn-slash-menu with the block types when "/" starts an empty block', async () => {
     const el = await fixture<ZnRemarkdEditor>(html`
       <zn-remarkd-editor value="Hello"></zn-remarkd-editor>`);

@@ -135,6 +135,28 @@ NOTE: The value is the same remarkd source either way."
 ></zn-remarkd-editor>
 ```
 
+### Height
+
+The editor never grows taller than the viewport: past that, its body scrolls and
+the toolbar stays in reach. Override the cap with `--remarkd-editor-max-height` —
+useful when the editor sits below a header and should only fill the space left on
+screen.
+
+All scrolling stays inside the editor's own body: adding a block or opening the
+image / include picker brings the new content into view, and dragging a block to a
+scroll edge keeps the content moving. Neither touches the page or panel around the
+editor.
+
+```html:preview
+<zn-remarkd-editor
+  style="--remarkd-editor-max-height: 20rem"
+  value="A short editor.
+
+Add blocks from the toolbar and the body starts scrolling once the content
+outgrows the 20rem cap set here."
+></zn-remarkd-editor>
+```
+
 ### Form Integration
 
 `zn-remarkd-editor` is a [form control](/getting-started/form-controls); its

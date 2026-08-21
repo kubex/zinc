@@ -8858,6 +8858,12 @@ declare module "components/translations/translations.component" {
         addLanguageKey(languageCode: string): void;
         /** Returns all language codes that have values. */
         getValueLanguages(): string[];
+        /**
+         * `values`, falling back to the `value` attribute it is built from while that is still pending. A parent
+         * zn-translation-group syncs its children from its own first update, which runs before theirs, so reading
+         * `values` alone would see it empty and overwrite the value the server rendered.
+         */
+        private pendingValues;
         disconnectedCallback(): void;
         protected firstUpdated(): void;
         protected updated(changedProperties: PropertyValues): void;
@@ -9385,6 +9391,8 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
      * @csspart image-controls - The caption / alignment / size panel shown when an image block is clicked.
      * @csspart include - The chip rendered in place of an `include::` directive.
      * @csspart include-picker - The inline Include picker opened from the toolbar or "/include".
+     *
+     * @cssproperty --remarkd-editor-max-height - The tallest the editor grows before its body scrolls. Defaults to `100dvh`.
      */
     export default class ZnRemarkdEditor extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
@@ -9423,6 +9431,8 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private dragStartX;
         private dragStartY;
         private dragGhost;
+        private dragPointerY;
+        private autoScrollFrame;
         /** The name of the control, submitted as part of form data. */
         name: string;
         /** The current remarkd source. */
@@ -9493,6 +9503,20 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
          */
         private computeEditShell;
         private focusInput;
+        /**
+         * Scrolls the editor's own body to bring `el` into view. Never `scrollIntoView()` and
+         * never `focus()` without preventScroll: both walk every scrollable ancestor, and an
+         * `overflow: hidden`/`auto` panel around the editor is scrollable too — that shifts a
+         * container the user never asked to move.
+         */
+        private reveal;
+        private revealAfterUpdate;
+        /**
+         * Centres a block added without opening an editor. An image has no height until it
+         * loads, so the first pass scrolls against a layout that is still short — the second
+         * pass corrects it once the real dimensions are in.
+         */
+        private revealBlock;
         private addBlockAt;
         private deleteBlock;
         /** Inserts a draft block — committed (or dropped, if left empty) on blur. */
@@ -9519,6 +9543,16 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private insertionIndexFromY;
         private handleHandlePointerDown;
         private handleDragPointerMove;
+        /**
+         * Holding the pointer near a scroll edge keeps the content moving, so a block can
+         * be dragged past the visible slice of a long document. Runs per frame rather than
+         * per pointermove — a pointer parked at the edge stops emitting moves.
+         */
+        private stepAutoScroll;
+        /** Scrolls the editor body, falling through to the page once the body is at its limit. */
+        private autoScroll;
+        /** Scroll step for this frame: nothing until the pointer is within `edge` of a boundary. */
+        private edgeScrollDelta;
         private handleDragPointerUp;
         private cancelDrag;
         private createDragGhost;

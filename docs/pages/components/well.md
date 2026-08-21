@@ -45,6 +45,40 @@ Use the `inline` attribute to display the well as an inline-flex element, allowi
 </p>
 ```
 
+### Preformatted Content
+
+Use the `pre` attribute to render the content inside a `pre` element. Whitespace and line breaks are preserved and the content is rendered in a monospace font. Long lines scroll horizontally rather than widening the well.
+
+```html:preview
+<zn-well pre icon="terminal">$ zinc build --watch
+  compiling components...
+  done in 1.2s</zn-well>
+```
+
+### Breaking Long Words
+
+Use the `break-long` attribute to break long unbroken strings — tokens, hashes, URLs — so they wrap inside the well instead of forcing it wider than its container.
+
+```html:preview
+<div style="width: 320px;">
+  <p>Without <code>break-long</code>:</p>
+  <zn-well icon="key">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJVadQssw5c</zn-well>
+
+  <p>With <code>break-long</code>:</p>
+  <zn-well break-long icon="key">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJVadQssw5c</zn-well>
+</div>
+```
+
+### Preformatted and Broken
+
+Combine `pre` and `break-long` to keep the monospace font and line breaks while still wrapping long lines instead of scrolling them.
+
+```html:preview
+<div style="width: 320px;">
+  <zn-well pre break-long icon="key">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJVadQssw5c</zn-well>
+</div>
+```
+
 ### Inline vs Block
 
 Compare the difference between inline and block (default) display modes.

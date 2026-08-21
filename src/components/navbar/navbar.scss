@@ -303,6 +303,17 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
   }
 }
 
+// Icon-bar items are standalone pills, not tabs — the tab-strip rule above
+// leaves them with a top+right border only, which reads as an unfinished box
+:host([icon-bar]:not([stacked])) {
+  ul.navbar {
+    > li {
+      border-width: 1px;
+      border-radius: 6px;
+    }
+  }
+}
+
 :host {
   display: block;
   width: 100%;

@@ -1718,11 +1718,16 @@ declare module "components/well/well.component" {
      * @since 1.0
      *
      * @slot - The default slot.
+     * @slot action - Content displayed on the right hand side of the well.
      */
     export default class ZnWell extends ZincElement {
         static styles: CSSResultGroup;
         icon: string;
         inline: boolean;
+        /** Renders the default slot inside a `pre` element, preserving whitespace using a monospace font. */
+        pre: boolean;
+        /** Breaks long unbroken words, so they wrap instead of forcing the well wider. */
+        breakLong: boolean;
         private readonly hasSlotController;
         render(): import("lit-html").TemplateResult<1>;
     }

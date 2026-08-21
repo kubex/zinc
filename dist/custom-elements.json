@@ -49404,6 +49404,10 @@
             {
               "description": "The default slot.",
               "name": ""
+            },
+            {
+              "description": "Content displayed on the right hand side of the well.",
+              "name": "action"
             }
           ],
           "members": [
@@ -49423,6 +49427,26 @@
                 "text": "boolean"
               },
               "attribute": "inline",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "pre",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Renders the default slot inside a `pre` element, preserving whitespace using a monospace font.",
+              "attribute": "pre",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "breakLong",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Breaks long unbroken words, so they wrap instead of forcing the well wider.",
+              "attribute": "break-long",
               "reflects": true
             },
             {
@@ -49448,6 +49472,22 @@
                 "text": "boolean"
               },
               "fieldName": "inline"
+            },
+            {
+              "name": "pre",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Renders the default slot inside a `pre` element, preserving whitespace using a monospace font.",
+              "fieldName": "pre"
+            },
+            {
+              "name": "break-long",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Breaks long unbroken words, so they wrap instead of forcing the well wider.",
+              "fieldName": "breakLong"
             }
           ],
           "superclass": {
@@ -49458,7 +49498,7 @@
           "tagNameWithoutPrefix": "well",
           "tagName": "zn-well",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/well\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/well\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot.\n * @slot action - Content displayed on the right hand side of the well.\n */",
           "documentation": "https://zinc.style/components/well",
           "status": "experimental",
           "since": "1.0"

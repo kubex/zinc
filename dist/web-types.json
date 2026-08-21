@@ -12085,18 +12085,44 @@
         },
         {
           "name": "zn-well",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **action** - Content displayed on the right hand side of the well.",
           "doc-url": "",
           "attributes": [
             { "name": "icon", "value": { "type": "string", "default": "''" } },
-            { "name": "inline", "value": { "type": "boolean" } }
+            { "name": "inline", "value": { "type": "boolean" } },
+            {
+              "name": "pre",
+              "description": "Renders the default slot inside a `pre` element, preserving whitespace using a monospace font.",
+              "value": { "type": "boolean" }
+            },
+            {
+              "name": "break-long",
+              "description": "Breaks long unbroken words, so they wrap instead of forcing the well wider.",
+              "value": { "type": "boolean" }
+            }
           ],
-          "slots": [{ "name": "", "description": "The default slot." }],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            {
+              "name": "action",
+              "description": "Content displayed on the right hand side of the well."
+            }
+          ],
           "events": [],
           "js": {
             "properties": [
               { "name": "icon", "type": "string" },
-              { "name": "inline", "type": "boolean" }
+              { "name": "inline", "type": "boolean" },
+              {
+                "name": "pre",
+                "description": "Renders the default slot inside a `pre` element, preserving whitespace using a monospace font.",
+                "type": "boolean"
+              },
+              {
+                "name": "breakLong",
+                "description": "Breaks long unbroken words, so they wrap instead of forcing the well wider.",
+                "type": "boolean"
+              }
             ],
             "events": []
           }

@@ -1,0 +1,349 @@
+@use "../../wc";
+
+// Defaults live in var() fallbacks rather than on :host, so a wrapper or a zn-thumbnail-group
+// can set any of these once for every thumbnail beneath it.
+$aspect-ratio: var(--zn-thumbnail-aspect-ratio, 16 / 9);
+$radius: var(--zn-thumbnail-radius, var(--zn-border-radius));
+
+// A badge, an action or the preview trigger — each one its own chip floating on the media, so
+// several of them read as separate icons rather than one grouped container.
+@mixin chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  min-height: 20px;
+  padding: 2px;
+  border: none;
+  border-radius: var(--zn-thumbnail-chip-radius, var(--zn-border-radius));
+  background-color: var(--zn-thumbnail-chip-background, rgba(0, 0, 0, 0.6));
+  color: var(--zn-thumbnail-chip-color, #fff);
+  line-height: 0;
+  transition: background-color var(--zn-transition-fast) ease-in-out;
+}
+
+// Actions and the preview trigger are controls, so they take the pointer.
+@mixin chip-interactive {
+  @include chip;
+
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--zn-thumbnail-chip-background-hover, rgba(0, 0, 0, 0.8));
+  }
+}
+
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.thumbnail {
+  position: relative;
+  min-width: 0;
+}
+
+.thumbnail__link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-spacing-x-small);
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+}
+
+.thumbnail--interactive .thumbnail__link {
+  cursor: pointer;
+}
+
+.thumbnail__media {
+  position: relative;
+  aspect-ratio: #{$aspect-ratio};
+  width: 100%;
+  overflow: hidden;
+  border-radius: #{$radius};
+  background-color: rgb(var(--zn-panel));
+  // One ring, driven by custom properties the state rules below reassign. Insetting it keeps
+  // it out of layout and stops the group's horizontal scroller clipping it, and routing every
+  // state through the same declaration avoids specificity fights between hover and the
+  // selected / active states.
+  //
+  // The gap ring is painted under the accent ring, so only the part of it that the accent
+  // doesn't cover shows — holding the accent off the image. At a 0 gap the two spreads match
+  // and the gap ring disappears entirely.
+  --thumbnail-ring-color: rgb(var(--zn-border-color));
+  --thumbnail-ring-width: 1px;
+  --thumbnail-ring-gap: 0px;
+
+  box-shadow:
+    inset 0 0 0 var(--thumbnail-ring-width) var(--thumbnail-ring-color),
+    inset 0 0 0 calc(var(--thumbnail-ring-width) + var(--thumbnail-ring-gap)) rgb(var(--zn-body));
+  transition: box-shadow var(--zn-transition-fast) ease-in-out;
+}
+
+.thumbnail__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+// Slotted media fills the frame; anything else (an icon placeholder, a label) is centred
+// at its natural size.
+.thumbnail__slotted-media {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.thumbnail__slotted-media::slotted(img),
+.thumbnail__slotted-media::slotted(video),
+.thumbnail__slotted-media::slotted(canvas),
+.thumbnail__slotted-media::slotted(picture),
+.thumbnail__slotted-media::slotted(div) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumbnail__caption {
+  @include wc.text-style(table-content);
+
+  min-width: 0;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Overlay
+ *
+ * A layer over the media frame only — it mirrors the media's width and aspect ratio rather than
+ * covering the caption too. It sits outside the link, and is transparent to pointer events except
+ * on the chips themselves, so slotted actions keep their own click behaviour while the rest of the
+ * media still activates the link.
+ */
+
+.thumbnail__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  aspect-ratio: #{$aspect-ratio};
+  border-radius: #{$radius};
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.thumbnail__badge,
+.thumbnail__actions,
+.thumbnail__preview-button {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  // Adjacent markers are spaced apart rather than sharing one container.
+  gap: var(--zn-thumbnail-chip-gap, var(--zn-spacing-2x-small));
+}
+
+.thumbnail__badge {
+  bottom: var(--zn-spacing-2x-small);
+  left: var(--zn-spacing-2x-small);
+  pointer-events: none;
+}
+
+.thumbnail__actions,
+.thumbnail__preview-button {
+  pointer-events: auto;
+}
+
+.thumbnail__actions {
+  bottom: var(--zn-spacing-2x-small);
+  right: var(--zn-spacing-2x-small);
+}
+
+.thumbnail__preview-button {
+  @include chip-interactive;
+
+  top: var(--zn-spacing-2x-small);
+  right: var(--zn-spacing-2x-small);
+}
+
+// The slots themselves disappear so each slotted item becomes a flex item of its positioner,
+// picking up the gap between markers.
+.thumbnail__badge-items,
+.thumbnail__action-items {
+  display: contents;
+}
+
+// A badge describes the asset rather than doing something, so it shares the chip's shape but is
+// held back on opacity — enough to read as a marker instead of a control sitting next to real ones.
+.thumbnail__badge-icon,
+.thumbnail__badge-items::slotted(*) {
+  @include chip;
+
+  cursor: default;
+  opacity: var(--zn-thumbnail-badge-opacity, 0.65);
+}
+
+.thumbnail__action-items::slotted(*) {
+  @include chip-interactive;
+}
+
+/* Ring states
+ *
+ * Hover is excluded on a thumbnail that already carries a state ring, so hovering a selected or
+ * active thumbnail can't repaint its ring in the hover colour.
+ */
+
+.thumbnail:hover:not(.thumbnail--disabled):not(.thumbnail--selected):not(.thumbnail--active) .thumbnail__media {
+  --thumbnail-ring-color: rgb(var(--zn-primary));
+}
+
+.thumbnail--selected .thumbnail__media {
+  --thumbnail-ring-color: var(--zn-thumbnail-selected-color, rgb(var(--zn-primary)));
+  --thumbnail-ring-width: 2px;
+  --thumbnail-ring-gap: 1px;
+}
+
+// Listed after `selected` so an active-and-selected thumbnail shows the active colour.
+.thumbnail--active .thumbnail__media {
+  --thumbnail-ring-color: var(--zn-thumbnail-active-color, rgb(var(--zn-color-success)));
+  --thumbnail-ring-width: 2px;
+  --thumbnail-ring-gap: 1px;
+}
+
+/* Focus */
+
+.thumbnail__link:focus-visible .thumbnail__media {
+  outline: var(--zn-focus-ring);
+  outline-offset: calc(-1 * var(--zn-focus-ring-width));
+}
+
+.thumbnail__preview-button:focus-visible,
+.thumbnail__action-items::slotted(*:focus-visible) {
+  outline: var(--zn-focus-ring);
+  outline-offset: 1px;
+}
+
+/* Disabled */
+
+.thumbnail--disabled {
+  .thumbnail__link {
+    cursor: not-allowed;
+  }
+
+  .thumbnail__media,
+  .thumbnail__caption {
+    opacity: 0.5;
+  }
+}
+
+/* Preview
+ *
+ * A native modal dialog, so it lands in the top layer and escapes the group's scroll container
+ * and any ancestor stacking context. The dialog is a transparent full-screen stage; the visible
+ * backdrop is a plain element inside it so its fade can be animated alongside the panel.
+ */
+
+.thumbnail__preview {
+  position: fixed;
+  inset: 0;
+  display: none;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  padding: 0;
+  border: none;
+  background: transparent;
+  overflow: hidden;
+
+  &[open] {
+    display: grid;
+    place-items: center;
+  }
+
+  &::backdrop {
+    background: transparent;
+  }
+}
+
+.thumbnail__preview-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--zn-overlay-background-color);
+}
+
+.thumbnail__preview-frame {
+  // The panel takes the asset's own aspect ratio — measured in JS and published as
+  // --zn-thumbnail-preview-measured-ratio — so it wraps the image rather than letterboxing it in a
+  // fixed-ratio box. That also puts the close button on the image's corner rather than a container's.
+  --preview-max-width: var(--zn-thumbnail-preview-max-width, 70vw);
+  --preview-max-height: var(--zn-thumbnail-preview-max-height, 70vh);
+  --preview-ratio: var(--zn-thumbnail-preview-aspect-ratio,
+      var(--zn-thumbnail-preview-measured-ratio, #{$aspect-ratio}));
+
+  position: relative;
+  // Grow to the width cap, unless the ratio would then push the height past its own cap — in which
+  // case the height leads and the width follows it. Sizing the panel from viewport units rather
+  // than from the image keeps it layout-determined, so the grow animation can measure its target
+  // before the full-size asset has loaded.
+  width: min(var(--preview-max-width), calc(var(--preview-max-height) * (var(--preview-ratio))));
+  max-width: var(--preview-max-width);
+  max-height: var(--preview-max-height);
+  aspect-ratio: var(--preview-ratio);
+  overflow: hidden;
+  border-radius: var(--zn-thumbnail-preview-radius, var(--zn-border-radius));
+  background-color: rgb(var(--zn-panel));
+  box-shadow: var(--zn-shadow-x-large);
+  // The panel is scaled down onto the thumbnail's box to open, so it has to transform
+  // about its own centre.
+  transform-origin: center center;
+}
+
+.thumbnail__preview-image,
+.thumbnail__preview-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+// Held behind the full-size asset so the panel is never empty while it loads. Covered rather than
+// contained, and slightly overscaled, so the blur's soft edge stays inside the panel.
+.thumbnail__preview-placeholder {
+  position: absolute;
+  inset: 0;
+  object-fit: cover;
+  filter: blur(12px);
+  transform: scale(1.05);
+}
+
+.thumbnail__preview-media::slotted(*) {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.thumbnail__preview-image {
+  position: relative;
+}
+
+.thumbnail__preview-close {
+  @include chip-interactive;
+
+  position: absolute;
+  top: var(--zn-spacing-x-small);
+  right: var(--zn-spacing-x-small);
+  min-width: 28px;
+  min-height: 28px;
+
+  &:focus-visible {
+    outline: var(--zn-focus-ring);
+    outline-offset: 1px;
+  }
+}

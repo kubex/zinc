@@ -1,0 +1,87 @@
+@use "../../wc";
+
+:host {
+  @include wc.scrollbars;
+
+  display: block;
+  width: 100%;
+}
+
+.thumbnail-group__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--zn-spacing-small);
+  margin-bottom: var(--zn-spacing-x-small);
+}
+
+.thumbnail-group__caption {
+  @include wc.text-style(h1);
+
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.thumbnail-group__header-actions {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: var(--zn-spacing-x-small);
+}
+
+.thumbnail-group__toggle {
+  @include wc.text-style(subheading);
+
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    color: rgb(var(--zn-text));
+  }
+
+  &:focus-visible {
+    outline: var(--zn-focus-ring);
+    outline-offset: var(--zn-focus-ring-offset);
+    border-radius: var(--zn-border-radius-small);
+  }
+}
+
+/* Collapsed — one row, scrolled horizontally */
+
+.thumbnail-group__items {
+  display: grid;
+  gap: var(--zn-thumbnail-gap, var(--zn-spacing-small));
+  grid-auto-flow: column;
+  grid-auto-columns: var(--zn-thumbnail-width, 180px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  // Keeps the scrollbar off the captions.
+  padding-bottom: var(--zn-spacing-2x-small);
+  scroll-snap-type: x proximity;
+  overscroll-behavior-x: contain;
+}
+
+/* Expanded — wrapping grid, no row restriction */
+
+.thumbnail-group--expanded .thumbnail-group__items {
+  grid-auto-flow: row;
+  grid-auto-columns: auto;
+  grid-template-columns: repeat(auto-fill, minmax(var(--zn-thumbnail-width, 180px), 1fr));
+  overflow: visible;
+  padding-bottom: 0;
+}
+
+// The slot has to disappear from the grid so the slotted thumbnails become the grid items.
+slot {
+  display: contents;
+}
+
+::slotted(*) {
+  scroll-snap-align: start;
+  min-width: 0;
+}

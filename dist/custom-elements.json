@@ -5682,6 +5682,23 @@
             },
             {
               "kind": "field",
+              "name": "animating",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "animatingTimer",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
               "name": "_store",
               "type": {
                 "text": "Store"
@@ -5715,6 +5732,21 @@
               "kind": "field",
               "name": "handleCaptionToggle",
               "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "startAnimating",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "stopAnimating",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleTransitionEnd",
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -49519,7 +49551,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.97",
+    "version": "1.1.98",
     "author": "",
     "license": "MIT"
   }

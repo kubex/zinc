@@ -24,9 +24,20 @@
   container-type: inline-size;
   position: relative;
 
-  #primary-pane, #secondary-pane {
-    flex-grow: 1;
-    flex-shrink: 1;
+  // Panes are sized from --initial-size, never from their content. Without an
+  // explicit flex-basis, a wide unbreakable child (long token in a <pre>, wide
+  // table) becomes the flex base size and the resizer stops having any effect.
+  #primary-pane {
+    flex: 0 1 var(--initial-size, 50%);
+    min-width: 0;
+    min-height: 0;
+  }
+
+  #secondary-pane {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
   }
 
   slot {
@@ -116,6 +127,7 @@
     }
 
     #primary-pane, #secondary-pane {
+      flex: 1 1 100%;
       max-width: 100% !important;
       width: 100%;
       padding-top: 40px;
@@ -131,12 +143,8 @@
   }
 
   #primary-pane {
-    max-width: var(--max-panel-size, var(--initial-size, 50%));
-  }
-
-  #secondary-pane {
-    max-width: calc(100% - var(--initial-size, 0));
-    width: 100%;
+    max-width: var(--max-panel-size, none);
+    overflow: hidden;
   }
 
   #resizer {
@@ -199,6 +207,7 @@
   }
 
   #secondary-pane {
+    flex: 1 1 100%;
     height: 100%;
     max-height: 100% !important;
     max-width: 100% !important;
@@ -208,6 +217,7 @@
 
 :host([hide="secondary"]) {
   #primary-pane {
+    flex: 1 1 100%;
     height: 100%;
     max-height: 100% !important;
     max-width: 100% !important;
@@ -258,12 +268,8 @@
   }
 
   #primary-pane {
-    max-height: var(--initial-size, 50%);
-  }
-
-  #secondary-pane {
-    height: 100%;
-    max-height: calc(100% - var(--initial-size, 0));
+    max-height: var(--max-panel-size, none);
+    overflow: hidden;
   }
 
   #resizer {

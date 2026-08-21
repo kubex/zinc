@@ -45520,6 +45520,1169 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/thumbnail/thumbnail.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnThumbnail",
+          "cssProperties": [
+            {
+              "description": "Aspect ratio of the media frame. Defaults to 16 / 9. The `aspect-ratio` attribute sets this on the thumbnail itself; set the property on any ancestor (including a `zn-thumbnail-group`) to apply it to every thumbnail beneath it.",
+              "name": "--zn-thumbnail-aspect-ratio"
+            },
+            {
+              "description": "Corner radius of the media frame.",
+              "name": "--zn-thumbnail-radius"
+            },
+            {
+              "description": "Overrides the measured aspect ratio of the preview panel. By default the panel takes the asset's own ratio so it wraps the image exactly.",
+              "name": "--zn-thumbnail-preview-aspect-ratio"
+            },
+            {
+              "description": "Largest width the preview may take. Defaults to 70vw.",
+              "name": "--zn-thumbnail-preview-max-width"
+            },
+            {
+              "description": "Largest height the preview may take. Defaults to 70vh.",
+              "name": "--zn-thumbnail-preview-max-height"
+            },
+            {
+              "description": "Corner radius of the preview panel.",
+              "name": "--zn-thumbnail-preview-radius"
+            },
+            {
+              "description": "Corner radius of a badge, action or preview chip.",
+              "name": "--zn-thumbnail-chip-radius"
+            },
+            {
+              "description": "Background of a badge, action or preview chip.",
+              "name": "--zn-thumbnail-chip-background"
+            },
+            {
+              "description": "Hover background of an action or preview chip.",
+              "name": "--zn-thumbnail-chip-background-hover"
+            },
+            {
+              "description": "Foreground colour of a badge, action or preview chip.",
+              "name": "--zn-thumbnail-chip-color"
+            },
+            {
+              "description": "Gap between adjacent chips.",
+              "name": "--zn-thumbnail-chip-gap"
+            },
+            {
+              "description": "Opacity of a badge, holding it back from the action chips beside it. Defaults to 0.65.",
+              "name": "--zn-thumbnail-badge-opacity"
+            },
+            {
+              "description": "Ring colour for the selected state.",
+              "name": "--zn-thumbnail-selected-color"
+            },
+            {
+              "description": "Ring colour for the active state.",
+              "name": "--zn-thumbnail-active-color"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The anchor (or div) covering the media and caption.",
+              "name": "link"
+            },
+            {
+              "description": "The fixed aspect-ratio media frame.",
+              "name": "media"
+            },
+            {
+              "description": "The built-in image element.",
+              "name": "image"
+            },
+            {
+              "description": "The layer holding the badge, actions and preview button.",
+              "name": "overlay"
+            },
+            {
+              "description": "The bottom-left badge container.",
+              "name": "badge"
+            },
+            {
+              "description": "The bottom-right actions container.",
+              "name": "actions"
+            },
+            {
+              "description": "The built-in preview trigger, when `preview-trigger=\"button\"`.",
+              "name": "preview-button"
+            },
+            {
+              "description": "The caption beneath the media.",
+              "name": "caption"
+            },
+            {
+              "description": "The preview `<dialog>`.",
+              "name": "preview"
+            },
+            {
+              "description": "The full-screen backdrop behind the preview.",
+              "name": "preview-backdrop"
+            },
+            {
+              "description": "The rounded panel the preview media sits in.",
+              "name": "preview-frame"
+            },
+            {
+              "description": "The full-size image inside the preview.",
+              "name": "preview-image"
+            },
+            {
+              "description": "The preview's close button.",
+              "name": "preview-close"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Fallback content rendered in place of the media when no `src` is set.",
+              "name": ""
+            },
+            {
+              "description": "Replaces the built-in `<img>` (e.g. a video, canvas or `zn-icon`).",
+              "name": "image"
+            },
+            {
+              "description": "Replaces the caption text.",
+              "name": "caption"
+            },
+            {
+              "description": "Content pinned to the bottom-left of the media (e.g. a play indicator). Badges take no pointer events and are held back on opacity, so they read as information about the asset rather than as something to click.",
+              "name": "badge"
+            },
+            {
+              "description": "Controls pinned to the bottom-right of the media (e.g. a download button). Each slotted element becomes its own chip, so several actions read as separate icons on the thumbnail rather than one grouped pill. This sits outside the thumbnail's link, so buttons and links here behave normally and never select the thumbnail or follow its `href`.",
+              "name": "actions"
+            },
+            {
+              "description": "Replaces the preview media (e.g. a `<video>` for the full-size asset).",
+              "name": "preview"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{'zn-icon': ZnIcon}"
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, '[default]', 'image', 'caption', 'badge', 'actions', 'preview')"
+            },
+            {
+              "kind": "field",
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Image URL for the built-in `<img>`.",
+              "attribute": "src"
+            },
+            {
+              "kind": "field",
+              "name": "alt",
+              "type": {
+                "text": "string"
+              },
+              "description": "Alternative text for the built-in image. Falls back to the caption.",
+              "attribute": "alt"
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The title shown beneath the media.",
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "aspectRatio",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Aspect ratio of the media frame, as any CSS `aspect-ratio` value (e.g. `1 / 1`, `4 / 3`).\nTakes precedence over an inherited `--zn-thumbnail-aspect-ratio`. Defaults to `16 / 9`.",
+              "attribute": "aspect-ratio",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Renders the thumbnail as a link to this URL.",
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Where to open `href` (e.g. `_blank`).",
+              "attribute": "target"
+            },
+            {
+              "kind": "field",
+              "name": "fullUri",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "URL of the full-size asset. Setting this enables the preview overlay, which grows out of the\nthumbnail's position over a full-screen backdrop.",
+              "attribute": "full-uri"
+            },
+            {
+              "kind": "field",
+              "name": "previewTrigger",
+              "type": {
+                "text": "'click' | 'button'"
+              },
+              "default": "'click'",
+              "description": "How the preview opens. `click` (the default) opens it when the thumbnail is activated; `button`\nadds a dedicated expand control to the media instead, leaving clicks for selection or the link.",
+              "attribute": "preview-trigger"
+            },
+            {
+              "kind": "field",
+              "name": "previewLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Preview'",
+              "description": "Accessible label for the built-in preview trigger and the preview overlay.",
+              "attribute": "preview-label"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Identifier reported in the `zn-select` event detail and used for group selection.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the selected ring. Managed automatically inside a `selectable` `zn-thumbnail-group`.",
+              "attribute": "selected",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "active",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the active ring — for the thumbnail currently in use (playing, open, being edited), as\ndistinct from the user's selection. Takes the ring colour when a thumbnail is both active and\nselected. Recolour it with `--zn-thumbnail-active-color`.",
+              "attribute": "active",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "selectable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Set by `zn-thumbnail-group` when it manages selection, so the thumbnail reads as clickable.",
+              "attribute": "selectable",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Dims the thumbnail and blocks selection, navigation and preview.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Icon rendered in the bottom-left badge when the `badge` slot is empty.",
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "hideCaption",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the caption row, leaving just the media frame.",
+              "attribute": "hide-caption"
+            },
+            {
+              "kind": "field",
+              "name": "_previewOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_previewRatio",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0",
+              "description": "Aspect ratio (width / height) measured from the asset, so the preview wraps it exactly."
+            },
+            {
+              "kind": "field",
+              "name": "_media",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_image",
+              "type": {
+                "text": "HTMLImageElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_previewImage",
+              "type": {
+                "text": "HTMLImageElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_preview",
+              "type": {
+                "text": "HTMLDialogElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_previewFrame",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_previewBackdrop",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_previewClose",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_origin",
+              "type": {
+                "text": "DOMRect | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The media rect captured when the preview opened, so the grow animation starts from the thumbnail."
+            },
+            {
+              "kind": "field",
+              "name": "_animating",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "_isLink",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_previewable",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_previewOnActivate",
+              "privacy": "private",
+              "description": "True when activating the thumbnail itself should open the preview.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_resolveRatio",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "description": "The asset's real aspect ratio, so the preview panel wraps the image instead of letterboxing it\ninside a fixed-ratio box. The full-size image is preferred, but it usually hasn't loaded when\nthe preview opens — the already-loaded thumbnail shares the asset's ratio, and the rendered\nmedia box is the last resort for slotted media that can't be measured."
+            },
+            {
+              "kind": "method",
+              "name": "showPreview",
+              "description": "Opens the preview overlay."
+            },
+            {
+              "kind": "method",
+              "name": "hidePreview",
+              "description": "Closes the preview overlay."
+            },
+            {
+              "kind": "method",
+              "name": "_animatePreview",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "direction",
+                  "type": {
+                    "text": "'in' | 'out'"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_collapsedTransform",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "from",
+                  "type": {
+                    "text": "DOMRect | null"
+                  }
+                },
+                {
+                  "name": "to",
+                  "type": {
+                    "text": "DOMRect"
+                  }
+                }
+              ],
+              "description": "Maps the preview panel onto the thumbnail's box, so the panel appears to grow out of it."
+            },
+            {
+              "kind": "method",
+              "name": "_activate",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                },
+                {
+                  "name": "allowPreview",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_handleClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handleKeyDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handlePreviewButtonClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handlePreviewCancel",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handleBackdropClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handlePreviewImageLoad",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when an enabled thumbnail is activated by click or keyboard. Cancelable — call `preventDefault()` to stop the preview from opening and to stop a parent `zn-thumbnail-group` from changing its selection.",
+              "name": "zn-select"
+            },
+            {
+              "description": "Emitted when the preview overlay starts opening.",
+              "name": "zn-show"
+            },
+            {
+              "description": "Emitted once the preview overlay has finished closing.",
+              "name": "zn-close"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Image URL for the built-in `<img>`.",
+              "fieldName": "src"
+            },
+            {
+              "name": "alt",
+              "type": {
+                "text": "string"
+              },
+              "description": "Alternative text for the built-in image. Falls back to the caption.",
+              "fieldName": "alt"
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The title shown beneath the media.",
+              "fieldName": "caption"
+            },
+            {
+              "name": "aspect-ratio",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Aspect ratio of the media frame, as any CSS `aspect-ratio` value (e.g. `1 / 1`, `4 / 3`).\nTakes precedence over an inherited `--zn-thumbnail-aspect-ratio`. Defaults to `16 / 9`.",
+              "fieldName": "aspectRatio"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Renders the thumbnail as a link to this URL.",
+              "fieldName": "href"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Where to open `href` (e.g. `_blank`).",
+              "fieldName": "target"
+            },
+            {
+              "name": "full-uri",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "URL of the full-size asset. Setting this enables the preview overlay, which grows out of the\nthumbnail's position over a full-screen backdrop.",
+              "fieldName": "fullUri"
+            },
+            {
+              "name": "preview-trigger",
+              "type": {
+                "text": "'click' | 'button'"
+              },
+              "default": "'click'",
+              "description": "How the preview opens. `click` (the default) opens it when the thumbnail is activated; `button`\nadds a dedicated expand control to the media instead, leaving clicks for selection or the link.",
+              "fieldName": "previewTrigger"
+            },
+            {
+              "name": "preview-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Preview'",
+              "description": "Accessible label for the built-in preview trigger and the preview overlay.",
+              "fieldName": "previewLabel"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Identifier reported in the `zn-select` event detail and used for group selection.",
+              "fieldName": "value"
+            },
+            {
+              "name": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the selected ring. Managed automatically inside a `selectable` `zn-thumbnail-group`.",
+              "fieldName": "selected"
+            },
+            {
+              "name": "active",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the active ring — for the thumbnail currently in use (playing, open, being edited), as\ndistinct from the user's selection. Takes the ring colour when a thumbnail is both active and\nselected. Recolour it with `--zn-thumbnail-active-color`.",
+              "fieldName": "active"
+            },
+            {
+              "name": "selectable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Set by `zn-thumbnail-group` when it manages selection, so the thumbnail reads as clickable.",
+              "fieldName": "selectable"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Dims the thumbnail and blocks selection, navigation and preview.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Icon rendered in the bottom-left badge when the `badge` slot is empty.",
+              "fieldName": "icon"
+            },
+            {
+              "name": "hide-caption",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the caption row, leaving just the media frame.",
+              "fieldName": "hideCaption"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A captioned image tile — a fixed aspect-ratio preview with a title beneath it, optional\ncorner badges and actions, and an optional full-screen preview that grows out of the thumbnail.",
+          "tagNameWithoutPrefix": "thumbnail",
+          "tagName": "zn-thumbnail",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A captioned image tile — a fixed aspect-ratio preview with a title beneath it, optional\n * corner badges and actions, and an optional full-screen preview that grows out of the thumbnail.\n * @documentation https://zinc.style/components/thumbnail\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @event zn-select - Emitted when an enabled thumbnail is activated by click or keyboard. Cancelable —\n *  call `preventDefault()` to stop the preview from opening and to stop a parent\n *  `zn-thumbnail-group` from changing its selection.\n * @event zn-show - Emitted when the preview overlay starts opening.\n * @event zn-close - Emitted once the preview overlay has finished closing.\n *\n * @slot - Fallback content rendered in place of the media when no `src` is set.\n * @slot image - Replaces the built-in `<img>` (e.g. a video, canvas or `zn-icon`).\n * @slot caption - Replaces the caption text.\n * @slot badge - Content pinned to the bottom-left of the media (e.g. a play indicator). Badges take\n *  no pointer events and are held back on opacity, so they read as information about the asset\n *  rather than as something to click.\n * @slot actions - Controls pinned to the bottom-right of the media (e.g. a download button). Each\n *  slotted element becomes its own chip, so several actions read as separate icons on the thumbnail\n *  rather than one grouped pill. This sits outside the thumbnail's link, so buttons and links here\n *  behave normally and never select the thumbnail or follow its `href`.\n * @slot preview - Replaces the preview media (e.g. a `<video>` for the full-size asset).\n *\n * @csspart base - The component's base wrapper.\n * @csspart link - The anchor (or div) covering the media and caption.\n * @csspart media - The fixed aspect-ratio media frame.\n * @csspart image - The built-in image element.\n * @csspart overlay - The layer holding the badge, actions and preview button.\n * @csspart badge - The bottom-left badge container.\n * @csspart actions - The bottom-right actions container.\n * @csspart preview-button - The built-in preview trigger, when `preview-trigger=\"button\"`.\n * @csspart caption - The caption beneath the media.\n * @csspart preview - The preview `<dialog>`.\n * @csspart preview-backdrop - The full-screen backdrop behind the preview.\n * @csspart preview-frame - The rounded panel the preview media sits in.\n * @csspart preview-image - The full-size image inside the preview.\n * @csspart preview-close - The preview's close button.\n *\n * @cssproperty --zn-thumbnail-aspect-ratio - Aspect ratio of the media frame. Defaults to 16 / 9. The\n *  `aspect-ratio` attribute sets this on the thumbnail itself; set the property on any ancestor\n *  (including a `zn-thumbnail-group`) to apply it to every thumbnail beneath it.\n * @cssproperty --zn-thumbnail-radius - Corner radius of the media frame.\n * @cssproperty --zn-thumbnail-preview-aspect-ratio - Overrides the measured aspect ratio of the preview\n *  panel. By default the panel takes the asset's own ratio so it wraps the image exactly.\n * @cssproperty --zn-thumbnail-preview-max-width - Largest width the preview may take. Defaults to 70vw.\n * @cssproperty --zn-thumbnail-preview-max-height - Largest height the preview may take. Defaults to 70vh.\n * @cssproperty --zn-thumbnail-preview-radius - Corner radius of the preview panel.\n * @cssproperty --zn-thumbnail-chip-radius - Corner radius of a badge, action or preview chip.\n * @cssproperty --zn-thumbnail-chip-background - Background of a badge, action or preview chip.\n * @cssproperty --zn-thumbnail-chip-background-hover - Hover background of an action or preview chip.\n * @cssproperty --zn-thumbnail-chip-color - Foreground colour of a badge, action or preview chip.\n * @cssproperty --zn-thumbnail-chip-gap - Gap between adjacent chips.\n * @cssproperty --zn-thumbnail-badge-opacity - Opacity of a badge, holding it back from the action\n *  chips beside it. Defaults to 0.65.\n * @cssproperty --zn-thumbnail-selected-color - Ring colour for the selected state.\n * @cssproperty --zn-thumbnail-active-color - Ring colour for the active state.\n */",
+          "documentation": "https://zinc.style/components/thumbnail",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-icon"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnThumbnail",
+            "module": "components/thumbnail/thumbnail.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/thumbnail-group/thumbnail-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnThumbnailGroup",
+          "cssProperties": [
+            {
+              "description": "Track width of a thumbnail. Defaults to 180px. Also settable with the `thumbnail-width` attribute.",
+              "name": "--zn-thumbnail-width"
+            },
+            {
+              "description": "Gap between thumbnails. Also settable with the `gap` attribute.",
+              "name": "--zn-thumbnail-gap"
+            },
+            {
+              "description": "Aspect ratio of every thumbnail in the group. Also settable with the `aspect-ratio` attribute. Any `zn-thumbnail` custom property set here is inherited by the slotted thumbnails.",
+              "name": "--zn-thumbnail-aspect-ratio"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The header row holding the caption and toggle.",
+              "name": "header"
+            },
+            {
+              "description": "The heading text.",
+              "name": "caption"
+            },
+            {
+              "description": "The show all / show less button.",
+              "name": "toggle"
+            },
+            {
+              "description": "The scrolling row / expanded grid that holds the thumbnails.",
+              "name": "items"
+            }
+          ],
+          "slots": [
+            {
+              "description": "One or more `zn-thumbnail` elements.",
+              "name": ""
+            },
+            {
+              "description": "Replaces the heading text.",
+              "name": "caption"
+            },
+            {
+              "description": "Extra content in the header, before the toggle.",
+              "name": "actions"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The heading shown at the top left of the group.",
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "expanded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Expands the group into the full wrapping grid.",
+              "attribute": "expanded",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "total",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Total number of thumbnails in the underlying set, shown in the \"Show All (n)\" label. Set this when\nthe row only holds the first page of a larger set; otherwise the slotted thumbnails are counted.",
+              "attribute": "total"
+            },
+            {
+              "kind": "field",
+              "name": "showAllLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Show All'",
+              "description": "Label of the expand toggle. The count is appended in brackets.",
+              "attribute": "show-all-label"
+            },
+            {
+              "kind": "field",
+              "name": "showLessLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Show Less'",
+              "description": "Label of the collapse toggle.",
+              "attribute": "show-less-label"
+            },
+            {
+              "kind": "field",
+              "name": "hideToggle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Never render the toggle, even when the row overflows.",
+              "attribute": "hide-toggle"
+            },
+            {
+              "kind": "field",
+              "name": "alwaysToggle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Always render the toggle, even when every thumbnail already fits on the row.",
+              "attribute": "always-toggle"
+            },
+            {
+              "kind": "field",
+              "name": "selectable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Manages single selection across the slotted thumbnails.",
+              "attribute": "selectable",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "aspectRatio",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Aspect ratio for every thumbnail in the group, as any CSS `aspect-ratio` value (e.g. `1 / 1`).\nShorthand for setting `--zn-thumbnail-aspect-ratio` on the group. A thumbnail's own\n`aspect-ratio` attribute still wins.",
+              "attribute": "aspect-ratio",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "thumbnailWidth",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Track width of each thumbnail (e.g. `140px`). Shorthand for `--zn-thumbnail-width`.",
+              "attribute": "thumbnail-width",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "gap",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Gap between thumbnails (e.g. `8px`). Shorthand for `--zn-thumbnail-gap`.",
+              "attribute": "gap",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The `value` of the selected thumbnail (`selectable` groups only).",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "_overflowing",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_count",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_items",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_resizeObserver",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "_observe",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_syncCustomProperties",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "changed",
+                  "type": {
+                    "text": "PropertyValues"
+                  }
+                }
+              ],
+              "description": "Mirrors the shorthand attributes onto host custom properties. They go on the host rather than\nanywhere in the shadow root because the thumbnails are light-DOM children — inheriting from the\nhost is the only way the values reach them."
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "description": "Expands the group into the full grid."
+            },
+            {
+              "kind": "method",
+              "name": "hide",
+              "description": "Collapses the group back to a single row."
+            },
+            {
+              "kind": "field",
+              "name": "_thumbnails",
+              "type": {
+                "text": "ZnThumbnail[]"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_sync",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_measure",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handleSelect",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handleToggle",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the group expands into the full grid.",
+              "name": "zn-expand"
+            },
+            {
+              "description": "Emitted when the group collapses back to a single row.",
+              "name": "zn-collapse"
+            },
+            {
+              "description": "Emitted when the selected thumbnail changes (`selectable` groups only).",
+              "name": "zn-change"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The heading shown at the top left of the group.",
+              "fieldName": "caption"
+            },
+            {
+              "name": "expanded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Expands the group into the full wrapping grid.",
+              "fieldName": "expanded"
+            },
+            {
+              "name": "total",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Total number of thumbnails in the underlying set, shown in the \"Show All (n)\" label. Set this when\nthe row only holds the first page of a larger set; otherwise the slotted thumbnails are counted.",
+              "fieldName": "total"
+            },
+            {
+              "name": "show-all-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Show All'",
+              "description": "Label of the expand toggle. The count is appended in brackets.",
+              "fieldName": "showAllLabel"
+            },
+            {
+              "name": "show-less-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Show Less'",
+              "description": "Label of the collapse toggle.",
+              "fieldName": "showLessLabel"
+            },
+            {
+              "name": "hide-toggle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Never render the toggle, even when the row overflows.",
+              "fieldName": "hideToggle"
+            },
+            {
+              "name": "always-toggle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Always render the toggle, even when every thumbnail already fits on the row.",
+              "fieldName": "alwaysToggle"
+            },
+            {
+              "name": "selectable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Manages single selection across the slotted thumbnails.",
+              "fieldName": "selectable"
+            },
+            {
+              "name": "aspect-ratio",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Aspect ratio for every thumbnail in the group, as any CSS `aspect-ratio` value (e.g. `1 / 1`).\nShorthand for setting `--zn-thumbnail-aspect-ratio` on the group. A thumbnail's own\n`aspect-ratio` attribute still wins.",
+              "fieldName": "aspectRatio"
+            },
+            {
+              "name": "thumbnail-width",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Track width of each thumbnail (e.g. `140px`). Shorthand for `--zn-thumbnail-width`.",
+              "fieldName": "thumbnailWidth"
+            },
+            {
+              "name": "gap",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Gap between thumbnails (e.g. `8px`). Shorthand for `--zn-thumbnail-gap`.",
+              "fieldName": "gap"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The `value` of the selected thumbnail (`selectable` groups only).",
+              "fieldName": "value"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Lays a set of `zn-thumbnail` elements out as a single scrollable row, with a\n\"Show All\" toggle that expands them into a wrapping grid.",
+          "tagNameWithoutPrefix": "thumbnail-group",
+          "tagName": "zn-thumbnail-group",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Lays a set of `zn-thumbnail` elements out as a single scrollable row, with a\n * \"Show All\" toggle that expands them into a wrapping grid.\n * @documentation https://zinc.style/components/thumbnail-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-thumbnail\n *\n * @event zn-expand - Emitted when the group expands into the full grid.\n * @event zn-collapse - Emitted when the group collapses back to a single row.\n * @event zn-change - Emitted when the selected thumbnail changes (`selectable` groups only).\n *\n * @slot - One or more `zn-thumbnail` elements.\n * @slot caption - Replaces the heading text.\n * @slot actions - Extra content in the header, before the toggle.\n *\n * @csspart base - The component's base wrapper.\n * @csspart header - The header row holding the caption and toggle.\n * @csspart caption - The heading text.\n * @csspart toggle - The show all / show less button.\n * @csspart items - The scrolling row / expanded grid that holds the thumbnails.\n *\n * @cssproperty --zn-thumbnail-width - Track width of a thumbnail. Defaults to 180px. Also settable\n *  with the `thumbnail-width` attribute.\n * @cssproperty --zn-thumbnail-gap - Gap between thumbnails. Also settable with the `gap` attribute.\n * @cssproperty --zn-thumbnail-aspect-ratio - Aspect ratio of every thumbnail in the group. Also\n *  settable with the `aspect-ratio` attribute. Any `zn-thumbnail` custom property set here is\n *  inherited by the slotted thumbnails.\n */",
+          "documentation": "https://zinc.style/components/thumbnail-group",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-thumbnail"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnThumbnailGroup",
+            "module": "components/thumbnail-group/thumbnail-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/tile/tile.js",
       "declarations": [
         {

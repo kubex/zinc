@@ -11861,6 +11861,278 @@ declare module "components/schedule-builder/index" {
         }
     }
 }
+declare module "components/thumbnail/thumbnail.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    /**
+     * @summary A captioned image tile — a fixed aspect-ratio preview with a title beneath it, optional
+     * corner badges and actions, and an optional full-screen preview that grows out of the thumbnail.
+     * @documentation https://zinc.style/components/thumbnail
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     *
+     * @event zn-select - Emitted when an enabled thumbnail is activated by click or keyboard. Cancelable —
+     *  call `preventDefault()` to stop the preview from opening and to stop a parent
+     *  `zn-thumbnail-group` from changing its selection.
+     * @event zn-show - Emitted when the preview overlay starts opening.
+     * @event zn-close - Emitted once the preview overlay has finished closing.
+     *
+     * @slot - Fallback content rendered in place of the media when no `src` is set.
+     * @slot image - Replaces the built-in `<img>` (e.g. a video, canvas or `zn-icon`).
+     * @slot caption - Replaces the caption text.
+     * @slot badge - Content pinned to the bottom-left of the media (e.g. a play indicator). Badges take
+     *  no pointer events and are held back on opacity, so they read as information about the asset
+     *  rather than as something to click.
+     * @slot actions - Controls pinned to the bottom-right of the media (e.g. a download button). Each
+     *  slotted element becomes its own chip, so several actions read as separate icons on the thumbnail
+     *  rather than one grouped pill. This sits outside the thumbnail's link, so buttons and links here
+     *  behave normally and never select the thumbnail or follow its `href`.
+     * @slot preview - Replaces the preview media (e.g. a `<video>` for the full-size asset).
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart link - The anchor (or div) covering the media and caption.
+     * @csspart media - The fixed aspect-ratio media frame.
+     * @csspart image - The built-in image element.
+     * @csspart overlay - The layer holding the badge, actions and preview button.
+     * @csspart badge - The bottom-left badge container.
+     * @csspart actions - The bottom-right actions container.
+     * @csspart preview-button - The built-in preview trigger, when `preview-trigger="button"`.
+     * @csspart caption - The caption beneath the media.
+     * @csspart preview - The preview `<dialog>`.
+     * @csspart preview-backdrop - The full-screen backdrop behind the preview.
+     * @csspart preview-frame - The rounded panel the preview media sits in.
+     * @csspart preview-image - The full-size image inside the preview.
+     * @csspart preview-close - The preview's close button.
+     *
+     * @cssproperty --zn-thumbnail-aspect-ratio - Aspect ratio of the media frame. Defaults to 16 / 9. The
+     *  `aspect-ratio` attribute sets this on the thumbnail itself; set the property on any ancestor
+     *  (including a `zn-thumbnail-group`) to apply it to every thumbnail beneath it.
+     * @cssproperty --zn-thumbnail-radius - Corner radius of the media frame.
+     * @cssproperty --zn-thumbnail-preview-aspect-ratio - Overrides the measured aspect ratio of the preview
+     *  panel. By default the panel takes the asset's own ratio so it wraps the image exactly.
+     * @cssproperty --zn-thumbnail-preview-max-width - Largest width the preview may take. Defaults to 70vw.
+     * @cssproperty --zn-thumbnail-preview-max-height - Largest height the preview may take. Defaults to 70vh.
+     * @cssproperty --zn-thumbnail-preview-radius - Corner radius of the preview panel.
+     * @cssproperty --zn-thumbnail-chip-radius - Corner radius of a badge, action or preview chip.
+     * @cssproperty --zn-thumbnail-chip-background - Background of a badge, action or preview chip.
+     * @cssproperty --zn-thumbnail-chip-background-hover - Hover background of an action or preview chip.
+     * @cssproperty --zn-thumbnail-chip-color - Foreground colour of a badge, action or preview chip.
+     * @cssproperty --zn-thumbnail-chip-gap - Gap between adjacent chips.
+     * @cssproperty --zn-thumbnail-badge-opacity - Opacity of a badge, holding it back from the action
+     *  chips beside it. Defaults to 0.65.
+     * @cssproperty --zn-thumbnail-selected-color - Ring colour for the selected state.
+     * @cssproperty --zn-thumbnail-active-color - Ring colour for the active state.
+     */
+    export default class ZnThumbnail extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+        };
+        private readonly hasSlotController;
+        /** Image URL for the built-in `<img>`. */
+        src: string;
+        /** Alternative text for the built-in image. Falls back to the caption. */
+        alt: string;
+        /** The title shown beneath the media. */
+        caption: string;
+        /**
+         * Aspect ratio of the media frame, as any CSS `aspect-ratio` value (e.g. `1 / 1`, `4 / 3`).
+         * Takes precedence over an inherited `--zn-thumbnail-aspect-ratio`. Defaults to `16 / 9`.
+         */
+        aspectRatio: string;
+        /** Renders the thumbnail as a link to this URL. */
+        href: string;
+        /** Where to open `href` (e.g. `_blank`). */
+        target: string;
+        /**
+         * URL of the full-size asset. Setting this enables the preview overlay, which grows out of the
+         * thumbnail's position over a full-screen backdrop.
+         */
+        fullUri: string;
+        /**
+         * How the preview opens. `click` (the default) opens it when the thumbnail is activated; `button`
+         * adds a dedicated expand control to the media instead, leaving clicks for selection or the link.
+         */
+        previewTrigger: 'click' | 'button';
+        /** Accessible label for the built-in preview trigger and the preview overlay. */
+        previewLabel: string;
+        /** Identifier reported in the `zn-select` event detail and used for group selection. */
+        value: string;
+        /** Draws the selected ring. Managed automatically inside a `selectable` `zn-thumbnail-group`. */
+        selected: boolean;
+        /**
+         * Draws the active ring — for the thumbnail currently in use (playing, open, being edited), as
+         * distinct from the user's selection. Takes the ring colour when a thumbnail is both active and
+         * selected. Recolour it with `--zn-thumbnail-active-color`.
+         */
+        active: boolean;
+        /** Set by `zn-thumbnail-group` when it manages selection, so the thumbnail reads as clickable. */
+        selectable: boolean;
+        /** Dims the thumbnail and blocks selection, navigation and preview. */
+        disabled: boolean;
+        /** Icon rendered in the bottom-left badge when the `badge` slot is empty. */
+        icon: string;
+        /** Hides the caption row, leaving just the media frame. */
+        hideCaption: boolean;
+        private _previewOpen;
+        /** Aspect ratio (width / height) measured from the asset, so the preview wraps it exactly. */
+        private _previewRatio;
+        private _media;
+        private _image;
+        private _previewImage;
+        private _preview;
+        private _previewFrame;
+        private _previewBackdrop;
+        private _previewClose;
+        /** The media rect captured when the preview opened, so the grow animation starts from the thumbnail. */
+        private _origin;
+        private _animating;
+        disconnectedCallback(): void;
+        private _isLink;
+        private get _previewable();
+        /** True when activating the thumbnail itself should open the preview. */
+        private get _previewOnActivate();
+        /**
+         * The asset's real aspect ratio, so the preview panel wraps the image instead of letterboxing it
+         * inside a fixed-ratio box. The full-size image is preferred, but it usually hasn't loaded when
+         * the preview opens — the already-loaded thumbnail shares the asset's ratio, and the rendered
+         * media box is the last resort for slotted media that can't be measured.
+         */
+        private _resolveRatio;
+        /** Opens the preview overlay. */
+        showPreview(): Promise<void>;
+        /** Closes the preview overlay. */
+        hidePreview(): Promise<void>;
+        private _animatePreview;
+        /** Maps the preview panel onto the thumbnail's box, so the panel appears to grow out of it. */
+        private _collapsedTransform;
+        private _activate;
+        private _handleClick;
+        private _handleKeyDown;
+        private _handlePreviewButtonClick;
+        private _handlePreviewCancel;
+        private _handleBackdropClick;
+        private _handlePreviewImageLoad;
+        render(): import("lit-html").TemplateResult;
+    }
+}
+declare module "components/thumbnail/index" {
+    import ZnThumbnail from "components/thumbnail/thumbnail.component";
+    export * from "components/thumbnail/thumbnail.component";
+    export default ZnThumbnail;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-thumbnail': ZnThumbnail;
+        }
+    }
+}
+declare module "components/thumbnail-group/thumbnail-group.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Lays a set of `zn-thumbnail` elements out as a single scrollable row, with a
+     * "Show All" toggle that expands them into a wrapping grid.
+     * @documentation https://zinc.style/components/thumbnail-group
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-thumbnail
+     *
+     * @event zn-expand - Emitted when the group expands into the full grid.
+     * @event zn-collapse - Emitted when the group collapses back to a single row.
+     * @event zn-change - Emitted when the selected thumbnail changes (`selectable` groups only).
+     *
+     * @slot - One or more `zn-thumbnail` elements.
+     * @slot caption - Replaces the heading text.
+     * @slot actions - Extra content in the header, before the toggle.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart header - The header row holding the caption and toggle.
+     * @csspart caption - The heading text.
+     * @csspart toggle - The show all / show less button.
+     * @csspart items - The scrolling row / expanded grid that holds the thumbnails.
+     *
+     * @cssproperty --zn-thumbnail-width - Track width of a thumbnail. Defaults to 180px. Also settable
+     *  with the `thumbnail-width` attribute.
+     * @cssproperty --zn-thumbnail-gap - Gap between thumbnails. Also settable with the `gap` attribute.
+     * @cssproperty --zn-thumbnail-aspect-ratio - Aspect ratio of every thumbnail in the group. Also
+     *  settable with the `aspect-ratio` attribute. Any `zn-thumbnail` custom property set here is
+     *  inherited by the slotted thumbnails.
+     */
+    export default class ZnThumbnailGroup extends ZincElement {
+        static styles: CSSResultGroup;
+        /** The heading shown at the top left of the group. */
+        caption: string;
+        /** Expands the group into the full wrapping grid. */
+        expanded: boolean;
+        /**
+         * Total number of thumbnails in the underlying set, shown in the "Show All (n)" label. Set this when
+         * the row only holds the first page of a larger set; otherwise the slotted thumbnails are counted.
+         */
+        total: number;
+        /** Label of the expand toggle. The count is appended in brackets. */
+        showAllLabel: string;
+        /** Label of the collapse toggle. */
+        showLessLabel: string;
+        /** Never render the toggle, even when the row overflows. */
+        hideToggle: boolean;
+        /** Always render the toggle, even when every thumbnail already fits on the row. */
+        alwaysToggle: boolean;
+        /** Manages single selection across the slotted thumbnails. */
+        selectable: boolean;
+        /**
+         * Aspect ratio for every thumbnail in the group, as any CSS `aspect-ratio` value (e.g. `1 / 1`).
+         * Shorthand for setting `--zn-thumbnail-aspect-ratio` on the group. A thumbnail's own
+         * `aspect-ratio` attribute still wins.
+         */
+        aspectRatio: string;
+        /** Track width of each thumbnail (e.g. `140px`). Shorthand for `--zn-thumbnail-width`. */
+        thumbnailWidth: string;
+        /** Gap between thumbnails (e.g. `8px`). Shorthand for `--zn-thumbnail-gap`. */
+        gap: string;
+        /** The `value` of the selected thumbnail (`selectable` groups only). */
+        value: string;
+        private _overflowing;
+        private _count;
+        private _items;
+        private _resizeObserver;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        protected firstUpdated(changed: PropertyValues): void;
+        private _observe;
+        protected updated(changed: PropertyValues): void;
+        /**
+         * Mirrors the shorthand attributes onto host custom properties. They go on the host rather than
+         * anywhere in the shadow root because the thumbnails are light-DOM children — inheriting from the
+         * host is the only way the values reach them.
+         */
+        private _syncCustomProperties;
+        /** Expands the group into the full grid. */
+        show(): void;
+        /** Collapses the group back to a single row. */
+        hide(): void;
+        private get _thumbnails();
+        private _handleSlotChange;
+        private _sync;
+        private _measure;
+        private _handleSelect;
+        private _handleToggle;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/thumbnail-group/index" {
+    import ZnThumbnailGroup from "components/thumbnail-group/thumbnail-group.component";
+    export * from "components/thumbnail-group/thumbnail-group.component";
+    export default ZnThumbnailGroup;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-thumbnail-group': ZnThumbnailGroup;
+        }
+    }
+}
 declare module "utilities/form" {
     export { clearFormStoreValues } from "internal/form";
 }
@@ -12222,6 +12494,8 @@ declare module "zinc" {
     export { default as SlashMenu } from "components/slash-menu/index";
     export { default as SlashItem } from "components/slash-item/index";
     export { default as ScheduleBuilder } from "components/schedule-builder/index";
+    export { default as Thumbnail } from "components/thumbnail/index";
+    export { default as ThumbnailGroup } from "components/thumbnail-group/index";
     export { default as ZincElement } from "internal/zinc-element";
     export * from "utilities/on";
     export * from "utilities/query";

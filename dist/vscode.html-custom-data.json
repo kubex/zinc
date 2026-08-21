@@ -4664,6 +4664,170 @@
       ]
     },
     {
+      "name": "zn-thumbnail",
+      "description": "A captioned image tile — a fixed aspect-ratio preview with a title beneath it, optional\ncorner badges and actions, and an optional full-screen preview that grows out of the thumbnail.\n---\n\n\n### **Events:**\n - **zn-select** - Emitted when an enabled thumbnail is activated by click or keyboard. Cancelable — call `preventDefault()` to stop the preview from opening and to stop a parent `zn-thumbnail-group` from changing its selection.\n- **zn-show** - Emitted when the preview overlay starts opening.\n- **zn-close** - Emitted once the preview overlay has finished closing.\n\n### **Methods:**\n - **showPreview()** - Opens the preview overlay.\n- **hidePreview()** - Closes the preview overlay.\n\n### **Slots:**\n - _default_ - Fallback content rendered in place of the media when no `src` is set.\n- **image** - Replaces the built-in `<img>` (e.g. a video, canvas or `zn-icon`).\n- **caption** - Replaces the caption text.\n- **badge** - Content pinned to the bottom-left of the media (e.g. a play indicator). Badges take no pointer events and are held back on opacity, so they read as information about the asset rather than as something to click.\n- **actions** - Controls pinned to the bottom-right of the media (e.g. a download button). Each slotted element becomes its own chip, so several actions read as separate icons on the thumbnail rather than one grouped pill. This sits outside the thumbnail's link, so buttons and links here behave normally and never select the thumbnail or follow its `href`.\n- **preview** - Replaces the preview media (e.g. a `<video>` for the full-size asset).\n\n### **CSS Properties:**\n - **--zn-thumbnail-aspect-ratio** - Aspect ratio of the media frame. Defaults to 16 / 9. The `aspect-ratio` attribute sets this on the thumbnail itself; set the property on any ancestor (including a `zn-thumbnail-group`) to apply it to every thumbnail beneath it. _(default: undefined)_\n- **--zn-thumbnail-radius** - Corner radius of the media frame. _(default: undefined)_\n- **--zn-thumbnail-preview-aspect-ratio** - Overrides the measured aspect ratio of the preview panel. By default the panel takes the asset's own ratio so it wraps the image exactly. _(default: undefined)_\n- **--zn-thumbnail-preview-max-width** - Largest width the preview may take. Defaults to 70vw. _(default: undefined)_\n- **--zn-thumbnail-preview-max-height** - Largest height the preview may take. Defaults to 70vh. _(default: undefined)_\n- **--zn-thumbnail-preview-radius** - Corner radius of the preview panel. _(default: undefined)_\n- **--zn-thumbnail-chip-radius** - Corner radius of a badge, action or preview chip. _(default: undefined)_\n- **--zn-thumbnail-chip-background** - Background of a badge, action or preview chip. _(default: undefined)_\n- **--zn-thumbnail-chip-background-hover** - Hover background of an action or preview chip. _(default: undefined)_\n- **--zn-thumbnail-chip-color** - Foreground colour of a badge, action or preview chip. _(default: undefined)_\n- **--zn-thumbnail-chip-gap** - Gap between adjacent chips. _(default: undefined)_\n- **--zn-thumbnail-badge-opacity** - Opacity of a badge, holding it back from the action chips beside it. Defaults to 0.65. _(default: undefined)_\n- **--zn-thumbnail-selected-color** - Ring colour for the selected state. _(default: undefined)_\n- **--zn-thumbnail-active-color** - Ring colour for the active state. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **link** - The anchor (or div) covering the media and caption.\n- **media** - The fixed aspect-ratio media frame.\n- **image** - The built-in image element.\n- **overlay** - The layer holding the badge, actions and preview button.\n- **badge** - The bottom-left badge container.\n- **actions** - The bottom-right actions container.\n- **preview-button** - The built-in preview trigger, when `preview-trigger=\"button\"`.\n- **caption** - The caption beneath the media.\n- **preview** - The preview `<dialog>`.\n- **preview-backdrop** - The full-screen backdrop behind the preview.\n- **preview-frame** - The rounded panel the preview media sits in.\n- **preview-image** - The full-size image inside the preview.\n- **preview-close** - The preview's close button.",
+      "attributes": [
+        {
+          "name": "src",
+          "description": "Image URL for the built-in `<img>`.",
+          "values": []
+        },
+        {
+          "name": "alt",
+          "description": "Alternative text for the built-in image. Falls back to the caption.",
+          "values": []
+        },
+        {
+          "name": "caption",
+          "description": "The title shown beneath the media.",
+          "values": []
+        },
+        {
+          "name": "aspect-ratio",
+          "description": "Aspect ratio of the media frame, as any CSS `aspect-ratio` value (e.g. `1 / 1`, `4 / 3`).\nTakes precedence over an inherited `--zn-thumbnail-aspect-ratio`. Defaults to `16 / 9`.",
+          "values": []
+        },
+        {
+          "name": "href",
+          "description": "Renders the thumbnail as a link to this URL.",
+          "values": []
+        },
+        {
+          "name": "target",
+          "description": "Where to open `href` (e.g. `_blank`).",
+          "values": []
+        },
+        {
+          "name": "full-uri",
+          "description": "URL of the full-size asset. Setting this enables the preview overlay, which grows out of the\nthumbnail's position over a full-screen backdrop.",
+          "values": []
+        },
+        {
+          "name": "preview-trigger",
+          "description": "How the preview opens. `click` (the default) opens it when the thumbnail is activated; `button`\nadds a dedicated expand control to the media instead, leaving clicks for selection or the link.",
+          "values": [{ "name": "click" }, { "name": "button" }]
+        },
+        {
+          "name": "preview-label",
+          "description": "Accessible label for the built-in preview trigger and the preview overlay.",
+          "values": []
+        },
+        {
+          "name": "value",
+          "description": "Identifier reported in the `zn-select` event detail and used for group selection.",
+          "values": []
+        },
+        {
+          "name": "selected",
+          "description": "Draws the selected ring. Managed automatically inside a `selectable` `zn-thumbnail-group`.",
+          "values": []
+        },
+        {
+          "name": "active",
+          "description": "Draws the active ring — for the thumbnail currently in use (playing, open, being edited), as\ndistinct from the user's selection. Takes the ring colour when a thumbnail is both active and\nselected. Recolour it with `--zn-thumbnail-active-color`.",
+          "values": []
+        },
+        {
+          "name": "selectable",
+          "description": "Set by `zn-thumbnail-group` when it manages selection, so the thumbnail reads as clickable.",
+          "values": []
+        },
+        {
+          "name": "disabled",
+          "description": "Dims the thumbnail and blocks selection, navigation and preview.",
+          "values": []
+        },
+        {
+          "name": "icon",
+          "description": "Icon rendered in the bottom-left badge when the `badge` slot is empty.",
+          "values": []
+        },
+        {
+          "name": "hide-caption",
+          "description": "Hides the caption row, leaving just the media frame.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/thumbnail"
+        }
+      ]
+    },
+    {
+      "name": "zn-thumbnail-group",
+      "description": "Lays a set of `zn-thumbnail` elements out as a single scrollable row, with a\n\"Show All\" toggle that expands them into a wrapping grid.\n---\n\n\n### **Events:**\n - **zn-expand** - Emitted when the group expands into the full grid.\n- **zn-collapse** - Emitted when the group collapses back to a single row.\n- **zn-change** - Emitted when the selected thumbnail changes (`selectable` groups only).\n\n### **Methods:**\n - **show()** - Expands the group into the full grid.\n- **hide()** - Collapses the group back to a single row.\n\n### **Slots:**\n - _default_ - One or more `zn-thumbnail` elements.\n- **caption** - Replaces the heading text.\n- **actions** - Extra content in the header, before the toggle.\n\n### **CSS Properties:**\n - **--zn-thumbnail-width** - Track width of a thumbnail. Defaults to 180px. Also settable with the `thumbnail-width` attribute. _(default: undefined)_\n- **--zn-thumbnail-gap** - Gap between thumbnails. Also settable with the `gap` attribute. _(default: undefined)_\n- **--zn-thumbnail-aspect-ratio** - Aspect ratio of every thumbnail in the group. Also settable with the `aspect-ratio` attribute. Any `zn-thumbnail` custom property set here is inherited by the slotted thumbnails. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The header row holding the caption and toggle.\n- **caption** - The heading text.\n- **toggle** - The show all / show less button.\n- **items** - The scrolling row / expanded grid that holds the thumbnails.",
+      "attributes": [
+        {
+          "name": "caption",
+          "description": "The heading shown at the top left of the group.",
+          "values": []
+        },
+        {
+          "name": "expanded",
+          "description": "Expands the group into the full wrapping grid.",
+          "values": []
+        },
+        {
+          "name": "total",
+          "description": "Total number of thumbnails in the underlying set, shown in the \"Show All (n)\" label. Set this when\nthe row only holds the first page of a larger set; otherwise the slotted thumbnails are counted.",
+          "values": []
+        },
+        {
+          "name": "show-all-label",
+          "description": "Label of the expand toggle. The count is appended in brackets.",
+          "values": []
+        },
+        {
+          "name": "show-less-label",
+          "description": "Label of the collapse toggle.",
+          "values": []
+        },
+        {
+          "name": "hide-toggle",
+          "description": "Never render the toggle, even when the row overflows.",
+          "values": []
+        },
+        {
+          "name": "always-toggle",
+          "description": "Always render the toggle, even when every thumbnail already fits on the row.",
+          "values": []
+        },
+        {
+          "name": "selectable",
+          "description": "Manages single selection across the slotted thumbnails.",
+          "values": []
+        },
+        {
+          "name": "aspect-ratio",
+          "description": "Aspect ratio for every thumbnail in the group, as any CSS `aspect-ratio` value (e.g. `1 / 1`).\nShorthand for setting `--zn-thumbnail-aspect-ratio` on the group. A thumbnail's own\n`aspect-ratio` attribute still wins.",
+          "values": []
+        },
+        {
+          "name": "thumbnail-width",
+          "description": "Track width of each thumbnail (e.g. `140px`). Shorthand for `--zn-thumbnail-width`.",
+          "values": []
+        },
+        {
+          "name": "gap",
+          "description": "Gap between thumbnails (e.g. `8px`). Shorthand for `--zn-thumbnail-gap`.",
+          "values": []
+        },
+        {
+          "name": "value",
+          "description": "The `value` of the selected thumbnail (`selectable` groups only).",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/thumbnail-group"
+        }
+      ]
+    },
+    {
       "name": "zn-tile",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [

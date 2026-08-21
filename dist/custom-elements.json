@@ -58,6 +58,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -246,79 +319,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -838,6 +838,269 @@
           "declaration": {
             "name": "ZnAudioSelect",
             "module": "components/audio-select/audio-select.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/background/background.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnBackground",
+          "cssProperties": [
+            {
+              "description": "Fallback colour when the `color` attribute is not set.",
+              "name": "--zn-background-color"
+            },
+            {
+              "description": "Position of the background image. Defaults to `center`.",
+              "name": "--zn-background-image-position"
+            },
+            {
+              "description": "Direction of the overlay gradient. Defaults to `110deg`.",
+              "name": "--zn-background-overlay-angle"
+            },
+            {
+              "description": "Colour of the floating icons. Defaults to `currentColor`.",
+              "name": "--zn-background-floating-icon-color"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's full-size background canvas.",
+              "name": "base"
+            },
+            {
+              "description": "The decorative background image.",
+              "name": "image"
+            },
+            {
+              "description": "The contrast overlay between the image and content.",
+              "name": "overlay"
+            },
+            {
+              "description": "The non-interactive layer containing the floating icons.",
+              "name": "floating-icons"
+            },
+            {
+              "description": "Each floating `zn-icon`.",
+              "name": "floating-icon"
+            },
+            {
+              "description": "The wrapper around the default slot.",
+              "name": "content"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Content displayed above the background layers.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{'zn-icon': ZnIcon}"
+            },
+            {
+              "kind": "field",
+              "name": "resizeObserver",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ResizeController<number>(this, { callback: entries => { const width = entries[0]?.contentRect.width ?? this.offsetWidth; return Math.max(1, Math.min(width * 0.05, 150)); }, })"
+            },
+            {
+              "kind": "field",
+              "name": "image",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "URL of the decorative background image.",
+              "attribute": "image"
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "CSS colour painted beneath the image.",
+              "attribute": "color"
+            },
+            {
+              "kind": "field",
+              "name": "imageStrength",
+              "type": {
+                "text": "BackgroundImageStrength"
+              },
+              "default": "'full'",
+              "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
+              "attribute": "image-strength",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "motion",
+              "type": {
+                "text": "BackgroundMotion"
+              },
+              "default": "'none'",
+              "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
+              "attribute": "motion",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "overlay",
+              "type": {
+                "text": "BackgroundOverlay"
+              },
+              "default": "'soft'",
+              "description": "Strength of the contrast gradient above the image.",
+              "attribute": "overlay",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "overlayTone",
+              "type": {
+                "text": "BackgroundOverlayTone"
+              },
+              "default": "'light'",
+              "description": "Whether the overlay uses a light or dark contrast treatment.",
+              "attribute": "overlay-tone",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "floatingIcons",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
+              "attribute": "floating-icons"
+            },
+            {
+              "kind": "field",
+              "name": "paused",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Pauses background motion without changing the selected motion treatment.",
+              "attribute": "paused",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "image",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "URL of the decorative background image.",
+              "fieldName": "image"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "CSS colour painted beneath the image.",
+              "fieldName": "color"
+            },
+            {
+              "name": "image-strength",
+              "type": {
+                "text": "BackgroundImageStrength"
+              },
+              "default": "'full'",
+              "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
+              "fieldName": "imageStrength"
+            },
+            {
+              "name": "motion",
+              "type": {
+                "text": "BackgroundMotion"
+              },
+              "default": "'none'",
+              "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
+              "fieldName": "motion"
+            },
+            {
+              "name": "overlay",
+              "type": {
+                "text": "BackgroundOverlay"
+              },
+              "default": "'soft'",
+              "description": "Strength of the contrast gradient above the image.",
+              "fieldName": "overlay"
+            },
+            {
+              "name": "overlay-tone",
+              "type": {
+                "text": "BackgroundOverlayTone"
+              },
+              "default": "'light'",
+              "description": "Whether the overlay uses a light or dark contrast treatment.",
+              "fieldName": "overlayTone"
+            },
+            {
+              "name": "floating-icons",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
+              "fieldName": "floatingIcons"
+            },
+            {
+              "name": "paused",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Pauses background motion without changing the selected motion treatment.",
+              "fieldName": "paused"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.",
+          "tagNameWithoutPrefix": "background",
+          "tagName": "zn-background",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n *\n * @documentation https://zinc.style/components/background\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - Content displayed above the background layers.\n *\n * @csspart base - The component's full-size background canvas.\n * @csspart image - The decorative background image.\n * @csspart overlay - The contrast overlay between the image and content.\n * @csspart floating-icons - The non-interactive layer containing the floating icons.\n * @csspart floating-icon - Each floating `zn-icon`.\n * @csspart content - The wrapper around the default slot.\n *\n * @cssproperty --zn-background-color - Fallback colour when the `color` attribute is not set.\n * @cssproperty --zn-background-image-position - Position of the background image. Defaults to `center`.\n * @cssproperty --zn-background-overlay-angle - Direction of the overlay gradient. Defaults to `110deg`.\n * @cssproperty --zn-background-floating-icon-color - Colour of the floating icons. Defaults to `currentColor`.\n */",
+          "documentation": "https://zinc.style/components/background",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-icon"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnBackground",
+            "module": "components/background/background.js"
           }
         }
       ]
@@ -36586,8 +36849,8 @@
           "name": "ZnScrollContainer",
           "cssProperties": [
             {
-              "description": "An example CSS custom property.",
-              "name": "--example"
+              "description": "The height and maximum height of the scroll container.",
+              "name": "--zn-scroll-container-height"
             }
           ],
           "cssParts": [
@@ -36607,6 +36870,16 @@
             }
           ],
           "members": [
+            {
+              "kind": "field",
+              "name": "height",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The height and maximum height of the scroll container.",
+              "attribute": "height"
+            },
             {
               "kind": "field",
               "name": "startScrolled",
@@ -36683,6 +36956,15 @@
           ],
           "attributes": [
             {
+              "name": "height",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The height and maximum height of the scroll container.",
+              "fieldName": "height"
+            },
+            {
               "name": "start-scrolled",
               "type": {
                 "text": "boolean"
@@ -36699,7 +36981,7 @@
           "tagNameWithoutPrefix": "scroll-container",
           "tagName": "zn-scroll-container",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/scroll-container\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/scroll-container\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --zn-scroll-container-height - The height and maximum height of the scroll container.\n */",
           "documentation": "https://zinc.style/components/scroll-container",
           "status": "experimental",
           "since": "1.0",

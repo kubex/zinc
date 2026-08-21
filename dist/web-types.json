@@ -16,6 +16,28 @@
           "js": { "properties": [], "events": [] }
         },
         {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -75,28 +97,6 @@
               { "name": "center", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -246,6 +246,108 @@
               { "name": "label", "type": "string" },
               { "name": "placeholder", "type": "string" },
               { "name": "files", "type": "AudioFile[]" }
+            ],
+            "events": []
+          }
+        },
+        {
+          "name": "zn-background",
+          "description": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n---\n\n\n### **Slots:**\n - _default_ - Content displayed above the background layers.\n\n### **CSS Properties:**\n - **--zn-background-color** - Fallback colour when the `color` attribute is not set. _(default: undefined)_\n- **--zn-background-image-position** - Position of the background image. Defaults to `center`. _(default: undefined)_\n- **--zn-background-overlay-angle** - Direction of the overlay gradient. Defaults to `110deg`. _(default: undefined)_\n- **--zn-background-floating-icon-color** - Colour of the floating icons. Defaults to `currentColor`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's full-size background canvas.\n- **image** - The decorative background image.\n- **overlay** - The contrast overlay between the image and content.\n- **floating-icons** - The non-interactive layer containing the floating icons.\n- **floating-icon** - Each floating `zn-icon`.\n- **content** - The wrapper around the default slot.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "image",
+              "description": "URL of the decorative background image.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "color",
+              "description": "CSS colour painted beneath the image.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "image-strength",
+              "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
+              "value": {
+                "type": "BackgroundImageStrength",
+                "default": "'full'"
+              }
+            },
+            {
+              "name": "motion",
+              "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
+              "value": { "type": "BackgroundMotion", "default": "'none'" }
+            },
+            {
+              "name": "overlay",
+              "description": "Strength of the contrast gradient above the image.",
+              "value": { "type": "BackgroundOverlay", "default": "'soft'" }
+            },
+            {
+              "name": "overlay-tone",
+              "description": "Whether the overlay uses a light or dark contrast treatment.",
+              "value": { "type": "BackgroundOverlayTone", "default": "'light'" }
+            },
+            {
+              "name": "floating-icons",
+              "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "paused",
+              "description": "Pauses background motion without changing the selected motion treatment.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Content displayed above the background layers."
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              {
+                "name": "image",
+                "description": "URL of the decorative background image.",
+                "type": "string"
+              },
+              {
+                "name": "color",
+                "description": "CSS colour painted beneath the image.",
+                "type": "string"
+              },
+              {
+                "name": "imageStrength",
+                "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
+                "type": "BackgroundImageStrength"
+              },
+              {
+                "name": "motion",
+                "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
+                "type": "BackgroundMotion"
+              },
+              {
+                "name": "overlay",
+                "description": "Strength of the contrast gradient above the image.",
+                "type": "BackgroundOverlay"
+              },
+              {
+                "name": "overlayTone",
+                "description": "Whether the overlay uses a light or dark contrast treatment.",
+                "type": "BackgroundOverlayTone"
+              },
+              {
+                "name": "floatingIcons",
+                "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
+                "type": "string"
+              },
+              {
+                "name": "paused",
+                "description": "Pauses background motion without changing the selected motion treatment.",
+                "type": "boolean"
+              }
             ],
             "events": []
           }
@@ -8512,9 +8614,14 @@
         },
         {
           "name": "zn-scroll-container",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--zn-scroll-container-height** - The height and maximum height of the scroll container. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
           "attributes": [
+            {
+              "name": "height",
+              "description": "The height and maximum height of the scroll container.",
+              "value": { "type": "string", "default": "''" }
+            },
             {
               "name": "start-scrolled",
               "value": { "type": "boolean", "default": "false" }
@@ -8528,7 +8635,14 @@
             { "name": "zn-event-name", "description": "Emitted as an example." }
           ],
           "js": {
-            "properties": [{ "name": "startScrolled", "type": "boolean" }],
+            "properties": [
+              {
+                "name": "height",
+                "description": "The height and maximum height of the scroll container.",
+                "type": "string"
+              },
+              { "name": "startScrolled", "type": "boolean" }
+            ],
             "events": [
               {
                 "name": "zn-event-name",

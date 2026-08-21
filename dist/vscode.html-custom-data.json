@@ -14,6 +14,17 @@
       ]
     },
     {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
+        }
+      ]
+    },
+    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -50,17 +61,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
-        }
-      ]
-    },
-    {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -135,6 +135,58 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/audio-select"
+        }
+      ]
+    },
+    {
+      "name": "zn-background",
+      "description": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n---\n\n\n### **Slots:**\n - _default_ - Content displayed above the background layers.\n\n### **CSS Properties:**\n - **--zn-background-color** - Fallback colour when the `color` attribute is not set. _(default: undefined)_\n- **--zn-background-image-position** - Position of the background image. Defaults to `center`. _(default: undefined)_\n- **--zn-background-overlay-angle** - Direction of the overlay gradient. Defaults to `110deg`. _(default: undefined)_\n- **--zn-background-floating-icon-color** - Colour of the floating icons. Defaults to `currentColor`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's full-size background canvas.\n- **image** - The decorative background image.\n- **overlay** - The contrast overlay between the image and content.\n- **floating-icons** - The non-interactive layer containing the floating icons.\n- **floating-icon** - Each floating `zn-icon`.\n- **content** - The wrapper around the default slot.",
+      "attributes": [
+        {
+          "name": "image",
+          "description": "URL of the decorative background image.",
+          "values": []
+        },
+        {
+          "name": "color",
+          "description": "CSS colour painted beneath the image.",
+          "values": []
+        },
+        {
+          "name": "image-strength",
+          "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
+          "values": [{ "name": "BackgroundImageStrength" }]
+        },
+        {
+          "name": "motion",
+          "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
+          "values": [{ "name": "BackgroundMotion" }]
+        },
+        {
+          "name": "overlay",
+          "description": "Strength of the contrast gradient above the image.",
+          "values": [{ "name": "BackgroundOverlay" }]
+        },
+        {
+          "name": "overlay-tone",
+          "description": "Whether the overlay uses a light or dark contrast treatment.",
+          "values": [{ "name": "BackgroundOverlayTone" }]
+        },
+        {
+          "name": "floating-icons",
+          "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
+          "values": []
+        },
+        {
+          "name": "paused",
+          "description": "Pauses background motion without changing the selected motion treatment.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/background"
         }
       ]
     },
@@ -3640,8 +3692,15 @@
     },
     {
       "name": "zn-scroll-container",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [{ "name": "start-scrolled", "values": [] }],
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--zn-scroll-container-height** - The height and maximum height of the scroll container. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        {
+          "name": "height",
+          "description": "The height and maximum height of the scroll container.",
+          "values": []
+        },
+        { "name": "start-scrolled", "values": [] }
+      ],
       "references": [
         {
           "name": "Documentation",

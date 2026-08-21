@@ -5981,16 +5981,19 @@ declare module "components/scroll-container/scroll-container.component" {
      *
      * @csspart base - The component's base wrapper.
      *
-     * @cssproperty --example - An example CSS custom property.
+     * @cssproperty --zn-scroll-container-height - The height and maximum height of the scroll container.
      */
     export default class ZnScrollContainer extends ZincElement {
         static styles: CSSResultGroup;
+        /** The height and maximum height of the scroll container. */
+        height: string;
         startScrolled: boolean;
         private container;
         private footer;
         private _footerObserved;
         private _footerHeightFrame;
         protected firstUpdated(_changedProperties: PropertyValues): void;
+        protected updated(changedProperties: PropertyValues): void;
         disconnectedCallback(): void;
         scrollEnd(): void;
         private _syncFooterHeight;
@@ -12178,6 +12181,72 @@ declare module "components/thumbnail-group/index" {
         }
     }
 }
+declare module "components/background/background.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    export type BackgroundImageStrength = 'soft' | 'medium' | 'full';
+    export type BackgroundMotion = 'none' | 'drift' | 'breathe';
+    export type BackgroundOverlay = 'none' | 'soft' | 'strong';
+    export type BackgroundOverlayTone = 'light' | 'dark';
+    /**
+     * @summary Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.
+     *
+     * @documentation https://zinc.style/components/background
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     *
+     * @slot - Content displayed above the background layers.
+     *
+     * @csspart base - The component's full-size background canvas.
+     * @csspart image - The decorative background image.
+     * @csspart overlay - The contrast overlay between the image and content.
+     * @csspart floating-icons - The non-interactive layer containing the floating icons.
+     * @csspart floating-icon - Each floating `zn-icon`.
+     * @csspart content - The wrapper around the default slot.
+     *
+     * @cssproperty --zn-background-color - Fallback colour when the `color` attribute is not set.
+     * @cssproperty --zn-background-image-position - Position of the background image. Defaults to `center`.
+     * @cssproperty --zn-background-overlay-angle - Direction of the overlay gradient. Defaults to `110deg`.
+     * @cssproperty --zn-background-floating-icon-color - Colour of the floating icons. Defaults to `currentColor`.
+     */
+    export default class ZnBackground extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+        };
+        private readonly resizeObserver;
+        /** URL of the decorative background image. */
+        image: string;
+        /** CSS colour painted beneath the image. */
+        color: string;
+        /** Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%). */
+        imageStrength: BackgroundImageStrength;
+        /** Subtle animation applied to the image. Motion stops when reduced motion is requested. */
+        motion: BackgroundMotion;
+        /** Strength of the contrast gradient above the image. */
+        overlay: BackgroundOverlay;
+        /** Whether the overlay uses a light or dark contrast treatment. */
+        overlayTone: BackgroundOverlayTone;
+        /** Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered. */
+        floatingIcons: string;
+        /** Pauses background motion without changing the selected motion treatment. */
+        paused: boolean;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/background/index" {
+    import ZnBackground from "components/background/background.component";
+    export * from "components/background/background.component";
+    export default ZnBackground;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-background': ZnBackground;
+        }
+    }
+}
 declare module "utilities/form" {
     export { clearFormStoreValues } from "internal/form";
 }
@@ -12541,6 +12610,7 @@ declare module "zinc" {
     export { default as ScheduleBuilder } from "components/schedule-builder/index";
     export { default as Thumbnail } from "components/thumbnail/index";
     export { default as ThumbnailGroup } from "components/thumbnail-group/index";
+    export { default as Background } from "components/background/index";
     export { default as ZincElement } from "internal/zinc-element";
     export * from "utilities/on";
     export * from "utilities/query";

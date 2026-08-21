@@ -52,6 +52,10 @@ export default class ZnCollapsible extends ZincElement {
 
   @state() numberOfItems: number = 0;
 
+  @state() private animating: boolean = false;
+
+  private animatingTimer?: ReturnType<typeof setTimeout>;
+
   protected _store: Store;
 
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'header', 'caption', 'label', 'description');
@@ -94,6 +98,11 @@ export default class ZnCollapsible extends ZincElement {
     }
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    clearTimeout(this.animatingTimer);
+  }
+
   // this is for handling global toggles
   public handleCaptionToggle = (e: ZnInputEvent) => {
     const toggle = e.target as ZnToggle;
@@ -104,8 +113,38 @@ export default class ZnCollapsible extends ZincElement {
 
   protected updated(changedProperties: PropertyValues) {
     super.updated(changedProperties);
-    if (changedProperties.has('expanded') && this.storeKey) {
-      this._store.set(this.storeKey, this.expanded.toString());
+    if (changedProperties.has('expanded')) {
+      if (changedProperties.get('expanded') !== undefined) {
+        this.startAnimating();
+      }
+
+      if (this.storeKey) {
+        this._store.set(this.storeKey, this.expanded.toString());
+      }
+    }
+  }
+
+  // Content is only clipped while the height transition runs, so expanded
+  // content can overflow the host. The timer covers a transitionend that never
+  // arrives (reduced motion, hidden host).
+  private startAnimating() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+
+    this.animating = true;
+    clearTimeout(this.animatingTimer);
+    this.animatingTimer = setTimeout(() => (this.animating = false), 600);
+  }
+
+  private stopAnimating() {
+    clearTimeout(this.animatingTimer);
+    this.animating = false;
+  }
+
+  private handleTransitionEnd = (e: TransitionEvent) => {
+    if (e.target === e.currentTarget && e.propertyName === 'grid-template-rows') {
+      this.stopAnimating();
     }
   }
 
@@ -160,8 +199,14 @@ export default class ZnCollapsible extends ZincElement {
               <zn-icon library="material-outlined" src="expand_more" class="expand"></zn-icon>` : ''}
           </div>
         </slot>
-        <div class=${classMap({ 'content': true, 'content--flush': this.flush, })} part="content">
-          <slot @slotchange="${this.requestUpdate}"></slot>
+        <div class=${classMap({
+          'content': true,
+          'content--flush': this.flush,
+          'content--animating': this.animating,
+        })} part="content" @transitionend="${this.handleTransitionEnd}">
+          <div class="content__inner">
+            <slot @slotchange="${this.requestUpdate}"></slot>
+          </div>
         </div>
       </div>`;
   }

@@ -64,18 +64,29 @@ $radius: var(--zn-thumbnail-radius, var(--zn-border-radius));
   overflow: hidden;
   border-radius: #{$radius};
   background-color: rgb(var(--zn-panel));
-  // One ring, driven by custom properties the state rules below reassign. Insetting it keeps
-  // it out of layout and stops the group's horizontal scroller clipping it, and routing every
-  // state through the same declaration avoids specificity fights between hover and the
+  // One ring, driven by custom properties the state rules below reassign. Routing every state
+  // through the same declaration avoids specificity fights between hover and the
   // selected / active states.
-  //
-  // The gap ring is painted under the accent ring, so only the part of it that the accent
-  // doesn't cover shows — holding the accent off the image. At a 0 gap the two spreads match
-  // and the gap ring disappears entirely.
   --thumbnail-ring-color: rgb(var(--zn-border-color));
   --thumbnail-ring-width: 1px;
   --thumbnail-ring-gap: 0px;
+}
 
+// The ring is drawn on a pseudo-element rather than on the frame itself: an inset shadow paints
+// under the frame's content, so the image would cover it. Positioning this above the media keeps
+// the ring visible over the image while staying out of layout, so the group's horizontal
+// scroller can't clip it.
+//
+// The gap ring is painted under the accent ring, so only the part of it that the accent
+// doesn't cover shows — holding the accent off the image. At a 0 gap the two spreads match
+// and the gap ring disappears entirely.
+.thumbnail__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
   box-shadow:
     inset 0 0 0 var(--thumbnail-ring-width) var(--thumbnail-ring-color),
     inset 0 0 0 calc(var(--thumbnail-ring-width) + var(--thumbnail-ring-gap)) rgb(var(--zn-body));

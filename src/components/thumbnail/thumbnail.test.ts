@@ -226,6 +226,25 @@ describe('<zn-thumbnail>', () => {
       expect(color()).to.not.equal(idle);
     });
 
+    it('should paint the ring above the media so an image cannot cover it', async () => {
+      const el = await fixture<ZnThumbnail>(html`
+        <zn-thumbnail
+          caption="Tahoe Day"
+          src="/thumb.jpg"
+          active
+          style="width: 200px; --zn-body: 255, 255, 255; --zn-thumbnail-active-color: rgb(0, 128, 0);">
+        </zn-thumbnail>`);
+
+      const media = el.shadowRoot!.querySelector<HTMLElement>('.thumbnail__media')!;
+      const ring = getComputedStyle(media, '::after');
+
+      // An inset shadow on the frame itself paints under the frame's content, so the image would
+      // hide it — the ring has to live on a positioned layer over the media.
+      expect(getComputedStyle(media).boxShadow).to.match(/none/);
+      expect(ring.boxShadow).to.contain('rgb(0, 128, 0)');
+      expect(ring.position).to.equal('absolute');
+    });
+
     it('should give the active ring colour precedence over the selected ring colour', async () => {
       const el = await fixture<ZnThumbnail>(html`
         <zn-thumbnail

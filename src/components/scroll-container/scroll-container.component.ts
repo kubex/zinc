@@ -21,10 +21,13 @@ import styles from './scroll-container.scss';
  *
  * @csspart base - The component's base wrapper.
  *
- * @cssproperty --example - An example CSS custom property.
+ * @cssproperty --zn-scroll-container-height - The height and maximum height of the scroll container.
  */
 export default class ZnScrollContainer extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
+
+  /** The height and maximum height of the scroll container. */
+  @property({type: String}) height = '';
 
   @property({attribute: 'start-scrolled', type: Boolean, reflect: true}) startScrolled: boolean = false;
 
@@ -41,6 +44,17 @@ export default class ZnScrollContainer extends ZincElement {
     super.firstUpdated(_changedProperties);
     if (this.startScrolled && this.container) {
       setTimeout(this.scrollEnd.bind(this), 10);
+    }
+  }
+
+  protected updated(changedProperties: PropertyValues) {
+    super.updated(changedProperties);
+    if (changedProperties.has('height')) {
+      if (this.height) {
+        this.style.setProperty('--zn-scroll-container-height-property', this.height);
+      } else {
+        this.style.removeProperty('--zn-scroll-container-height-property');
+      }
     }
   }
 

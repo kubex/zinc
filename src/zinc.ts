@@ -117,6 +117,7 @@ export { default as SlashItem } from './components/slash-item';
 export { default as ScheduleBuilder } from './components/schedule-builder';
 export { default as Thumbnail } from './components/thumbnail';
 export { default as ThumbnailGroup } from './components/thumbnail-group';
+export { default as Background } from './components/background';
 /* plop:component */
 
 // Base Component

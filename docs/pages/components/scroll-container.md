@@ -5,10 +5,10 @@ meta:
 layout: component
 ---
 
-The scroll container provides a flexible scrolling area with optional header and footer slots that remain fixed while the main content scrolls. It supports automatic scrolling to the bottom, making it ideal for chat applications, activity feeds, and log viewers.
+The scroll container provides a flexible scrolling area with optional header and footer slots that remain fixed while the main content scrolls. It supports automatic scrolling to the bottom, making it ideal for chat applications, activity feeds, and log viewers. Set `height` to constrain the block-level container and enable scrolling when its content exceeds that height.
 
 ```html:preview
-<zn-scroll-container style="height: 300px; display: block; border: 1px solid var(--zn-color-neutral-200);">
+<zn-scroll-container height="300px" style="border: 1px solid var(--zn-color-neutral-200);">
   <div slot="header" style="padding: 1rem; background: var(--zn-color-neutral-100); border-bottom: 1px solid var(--zn-color-neutral-200);">
     <strong>Header Area</strong>
   </div>
@@ -39,7 +39,7 @@ The scroll container provides a flexible scrolling area with optional header and
 The most common use case is a simple vertical scrolling container. The main content area scrolls while header and footer remain fixed.
 
 ```html:preview
-<zn-scroll-container style="height: 400px; display: block; border: 1px solid var(--zn-color-neutral-200); border-radius: 4px; overflow: hidden;">
+<zn-scroll-container height="400px" style="border: 1px solid var(--zn-color-neutral-200); border-radius: 4px; overflow: hidden;">
   <div style="padding: 1rem;">
     <h3 style="margin-top: 0;">Scrollable Content Area</h3>
     <p>This container has a fixed height and the content will scroll vertically when it exceeds the available space.</p>
@@ -60,7 +60,7 @@ The most common use case is a simple vertical scrolling container. The main cont
 Use the `header` slot to add a fixed header that remains visible while content scrolls.
 
 ```html:preview
-<zn-scroll-container style="height: 350px; display: block; border: 1px solid var(--zn-color-neutral-200); border-radius: 4px; overflow: hidden;">
+<zn-scroll-container height="350px" style="border: 1px solid var(--zn-color-neutral-200); border-radius: 4px; overflow: hidden;">
   <div slot="header" style="padding: 1rem; background: var(--zn-color-primary-50); border-bottom: 2px solid var(--zn-color-primary-200);">
     <h3 style="margin: 0;">Document Title</h3>
     <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: var(--zn-color-neutral-600);">Last updated: January 23, 2026</p>
@@ -91,7 +91,7 @@ Use the `header` slot to add a fixed header that remains visible while content s
 Use the `footer` slot to add a fixed footer that remains at the bottom. The footer is positioned absolutely and the scrollable area has padding to account for its height.
 
 ```html:preview
-<zn-scroll-container style="height: 350px; display: block; border: 1px solid var(--zn-color-neutral-200); border-radius: 4px; overflow: hidden;">
+<zn-scroll-container height="350px" style="border: 1px solid var(--zn-color-neutral-200); border-radius: 4px; overflow: hidden;">
   <div style="padding: 1rem;">
     <h4>Content Area</h4>
     <p>The footer remains fixed at the bottom while this content scrolls.</p>
@@ -116,7 +116,7 @@ Use the `footer` slot to add a fixed footer that remains at the bottom. The foot
 Combine both header and footer slots for maximum control. The scrollable area sits between them.
 
 ```html:preview
-<zn-scroll-container style="height: 400px; display: block; border: 1px solid var(--zn-color-neutral-200); border-radius: 4px; overflow: hidden;">
+<zn-scroll-container height="400px" style="border: 1px solid var(--zn-color-neutral-200); border-radius: 4px; overflow: hidden;">
   <div slot="header" style="padding: 1rem; background: var(--zn-color-neutral-100); border-bottom: 1px solid var(--zn-color-neutral-200);">
     <h3 style="margin: 0;">Messages</h3>
   </div>
@@ -156,7 +156,7 @@ Combine both header and footer slots for maximum control. The scrollable area si
 Use the `start-scrolled` attribute to automatically scroll to the bottom when the component loads or when new content is added. This is perfect for chat interfaces, activity logs, and notification feeds.
 
 ```html:preview
-<zn-scroll-container start-scrolled style="height: 300px; display: block; border: 1px solid var(--zn-color-neutral-200); border-radius: 4px; overflow: hidden;">
+<zn-scroll-container height="300px" start-scrolled style="border: 1px solid var(--zn-color-neutral-200); border-radius: 4px; overflow: hidden;">
   <div slot="header" style="padding: 1rem; background: var(--zn-color-neutral-100); border-bottom: 1px solid var(--zn-color-neutral-200);">
     <h4 style="margin: 0;">Activity Log</h4>
   </div>
@@ -198,7 +198,7 @@ Use the `start-scrolled` attribute to automatically scroll to the bottom when th
 A practical example showing how to build a chat interface with auto-scrolling and dynamic content.
 
 ```html:preview
-<zn-scroll-container id="chat-example" start-scrolled style="height: 450px; display: block; border: 1px solid var(--zn-color-neutral-200); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+<zn-scroll-container id="chat-example" height="450px" start-scrolled style="border: 1px solid var(--zn-color-neutral-200); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
   <div slot="header" style="padding: 1rem; background: var(--zn-color-primary); color: white; display: flex; align-items: center; gap: 0.75rem;">
     <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--zn-color-primary-700); display: flex; align-items: center; justify-content: center; font-weight: bold;">
       TC
@@ -274,7 +274,7 @@ A practical example showing how to build a chat interface with auto-scrolling an
 Perfect for displaying server logs, build output, or any streaming text content.
 
 ```html:preview
-<zn-scroll-container start-scrolled style="height: 350px; display: block; border: 1px solid var(--zn-color-neutral-800); border-radius: 4px; overflow: hidden; background: var(--zn-color-neutral-900);">
+<zn-scroll-container height="350px" start-scrolled style="border: 1px solid var(--zn-color-neutral-800); border-radius: 4px; overflow: hidden; background: var(--zn-color-neutral-900);">
   <div slot="header" style="padding: 0.75rem 1rem; background: var(--zn-color-neutral-800); color: var(--zn-color-neutral-200); font-family: monospace; font-size: 0.875rem; border-bottom: 1px solid var(--zn-color-neutral-700);">
     <strong>build.log</strong> - Application Build Output
   </div>
@@ -307,7 +307,7 @@ Perfect for displaying server logs, build output, or any streaming text content.
 A practical example showing an activity feed that automatically scrolls to show the latest activity.
 
 ```html:preview
-<zn-scroll-container id="activity-feed" start-scrolled style="height: 400px; display: block; border: 1px solid var(--zn-color-neutral-200); border-radius: 4px; overflow: hidden;">
+<zn-scroll-container id="activity-feed" height="400px" start-scrolled style="border: 1px solid var(--zn-color-neutral-200); border-radius: 4px; overflow: hidden;">
   <div slot="header" style="padding: 1rem; background: var(--zn-color-neutral-50); border-bottom: 1px solid var(--zn-color-neutral-200); display: flex; justify-content: space-between; align-items: center;">
     <h4 style="margin: 0;">Recent Activity</h4>
     <zn-chip size="small" type="info">Live</zn-chip>
@@ -358,7 +358,7 @@ A practical example showing an activity feed that automatically scrolls to show 
 A comprehensive example showing how to build a notification center with categorized notifications.
 
 ```html:preview
-<zn-scroll-container start-scrolled style="height: 450px; display: block; border: 1px solid var(--zn-color-neutral-200); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+<zn-scroll-container height="450px" start-scrolled style="border: 1px solid var(--zn-color-neutral-200); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
   <div slot="header" style="padding: 1.25rem; background: var(--zn-color-white); border-bottom: 1px solid var(--zn-color-neutral-200);">
     <div style="display: flex; justify-content: space-between; align-items: center;">
       <div>
@@ -460,7 +460,7 @@ A comprehensive example showing how to build a notification center with categori
 You can programmatically scroll to the bottom using the `scrollEnd()` method.
 
 ```html:preview
-<zn-scroll-container id="programmatic-scroll" style="height: 300px; display: block; border: 1px solid var(--zn-color-neutral-200); border-radius: 4px; overflow: hidden;">
+<zn-scroll-container id="programmatic-scroll" height="300px" style="border: 1px solid var(--zn-color-neutral-200); border-radius: 4px; overflow: hidden;">
   <div id="scroll-content" style="padding: 1rem;">
     <p>Content line 1</p>
     <p>Content line 2</p>
@@ -507,7 +507,7 @@ You can programmatically scroll to the bottom using the `scrollEnd()` method.
 The footer's height is automatically tracked and the scrollable area adjusts accordingly. This happens dynamically when the footer content changes size.
 
 ```html:preview
-<zn-scroll-container start-scrolled style="height: 400px; display: block; border: 1px solid var(--zn-color-neutral-200); border-radius: 4px; overflow: hidden;">
+<zn-scroll-container height="400px" start-scrolled style="border: 1px solid var(--zn-color-neutral-200); border-radius: 4px; overflow: hidden;">
   <div style="padding: 1rem;">
     <p>The scrollable area automatically adjusts its padding based on the footer's height.</p>
     <p>This ensures that content is never hidden behind the fixed footer.</p>
@@ -552,7 +552,7 @@ The footer's height is automatically tracked and the scrollable area adjusts acc
 A minimal example showing just the essential markup.
 
 ```html:preview
-<zn-scroll-container style="height: 250px; display: block; border: 1px solid var(--zn-color-neutral-200);">
+<zn-scroll-container height="250px" style="border: 1px solid var(--zn-color-neutral-200);">
   <div style="padding: 1rem;">
     <p>Simple scrollable content without header or footer.</p>
     <p>Just add content to the default slot.</p>
@@ -564,5 +564,4 @@ A minimal example showing just the essential markup.
   </div>
 </zn-scroll-container>
 ```
-
 

@@ -58,79 +58,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -319,6 +246,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -4457,6 +4457,44 @@
           "kind": "class",
           "description": "",
           "name": "ZnCheckbox",
+          "cssProperties": [
+            {
+              "description": "Width of the built-in card image.",
+              "name": "--zn-selection-card-image-width"
+            },
+            {
+              "description": "Height of the built-in card image.",
+              "name": "--zn-selection-card-image-height"
+            },
+            {
+              "description": "Minimum height of a contained checkbox with an image.",
+              "name": "--zn-selection-card-min-height"
+            },
+            {
+              "description": "Width the card text keeps before it wraps below the image.",
+              "name": "--zn-selection-card-content-min-width"
+            },
+            {
+              "description": "Font size of a selection card title.",
+              "name": "--zn-selection-card-title-font-size"
+            },
+            {
+              "description": "Equal inset around the contents of a selection card.",
+              "name": "--zn-selection-card-padding"
+            },
+            {
+              "description": "Space between the image, title, and indicator gutter.",
+              "name": "--zn-selection-card-gap"
+            },
+            {
+              "description": "Distance between a positioned control and the card edge.",
+              "name": "--zn-selection-card-control-offset"
+            },
+            {
+              "description": "Corner radius of a contained container.",
+              "name": "--zn-selection-card-border-radius"
+            }
+          ],
           "cssParts": [
             {
               "description": "The component's base wrapper.",
@@ -4487,6 +4525,18 @@
               "name": "indeterminate-icon"
             },
             {
+              "description": "The wrapper around the built-in image or image slot.",
+              "name": "image-container"
+            },
+            {
+              "description": "The built-in image.",
+              "name": "image"
+            },
+            {
+              "description": "The title inside a selection card.",
+              "name": "card-title"
+            },
+            {
               "description": "The container that wraps the checkbox's label.",
               "name": "label"
             },
@@ -4503,6 +4553,10 @@
             {
               "description": "The checkbox's label.",
               "name": ""
+            },
+            {
+              "description": "Replaces the built-in image used by contained checkboxes.",
+              "name": "image"
             },
             {
               "description": "A description of the checkbox's label. Serves as help text for a checkbox item. Alternatively, you can use the `description` attribute.",
@@ -4535,7 +4589,7 @@
               "name": "hasSlotController",
               "privacy": "private",
               "readonly": true,
-              "default": "new HasSlotController(this, 'description')"
+              "default": "new HasSlotController(this, '[default]', 'description', 'image')"
             },
             {
               "kind": "field",
@@ -4580,6 +4634,16 @@
               },
               "description": "The current value of the checkbox, submitted as a name/value pair with form data.",
               "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "cardTitle",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Title rendered inside the card. The default slot takes precedence when provided.",
+              "attribute": "card-title"
             },
             {
               "kind": "field",
@@ -4644,6 +4708,59 @@
               "default": "false",
               "description": "Draws a container around the checkbox.",
               "attribute": "contained",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "square",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Squares off the corners of the container drawn by `contained`, which is rounded by default.",
+              "attribute": "square",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "URL for the image shown in a contained checkbox.",
+              "attribute": "src"
+            },
+            {
+              "kind": "field",
+              "name": "imageAlt",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Accessible text for the built-in image. Leave empty when the image is decorative.",
+              "attribute": "image-alt"
+            },
+            {
+              "kind": "field",
+              "name": "imagePosition",
+              "type": {
+                "text": "SelectionCardImagePosition"
+              },
+              "default": "'left'",
+              "description": "Places the image above, beside, or below the checkbox's text. Requires `contained`.",
+              "attribute": "image-position",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "controlPosition",
+              "type": {
+                "text": "SelectionCardControlPosition"
+              },
+              "default": "'start'",
+              "description": "Places the checkbox indicator within a contained card. Use `none` to hide the indicator so the card itself\nshows the selected state. Requires `contained`.",
+              "attribute": "control-position",
               "reflects": true
             },
             {
@@ -4963,6 +5080,15 @@
               "fieldName": "value"
             },
             {
+              "name": "card-title",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Title rendered inside the card. The default slot takes precedence when provided.",
+              "fieldName": "cardTitle"
+            },
+            {
               "name": "unchecked-value",
               "type": {
                 "text": "string"
@@ -5014,6 +5140,51 @@
               "default": "false",
               "description": "Draws a container around the checkbox.",
               "fieldName": "contained"
+            },
+            {
+              "name": "square",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Squares off the corners of the container drawn by `contained`, which is rounded by default.",
+              "fieldName": "square"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "URL for the image shown in a contained checkbox.",
+              "fieldName": "src"
+            },
+            {
+              "name": "image-alt",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Accessible text for the built-in image. Leave empty when the image is decorative.",
+              "fieldName": "imageAlt"
+            },
+            {
+              "name": "image-position",
+              "type": {
+                "text": "SelectionCardImagePosition"
+              },
+              "default": "'left'",
+              "description": "Places the image above, beside, or below the checkbox's text. Requires `contained`.",
+              "fieldName": "imagePosition"
+            },
+            {
+              "name": "control-position",
+              "type": {
+                "text": "SelectionCardControlPosition"
+              },
+              "default": "'start'",
+              "description": "Places the checkbox indicator within a contained card. Use `none` to hide the indicator so the card itself\nshows the selected state. Requires `contained`.",
+              "fieldName": "controlPosition"
             },
             {
               "name": "borderless",
@@ -5135,7 +5306,7 @@
           "tagNameWithoutPrefix": "checkbox",
           "tagName": "zn-checkbox",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/checkbox\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - The checkbox's label.\n * @slot description - A description of the checkbox's label. Serves as help text for a checkbox item. Alternatively, you can use the `description` attribute.\n * @slot selected-content - Use to nest rich content (like an input) inside a selected checkbox item. Use only with the contained style.\n *\n * @event zn-blur - Emitted when the checkbox loses focus.\n * @event zn-change - Emitted when the checked state changes.\n * @event zn-focus - Emitted when the checkbox gains focus.\n * @event zn-input - Emitted when the checkbox receives input.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n *\n * @csspart base - The component's base wrapper.\n * @csspart control - The square container that wraps the checkbox's checked state.\n * @csspart control--checked - Matches the control part when the checkbox is checked.\n * @csspart control--indeterminate - Matches the control part when the checkbox is indeterminate.\n * @csspart checked-icon - The checked icon, an `<zn-icon>` element.\n * @csspart unchecked-icon - The unchecked icon, an `<zn-icon>` element.\n * @csspart indeterminate-icon - The indeterminate icon, an `<zn-icon>` element.\n * @csspart label - The container that wraps the checkbox's label.\n * @csspart description - The container that wraps the checkbox's description.\n * @csspart selected-content - The container that wraps optional content that appears when a checkbox is checked.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/checkbox\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - The checkbox's label.\n * @slot image - Replaces the built-in image used by contained checkboxes.\n * @slot description - A description of the checkbox's label. Serves as help text for a checkbox item. Alternatively, you can use the `description` attribute.\n * @slot selected-content - Use to nest rich content (like an input) inside a selected checkbox item. Use only with the contained style.\n *\n * @event zn-blur - Emitted when the checkbox loses focus.\n * @event zn-change - Emitted when the checked state changes.\n * @event zn-focus - Emitted when the checkbox gains focus.\n * @event zn-input - Emitted when the checkbox receives input.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n *\n * @csspart base - The component's base wrapper.\n * @csspart control - The square container that wraps the checkbox's checked state.\n * @csspart control--checked - Matches the control part when the checkbox is checked.\n * @csspart control--indeterminate - Matches the control part when the checkbox is indeterminate.\n * @csspart checked-icon - The checked icon, an `<zn-icon>` element.\n * @csspart unchecked-icon - The unchecked icon, an `<zn-icon>` element.\n * @csspart indeterminate-icon - The indeterminate icon, an `<zn-icon>` element.\n * @csspart image-container - The wrapper around the built-in image or image slot.\n * @csspart image - The built-in image.\n * @csspart card-title - The title inside a selection card.\n * @csspart label - The container that wraps the checkbox's label.\n * @csspart description - The container that wraps the checkbox's description.\n * @csspart selected-content - The container that wraps optional content that appears when a checkbox is checked.\n *\n * @cssproperty --zn-selection-card-image-width - Width of the built-in card image.\n * @cssproperty --zn-selection-card-image-height - Height of the built-in card image.\n * @cssproperty --zn-selection-card-min-height - Minimum height of a contained checkbox with an image.\n * @cssproperty --zn-selection-card-content-min-width - Width the card text keeps before it wraps below the image.\n * @cssproperty --zn-selection-card-title-font-size - Font size of a selection card title.\n * @cssproperty --zn-selection-card-padding - Equal inset around the contents of a selection card.\n * @cssproperty --zn-selection-card-gap - Space between the image, title, and indicator gutter.\n * @cssproperty --zn-selection-card-control-offset - Distance between a positioned control and the card edge.\n * @cssproperty --zn-selection-card-border-radius - Corner radius of a contained container.\n */",
           "documentation": "https://zinc.style/components/checkbox",
           "status": "experimental",
           "since": "1.0",
@@ -5163,6 +5334,12 @@
           "kind": "class",
           "description": "",
           "name": "ZnCheckboxGroup",
+          "cssProperties": [
+            {
+              "description": "Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set.",
+              "name": "--zn-checkbox-group-column-width"
+            }
+          ],
           "cssParts": [
             {
               "description": "The form control that wraps the label, input, and help text.",
@@ -5336,6 +5513,28 @@
               "default": "false",
               "description": "The checkbox group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child checkboxes.",
               "attribute": "contained",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "square",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Squares off the corners of every contained checkbox in the group, which are rounded by default.",
+              "attribute": "square",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "wrap",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays horizontal contained checkboxes out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-checkbox-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
+              "attribute": "wrap",
               "reflects": true
             },
             {
@@ -5561,6 +5760,24 @@
               "fieldName": "contained"
             },
             {
+              "name": "square",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Squares off the corners of every contained checkbox in the group, which are rounded by default.",
+              "fieldName": "square"
+            },
+            {
+              "name": "wrap",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays horizontal contained checkboxes out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-checkbox-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
+              "fieldName": "wrap"
+            },
+            {
               "name": "form",
               "type": {
                 "text": "string"
@@ -5587,7 +5804,7 @@
           "tagNameWithoutPrefix": "checkbox-group",
           "tagName": "zn-checkbox-group",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Shotrt summary of the component's intended use.\n * @documentation https://zinc.style/components/checkbox-group\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot where `<zn-checkbox>` elements are placed.\n * @slot label - The checkbox group's label. Required for proper accessibility. Alternatively, you can use the `label` attribute.\n * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n * @slot help-text - Text that describes how to use the checkbox group. Alternatively, you can use the `help-text` attribute.\n *\n * @event zn-change - Emitted when the checkbox group's selected value changes.\n * @event zn-input - Emitted when the checkbox group receives user input.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n *\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n */",
+          "jsDoc": "/**\n * @summary Shotrt summary of the component's intended use.\n * @documentation https://zinc.style/components/checkbox-group\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot where `<zn-checkbox>` elements are placed.\n * @slot label - The checkbox group's label. Required for proper accessibility. Alternatively, you can use the `label` attribute.\n * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n * @slot help-text - Text that describes how to use the checkbox group. Alternatively, you can use the `help-text` attribute.\n *\n * @event zn-change - Emitted when the checkbox group's selected value changes.\n * @event zn-input - Emitted when the checkbox group receives user input.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n *\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n *\n * @cssproperty --zn-checkbox-group-column-width - Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set.\n */",
           "documentation": "https://zinc.style/components/checkbox-group",
           "status": "experimental",
           "since": "1.0"
@@ -32088,6 +32305,44 @@
           "kind": "class",
           "description": "",
           "name": "ZnRadio",
+          "cssProperties": [
+            {
+              "description": "Width of the built-in card image.",
+              "name": "--zn-selection-card-image-width"
+            },
+            {
+              "description": "Height of the built-in card image.",
+              "name": "--zn-selection-card-image-height"
+            },
+            {
+              "description": "Minimum height of a contained radio with an image.",
+              "name": "--zn-selection-card-min-height"
+            },
+            {
+              "description": "Width the card text keeps before it wraps below the image.",
+              "name": "--zn-selection-card-content-min-width"
+            },
+            {
+              "description": "Font size of a selection card title.",
+              "name": "--zn-selection-card-title-font-size"
+            },
+            {
+              "description": "Equal inset around the contents of a selection card.",
+              "name": "--zn-selection-card-padding"
+            },
+            {
+              "description": "Space between the image, title, and indicator gutter.",
+              "name": "--zn-selection-card-gap"
+            },
+            {
+              "description": "Distance between a positioned control and the card edge.",
+              "name": "--zn-selection-card-control-offset"
+            },
+            {
+              "description": "Corner radius of a contained container.",
+              "name": "--zn-selection-card-border-radius"
+            }
+          ],
           "cssParts": [
             {
               "description": "The component's base wrapper.",
@@ -32106,6 +32361,18 @@
               "name": "checked-icon"
             },
             {
+              "description": "The wrapper around the built-in image or image slot.",
+              "name": "image-container"
+            },
+            {
+              "description": "The built-in image.",
+              "name": "image"
+            },
+            {
+              "description": "The title inside a selection card.",
+              "name": "card-title"
+            },
+            {
               "description": "The container that wraps the radio's label.",
               "name": "label"
             },
@@ -32122,6 +32389,10 @@
             {
               "description": "The radio's label.",
               "name": ""
+            },
+            {
+              "description": "Replaces the built-in image used by contained radios.",
+              "name": "image"
             },
             {
               "description": "A description of the radio's label. Serves as help text for a radio item. Alternatively, you can use the `description` attribute.",
@@ -32154,7 +32425,7 @@
               "name": "hasSlotController",
               "privacy": "private",
               "readonly": true,
-              "default": "new HasSlotController(this, 'description')"
+              "default": "new HasSlotController(this, '[default]', 'description', 'image')"
             },
             {
               "kind": "field",
@@ -32202,6 +32473,16 @@
             },
             {
               "kind": "field",
+              "name": "cardTitle",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Title rendered inside the card. The default slot takes precedence when provided.",
+              "attribute": "card-title"
+            },
+            {
+              "kind": "field",
               "name": "size",
               "type": {
                 "text": "'small' | 'medium' | 'large'"
@@ -32242,6 +32523,59 @@
               "default": "false",
               "description": "Draws a container around the radio.",
               "attribute": "contained",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "square",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Squares off the corners of the container drawn by `contained`, which is rounded by default.",
+              "attribute": "square",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "URL for the image shown in a contained radio.",
+              "attribute": "src"
+            },
+            {
+              "kind": "field",
+              "name": "imageAlt",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Accessible text for the built-in image. Leave empty when the image is decorative.",
+              "attribute": "image-alt"
+            },
+            {
+              "kind": "field",
+              "name": "imagePosition",
+              "type": {
+                "text": "SelectionCardImagePosition"
+              },
+              "default": "'left'",
+              "description": "Places the image above, beside, or below the radio's text. Requires `contained`.",
+              "attribute": "image-position",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "controlPosition",
+              "type": {
+                "text": "SelectionCardControlPosition"
+              },
+              "default": "'start'",
+              "description": "Places the radio indicator within a contained card. Use `none` to hide the indicator so the card itself\nshows the selected state. Requires `contained`.",
+              "attribute": "control-position",
               "reflects": true
             },
             {
@@ -32485,6 +32819,15 @@
               "fieldName": "value"
             },
             {
+              "name": "card-title",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Title rendered inside the card. The default slot takes precedence when provided.",
+              "fieldName": "cardTitle"
+            },
+            {
               "name": "size",
               "type": {
                 "text": "'small' | 'medium' | 'large'"
@@ -32519,6 +32862,51 @@
               "default": "false",
               "description": "Draws a container around the radio.",
               "fieldName": "contained"
+            },
+            {
+              "name": "square",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Squares off the corners of the container drawn by `contained`, which is rounded by default.",
+              "fieldName": "square"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "URL for the image shown in a contained radio.",
+              "fieldName": "src"
+            },
+            {
+              "name": "image-alt",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Accessible text for the built-in image. Leave empty when the image is decorative.",
+              "fieldName": "imageAlt"
+            },
+            {
+              "name": "image-position",
+              "type": {
+                "text": "SelectionCardImagePosition"
+              },
+              "default": "'left'",
+              "description": "Places the image above, beside, or below the radio's text. Requires `contained`.",
+              "fieldName": "imagePosition"
+            },
+            {
+              "name": "control-position",
+              "type": {
+                "text": "SelectionCardControlPosition"
+              },
+              "default": "'start'",
+              "description": "Places the radio indicator within a contained card. Use `none` to hide the indicator so the card itself\nshows the selected state. Requires `contained`.",
+              "fieldName": "controlPosition"
             },
             {
               "name": "horizontal",
@@ -32579,7 +32967,7 @@
           "tagNameWithoutPrefix": "radio",
           "tagName": "zn-radio",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/radio\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - The radio's label.\n * @slot description - A description of the radio's label. Serves as help text for a radio item. Alternatively, you can use the `description` attribute.\n * @slot selected-content - Use to nest rich content (like an input) inside a selected radio item. Use only with the contained style.\n *\n * @event zn-blur - Emitted when the radio loses focus.\n * @event zn-change - Emitted when the checked state changes.\n * @event zn-focus - Emitted when the radio gains focus.\n * @event zn-input - Emitted when the radio receives input.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n *\n * @csspart base - The component's base wrapper.\n * @csspart control - The square container that wraps the radio's checked state.\n * @csspart control--checked - Matches the control part when the radio is checked.\n * @csspart checked-icon - The checked icon, an `<zn-icon>` element.\n * @csspart label - The container that wraps the radio's label.\n * @csspart description - The container that wraps the radio's description.\n * @csspart selected-content - The container that wraps optional content that appears when a radio is checked.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/radio\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - The radio's label.\n * @slot image - Replaces the built-in image used by contained radios.\n * @slot description - A description of the radio's label. Serves as help text for a radio item. Alternatively, you can use the `description` attribute.\n * @slot selected-content - Use to nest rich content (like an input) inside a selected radio item. Use only with the contained style.\n *\n * @event zn-blur - Emitted when the radio loses focus.\n * @event zn-change - Emitted when the checked state changes.\n * @event zn-focus - Emitted when the radio gains focus.\n * @event zn-input - Emitted when the radio receives input.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n *\n * @csspart base - The component's base wrapper.\n * @csspart control - The square container that wraps the radio's checked state.\n * @csspart control--checked - Matches the control part when the radio is checked.\n * @csspart checked-icon - The checked icon, an `<zn-icon>` element.\n * @csspart image-container - The wrapper around the built-in image or image slot.\n * @csspart image - The built-in image.\n * @csspart card-title - The title inside a selection card.\n * @csspart label - The container that wraps the radio's label.\n * @csspart description - The container that wraps the radio's description.\n * @csspart selected-content - The container that wraps optional content that appears when a radio is checked.\n *\n * @cssproperty --zn-selection-card-image-width - Width of the built-in card image.\n * @cssproperty --zn-selection-card-image-height - Height of the built-in card image.\n * @cssproperty --zn-selection-card-min-height - Minimum height of a contained radio with an image.\n * @cssproperty --zn-selection-card-content-min-width - Width the card text keeps before it wraps below the image.\n * @cssproperty --zn-selection-card-title-font-size - Font size of a selection card title.\n * @cssproperty --zn-selection-card-padding - Equal inset around the contents of a selection card.\n * @cssproperty --zn-selection-card-gap - Space between the image, title, and indicator gutter.\n * @cssproperty --zn-selection-card-control-offset - Distance between a positioned control and the card edge.\n * @cssproperty --zn-selection-card-border-radius - Corner radius of a contained container.\n */",
           "documentation": "https://zinc.style/components/radio",
           "status": "experimental",
           "since": "1.0",
@@ -32609,8 +32997,8 @@
           "name": "ZnRadioGroup",
           "cssProperties": [
             {
-              "description": "An example CSS custom property.",
-              "name": "--example"
+              "description": "Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set.",
+              "name": "--zn-radio-group-column-width"
             }
           ],
           "cssParts": [
@@ -32761,7 +33149,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "The checkbox group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
+              "description": "The radio group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
               "attribute": "horizontal",
               "reflects": true
             },
@@ -32772,8 +33160,30 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "The checkbox group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child checkboxes.",
+              "description": "The radio group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child radios.",
               "attribute": "contained",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "square",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Squares off the corners of every contained radio in the group, which are rounded by default.",
+              "attribute": "square",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "wrap",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
+              "attribute": "wrap",
               "reflects": true
             },
             {
@@ -32999,7 +33409,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "The checkbox group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
+              "description": "The radio group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
               "fieldName": "horizontal"
             },
             {
@@ -33008,8 +33418,26 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "The checkbox group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child checkboxes.",
+              "description": "The radio group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child radios.",
               "fieldName": "contained"
+            },
+            {
+              "name": "square",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Squares off the corners of every contained radio in the group, which are rounded by default.",
+              "fieldName": "square"
+            },
+            {
+              "name": "wrap",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
+              "fieldName": "wrap"
             },
             {
               "name": "form",
@@ -33038,7 +33466,7 @@
           "tagNameWithoutPrefix": "radio-group",
           "tagName": "zn-radio-group",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/radio-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/radio-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --zn-radio-group-column-width - Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set.\n */",
           "documentation": "https://zinc.style/components/radio-group",
           "status": "experimental",
           "since": "1.0",

@@ -590,6 +590,7 @@
             <li data-level="2"><a href="#properties">Properties</a></li>
             <li data-level="2"><a href="#events">Events</a></li>
             <li data-level="2"><a href="#methods">Methods</a></li>
+            <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
             <li data-level="2"><a href="#parts">Parts</a></li>
           </ul>
         </div>
@@ -953,6 +954,23 @@
               When <a href="/components/checkbox">checkboxes</a> are wrapped with the Checkbox Group , adding the
               <code>contained</code> attribute to the parent Checkbox Group or to <em>any</em> checkbox in the group
               will create <code>contained</code> checkboxes for the entire group.
+            </p>
+            <p>
+              Contained checkboxes can also render as
+              <a href="/components/checkbox#multi-select-cards">multi-select cards</a> with an image, title,
+              description, and positioned indicator. The checkbox group continues to manage validation and submits every
+              selected value under the group’s name.
+            </p>
+            <p>
+              Contained checkboxes are rounded by default; add <code>square</code> to the group to square off every
+              checkbox in it. With <code>horizontal</code>, cards in a row are given equal height, and
+              <code>--zn-checkbox-group-column-width</code> (default <code>152px</code>) sets the minimum column width
+              used by the grid.
+            </p>
+            <p>
+              Add <code>wrap</code> to lay the checkboxes out as a wrapping row instead of an equal-width grid: each
+              card starts from <code>--zn-checkbox-group-column-width</code> and grows to fill its line, and setting
+              that property to <code>auto</code> sizes every card from its own content.
             </p>
           </div>
           <h3 id="disabling-options" class="anchor-heading">
@@ -1476,6 +1494,45 @@
 
                 <tr>
                   <td>
+                    <code class="nowrap">square</code>
+                  </td>
+                  <td>
+                    Squares off the corners of every contained checkbox in the group, which are rounded by default.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">wrap</code>
+                  </td>
+                  <td>
+                    Lays horizontal contained checkboxes out as a wrapping row instead of an equal-width grid, so each
+                    one sizes from
+                    <code>--zn-checkbox-group-column-width</code> (set it to <code>auto</code> to size from content) and
+                    wraps onto a new line when needed.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
                     <code class="nowrap">form</code>
                   </td>
                   <td>
@@ -1643,6 +1700,39 @@
 
           <p>
             <em>Learn more about <a href="/getting-started/usage#methods">methods</a>.</em>
+          </p>
+
+          <h2 id="custom-properties" class="anchor-heading">
+            Custom Properties<a href="#custom-properties" aria-label='Direct link to "Custom Properties"'></a>
+          </h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-default">Default</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap"><code>--zn-checkbox-group-column-width</code></td>
+                  <td>
+                    Minimum column width used by the horizontal contained grid, or the card basis when
+                    <code>wrap</code> is set.
+                  </td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em
+              >Learn more about
+              <a href="/getting-started/customizing#custom-properties">customizing CSS custom properties</a>.</em
+            >
           </p>
 
           <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>

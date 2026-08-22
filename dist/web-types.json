@@ -16,28 +16,6 @@
           "js": { "properties": [], "events": [] }
         },
         {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -97,6 +75,28 @@
               { "name": "center", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -1292,7 +1292,7 @@
         },
         {
           "name": "zn-checkbox",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the checkbox loses focus.\n- **zn-change** - Emitted when the checked state changes.\n- **zn-focus** - Emitted when the checkbox gains focus.\n- **zn-input** - Emitted when the checkbox receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Methods:**\n - **click()** - Simulates a click on the checkbox.\n- **focus(options: _FocusOptions_)** - Sets focus on the checkbox.\n- **blur()** - Removes focus from the checkbox.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. The value provided will be shown to the user when the form is submitted. To clear\nthe custom validation message, call this method with an empty string.\n\n### **Slots:**\n - _default_ - The checkbox's label.\n- **description** - A description of the checkbox's label. Serves as help text for a checkbox item. Alternatively, you can use the `description` attribute.\n- **selected-content** - Use to nest rich content (like an input) inside a selected checkbox item. Use only with the contained style.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **control** - The square container that wraps the checkbox's checked state.\n- **control--checked** - Matches the control part when the checkbox is checked.\n- **control--indeterminate** - Matches the control part when the checkbox is indeterminate.\n- **checked-icon** - The checked icon, an `<zn-icon>` element.\n- **unchecked-icon** - The unchecked icon, an `<zn-icon>` element.\n- **indeterminate-icon** - The indeterminate icon, an `<zn-icon>` element.\n- **label** - The container that wraps the checkbox's label.\n- **description** - The container that wraps the checkbox's description.\n- **selected-content** - The container that wraps optional content that appears when a checkbox is checked.",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the checkbox loses focus.\n- **zn-change** - Emitted when the checked state changes.\n- **zn-focus** - Emitted when the checkbox gains focus.\n- **zn-input** - Emitted when the checkbox receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Methods:**\n - **click()** - Simulates a click on the checkbox.\n- **focus(options: _FocusOptions_)** - Sets focus on the checkbox.\n- **blur()** - Removes focus from the checkbox.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. The value provided will be shown to the user when the form is submitted. To clear\nthe custom validation message, call this method with an empty string.\n\n### **Slots:**\n - _default_ - The checkbox's label.\n- **image** - Replaces the built-in image used by contained checkboxes.\n- **description** - A description of the checkbox's label. Serves as help text for a checkbox item. Alternatively, you can use the `description` attribute.\n- **selected-content** - Use to nest rich content (like an input) inside a selected checkbox item. Use only with the contained style.\n\n### **CSS Properties:**\n - **--zn-selection-card-image-width** - Width of the built-in card image. _(default: undefined)_\n- **--zn-selection-card-image-height** - Height of the built-in card image. _(default: undefined)_\n- **--zn-selection-card-min-height** - Minimum height of a contained checkbox with an image. _(default: undefined)_\n- **--zn-selection-card-content-min-width** - Width the card text keeps before it wraps below the image. _(default: undefined)_\n- **--zn-selection-card-title-font-size** - Font size of a selection card title. _(default: undefined)_\n- **--zn-selection-card-padding** - Equal inset around the contents of a selection card. _(default: undefined)_\n- **--zn-selection-card-gap** - Space between the image, title, and indicator gutter. _(default: undefined)_\n- **--zn-selection-card-control-offset** - Distance between a positioned control and the card edge. _(default: undefined)_\n- **--zn-selection-card-border-radius** - Corner radius of a contained container. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **control** - The square container that wraps the checkbox's checked state.\n- **control--checked** - Matches the control part when the checkbox is checked.\n- **control--indeterminate** - Matches the control part when the checkbox is indeterminate.\n- **checked-icon** - The checked icon, an `<zn-icon>` element.\n- **unchecked-icon** - The unchecked icon, an `<zn-icon>` element.\n- **indeterminate-icon** - The indeterminate icon, an `<zn-icon>` element.\n- **image-container** - The wrapper around the built-in image or image slot.\n- **image** - The built-in image.\n- **card-title** - The title inside a selection card.\n- **label** - The container that wraps the checkbox's label.\n- **description** - The container that wraps the checkbox's description.\n- **selected-content** - The container that wraps optional content that appears when a checkbox is checked.",
           "doc-url": "",
           "attributes": [
             { "name": "title", "value": { "type": "string", "default": "''" } },
@@ -1305,6 +1305,11 @@
               "name": "value",
               "description": "The current value of the checkbox, submitted as a name/value pair with form data.",
               "value": { "type": "string" }
+            },
+            {
+              "name": "card-title",
+              "description": "Title rendered inside the card. The default slot takes precedence when provided.",
+              "value": { "type": "string", "default": "''" }
             },
             {
               "name": "unchecked-value",
@@ -1338,6 +1343,37 @@
               "name": "contained",
               "description": "Draws a container around the checkbox.",
               "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "square",
+              "description": "Squares off the corners of the container drawn by `contained`, which is rounded by default.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "src",
+              "description": "URL for the image shown in a contained checkbox.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "image-alt",
+              "description": "Accessible text for the built-in image. Leave empty when the image is decorative.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "image-position",
+              "description": "Places the image above, beside, or below the checkbox's text. Requires `contained`.",
+              "value": {
+                "type": "SelectionCardImagePosition",
+                "default": "'left'"
+              }
+            },
+            {
+              "name": "control-position",
+              "description": "Places the checkbox indicator within a contained card. Use `none` to hide the indicator so the card itself\nshows the selected state. Requires `contained`.",
+              "value": {
+                "type": "SelectionCardControlPosition",
+                "default": "'start'"
+              }
             },
             {
               "name": "borderless",
@@ -1400,6 +1436,10 @@
           "slots": [
             { "name": "", "description": "The checkbox's label." },
             {
+              "name": "image",
+              "description": "Replaces the built-in image used by contained checkboxes."
+            },
+            {
               "name": "description",
               "description": "A description of the checkbox's label. Serves as help text for a checkbox item. Alternatively, you can use the `description` attribute."
             },
@@ -1445,6 +1485,11 @@
                 "type": "string"
               },
               {
+                "name": "cardTitle",
+                "description": "Title rendered inside the card. The default slot takes precedence when provided.",
+                "type": "string"
+              },
+              {
                 "name": "uncheckedValue",
                 "description": "The unchecked value of the checkbox, submitted as a name/value pair with form data.",
                 "type": "string"
@@ -1473,6 +1518,31 @@
                 "name": "contained",
                 "description": "Draws a container around the checkbox.",
                 "type": "boolean"
+              },
+              {
+                "name": "square",
+                "description": "Squares off the corners of the container drawn by `contained`, which is rounded by default.",
+                "type": "boolean"
+              },
+              {
+                "name": "src",
+                "description": "URL for the image shown in a contained checkbox.",
+                "type": "string"
+              },
+              {
+                "name": "imageAlt",
+                "description": "Accessible text for the built-in image. Leave empty when the image is decorative.",
+                "type": "string"
+              },
+              {
+                "name": "imagePosition",
+                "description": "Places the image above, beside, or below the checkbox's text. Requires `contained`.",
+                "type": "SelectionCardImagePosition"
+              },
+              {
+                "name": "controlPosition",
+                "description": "Places the checkbox indicator within a contained card. Use `none` to hide the indicator so the card itself\nshows the selected state. Requires `contained`.",
+                "type": "SelectionCardControlPosition"
               },
               {
                 "name": "borderless",
@@ -1572,7 +1642,7 @@
         },
         {
           "name": "zn-checkbox-group",
-          "description": "Shotrt summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the checkbox group's selected value changes.\n- **zn-input** - Emitted when the checkbox group receives user input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Methods:**\n - **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot where `<zn-checkbox>` elements are placed.\n- **label** - The checkbox group's label. Required for proper accessibility. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **help-text** - Text that describes how to use the checkbox group. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input's wrapper.\n- **form-control-help-text** - The help text's wrapper.",
+          "description": "Shotrt summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the checkbox group's selected value changes.\n- **zn-input** - Emitted when the checkbox group receives user input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Methods:**\n - **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot where `<zn-checkbox>` elements are placed.\n- **label** - The checkbox group's label. Required for proper accessibility. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **help-text** - Text that describes how to use the checkbox group. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--zn-checkbox-group-column-width** - Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input's wrapper.\n- **form-control-help-text** - The help text's wrapper.",
           "doc-url": "",
           "attributes": [
             {
@@ -1616,6 +1686,16 @@
             {
               "name": "contained",
               "description": "The checkbox group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child checkboxes.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "square",
+              "description": "Squares off the corners of every contained checkbox in the group, which are rounded by default.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "wrap",
+              "description": "Lays horizontal contained checkboxes out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-checkbox-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
               "value": { "type": "boolean", "default": "false" }
             },
             {
@@ -1703,6 +1783,16 @@
               {
                 "name": "contained",
                 "description": "The checkbox group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child checkboxes.",
+                "type": "boolean"
+              },
+              {
+                "name": "square",
+                "description": "Squares off the corners of every contained checkbox in the group, which are rounded by default.",
+                "type": "boolean"
+              },
+              {
+                "name": "wrap",
+                "description": "Lays horizontal contained checkboxes out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-checkbox-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
                 "type": "boolean"
               },
               {
@@ -7711,7 +7801,7 @@
         },
         {
           "name": "zn-radio",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the radio loses focus.\n- **zn-change** - Emitted when the checked state changes.\n- **zn-focus** - Emitted when the radio gains focus.\n- **zn-input** - Emitted when the radio receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Methods:**\n - **click()** - Simulates a click on the radio.\n- **focus(options: _FocusOptions_)** - Sets focus on the radio.\n- **blur()** - Removes focus from the radio.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. The value provided will be shown to the user when the form is submitted. To clear\nthe custom validation message, call this method with an empty string.\n\n### **Slots:**\n - _default_ - The radio's label.\n- **description** - A description of the radio's label. Serves as help text for a radio item. Alternatively, you can use the `description` attribute.\n- **selected-content** - Use to nest rich content (like an input) inside a selected radio item. Use only with the contained style.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **control** - The square container that wraps the radio's checked state.\n- **control--checked** - Matches the control part when the radio is checked.\n- **checked-icon** - The checked icon, an `<zn-icon>` element.\n- **label** - The container that wraps the radio's label.\n- **description** - The container that wraps the radio's description.\n- **selected-content** - The container that wraps optional content that appears when a radio is checked.",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the radio loses focus.\n- **zn-change** - Emitted when the checked state changes.\n- **zn-focus** - Emitted when the radio gains focus.\n- **zn-input** - Emitted when the radio receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Methods:**\n - **click()** - Simulates a click on the radio.\n- **focus(options: _FocusOptions_)** - Sets focus on the radio.\n- **blur()** - Removes focus from the radio.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. The value provided will be shown to the user when the form is submitted. To clear\nthe custom validation message, call this method with an empty string.\n\n### **Slots:**\n - _default_ - The radio's label.\n- **image** - Replaces the built-in image used by contained radios.\n- **description** - A description of the radio's label. Serves as help text for a radio item. Alternatively, you can use the `description` attribute.\n- **selected-content** - Use to nest rich content (like an input) inside a selected radio item. Use only with the contained style.\n\n### **CSS Properties:**\n - **--zn-selection-card-image-width** - Width of the built-in card image. _(default: undefined)_\n- **--zn-selection-card-image-height** - Height of the built-in card image. _(default: undefined)_\n- **--zn-selection-card-min-height** - Minimum height of a contained radio with an image. _(default: undefined)_\n- **--zn-selection-card-content-min-width** - Width the card text keeps before it wraps below the image. _(default: undefined)_\n- **--zn-selection-card-title-font-size** - Font size of a selection card title. _(default: undefined)_\n- **--zn-selection-card-padding** - Equal inset around the contents of a selection card. _(default: undefined)_\n- **--zn-selection-card-gap** - Space between the image, title, and indicator gutter. _(default: undefined)_\n- **--zn-selection-card-control-offset** - Distance between a positioned control and the card edge. _(default: undefined)_\n- **--zn-selection-card-border-radius** - Corner radius of a contained container. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **control** - The square container that wraps the radio's checked state.\n- **control--checked** - Matches the control part when the radio is checked.\n- **checked-icon** - The checked icon, an `<zn-icon>` element.\n- **image-container** - The wrapper around the built-in image or image slot.\n- **image** - The built-in image.\n- **card-title** - The title inside a selection card.\n- **label** - The container that wraps the radio's label.\n- **description** - The container that wraps the radio's description.\n- **selected-content** - The container that wraps optional content that appears when a radio is checked.",
           "doc-url": "",
           "attributes": [
             { "name": "title", "value": { "type": "string", "default": "''" } },
@@ -7724,6 +7814,11 @@
               "name": "value",
               "description": "The current value of the radio, submitted as a name/value pair with form data.",
               "value": { "type": "string" }
+            },
+            {
+              "name": "card-title",
+              "description": "Title rendered inside the card. The default slot takes precedence when provided.",
+              "value": { "type": "string", "default": "''" }
             },
             {
               "name": "size",
@@ -7747,6 +7842,37 @@
               "name": "contained",
               "description": "Draws a container around the radio.",
               "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "square",
+              "description": "Squares off the corners of the container drawn by `contained`, which is rounded by default.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "src",
+              "description": "URL for the image shown in a contained radio.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "image-alt",
+              "description": "Accessible text for the built-in image. Leave empty when the image is decorative.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "image-position",
+              "description": "Places the image above, beside, or below the radio's text. Requires `contained`.",
+              "value": {
+                "type": "SelectionCardImagePosition",
+                "default": "'left'"
+              }
+            },
+            {
+              "name": "control-position",
+              "description": "Places the radio indicator within a contained card. Use `none` to hide the indicator so the card itself\nshows the selected state. Requires `contained`.",
+              "value": {
+                "type": "SelectionCardControlPosition",
+                "default": "'start'"
+              }
             },
             {
               "name": "horizontal",
@@ -7773,6 +7899,10 @@
           ],
           "slots": [
             { "name": "", "description": "The radio's label." },
+            {
+              "name": "image",
+              "description": "Replaces the built-in image used by contained radios."
+            },
             {
               "name": "description",
               "description": "A description of the radio's label. Serves as help text for a radio item. Alternatively, you can use the `description` attribute."
@@ -7819,6 +7949,11 @@
                 "type": "string"
               },
               {
+                "name": "cardTitle",
+                "description": "Title rendered inside the card. The default slot takes precedence when provided.",
+                "type": "string"
+              },
+              {
                 "name": "size",
                 "description": "The radio's size.",
                 "type": "'small' | 'medium' | 'large'"
@@ -7837,6 +7972,31 @@
                 "name": "contained",
                 "description": "Draws a container around the radio.",
                 "type": "boolean"
+              },
+              {
+                "name": "square",
+                "description": "Squares off the corners of the container drawn by `contained`, which is rounded by default.",
+                "type": "boolean"
+              },
+              {
+                "name": "src",
+                "description": "URL for the image shown in a contained radio.",
+                "type": "string"
+              },
+              {
+                "name": "imageAlt",
+                "description": "Accessible text for the built-in image. Leave empty when the image is decorative.",
+                "type": "string"
+              },
+              {
+                "name": "imagePosition",
+                "description": "Places the image above, beside, or below the radio's text. Requires `contained`.",
+                "type": "SelectionCardImagePosition"
+              },
+              {
+                "name": "controlPosition",
+                "description": "Places the radio indicator within a contained card. Use `none` to hide the indicator so the card itself\nshows the selected state. Requires `contained`.",
+                "type": "SelectionCardControlPosition"
               },
               {
                 "name": "horizontal",
@@ -7900,7 +8060,7 @@
         },
         {
           "name": "zn-radio-group",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--zn-radio-group-column-width** - Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
           "attributes": [
             {
@@ -7938,12 +8098,22 @@
             },
             {
               "name": "horizontal",
-              "description": "The checkbox group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
+              "description": "The radio group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
               "value": { "type": "boolean", "default": "false" }
             },
             {
               "name": "contained",
-              "description": "The checkbox group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child checkboxes.",
+              "description": "The radio group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child radios.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "square",
+              "description": "Squares off the corners of every contained radio in the group, which are rounded by default.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "wrap",
+              "description": "Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
               "value": { "type": "boolean", "default": "false" }
             },
             {
@@ -8001,12 +8171,22 @@
               },
               {
                 "name": "horizontal",
-                "description": "The checkbox group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
+                "description": "The radio group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
                 "type": "boolean"
               },
               {
                 "name": "contained",
-                "description": "The checkbox group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child checkboxes.",
+                "description": "The radio group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child radios.",
+                "type": "boolean"
+              },
+              {
+                "name": "square",
+                "description": "Squares off the corners of every contained radio in the group, which are rounded by default.",
+                "type": "boolean"
+              },
+              {
+                "name": "wrap",
+                "description": "Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
                 "type": "boolean"
               },
               {

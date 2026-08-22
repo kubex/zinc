@@ -124,6 +124,16 @@ declare module "internal/form-navigation" {
      */
     export function getFormNavigationController(form: HTMLFormElement): FormNavigationController;
 }
+declare module "utilities/query" {
+    /**
+     * Builds a valid `#id` selector. Ids can legally contain characters that CSS treats as syntax (`&`, `.`, `:`,
+     * a leading digit), so they must be escaped before being used in `querySelector`/`matches`.
+     */
+    export function idSelector(id: string): string;
+    export function deepQuery<T extends Element = Element>(selector: string, root?: Document | ShadowRoot | Element): T | null;
+    export function deepQueryAll<T extends Element = Element>(selector: string, root?: Document | ShadowRoot | Element, out?: T[]): T[];
+    export function deepQuerySelectorAll(selector: string, element: Element, stopSelector: string): Element[];
+}
 declare module "internal/storage" {
     export class Store {
         storage: Storage;
@@ -686,11 +696,6 @@ declare module "events/zn-select" {
             'zn-select': ZnSelectEvent;
         }
     }
-}
-declare module "utilities/query" {
-    export function deepQuery<T extends Element = Element>(selector: string, root?: Document | ShadowRoot | Element): T | null;
-    export function deepQueryAll<T extends Element = Element>(selector: string, root?: Document | ShadowRoot | Element, out?: T[]): T[];
-    export function deepQuerySelectorAll(selector: string, element: Element, stopSelector: string): Element[];
 }
 declare module "internal/offset" {
     /**
@@ -7025,10 +7030,20 @@ declare module "components/editor/index" {
         }
     }
 }
+declare module "internal/selection-card" {
+    /** Where a selection card renders its image, relative to the card's text. */
+    export type SelectionCardImagePosition = 'top' | 'right' | 'bottom' | 'left';
+    /**
+     * Where a selection card renders its radio/checkbox indicator. `start` keeps the standard
+     * inline position; `none` hides the indicator so the card itself shows the selected state.
+     */
+    export type SelectionCardControlPosition = 'start' | 'none' | 'top-left' | 'top-center' | 'top-right' | 'center-left' | 'center' | 'center-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
+}
 declare module "components/checkbox/checkbox.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
+    import type { SelectionCardControlPosition, SelectionCardImagePosition } from "internal/selection-card";
     import type { ZincFormControl } from "internal/zinc-element";
     type ColorOption = 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent';
     /**
@@ -7040,6 +7055,7 @@ declare module "components/checkbox/checkbox.component" {
      * @dependency zn-icon
      *
      * @slot - The checkbox's label.
+     * @slot image - Replaces the built-in image used by contained checkboxes.
      * @slot description - A description of the checkbox's label. Serves as help text for a checkbox item. Alternatively, you can use the `description` attribute.
      * @slot selected-content - Use to nest rich content (like an input) inside a selected checkbox item. Use only with the contained style.
      *
@@ -7056,9 +7072,22 @@ declare module "components/checkbox/checkbox.component" {
      * @csspart checked-icon - The checked icon, an `<zn-icon>` element.
      * @csspart unchecked-icon - The unchecked icon, an `<zn-icon>` element.
      * @csspart indeterminate-icon - The indeterminate icon, an `<zn-icon>` element.
+     * @csspart image-container - The wrapper around the built-in image or image slot.
+     * @csspart image - The built-in image.
+     * @csspart card-title - The title inside a selection card.
      * @csspart label - The container that wraps the checkbox's label.
      * @csspart description - The container that wraps the checkbox's description.
      * @csspart selected-content - The container that wraps optional content that appears when a checkbox is checked.
+     *
+     * @cssproperty --zn-selection-card-image-width - Width of the built-in card image.
+     * @cssproperty --zn-selection-card-image-height - Height of the built-in card image.
+     * @cssproperty --zn-selection-card-min-height - Minimum height of a contained checkbox with an image.
+     * @cssproperty --zn-selection-card-content-min-width - Width the card text keeps before it wraps below the image.
+     * @cssproperty --zn-selection-card-title-font-size - Font size of a selection card title.
+     * @cssproperty --zn-selection-card-padding - Equal inset around the contents of a selection card.
+     * @cssproperty --zn-selection-card-gap - Space between the image, title, and indicator gutter.
+     * @cssproperty --zn-selection-card-control-offset - Distance between a positioned control and the card edge.
+     * @cssproperty --zn-selection-card-border-radius - Corner radius of a contained container.
      */
     export default class ZnCheckbox extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
@@ -7074,6 +7103,8 @@ declare module "components/checkbox/checkbox.component" {
         name: string;
         /** The current value of the checkbox, submitted as a name/value pair with form data. */
         value: string;
+        /** Title rendered inside the card. The default slot takes precedence when provided. */
+        cardTitle: string;
         /** The unchecked value of the checkbox, submitted as a name/value pair with form data. */
         uncheckedValue: string;
         /** The checkbox's size. */
@@ -7089,6 +7120,19 @@ declare module "components/checkbox/checkbox.component" {
         indeterminate: boolean;
         /** Draws a container around the checkbox. */
         contained: boolean;
+        /** Squares off the corners of the container drawn by `contained`, which is rounded by default. */
+        square: boolean;
+        /** URL for the image shown in a contained checkbox. */
+        src: string;
+        /** Accessible text for the built-in image. Leave empty when the image is decorative. */
+        imageAlt: string;
+        /** Places the image above, beside, or below the checkbox's text. Requires `contained`. */
+        imagePosition: SelectionCardImagePosition;
+        /**
+         * Places the checkbox indicator within a contained card. Use `none` to hide the indicator so the card itself
+         * shows the selected state. Requires `contained`.
+         */
+        controlPosition: SelectionCardControlPosition;
         /** Removes a container around the checkbox. */
         borderless: boolean;
         /** Applies styles relevant to checkboxes in a horizontal layout. */
@@ -7321,6 +7365,7 @@ declare module "components/radio/radio.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
+    import type { SelectionCardControlPosition, SelectionCardImagePosition } from "internal/selection-card";
     import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
@@ -7331,6 +7376,7 @@ declare module "components/radio/radio.component" {
      * @dependency zn-icon
      *
      * @slot - The radio's label.
+     * @slot image - Replaces the built-in image used by contained radios.
      * @slot description - A description of the radio's label. Serves as help text for a radio item. Alternatively, you can use the `description` attribute.
      * @slot selected-content - Use to nest rich content (like an input) inside a selected radio item. Use only with the contained style.
      *
@@ -7344,9 +7390,22 @@ declare module "components/radio/radio.component" {
      * @csspart control - The square container that wraps the radio's checked state.
      * @csspart control--checked - Matches the control part when the radio is checked.
      * @csspart checked-icon - The checked icon, an `<zn-icon>` element.
+     * @csspart image-container - The wrapper around the built-in image or image slot.
+     * @csspart image - The built-in image.
+     * @csspart card-title - The title inside a selection card.
      * @csspart label - The container that wraps the radio's label.
      * @csspart description - The container that wraps the radio's description.
      * @csspart selected-content - The container that wraps optional content that appears when a radio is checked.
+     *
+     * @cssproperty --zn-selection-card-image-width - Width of the built-in card image.
+     * @cssproperty --zn-selection-card-image-height - Height of the built-in card image.
+     * @cssproperty --zn-selection-card-min-height - Minimum height of a contained radio with an image.
+     * @cssproperty --zn-selection-card-content-min-width - Width the card text keeps before it wraps below the image.
+     * @cssproperty --zn-selection-card-title-font-size - Font size of a selection card title.
+     * @cssproperty --zn-selection-card-padding - Equal inset around the contents of a selection card.
+     * @cssproperty --zn-selection-card-gap - Space between the image, title, and indicator gutter.
+     * @cssproperty --zn-selection-card-control-offset - Distance between a positioned control and the card edge.
+     * @cssproperty --zn-selection-card-border-radius - Corner radius of a contained container.
      */
     export default class ZnRadio extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
@@ -7362,6 +7421,8 @@ declare module "components/radio/radio.component" {
         name: string;
         /** The current value of the radio, submitted as a name/value pair with form data. */
         value: string;
+        /** Title rendered inside the card. The default slot takes precedence when provided. */
+        cardTitle: string;
         /** The radio's size. */
         size: 'small' | 'medium' | 'large';
         /** Disables the radio. */
@@ -7370,6 +7431,19 @@ declare module "components/radio/radio.component" {
         checked: boolean;
         /** Draws a container around the radio. */
         contained: boolean;
+        /** Squares off the corners of the container drawn by `contained`, which is rounded by default. */
+        square: boolean;
+        /** URL for the image shown in a contained radio. */
+        src: string;
+        /** Accessible text for the built-in image. Leave empty when the image is decorative. */
+        imageAlt: string;
+        /** Places the image above, beside, or below the radio's text. Requires `contained`. */
+        imagePosition: SelectionCardImagePosition;
+        /**
+         * Places the radio indicator within a contained card. Use `none` to hide the indicator so the card itself
+         * shows the selected state. Requires `contained`.
+         */
+        controlPosition: SelectionCardControlPosition;
         /** Applies styles relevant to radios in a horizontal layout. */
         horizontal: boolean;
         /** The default value of the form control. Primarily used for resetting the form control. */
@@ -7535,7 +7609,7 @@ declare module "components/radio-group/radio-group.component" {
      *
      * @csspart base - The component's base wrapper.
      *
-     * @cssproperty --example - An example CSS custom property.
+     * @cssproperty --zn-radio-group-column-width - Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set.
      */
     export default class ZnRadioGroup extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
@@ -7562,10 +7636,17 @@ declare module "components/radio-group/radio-group.component" {
         value: string;
         /** The radio group's size. This size will be applied to all child radios */
         size: 'small' | 'medium' | 'large';
-        /** The checkbox group's orientation. Changes the group's layout from the default (vertical) to horizontal. */
+        /** The radio group's orientation. Changes the group's layout from the default (vertical) to horizontal. */
         horizontal: boolean;
-        /** The checkbox group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child checkboxes. */
+        /** The radio group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child radios. */
         contained: boolean;
+        /** Squares off the corners of every contained radio in the group, which are rounded by default. */
+        square: boolean;
+        /**
+         * Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from
+         * `--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.
+         */
+        wrap: boolean;
         /**
          * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
          * to place the form control outside a form and associate it with the form that has this `id`. The form must be in
@@ -7910,6 +7991,8 @@ declare module "components/checkbox-group/checkbox-group.component" {
      * @csspart form-control-label - The label's wrapper.
      * @csspart form-control-input - The input's wrapper.
      * @csspart form-control-help-text - The help text's wrapper.
+     *
+     * @cssproperty --zn-checkbox-group-column-width - Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set.
      */
     export default class ZnCheckboxGroup extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
@@ -7939,6 +8022,13 @@ declare module "components/checkbox-group/checkbox-group.component" {
         horizontal: boolean;
         /** The checkbox group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child checkboxes. */
         contained: boolean;
+        /** Squares off the corners of every contained checkbox in the group, which are rounded by default. */
+        square: boolean;
+        /**
+         * Lays horizontal contained checkboxes out as a wrapping row instead of an equal-width grid, so each one sizes from
+         * `--zn-checkbox-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.
+         */
+        wrap: boolean;
         /**
          * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
          * to place the form control outside of a form and associate it with the form that has this `id`. The form must be in

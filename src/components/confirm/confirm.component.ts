@@ -1,6 +1,6 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
-import {deepQuerySelectorAll} from "../../utilities/query";
+import {deepQuerySelectorAll, idSelector} from "../../utilities/query";
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property, query, state} from 'lit/decorators.js';
@@ -97,7 +97,7 @@ export default class ZnConfirm extends ZincElement {
       const trigger = this.hasSlotController.getSlot('trigger');
       trigger?.addEventListener('click', this.show);
     } else if (this.trigger) {
-      const triggers = deepQuerySelectorAll('#' + this.trigger, this.parentElement as Element, '');
+      const triggers = deepQuerySelectorAll(idSelector(this.trigger), this.parentElement as Element, '');
       triggers.forEach((el: HTMLButtonElement) => {
         el.addEventListener('click', this.show);
       });
@@ -105,7 +105,7 @@ export default class ZnConfirm extends ZincElement {
   }
 
   updateTriggers() {
-    const triggers = deepQuerySelectorAll('#' + this.trigger, this.parentElement as Element, '');
+    const triggers = deepQuerySelectorAll(idSelector(this.trigger), this.parentElement as Element, '');
     triggers.forEach((el: HTMLButtonElement) => {
       // if already has a click listener, remove it
       el.removeEventListener('click', this.show);

@@ -1,4 +1,4 @@
-import {deepQuerySelectorAll} from '../utilities/query';
+import {deepQuerySelectorAll, idSelector} from '../utilities/query';
 import type {ReactiveController, ReactiveControllerHost} from 'lit';
 
 export interface ConditionalHost {
@@ -26,7 +26,7 @@ export class ConditionalController implements ReactiveController {
     const ids = this.host.conditional.split(',').map(id => id.trim());
 
     ids.forEach(id => {
-      const byId = deepQuerySelectorAll(`#${id}`, document.documentElement, '') as (Element & {
+      const byId = deepQuerySelectorAll(idSelector(id), document.documentElement, '') as (Element & {
         value: string | string[];
       })[];
       const byName = deepQuerySelectorAll(`[name="${id}"]`, document.documentElement, '') as (Element & {

@@ -188,6 +188,64 @@ Add the `contained` attribute to draw a card-like container around a checkbox. T
 When checkboxes are wrapped with [Checkbox Group](/components/checkbox-group), adding the `contained` attribute to the parent Checkbox Group or to _any_ checkbox in the group will create `contained` checkboxes for the entire group.
 :::
 
+### Multi-select Cards
+
+Contained checkboxes support the same card content and placement options as [contained radios](/components/radio#selection-cards),
+while preserving checkbox semantics. Use them inside `zn-checkbox-group` when people may select more than one card.
+
+Set the title with `card-title` (or use the default slot), supporting text with `description`, and an image with `src`
+and `image-alt` or the `image` slot. `image-position` accepts `top`, `right`, `bottom`, and `left`. Cards are rounded
+by default; add `square` to the group to square off every card.
+
+```html:preview
+<zn-checkbox-group
+  label="Choose benefits"
+  help-text="Select all that apply"
+  name="benefits"
+  contained
+  horizontal>
+  <zn-checkbox
+    value="health"
+    card-title="Health insurance"
+    description="Medical and dental cover."
+    image-position="top"
+    control-position="top-right">
+    <zn-icon slot="image" src="health_and_safety" size="64"></zn-icon>
+  </zn-checkbox>
+  <zn-checkbox
+    value="pension"
+    card-title="Pension"
+    description="Employer contribution matching."
+    image-position="top"
+    control-position="top-right">
+    <zn-icon slot="image" src="savings" size="64"></zn-icon>
+  </zn-checkbox>
+</zn-checkbox-group>
+```
+
+Image and control placement is identical for radio and checkbox cards. See the
+[image and indicator position examples](/components/radio#image-and-indicator-positions) for a visual matrix of the
+four image directions, indicator corners, centered edge positions, and a hidden indicator.
+
+`control-position` accepts `top-left`, `top-center`, `top-right`, `center-left`, `center`, `center-right`,
+`bottom-left`, `bottom-center`, and `bottom-right`. The default `start` position retains the standard inline checkbox;
+use `none` to hide the indicator so the card itself shows the selected state, while keeping checkbox semantics and the
+full-card click target — see [hiding the input](/components/radio#hiding-the-radio-input) for what that looks like.
+
+```html:preview
+<zn-checkbox-group label="Choose add-ons" name="addons" contained horizontal wrap>
+  <zn-checkbox value="support" card-title="Priority support" description="One hour response time" control-position="none"></zn-checkbox>
+  <zn-checkbox value="backups" card-title="Daily backups" description="Retained for 30 days" control-position="none"></zn-checkbox>
+  <zn-checkbox value="audit" card-title="Audit log" description="Exportable as CSV" control-position="none"></zn-checkbox>
+</zn-checkbox-group>
+```
+
+Card dimensions can be adjusted with `--zn-selection-card-image-width`, `--zn-selection-card-image-height`,
+`--zn-selection-card-min-height`, `--zn-selection-card-content-min-width`, and `--zn-selection-card-title-font-size`.
+Use `--zn-selection-card-padding` for the inset around the card, `--zn-selection-card-gap` for the space between its
+regions, `--zn-selection-card-control-offset` for indicator placement, `--zn-selection-card-border-radius` for the
+corner radius, and `--zn-checkbox-group-column-width` on the group to control how many cards sit in a row.
+
 ### Borderless
 
 Use the `borderless` attribute to remove borders from the checkbox.

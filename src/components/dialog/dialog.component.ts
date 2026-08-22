@@ -1,6 +1,7 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
+import {idSelector} from "../../utilities/query";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property, query} from 'lit/decorators.js';
 import {unlockBodyScrolling} from "../../internal/scroll";
@@ -105,7 +106,7 @@ export default class ZnDialog extends ZincElement {
     this.shadowRoot?.addEventListener('click', this.closeClickHandler);
 
     if (this.trigger) {
-      const trigger = this.parentNode?.querySelector('#' + this.trigger);
+      const trigger = this.parentNode?.querySelector(idSelector(this.trigger));
       if (trigger) {
         trigger.addEventListener('click', () => this.show());
       }
@@ -132,7 +133,7 @@ export default class ZnDialog extends ZincElement {
     this.removeEventListener('click', this.closeClickHandler);
 
     if (this.trigger) {
-      const trigger = this.parentElement?.querySelector('#' + this.trigger);
+      const trigger = this.parentElement?.querySelector(idSelector(this.trigger));
       if (trigger) {
         trigger.removeEventListener('click', () => this.show());
       }

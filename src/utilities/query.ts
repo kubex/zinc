@@ -1,3 +1,11 @@
+/**
+ * Builds a valid `#id` selector. Ids can legally contain characters that CSS treats as syntax (`&`, `.`, `:`,
+ * a leading digit), so they must be escaped before being used in `querySelector`/`matches`.
+ */
+export function idSelector(id: string): string {
+  return `#${CSS.escape(id.startsWith('#') ? id.slice(1) : id)}`;
+}
+
 export function deepQuery<T extends Element = Element>(
   selector: string,
   root: Document | ShadowRoot | Element = document,

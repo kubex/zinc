@@ -1,5 +1,5 @@
 import {expect, fixture, html} from '@open-wc/testing';
-import {deepQuery} from './query';
+import {deepQuery, idSelector} from './query';
 
 describe('deepQuery', () => {
   it('returns null when no element matches', async () => {
@@ -59,5 +59,22 @@ describe('deepQuery', () => {
 
     expect(deepQuery('.needle', a)).to.exist;
     expect(deepQuery('.needle', b)).to.be.null;
+  });
+});
+
+describe('idSelector', () => {
+  it('escapes characters that CSS would otherwise treat as syntax', async () => {
+    const id = 'delete-enum-cloud_hosting_&_infrastructure';
+    const el = await fixture<HTMLElement>(html`<div id="${id}"></div>`);
+
+    expect(() => document.querySelector(`#${id}`)).to.throw();
+    expect(document.querySelector(idSelector(id))).to.equal(el);
+    expect(el.matches(idSelector(id))).to.be.true;
+  });
+
+  it('accepts an id that already carries a leading hash', async () => {
+    const el = await fixture<HTMLElement>(html`<div id="plain-id"></div>`);
+
+    expect(document.querySelector(idSelector('#plain-id'))).to.equal(el);
   });
 });

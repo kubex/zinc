@@ -1,4 +1,5 @@
 import {getFormNavigationController} from "./form-navigation";
+import {idSelector} from "../utilities/query";
 import {Store} from "./storage";
 import type {ReactiveController, ReactiveControllerHost} from "lit";
 import type {ZincFormControl} from "./zinc-element";
@@ -256,7 +257,7 @@ export class FormControlController implements ReactiveController {
 
         if (formId) {
           const root = input.getRootNode() as Document | ShadowRoot | HTMLElement;
-          const form = root.querySelector(`#${formId}`);
+          const form = root.querySelector(idSelector(formId));
 
           if (form) {
             return form as HTMLFormElement;

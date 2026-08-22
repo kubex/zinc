@@ -30,7 +30,7 @@ import styles from './radio-group.scss';
  *
  * @csspart base - The component's base wrapper.
  *
- * @cssproperty --example - An example CSS custom property.
+ * @cssproperty --zn-radio-group-column-width - Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set.
  */
 export default class ZnRadioGroup extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -67,11 +67,20 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
   /** The radio group's size. This size will be applied to all child radios */
   @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
 
-  /** The checkbox group's orientation. Changes the group's layout from the default (vertical) to horizontal. */
+  /** The radio group's orientation. Changes the group's layout from the default (vertical) to horizontal. */
   @property({type: Boolean, reflect: true}) horizontal = false;
 
-  /** The checkbox group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child checkboxes. */
+  /** The radio group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child radios. */
   @property({type: Boolean, reflect: true}) contained = false;
+
+  /** Squares off the corners of every contained radio in the group, which are rounded by default. */
+  @property({type: Boolean, reflect: true}) square = false;
+
+  /**
+   * Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from
+   * `--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.
+   */
+  @property({type: Boolean, reflect: true}) wrap = false;
 
   /**
    * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
@@ -190,6 +199,10 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
         radio.size = this.size;
         radio.horizontal = this.horizontal;
         radio.contained = this.contained;
+
+        if (this.square) {
+          radio.square = true;
+        }
       })
     );
 

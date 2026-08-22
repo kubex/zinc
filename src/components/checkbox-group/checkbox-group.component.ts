@@ -34,6 +34,8 @@ import styles from './checkbox-group.scss';
  * @csspart form-control-label - The label's wrapper.
  * @csspart form-control-input - The input's wrapper.
  * @csspart form-control-help-text - The help text's wrapper.
+ *
+ * @cssproperty --zn-checkbox-group-column-width - Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set.
  */
 export default class ZnCheckboxGroup extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -74,6 +76,15 @@ export default class ZnCheckboxGroup extends ZincElement implements ZincFormCont
 
   /** The checkbox group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child checkboxes. */
   @property({type: Boolean, reflect: true}) contained = false;
+
+  /** Squares off the corners of every contained checkbox in the group, which are rounded by default. */
+  @property({type: Boolean, reflect: true}) square = false;
+
+  /**
+   * Lays horizontal contained checkboxes out as a wrapping row instead of an equal-width grid, so each one sizes from
+   * `--zn-checkbox-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.
+   */
+  @property({type: Boolean, reflect: true}) wrap = false;
 
   /**
    * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
@@ -157,6 +168,10 @@ export default class ZnCheckboxGroup extends ZincElement implements ZincFormCont
         await checkbox.updateComplete;
         checkbox.size = this.size;
         checkbox.horizontal = this.horizontal;
+
+        if (this.square) {
+          checkbox.square = true;
+        }
 
         // Add class to checkboxes in a Checkbox Group so that we can style them without using :slotted
         checkbox.classList.add('groupedCheckbox');

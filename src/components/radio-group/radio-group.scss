@@ -8,7 +8,9 @@
 
 :host([horizontal]) .form-control-input {
   display: flex;
+  flex-wrap: wrap;
   column-gap: var(--zn-spacing-2x-large);
+  row-gap: var(--zn-spacing-small);
 }
 
 :host([contained]) .form-control-input {
@@ -18,7 +20,8 @@
 :host([horizontal][contained]) .form-control-input {
   margin-top: var(--zn-spacing-medium);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(152px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--zn-radio-group-column-width, 152px)), 1fr));
+  align-items: stretch;
   gap: var(--zn-spacing-x-small);
 }
 
@@ -34,6 +37,22 @@
 ::slotted(zn-radio[horizontal][contained]) {
   margin-top: 0;
   height: 100%;
+}
+
+/* `wrap` swaps the equal-width grid for a flex row: cards start from their basis and wrap onto new lines. */
+:host([horizontal][contained][wrap]) .form-control-input {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: var(--zn-spacing-x-small);
+}
+
+:host([wrap]) ::slotted(zn-radio[horizontal][contained]) {
+  flex: 1 1 var(--zn-radio-group-column-width, 152px);
+  min-width: 0;
+
+  /* A percentage height would resolve against every line, not the card's own. */
+  height: auto;
 }
 
 .form-control {

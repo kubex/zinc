@@ -9,6 +9,7 @@ import {property, query, state} from 'lit/decorators.js';
 import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
 import ZnIcon from "../icon";
+import type {SelectionCardControlPosition, SelectionCardImagePosition} from '../../internal/selection-card';
 import type {ZincFormControl} from '../../internal/zinc-element';
 
 import styles from './checkbox.scss';
@@ -24,6 +25,7 @@ type ColorOption = 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'suc
  * @dependency zn-icon
  *
  * @slot - The checkbox's label.
+ * @slot image - Replaces the built-in image used by contained checkboxes.
  * @slot description - A description of the checkbox's label. Serves as help text for a checkbox item. Alternatively, you can use the `description` attribute.
  * @slot selected-content - Use to nest rich content (like an input) inside a selected checkbox item. Use only with the contained style.
  *
@@ -40,9 +42,22 @@ type ColorOption = 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'suc
  * @csspart checked-icon - The checked icon, an `<zn-icon>` element.
  * @csspart unchecked-icon - The unchecked icon, an `<zn-icon>` element.
  * @csspart indeterminate-icon - The indeterminate icon, an `<zn-icon>` element.
+ * @csspart image-container - The wrapper around the built-in image or image slot.
+ * @csspart image - The built-in image.
+ * @csspart card-title - The title inside a selection card.
  * @csspart label - The container that wraps the checkbox's label.
  * @csspart description - The container that wraps the checkbox's description.
  * @csspart selected-content - The container that wraps optional content that appears when a checkbox is checked.
+ *
+ * @cssproperty --zn-selection-card-image-width - Width of the built-in card image.
+ * @cssproperty --zn-selection-card-image-height - Height of the built-in card image.
+ * @cssproperty --zn-selection-card-min-height - Minimum height of a contained checkbox with an image.
+ * @cssproperty --zn-selection-card-content-min-width - Width the card text keeps before it wraps below the image.
+ * @cssproperty --zn-selection-card-title-font-size - Font size of a selection card title.
+ * @cssproperty --zn-selection-card-padding - Equal inset around the contents of a selection card.
+ * @cssproperty --zn-selection-card-gap - Space between the image, title, and indicator gutter.
+ * @cssproperty --zn-selection-card-control-offset - Distance between a positioned control and the card edge.
+ * @cssproperty --zn-selection-card-border-radius - Corner radius of a contained container.
  */
 export default class ZnCheckbox extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -53,7 +68,7 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
     defaultValue: (control: ZnCheckbox) => control.defaultChecked,
     setValue: (control: ZnCheckbox, checked: boolean) => (control.checked = checked)
   });
-  private readonly hasSlotController = new HasSlotController(this, 'description');
+  private readonly hasSlotController = new HasSlotController(this, '[default]', 'description', 'image');
 
   @query('input[type="checkbox"]') input: HTMLInputElement;
 
@@ -66,6 +81,9 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
 
   /** The current value of the checkbox, submitted as a name/value pair with form data. */
   @property() value: string;
+
+  /** Title rendered inside the card. The default slot takes precedence when provided. */
+  @property({attribute: 'card-title'}) cardTitle = '';
 
   /** The unchecked value of the checkbox, submitted as a name/value pair with form data. */
   @property({attribute: 'unchecked-value', reflect: true}) uncheckedValue: string;
@@ -87,6 +105,24 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
 
   /** Draws a container around the checkbox. */
   @property({type: Boolean, reflect: true}) contained = false;
+
+  /** Squares off the corners of the container drawn by `contained`, which is rounded by default. */
+  @property({type: Boolean, reflect: true}) square = false;
+
+  /** URL for the image shown in a contained checkbox. */
+  @property() src = '';
+
+  /** Accessible text for the built-in image. Leave empty when the image is decorative. */
+  @property({attribute: 'image-alt'}) imageAlt = '';
+
+  /** Places the image above, beside, or below the checkbox's text. Requires `contained`. */
+  @property({attribute: 'image-position', reflect: true}) imagePosition: SelectionCardImagePosition = 'left';
+
+  /**
+   * Places the checkbox indicator within a contained card. Use `none` to hide the indicator so the card itself
+   * shows the selected state. Requires `contained`.
+   */
+  @property({attribute: 'control-position', reflect: true}) controlPosition: SelectionCardControlPosition = 'start';
 
   /** Removes a container around the checkbox. */
   @property({type: Boolean, reflect: true}) borderless = false;
@@ -244,6 +280,9 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
   render() {
     const hasDescriptionSlot = this.hasSlotController.test('description');
     const hasDescription = this.description ? true : hasDescriptionSlot;
+    const hasImage = this.contained && (Boolean(this.src) || this.hasSlotController.test('image'));
+    const hasDefaultSlot = this.hasSlotController.test('[default]');
+    const isCard = this.contained && (hasImage || Boolean(this.cardTitle) || this.controlPosition !== 'start');
     const hasLabelSlot = this.hasSlotController.test('label');
     const hasLabelTooltip = this.hasSlotController.test('label-tooltip');
     const hasLabel = this.label || hasLabelSlot;
@@ -309,7 +348,11 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
             'checkbox--warning': effectiveColor === 'warning',
             'checkbox--transparent': effectiveColor === 'transparent',
             'checkbox--has-description': hasDescription,
-            'checkbox--has-selected-content': this.hasSlotController.test('selected-content')
+            'checkbox--has-selected-content': this.hasSlotController.test('selected-content'),
+            'selection-card': isCard,
+            'selection-card--has-image': hasImage,
+            [`selection-card--image-${this.imagePosition}`]: hasImage,
+            [`selection-card--control-${this.controlPosition}`]: isCard && this.controlPosition !== 'start'
           })}>
 
           <input
@@ -323,7 +366,7 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
             .disabled=${this.disabled}
             .required=${this.required}
             aria-checked=${this.checked ? 'true' : 'false'}
-            aria-describedby=${hasDescription ? '' : 'description'}
+            aria-describedby=${hasDescription ? 'description' : ''}
             @click=${this.handleClick}
             @input=${this.handleInput}
             @invalid=${this.handleInvalid}
@@ -334,7 +377,7 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
             part="control${this.checked ? ' control--checked' : ''}${this.indeterminate
               ? ' control--indeterminate'
               : ''}"
-            class="checkbox__control">
+            class="checkbox__control selection-card__control">
 
             ${this.checked && !this.indeterminate
               ? this.checkedIcon
@@ -367,8 +410,21 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
               : ''}
           </span>
 
-          <div part="label" class="checkbox__label">
-            <slot></slot>
+          ${hasImage
+            ? html`
+              <span part="image-container" class="selection-card__image-container">
+                <slot name="image">
+                  ${this.src
+                    ? html`<img part="image" class="selection-card__image" src=${this.src} alt=${this.imageAlt}>`
+                    : ''}
+                </slot>
+              </span>`
+            : ''}
+
+          <div part="label" class="checkbox__label selection-card__content">
+            <span part="card-title" class="selection-card__title">
+              <slot></slot>${hasDefaultSlot ? '' : this.cardTitle}
+            </span>
             <div
               aria-hidden=${hasDescription ? 'false' : 'true'}
               class="checkbox__description"

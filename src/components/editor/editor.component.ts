@@ -1,5 +1,5 @@
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
-import {deepQuerySelectorAll} from "../../utilities/query";
+import {deepQuerySelectorAll, idSelector} from "../../utilities/query";
 import {FormControlController} from '../../internal/form';
 import {on} from "../../utilities/on";
 import {property, query} from 'lit/decorators.js';
@@ -489,12 +489,13 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     // Find which element contains the content to insert
     // Priority: currentTarget > selectedTarget > target > composedPath > querySelector
+    const contentSelector = idSelector(contentContainer);
     const contentElement: Element | null =
-      (e.currentTarget instanceof Element && e.currentTarget.closest('#' + contentContainer)) ||
-      (e.selectedTarget instanceof Element && e.selectedTarget.closest('#' + contentContainer)) ||
-      (e.target instanceof Element && e.target.closest('#' + contentContainer)) ||
-      ((e.composedPath()[0] as Element)?.closest('#' + contentContainer)) ||
-      deepQuerySelectorAll(`#${contentContainer}`, document.documentElement, '')[0];
+      (e.currentTarget instanceof Element && e.currentTarget.closest(contentSelector)) ||
+      (e.selectedTarget instanceof Element && e.selectedTarget.closest(contentSelector)) ||
+      (e.target instanceof Element && e.target.closest(contentSelector)) ||
+      ((e.composedPath()[0] as Element)?.closest(contentSelector)) ||
+      deepQuerySelectorAll(contentSelector, document.documentElement, '')[0];
     if (!contentElement) return;
 
     let content = contentElement.textContent;

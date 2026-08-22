@@ -111,6 +111,194 @@ Add the `contained` attribute to draw a card-like container around a radio. This
 <zn-radio name="payment" value="bank" description="Direct bank transfer (3-5 business days)" contained>Bank Transfer</zn-radio>
 ```
 
+Containers are rounded by default. Add `square` to square off the corners; setting it on a
+[radio group](/components/radio-group) squares every radio in the group.
+
+```html:preview
+<zn-radio-group name="delivery" value="standard" contained square>
+  <zn-radio value="standard" description="Arrives in 3-5 working days">Standard delivery</zn-radio>
+  <zn-radio value="express" description="Arrives the next working day">Express delivery</zn-radio>
+</zn-radio-group>
+```
+
+### Selection Cards
+
+A contained radio can combine an image, title, supporting text, and a freely positioned radio indicator. Set the title
+with `card-title` (or use the default slot), and set supporting text with `description` (or the `description` slot).
+Provide an image with `src` and `image-alt`, or place richer content such as `zn-icon` in the `image` slot.
+
+Use these cards inside [`zn-radio-group`](/components/radio-group) for a single-select form input. Adding both
+`contained` and `horizontal` to the group produces a responsive grid of equal-height cards that stacks when the
+available width becomes narrow.
+
+```html:preview
+<zn-radio-group label="Choose a pricing plan" name="plan" value="complete" contained horizontal>
+  <zn-radio
+    value="basic"
+    card-title="Basic"
+    description="For smaller businesses, with simple salaries and pay schedules."
+    control-position="top-right">
+    <zn-icon slot="image" src="support" size="64"></zn-icon>
+  </zn-radio>
+  <zn-radio
+    value="complete"
+    card-title="Complete"
+    description="For growing businesses that want to create a rewarding place to work."
+    control-position="top-right">
+    <zn-icon slot="image" src="potted_plant" size="64"></zn-icon>
+  </zn-radio>
+</zn-radio-group>
+```
+
+#### Image and Indicator Positions
+
+Set `image-position` to `top`, `right`, `bottom`, or `left` (the default), and `control-position` to any corner,
+edge centre, or `center`. Content is never placed underneath a positioned indicator — the card reserves a gutter for
+it — so wider columns leave more room for text. Use `--zn-radio-group-column-width` on the group to control how many
+cards sit in a row, or add `wrap` to the group to let cards grow to fill each line instead of sharing equal-width
+columns.
+
+```html:preview
+<zn-radio-group
+  label="Card position examples"
+  name="position-example"
+  contained
+  horizontal
+  style="--zn-radio-group-column-width: 24rem;">
+  <zn-radio
+    value="top"
+    card-title="Image above"
+    description="Top image, top-left control."
+    image-position="top"
+    control-position="top-left"
+    checked>
+    <zn-icon slot="image" src="image" size="48"></zn-icon>
+  </zn-radio>
+  <zn-radio
+    value="right"
+    card-title="Image right"
+    description="Right image, top-right control."
+    image-position="right"
+    control-position="top-right">
+    <zn-icon slot="image" src="image" size="48"></zn-icon>
+  </zn-radio>
+  <zn-radio
+    value="bottom"
+    card-title="Image below"
+    description="Bottom image, bottom-left control."
+    image-position="bottom"
+    control-position="bottom-left">
+    <zn-icon slot="image" src="image" size="48"></zn-icon>
+  </zn-radio>
+  <zn-radio
+    value="left"
+    card-title="Image left"
+    description="Left image, bottom-right control."
+    image-position="left"
+    control-position="bottom-right">
+    <zn-icon slot="image" src="image" size="48"></zn-icon>
+  </zn-radio>
+</zn-radio-group>
+```
+
+#### Indicators on an Edge
+
+The indicator can also be centred along any edge of the card.
+
+```html:preview
+<zn-radio-group
+  label="Additional indicator positions"
+  name="control-example"
+  contained
+  horizontal
+  style="--zn-radio-group-column-width: 18rem;">
+  <zn-radio
+    value="top-center"
+    card-title="Top center"
+    description="Centered along the top edge."
+    control-position="top-center">
+    <zn-icon slot="image" src="filter_center_focus" size="48"></zn-icon>
+  </zn-radio>
+  <zn-radio
+    value="center-right"
+    card-title="Center right"
+    description="Centered along the right edge."
+    control-position="center-right">
+    <zn-icon slot="image" src="filter_center_focus" size="48"></zn-icon>
+  </zn-radio>
+  <zn-radio
+    value="bottom-center"
+    card-title="Bottom center"
+    description="Centered along the bottom edge."
+    control-position="bottom-center">
+    <zn-icon slot="image" src="filter_center_focus" size="48"></zn-icon>
+  </zn-radio>
+</zn-radio-group>
+```
+
+#### Hiding the Radio Input
+
+Set `control-position="none"` to hide the radio itself so the card *is* the control — selection is shown by the card's
+highlighted border and background alone. Nothing is removed from the DOM: the native radio still receives focus, still
+responds to arrow keys within a [radio group](/components/radio-group), still submits its value, and the whole card
+stays clickable. Focusing a card in this state draws a focus ring around the card.
+
+```html:preview
+<zn-radio-group label="Choose a theme" name="theme" value="light" contained horizontal>
+  <zn-radio
+    value="light"
+    card-title="Light"
+    description="Bright background with dark text."
+    image-position="top"
+    control-position="none">
+    <zn-icon slot="image" src="light_mode" size="48"></zn-icon>
+  </zn-radio>
+  <zn-radio
+    value="dark"
+    card-title="Dark"
+    description="Dark background with light text."
+    image-position="top"
+    control-position="none">
+    <zn-icon slot="image" src="dark_mode" size="48"></zn-icon>
+  </zn-radio>
+  <zn-radio
+    value="system"
+    card-title="System"
+    description="Follows your device setting."
+    image-position="top"
+    control-position="none">
+    <zn-icon slot="image" src="contrast" size="48"></zn-icon>
+  </zn-radio>
+</zn-radio-group>
+```
+
+It works just as well without an image, which gives a compact set of button-like options.
+
+```html:preview
+<zn-radio-group label="Billing period" name="billing" value="annual" contained horizontal wrap>
+  <zn-radio value="monthly" card-title="Monthly" description="£29 per month" control-position="none"></zn-radio>
+  <zn-radio value="annual" card-title="Annual" description="£290 per year, two months free" control-position="none"></zn-radio>
+</zn-radio-group>
+```
+
+:::warning
+Because a hidden indicator removes the usual radio affordance, keep the selected state obvious — a short title with
+supporting text, as above, reads better than an image on its own.
+:::
+
+:::tip
+Card attributes only apply to `contained` radios. `control-position` accepts `top-left`, `top-center`, `top-right`,
+`center-left`, `center`, `center-right`, `bottom-left`, `bottom-center`, `bottom-right`, `none`, and the default
+`start`, which keeps the standard inline radio.
+:::
+
+Card dimensions can be adjusted with `--zn-selection-card-image-width`, `--zn-selection-card-image-height`,
+`--zn-selection-card-min-height`, and `--zn-selection-card-title-font-size`. Use `--zn-selection-card-padding` for the
+inset around the card, `--zn-selection-card-gap` for the space between its regions,
+`--zn-selection-card-control-offset` to change the indicator's distance from an edge,
+`--zn-selection-card-content-min-width` for the width the text keeps before it wraps below a side image, and
+`--zn-selection-card-border-radius` for the corner radius.
+
 ### Horizontal Layout
 
 Use the `horizontal` attribute to apply styles relevant to radios in a horizontal layout.

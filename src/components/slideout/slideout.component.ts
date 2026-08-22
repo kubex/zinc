@@ -4,6 +4,7 @@ import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {LocalizeController} from "../../utilities/localize";
 import {property, query} from 'lit/decorators.js';
 import {getAnimation, setDefaultAnimation} from "../../utilities/animation-registry";
+import {idSelector} from "../../utilities/query";
 import {unlockBodyScrolling} from "../../internal/scroll";
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from "../button";
@@ -83,7 +84,7 @@ export default class ZnSlideout extends ZincElement {
     this.shadowRoot?.addEventListener('click', this.closeClickHandler);
 
     if (this.trigger) {
-      const trigger = this.parentNode?.querySelector('#' + this.trigger);
+      const trigger = this.parentNode?.querySelector(idSelector(this.trigger));
       if (trigger) {
         trigger.addEventListener('click', () => this.show());
       }
@@ -98,7 +99,7 @@ export default class ZnSlideout extends ZincElement {
     this.removeEventListener('click', this.closeClickHandler);
 
     if (this.trigger) {
-      const trigger = this.parentElement?.querySelector('#' + this.trigger);
+      const trigger = this.parentElement?.querySelector(idSelector(this.trigger));
       if (trigger) {
         trigger.removeEventListener('click', () => this.show());
       }

@@ -1,0 +1,187 @@
+@use "sass:map";
+
+/*
+ * Shared presentation for "selection cards" — contained radios and checkboxes that
+ * render an image, a title, supporting text, and a repositionable indicator.
+ *
+ * The host component adds `.selection-card` (plus modifiers) to its `part="base"`
+ * element and renders `.selection-card__control`, `.selection-card__image-container`
+ * and `.selection-card__content` inside it. Everything is scoped to
+ * `:host([contained]) .selection-card` so these rules outrank the plain contained
+ * styles, and so a contained radio or checkbox without card content is untouched.
+ */
+
+$control-positions: (
+  "top-left": (block: start, inline: start),
+  "top-center": (block: start, inline: center),
+  "top-right": (block: start, inline: end),
+  "center-left": (block: center, inline: start),
+  "center": (block: center, inline: center),
+  "center-right": (block: center, inline: end),
+  "bottom-left": (block: end, inline: start),
+  "bottom-center": (block: end, inline: center),
+  "bottom-right": (block: end, inline: end),
+);
+
+:host([contained]) .selection-card {
+  --selection-card-padding: var(--zn-selection-card-padding, var(--zn-spacing-large));
+  --selection-card-gap: var(--zn-selection-card-gap, var(--zn-spacing-medium));
+  --selection-card-image-width: var(--zn-selection-card-image-width, 5rem);
+  --selection-card-image-height: var(--zn-selection-card-image-height, 5rem);
+  --selection-card-control-offset: var(--zn-selection-card-control-offset, var(--zn-spacing-medium));
+
+  /* Space an edge-positioned control needs so content never runs underneath it. */
+  --selection-card-control-gutter: calc(var(--selection-card-control-offset) + var(--toggle-size) + var(--selection-card-gap));
+
+  align-items: center;
+  align-content: center;
+  gap: var(--selection-card-gap);
+  padding: var(--selection-card-padding);
+
+  .selection-card__content {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin-inline-start: 0;
+    line-height: var(--zn-line-height-normal);
+  }
+
+  .selection-card__title {
+    display: block;
+    font-size: var(--zn-selection-card-title-font-size, var(--zn-font-size-large));
+    font-weight: var(--zn-font-weight-semibold);
+    line-height: var(--zn-line-height-dense);
+  }
+
+  /* Images */
+  &.selection-card--has-image {
+    min-height: var(--zn-selection-card-min-height, 9rem);
+
+    /* Beside an image the text keeps a readable column, and wraps below it when there isn't room. */
+    flex-wrap: wrap;
+
+    .selection-card__content {
+      flex-basis: var(--zn-selection-card-content-min-width, 8rem);
+    }
+  }
+
+  .selection-card__image-container {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    ::slotted(*) {
+      display: block;
+      max-width: 100%;
+      max-height: var(--selection-card-image-height);
+    }
+  }
+
+  .selection-card__image {
+    display: block;
+    width: var(--selection-card-image-width);
+    max-width: 100%;
+    height: var(--selection-card-image-height);
+    object-fit: contain;
+  }
+
+  /* The image renders before the content, so only trailing positions need reordering. */
+  &.selection-card--image-right,
+  &.selection-card--image-bottom {
+    .selection-card__image-container {
+      order: 2;
+    }
+
+    .selection-card__content {
+      order: 1;
+    }
+  }
+
+  &.selection-card--image-top,
+  &.selection-card--image-bottom {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: center;
+
+    .selection-card__image-container {
+      align-self: center;
+    }
+
+    .selection-card__content {
+      /* The basis above is a width; in a column it would set the text block's height. */
+      flex: 0 0 auto;
+      text-align: center;
+    }
+
+    /* Centred text stays centred: mirror the gutter an edge control needs on both sides. */
+    @each $name, $position in $control-positions {
+      @if map.get($position, inline) != center {
+        &.selection-card--control-#{$name} {
+          padding-inline: var(--selection-card-control-gutter);
+        }
+      }
+    }
+  }
+
+  /* Positioned controls */
+  @each $name, $position in $control-positions {
+    $block: map.get($position, block);
+    $inline: map.get($position, inline);
+
+    &.selection-card--control-#{$name} {
+      @if $inline == start {
+        padding-inline-start: var(--selection-card-control-gutter);
+      } @else if $inline == end {
+        padding-inline-end: var(--selection-card-control-gutter);
+      } @else if $block == start {
+        padding-block-start: var(--selection-card-control-gutter);
+      } @else if $block == end {
+        padding-block-end: var(--selection-card-control-gutter);
+      }
+
+      .selection-card__control {
+        position: absolute;
+        z-index: 1;
+        transform: translate(var(--selection-card-control-shift-x, 0), var(--selection-card-control-shift-y, 0));
+
+        @if $block == center {
+          --selection-card-control-shift-y: -50%;
+
+          inset-block-start: 50%;
+        } @else {
+          inset-block-#{$block}: var(--selection-card-control-offset);
+        }
+
+        @if $inline == center {
+          --selection-card-control-shift-x: -50%;
+
+          inset-inline-start: 50%;
+        } @else {
+          inset-inline-#{$inline}: var(--selection-card-control-offset);
+        }
+      }
+    }
+  }
+
+  /* Hidden control — the card itself becomes the visible indicator. */
+  &.selection-card--control-none {
+    .selection-card__control {
+      display: none;
+    }
+
+    &:has(input:focus-visible) {
+      outline: var(--zn-focus-ring);
+      outline-offset: var(--zn-focus-ring-offset);
+    }
+  }
+}
+
+/* Contained radios and checkboxes are rounded by default; `square` opts out. */
+:host([contained]) [part~="base"] {
+  border-radius: var(--zn-selection-card-border-radius, var(--zn-border-radius));
+}
+
+:host([square]) [part~="base"] {
+  border-radius: 0;
+}

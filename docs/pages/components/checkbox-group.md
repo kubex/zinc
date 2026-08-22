@@ -106,6 +106,18 @@ This option can be combined with the `horizontal` attribute.
 :::tip
 When [checkboxes](/components/checkbox) are wrapped with the Checkbox Group , adding the `contained` attribute to the
 parent Checkbox Group or to _any_ checkbox in the group will create `contained` checkboxes for the entire group.
+
+Contained checkboxes can also render as [multi-select cards](/components/checkbox#multi-select-cards) with an image,
+title, description, and positioned indicator. The checkbox group continues to manage validation and submits every
+selected value under the group's name.
+
+Contained checkboxes are rounded by default; add `square` to the group to square off every checkbox in it. With
+`horizontal`, cards in a row are given equal height, and `--zn-checkbox-group-column-width` (default `152px`) sets the
+minimum column width used by the grid.
+
+Add `wrap` to lay the checkboxes out as a wrapping row instead of an equal-width grid: each card starts from
+`--zn-checkbox-group-column-width` and grows to fill its line, and setting that property to `auto` sizes every card from
+its own content.
 :::
 
 ### Disabling Options

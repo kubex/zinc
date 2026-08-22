@@ -13,16 +13,16 @@
   row-gap: var(--zn-spacing-small);
 }
 
-:host([contained]) .form-control-input {
+/* The label supplies the gap above the options, so a group without one starts flush. */
+:host([contained]) .form-control--has-label .form-control-input {
   margin-top: var(--zn-spacing-medium);
 }
 
 :host([horizontal][contained]) .form-control-input {
-  margin-top: var(--zn-spacing-medium);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--zn-radio-group-column-width, 152px)), 1fr));
   align-items: stretch;
-  gap: var(--zn-spacing-x-small);
+  gap: var(--zn-spacing-small);
 }
 
 ::slotted(zn-radio) {
@@ -44,7 +44,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
-  gap: var(--zn-spacing-x-small);
+  gap: var(--zn-base-gap);
 }
 
 :host([wrap]) ::slotted(zn-radio[horizontal][contained]) {

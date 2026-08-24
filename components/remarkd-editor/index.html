@@ -589,6 +589,9 @@
             <li data-level="3"><a href="#remarkd-blocks">Remarkd Blocks</a></li>
             <li data-level="3"><a href="#raw-source">Raw Source</a></li>
             <li data-level="3"><a href="#height">Height</a></li>
+            <li data-level="3"><a href="#actions">Actions</a></li>
+            <li data-level="3"><a href="#inline-formatting">Inline Formatting</a></li>
+            <li data-level="3"><a href="#variables-and-conditionals">Variables and Conditionals</a></li>
             <li data-level="3"><a href="#form-integration">Form Integration</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#properties">Properties</a></li>
@@ -1055,6 +1058,184 @@ outgrows the 20rem cap set here.<span class="token punctuation">"</span></span>
               </button>
             </div>
           </div>
+          <h3 id="actions" class="anchor-heading">
+            Actions<a href="#actions" aria-label='Direct link to "Actions"'></a>
+          </h3>
+          <p>
+            The toolbar and the <code>/</code> slash menu are driven by one shared registry of actions, grouped under
+            ten headings: <strong>Text</strong>, <strong>Inline</strong>, <strong>Lists</strong>,
+            <strong>Admonitions</strong>, <strong>Blocks</strong>, <strong>Structured</strong>, <strong>Media</strong>,
+            <strong>Objects</strong>, <strong>Breaks</strong>, and <strong>Logic</strong>. The toolbar shows as many
+            groups as fit its width and folds the rest into an overflow menu; the slash menu carries every action
+            regardless of width, and typing narrows it by label or keyword — so a folded toolbar group is never actually
+            out of reach.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-remarkd-editor
+                value='{{button:action text="Get started" href=/}}
+
+{{video:dQw4w9WgXcQ source=youtube}}
+
+{{reflist}}'
+              ></zn-remarkd-editor>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-977">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1237"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{{button:action text="Get started" href=/}}
+
+{{video:dQw4w9WgXcQ source=youtube}}
+
+{{reflist}}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1237"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-977"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="inline-formatting" class="anchor-heading">
+            Inline Formatting<a href="#inline-formatting" aria-label='Direct link to "Inline Formatting"'></a>
+          </h3>
+          <p>
+            Inline actions — Strong, Emphasis, Code, Underline, Strikethrough, Highlight, and the rest of the Inline
+            group — apply to the current selection inside the block being edited, so they only make sense while a block
+            is open: the toolbar disables them until one is (the slash menu lists them regardless, since it can only
+            ever open inside a block in the first place). Choosing one from the toolbar wraps the selection in its mark,
+            or — with nothing selected — inserts a placeholder inside the mark with the placeholder selected so typing
+            replaces it; from the slash menu it always inserts the full construct with the caret collapsed at the start
+            of the placeholder, since there is no selection to wrap. Choosing the same action again on a selection that
+            already carries the mark unwraps it rather than nesting a second one.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-remarkd-editor
+                value="Click into this block, select a word, then choose Strong or Emphasis from the toolbar."
+              ></zn-remarkd-editor>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-978">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1238"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Click into this block, select a word, then choose Strong or Emphasis from the toolbar.<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1238"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-978"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="variables-and-conditionals" class="anchor-heading">
+            Variables and Conditionals<a
+              href="#variables-and-conditionals"
+              aria-label='Direct link to "Variables and Conditionals"'
+            ></a>
+          </h3>
+          <p>
+            The Logic group’s actions insert document attributes (<code>:name: value</code>) and remarkd’s conditional
+            directives (<code>ifdef</code>, <code>ifndef</code>, <code>ifeval</code>) — but the editor only ever
+            <em>marks</em> them, it never evaluates them: an attribute line renders as a chip, a
+            <code>{name}</code> reference in surrounding text renders as a token, and an
+            <code>ifdef</code>/<code>ifndef</code>/<code>ifeval</code> range renders as a labelled wrapper whose content
+            stays visible regardless of whether the flag is defined. Evaluating conditionals belongs to the renderer the
+            finished document is published through, not to this editor — showing both branches of an if/else here means
+            neither one ever disappears while you’re still editing it.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-remarkd-editor
+                value=":product: Remarkd
+
+This documents {product}.
+
+ifdef::beta[]
+Only for the beta.
+endif::[]"
+              ></zn-remarkd-editor>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-979">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1239"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>:product: Remarkd
+
+This documents {product}.
+
+ifdef::beta[]
+Only for the beta.
+endif::[]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1239"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-979"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
           <h3 id="form-integration" class="anchor-heading">
             Form Integration<a href="#form-integration" aria-label='Direct link to "Form Integration"'></a>
           </h3>
@@ -1088,9 +1269,9 @@ outgrows the 20rem cap set here.<span class="token punctuation">"</span></span>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-977">
+            <div class="code-preview__source-group" id="code-preview-source-group-980">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1237"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>remarkd-editor-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1240"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>remarkd-editor-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span> <span class="token attr-name">required</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Edit me, then submit.<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>success<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Submit<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
@@ -1108,7 +1289,7 @@ outgrows the 20rem cap set here.<span class="token punctuation">"</span></span>
     <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Submitted!\n\n'</span> <span class="token operator">+</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1237"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1240"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1117,7 +1298,7 @@ outgrows the 20rem cap set here.<span class="token punctuation">"</span></span>
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-977"
+                aria-controls="code-preview-source-group-980"
               >
                 Source
                 <svg
@@ -1155,7 +1336,7 @@ outgrows the 20rem cap set here.<span class="token punctuation">"</span></span>
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-1238"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.101/dist/components/remarkd-editor/remarkd-editor.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1238"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-1241"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.101/dist/components/remarkd-editor/remarkd-editor.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1241"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1170,12 +1351,12 @@ outgrows the 20rem cap set here.<span class="token punctuation">"</span></span>
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-1239"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.101/dist/components/remarkd-editor/remarkd-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1239"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1242"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.101/dist/components/remarkd-editor/remarkd-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1242"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-1240"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/remarkd-editor/remarkd-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1240"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1243"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/remarkd-editor/remarkd-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1243"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="properties" class="anchor-heading">
@@ -1531,7 +1712,7 @@ outgrows the 20rem cap set here.<span class="token punctuation">"</span></span>
 
                 <tr>
                   <td class="nowrap"><code>toolbar</code></td>
-                  <td>The always-visible block-insert toolbar.</td>
+                  <td>The always-visible block-insert and inline-formatting toolbar.</td>
                 </tr>
 
                 <tr>
@@ -1547,6 +1728,16 @@ outgrows the 20rem cap set here.<span class="token punctuation">"</span></span>
                 <tr>
                   <td class="nowrap"><code>rendered</code></td>
                   <td>The rendered remarkd output of a block.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>conditional</code></td>
+                  <td>A labelled wrapper for an ifdef/ifndef/ifeval/iftrue/iffalse/ifempty/ifnempty range.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>variable</code></td>
+                  <td>A chip rendered for a document attribute, title, or bracket line.</td>
                 </tr>
 
                 <tr>
@@ -1599,11 +1790,17 @@ outgrows the 20rem cap set here.<span class="token punctuation">"</span></span>
 
             <li><code>&lt;zn-dialog&gt;</code></li>
 
+            <li><code>&lt;zn-dropdown&gt;</code></li>
+
             <li><code>&lt;zn-example&gt;</code></li>
 
             <li><code>&lt;zn-file&gt;</code></li>
 
             <li><code>&lt;zn-icon&gt;</code></li>
+
+            <li><code>&lt;zn-menu&gt;</code></li>
+
+            <li><code>&lt;zn-menu-item&gt;</code></li>
 
             <li><code>&lt;zn-slash-menu&gt;</code></li>
 

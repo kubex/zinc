@@ -22553,6 +22553,10 @@
             {
               "description": "An example CSS custom property.",
               "name": "--example"
+            },
+            {
+              "description": "Caps the menu's height and makes it scroll internally. Unset (`none`) by default, so the menu grows to fit its items unless a consumer sets this.",
+              "name": "--zn-menu-max-height"
             }
           ],
           "cssParts": [
@@ -22705,7 +22709,7 @@
           "tagNameWithoutPrefix": "menu",
           "tagName": "zn-menu",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/menu\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/menu\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n * @cssproperty --zn-menu-max-height - Caps the menu's height and makes it scroll internally.\n *  Unset (`none`) by default, so the menu grows to fit its items unless a consumer sets this.\n */",
           "documentation": "https://zinc.style/components/menu",
           "status": "experimental",
           "since": "1.0",
@@ -34063,7 +34067,7 @@
               "name": "base"
             },
             {
-              "description": "The always-visible block-insert toolbar.",
+              "description": "The always-visible block-insert and inline-formatting toolbar.",
               "name": "toolbar"
             },
             {
@@ -34077,6 +34081,14 @@
             {
               "description": "The rendered remarkd output of a block.",
               "name": "rendered"
+            },
+            {
+              "description": "A labelled wrapper for an ifdef/ifndef/ifeval/iftrue/iffalse/ifempty/ifnempty range.",
+              "name": "conditional"
+            },
+            {
+              "description": "A chip rendered for a document attribute, title, or bracket line.",
+              "name": "variable"
             },
             {
               "description": "The textarea shown while editing a block.",
@@ -34111,7 +34123,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ 'zn-slash-menu': ZnSlashMenu }"
+              "default": "{ 'zn-dropdown': ZnDropdown, 'zn-menu': ZnMenu, 'zn-menu-item': ZnMenuItem, 'zn-slash-menu': ZnSlashMenu }"
             },
             {
               "kind": "field",
@@ -34126,6 +34138,13 @@
               "privacy": "private",
               "readonly": true,
               "default": "new SlashMenuController(this, { menu: () => this.mountSlashMenu(), // The menu only belongs in a block that is nothing but the slash command — a // block prefix like \"## \" is not valid remarkd part-way through a line. items: () => this.isSlashBlock() ? SLASH_ITEMS.filter(item => item.action !== 'include' || !!this.includeUrl) : [], onSelect: item => this.handleSlashSelect(item) })"
+            },
+            {
+              "kind": "field",
+              "name": "toolbarOverflow",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ToolbarOverflowController(this, { groups: () => [...(this.shadowRoot?.querySelectorAll<HTMLElement>('.toolbar__group') ?? [])], container: () => this.shadowRoot?.querySelector<HTMLElement>('.remarkd-editor__toolbar'), })"
             },
             {
               "kind": "field",
@@ -34568,7 +34587,7 @@
                   }
                 }
               ],
-              "description": "Splits remarkd source into blocks on blank lines, keeping fenced /\ndelimited containers (``` ==== !!!! .... ----) as single blocks."
+              "description": "Splits remarkd source into blocks on blank lines, keeping fenced /\ndelimited containers (``` ==== !!!! .... ---- ____ **** ////) as single blocks."
             },
             {
               "kind": "method",
@@ -34743,6 +34762,13 @@
                   "type": {
                     "text": "'nearest' | 'center'"
                   }
+                },
+                {
+                  "name": "caretOffset",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
                 }
               ]
             },
@@ -34813,6 +34839,13 @@
                   "default": "'nearest'",
                   "type": {
                     "text": "'nearest' | 'center'"
+                  }
+                },
+                {
+                  "name": "caretOffset",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
                   }
                 }
               ]
@@ -34918,6 +34951,13 @@
                 {
                   "name": "prefill",
                   "default": "''"
+                },
+                {
+                  "name": "caretOffset",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
                 }
               ],
               "description": "Inserts a draft block — committed (or dropped, if left empty) on blur."
@@ -35257,6 +35297,20 @@
               ]
             },
             {
+              "kind": "method",
+              "name": "applyInline",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "mark",
+                  "type": {
+                    "text": "InlineMark"
+                  }
+                }
+              ],
+              "description": "Applies an inline mark to the open block's textarea: wraps the selection, toggles the\nmark off when it is already wrapped, or inserts a selected placeholder when there is\nno selection. Goes through `editingDraft` so `zn-input` still fires."
+            },
+            {
               "kind": "field",
               "name": "toggleRawMode",
               "privacy": "private"
@@ -35284,9 +35338,9 @@
               "privacy": "private",
               "parameters": [
                 {
-                  "name": "item",
+                  "name": "action",
                   "type": {
-                    "text": "BlockType"
+                    "text": "EditorAction"
                   }
                 }
               ]
@@ -35311,6 +35365,67 @@
             },
             {
               "kind": "method",
+              "name": "renderMetaChips",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "lines",
+                  "type": {
+                    "text": "MetaLine[]"
+                  }
+                }
+              ],
+              "description": "A metadata-only block parses to nothing, so show each of its lines as a chip instead."
+            },
+            {
+              "kind": "method",
+              "name": "renderMetaChip",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "line",
+                  "type": {
+                    "text": "MetaLine"
+                  }
+                }
+              ],
+              "description": "One shared chip treatment for every metadata line kind — each kind just supplies an\nicon, a name, and an optional value/state, display-only in all three cases."
+            },
+            {
+              "kind": "method",
+              "name": "markVariables",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "Element"
+                  }
+                }
+              ],
+              "description": "Wraps `{name}` references so they read as variables rather than literal text. Walks text\nnodes and skips code, so a brace in a sample stays a brace, and no regex touches markup."
+            },
+            {
+              "kind": "method",
+              "name": "renderConditional",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "block",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "A conditional range as a labelled wrapper. The inner content is parsed without the\ndirective lines: evaluating instead would blank the block whenever the flag is not\ndefined in this same block, hiding the author's content while they edit it. It also\nkeeps both halves of an if/else idiom visible — with evaluation you could never see\nthe `ifndef` branch while the `ifdef` condition held. Nesting is handled by\n`splitConditionalParts`/`renderConditionalWrapper` below, recursively."
+            },
+            {
+              "kind": "method",
               "name": "renderBlock",
               "privacy": "private",
               "parameters": [
@@ -35327,6 +35442,67 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "isActionDisabled",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "action",
+                  "type": {
+                    "text": "EditorAction"
+                  }
+                }
+              ],
+              "description": "An inline action needs an open block to apply its mark to."
+            },
+            {
+              "kind": "method",
+              "name": "activateAction",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "action",
+                  "type": {
+                    "text": "EditorAction"
+                  }
+                }
+              ],
+              "description": "Routes a toolbar/menu action to the inline or block insert path — the one place both\n`renderAction` and `renderMenuAction` call, so the bar and the overflow menu cannot\ndrift out of sync on what a given action actually does."
+            },
+            {
+              "kind": "method",
+              "name": "renderAction",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "action",
+                  "type": {
+                    "text": "EditorAction"
+                  }
+                }
+              ],
+              "description": "A single toolbar action button, shared by the toolbar bar and the overflow menu."
+            },
+            {
+              "kind": "method",
+              "name": "renderMenuAction",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "action",
+                  "type": {
+                    "text": "EditorAction"
+                  }
+                }
+              ],
+              "description": "The same action, rendered as a menu item for the overflow menu."
             },
             {
               "kind": "method",
@@ -35460,15 +35636,18 @@
           "tagNameWithoutPrefix": "remarkd-editor",
           "tagName": "zn-remarkd-editor",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n * @documentation https://zinc.style/components/remarkd-editor\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-button-group\n * @dependency zn-icon\n * @dependency zn-file\n * @dependency zn-slash-menu\n *\n * @event zn-input - Emitted on each keystroke while editing a block.\n * @event zn-change - Emitted when a block edit is committed and the value changes.\n *\n * @csspart base - The component's base wrapper.\n * @csspart toolbar - The always-visible block-insert toolbar.\n * @csspart raw-toggle - The button that switches between the block view and the raw source view.\n * @csspart block - A rendered block wrapper.\n * @csspart rendered - The rendered remarkd output of a block.\n * @csspart input - The textarea shown while editing a block.\n * @csspart raw - The full-document textarea shown in raw source mode.\n * @csspart slash-menu - The `zn-slash-menu` opened by typing \"/\" in an empty block.\n * @csspart image-controls - The caption / alignment / size panel shown when an image block is clicked.\n * @csspart include - The chip rendered in place of an `include::` directive.\n * @csspart include-picker - The inline Include picker opened from the toolbar or \"/include\".\n *\n * @cssproperty --remarkd-editor-max-height - The tallest the editor grows before its body scrolls. Defaults to `100dvh`.\n */",
+          "jsDoc": "/**\n * @summary A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n * @documentation https://zinc.style/components/remarkd-editor\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-button-group\n * @dependency zn-dropdown\n * @dependency zn-icon\n * @dependency zn-file\n * @dependency zn-menu\n * @dependency zn-menu-item\n * @dependency zn-slash-menu\n *\n * @event zn-input - Emitted on each keystroke while editing a block.\n * @event zn-change - Emitted when a block edit is committed and the value changes.\n *\n * @csspart base - The component's base wrapper.\n * @csspart toolbar - The always-visible block-insert and inline-formatting toolbar.\n * @csspart raw-toggle - The button that switches between the block view and the raw source view.\n * @csspart block - A rendered block wrapper.\n * @csspart rendered - The rendered remarkd output of a block.\n * @csspart conditional - A labelled wrapper for an ifdef/ifndef/ifeval/iftrue/iffalse/ifempty/ifnempty range.\n * @csspart variable - A chip rendered for a document attribute, title, or bracket line.\n * @csspart input - The textarea shown while editing a block.\n * @csspart raw - The full-document textarea shown in raw source mode.\n * @csspart slash-menu - The `zn-slash-menu` opened by typing \"/\" in an empty block.\n * @csspart image-controls - The caption / alignment / size panel shown when an image block is clicked.\n * @csspart include - The chip rendered in place of an `include::` directive.\n * @csspart include-picker - The inline Include picker opened from the toolbar or \"/include\".\n *\n * @cssproperty --remarkd-editor-max-height - The tallest the editor grows before its body scrolls. Defaults to `100dvh`.\n */",
           "documentation": "https://zinc.style/components/remarkd-editor",
           "status": "experimental",
           "since": "1.0",
           "dependencies": [
             "zn-button",
             "zn-button-group",
+            "zn-dropdown",
             "zn-icon",
             "zn-file",
+            "zn-menu",
+            "zn-menu-item",
             "zn-slash-menu"
           ]
         }

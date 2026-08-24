@@ -989,6 +989,8 @@ declare module "components/menu/menu.component" {
      * @csspart base - The component's base wrapper.
      *
      * @cssproperty --example - An example CSS custom property.
+     * @cssproperty --zn-menu-max-height - Caps the menu's height and makes it scroll internally.
+     *  Unset (`none`) by default, so the menu grows to fit its items unless a consumer sets this.
      */
     export default class ZnMenu extends ZincElement {
         static styles: CSSResultGroup;
@@ -9453,9 +9455,73 @@ declare module "components/markdown-editor/index" {
         }
     }
 }
+declare module "components/remarkd-editor/actions" {
+    import type { SlashMenuItem } from "components/slash-menu/index";
+    export type ActionGroup = 'text' | 'lists' | 'admonitions' | 'blocks' | 'structured' | 'media' | 'objects' | 'breaks' | 'logic' | 'inline';
+    /** What an inline action wraps the selection in. `after` defaults to `before`. */
+    export interface InlineMark {
+        before: string;
+        after?: string;
+        placeholder?: string;
+    }
+    export interface EditorAction {
+        /** Stable id, used for toolbar keys and tests. */
+        key: string;
+        label: string;
+        icon: string;
+        group: ActionGroup;
+        /** Extra search terms for the slash menu, e.g. "bold" finds Strong. */
+        keywords?: string[];
+        /** Block actions: spliced in as a new block. */
+        prefix?: string;
+        /** Inline actions: applied to the selection in the open block. */
+        inline?: InlineMark;
+        /** Where the caret lands within `prefix`. Defaults to the end. */
+        caretOffset?: number;
+        /** Actions that open their own picker instead of inserting text. */
+        opens?: 'image' | 'include';
+    }
+    /** Toolbar order, most-used first — the last groups are the first to collapse. */
+    export const ACTION_GROUPS: {
+        id: ActionGroup;
+        label: string;
+    }[];
+    export const EDITOR_ACTIONS: EditorAction[];
+    /** The registry as slash menu entries. Picker actions insert nothing; the menu emits their action id. */
+    export function slashItems(actions: EditorAction[]): SlashMenuItem[];
+}
+declare module "internal/toolbar-overflow" {
+    import type { ReactiveController, ReactiveControllerHost } from 'lit';
+    interface ToolbarOverflowOptions {
+        /** The measurable group elements, in toolbar order. */
+        groups: () => HTMLElement[];
+        /** The element whose width the groups have to fit inside. */
+        container: () => HTMLElement | null | undefined;
+        /** Space to keep for the overflow trigger. Defaults to 44px. */
+        reserve?: number;
+    }
+    /**
+     * Reports how many leading toolbar groups fit the container, so the host can render the
+     * rest into an overflow menu. Two passes: the first ignores the trigger, because when
+     * everything fits there is no trigger to make room for.
+     */
+    export class ToolbarOverflowController implements ReactiveController {
+        visibleCount: number;
+        private readonly host;
+        private readonly options;
+        private resizeRafId;
+        constructor(host: ReactiveControllerHost & Element, options: ToolbarOverflowOptions);
+        hostUpdated(): void;
+        private measure;
+        private countThatFit;
+    }
+}
 declare module "components/remarkd-editor/remarkd-editor.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import { type CSSResultGroup, type PropertyValues, type TemplateResult } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import ZnDropdown from "components/dropdown/index";
+    import ZnMenu from "components/menu/index";
+    import ZnMenuItem from "components/menu-item/index";
     import ZnSlashMenu from "components/slash-menu/index";
     import type { ZincFormControl } from "internal/zinc-element";
     /**
@@ -9466,18 +9532,23 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
      *
      * @dependency zn-button
      * @dependency zn-button-group
+     * @dependency zn-dropdown
      * @dependency zn-icon
      * @dependency zn-file
+     * @dependency zn-menu
+     * @dependency zn-menu-item
      * @dependency zn-slash-menu
      *
      * @event zn-input - Emitted on each keystroke while editing a block.
      * @event zn-change - Emitted when a block edit is committed and the value changes.
      *
      * @csspart base - The component's base wrapper.
-     * @csspart toolbar - The always-visible block-insert toolbar.
+     * @csspart toolbar - The always-visible block-insert and inline-formatting toolbar.
      * @csspart raw-toggle - The button that switches between the block view and the raw source view.
      * @csspart block - A rendered block wrapper.
      * @csspart rendered - The rendered remarkd output of a block.
+     * @csspart conditional - A labelled wrapper for an ifdef/ifndef/ifeval/iftrue/iffalse/ifempty/ifnempty range.
+     * @csspart variable - A chip rendered for a document attribute, title, or bracket line.
      * @csspart input - The textarea shown while editing a block.
      * @csspart raw - The full-document textarea shown in raw source mode.
      * @csspart slash-menu - The `zn-slash-menu` opened by typing "/" in an empty block.
@@ -9490,10 +9561,14 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
     export default class ZnRemarkdEditor extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
         static dependencies: {
+            'zn-dropdown': typeof ZnDropdown;
+            'zn-menu': typeof ZnMenu;
+            'zn-menu-item': typeof ZnMenuItem;
             'zn-slash-menu': typeof ZnSlashMenu;
         };
         private readonly formControlController;
         private readonly slashController;
+        private readonly toolbarOverflow;
         private editingDraft;
         private includeRequest;
         private rawEntryValue;
@@ -9565,12 +9640,13 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         /** Commits any in-progress block or raw edit. */
         blur(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
+        protected updated(changedProperties: PropertyValues<this>): void;
         disconnectedCallback(): void;
         handleValueChange(): void;
         handleIncludeUrlChange(): void;
         /**
          * Splits remarkd source into blocks on blank lines, keeping fenced /
-         * delimited containers (``` ==== !!!! .... ----) as single blocks.
+         * delimited containers (``` ==== !!!! .... ---- ____ **** ////) as single blocks.
          */
         private splitBlocks;
         private fenceMarker;
@@ -9670,6 +9746,12 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         /** Fetches the include list once; every later caller shares the same promise. */
         private loadIncludeOptions;
         private autosize;
+        /**
+         * Applies an inline mark to the open block's textarea: wraps the selection, toggles the
+         * mark off when it is already wrapped, or inserts a selected placeholder when there is
+         * no selection. Goes through `editingDraft` so `zn-input` still fires.
+         */
+        private applyInline;
         private toggleRawMode;
         private focusRaw;
         /**
@@ -9687,8 +9769,39 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private handleToolbarInsert;
         private renderImageControls;
         private renderIncludeChip;
+        /** A metadata-only block parses to nothing, so show each of its lines as a chip instead. */
+        private renderMetaChips;
+        /**
+         * One shared chip treatment for every metadata line kind — each kind just supplies an
+         * icon, a name, and an optional value/state, display-only in all three cases.
+         */
+        private renderMetaChip;
+        /**
+         * Wraps `{name}` references so they read as variables rather than literal text. Walks text
+         * nodes and skips code, so a brace in a sample stays a brace, and no regex touches markup.
+         */
+        private markVariables;
+        /**
+         * A conditional range as a labelled wrapper. The inner content is parsed without the
+         * directive lines: evaluating instead would blank the block whenever the flag is not
+         * defined in this same block, hiding the author's content while they edit it. It also
+         * keeps both halves of an if/else idiom visible — with evaluation you could never see
+         * the `ifndef` branch while the `ifdef` condition held. Nesting is handled by
+         * `splitConditionalParts`/`renderConditionalWrapper` below, recursively.
+         */
+        private renderConditional;
         private renderBlock;
-        render(): import("lit-html").TemplateResult<1>;
+        /** An inline action needs an open block to apply its mark to. */
+        private isActionDisabled;
+        /** Routes a toolbar/menu action to the inline or block insert path — the one place both
+         * `renderAction` and `renderMenuAction` call, so the bar and the overflow menu cannot
+         * drift out of sync on what a given action actually does. */
+        private activateAction;
+        /** A single toolbar action button, shared by the toolbar bar and the overflow menu. */
+        private renderAction;
+        /** The same action, rendered as a menu item for the overflow menu. */
+        private renderMenuAction;
+        render(): TemplateResult<1>;
         private renderRaw;
         /** The block views, with the inline image picker spliced in when active. */
         private renderBody;
@@ -12743,6 +12856,13 @@ declare module "components/editor/modules/events/zn-editor-update" {
 }
 declare module "components/hover-container/hover-container" {
     import '../../../dist/zn.min.js';
+}
+declare module "components/remarkd-editor/feature-keys" {
+    /**
+     * The remarkd feature fixtures, from `node_modules/remarkd-js/requirements/features/`.
+     * Regenerate with: ls node_modules/remarkd-js/requirements/features
+     */
+    export const FEATURE_KEYS: string[];
 }
 declare module "events/zn-after-collapse" {
     export type ZnAfterExpandEvent = CustomEvent<Record<PropertyKey, never>>;

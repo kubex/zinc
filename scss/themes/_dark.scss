@@ -248,6 +248,15 @@
   --zn-color-neutral-0: hsl(0, 0%, 0%);
   --zn-color-neutral-1000: hsl(0, 0%, 100%);
 
+  /* Neutral 50 and 200 are the two steps _light.scss pins to literal hsl() values
+     instead of aliasing to --zn-color-gray-*. Every other step aliases the gray
+     ramp and so follows the dark ramp above for free; these two do not, and left
+     undefined here they stay near-white in dark mode (L=0.98 / L=0.94).
+     That is what paints a white pill for `color="secondary"` buttons and a white
+     border on every panel. Alias them so they track the ramp like the rest. */
+  --zn-color-neutral-50: var(--zn-color-gray-50);
+  --zn-color-neutral-200: var(--zn-color-gray-200);
+
   /* Elevations */
   --zn-shadow-x-small: 0 1px 4px rgba(0, 0, 0, 0.18);
   --zn-shadow-small: 0 3px 9px rgba(0, 0, 0, 0.24);

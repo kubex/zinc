@@ -1,9 +1,28 @@
-// Aura — a soft, light-based theme with a pastel violet identity.
-// It inherits the light theme primitives (defined on :root) and only
-// re-points the primary ramp to a softer, more pastel violet so the
-// whole UI takes on the "aura" glow without redefining every token.
-[t="aura"],
-.theme-aura {
+// Aura — a soft violet identity drawn over either mode's primitives.
+//
+// Light inherits the light primitives (defined on :root) and only re-points the
+// primary ramp to a softer, more pastel violet so the whole UI takes on the
+// "aura" glow without redefining every token. Dark does the same over the dark
+// primitives, with the ramp inverted (50 darkest -> 900 lightest) the way
+// themes/_dark.scss inverts every other ramp.
+//
+// The selectors are root-qualified (`html[t="aura"]` / `body[t="aura"]`) and must
+// stay that way. ZincElement reflects `t`/`m` onto EVERY component, so a bare
+// `[t="aura"]` matched each of them individually and re-declared these tokens
+// with literal values, wiping out contextual overrides from an ancestor — that
+// is what painted the rubix aura header's buttons violet instead of white.
+// Worse, a consumer on an older ZincElement reflects `t` but not `m`: the bare
+// light block then matched it, poured light tokens over its whole subtree, and
+// anything in a shadow tree below could not recover (document stylesheets do not
+// match inside shadow roots), which is what painted shell dropdowns white in
+// aura dark. Root-qualified, non-root elements simply inherit.
+//
+// Only *source* tokens (--zn-color-*) and theme-owned leaf tokens belong here.
+// Never set a derived token (--zn-border-color, --zn-text*, --zn-panel,
+// --zn-body, --zn-input-bg) — those are mapped off the source tokens in
+// scss/_root.scss and will not follow if pinned here.
+html[t="aura"], body[t="aura"],
+html.theme-aura, body.theme-aura {
   color-scheme: light;
 
   /**************************************************************
@@ -28,8 +47,68 @@
   --zn-shadow-large: 0 6px 20px rgba(60, 44, 110, 0.14);
   --zn-shadow-x-large: 0 6px 20px rgba(60, 44, 110, 0.22);
 
-  --zn-border-color: 218, 212, 246;
-
   /* Focus ring follows the softer primary */
   --zn-input-focus-ring-color: hsl(255 82% 68% / 40%);
+}
+
+// Aura dark — the same violet identity over the dark primitives.
+//
+// html[t="aura"][m="dark"] (0,2,1) outranks themes/_dark.scss's :root[m="dark"]
+// (0,2,0), but this block should still stay AFTER _dark.scss in themes/_index.scss
+// so the ordering reads the way it resolves. See the specificity note in
+// scss/_root.scss for why these are html/body rather than :root.
+html[t="aura"][m="dark"], body[t="aura"][m="dark"],
+html.theme-aura.theme-dark, body.theme-aura.theme-dark {
+  color-scheme: dark;
+
+  /**************************************************************
+   * Theme Tokens — soft violet primary, inverted for dark
+   *************************************************************/
+
+  --zn-color-primary-50: hsl(257, 45%, 25%);
+  --zn-color-primary-100: hsl(257, 50%, 34%);
+  --zn-color-primary-200: hsl(257, 55%, 41%);
+  --zn-color-primary-300: hsl(257, 62%, 50%);
+  --zn-color-primary-400: hsl(256, 75%, 60%);
+  --zn-color-primary-500: hsl(255, 88%, 68%);
+  --zn-color-primary-600: hsl(253, 95%, 75%);
+  --zn-color-primary-700: hsl(251, 100%, 83%);
+  --zn-color-primary-800: hsl(249, 100%, 90%);
+  --zn-color-primary-900: hsl(250, 100%, 94%);
+
+  /* Elevations read as depth against the navy canvas, not violet haze */
+  --zn-shadow-x-small: 0 1px 4px rgba(6, 10, 20, 0.30);
+  --zn-shadow-small: 0 3px 9px rgba(6, 10, 20, 0.38);
+  --zn-shadow-medium: 0 6px 18px rgba(6, 10, 20, 0.38);
+  --zn-shadow-large: 0 6px 20px rgba(6, 10, 20, 0.42);
+  --zn-shadow-x-large: 0 6px 20px rgba(6, 10, 20, 0.52);
+
+  --zn-input-focus-ring-color: hsl(255 88% 68% / 45%);
+
+  /* _dark.scss's gray-100 is a muddy violet-grey (hsl(262, 12%, 35%)) that reads
+     brown over aura's navy canvas. It is the hover/secondary surface for a wide
+     spread of components — every `--zn-color-neutral-100` consumer aliases it
+     (zn-tile hover, zn-button hover, the markdown/remarkd editors,
+     schedule-builder, the droparea checker) plus zn-alert directly — so
+     re-pointing it here fixes them all at once. */
+  --zn-color-gray-100: hsl(221.6, 41.21%, 27.22%);
+
+  /* The neighbouring steps come along for the ride: _dark.scss aliases
+     --zn-color-neutral-50/-200 onto these, so leaving them on the muddy violet
+     ramp would put that colour back on `color="secondary"` button fills, input
+     surfaces and every panel border. Values chosen to land on aura dark's
+     existing navy tokens — 50 meets --zn-input-bg-accent (34,46,68) and 200
+     meets --zn-color-border (64,82,113). */
+  --zn-color-gray-50: hsl(220, 33%, 20%);
+  --zn-color-gray-200: hsl(220, 28%, 35%);
+
+  /* _dark.scss pins these to near-black literals, which read as holes punched
+     in aura's navy canvas — re-point them to the navy family. */
+  --zn-input-background-color-focus: rgb(35, 47, 70);
+  --zn-input-background-color-disabled: rgb(33, 44, 65);
+
+  --zn-tooltip-background-color: rgb(24, 33, 50);
+
+  /* tables */
+  --zn-table-header-background-color: 46, 61, 88;
 }

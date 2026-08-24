@@ -61,10 +61,21 @@ export default class ZnTile extends ZincElement {
   }
 
   private _handleActionsClick(e: MouseEvent) {
-    if (this._isLink()) {
-      e.preventDefault();
-      e.stopPropagation();
+    if (!this._isLink()) return;
+
+    // Let Rubix's delegated pagelet handler see an action's own link. For controls without
+    // navigation metadata, stop before the handler can walk up to the tile host's href.
+    for (const target of e.composedPath()) {
+      if (target === this) break;
+      if (!(target instanceof Element)) continue;
+
+      const href = target.getAttribute('href');
+      if (target.hasAttribute('data-uri') || (href !== null && href !== '' && !href.startsWith('#'))) {
+        return;
+      }
     }
+
+    e.stopPropagation();
   }
 
   render() {
@@ -77,11 +88,7 @@ export default class ZnTile extends ZincElement {
     const hasImage = this.hasSlotController.test('image');
 
     return html`
-      <${tag}
-        href="${ifDefined(this.href)}"
-        data-uri="${ifDefined(this.dataUri)}"
-        gaid="${ifDefined(this.gaid)}"
-        data-target="${ifDefined(this.dataTarget)}"
+      <div
         class="${classMap({
           tile: true,
           'tile--flush': this.flush,
@@ -96,11 +103,15 @@ export default class ZnTile extends ZincElement {
           'tile--has-actions': hasActions,
           'tile--has-image': hasImage,
         })}">
-        ${!hasCaption && !hasDescription && !hasProperties && !hasActions ? html`
-          <slot></slot>
-        ` : html`
-          <div
-            class="tile__link">
+        <${tag}
+          href="${ifDefined(this.href)}"
+          data-uri="${ifDefined(this.dataUri)}"
+          gaid="${ifDefined(this.gaid)}"
+          data-target="${ifDefined(this.dataTarget)}"
+          class="tile__link">
+          ${!hasCaption && !hasDescription && !hasProperties && !hasActions ? html`
+            <slot></slot>
+          ` : html`
             <div class="tile__left">
               ${hasImage ? html`
                 <slot name="image" part="image" class="tile__image"></slot>` : html``}
@@ -113,15 +124,17 @@ export default class ZnTile extends ZincElement {
                     ${this.description}</p>` : html`<slot name="description" class="tile__description"></slot>`}
               </div>
             </div>
-          </div>
-
-          <div class="tile__right">
             ${hasProperties ? html`
               <slot name="properties" part="properties" class="tile__properties"></slot>` : ''}
-            ${hasActions ? html`
+          `}
+        </${tag}>
+
+        ${hasActions ? html`
+          <div class="tile__right">
+            <!-- Kept outside the link so slotted controls retain their default behaviour. -->
               <slot name="actions" part="actions" class="tile__actions"
-                    @click=${this._handleActionsClick}></slot>` : ''}
-          </div>`}
-      </${tag}>`;
+                    @click=${this._handleActionsClick}></slot>
+          </div>` : ''}
+      </div>`;
   }
 }

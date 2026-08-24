@@ -18,12 +18,15 @@
 // full palette. They carry the same hazard, which is why light mode is expressed
 // as plain `:root` — light is the default palette, so it needs no `m` hook.
 //
-// $light-only lists themes that ship a light palette *only*. They are excluded
-// from the dark selector, so `t="<theme>" m="dark"` renders light rather than a
-// hybrid of that theme's tokens over the dark primitives. Themes are
-// dark-capable by default — add one here only while it has no dark palette, and
-// remove it when it gains one.
-$light-only: '[t="aura"]';
+// A theme that ships a light palette *only* must be excluded from $dark, or
+// `t="<theme>" m="dark"` layers its tokens over the dark primitives and renders
+// a hybrid. Themes are dark-capable by default; add an exclusion here only while
+// a theme has no dark palette, and drop it when it gains one. Every theme
+// currently ships both palettes, so the list is empty:
+//
+//   $light-only: '[t="newtheme"]';
+//   $dark: ':root[m="dark"]:not(#{$light-only}), ...';
+$light-only: null;
 
 $light: ':root, [t="light"], .theme-light';
-$dark: ':root[m="dark"]:not(#{$light-only}), [t="dark"], .theme-dark';
+$dark: ':root[m="dark"], [t="dark"], .theme-dark';

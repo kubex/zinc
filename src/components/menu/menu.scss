@@ -14,7 +14,12 @@
   overflow: auto;
   overscroll-behavior: none;
   box-shadow: 0 4px 8px -4px rgba(33, 33, 33, 0.1);
-  background-color: rgb(var(--zn-panel));
+  // Same surface as the shell-header menus below, so every dropdown in the
+  // product reads as one material rather than splitting into --zn-panel menus
+  // and --zn-color-navigation ones depending on where it was mounted.
+  // (No backdrop-filter here: at 0.95 the blur is not worth the GPU cost on
+  // every dropdown, and .menu--shell keeps it for the chrome look.)
+  background-color: rgba(var(--zn-color-navigation, 255, 255, 255), 0.95);
 }
 
 // Dropdown vs shell hover/row styling lives on zn-menu-item, keyed by the

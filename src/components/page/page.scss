@@ -12,7 +12,11 @@
   // A theme sets it to an image and its tile size; unset it costs nothing.
   --zn-page-texture: none;
   --zn-page-texture-size: auto;
-  --zn-page-content-background: var(--zn-body);
+  // The page canvas. Defaults to the body so the page is flush with the shell,
+  // but a theme can lift it clear by setting --zn-page-canvas on its root (it
+  // inherits across this shadow boundary). The indirection is needed because
+  // this :host declaration would otherwise beat any inherited value.
+  --zn-page-content-background: var(--zn-page-canvas, var(--zn-body));
   --zn-page-header-background: var(--zn-page-surface-background, var(--zn-page-background, var(--zn-body)));
   // A modal shell overlays its own close button at --zn-base-gap from the page edge;
   // these describe it so the header can keep clear of it.
@@ -62,11 +66,19 @@
   }
 }
 
-// Aura theme — the page header carries a soft violet/teal aurora gradient
-// instead of the flat body-coloured surface.
+// Aura theme — the page header carries an aurora gradient instead of the flat
+// body-coloured surface. The gradient itself is a token so each mode can own its
+// own (pale violet/teal in light, deep violet/blue in dark) without a second
+// selector here; it is set on the theme root in zinc's scss/_root.scss and
+// inherits across this shadow boundary. Deliberately NOT called
+// --zn-page-header-background: that name is already taken above, by an RGB
+// triplet read as rgba(var(--zn-page-header-background), 95%).
+//
+// The var() fallback is the light gradient, so a consumer on a stale zn.min.css
+// (no token) still gets the original aura header rather than a bare surface.
 :host-context([t="aura"]) .page__header,
 :host-context(.theme-aura) .page__header {
-  background: linear-gradient(225deg, rgba(233, 227, 255, 1) 0%, rgba(214, 246, 245, 1) 40%, rgba(233, 227, 255, 1) 100%), linear-gradient(180deg, rgba(129, 153, 217, 0) 0%, rgba(0, 0, 0, 1) 100%);
+  background: var(--zn-page-header-aurora, linear-gradient(225deg, rgba(233, 227, 255, 1) 0%, rgba(214, 246, 245, 1) 40%, rgba(233, 227, 255, 1) 100%), linear-gradient(180deg, rgba(129, 153, 217, 0) 0%, rgba(0, 0, 0, 1) 100%));
 
 
   // Held still deliberately. This gradient used to drift via
@@ -111,7 +123,9 @@
     // aurora wave (it no longer darkens what it sits on); restore the blend mode
     // if the look regresses, but expect the GPU cost back with it.
     //mix-blend-mode: color-burn;
-    opacity: 0.04;
+    // The wave artwork is a mid violet (#8b7fd4): on the pale light gradient it
+    // darkens, on the deep dark one it lifts, so each mode needs its own weight.
+    opacity: var(--zn-page-header-wave-opacity, 0.04);
     pointer-events: none;
   }
 

@@ -330,14 +330,12 @@ ul.square {
 // derived tokens (--zn-body, --zn-text, --zn-panel ...) reference these via
 // var() and follow automatically.
 //
-// Aura ships a light palette only, so it is listed in `$light-only` in
-// themes/_modes.scss and excluded from the dark selector: `t="aura" m="dark"`
-// renders light rather than layering these tokens over the dark primitives.
-// The rubix shell resolves aura's mode to light for the same reason (see THEMES
-// in static/src/ts/shell.ts). To give aura a real dark variant, add an
-// `[t="aura"][m="dark"]` block covering the primitives *and* the tokens below,
-// then drop it from `$light-only` and add 'dark' to aura's `modes`.
-[t="aura"], .theme-aura {
+// Aura ships both palettes: this block is the light one, and the
+// `html[t="aura"][m="dark"]` block below re-points every token in it for dark. The
+// two must stay token-for-token in step — a token set here and missed there
+// leaks a light value into dark mode, because this block is mode-agnostic and
+// so applies in both.
+html[t="aura"], body[t="aura"], html.theme-aura, body.theme-aura {
   --zn-backdrop-color: rgba(30, 27, 60, 0.45);
 
   --zn-color-text: 42, 32, 89;
@@ -384,7 +382,113 @@ ul.square {
   --navbar-page-inactive-tab-background: rgba(255, 255, 255, 0.5);
   --navbar-page-inactive-tab-filter: none;
 
+  // Aurora gradient behind the zn-page header, plus the weight of the wave
+  // artwork layered on top of it (components/page/page.scss). Held still — see
+  // the PERF note there before reintroducing any drift.
+  --zn-page-header-aurora: linear-gradient(225deg, rgba(233, 227, 255, 1) 0%, rgba(214, 246, 245, 1) 40%, rgba(233, 227, 255, 1) 100%), linear-gradient(180deg, rgba(129, 153, 217, 0) 0%, rgba(0, 0, 0, 1) 100%);
+  --zn-page-header-wave-opacity: 0.04;
+
   .zn-primary {
     color: rgb(var(--zn-color-primary));
+  }
+}
+
+// Aura dark — the same violet identity drawn over the dark primitives, on a
+// deep navy canvas rather than a bespoke hue.
+//
+// The canvas colour is deliberate: `--zn-color-body` is the exact navy the
+// rubix shell chrome paints itself (`--rx-shell-header-bg: 19, 29, 45`, set in
+// the aura-dark block of static/src/scss/shell/_header.scss — deeper than the
+// 40, 55, 80 aura light mode uses), so the top bar, the app navigation and the
+// page body read as one continuous surface with panels lifted above it.
+//
+// Specificity note: the selectors are deliberately `html[…]`/`body[…]` (a type
+// selector plus attributes) rather than `:root[…]`. That keeps the ordering the
+// bare selectors used to have: `html[t="aura"][m="dark"]` (0,2,1) outranks both
+// `:root[m="dark"]` (0,2,0) from `#{modes.$dark}` and the mode-agnostic
+// `html[t="aura"]` (0,1,1), which in turn still loses to `:root[m="dark"]` the
+// way `[t="aura"]` (0,1,0) did. `:root[t="aura"]` would have been (0,2,0) and
+// silently started beating the dark block. This one stays last in the file.
+html[t="aura"][m="dark"], body[t="aura"][m="dark"],
+html.theme-aura.theme-dark, body.theme-aura.theme-dark {
+  --zn-backdrop-color: rgba(8, 12, 24, 0.65);
+
+  --zn-color-text: 226, 228, 242;
+  --zn-color-muted-text: 154, 163, 190;
+
+  --zn-color-base: 30, 41, 61;
+  // Matches --rx-shell-header-bg in the rubix shell (its aura-dark block in
+  // static/src/scss/shell/_header.scss) — change both together.
+  --zn-color-body: 19, 29, 45;
+  --zn-color-navigation: var(--zn-color-base);
+  --zn-color-navigation-hightlight: 35, 47, 70;
+  --zn-color-border: 64, 82, 113;
+  --zn-color-border-active: 92, 111, 145;
+  --zn-color-tab: 33, 45, 66;
+  // A few points of lift reads as an outline rather than a surface, so the
+  // panel steps well clear of the body. #223555 — the top of the ladder:
+  // body 19,29,45 -> page canvas 31,45,70 -> panel 34,53,85.
+  --zn-color-panel: 34, 53, 85;
+
+  --zn-color-primary: 163, 140, 250;
+  --zn-color-info: 96, 148, 232;
+  --zn-color-success: 116, 199, 140;
+  --zn-color-warning: 245, 183, 105;
+  --zn-color-error: 244, 106, 126;
+  --zn-color-disabled: 118, 130, 152;
+
+  // Theme-specific leaf tokens — the mirror of the light block above.
+  --zn-panel-opacity: 1;
+  --zn-shadow: 12, 18, 32;
+  --zn-panel-secondary: 46 61 88;
+  --zn-panel-highlight: 66, 86, 120;
+  // NOT the classic dark 0.1: on a lifted palette a 10% wash leaves hover and
+  // selected rows indistinguishable from the panel they sit on.
+  --zn-panel-highlight-opacity: 1;
+  --zn-input-bg-accent: 34, 46, 68;
+  --zn-bright-bg: 52, 69, 99;
+  --zn-light-text: 168, 176, 201;
+  --zn-dark-text: 226, 228, 242;
+  --zn-purple-text: 178, 158, 252;
+  --zn-accent: 96, 196, 220;
+
+  // #{modes.$dark} hardcodes the base dark theme's own accent here; aura owns
+  // its accent in both modes, so re-point both this and .zn-primary below.
+  //
+  // Deliberately NOT var(--zn-color-primary): aura dark's *interactive* accent is
+  // a cyan, while its identity accent stays violet. --zn-primary is what buttons,
+  // the navbar, tabs, toggles, radios, progress bars, steppers and pagination
+  // read; --zn-color-primary (still violet above) is what inputs, checkboxes,
+  // selects, dialogs and the .zn-primary text utility read.
+  --zn-primary: 126, 238, 255;
+  // A fill this light is unreadable under the default white ink (1.35:1), so the
+  // paired ink drops to the shell navy — 12.6:1 on the cyan. zn-button declares
+  // the pair as --btn-color / --btn-ink for exactly this case.
+  --zn-color-on-primary: 19, 29, 45;
+
+  --base: 0, 0, 0;
+  --inverse-base: 255, 255, 255;
+
+  // Frosted-glass inactive tabs — see the light block for why there is no
+  // backdrop-filter. Inverted against the light block: on the deep aurora an
+  // inactive tab recedes by being *darker* than the gradient, not lighter.
+  --navbar-page-inactive-tab-background: rgba(0, 0, 0, 0.30);
+  --navbar-page-inactive-tab-filter: none;
+
+  // The page canvas sits a step above the navy shell surface, so the page reads
+  // as a sheet laid on the chrome rather than a hole in it (components/page/page.scss).
+  --zn-page-canvas: 31, 45, 70;
+
+  // The dark aurora: the light gradient's violet -> teal -> violet sweep taken
+  // down to full-strength indigo/teal so the page title's light ink reads on it.
+  --zn-page-header-aurora: linear-gradient(225deg, rgb(76 42 202) 0%, rgb(0 100 150) 40%, rgb(56 40 115) 100%), linear-gradient(180deg, rgb(31 50 103 / 0%) 0%, rgb(0, 0, 0) 100%);
+  // The violet wave artwork lifts rather than darkens here, so it can carry
+  // more weight than the 0.04 the pale light gradient tolerates.
+  --zn-page-header-wave-opacity: 0.10;
+
+  .zn-primary {
+    // !important to beat #{modes.$dark}'s own `.zn-primary { ... !important }`,
+    // which ties on specificity.
+    color: rgb(var(--zn-color-primary)) !important;
   }
 }

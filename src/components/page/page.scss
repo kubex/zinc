@@ -14,6 +14,10 @@
   --zn-page-texture-size: auto;
   --zn-page-content-background: var(--zn-body);
   --zn-page-header-background: var(--zn-page-surface-background, var(--zn-page-background, var(--zn-body)));
+  // A modal shell overlays its own close button at --zn-base-gap from the page edge;
+  // these describe it so the header can keep clear of it.
+  --zn-page-closer-size: 36px;
+  --zn-page-closer-gap: var(--zn-spacing-x-small);
 }
 
 :host([panel]) {
@@ -151,6 +155,7 @@
     justify-content: space-between;
     gap: 2px;
     max-width: 100%;
+    min-width: 0;
     min-height: 36px;
 
     a {
@@ -168,14 +173,14 @@
     gap: var(--zn-spacing-x-small);
     min-height: 36px;
     flex-shrink: 1;
+    min-width: 0;
     max-width: 100%;
   }
 
   &__right {
     flex-grow: 1;
-    flex-shrink: 1;
+    flex-shrink: 0;
     overflow: hidden;
-    min-width: 20px;
   }
 
   &__caption {
@@ -198,6 +203,7 @@
   &__description {
     @include wc.text-style(subheading);
     display: block;
+    overflow-wrap: anywhere;
   }
 
   .breadcrumb {
@@ -365,6 +371,12 @@ zn-navbar {
 
 :host .header {
   padding-inline: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
+}
+
+// The gutter shrinks to 0 on narrow containers, which would run the header actions
+// under the closer. Reserving the closer's own footprint holds the gap steady instead.
+:host([modal]) .header {
+  padding-inline-end: calc(var(--zn-base-gap, 0) + var(--zn-page-closer-size) + var(--zn-page-closer-gap));
 }
 
 :host zn-navbar {

@@ -35,7 +35,10 @@
   background-color: var(--arrow-color);
   text-align: start;
   white-space: normal;
-  color: white;
+  // The bubble is painted in --arrow-color, which resolves to --zn-color-text,
+  // so the ink has to be the surface colour rather than a fixed white — on any
+  // dark theme the text colour is light and white-on-light is unreadable.
+  color: rgb(var(--zn-color-base, 255, 255, 255));
   padding: var(--zn-spacing-x-small) var(--zn-spacing-small);
   pointer-events: none;
   user-select: none;

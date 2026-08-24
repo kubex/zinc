@@ -276,33 +276,36 @@ zn-popup::part(popup) {
 }
 
 
+// Colour variants fill the row on hover, so the label switches to the matching
+// --zn-color-on-* ink rather than a hardcoded white (which disappears on a
+// light accent such as velocity's neon lime).
 .menu-item--primary {
   --color: rgba(var(--zn-primary), 0.9);
-  --hover-color: #ffffff;
+  --hover-color: rgb(var(--zn-color-on-primary, 255, 255, 255));
   --hover-bg: rgba(var(--zn-primary), 0.9);
 }
 
 .menu-item--error {
   --color: rgb(var(--zn-color-error));
-  --hover-color: #ffffff;
+  --hover-color: rgb(var(--zn-color-on-error, 255, 255, 255));
   --hover-bg: rgba(var(--zn-color-error), 0.9);
 }
 
 .menu-item--info {
   --color: rgb(var(--zn-color-info));
-  --hover-color: #ffffff;
+  --hover-color: rgb(var(--zn-color-on-info, 255, 255, 255));
   --hover-bg: rgba(var(--zn-color-info), 0.9);
 }
 
 .menu-item--warning {
   --color: rgb(var(--zn-color-warning));
-  --hover-color: #ffffff;
+  --hover-color: rgb(var(--zn-color-on-warning, 255, 255, 255));
   --hover-bg: rgba(var(--zn-color-warning), 0.9);
 }
 
 .menu-item--success {
   --color: rgb(var(--zn-color-success));
-  --hover-color: #ffffff;
+  --hover-color: rgb(var(--zn-color-on-success, 255, 255, 255));
   --hover-bg: rgba(var(--zn-color-success), 0.9);
 }
 

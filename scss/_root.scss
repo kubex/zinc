@@ -78,6 +78,22 @@
 :root {
   --zn-primary: var(--zn-color-primary);
 
+  // Ink colours — text and icons painted ON TOP of a filled colour surface
+  // (solid buttons, active menu items, badges). Every theme so far uses a
+  // colour dark enough for white ink, so white is the default; a theme with a
+  // light or high-luminance accent (neon lime, amber, mint) must override the
+  // matching token or its filled controls become unreadable.
+  //
+  // Declared as RGB triplets so they compose with rgba() the same way the rest
+  // of the palette does. Components that consume them are inside shadow roots
+  // that do not load this file, so they always pass a `255, 255, 255` fallback.
+  --zn-color-on-primary: 255, 255, 255;
+  --zn-color-on-info: 255, 255, 255;
+  --zn-color-on-success: 255, 255, 255;
+  --zn-color-on-warning: 255, 255, 255;
+  --zn-color-on-error: 255, 255, 255;
+  --zn-color-on-accent: 255, 255, 255;
+
   // Brand Colors
   --zn-red: 237, 84, 109;
   --zn-blue: 100, 117, 242;

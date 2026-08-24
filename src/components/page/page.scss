@@ -8,6 +8,10 @@
   height: 100%;
   min-height: 0;
   container-type: inline-size;
+  // Optional decorative layer tiled across the page canvas (header + content).
+  // A theme sets it to an image and its tile size; unset it costs nothing.
+  --zn-page-texture: none;
+  --zn-page-texture-size: auto;
   --zn-page-content-background: var(--zn-body);
   --zn-page-header-background: var(--zn-page-surface-background, var(--zn-page-background, var(--zn-body)));
 }
@@ -30,7 +34,11 @@
   top: 0;
   z-index: 2;
   box-sizing: border-box;
-  background: rgba(var(--zn-page-header-background), 95%);
+  background-color: rgba(var(--zn-page-header-background), 95%);
+  background-image: var(--zn-page-texture);
+  background-repeat: repeat;
+  background-position: center top;
+  background-size: var(--zn-page-texture-size);
 
   &::after {
     content: '';
@@ -173,6 +181,8 @@
   &__caption {
     font-weight: var(--zn-text-h1-font-weight);
     font-size: var(--zn-text-h1-font-size);
+    text-transform: var(--zn-text-h1-transform, none);
+    letter-spacing: var(--zn-text-h1-letter-spacing, normal);
     color: rgba(var(--zn-text-panel-title), 100%);
     line-height: var(--zn-spacing-medium);
     margin: 0;
@@ -303,7 +313,11 @@
   overflow: visible;
   box-sizing: border-box;
   padding: 0 var(--zn-base-gap) var(--zn-base-gap);
-  background: rgb(var(--zn-page-content-background, var(--zn-body)));
+  background-color: rgb(var(--zn-page-content-background, var(--zn-body)));
+  background-image: var(--zn-page-texture);
+  background-repeat: repeat;
+  background-position: center top;
+  background-size: var(--zn-page-texture-size);
 }
 
 .page__tabs .page__content {

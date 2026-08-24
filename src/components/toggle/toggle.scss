@@ -31,7 +31,11 @@
   border-radius: 12px;
   align-items: center;
   background-color: rgb(var(--zn-color-tab));
-  border: 0.92px solid rgb(var(--zn-color-tab));
+  // The unchecked track needs an edge of its own. --zn-color-tab sits close to
+  // the surface behind it on dark themes, which left the switch reading as a
+  // free-floating knob with no discoverable control boundary. The checked state
+  // below repaints the border in the accent colour.
+  border: 0.92px solid rgb(var(--zn-border-color));
   margin: var(--zn-toggle-margin);
   transition: color .2s ease-in-out, background-color .4s ease-in-out, border-color .2s ease-in-out;
 }
@@ -46,6 +50,9 @@
 
   .switch__control {
     left: calc(100% - 20.32px - 0.92px);
+    // The knob carries the on/off state, so it takes the on-primary ink: a
+    // white knob on a light accent (neon lime, amber) is invisible.
+    background: rgb(var(--zn-color-on-primary, 255, 255, 255));
   }
 }
 

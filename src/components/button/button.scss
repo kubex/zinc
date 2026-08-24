@@ -17,7 +17,12 @@
 .button {
   @include shared.button;
 
+  // --btn-color paints the fill; --btn-ink is the text/icon colour that sits
+  // on top of it. They are declared as a pair so a theme with a light accent
+  // (e.g. neon lime) can re-point the ink via --zn-color-on-* without any
+  // component-level override.
   --btn-color: var(--zn-primary);
+  --btn-ink: var(--zn-color-on-primary, 255, 255, 255);
   --notification-color: rgb(var(--zn-color-error));
 
   border-width: var(--zn-button-border-width, 1px);
@@ -31,18 +36,22 @@
 
   &.button--info {
     --btn-color: var(--zn-color-info);
+    --btn-ink: var(--zn-color-on-info, 255, 255, 255);
   }
 
   &.button--error {
     --btn-color: var(--zn-color-error);
+    --btn-ink: var(--zn-color-on-error, 255, 255, 255);
   }
 
   &.button--warning {
     --btn-color: var(--zn-color-warning);
+    --btn-ink: var(--zn-color-on-warning, 255, 255, 255);
   }
 
   &.button--success {
     --btn-color: var(--zn-color-success);
+    --btn-ink: var(--zn-color-on-success, 255, 255, 255);
   }
 
   &__label--hidden {
@@ -131,7 +140,7 @@
 
   background-color: rgba(var(--btn-color));
   border-color: var(--zn-button-border-color, rgb(var(--btn-color)));
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(var(--btn-ink), 0.9);
 
   &:hover:not([disabled]) {
     background-color: rgba(var(--btn-color), 0.8);
@@ -154,7 +163,7 @@
 
   &:hover:not([disabled]), &:active:not([disabled]) {
     background-color: rgb(var(--btn-color));
-    color: white;
+    color: rgb(var(--btn-ink));
   }
 
   &.button--secondary {
@@ -219,9 +228,10 @@
 
 .button--star {
   --btn-color: var(--zn-orange);
+  --btn-ink: var(--zn-color-on-warning, 255, 255, 255);
   background-color: rgb(var(--btn-color));
   border-color: var(--zn-button-border-color, rgb(var(--btn-color)));
-  color: white;
+  color: rgb(var(--btn-ink));
   opacity: 1 !important;
 
   &:hover:not([disabled]) {
@@ -239,7 +249,7 @@
 
     &:hover:not([disabled]), &:active:not([disabled]) {
       background-color: rgba(var(--btn-color));
-      color: white;
+      color: rgb(var(--btn-ink));
     }
   }
 }

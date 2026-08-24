@@ -12,6 +12,7 @@
  *   --zn-text-<role>-font-weight
  *   --zn-text-<role>-color
  *   --zn-text-<role>-transform
+ *   --zn-text-<role>-letter-spacing
  *
  * All roles use the sans family (--zn-font-sans). Apply a role
  * in a component with the text-style() mixin from scss/mixins.
@@ -59,5 +60,6 @@ $text-styles: (
       --zn-text-#{$role}-color: var(--zn-text-color);
     }
     --zn-text-#{$role}-transform: #{map.get($style, "transform")};
+    --zn-text-#{$role}-letter-spacing: var(--zn-letter-spacing-normal, normal);
   }
 }

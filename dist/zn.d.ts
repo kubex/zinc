@@ -38,6 +38,7 @@ declare module "internal/tabbable" {
 declare module "internal/theme" {
     import { SignalWatcher } from '@lit-labs/signals';
     export const themeSignal: import("@lit-labs/signals").Signal.State<string>;
+    export const modeSignal: import("@lit-labs/signals").Signal.State<string>;
     export function installThemeListener(): void;
     export { SignalWatcher };
 }
@@ -68,6 +69,7 @@ declare module "internal/zinc-element" {
         dir: string;
         lang: string;
         t: string;
+        m: string;
         protected willUpdate(changed: PropertyValues): void;
         static define(name: string, elementConstructor?: typeof ZincElement, options?: ElementDefinitionOptions): void;
         static dependencies: Record<string, typeof ZincElement>;

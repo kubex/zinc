@@ -106,6 +106,10 @@ export default class ZnChart extends ZincElement {
   }
 
   private getTheme(): 'light' | 'dark' {
+    // `m` is the rendered mode; `t` is the theme family. Fall back to `t` for
+    // hosts that still only set the legacy `t="dark"`.
+    if (this.getAttribute('m') === 'dark') return 'dark';
+    if (this.getAttribute('m') === 'light') return 'light';
     return this.getAttribute('t') === 'dark' ? 'dark' : 'light';
   }
 

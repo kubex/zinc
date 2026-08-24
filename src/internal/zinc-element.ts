@@ -1,6 +1,6 @@
 import {LitElement, type PropertyValues} from "lit";
 import {property} from "lit/decorators.js";
-import {SignalWatcher, themeSignal} from "./theme";
+import {modeSignal, SignalWatcher, themeSignal} from "./theme";
 import type {
   EventTypeDoesNotRequireDetail,
   EventTypeRequiresDetail,
@@ -19,13 +19,15 @@ const ZincElementBase: typeof LitElement & Constructor<SignalWatcherApi> = Signa
 export default class ZincElement extends ZincElementBase {
   @property() dir: string; // LTR or RTL direction
   @property() lang: string; // Language
-  @property({reflect: true}) t: string; // Theme (light or dark)
+  @property({reflect: true}) t: string; // Theme family (base, aura, ...)
+  @property({reflect: true}) m: string; // Rendered mode (light or dark)
 
   protected override willUpdate(changed: PropertyValues): void {
-    // Reading themeSignal here subscribes this component to theme changes
-    // via the SignalWatcher mixin. The reflected `t` attribute keeps existing
-    // CSS selectors like `[t="dark"]` working.
+    // Reading these signals here subscribes this component to theme changes via
+    // the SignalWatcher mixin. The reflected attributes keep CSS selectors like
+    // `[m="dark"]` and `:host-context([t="aura"])` working inside shadow roots.
     this.t = themeSignal.get();
+    this.m = modeSignal.get();
     super.willUpdate(changed);
   }
 

@@ -2,6 +2,7 @@
 @use "sass:color";
 @use "sass:meta";
 @use "variables";
+@use "themes/modes";
 
 :root {
   --zn-base-px: 8px;
@@ -16,7 +17,7 @@
   --zn-font-family-mono: 'Roboto Mono', monospace;
 }
 
-:root, [t="light"], .theme-light {
+#{modes.$light} {
   --zn-backdrop-color: rgba(0, 0, 0, 0.5);
 
   --zn-color-text: 33, 33, 33;
@@ -39,7 +40,7 @@
   --zn-color-disabled: 181, 181, 181;
 }
 
-[t="dark"], .theme-dark {
+#{modes.$dark} {
   --zn-backdrop-color: rgba(0, 0, 0, 0.85);
 
   --zn-color-text: 215, 215, 215;
@@ -147,7 +148,7 @@
   font-size: var(--zn-font-size-x-large);
 }
 
-:root, [t="light"], .theme-light, [t="dark"], .theme-dark {
+#{modes.$light}, #{modes.$dark} {
   --zn-body: var(--zn-color-body);
 
   --zn-text: var(--zn-color-text);
@@ -160,8 +161,8 @@
   --zn-input-bg: var(--zn-color-body);
 }
 
-[t="light"], .theme-light {
-  // Theme Light
+#{modes.$light} {
+  // Light mode
   --zn-panel-opacity: 1;
   --zn-shadow: 236, 235, 249;
 
@@ -179,8 +180,8 @@
   }
 }
 
-[t="dark"], .theme-dark {
-  // Theme Dark
+#{modes.$dark} {
+  // Dark mode
   --zn-shadow: 10, 10, 10;
   --zn-panel-secondary: 27, 27, 30;
   --zn-panel-opacity: 1;
@@ -328,6 +329,14 @@ ul.square {
 // Only the source colour tokens and the theme-specific leaf tokens are set;
 // derived tokens (--zn-body, --zn-text, --zn-panel ...) reference these via
 // var() and follow automatically.
+//
+// Aura ships a light palette only, so it is listed in `$light-only` in
+// themes/_modes.scss and excluded from the dark selector: `t="aura" m="dark"`
+// renders light rather than layering these tokens over the dark primitives.
+// The rubix shell resolves aura's mode to light for the same reason (see THEMES
+// in static/src/ts/shell.ts). To give aura a real dark variant, add an
+// `[t="aura"][m="dark"]` block covering the primitives *and* the tokens below,
+// then drop it from `$light-only` and add 'dark' to aura's `modes`.
 [t="aura"], .theme-aura {
   --zn-backdrop-color: rgba(30, 27, 60, 0.45);
 

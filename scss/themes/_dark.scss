@@ -1,5 +1,8 @@
-[t="dark"],
-.theme-dark {
+@use "modes";
+
+// Dark mode primitives — see themes/_modes.scss for the `m` / `t` split, and
+// for why light-only themes are excluded from this selector.
+#{modes.$dark} {
   color-scheme: dark;
 
   /**************************************************************

@@ -157,6 +157,65 @@ outgrows the 20rem cap set here."
 ></zn-remarkd-editor>
 ```
 
+### Actions
+
+The toolbar and the `/` slash menu are driven by one shared registry of actions, grouped
+under ten headings: **Text**, **Inline**, **Lists**, **Admonitions**, **Blocks**,
+**Structured**, **Media**, **Objects**, **Breaks**, and **Logic**. The toolbar shows as
+many groups as fit its width and folds the rest into an overflow menu; the slash menu
+carries every action regardless of width, and typing narrows it by label or keyword — so
+a folded toolbar group is never actually out of reach.
+
+{% raw %}
+
+```html:preview
+<zn-remarkd-editor value='{{button:action text="Get started" href=/}}
+
+{{video:dQw4w9WgXcQ source=youtube}}
+
+{{reflist}}'></zn-remarkd-editor>
+```
+
+{% endraw %}
+
+### Inline Formatting
+
+Inline actions — Strong, Emphasis, Code, Underline, Strikethrough, Highlight, and the
+rest of the Inline group — apply to the current selection inside the block being edited,
+so they only make sense while a block is open: the toolbar disables them until one is
+(the slash menu lists them regardless, since it can only ever open inside a block in the
+first place). Choosing one from the toolbar wraps the selection in its mark, or — with
+nothing selected — inserts a placeholder inside the mark with the placeholder selected so
+typing replaces it; from the slash menu it always inserts the full construct with the
+caret collapsed at the start of the placeholder, since there is no selection to wrap.
+Choosing the same action again on a selection that already carries the mark unwraps it
+rather than nesting a second one.
+
+```html:preview
+<zn-remarkd-editor value="Click into this block, select a word, then choose Strong or Emphasis from the toolbar."></zn-remarkd-editor>
+```
+
+### Variables and Conditionals
+
+The Logic group's actions insert document attributes (`:name: value`) and remarkd's
+conditional directives (`ifdef`, `ifndef`, `ifeval`) — but the editor only ever *marks*
+them, it never evaluates them: an attribute line renders as a chip, a `{name}` reference
+in surrounding text renders as a token, and an `ifdef`/`ifndef`/`ifeval` range renders as
+a labelled wrapper whose content stays visible regardless of whether the flag is defined.
+Evaluating conditionals belongs to the renderer the finished document is published
+through, not to this editor — showing both branches of an if/else here means neither one
+ever disappears while you're still editing it.
+
+```html:preview
+<zn-remarkd-editor value=":product: Remarkd
+
+This documents {product}.
+
+ifdef::beta[]
+Only for the beta.
+endif::[]"></zn-remarkd-editor>
+```
+
 ### Form Integration
 
 `zn-remarkd-editor` is a [form control](/getting-started/form-controls); its

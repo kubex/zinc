@@ -8,6 +8,9 @@
   border-radius: var(--zn-border-radius);
   width: fit-content;
   min-width: var(--zn-size-spanel);
+  // Unconstrained by default — a consumer that needs the menu to scroll inside a bounded
+  // popup (rather than growing to fit all its items) sets this custom property.
+  max-height: var(--zn-menu-max-height, none);
   overflow: auto;
   overscroll-behavior: none;
   box-shadow: 0 4px 8px -4px rgba(33, 33, 33, 0.1);

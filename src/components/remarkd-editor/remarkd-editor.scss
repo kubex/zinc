@@ -23,9 +23,33 @@
   display: flex;
   flex: none;
   gap: 2px;
-  flex-wrap: wrap;
+  // Collapsing overflow into the "more" menu replaces wrapping — see ToolbarOverflowController.
+  flex-wrap: nowrap;
   padding: var(--zn-spacing-x-small);
   border-bottom: 1px solid rgb(var(--zn-border-color));
+}
+
+.toolbar__group {
+  display: flex;
+  flex-shrink: 0;
+  gap: 2px;
+  align-items: center;
+}
+
+.toolbar__group + .toolbar__group::before {
+  content: '';
+  align-self: stretch;
+  margin-inline: 4px;
+  border-left: 1px solid rgb(var(--zn-border-color));
+}
+
+// The constraint has to land on zn-menu's own scroll container (--zn-menu-max-height),
+// not the host: the host has room to spare (nothing to chain a wheel-over-an-item to), so
+// putting the cap on the host left the inner list unscrollable except at its edge. The
+// popup auto-sizes to the space it actually has (--auto-size-available-height); 60dvh is
+// only the fallback for when that variable isn't published.
+.remarkd-editor__toolbar-more zn-menu {
+  --zn-menu-max-height: var(--auto-size-available-height, 60dvh);
 }
 
 .remarkd-editor__body {
@@ -263,6 +287,49 @@
 .remarkd-editor__include-link {
   margin-left: auto;
   font-size: var(--zn-font-size-small);
+}
+
+.remarkd-editor__conditional {
+  border-left: 3px solid rgba(var(--zn-primary), 0.5);
+  padding-left: var(--zn-spacing-small);
+}
+
+.remarkd-editor__conditional-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: var(--zn-spacing-x-small);
+  color: rgb(var(--zn-primary));
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.remarkd-editor__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--zn-spacing-x-small);
+}
+
+.remarkd-editor__variable {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--zn-spacing-x-small);
+  padding: 2px var(--zn-spacing-x-small);
+  border: 1px dashed rgb(var(--zn-border-color));
+  border-radius: var(--zn-border-radius);
+  font-size: 0.875rem;
+}
+
+.remarkd-editor__variable-name { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.remarkd-editor__variable-state { color: rgb(var(--zn-text-body)); font-style: italic; }
+
+.remarkd-editor__var {
+  padding: 0 2px;
+  border-radius: 3px;
+  background: rgba(var(--zn-primary), 0.12);
+  color: rgb(var(--zn-primary));
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 .remarkd-editor__include-picker {

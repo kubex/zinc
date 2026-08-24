@@ -8,8 +8,8 @@ import ZnIcon from "../icon";
 import ZnMenuItem from "../menu-item";
 import ZnTooltip from "../tooltip";
 
-import styles from './menu.scss';
 import { classMap } from "lit/directives/class-map.js";
+import styles from './menu.scss';
 
 interface NavItem {
   title: string;
@@ -44,6 +44,8 @@ interface NavItem {
  * @csspart base - The component's base wrapper.
  *
  * @cssproperty --example - An example CSS custom property.
+ * @cssproperty --zn-menu-max-height - Caps the menu's height and makes it scroll internally.
+ *  Unset (`none`) by default, so the menu grows to fit its items unless a consumer sets this.
  */
 export default class ZnMenu extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -101,6 +103,7 @@ export default class ZnMenu extends ZincElement {
   render() {
     return html`
       <div
+        part="base"
         class="${classMap({
           'menu': true,
           'menu--shell': this.variant === 'shell',

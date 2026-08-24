@@ -1,13 +1,19 @@
+import {ACTION_GROUPS, EDITOR_ACTIONS, slashItems} from './actions';
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, type PropertyValues, type TemplateResult, unsafeCSS} from 'lit';
 import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
 import {property, query, state} from 'lit/decorators.js';
 import {parse as remarkdParse} from "remarkd-js";
+import {ToolbarOverflowController} from '../../internal/toolbar-overflow';
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
+import ZnDropdown from "../dropdown";
+import ZnMenu from "../menu";
+import ZnMenuItem from "../menu-item";
 import ZnSlashMenu, {SlashMenuController, type SlashMenuItem} from "../slash-menu";
+import type {EditorAction, InlineMark} from './actions';
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type ZnFile from "../file";
 
@@ -17,16 +23,6 @@ interface UploadResponse {
   uploadPath: string;
   uploadUrl: string;
   originalFilename: string;
-}
-
-interface BlockType {
-  label: string;
-  icon: string;
-  prefix?: string;
-  /** Where the caret lands within `prefix`. Defaults to the end. */
-  caretOffset?: number;
-  image?: boolean;
-  include?: boolean;
 }
 
 interface ImageBlockData {
@@ -53,21 +49,69 @@ interface IncludeOption {
   url?: string;
 }
 
-const BLOCK_TYPES: BlockType[] = [
-  {label: 'Text', icon: 'text@lu', prefix: ''},
-  {label: 'Heading 1', icon: 'heading-1@lu', prefix: '# '},
-  {label: 'Heading 2', icon: 'heading-2@lu', prefix: '## '},
-  {label: 'Heading 3', icon: 'heading-3@lu', prefix: '### '},
-  {label: 'Note', icon: 'info@lu', prefix: 'NOTE: '},
-  {label: 'Tip', icon: 'lightbulb@lu', prefix: 'TIP: '},
-  {label: 'Warning', icon: 'triangle-alert@lu', prefix: 'WARNING: '},
-  {label: 'Code', icon: 'code@lu', prefix: '```\n\n```', caretOffset: 4},
-  {label: 'Image', icon: 'image@lu', image: true},
-  {label: 'Include', icon: 'blocks@lu', include: true},
-];
-
 /** remarkd's include directive on a line of its own: `include::<target>[<label>]`. */
 const INCLUDE_LINE = /^include::([^[]+)\[(.*)]\s*$/;
+
+/** A document attribute definition: `:name: value`, `:flag:`, or `:flag!:` to unset. */
+const ATTRIBUTE_LINE = /^:([A-Za-z0-9_-]+)(!)?:\s*(.*)$/;
+
+/** A title line decorating whatever follows it: `.Title text`. `..` escapes a literal leading dot. */
+const TITLE_LINE = /^\.([^.\s].*)$/;
+
+/** A bracketed attribute/parameter line: `[.lead]`, `[%hardbreaks]`, `[verse]`, `[striped=true]`. */
+const BRACKET_LINE = /^\[.+]$/;
+
+/** A metadata line that renders empty on its own — an attribute, a title, or a bracket line. */
+type MetaLine =
+  | { kind: 'attribute'; name: string; value: string; unset: boolean }
+  | { kind: 'title'; text: string }
+  | { kind: 'bracket'; text: string };
+
+function parseMetaLine(line: string): MetaLine | null {
+  const attribute = ATTRIBUTE_LINE.exec(line);
+  if (attribute) return {kind: 'attribute', name: attribute[1], value: attribute[3], unset: !!attribute[2]};
+  const title = TITLE_LINE.exec(line);
+  if (title) return {kind: 'title', text: title[1]};
+  if (BRACKET_LINE.test(line)) return {kind: 'bracket', text: line};
+  return null;
+}
+
+/**
+ * A block that is nothing but metadata lines parses to an empty section — e.g. a lone
+ * `.Title` or `:name: value`. Mixed content (a title immediately followed by its body, no
+ * blank line) parses correctly on its own and must not be caught here.
+ */
+function parseMetaBlock(block: string): MetaLine[] | null {
+  const lines = block.split('\n').map(line => line.trim()).filter(line => line !== '');
+  if (!lines.length) return null;
+  const parsed: MetaLine[] = [];
+  for (const line of lines) {
+    const meta = parseMetaLine(line);
+    if (!meta) return null;
+    parsed.push(meta);
+  }
+  return parsed;
+}
+
+/** A remarkd table delimiter. Rows are separated by blank lines, so the whole table is one block. */
+const TABLE_FENCE = '|===';
+const TABLE_FENCE_LINE = /^\|={3,}$/;
+
+/**
+ * Block-form conditionals: empty brackets open a range closed by `endif::[]`.
+ * The inline forms (`iftrue::flag[text]`) carry their text in the brackets and stay single lines.
+ */
+const CONDITIONAL_OPEN = /^(?:ifdef|ifndef)::[^[]*\[]$/;
+const IFEVAL_OPEN = /^ifeval::\[[^\]]*]$/;
+const CONDITIONAL_END = /^endif::\[]$/;
+
+/**
+ * Single-line conditional forms carry their content inside non-empty brackets and evaluate
+ * immediately if handed to the parser verbatim: iftrue/iffalse/ifnempty match no parser rule
+ * (rendering an empty section) and ifempty is genuinely evaluated. Marked the same way as the
+ * block forms instead — never evaluated.
+ */
+const CONDITIONAL_INLINE = /^(ifdef|ifndef|iftrue|iffalse|ifempty|ifnempty)::([^[]+)\[([^\]]+)]\s*$/;
 
 /**
  * The marker a document body carries for an embed. Mirrors app-kb's
@@ -79,10 +123,162 @@ function includeMarker(id: string, title: string): string {
   return `include::${id}[${label}]`;
 }
 
-/** The block types as slash menu insertions. Image opens the picker, so it inserts nothing. */
-const SLASH_ITEMS: SlashMenuItem[] = BLOCK_TYPES.map(item => item.image || item.include
-  ? {label: item.label, icon: item.icon, action: item.image ? 'image' : 'include'}
-  : {label: item.label, icon: item.icon, value: item.prefix ?? '', caretOffset: item.caretOffset});
+const SLASH_ITEMS = slashItems(EDITOR_ACTIONS);
+
+/**
+ * For an asymmetric mark whose closer embeds a variable payload in parentheses — Link's
+ * `](https://)`, Tooltip's `}(Explanation)` — matches the closer by its fixed prefix rather
+ * than the placeholder text, so a real URL or explanation of a different length still counts
+ * as "already wrapped". Returns null for a mark with no such payload (Keyboard, Footnote,
+ * Cross reference, …), which keeps comparing `after` literally.
+ */
+function closerPattern(after: string): RegExp | null {
+  const paren = after.indexOf('(');
+  if (paren === -1 || !after.endsWith(')')) return null;
+  const fixed = after.slice(0, paren).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(`^${fixed}\\([^)]*\\)`);
+}
+
+/** The parser throws on some incomplete input — `t::partial::` with no path raises EISDIR. */
+function safeParse(source: string): string {
+  try {
+    return remarkdParse(source);
+  } catch {
+    // Show the source as-is rather than losing the block while it is being typed.
+    return `<pre class="remarkd-editor__unparsed">${source.replace(/[&<>]/g,
+      ch => ({'&': '&amp;', '<': '&lt;', '>': '&gt;'}[ch]!))}</pre>`;
+  }
+}
+
+/** A conditional's interior, split so no directive line ever reaches the parser (see below). */
+type ConditionalPart =
+  | { kind: 'content'; lines: string[] }
+  | { kind: 'nested'; label: string; parts: ConditionalPart[] };
+
+/**
+ * Depth-aware search for the `endif::[]` that closes the range opened at `lines[from - 1]`,
+ * mirroring the block splitter's own depth tracking above. Returns -1 for an unclosed range
+ * (which still must show its content, so callers treat that as "to the end").
+ */
+function findConditionalEnd(lines: string[], from: number): number {
+  let depth = 1;
+  for (let i = from; i < lines.length; i++) {
+    const trimmed = lines[i].trimEnd();
+    if (CONDITIONAL_OPEN.test(trimmed) || IFEVAL_OPEN.test(trimmed)) depth++;
+    else if (CONDITIONAL_END.test(trimmed) && --depth === 0) return i;
+  }
+  return -1;
+}
+
+/**
+ * Wording for what shows a conditional's content, keyed by directive — shared by the
+ * block-range label below and the single-line form's label.
+ */
+const CONDITIONAL_VERB: Record<string, string> = {
+  ifdef: 'is defined',
+  ifndef: 'is not defined',
+  iftrue: 'is true',
+  iffalse: 'is false',
+  ifempty: 'is empty',
+  ifnempty: 'is not empty',
+};
+
+/** The label describing when a conditional's content would apply, given its opening line. */
+function conditionalLabel(open: string): string {
+  if (IFEVAL_OPEN.test(open)) return `shown when ${open.slice('ifeval::['.length, -1)}`;
+  const directive = open.slice(0, open.indexOf('::'));
+  const expression = open.slice(open.indexOf('::') + 2, open.indexOf('['));
+  return `shown when ${expression} ${CONDITIONAL_VERB[directive] ?? 'is defined'}`;
+}
+
+/** The label for a single-line conditional, in the same wording as the block forms. */
+function inlineConditionalLabel(directive: string, flag: string): string {
+  return `shown when ${flag} ${CONDITIONAL_VERB[directive] ?? 'is defined'}`;
+}
+
+/**
+ * Splits a conditional's interior into plain-content runs and nested conditional ranges.
+ * `parse()` evaluates any directive line it sees, so a nested `ifdef`/`endif` pair handed to
+ * it verbatim renders empty — this walk keeps every directive line out of what gets parsed,
+ * however deep the nesting, so content is never lost to an unintentional evaluation.
+ */
+function splitConditionalParts(lines: string[]): ConditionalPart[] {
+  const parts: ConditionalPart[] = [];
+  let buffer: string[] = [];
+  const flush = () => {
+    if (buffer.length) parts.push({kind: 'content', lines: buffer});
+    buffer = [];
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    const trimmed = lines[i].trimEnd();
+    if (CONDITIONAL_OPEN.test(trimmed) || IFEVAL_OPEN.test(trimmed)) {
+      flush();
+      const end = findConditionalEnd(lines, i + 1);
+      const nestedInterior = lines.slice(i + 1, end === -1 ? undefined : end);
+      parts.push({kind: 'nested', label: conditionalLabel(trimmed), parts: splitConditionalParts(nestedInterior)});
+      i = end === -1 ? lines.length : end;
+      continue;
+    }
+    buffer.push(lines[i]);
+  }
+  flush();
+  return parts;
+}
+
+/**
+ * Renders a conditional's parts. A lone content run (the common case) keeps a single body
+ * div carrying the `remarkd-editor__rendered--parsed` marker directly — its content is pure
+ * parser output with no Lit bindings inside, so `markVariables` can safely mutate its text
+ * nodes. Once there is more than one part, or any nesting, the body becomes a plain
+ * container instead and the marker moves onto each content-run div individually: a nested
+ * wrapper's label is a Lit string binding, and the marker must never sit on an element whose
+ * subtree contains one, or a repeat render corrupts it the way Task 8 fixed.
+ */
+function renderConditionalParts(parts: ConditionalPart[]): TemplateResult {
+  const lone = parts.length === 1 && parts[0].kind === 'content' ? parts[0] : undefined;
+  if (parts.length === 0 || lone) {
+    const text = lone?.lines.join('\n').trim() ?? '';
+    return html`
+      <div class="remarkd-editor__conditional-body remarkd-rendered remarkd-editor__rendered--parsed">
+        ${text ? unsafeHTML(safeParse(text)) : ''}
+      </div>`;
+  }
+
+  return html`
+    <div class="remarkd-editor__conditional-body remarkd-rendered">
+      ${parts.map(part => {
+        if (part.kind === 'nested') return renderConditionalWrapper(part.label, part.parts);
+        const text = part.lines.join('\n').trim();
+        return text ? html`<div class="remarkd-editor__rendered--parsed">${unsafeHTML(safeParse(text))}</div>` : '';
+      })}
+    </div>`;
+}
+
+function renderConditionalWrapper(label: string, parts: ConditionalPart[]): TemplateResult {
+  return html`
+    <div part="conditional" class="remarkd-editor__conditional">
+      <span class="remarkd-editor__conditional-label">
+        <zn-icon src="git-branch@lu" size="14"></zn-icon>${label}
+      </span>
+      ${renderConditionalParts(parts)}
+    </div>`;
+}
+
+/**
+ * A single-line conditional (`iftrue::flag[Shown]`) as the same labelled wrapper the block
+ * forms use. Handed to the parser verbatim it either renders an empty section (iftrue,
+ * iffalse, ifnempty match no parser rule) or is genuinely evaluated (ifempty) — so the
+ * bracket text is parsed on its own and marked, never evaluated, exactly like the block forms.
+ */
+function renderInlineConditional(block: string): TemplateResult | null {
+  const trimmed = block.trim();
+  if (trimmed.includes('\n')) return null;
+  const match = CONDITIONAL_INLINE.exec(trimmed);
+  if (!match) return null;
+  const [, directive, flag, text] = match;
+  return renderConditionalWrapper(inlineConditionalLabel(directive, flag), [{kind: 'content', lines: [text]}]);
+}
 
 /**
  * @summary A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.
@@ -92,18 +288,23 @@ const SLASH_ITEMS: SlashMenuItem[] = BLOCK_TYPES.map(item => item.image || item.
  *
  * @dependency zn-button
  * @dependency zn-button-group
+ * @dependency zn-dropdown
  * @dependency zn-icon
  * @dependency zn-file
+ * @dependency zn-menu
+ * @dependency zn-menu-item
  * @dependency zn-slash-menu
  *
  * @event zn-input - Emitted on each keystroke while editing a block.
  * @event zn-change - Emitted when a block edit is committed and the value changes.
  *
  * @csspart base - The component's base wrapper.
- * @csspart toolbar - The always-visible block-insert toolbar.
+ * @csspart toolbar - The always-visible block-insert and inline-formatting toolbar.
  * @csspart raw-toggle - The button that switches between the block view and the raw source view.
  * @csspart block - A rendered block wrapper.
  * @csspart rendered - The rendered remarkd output of a block.
+ * @csspart conditional - A labelled wrapper for an ifdef/ifndef/ifeval/iftrue/iffalse/ifempty/ifnempty range.
+ * @csspart variable - A chip rendered for a document attribute, title, or bracket line.
  * @csspart input - The textarea shown while editing a block.
  * @csspart raw - The full-document textarea shown in raw source mode.
  * @csspart slash-menu - The `zn-slash-menu` opened by typing "/" in an empty block.
@@ -116,6 +317,9 @@ const SLASH_ITEMS: SlashMenuItem[] = BLOCK_TYPES.map(item => item.image || item.
 export default class ZnRemarkdEditor extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
   static dependencies = {
+    'zn-dropdown': ZnDropdown,
+    'zn-menu': ZnMenu,
+    'zn-menu-item': ZnMenuItem,
     'zn-slash-menu': ZnSlashMenu
   };
 
@@ -131,6 +335,11 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       ? SLASH_ITEMS.filter(item => item.action !== 'include' || !!this.includeUrl)
       : [],
     onSelect: item => this.handleSlashSelect(item)
+  });
+
+  private readonly toolbarOverflow = new ToolbarOverflowController(this, {
+    groups: () => [...(this.shadowRoot?.querySelectorAll<HTMLElement>('.toolbar__group') ?? [])],
+    container: () => this.shadowRoot?.querySelector<HTMLElement>('.remarkd-editor__toolbar'),
   });
 
   private editingDraft = '';
@@ -258,6 +467,13 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     if (this.hasIncludeBlock()) void this.loadIncludeOptions();
   }
 
+  protected updated(changedProperties: PropertyValues<this>) {
+    super.updated(changedProperties);
+    // Scoped to the parser-rendered branch only — see the class comment on the rendered div.
+    this.shadowRoot?.querySelectorAll('.remarkd-editor__rendered--parsed')
+      .forEach(rendered => this.markVariables(rendered));
+  }
+
   disconnectedCallback() {
     super.disconnectedCallback();
     this.cancelDrag();
@@ -283,13 +499,14 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
 
   /**
    * Splits remarkd source into blocks on blank lines, keeping fenced /
-   * delimited containers (``` ==== !!!! .... ----) as single blocks.
+   * delimited containers (``` ==== !!!! .... ---- ____ **** ////) as single blocks.
    */
   private splitBlocks(source: string): string[] {
     const lines = source.replace(/\r\n/g, '\n').split('\n');
     const blocks: string[] = [];
     let current: string[] = [];
     let fence: string | null = null;
+    let depth = 0;
 
     const push = () => {
       const text = current.join('\n').trim();
@@ -310,6 +527,18 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
         fence = marker;
         continue;
       }
+      if (depth > 0) {
+        current.push(line);
+        if (CONDITIONAL_OPEN.test(trimmed) || IFEVAL_OPEN.test(trimmed)) depth++;
+        else if (CONDITIONAL_END.test(trimmed) && --depth === 0) push();
+        continue;
+      }
+      if (CONDITIONAL_OPEN.test(trimmed) || IFEVAL_OPEN.test(trimmed)) {
+        push();
+        current.push(line);
+        depth = 1;
+        continue;
+      }
       if (INCLUDE_LINE.test(trimmed)) {
         push();
         current.push(line);
@@ -327,14 +556,18 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   }
 
   private fenceMarker(line: string): string | null {
+    if (TABLE_FENCE_LINE.test(line)) return TABLE_FENCE;
     const backticks = /^`{3,}/.exec(line);
     if (backticks) return backticks[0];
-    if (/^(={4,}|\.{4,}|-{4,}|!{4,})$/.test(line)) return line;
+    // `_{4,}`/`*{4,}`/`/{4,}` are Quote/Verse/Sidebar/Comment's delimiters — none collide with
+    // the 3-character Underline mark (`___`) or Divider (`---`), both below this floor.
+    if (/^(={4,}|\.{4,}|-{4,}|!{4,}|_{4,}|\*{4,}|\/{4,})$/.test(line)) return line;
     if (/^!!\S+!!$/.test(line)) return '!!!!';
     return null;
   }
 
   private closesFence(line: string, fence: string): boolean {
+    if (fence === TABLE_FENCE) return TABLE_FENCE_LINE.test(line);
     const char = fence[0];
     let count = 0;
     while (count < line.length && line[count] === char) count++;
@@ -444,14 +677,14 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     this.updateBlocks(blocks);
   }
 
-  private startEdit(index: number, draft?: string, align: 'nearest' | 'center' = 'nearest') {
+  private startEdit(index: number, draft?: string, align: 'nearest' | 'center' = 'nearest', caretOffset?: number) {
     if (this.disabled || this.readonly) return;
     this.editingDraft = draft ?? this.blocks[index] ?? '';
     this.editingIndex = index;
     this.imageEdit = null;
     this.editShell = this.computeEditShell(this.editingDraft);
     this.slashController.close();
-    void this.focusInput(align);
+    void this.focusInput(align, caretOffset);
   }
 
   private updateImageEdit(patch: Partial<ImageBlockData>) {
@@ -511,7 +744,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     return '';
   }
 
-  private async focusInput(align: 'nearest' | 'center' = 'nearest') {
+  private async focusInput(align: 'nearest' | 'center' = 'nearest', caretOffset?: number) {
     await this.updateComplete;
     const input = this.shadowRoot?.querySelector<HTMLTextAreaElement>('.remarkd-editor__input');
     if (input) {
@@ -521,7 +754,12 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       // preventScroll because the browser's own focus scroll walks every scrollable
       // ancestor — including the surrounding page panel. reveal() stays in the editor.
       input.focus({preventScroll: true});
-      input.setSelectionRange(input.value.length, input.value.length);
+      // Mirrors the slash menu's own clamp (slash-menu-controller's replace()) so a toolbar
+      // insert lands the caret in the same place a "/" insert of the same action would.
+      const caret = caretOffset === undefined
+        ? input.value.length
+        : Math.min(Math.max(caretOffset, 0), input.value.length);
+      input.setSelectionRange(caret, caret);
       this.reveal(input, align);
     }
     this.suppressBlurCommit = false;
@@ -598,12 +836,12 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   }
 
   /** Inserts a draft block — committed (or dropped, if left empty) on blur. */
-  private insertDraftBlock(index: number, prefill = '') {
+  private insertDraftBlock(index: number, prefill = '', caretOffset?: number) {
     if (this.disabled || this.readonly) return;
     const blocks = [...this.blocks];
     blocks.splice(index, 0, '');
     this.blocks = blocks;
-    this.startEdit(index, prefill, 'center');
+    this.startEdit(index, prefill, 'center', caretOffset);
   }
 
   /**
@@ -992,6 +1230,65 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     input.style.height = `${input.scrollHeight}px`;
   }
 
+  /**
+   * Applies an inline mark to the open block's textarea: wraps the selection, toggles the
+   * mark off when it is already wrapped, or inserts a selected placeholder when there is
+   * no selection. Goes through `editingDraft` so `zn-input` still fires.
+   */
+  private applyInline(mark: InlineMark) {
+    const input = this.shadowRoot?.querySelector<HTMLTextAreaElement>('.remarkd-editor__input');
+    if (!input) return;
+
+    const after = mark.after ?? mark.before;
+    const {selectionStart: start, selectionEnd: end, value} = input;
+    const selected = value.slice(start, end);
+
+    // A repeated-character mark nests inside its longer sibling (`~` within `~~`), so an
+    // exact run is required — a prefix match would strip one character from each side. Gated
+    // on symmetric marks only: asymmetric marks like Link (`[` … `](https://)`) share a
+    // trailing `)` that would otherwise misfire this guard on unrelated marks.
+    const symmetric = after === mark.before;
+    const repeated = symmetric && mark.before.length > 0
+      && mark.before === mark.before[0].repeat(mark.before.length);
+    const beforeMatches = value.slice(start - mark.before.length, start) === mark.before;
+
+    // Link/Tooltip's closer carries a real URL or explanation, not the placeholder text, so
+    // it is matched by pattern; its length is whatever the pattern actually consumed, not
+    // `after.length`, since a real payload is rarely the same length as the placeholder.
+    const closer = symmetric ? null : closerPattern(after);
+    const closerMatch = closer?.exec(value.slice(end)) ?? null;
+    const afterLength = closerMatch ? closerMatch[0].length : after.length;
+    const afterMatches = closer ? !!closerMatch : value.slice(end, end + after.length) === after;
+
+    const outerBefore = value[start - mark.before.length - 1];
+    const outerAfter = value[end + afterLength];
+    const wrapped = beforeMatches && afterMatches
+      && !(repeated && (outerBefore === mark.before[0] || outerAfter === after[after.length - 1]));
+
+    let next: string;
+    let caret: [number, number];
+    if (wrapped) {
+      next = value.slice(0, start - mark.before.length) + selected + value.slice(end + afterLength);
+      caret = [start - mark.before.length, start - mark.before.length + selected.length];
+    } else if (closer && beforeMatches) {
+      // A real opener with no matching closer pattern after it — decline to wrap rather than
+      // nesting a second opener in front of what may already be one.
+      return;
+    } else {
+      const body = selected || mark.placeholder || '';
+      next = value.slice(0, start) + mark.before + body + after + value.slice(end);
+      caret = [start + mark.before.length, start + mark.before.length + body.length];
+    }
+
+    this.editingDraft = next;
+    input.value = next;
+    input.setSelectionRange(caret[0], caret[1]);
+    this.editShell = this.computeEditShell(next);
+    this.autosize(input);
+    input.focus({preventScroll: true});
+    this.emit('zn-input');
+  }
+
   private toggleRawMode = () => {
     if (this.rawMode) {
       this.commitRaw();
@@ -1047,15 +1344,15 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     this.emit('zn-change');
   };
 
-  private handleToolbarInsert(item: BlockType) {
+  private handleToolbarInsert(action: EditorAction) {
     if (this.editingIndex !== null) this.suppressBlurCommit = true;
     const index = this.editingIndex !== null ? this.commitEdit() : this.blocks.length;
-    if (item.image) {
+    if (action.opens === 'image') {
       this.pickImage(index);
-    } else if (item.include) {
+    } else if (action.opens === 'include') {
       this.pickInclude(index);
     } else {
-      this.insertDraftBlock(index, item.prefix ?? '');
+      this.insertDraftBlock(index, action.prefix ?? '', action.caretOffset);
     }
   }
 
@@ -1152,6 +1449,89 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       </div>`;
   }
 
+  /** A metadata-only block parses to nothing, so show each of its lines as a chip instead. */
+  private renderMetaChips(lines: MetaLine[]) {
+    return html`
+      <div class="remarkd-editor__meta">
+        ${lines.map(line => this.renderMetaChip(line))}
+      </div>`;
+  }
+
+  /**
+   * One shared chip treatment for every metadata line kind — each kind just supplies an
+   * icon, a name, and an optional value/state, display-only in all three cases.
+   */
+  private renderMetaChip(line: MetaLine) {
+    const icon = line.kind === 'title' ? 'captions@lu' : line.kind === 'bracket' ? 'brackets@lu' : 'braces@lu';
+    // Names are the code-like part (an attribute's key, a bracket line's raw text); a title
+    // has none, its text is the value — so it renders in plain prose type, not monospace.
+    const name = line.kind === 'attribute' ? line.name : line.kind === 'bracket' ? line.text : '';
+    const value = line.kind === 'attribute' ? line.value : line.kind === 'title' ? line.text : '';
+    const attrState = line.kind === 'attribute' ? (line.unset ? 'unset' : (value ? '' : 'set')) : '';
+    return html`
+      <div part="variable" class="remarkd-editor__variable">
+        <zn-icon src=${icon} size="16"></zn-icon>
+        ${name ? html`<span class="remarkd-editor__variable-name">${name}</span>` : ''}
+        ${attrState
+          ? html`<span class="remarkd-editor__variable-state">${attrState}</span>`
+          : value
+            ? html`<span class="remarkd-editor__variable-value">${value}</span>`
+            : ''}
+      </div>`;
+  }
+
+  /**
+   * Wraps `{name}` references so they read as variables rather than literal text. Walks text
+   * nodes and skips code, so a brace in a sample stays a brace, and no regex touches markup.
+   */
+  private markVariables(root: Element) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const targets: Text[] = [];
+    while (walker.nextNode()) {
+      const node = walker.currentNode as Text;
+      if (node.parentElement?.closest('code, pre')) continue;
+      // Lit's unsafeHTML part only touches the DOM when the parsed string changes, so
+      // updated() can re-run over spans this pass already produced — skip them, or a
+      // repeat render nests another wrapper inside the last one.
+      if (node.parentElement?.classList.contains('remarkd-editor__var')) continue;
+      if (/\{[A-Za-z0-9_-]+}/.test(node.data)) targets.push(node);
+    }
+
+    for (const node of targets) {
+      const fragment = document.createDocumentFragment();
+      let index = 0;
+      for (const match of node.data.matchAll(/\{([A-Za-z0-9_-]+)}/g)) {
+        const at = match.index;
+        if (at > index) fragment.append(node.data.slice(index, at));
+        const token = document.createElement('span');
+        token.className = 'remarkd-editor__var';
+        token.textContent = match[0];
+        fragment.append(token);
+        index = at + match[0].length;
+      }
+      if (index < node.data.length) fragment.append(node.data.slice(index));
+      node.replaceWith(fragment);
+    }
+  }
+
+  /**
+   * A conditional range as a labelled wrapper. The inner content is parsed without the
+   * directive lines: evaluating instead would blank the block whenever the flag is not
+   * defined in this same block, hiding the author's content while they edit it. It also
+   * keeps both halves of an if/else idiom visible — with evaluation you could never see
+   * the `ifndef` branch while the `ifdef` condition held. Nesting is handled by
+   * `splitConditionalParts`/`renderConditionalWrapper` below, recursively.
+   */
+  private renderConditional(block: string): TemplateResult | null {
+    const lines = block.split('\n');
+    const open = lines[0]?.trimEnd() ?? '';
+    if (!CONDITIONAL_OPEN.test(open) && !IFEVAL_OPEN.test(open)) return null;
+
+    const end = findConditionalEnd(lines, 1);
+    const interior = lines.slice(1, end === -1 ? undefined : end);
+    return renderConditionalWrapper(conditionalLabel(open), splitConditionalParts(interior));
+  }
+
   private renderBlock(block: string, index: number) {
     if (this.editingIndex === index) {
       if (this.imageEdit) {
@@ -1176,6 +1556,8 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     }
 
     const include = this.parseIncludeBlock(block);
+    const conditional = include ? null : (this.renderConditional(block) ?? renderInlineConditional(block));
+    const meta = include || conditional ? null : parseMetaBlock(block.trim());
     return html`
       <div part="block"
            class=${classMap({
@@ -1199,11 +1581,61 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                      type="button" icon-button="small" plain icon="x@lu" icon-size="16" color="error"
                      tooltip="Delete block"
                      @click=${() => this.deleteBlock(index)}></zn-button>`}
-        <div part="rendered" class="remarkd-editor__rendered remarkd-rendered"
+        <div part="rendered"
+             class=${classMap({
+               'remarkd-editor__rendered': true,
+               'remarkd-rendered': true,
+               // Only the parser-rendered branch is safe for markVariables to mutate — the
+               // include/meta branches are plain Lit templates whose ChildPart bindings assume
+               // their next sibling stays a Text node, so it must not touch those. The
+               // conditional branch is also a Lit template (its label is a string binding) —
+               // its own inner body div carries the marker instead, see renderConditional.
+               'remarkd-editor__rendered--parsed': !include && !conditional && !meta,
+             })}
              @click=${(e: MouseEvent) => this.handleRenderedClick(e, index)}>${
-          include ? this.renderIncludeChip(include) : unsafeHTML(remarkdParse(block))}
+          include ? this.renderIncludeChip(include)
+            : conditional ? conditional
+              : meta ? this.renderMetaChips(meta)
+                : unsafeHTML(safeParse(block))}
         </div>
       </div>`;
+  }
+
+  /** An inline action needs an open block to apply its mark to. */
+  private isActionDisabled(action: EditorAction): boolean {
+    return !!action.inline && this.editingIndex === null;
+  }
+
+  /** Routes a toolbar/menu action to the inline or block insert path — the one place both
+   * `renderAction` and `renderMenuAction` call, so the bar and the overflow menu cannot
+   * drift out of sync on what a given action actually does. */
+  private activateAction(action: EditorAction) {
+    if (action.inline) {
+      this.applyInline(action.inline);
+    } else {
+      this.handleToolbarInsert(action);
+    }
+  }
+
+  /** A single toolbar action button, shared by the toolbar bar and the overflow menu. */
+  private renderAction(action: EditorAction) {
+    return html`
+      <zn-button type="button" icon-button plain icon=${action.icon} icon-size="18"
+                 tooltip=${action.label}
+                 ?disabled=${this.isActionDisabled(action)}
+                 @mousedown=${(e: MouseEvent) => e.preventDefault()}
+                 @click=${() => this.activateAction(action)}></zn-button>`;
+  }
+
+  /** The same action, rendered as a menu item for the overflow menu. */
+  private renderMenuAction(action: EditorAction) {
+    return html`
+      <zn-menu-item
+        ?disabled=${this.isActionDisabled(action)}
+        @click=${() => this.activateAction(action)}>
+        <zn-icon slot="prefix" src=${action.icon} size="18"></zn-icon>
+        ${action.label}
+      </zn-menu-item>`;
   }
 
   render() {
@@ -1219,12 +1651,40 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
            @drop=${this.handleDrop}>
         ${editable ? html`
           <div part="toolbar" class="remarkd-editor__toolbar">
-            ${this.rawMode ? '' : BLOCK_TYPES
-              .filter(item => !item.include || !!this.includeUrl)
-              .map(item => html`
-              <zn-button type="button" icon-button plain icon=${item.icon} icon-size="18"
-                         tooltip=${item.label}
-                         @click=${() => this.handleToolbarInsert(item)}></zn-button>`)}
+            ${this.rawMode ? '' : (() => {
+              const groups = ACTION_GROUPS
+                .map(group => ({
+                  group,
+                  actions: EDITOR_ACTIONS.filter(action => action.group === group.id
+                    && (action.opens !== 'include' || !!this.includeUrl)),
+                }))
+                .filter(entry => entry.actions.length);
+              const visible = this.toolbarOverflow.visibleCount;
+              const overflowed = groups.slice(visible);
+
+              return html`
+                ${groups.map(entry => html`
+                  <div class="toolbar__group" data-group=${entry.group.id}>
+                    ${entry.actions.map(action => this.renderAction(action))}
+                  </div>`)}
+                ${overflowed.length ? html`
+                  <zn-dropdown class="remarkd-editor__toolbar-more" placement="bottom-end"
+                               @zn-show=${(e: Event) => {
+                                 if (e.target !== e.currentTarget) return;
+                                 this.suppressBlurCommit = true;
+                               }}
+                               @zn-hide=${(e: Event) => {
+                                 if (e.target !== e.currentTarget) return;
+                                 this.suppressBlurCommit = false;
+                               }}>
+                    <zn-button slot="trigger" type="button" icon-button plain icon="ellipsis@lu"
+                               icon-size="18" tooltip="More"
+                               @mousedown=${(e: MouseEvent) => e.preventDefault()}></zn-button>
+                    <zn-menu>
+                      ${overflowed.flatMap(entry => entry.actions).map(action => this.renderMenuAction(action))}
+                    </zn-menu>
+                  </zn-dropdown>` : ''}`;
+            })()}
             ${this.allowRaw ? html`
               <zn-button part="raw-toggle" class="remarkd-editor__raw-toggle"
                          type="button" icon-button icon="code-xml@lu" icon-size="18"

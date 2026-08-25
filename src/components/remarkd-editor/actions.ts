@@ -79,7 +79,6 @@ export const EDITOR_ACTIONS: EditorAction[] = [
   {key: 'literal-block', label: 'Literal', icon: 'file-code@lu', group: 'blocks', prefix: '....\n\n....', caretOffset: 5},
   {key: 'listing-block', label: 'Listing', icon: 'terminal@lu', group: 'blocks', prefix: '----\n\n----', caretOffset: 5},
   {key: 'generic-container', label: 'Container', icon: 'box@lu', group: 'blocks', prefix: '!!!!\n\n!!!!', caretOffset: 5},
-  {key: 'comments', label: 'Comment', icon: 'message-square-dashed@lu', group: 'blocks', prefix: '////\n\n////', caretOffset: 5},
   {key: 'hardbreaks', label: 'Hard breaks', icon: 'wrap-text@lu', group: 'blocks', prefix: '[%hardbreaks]\n', keywords: ['line breaks']},
 
   // Structured
@@ -89,7 +88,6 @@ export const EDITOR_ACTIONS: EditorAction[] = [
 
   // Media
   {key: 'asciidoc-image', label: 'Image', icon: 'image@lu', group: 'media', opens: 'image'},
-  {key: 'image-alignment', label: 'Aligned image', icon: 'image-plus@lu', group: 'media', prefix: '[.align-center]\nimage::file.png[Alt,640,480]', caretOffset: 23},
   {key: 'video', label: 'Video', icon: 'video@lu', group: 'media', prefix: '{{video:ID source=youtube}}', caretOffset: 8},
   {key: 'include', label: 'Include', icon: 'blocks@lu', group: 'media', opens: 'include'},
   // The path placeholder is load-bearing: `t::partial::` with an empty path makes parse() throw.
@@ -99,7 +97,6 @@ export const EDITOR_ACTIONS: EditorAction[] = [
   // Objects
   {key: 'button-object', label: 'Button', icon: 'mouse-pointer-click@lu', group: 'objects', prefix: '{{button:action text="Label" href=/}}', caretOffset: 9},
   {key: 'object-macros', label: 'Link object', icon: 'external-link@lu', group: 'objects', prefix: '{{link:https:// text=Label}}', caretOffset: 7},
-  {key: 'anchor', label: 'Anchor', icon: 'anchor@lu', group: 'objects', prefix: '{{anchor name=top}}', caretOffset: 14},
   {key: 'meter', label: 'Meter', icon: 'gauge@lu', group: 'objects', prefix: '{{meter id=progress min=0 max=10 value=5}}', caretOffset: 11},
   {key: 'object-attributes', label: 'Break object', icon: 'separator-horizontal@lu', group: 'objects', prefix: '{{br}}'},
 
@@ -124,7 +121,6 @@ export const EDITOR_ACTIONS: EditorAction[] = [
   {key: 'inline-code', label: 'Code', icon: 'square-code@lu', group: 'inline', inline: {before: '`', placeholder: 'code'}},
   {key: 'underline', label: 'Underline', icon: 'underline@lu', group: 'inline', inline: {before: '___', placeholder: 'text'}},
   {key: 'strike', label: 'Strikethrough', icon: 'strikethrough@lu', group: 'inline', keywords: ['delete'], inline: {before: '~~', placeholder: 'text'}},
-  {key: 'highlight', label: 'Highlight', icon: 'highlighter@lu', group: 'inline', keywords: ['mark'], inline: {before: '#', placeholder: 'text'}},
   {key: 'subscript', label: 'Subscript', icon: 'subscript@lu', group: 'inline', inline: {before: '~', placeholder: '2'}},
   {key: 'superscript', label: 'Superscript', icon: 'superscript@lu', group: 'inline', inline: {before: '^', placeholder: '2'}},
   {key: 'keyboard', label: 'Keyboard', icon: 'keyboard@lu', group: 'inline', keywords: ['kbd', 'shortcut'], inline: {before: 'kbd:[', after: ']', placeholder: 'Ctrl+C'}},

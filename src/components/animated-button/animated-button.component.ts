@@ -4,12 +4,13 @@ import {property, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnIcon from '../icon/icon.component';
 
+import sharedStyles from '../../../scss/shared/index.scss';
 import styles from './animated-button.scss';
 
 type AnimatedButtonState = 'idle' | 'processing' | 'success' | 'failure';
 
 export default class ZnAnimatedButton extends ZincElement {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(sharedStyles), unsafeCSS(styles)];
 
   static dependencies = {
     'zn-icon': ZnIcon

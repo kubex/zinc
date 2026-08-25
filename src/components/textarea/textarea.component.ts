@@ -14,6 +14,7 @@ import ZincElement, {type ZincFormControl} from '../../internal/zinc-element';
 import ZnSlashItem from "../slash-item";
 import ZnSlashMenu from "../slash-menu";
 
+import formControlStyles from '../../form-control.scss';
 import styles from './textarea.scss';
 
 /**
@@ -52,7 +53,7 @@ import styles from './textarea.scss';
  * @csspart slash-menu - The slash menu shown at the caret.
  */
 export default class ZnTextarea extends ZincElement implements ZincFormControl {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
   static dependencies = {
     'zn-slash-item': ZnSlashItem,
     'zn-slash-menu': ZnSlashMenu

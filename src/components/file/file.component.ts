@@ -14,6 +14,7 @@ import ZincElement, {type ZincFormControl} from '../../internal/zinc-element';
 import ZnDialog from "../dialog";
 import type ZnButton from "../button";
 
+import formControlStyles from '../../form-control.scss';
 import styles from './file.scss';
 
 /**
@@ -69,7 +70,7 @@ import styles from './file.scss';
  * when a file is dropped
  */
 export default class ZnFile extends ZincElement implements ZincFormControl {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
   static dependencies = {
     'zn-dialog': ZnDialog
   };

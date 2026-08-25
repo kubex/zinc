@@ -13,6 +13,7 @@ import ZnSelect from "../select";
 import type { ZincFormControl } from '../../internal/zinc-element';
 import type ZnInput from "../input";
 
+import formElementStyles from '../../../scss/shared/_form-elements.scss';
 import styles from './inline-edit.scss';
 
 /**
@@ -34,7 +35,7 @@ import styles from './inline-edit.scss';
  * @cssproperty --example - An example CSS custom property.
  */
 export default class ZnInlineEdit extends ZincElement implements ZincFormControl {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(formElementStyles), unsafeCSS(styles)];
 
   private readonly formControlController = new FormControlController(this, {
     defaultValue: (control: ZnInlineEdit) => control.defaultValue,

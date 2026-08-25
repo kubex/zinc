@@ -14,6 +14,7 @@ import ZnOption from '../option';
 import ZnSelect from '../select';
 import type {ZincFormControl} from '../../internal/zinc-element';
 
+import formControlStyles from '../../form-control.scss';
 import styles from './schedule-builder.scss';
 
 /** The seven weekday keys used throughout the schedule. */
@@ -533,7 +534,7 @@ type SlotState = 'closed' | 'open' | 'reduced';
  * @cssproperty --reduced-color - The fill used for hours an exception removes.
  */
 export default class ZnScheduleBuilder extends ZincElement implements ZincFormControl {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
 
   static formAssociated = true;
 

@@ -4,6 +4,7 @@ import { HasSlotController } from "../../internal/slot";
 import { property } from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
+import formControlStyles from '../../form-control.scss';
 import styles from './form-group.scss';
 
 /**
@@ -17,7 +18,7 @@ import styles from './form-group.scss';
  *
  */
 export default class ZnFormGroup extends ZincElement {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
 
   private readonly hasSlotController = new HasSlotController(this, 'help-text', 'label', 'chip');
 

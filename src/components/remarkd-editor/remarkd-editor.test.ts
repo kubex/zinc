@@ -24,11 +24,10 @@ describe('<zn-remarkd-editor>', () => {
     //   attributes-title → `.Intro` alone is empty; a title decorates the block below it
     //   reference-list   → `{{reflist}}` is empty until something references it
     //   asciidoc-section → `== ` alone is empty; the section needs a body the author types
-    //   comments         → `////` blocks are meant to render nothing, that is the feature
     //   hardbreaks       → `[%hardbreaks]` alone is an attribute line; it needs the paragraph
     //                       below it (real fixture: attribute line directly followed by body,
     //                       no blank line) that the helper's `\n\n` placeholder trick can't reach
-    const rendersEmpty = ['attributes-title', 'reference-list', 'asciidoc-section', 'comments', 'hardbreaks'];
+    const rendersEmpty = ['attributes-title', 'reference-list', 'asciidoc-section', 'hardbreaks'];
     // Logic actions all render through the editor's own chrome (a variable chip or a
     // conditional wrapper) rather than the parser — listed explicitly, not by group, so a
     // future logic action with no chrome of its own falls through and fails this guard.
@@ -109,8 +108,11 @@ describe('<zn-remarkd-editor>', () => {
     // not in the Go renderer the user's app ships in production, tested by the user directly.
     // `id-block` is additionally broken in remarkd itself (its own fixture enshrines the leak).
     const unsupportedByProductionRenderer = ['id-block', 'table', 'pros-cons', 'accordion'];
+    // Dropped by request: `image-alignment` duplicates the image block's own alignment control,
+    // and comments/highlight are not wanted in the authoring surface.
+    const withdrawn = ['image-alignment', 'comments', 'highlight'];
     const covered = new Set(EDITOR_ACTIONS.map(a => a.key));
-    const excluded = [...notActions, ...unsupportedByProductionRenderer];
+    const excluded = [...notActions, ...unsupportedByProductionRenderer, ...withdrawn];
     const missing = FEATURE_KEYS.filter(f => !excluded.includes(f) && !covered.has(f));
     expect(missing, `features with no action: ${missing.join(', ')}`).to.be.empty;
   });

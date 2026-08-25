@@ -21,6 +21,7 @@ import type {CSSResultGroup, PropertyValues, TemplateResult} from 'lit';
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type {ZnRemoveEvent} from "../../events/zn-remove";
 
+import formControlStyles from '../../form-control.scss';
 import styles from './select.scss';
 
 /**
@@ -77,7 +78,7 @@ import styles from './select.scss';
  * @csspart expand-icon - The container that wraps the expand icon.
  */
 export default class ZnSelect extends ZincElement implements ZincFormControl {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
   static dependencies = {
     'zn-icon': ZnIcon,
     'zn-opt-group': ZnOptGroup,

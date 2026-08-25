@@ -9,10 +9,12 @@ import ZnMenu from "../../../menu";
 import ZnMenuItem from "../../../menu-item";
 import type {EditorFeatureConfig} from "../../editor.component";
 
+// Air Picker only positions correctly with the global sheet present inside this shadow root.
+import bootStyles from '../../../../../scss/boot.scss';
 import styles from './toolbar.scss';
 
 export default class ToolbarComponent extends ZincElement {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(bootStyles), unsafeCSS(styles)];
 
   @property({type: Number})
   public containerWidth: number;

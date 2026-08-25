@@ -1,36 +1,6 @@
-@use '../mixins';
-@use '../variables';
-
-@mixin button {
-  // Buttons take their own radius token so a theme can make controls pills
-  // without reshaping panels, inputs and dialogs at the same time.
-  border-radius: var(--zn-button-border-radius, var(--zn-border-radius));
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--zn-base-px);// calc(var(--zn-base-px) + var(--zn-button-gutter));
-  margin: auto;
-  width: fit-content;
-  background-color: rgb(var(--zn-primary));
-  color: rgba(var(--zn-color-on-primary, 255, 255, 255), 0.9);
-  font-size: var(--zn-text-button-label-font-size);
-  font-weight: var(--zn-text-button-label-font-weight);
-  line-height: var(--zn-text-button-label-line-height);
-  text-transform: var(--zn-text-button-label-transform);
-  cursor: pointer;
-  vertical-align: middle;
-  border-color: transparent;
-  white-space: nowrap;
-
-  max-height: 36px;
-  height: 36px;
-  min-height: 36px;
-
-  &:hover:not([disabled]) {
-    background-color: rgba(var(--zn-primary), 0.8);
-  }
-}
+@use 'button-mixin';
+@forward 'button-mixin';
 
 button, .zn-button {
-  @include button;
+  @include button-mixin.button;
 }

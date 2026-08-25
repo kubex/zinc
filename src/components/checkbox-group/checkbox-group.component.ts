@@ -13,6 +13,7 @@ import ZincElement from '../../internal/zinc-element';
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type ZnCheckbox from "../checkbox";
 
+import formControlStyles from '../../form-control.scss';
 import styles from './checkbox-group.scss';
 
 /**
@@ -38,7 +39,7 @@ import styles from './checkbox-group.scss';
  * @cssproperty --zn-checkbox-group-column-width - Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set.
  */
 export default class ZnCheckboxGroup extends ZincElement implements ZincFormControl {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
 
   protected readonly formControlController = new FormControlController(this);
   private readonly hasSlotController = new HasSlotController(this, 'help-text', 'label');

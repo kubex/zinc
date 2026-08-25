@@ -11,6 +11,7 @@ import ZnSelect from "../select";
 import type {ZnChangeEvent} from "../../events/zn-change";
 import type {ZnInputEvent} from "../../events/zn-input";
 
+import formElementStyles from '../../../scss/shared/_form-elements.scss';
 import styles from './bulk-actions.scss';
 
 export interface CreatedRule {
@@ -51,7 +52,7 @@ export interface BulkActionItem {
  * @cssproperty --example - An example CSS custom property.
  */
 export default class ZnBulkActions extends ZincElement {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(formElementStyles), unsafeCSS(styles)];
   static dependencies = {
     'zn-button': ZnButton,
     'zn-input': ZnInput,

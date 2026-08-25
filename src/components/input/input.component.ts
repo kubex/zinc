@@ -17,6 +17,7 @@ import ZnSlashMenu from "../slash-menu";
 import ZnTooltip from "../tooltip";
 import type {ZincFormControl} from '../../internal/zinc-element';
 
+import formControlStyles from '../../form-control.scss';
 import styles from './input.scss';
 
 /**
@@ -75,7 +76,7 @@ import styles from './input.scss';
  * @cssproperty --zn-range-thumb-ring-width - The width of the ring drawn around a range input's thumb.
  */
 export default class ZnInput extends ZincElement implements ZincFormControl {
-  static styles = unsafeCSS(styles);
+  static styles = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
   static dependencies = {
     'zn-icon': ZnIcon,
     'zn-slash-item': ZnSlashItem,

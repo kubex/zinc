@@ -180,7 +180,7 @@ a folded toolbar group is never actually out of reach.
 
 ### Inline Formatting
 
-Inline actions — Strong, Emphasis, Code, Underline, Strikethrough, Highlight, and the
+Inline actions — Strong, Emphasis, Code, Underline, Strikethrough, and the
 rest of the Inline group — apply to the current selection inside the block being edited,
 so they only make sense while a block is open: the toolbar disables them until one is
 (the slash menu lists them regardless, since it can only ever open inside a block in the

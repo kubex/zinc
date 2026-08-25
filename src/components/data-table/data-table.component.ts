@@ -29,6 +29,8 @@ import type ZnInput from "../input";
 import type ZnQueryBuilder from "../query-builder";
 import type ZnSelect from "../select";
 
+// Tables load in such a way that the global sheet has to be re-applied inside the shadow root.
+import bootStyles from '../../../scss/boot.scss';
 import styles from './data-table.scss';
 
 const DEFAULT_PAGE = 1;
@@ -187,7 +189,7 @@ type AllowedInputElement =
  * @cssproperty --example - An example CSS custom property.
  */
 export default class ZnDataTable extends ZincElement {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(bootStyles), unsafeCSS(styles)];
   static dependencies = {
     'zn-alert': ZnAlert,
     'zn-button': ZnButton,

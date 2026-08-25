@@ -14,6 +14,7 @@ import ZnTooltip from "../tooltip";
 import type {ZincFormControl} from '../../internal/zinc-element';
 
 import airDatepickerStyles from '../../../scss/air-datapicker.scss';
+import formControlStyles from '../../form-control.scss';
 import styles from './datepicker.scss';
 
 /**
@@ -54,7 +55,7 @@ import styles from './datepicker.scss';
  * @cssproperty --zn-input-* - Inherited input component CSS custom properties.
  */
 export default class ZnDatepicker extends ZincElement implements ZincFormControl {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
 
   static dependencies = {
     'zn-icon': ZnIcon,

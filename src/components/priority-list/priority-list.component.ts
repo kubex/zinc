@@ -11,6 +11,7 @@ import ZincElement from '../../internal/zinc-element';
 import ZnIcon from '../icon';
 import type {ZincFormControl} from '../../internal/zinc-element';
 
+import formControlStyles from '../../form-control.scss';
 import styles from './priority-list.scss';
 
 export interface PriorityItem {
@@ -60,7 +61,7 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
     'zn-icon': ZnIcon,
   };
 
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
 
   protected readonly formControlController = new FormControlController(this, {
     value: (control: ZnPriorityList) => {

@@ -12,10 +12,11 @@ import ZnOption from '../option';
 import ZnSelect from '../select';
 import type {ZincFormControl} from '../../internal/zinc-element';
 
+import formControlStyles from '../../form-control.scss';
 import styles from './icon-picker.scss';
 
 export default class ZnIconPicker extends ZincElement implements ZincFormControl {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
   static dependencies = {
     'zn-icon': ZnIcon,
     'zn-button': ZnButton,

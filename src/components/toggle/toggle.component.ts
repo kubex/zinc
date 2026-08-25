@@ -8,6 +8,7 @@ import { live } from "lit/directives/live.js";
 import { property, query, state } from 'lit/decorators.js';
 import ZincElement, { type ZincFormControl } from '../../internal/zinc-element';
 
+import formControlStyles from '../../form-control.scss';
 import styles from './toggle.scss';
 
 /**
@@ -32,7 +33,7 @@ import styles from './toggle.scss';
  * @cssproperty --zn-toggle-margin - The margin around the toggle switch. Defaults to `8px 0`.
  */
 export default class ZnToggle extends ZincElement implements ZincFormControl {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
 
   private readonly hasSlotController = new HasSlotController(this, 'help-text', 'description');
 

@@ -12,6 +12,7 @@ import type {ZincFormControl} from '../../internal/zinc-element';
 import type {ZnChangeEvent} from "../../events/zn-change";
 import type {ZnInputEvent} from "../../events/zn-input";
 
+import formElementStyles from '../../../scss/shared/_form-elements.scss';
 import styles from './query-builder.scss';
 import type ZnDatepicker from "../datepicker";
 
@@ -138,7 +139,7 @@ export interface CreatedRule {
  * @cssproperty --example - An example CSS custom property.
  */
 export default class ZnQueryBuilder extends ZincElement implements ZincFormControl {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(formElementStyles), unsafeCSS(styles)];
   static dependencies = {
     'zn-button': ZnButton,
     'zn-input': ZnInput,

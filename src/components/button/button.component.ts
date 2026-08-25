@@ -14,6 +14,7 @@ import ZnTooltip from "../tooltip";
 import type {IconColor, IconLibrary} from "../icon";
 import type {ZincFormControl} from '../../internal/zinc-element';
 
+import sharedStyles from '../../../scss/shared/index.scss';
 import styles from './button.scss';
 
 /**
@@ -42,7 +43,7 @@ import styles from './button.scss';
  * @csspart spinner - The spinner that shows when the button is in the loading state.
  */
 export default class ZnButton extends ZincElement implements ZincFormControl {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(sharedStyles), unsafeCSS(styles)];
   static dependencies = {
     'zn-tooltip': ZnTooltip,
     'zn-icon': ZnIcon

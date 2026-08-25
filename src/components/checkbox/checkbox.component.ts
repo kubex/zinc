@@ -12,6 +12,8 @@ import ZnIcon from "../icon";
 import type {SelectionCardControlPosition, SelectionCardImagePosition} from '../../internal/selection-card';
 import type {ZincFormControl} from '../../internal/zinc-element';
 
+import formControlStyles from '../../form-control.scss';
+import selectionCardStyles from '../../selection-card.scss';
 import styles from './checkbox.scss';
 
 type ColorOption = 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent';
@@ -60,7 +62,7 @@ type ColorOption = 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'suc
  * @cssproperty --zn-selection-card-border-radius - Corner radius of a contained container.
  */
 export default class ZnCheckbox extends ZincElement implements ZincFormControl {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(formControlStyles), unsafeCSS(selectionCardStyles), unsafeCSS(styles)];
   static dependencies = {'zn-icon': ZnIcon};
 
   private readonly formControlController = new FormControlController(this, {

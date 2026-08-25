@@ -19,10 +19,11 @@ import type {PropertyValues} from 'lit';
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type {ZnMenuSelectEvent} from '../../events/zn-menu-select';
 
+import formControlStyles from '../../form-control.scss';
 import styles from './translations.scss';
 
 export default class ZnTranslations extends ZincElement implements ZincFormControl {
-  static styles = unsafeCSS(styles);
+  static styles = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
   static dependencies = {
     'zn-button': ZnButton,
     'zn-button-group': ZnButtonGroup,

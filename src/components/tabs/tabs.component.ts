@@ -17,6 +17,8 @@ import {property} from 'lit/decorators.js';
 import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 
+// Tabs load in such a way that the global sheet has to be re-applied inside the shadow root.
+import bootStyles from '../../../scss/boot.scss';
 import styles from './tabs.scss';
 
 // Every element that manages its own tabs (ZnTabs and its subclasses). Tab
@@ -42,7 +44,7 @@ const tabContainerSelector = 'zn-tabs, zn-page, zn-page-nav';
  * @cssproperty --example - An example CSS custom property.
  */
 export default class ZnTabs extends ZincElement {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(bootStyles), unsafeCSS(styles)];
   @property({attribute: 'master-id', reflect: true}) masterId: string;
   @property({attribute: 'default-uri', reflect: true}) defaultUri = '';
   @property({attribute: 'active', reflect: true}) _current = '';

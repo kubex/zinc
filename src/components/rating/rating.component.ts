@@ -9,6 +9,7 @@ import ZincElement from '../../internal/zinc-element';
 
 import type {ZincFormControl} from '../../internal/zinc-element';
 
+import formControlStyles from '../../form-control.scss';
 import styles from './rating.scss';
 
 /**
@@ -35,7 +36,7 @@ import styles from './rating.scss';
  * @cssproperty --preview-size - The font size of the preview value.
  */
 export default class ZnRating extends ZincElement implements ZincFormControl {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
 
   private readonly formControlController = new FormControlController(this, {
     assumeInteractionOn: ['zn-blur', 'zn-input']

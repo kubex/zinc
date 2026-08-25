@@ -3623,27 +3623,6 @@
       ]
     },
     {
-      "name": "zn-reveal",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "duration", "values": [] },
-        { "name": "initial", "values": [] },
-        { "name": "revealed", "values": [] },
-        { "name": "hide-delay", "values": [] },
-        {
-          "name": "no-toggle",
-          "description": "Disables click-to-toggle so the value is only revealed on hover. Clicks still bubble to the parent.",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/reveal"
-        }
-      ]
-    },
-    {
       "name": "zn-schedule-builder",
       "description": "Builds a weekly opening-hours schedule as a drag-to-paint calendar or a compact list of\ntime ranges, and posts the result as JSON.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the schedule changes.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks validity but does not show a validation message.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n- **setDay(day: _ScheduleDay_, ranges: _ScheduleRange[]_)** - Replaces the hours for a single day, in the save timezone.\n- **getDay(day: _ScheduleDay_): _ScheduleRange[]_** - Reads the hours for a single day, in the save timezone.\n- **setDisplayDay(day: _ScheduleDay_, ranges: _ScheduleRange[]_)** - Replaces the hours for a single day, given in the display timezone.\n\n### **Slots:**\n - **label** - The schedule's label. Alternatively, use the `label` attribute.\n- **help-text** - Text that describes how to use the schedule. Alternatively, use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--slot-height** - The height of a single time slot in the calendar. Defaults to `18px`. _(default: undefined)_\n- **--gutter-width** - The width of the calendar's time gutter. Defaults to `64px`. _(default: undefined)_\n- **--open-color** - The fill used for open hours. _(default: undefined)_\n- **--reduced-color** - The fill used for hours an exception removes. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the builder, label and help text.\n- **base** - The component's base wrapper.\n- **toolbar** - The row above the builder holding the hint, legend and view toggle.\n- **calendar** - The calendar view wrapper.\n- **list** - The form (list) view wrapper.\n- **summary** - The summary panel beside the calendar.",
       "attributes": [
@@ -3767,6 +3746,27 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/schedule-builder"
+        }
+      ]
+    },
+    {
+      "name": "zn-reveal",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "duration", "values": [] },
+        { "name": "initial", "values": [] },
+        { "name": "revealed", "values": [] },
+        { "name": "hide-delay", "values": [] },
+        {
+          "name": "no-toggle",
+          "description": "Disables click-to-toggle so the value is only revealed on hover. Clicks still bubble to the parent.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/reveal"
         }
       ]
     },

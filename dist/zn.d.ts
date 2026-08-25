@@ -2271,7 +2271,7 @@ declare module "components/input/input.component" {
      * @cssproperty --zn-range-thumb-ring-width - The width of the ring drawn around a range input's thumb.
      */
     export default class ZnInput extends ZincElement implements ZincFormControl {
-        static styles: import("lit").CSSResult;
+        static styles: import("lit").CSSResult[];
         static dependencies: {
             'zn-icon': typeof ZnIcon;
             'zn-slash-item': typeof ZnSlashItem;
@@ -8891,7 +8891,7 @@ declare module "components/translations/translations.component" {
     import type { PropertyValues } from 'lit';
     import type { ZincFormControl } from "internal/zinc-element";
     export default class ZnTranslations extends ZincElement implements ZincFormControl {
-        static styles: import("lit").CSSResult;
+        static styles: import("lit").CSSResult[];
         static dependencies: {
             'zn-button': typeof ZnButton;
             'zn-button-group': typeof ZnButtonGroup;

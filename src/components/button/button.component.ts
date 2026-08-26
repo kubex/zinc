@@ -261,6 +261,10 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     if (this.type === 'submit') {
       this.formControlController.submit();
     }
+
+    if (this.type === 'reset') {
+      this.formControlController.reset();
+    }
   }
 
   private _isLink() {

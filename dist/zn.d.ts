@@ -5177,7 +5177,7 @@ declare module "components/icon-picker/material-icons" {
     export const material_symbols_outlinedIcons: string[];
 }
 declare module "components/icon-picker/icon-picker.component" {
-    import { type CSSResultGroup } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     import ZnButton from "components/button/index";
     import ZnDialog from "components/dialog/index";
@@ -5249,6 +5249,8 @@ declare module "components/icon-picker/icon-picker.component" {
         private discardPendingFile;
         private clearFile;
         disconnectedCallback(): void;
+        private syncHiddenInputs;
+        protected updated(changedProperties: PropertyValues): void;
         private handleSearchInput;
         private filterIcons;
         private handleIconSelect;

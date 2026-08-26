@@ -1,5 +1,5 @@
 import {classMap} from 'lit/directives/class-map.js';
-import {type CSSResultGroup, html, nothing, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
 import {defaultValue} from '../../internal/default-value';
 import {FormControlController} from '../../internal/form';
 import {property, query, state} from 'lit/decorators.js';
@@ -244,6 +244,36 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
     }
   }
 
+  // The [icon]/[library]/[color] hidden inputs must live in the light DOM —
+  // shadow DOM inputs are invisible to form submission.
+  private syncHiddenInputs() {
+    const fields: [string, string, boolean][] = [
+      ['icon', this.icon, true],
+      ['library', this.library, !this.noLibrary],
+      ['color', this.color, !this.noColor],
+    ];
+    for (const [key, value, enabled] of fields) {
+      const name = `${this.name}[${key}]`;
+      let input = this.querySelector<HTMLInputElement>(`input[type="hidden"][name="${name}"]`);
+      if (!this.name || !enabled) {
+        input?.remove();
+        continue;
+      }
+      if (!input) {
+        input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        this.appendChild(input);
+      }
+      input.value = value ?? '';
+    }
+  }
+
+  protected updated(changedProperties: PropertyValues) {
+    super.updated(changedProperties);
+    this.syncHiddenInputs();
+  }
+
   private handleSearchInput(e: Event) {
     const input = e.target as HTMLInputElement;
     this._searchQuery = input.value.toLowerCase();
@@ -380,12 +410,6 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
             ` : nothing}
           `}
         </div>
-
-        ${this.name ? html`
-          <input type="hidden" name="${this.name}[icon]" .value=${this.icon}>
-          ${!this.noLibrary ? html`<input type="hidden" name="${this.name}[library]" .value=${this.library}>` : nothing}
-          ${!this.noColor ? html`<input type="hidden" name="${this.name}[color]" .value=${this.color}>` : nothing}
-        ` : nothing}
 
         <div
           part="form-control-help-text"

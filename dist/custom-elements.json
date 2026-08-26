@@ -17426,7 +17426,7 @@
               "name": "formControlController",
               "privacy": "private",
               "readonly": true,
-              "default": "new FormControlController(this, { assumeInteractionOn: ['zn-change'], // With allow-upload, a chosen file is submitted under `name` in place of // the icon string — the two are mutually exclusive. value: (el: ZnIconPicker) => el._file ?? el.icon })"
+              "default": "new FormControlController(this, { assumeInteractionOn: ['zn-change'], // With allow-upload, a chosen file is submitted under `name` in place of // the icon string — the two are mutually exclusive. value: (el: ZnIconPicker) => el._file ?? el.icon, setValue: (el: ZnIconPicker, value: string) => { el.clearFile(); el.icon = value ?? ''; } })"
             },
             {
               "kind": "field",
@@ -35665,6 +35665,207 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/reveal/reveal.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnReveal",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "duration",
+              "type": {
+                "text": "number"
+              },
+              "default": "2000",
+              "attribute": "duration"
+            },
+            {
+              "kind": "field",
+              "name": "initial",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "initial"
+            },
+            {
+              "kind": "field",
+              "name": "revealed",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "revealed"
+            },
+            {
+              "kind": "field",
+              "name": "hideDelay",
+              "type": {
+                "text": "number"
+              },
+              "default": "150",
+              "attribute": "hide-delay"
+            },
+            {
+              "kind": "field",
+              "name": "noToggle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables click-to-toggle so the value is only revealed on hover. Clicks still bubble to the parent.",
+              "attribute": "no-toggle"
+            },
+            {
+              "kind": "field",
+              "name": "_isRevealed",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_isToggled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_hideTimer",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_clearHideTimer",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleToggleReveal",
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "handleMouseEnter",
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "handleMouseLeave",
+              "privacy": "protected"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "duration",
+              "type": {
+                "text": "number"
+              },
+              "default": "2000",
+              "fieldName": "duration"
+            },
+            {
+              "name": "initial",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "initial"
+            },
+            {
+              "name": "revealed",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "revealed"
+            },
+            {
+              "name": "hide-delay",
+              "type": {
+                "text": "number"
+              },
+              "default": "150",
+              "fieldName": "hideDelay"
+            },
+            {
+              "name": "no-toggle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables click-to-toggle so the value is only revealed on hover. Clicks still bubble to the parent.",
+              "fieldName": "noToggle"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "reveal",
+          "tagName": "zn-reveal",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/reveal\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @usage\n * ```html\n * <zn-reveal duration=\"3000\"\n *            initial=\"******@hotmail.com\"\n *            revealed=\"john.doe@hotmail.com\" toggle>\n * </zn-reveal>\n * ```\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/reveal",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnReveal",
+            "module": "components/reveal/reveal.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/schedule-builder/schedule-builder.js",
       "declarations": [
         {
@@ -37241,207 +37442,6 @@
           "declaration": {
             "name": "ZnScheduleBuilder",
             "module": "components/schedule-builder/schedule-builder.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/reveal/reveal.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnReveal",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "duration",
-              "type": {
-                "text": "number"
-              },
-              "default": "2000",
-              "attribute": "duration"
-            },
-            {
-              "kind": "field",
-              "name": "initial",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "initial"
-            },
-            {
-              "kind": "field",
-              "name": "revealed",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "revealed"
-            },
-            {
-              "kind": "field",
-              "name": "hideDelay",
-              "type": {
-                "text": "number"
-              },
-              "default": "150",
-              "attribute": "hide-delay"
-            },
-            {
-              "kind": "field",
-              "name": "noToggle",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Disables click-to-toggle so the value is only revealed on hover. Clicks still bubble to the parent.",
-              "attribute": "no-toggle"
-            },
-            {
-              "kind": "field",
-              "name": "_isRevealed",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_isToggled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_hideTimer",
-              "type": {
-                "text": "ReturnType<typeof setTimeout> | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_clearHideTimer",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleToggleReveal",
-              "privacy": "protected"
-            },
-            {
-              "kind": "method",
-              "name": "handleMouseEnter",
-              "privacy": "protected"
-            },
-            {
-              "kind": "method",
-              "name": "handleMouseLeave",
-              "privacy": "protected"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "duration",
-              "type": {
-                "text": "number"
-              },
-              "default": "2000",
-              "fieldName": "duration"
-            },
-            {
-              "name": "initial",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "initial"
-            },
-            {
-              "name": "revealed",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "revealed"
-            },
-            {
-              "name": "hide-delay",
-              "type": {
-                "text": "number"
-              },
-              "default": "150",
-              "fieldName": "hideDelay"
-            },
-            {
-              "name": "no-toggle",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Disables click-to-toggle so the value is only revealed on hover. Clicks still bubble to the parent.",
-              "fieldName": "noToggle"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "reveal",
-          "tagName": "zn-reveal",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/reveal\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @usage\n * ```html\n * <zn-reveal duration=\"3000\"\n *            initial=\"******@hotmail.com\"\n *            revealed=\"john.doe@hotmail.com\" toggle>\n * </zn-reveal>\n * ```\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/reveal",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnReveal",
-            "module": "components/reveal/reveal.js"
           }
         }
       ]
@@ -50588,7 +50588,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.102",
+    "version": "1.1.103",
     "author": "",
     "license": "MIT"
   }

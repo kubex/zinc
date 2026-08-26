@@ -14,6 +14,17 @@
       ]
     },
     {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
+        }
+      ]
+    },
+    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -50,17 +61,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
-        }
-      ]
-    },
-    {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -1080,6 +1080,47 @@
       ]
     },
     {
+      "name": "zn-data-table",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **search** - Slot for search component.\n- **sort** - Slot for sort component.\n- **filter** - Slot for filter component.\n- **filter-top** - Slot for top-level filter component.\n- **delete-action** - Slot for delete action button.\n- **modify-action** - Slot for modify action button.\n- **create-action** - Slot for create action button.\n- **inputs** - Slot for additional input controls.\n- **empty-state** - Slot for custom empty state.\n- **no-results** - Slot for a custom no-results state, shown when a search on a no-initial-load table returns no rows.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "data-uri", "values": [] },
+        { "name": "data", "values": [{ "name": "Row[]" }, { "name": "Row" }] },
+        { "name": "sort-column", "values": [] },
+        { "name": "sort-direction", "values": [] },
+        { "name": "local-sort", "values": [] },
+        { "name": "filter", "values": [] },
+        { "name": "search", "values": [] },
+        { "name": "wide-column", "values": [] },
+        { "name": "key", "values": [] },
+        {
+          "name": "headers",
+          "values": [{ "name": "Record<string" }, { "name": "HeaderConfig>" }]
+        },
+        { "name": "hide-headers", "values": [] },
+        { "name": "hide-columns", "values": [] },
+        { "name": "unsortable-headers", "values": [] },
+        { "name": "unsortable", "values": [] },
+        { "name": "hide-pagination", "values": [] },
+        { "name": "standalone", "values": [] },
+        { "name": "caption", "values": [] },
+        { "name": "empty-state-caption", "values": [] },
+        { "name": "empty-state-icon", "values": [] },
+        { "name": "hide-checkboxes", "values": [] },
+        { "name": "filters", "values": [{ "name": "[]" }] },
+        { "name": "method", "values": [{ "name": "GET" }, { "name": "POST" }] },
+        { "name": "no-initial-load", "values": [] },
+        { "name": "group-by", "values": [] },
+        { "name": "groups", "values": [] },
+        { "name": "per-page-size", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/data-table"
+        }
+      ]
+    },
+    {
       "name": "zn-data-select",
       "description": "A select component with built-in data providers for common options like colors, currencies, and countries.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted when the select's value changes.\n- **zn-clear** - Emitted when the clear button is activated.\n- **blur** - Emitted when the select loses focus.\n\n### **Slots:**\n - **label** - The select's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.\n- **help-text** - Text that describes how to use the select. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Parts:**\n - **combobox** - The container that wraps the prefix, combobox, clear icon, and expand button (forwarded from zn-select).\n- **expand-icon** - The container that wraps the expand icon (forwarded from zn-select).\n- **form-control-help-text** - The help text's wrapper (forwarded from zn-select).\n- **form-control-input** - The select's wrapper (forwarded from zn-select).\n- **display-input** - The element that displays the selected option's label (forwarded from zn-select).",
       "attributes": [
@@ -1183,47 +1224,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/data-select"
-        }
-      ]
-    },
-    {
-      "name": "zn-data-table",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **search** - Slot for search component.\n- **sort** - Slot for sort component.\n- **filter** - Slot for filter component.\n- **filter-top** - Slot for top-level filter component.\n- **delete-action** - Slot for delete action button.\n- **modify-action** - Slot for modify action button.\n- **create-action** - Slot for create action button.\n- **inputs** - Slot for additional input controls.\n- **empty-state** - Slot for custom empty state.\n- **no-results** - Slot for a custom no-results state, shown when a search on a no-initial-load table returns no rows.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "data-uri", "values": [] },
-        { "name": "data", "values": [{ "name": "Row[]" }, { "name": "Row" }] },
-        { "name": "sort-column", "values": [] },
-        { "name": "sort-direction", "values": [] },
-        { "name": "local-sort", "values": [] },
-        { "name": "filter", "values": [] },
-        { "name": "search", "values": [] },
-        { "name": "wide-column", "values": [] },
-        { "name": "key", "values": [] },
-        {
-          "name": "headers",
-          "values": [{ "name": "Record<string" }, { "name": "HeaderConfig>" }]
-        },
-        { "name": "hide-headers", "values": [] },
-        { "name": "hide-columns", "values": [] },
-        { "name": "unsortable-headers", "values": [] },
-        { "name": "unsortable", "values": [] },
-        { "name": "hide-pagination", "values": [] },
-        { "name": "standalone", "values": [] },
-        { "name": "caption", "values": [] },
-        { "name": "empty-state-caption", "values": [] },
-        { "name": "empty-state-icon", "values": [] },
-        { "name": "hide-checkboxes", "values": [] },
-        { "name": "filters", "values": [{ "name": "[]" }] },
-        { "name": "method", "values": [{ "name": "GET" }, { "name": "POST" }] },
-        { "name": "no-initial-load", "values": [] },
-        { "name": "group-by", "values": [] },
-        { "name": "groups", "values": [] },
-        { "name": "per-page-size", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/data-table"
         }
       ]
     },
@@ -2810,6 +2810,19 @@
       ]
     },
     {
+      "name": "zn-order-table",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "data", "values": [{ "name": "OrderTableData" }] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/order-table"
+        }
+      ]
+    },
+    {
       "name": "zn-page",
       "description": "Combines a page header with tab navigation and tab panels.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n \n\n\n### **Slots:**\n - _default_ - Page content. Use zn-tab for named tabs and header-action/header-actions for header actions.\n- **description** - Rich subtitle/description content. Falls back to the `summary` attribute when empty.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -2846,19 +2859,6 @@
       ],
       "references": [
         { "name": "Documentation", "url": "https://zinc.style/components/page" }
-      ]
-    },
-    {
-      "name": "zn-order-table",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "data", "values": [{ "name": "OrderTableData" }] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/order-table"
-        }
       ]
     },
     {
@@ -2966,30 +2966,6 @@
       "attributes": [{ "name": "flush", "values": [] }],
       "references": [
         { "name": "Documentation", "url": "https://zinc.style/components/pane" }
-      ]
-    },
-    {
-      "name": "zn-panel",
-      "description": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n---\n\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "basis-px", "values": [] },
-        { "name": "caption", "values": [] },
-        { "name": "icon", "values": [] },
-        { "name": "tabbed", "values": [] },
-        { "name": "header-borderless", "values": [] },
-        { "name": "cosmic", "values": [] },
-        { "name": "flush", "values": [] },
-        { "name": "flush-x", "values": [] },
-        { "name": "flush-y", "values": [] },
-        { "name": "flush-footer", "values": [] },
-        { "name": "transparent", "values": [] },
-        { "name": "shadow", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/panel"
-        }
       ]
     },
     {
@@ -3138,6 +3114,30 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/popup"
+        }
+      ]
+    },
+    {
+      "name": "zn-panel",
+      "description": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n---\n\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "basis-px", "values": [] },
+        { "name": "caption", "values": [] },
+        { "name": "icon", "values": [] },
+        { "name": "tabbed", "values": [] },
+        { "name": "header-borderless", "values": [] },
+        { "name": "cosmic", "values": [] },
+        { "name": "flush", "values": [] },
+        { "name": "flush-x", "values": [] },
+        { "name": "flush-y", "values": [] },
+        { "name": "flush-footer", "values": [] },
+        { "name": "transparent", "values": [] },
+        { "name": "shadow", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/panel"
         }
       ]
     },
@@ -4895,6 +4895,35 @@
       ]
     },
     {
+      "name": "zn-tile",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "caption", "values": [] },
+        { "name": "description", "values": [] },
+        { "name": "href", "values": [] },
+        { "name": "data-target", "values": [] },
+        { "name": "gaid", "values": [] },
+        { "name": "data-uri", "values": [] },
+        { "name": "flush", "values": [] },
+        { "name": "flush-x", "values": [] },
+        { "name": "flush-y", "values": [] },
+        { "name": "inline", "values": [] },
+        {
+          "name": "plain",
+          "description": "Renders the caption in the normal table-content weight instead of bold.",
+          "values": []
+        },
+        {
+          "name": "grouped",
+          "description": "Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row.",
+          "values": []
+        }
+      ],
+      "references": [
+        { "name": "Documentation", "url": "https://zinc.style/components/tile" }
+      ]
+    },
+    {
       "name": "zn-thumbnail-group",
       "description": "Lays a set of `zn-thumbnail` elements out as a single scrollable row, with a\n\"Show All\" toggle that expands them into a wrapping grid.\n---\n\n\n### **Events:**\n - **zn-expand** - Emitted when the group expands into the full grid.\n- **zn-collapse** - Emitted when the group collapses back to a single row.\n- **zn-change** - Emitted when the selected thumbnail changes (`selectable` groups only).\n\n### **Methods:**\n - **show()** - Expands the group into the full grid.\n- **hide()** - Collapses the group back to a single row.\n\n### **Slots:**\n - _default_ - One or more `zn-thumbnail` elements.\n- **caption** - Replaces the heading text.\n- **actions** - Extra content in the header, before the toggle.\n\n### **CSS Properties:**\n - **--zn-thumbnail-width** - Track width of a thumbnail. Defaults to 180px. Also settable with the `thumbnail-width` attribute. _(default: undefined)_\n- **--zn-thumbnail-gap** - Gap between thumbnails. Also settable with the `gap` attribute. _(default: undefined)_\n- **--zn-thumbnail-aspect-ratio** - Aspect ratio of every thumbnail in the group. Also settable with the `aspect-ratio` attribute. Any `zn-thumbnail` custom property set here is inherited by the slotted thumbnails. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The header row holding the caption and toggle.\n- **caption** - The heading text.\n- **toggle** - The show all / show less button.\n- **items** - The scrolling row / expanded grid that holds the thumbnails.",
       "attributes": [
@@ -4964,35 +4993,6 @@
           "name": "Documentation",
           "url": "https://zinc.style/components/thumbnail-group"
         }
-      ]
-    },
-    {
-      "name": "zn-tile",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "caption", "values": [] },
-        { "name": "description", "values": [] },
-        { "name": "href", "values": [] },
-        { "name": "data-target", "values": [] },
-        { "name": "gaid", "values": [] },
-        { "name": "data-uri", "values": [] },
-        { "name": "flush", "values": [] },
-        { "name": "flush-x", "values": [] },
-        { "name": "flush-y", "values": [] },
-        { "name": "inline", "values": [] },
-        {
-          "name": "plain",
-          "description": "Renders the caption in the normal table-content weight instead of bold.",
-          "values": []
-        },
-        {
-          "name": "grouped",
-          "description": "Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row.",
-          "values": []
-        }
-      ],
-      "references": [
-        { "name": "Documentation", "url": "https://zinc.style/components/tile" }
       ]
     },
     {

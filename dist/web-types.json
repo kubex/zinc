@@ -16,6 +16,28 @@
           "js": { "properties": [], "events": [] }
         },
         {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -75,28 +97,6 @@
               { "name": "center", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -2394,6 +2394,167 @@
           }
         },
         {
+          "name": "zn-data-table",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **search** - Slot for search component.\n- **sort** - Slot for sort component.\n- **filter** - Slot for filter component.\n- **filter-top** - Slot for top-level filter component.\n- **delete-action** - Slot for delete action button.\n- **modify-action** - Slot for modify action button.\n- **create-action** - Slot for create action button.\n- **inputs** - Slot for additional input controls.\n- **empty-state** - Slot for custom empty state.\n- **no-results** - Slot for a custom no-results state, shown when a search on a no-initial-load table returns no rows.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "data-uri", "value": { "type": "string" } },
+            {
+              "name": "data",
+              "value": { "type": "Row[] | Row", "default": "[]" }
+            },
+            { "name": "sort-column", "value": { "type": "string" } },
+            {
+              "name": "sort-direction",
+              "value": { "type": "string", "default": "\"asc\"" }
+            },
+            {
+              "name": "local-sort",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "filter",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "search",
+              "value": { "type": "string", "default": "''" }
+            },
+            { "name": "wide-column", "value": { "type": "string" } },
+            { "name": "key", "value": { "type": "string", "default": "'id'" } },
+            {
+              "name": "headers",
+              "value": {
+                "type": "Record<string, HeaderConfig>",
+                "default": "{}"
+              }
+            },
+            {
+              "name": "hide-headers",
+              "value": { "type": "string", "default": "'{}'" }
+            },
+            {
+              "name": "hide-columns",
+              "value": { "type": "string", "default": "'{}'" }
+            },
+            {
+              "name": "unsortable-headers",
+              "value": { "type": "string", "default": "'{}'" }
+            },
+            {
+              "name": "unsortable",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "hide-pagination", "value": { "type": "boolean" } },
+            {
+              "name": "standalone",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "caption", "value": { "type": "string" } },
+            { "name": "empty-state-caption", "value": { "type": "string" } },
+            {
+              "name": "empty-state-icon",
+              "value": { "type": "string", "default": "\"data_alert\"" }
+            },
+            { "name": "hide-checkboxes", "value": { "type": "boolean" } },
+            { "name": "filters", "value": { "type": "[]", "default": "[]" } },
+            {
+              "name": "method",
+              "value": { "type": "'GET' | 'POST'", "default": "'POST'" }
+            },
+            {
+              "name": "no-initial-load",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "group-by",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "groups",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "per-page-size",
+              "value": { "type": "number", "default": "DEFAULT_PER_PAGE" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "search", "description": "Slot for search component." },
+            { "name": "sort", "description": "Slot for sort component." },
+            { "name": "filter", "description": "Slot for filter component." },
+            {
+              "name": "filter-top",
+              "description": "Slot for top-level filter component."
+            },
+            {
+              "name": "delete-action",
+              "description": "Slot for delete action button."
+            },
+            {
+              "name": "modify-action",
+              "description": "Slot for modify action button."
+            },
+            {
+              "name": "create-action",
+              "description": "Slot for create action button."
+            },
+            {
+              "name": "inputs",
+              "description": "Slot for additional input controls."
+            },
+            {
+              "name": "empty-state",
+              "description": "Slot for custom empty state."
+            },
+            {
+              "name": "no-results",
+              "description": "Slot for a custom no-results state, shown when a search on a no-initial-load table returns no rows."
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "dataUri", "type": "string" },
+              { "name": "data", "type": "Row[] | Row" },
+              { "name": "sortColumn", "type": "string" },
+              { "name": "sortDirection", "type": "string" },
+              { "name": "localSort", "type": "boolean" },
+              { "name": "filter", "type": "string" },
+              { "name": "search", "type": "string" },
+              { "name": "wideColumn", "type": "string" },
+              { "name": "key", "type": "string" },
+              { "name": "headers", "type": "Record<string, HeaderConfig>" },
+              {
+                "name": "displayTemplates",
+                "type": "Record<string, DisplayTemplate>"
+              },
+              { "name": "hiddenHeaders", "type": "string" },
+              { "name": "hiddenColumns", "type": "string" },
+              { "name": "unsortableHeaders", "type": "string" },
+              { "name": "unsortable", "type": "boolean" },
+              { "name": "hidePagination", "type": "boolean" },
+              { "name": "standalone", "type": "boolean" },
+              { "name": "caption", "type": "string" },
+              { "name": "emptyStateCaption", "type": "string" },
+              { "name": "emptyStateIcon", "type": "string" },
+              { "name": "hideCheckboxes", "type": "boolean" },
+              { "name": "filters", "type": "[]" },
+              { "name": "method", "type": "'GET' | 'POST'" },
+              { "name": "noInitialLoad", "type": "boolean" },
+              { "name": "groupBy", "type": "string" },
+              { "name": "groups", "type": "string" },
+              { "name": "itemsPerPage", "type": "number" },
+              { "name": "selectAllButton", "type": "ZnButton" },
+              { "name": "requestParams", "type": "Record<string, any>" },
+              { "name": "filterChangeListener" },
+              { "name": "searchChangeListener" }
+            ],
+            "events": []
+          }
+        },
+        {
           "name": "zn-data-select",
           "description": "A select component with built-in data providers for common options like colors, currencies, and countries.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted when the select's value changes.\n- **zn-clear** - Emitted when the clear button is activated.\n- **blur** - Emitted when the select loses focus.\n\n### **Slots:**\n - **label** - The select's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.\n- **help-text** - Text that describes how to use the select. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Parts:**\n - **combobox** - The container that wraps the prefix, combobox, clear icon, and expand button (forwarded from zn-select).\n- **expand-icon** - The container that wraps the expand icon (forwarded from zn-select).\n- **form-control-help-text** - The help text's wrapper (forwarded from zn-select).\n- **form-control-input** - The select's wrapper (forwarded from zn-select).\n- **display-input** - The element that displays the selected option's label (forwarded from zn-select).",
           "doc-url": "",
@@ -2648,167 +2809,6 @@
                 "description": "Emitted when the select loses focus."
               }
             ]
-          }
-        },
-        {
-          "name": "zn-data-table",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **search** - Slot for search component.\n- **sort** - Slot for sort component.\n- **filter** - Slot for filter component.\n- **filter-top** - Slot for top-level filter component.\n- **delete-action** - Slot for delete action button.\n- **modify-action** - Slot for modify action button.\n- **create-action** - Slot for create action button.\n- **inputs** - Slot for additional input controls.\n- **empty-state** - Slot for custom empty state.\n- **no-results** - Slot for a custom no-results state, shown when a search on a no-initial-load table returns no rows.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "data-uri", "value": { "type": "string" } },
-            {
-              "name": "data",
-              "value": { "type": "Row[] | Row", "default": "[]" }
-            },
-            { "name": "sort-column", "value": { "type": "string" } },
-            {
-              "name": "sort-direction",
-              "value": { "type": "string", "default": "\"asc\"" }
-            },
-            {
-              "name": "local-sort",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "filter",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "search",
-              "value": { "type": "string", "default": "''" }
-            },
-            { "name": "wide-column", "value": { "type": "string" } },
-            { "name": "key", "value": { "type": "string", "default": "'id'" } },
-            {
-              "name": "headers",
-              "value": {
-                "type": "Record<string, HeaderConfig>",
-                "default": "{}"
-              }
-            },
-            {
-              "name": "hide-headers",
-              "value": { "type": "string", "default": "'{}'" }
-            },
-            {
-              "name": "hide-columns",
-              "value": { "type": "string", "default": "'{}'" }
-            },
-            {
-              "name": "unsortable-headers",
-              "value": { "type": "string", "default": "'{}'" }
-            },
-            {
-              "name": "unsortable",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "hide-pagination", "value": { "type": "boolean" } },
-            {
-              "name": "standalone",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "caption", "value": { "type": "string" } },
-            { "name": "empty-state-caption", "value": { "type": "string" } },
-            {
-              "name": "empty-state-icon",
-              "value": { "type": "string", "default": "\"data_alert\"" }
-            },
-            { "name": "hide-checkboxes", "value": { "type": "boolean" } },
-            { "name": "filters", "value": { "type": "[]", "default": "[]" } },
-            {
-              "name": "method",
-              "value": { "type": "'GET' | 'POST'", "default": "'POST'" }
-            },
-            {
-              "name": "no-initial-load",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "group-by",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "groups",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "per-page-size",
-              "value": { "type": "number", "default": "DEFAULT_PER_PAGE" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "search", "description": "Slot for search component." },
-            { "name": "sort", "description": "Slot for sort component." },
-            { "name": "filter", "description": "Slot for filter component." },
-            {
-              "name": "filter-top",
-              "description": "Slot for top-level filter component."
-            },
-            {
-              "name": "delete-action",
-              "description": "Slot for delete action button."
-            },
-            {
-              "name": "modify-action",
-              "description": "Slot for modify action button."
-            },
-            {
-              "name": "create-action",
-              "description": "Slot for create action button."
-            },
-            {
-              "name": "inputs",
-              "description": "Slot for additional input controls."
-            },
-            {
-              "name": "empty-state",
-              "description": "Slot for custom empty state."
-            },
-            {
-              "name": "no-results",
-              "description": "Slot for a custom no-results state, shown when a search on a no-initial-load table returns no rows."
-            }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              { "name": "dataUri", "type": "string" },
-              { "name": "data", "type": "Row[] | Row" },
-              { "name": "sortColumn", "type": "string" },
-              { "name": "sortDirection", "type": "string" },
-              { "name": "localSort", "type": "boolean" },
-              { "name": "filter", "type": "string" },
-              { "name": "search", "type": "string" },
-              { "name": "wideColumn", "type": "string" },
-              { "name": "key", "type": "string" },
-              { "name": "headers", "type": "Record<string, HeaderConfig>" },
-              {
-                "name": "displayTemplates",
-                "type": "Record<string, DisplayTemplate>"
-              },
-              { "name": "hiddenHeaders", "type": "string" },
-              { "name": "hiddenColumns", "type": "string" },
-              { "name": "unsortableHeaders", "type": "string" },
-              { "name": "unsortable", "type": "boolean" },
-              { "name": "hidePagination", "type": "boolean" },
-              { "name": "standalone", "type": "boolean" },
-              { "name": "caption", "type": "string" },
-              { "name": "emptyStateCaption", "type": "string" },
-              { "name": "emptyStateIcon", "type": "string" },
-              { "name": "hideCheckboxes", "type": "boolean" },
-              { "name": "filters", "type": "[]" },
-              { "name": "method", "type": "'GET' | 'POST'" },
-              { "name": "noInitialLoad", "type": "boolean" },
-              { "name": "groupBy", "type": "string" },
-              { "name": "groups", "type": "string" },
-              { "name": "itemsPerPage", "type": "number" },
-              { "name": "selectAllButton", "type": "ZnButton" },
-              { "name": "requestParams", "type": "Record<string, any>" },
-              { "name": "filterChangeListener" },
-              { "name": "searchChangeListener" }
-            ],
-            "events": []
           }
         },
         {
@@ -6568,6 +6568,33 @@
           }
         },
         {
+          "name": "zn-order-table",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "data", "value": { "type": "OrderTableData" } }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "data", "type": "OrderTableData" },
+              { "name": "resizeEventHandler" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-page",
           "description": "Combines a page header with tab navigation and tab panels.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n \n\n\n### **Slots:**\n - _default_ - Page content. Use zn-tab for named tabs and header-action/header-actions for header actions.\n- **description** - Rich subtitle/description content. Falls back to the `summary` attribute when empty.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -6700,33 +6727,6 @@
               { "name": "monitor", "type": "string" },
               { "name": "description", "type": "string" },
               { "name": "reRegisterTabs" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-order-table",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "data", "value": { "type": "OrderTableData" } }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "data", "type": "OrderTableData" },
-              { "name": "resizeEventHandler" }
             ],
             "events": [
               {
@@ -7047,54 +7047,6 @@
           }
         },
         {
-          "name": "zn-panel",
-          "description": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n---\n\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "basis-px", "value": { "type": "number" } },
-            { "name": "caption", "value": { "type": "string" } },
-            { "name": "icon", "value": { "type": "string" } },
-            { "name": "tabbed", "value": { "type": "boolean" } },
-            { "name": "header-borderless", "value": { "type": "boolean" } },
-            { "name": "cosmic", "value": { "type": "boolean" } },
-            { "name": "flush", "value": { "type": "boolean" } },
-            { "name": "flush-x", "value": { "type": "boolean" } },
-            { "name": "flush-y", "value": { "type": "boolean" } },
-            { "name": "flush-footer", "value": { "type": "boolean" } },
-            { "name": "transparent", "value": { "type": "boolean" } },
-            { "name": "shadow", "value": { "type": "boolean" } }
-          ],
-          "slots": [
-            { "name": "", "description": "The panel's main content." },
-            {
-              "name": "actions",
-              "description": "Actions displayed in the panel header (buttons, chips, etc)."
-            },
-            {
-              "name": "footer",
-              "description": "Content displayed in the panel footer."
-            }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              { "name": "basis", "type": "number" },
-              { "name": "caption", "type": "string" },
-              { "name": "icon", "type": "string" },
-              { "name": "tabbed", "type": "boolean" },
-              { "name": "headerBorderless", "type": "boolean" },
-              { "name": "cosmic", "type": "boolean" },
-              { "name": "flush", "type": "boolean" },
-              { "name": "flushX", "type": "boolean" },
-              { "name": "flushY", "type": "boolean" },
-              { "name": "flushFooter", "type": "boolean" },
-              { "name": "transparent", "type": "boolean" },
-              { "name": "shadow", "type": "boolean" }
-            ],
-            "events": []
-          }
-        },
-        {
           "name": "zn-popup",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **reposition()** - Forces the popup to recalculate and reposition itself.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -7351,6 +7303,54 @@
                 "description": "Emitted as an example."
               }
             ]
+          }
+        },
+        {
+          "name": "zn-panel",
+          "description": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n---\n\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "basis-px", "value": { "type": "number" } },
+            { "name": "caption", "value": { "type": "string" } },
+            { "name": "icon", "value": { "type": "string" } },
+            { "name": "tabbed", "value": { "type": "boolean" } },
+            { "name": "header-borderless", "value": { "type": "boolean" } },
+            { "name": "cosmic", "value": { "type": "boolean" } },
+            { "name": "flush", "value": { "type": "boolean" } },
+            { "name": "flush-x", "value": { "type": "boolean" } },
+            { "name": "flush-y", "value": { "type": "boolean" } },
+            { "name": "flush-footer", "value": { "type": "boolean" } },
+            { "name": "transparent", "value": { "type": "boolean" } },
+            { "name": "shadow", "value": { "type": "boolean" } }
+          ],
+          "slots": [
+            { "name": "", "description": "The panel's main content." },
+            {
+              "name": "actions",
+              "description": "Actions displayed in the panel header (buttons, chips, etc)."
+            },
+            {
+              "name": "footer",
+              "description": "Content displayed in the panel footer."
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "basis", "type": "number" },
+              { "name": "caption", "type": "string" },
+              { "name": "icon", "type": "string" },
+              { "name": "tabbed", "type": "boolean" },
+              { "name": "headerBorderless", "type": "boolean" },
+              { "name": "cosmic", "type": "boolean" },
+              { "name": "flush", "type": "boolean" },
+              { "name": "flushX", "type": "boolean" },
+              { "name": "flushY", "type": "boolean" },
+              { "name": "flushFooter", "type": "boolean" },
+              { "name": "transparent", "type": "boolean" },
+              { "name": "shadow", "type": "boolean" }
+            ],
+            "events": []
           }
         },
         {
@@ -11521,6 +11521,70 @@
           }
         },
         {
+          "name": "zn-tile",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "caption", "value": { "type": "string" } },
+            { "name": "description", "value": { "type": "string" } },
+            { "name": "href", "value": { "type": "string" } },
+            { "name": "data-target", "value": { "type": "string" } },
+            { "name": "gaid", "value": { "type": "string" } },
+            { "name": "data-uri", "value": { "type": "string" } },
+            { "name": "flush", "value": { "type": "boolean" } },
+            { "name": "flush-x", "value": { "type": "boolean" } },
+            { "name": "flush-y", "value": { "type": "boolean" } },
+            { "name": "inline", "value": { "type": "boolean" } },
+            {
+              "name": "plain",
+              "description": "Renders the caption in the normal table-content weight instead of bold.",
+              "value": { "type": "boolean" }
+            },
+            {
+              "name": "grouped",
+              "description": "Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row.",
+              "value": { "type": "boolean" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "caption", "type": "string" },
+              { "name": "description", "type": "string" },
+              { "name": "href", "type": "string" },
+              { "name": "dataTarget", "type": "string" },
+              { "name": "gaid", "type": "string" },
+              { "name": "dataUri", "type": "string" },
+              { "name": "flush", "type": "boolean" },
+              { "name": "flushX", "type": "boolean" },
+              { "name": "flushY", "type": "boolean" },
+              { "name": "inline", "type": "boolean" },
+              {
+                "name": "plain",
+                "description": "Renders the caption in the normal table-content weight instead of bold.",
+                "type": "boolean"
+              },
+              {
+                "name": "grouped",
+                "description": "Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row.",
+                "type": "boolean"
+              }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-thumbnail-group",
           "description": "Lays a set of `zn-thumbnail` elements out as a single scrollable row, with a\n\"Show All\" toggle that expands them into a wrapping grid.\n---\n\n\n### **Events:**\n - **zn-expand** - Emitted when the group expands into the full grid.\n- **zn-collapse** - Emitted when the group collapses back to a single row.\n- **zn-change** - Emitted when the selected thumbnail changes (`selectable` groups only).\n\n### **Methods:**\n - **show()** - Expands the group into the full grid.\n- **hide()** - Collapses the group back to a single row.\n\n### **Slots:**\n - _default_ - One or more `zn-thumbnail` elements.\n- **caption** - Replaces the heading text.\n- **actions** - Extra content in the header, before the toggle.\n\n### **CSS Properties:**\n - **--zn-thumbnail-width** - Track width of a thumbnail. Defaults to 180px. Also settable with the `thumbnail-width` attribute. _(default: undefined)_\n- **--zn-thumbnail-gap** - Gap between thumbnails. Also settable with the `gap` attribute. _(default: undefined)_\n- **--zn-thumbnail-aspect-ratio** - Aspect ratio of every thumbnail in the group. Also settable with the `aspect-ratio` attribute. Any `zn-thumbnail` custom property set here is inherited by the slotted thumbnails. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The header row holding the caption and toggle.\n- **caption** - The heading text.\n- **toggle** - The show all / show less button.\n- **items** - The scrolling row / expanded grid that holds the thumbnails.",
           "doc-url": "",
@@ -11686,70 +11750,6 @@
               {
                 "name": "zn-change",
                 "description": "Emitted when the selected thumbnail changes (`selectable` groups only)."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-tile",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "caption", "value": { "type": "string" } },
-            { "name": "description", "value": { "type": "string" } },
-            { "name": "href", "value": { "type": "string" } },
-            { "name": "data-target", "value": { "type": "string" } },
-            { "name": "gaid", "value": { "type": "string" } },
-            { "name": "data-uri", "value": { "type": "string" } },
-            { "name": "flush", "value": { "type": "boolean" } },
-            { "name": "flush-x", "value": { "type": "boolean" } },
-            { "name": "flush-y", "value": { "type": "boolean" } },
-            { "name": "inline", "value": { "type": "boolean" } },
-            {
-              "name": "plain",
-              "description": "Renders the caption in the normal table-content weight instead of bold.",
-              "value": { "type": "boolean" }
-            },
-            {
-              "name": "grouped",
-              "description": "Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row.",
-              "value": { "type": "boolean" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "caption", "type": "string" },
-              { "name": "description", "type": "string" },
-              { "name": "href", "type": "string" },
-              { "name": "dataTarget", "type": "string" },
-              { "name": "gaid", "type": "string" },
-              { "name": "dataUri", "type": "string" },
-              { "name": "flush", "type": "boolean" },
-              { "name": "flushX", "type": "boolean" },
-              { "name": "flushY", "type": "boolean" },
-              { "name": "inline", "type": "boolean" },
-              {
-                "name": "plain",
-                "description": "Renders the caption in the normal table-content weight instead of bold.",
-                "type": "boolean"
-              },
-              {
-                "name": "grouped",
-                "description": "Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row.",
-                "type": "boolean"
-              }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
               }
             ]
           }

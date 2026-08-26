@@ -30,7 +30,11 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
     assumeInteractionOn: ['zn-change'],
     // With allow-upload, a chosen file is submitted under `name` in place of
     // the icon string — the two are mutually exclusive.
-    value: (el: ZnIconPicker) => el._file ?? el.icon
+    value: (el: ZnIconPicker) => el._file ?? el.icon,
+    setValue: (el: ZnIconPicker, value: string) => {
+      el.clearFile();
+      el.icon = value ?? '';
+    }
   });
 
   @property() name = '';
@@ -50,7 +54,7 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
   @property() accept = 'image/*';
   @property({reflect: true}) form: string;
 
-  @defaultValue() defaultValue = '';
+  @defaultValue('icon') defaultValue = '';
 
   @state() private _dialogOpen = false;
   @state() private _searchQuery = '';

@@ -725,8 +725,7 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
                   class="droparea__upload"
                   icon="cloud_upload"
                   icon-size="20"
-                  color="default"
-                  outline
+                  panel-bg
                   ?disabled=${this.disabled}
                   part="upload">
                   ${buttonText}
@@ -760,7 +759,7 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
           ?disabled=${this.disabled}
           exportparts="base:button__base"
           part="button"
-          outline>
+          panel-bg>
           ${buttonText}
         </zn-button>
         ${this.renderFileValueWithDelete()}

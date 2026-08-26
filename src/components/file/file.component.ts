@@ -551,7 +551,7 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
     e.stopPropagation();
 
     const files = Array.from(this.files || []);
-    const file = (e.target as ZnButton).parentElement?.getAttribute('data-file-name');
+    const file = (e.target as HTMLElement).closest('[data-file-name]')?.getAttribute('data-file-name');
 
     const index = files.findIndex(f => f.name === file);
 
@@ -652,17 +652,17 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
                 'input__value--hidden': this.hideValue,
               })}
               data-file-name="${file.name}"
+              type="primary"
               part="value">
               ${file.name}
               ${isClearable ? html`
-                <zn-button
+                <zn-icon
                   slot="action"
                   class="input__delete"
-                  color="transparent"
-                  icon="close"
-                  icon-size="18"
+                  src="close"
+                  size="16"
                   @click="${this.removeFile}"
-                  part="delete"></zn-button>` : ''}
+                  part="delete"></zn-icon>` : ''}
             </zn-chip>
           `)}
         </div>` : html`${fileChosenLabel}`}`;

@@ -157,6 +157,20 @@ export default class ZnSlideout extends ZincElement {
   private closeClickHandler = (event: MouseEvent) => {
     if (event.target instanceof HTMLElement && event.target.hasAttribute('slideout-closer')) {
       this.hide();
+      return;
+    }
+
+    // `modal-closer` works from nested shadow roots (e.g. zn-form-actions' cancel button),
+    // where retargeting hides the source from event.target. Walk outward from the click:
+    // hitting another modal first means the closer belongs to it, not this slideout.
+    for (const el of event.composedPath()) {
+      if (el === this) return;
+      if (!(el instanceof HTMLElement)) continue;
+      if (el.hasAttribute('modal-closer')) {
+        void this.hide();
+        return;
+      }
+      if (el.localName === 'zn-dialog' || el.localName === 'zn-slideout') return;
     }
   }
 

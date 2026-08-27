@@ -378,6 +378,8 @@ You can also prevent close from specific sources by checking the `event.detail.s
 
 Add the `dialog-closer` attribute to any element inside the dialog to make it close the dialog when clicked. This is commonly used with buttons in the footer.
 
+The `modal-closer` attribute works the same way but closes the nearest containing modal of either kind — dialog or slideout — and, unlike `dialog-closer`, works from inside a nested component's shadow root. `<zn-form-actions>` uses it on its cancel button.
+
 ```html:preview
 <zn-button id="dialog-closer-trigger">Open Dialog</zn-button>
 <zn-dialog trigger="dialog-closer-trigger" label="Dialog Closer">

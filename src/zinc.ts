@@ -63,6 +63,7 @@ export { default as Option } from './components/option';
 export { default as Textarea } from './components/textarea';
 export { default as Checkbox } from './components/checkbox';
 export { default as Datepicker } from './components/datepicker';
+export { default as FormActions } from './components/form-actions';
 export { default as FormGroup } from './components/form-group';
 export { default as InputGroup } from './components/input-group';
 export { default as LinkedSelect } from './components/linked-select';

@@ -3138,6 +3138,8 @@ declare module "components/data-select/data-select.component" {
         name: string;
         /** The value of the select. Used for form submission. When `multiple` is enabled, this is an array of strings. */
         value: string | string[];
+        /** The default value of the form control. Primarily used for resetting the form control. */
+        defaultValue: string | string[];
         /** The provider of the select. */
         provider: 'color' | 'currency' | 'country' | 'phone' | 'us-state';
         /** The position of the icon. */
@@ -7390,6 +7392,8 @@ declare module "components/linked-select/linked-select.component" {
         static styles: CSSResultGroup;
         name: string;
         value: string;
+        /** The default value of the form control. Primarily used for resetting the form control. */
+        defaultValue: string;
         checked: boolean;
         options: linkedSelectOptions;
         linkedSelect: string;
@@ -7610,6 +7614,8 @@ declare module "components/rating/rating.component" {
         helpText: string;
         name: string;
         value: number;
+        /** The default value of the form control. Primarily used for resetting the form control. */
+        defaultValue: number;
         max: number;
         precision: number;
         readonly: boolean;

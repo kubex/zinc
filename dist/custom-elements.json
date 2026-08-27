@@ -58,79 +58,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -319,6 +246,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -16171,6 +16171,275 @@
           "declaration": {
             "name": "ZnFlowBuilder",
             "module": "components/flow-builder/flow-builder.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/form-actions/form-actions.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnFormActions",
+          "cssParts": [
+            {
+              "description": "The cancel button.",
+              "name": "cancel-button"
+            },
+            {
+              "description": "The reset button.",
+              "name": "reset-button"
+            },
+            {
+              "description": "The submit button.",
+              "name": "submit-button"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Extra actions, placed before the buttons.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-button': ZnButton }"
+            },
+            {
+              "kind": "field",
+              "name": "submitText",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Save'",
+              "description": "The submit button's text.",
+              "attribute": "submit-text"
+            },
+            {
+              "kind": "field",
+              "name": "submitIcon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'check@lu'",
+              "description": "The submit button's icon.",
+              "attribute": "submit-icon"
+            },
+            {
+              "kind": "field",
+              "name": "withCancel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Adds a cancel button. Closes the containing dialog or slideout, if any, and emits `zn-cancel`.",
+              "attribute": "with-cancel"
+            },
+            {
+              "kind": "field",
+              "name": "cancelText",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Cancel'",
+              "description": "The cancel button's text.",
+              "attribute": "cancel-text"
+            },
+            {
+              "kind": "field",
+              "name": "cancelIcon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'x@lu'",
+              "description": "The cancel button's icon.",
+              "attribute": "cancel-icon"
+            },
+            {
+              "kind": "field",
+              "name": "withReset",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Adds a reset button that resets the form.",
+              "attribute": "with-reset"
+            },
+            {
+              "kind": "field",
+              "name": "resetText",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Reset'",
+              "description": "The reset button's text.",
+              "attribute": "reset-text"
+            },
+            {
+              "kind": "field",
+              "name": "resetIcon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'rotate-ccw@lu'",
+              "description": "The reset button's icon.",
+              "attribute": "reset-icon"
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "The id of the form to act on. If omitted, the closest containing form is used.",
+              "attribute": "form"
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "handleCancel",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleReset",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleSubmit",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the cancel button is clicked.",
+              "name": "zn-cancel"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "submit-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Save'",
+              "description": "The submit button's text.",
+              "fieldName": "submitText"
+            },
+            {
+              "name": "submit-icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'check@lu'",
+              "description": "The submit button's icon.",
+              "fieldName": "submitIcon"
+            },
+            {
+              "name": "with-cancel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Adds a cancel button. Closes the containing dialog or slideout, if any, and emits `zn-cancel`.",
+              "fieldName": "withCancel"
+            },
+            {
+              "name": "cancel-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Cancel'",
+              "description": "The cancel button's text.",
+              "fieldName": "cancelText"
+            },
+            {
+              "name": "cancel-icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'x@lu'",
+              "description": "The cancel button's icon.",
+              "fieldName": "cancelIcon"
+            },
+            {
+              "name": "with-reset",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Adds a reset button that resets the form.",
+              "fieldName": "withReset"
+            },
+            {
+              "name": "reset-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Reset'",
+              "description": "The reset button's text.",
+              "fieldName": "resetText"
+            },
+            {
+              "name": "reset-icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'rotate-ccw@lu'",
+              "description": "The reset button's icon.",
+              "fieldName": "resetIcon"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "The id of the form to act on. If omitted, the closest containing form is used.",
+              "fieldName": "form"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Standard action row for the bottom of a form. Renders a submit button by default; opt in to more\nwith `with-cancel` and `with-reset`.",
+          "tagNameWithoutPrefix": "form-actions",
+          "tagName": "zn-form-actions",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Standard action row for the bottom of a form. Renders a submit button by default; opt in to more\n * with `with-cancel` and `with-reset`.\n * @documentation https://zinc.style/components/form-actions\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n *\n * @event zn-cancel - Emitted when the cancel button is clicked.\n *\n * @slot - Extra actions, placed before the buttons.\n *\n * @csspart cancel-button - The cancel button.\n * @csspart reset-button - The reset button.\n * @csspart submit-button - The submit button.\n */",
+          "documentation": "https://zinc.style/components/form-actions",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-button"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnFormActions",
+            "module": "components/form-actions/form-actions.js"
           }
         }
       ]
@@ -50593,7 +50862,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.105",
+    "version": "1.1.106",
     "author": "",
     "license": "MIT"
   }

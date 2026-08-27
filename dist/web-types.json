@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.1.105",
+  "version": "1.1.106",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -14,28 +14,6 @@
           "slots": [{ "name": "", "description": "The default slot" }],
           "events": [],
           "js": { "properties": [], "events": [] }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
         },
         {
           "name": "zn-alert",
@@ -97,6 +75,28 @@
               { "name": "center", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -4379,6 +4379,125 @@
               {
                 "name": "zn-flow-connect",
                 "description": "Emitted when a connection is created. `event.detail.connection`."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-form-actions",
+          "description": "Standard action row for the bottom of a form. Renders a submit button by default; opt in to more\nwith `with-cancel` and `with-reset`.\n---\n\n\n### **Events:**\n - **zn-cancel** - Emitted when the cancel button is clicked.\n\n### **Slots:**\n - _default_ - Extra actions, placed before the buttons.\n\n### **CSS Parts:**\n - **cancel-button** - The cancel button.\n- **reset-button** - The reset button.\n- **submit-button** - The submit button.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "submit-text",
+              "description": "The submit button's text.",
+              "value": { "type": "string", "default": "'Save'" }
+            },
+            {
+              "name": "submit-icon",
+              "description": "The submit button's icon.",
+              "value": { "type": "string", "default": "'check@lu'" }
+            },
+            {
+              "name": "with-cancel",
+              "description": "Adds a cancel button. Closes the containing dialog or slideout, if any, and emits `zn-cancel`.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "cancel-text",
+              "description": "The cancel button's text.",
+              "value": { "type": "string", "default": "'Cancel'" }
+            },
+            {
+              "name": "cancel-icon",
+              "description": "The cancel button's icon.",
+              "value": { "type": "string", "default": "'x@lu'" }
+            },
+            {
+              "name": "with-reset",
+              "description": "Adds a reset button that resets the form.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "reset-text",
+              "description": "The reset button's text.",
+              "value": { "type": "string", "default": "'Reset'" }
+            },
+            {
+              "name": "reset-icon",
+              "description": "The reset button's icon.",
+              "value": { "type": "string", "default": "'rotate-ccw@lu'" }
+            },
+            {
+              "name": "form",
+              "description": "The id of the form to act on. If omitted, the closest containing form is used.",
+              "value": { "type": "string" }
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Extra actions, placed before the buttons."
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-cancel",
+              "description": "Emitted when the cancel button is clicked."
+            }
+          ],
+          "js": {
+            "properties": [
+              {
+                "name": "submitText",
+                "description": "The submit button's text.",
+                "type": "string"
+              },
+              {
+                "name": "submitIcon",
+                "description": "The submit button's icon.",
+                "type": "string"
+              },
+              {
+                "name": "withCancel",
+                "description": "Adds a cancel button. Closes the containing dialog or slideout, if any, and emits `zn-cancel`.",
+                "type": "boolean"
+              },
+              {
+                "name": "cancelText",
+                "description": "The cancel button's text.",
+                "type": "string"
+              },
+              {
+                "name": "cancelIcon",
+                "description": "The cancel button's icon.",
+                "type": "string"
+              },
+              {
+                "name": "withReset",
+                "description": "Adds a reset button that resets the form.",
+                "type": "boolean"
+              },
+              {
+                "name": "resetText",
+                "description": "The reset button's text.",
+                "type": "string"
+              },
+              {
+                "name": "resetIcon",
+                "description": "The reset button's icon.",
+                "type": "string"
+              },
+              {
+                "name": "form",
+                "description": "The id of the form to act on. If omitted, the closest containing form is used.",
+                "type": "string"
+              }
+            ],
+            "events": [
+              {
+                "name": "zn-cancel",
+                "description": "Emitted when the cancel button is clicked."
               }
             ]
           }

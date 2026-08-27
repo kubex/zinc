@@ -7213,6 +7213,67 @@ declare module "components/checkbox/index" {
         }
     }
 }
+declare module "components/form-actions/form-actions.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    /**
+     * @summary Standard action row for the bottom of a form. Renders a submit button by default; opt in to more
+     * with `with-cancel` and `with-reset`.
+     * @documentation https://zinc.style/components/form-actions
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-button
+     *
+     * @event zn-cancel - Emitted when the cancel button is clicked.
+     *
+     * @slot - Extra actions, placed before the buttons.
+     *
+     * @csspart cancel-button - The cancel button.
+     * @csspart reset-button - The reset button.
+     * @csspart submit-button - The submit button.
+     */
+    export default class ZnFormActions extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-button': typeof ZnButton;
+        };
+        /** The submit button's text. */
+        submitText: string;
+        /** The submit button's icon. */
+        submitIcon: string;
+        /** Adds a cancel button. Closes the containing dialog or slideout, if any, and emits `zn-cancel`. */
+        withCancel: boolean;
+        /** The cancel button's text. */
+        cancelText: string;
+        /** The cancel button's icon. */
+        cancelIcon: string;
+        /** Adds a reset button that resets the form. */
+        withReset: boolean;
+        /** The reset button's text. */
+        resetText: string;
+        /** The reset button's icon. */
+        resetIcon: string;
+        /** The id of the form to act on. If omitted, the closest containing form is used. */
+        form: string;
+        private getForm;
+        private handleCancel;
+        private handleReset;
+        private handleSubmit;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/form-actions/index" {
+    import ZnFormActions from "components/form-actions/form-actions.component";
+    export * from "components/form-actions/form-actions.component";
+    export default ZnFormActions;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-form-actions': ZnFormActions;
+        }
+    }
+}
 declare module "components/form-group/form-group.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -12763,6 +12824,7 @@ declare module "zinc" {
     export { default as Textarea } from "components/textarea/index";
     export { default as Checkbox } from "components/checkbox/index";
     export { default as Datepicker } from "components/datepicker/index";
+    export { default as FormActions } from "components/form-actions/index";
     export { default as FormGroup } from "components/form-group/index";
     export { default as InputGroup } from "components/input-group/index";
     export { default as LinkedSelect } from "components/linked-select/index";

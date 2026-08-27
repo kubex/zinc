@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="A sorting control component that displays a dropdown with field selection and sort direction (ascending/descending) options, with clear and update actions."
+      content="A standard action row for the bottom of a form, built up from a lone submit button."
     />
-    <title>Data Table Sort</title>
+    <title>Form Actions</title>
 
     <meta name="turbo-cache-control" />
 
@@ -15,11 +15,11 @@
     <meta name="twitter:creator" content="kubex" />
     <meta name="twitter:image" content="https://zinc.style/assets" />
 
-    <meta property="og:url" content="https://zinc.style/components/data-table-sort" />
-    <meta property="og:title" content="Data Table Sort" />
+    <meta property="og:url" content="https://zinc.style/components/form-actions" />
+    <meta property="og:title" content="Form Actions" />
     <meta
       property="og:description"
-      content="A sorting control component that displays a dropdown with field selection and sort direction (ascending/descending) options, with clear and update actions."
+      content="A standard action row for the bottom of a form, built up from a lone submit button."
     />
     <meta property="og:image" content="https://zinc.style/assets" />
 
@@ -240,7 +240,7 @@
               </li>
 
               <li>
-                <a href="/components/data-table-sort" class="active-link"> Data Table Sort </a>
+                <a href="/components/data-table-sort"> Data Table Sort </a>
               </li>
 
               <li>
@@ -288,7 +288,7 @@
               </li>
 
               <li>
-                <a href="/components/form-actions"> Form Actions </a>
+                <a href="/components/form-actions" class="active-link"> Form Actions </a>
               </li>
 
               <li>
@@ -585,17 +585,17 @@
       <article id="content" class="content content--with-toc">
         <div class="content__toc">
           <ul>
-            <li class="top"><a href="#">Data Table Sort</a></li>
+            <li class="top"><a href="#">Form Actions</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
-            <li data-level="3"><a href="#basic-usage">Basic Usage</a></li>
-            <li data-level="3"><a href="#in-table-header">In Table Header</a></li>
-            <li data-level="3"><a href="#with-action-bar">With Action Bar</a></li>
-            <li data-level="3"><a href="#multiple-sort-controls">Multiple Sort Controls</a></li>
-            <li data-level="3"><a href="#compact-layout">Compact Layout</a></li>
+            <li data-level="3"><a href="#with-a-cancel-button">With a Cancel Button</a></li>
+            <li data-level="3"><a href="#with-a-reset-button">With a Reset Button</a></li>
+            <li data-level="3"><a href="#custom-text-and-icons">Custom Text and Icons</a></li>
+            <li data-level="3"><a href="#extra-actions">Extra Actions</a></li>
+            <li data-level="3"><a href="#targeting-a-form-by-id">Targeting a Form by Id</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
+            <li data-level="2"><a href="#properties">Properties</a></li>
             <li data-level="2"><a href="#events">Events</a></li>
-            <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
             <li data-level="2"><a href="#parts">Parts</a></li>
             <li data-level="2"><a href="#dependencies">Dependencies</a></li>
           </ul>
@@ -603,10 +603,10 @@
 
         <div class="content__body">
           <header class="component-header">
-            <h1>Data Table Sort</h1>
+            <h1>Form Actions</h1>
 
             <div class="component-header__tag">
-              <code>&lt;zn-data-table-sort&gt; | ZnDataTableSort</code>
+              <code>&lt;zn-form-actions&gt; | ZnFormActions</code>
             </div>
 
             <div class="component-header__info">
@@ -615,21 +615,33 @@
             </div>
           </header>
 
-          <p class="component-summary">Short summary of the component’s intended use.</p>
+          <p class="component-summary">
+            Standard action row for the bottom of a form. Renders a submit button by default; opt in to more with
+            <code>with-cancel</code> and <code>with-reset</code>.
+          </p>
 
+          <p>
+            Drops the standard action row into a form. The default is just a primary submit button — build it up with
+            <code>with-cancel</code> and <code>with-reset</code> as the form needs. Place it inside the form it should
+            act on.
+          </p>
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-data-table-sort></zn-data-table-sort>
+              <form>
+                <zn-form-actions></zn-form-actions>
+              </form>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-338">
+            <div class="code-preview__source-group" id="code-preview-source-group-554">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-435"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table-sort</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table-sort</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-435"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-702"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-form-actions</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-form-actions</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-702"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -638,7 +650,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-338"
+                aria-controls="code-preview-source-group-554"
               >
                 Source
                 <svg
@@ -657,23 +669,36 @@
           <h2 id="examples" class="anchor-heading">
             Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
           </h2>
-          <h3 id="basic-usage" class="anchor-heading">
-            Basic Usage<a href="#basic-usage" aria-label='Direct link to "Basic Usage"'></a>
+          <h3 id="with-a-cancel-button" class="anchor-heading">
+            With a Cancel Button<a href="#with-a-cancel-button" aria-label='Direct link to "With a Cancel Button"'></a>
           </h3>
-          <p>The data table sort component provides a dropdown interface for sorting data.</p>
+          <p>
+            Use the <code>with-cancel</code> attribute to add a cancel button. When the form lives inside a dialog or
+            slideout, cancelling closes it; it also emits a <code>zn-cancel</code> event for the container to handle.
+          </p>
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-data-table-sort></zn-data-table-sort>
+              <zn-dialog trigger="form-actions-dialog" label="New Ticket">
+                <form>
+                  <zn-form-actions with-cancel=""></zn-form-actions>
+                </form>
+              </zn-dialog>
+              <zn-button id="form-actions-dialog">Open Dialog</zn-button>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-339">
+            <div class="code-preview__source-group" id="code-preview-source-group-555">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-436"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table-sort</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table-sort</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-436"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-703"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-dialog</span> <span class="token attr-name">trigger</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form-actions-dialog<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>New Ticket<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-form-actions</span> <span class="token attr-name">with-cancel</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-form-actions</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-dialog</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form-actions-dialog<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Open Dialog<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-703"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -682,7 +707,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-339"
+                aria-controls="code-preview-source-group-555"
               >
                 Source
                 <svg
@@ -698,29 +723,29 @@
               </button>
             </div>
           </div>
-          <h3 id="in-table-header" class="anchor-heading">
-            In Table Header<a href="#in-table-header" aria-label='Direct link to "In Table Header"'></a>
+          <h3 id="with-a-reset-button" class="anchor-heading">
+            With a Reset Button<a href="#with-a-reset-button" aria-label='Direct link to "With a Reset Button"'></a>
           </h3>
-          <p>Typically used in data table headers for sorting functionality.</p>
+          <p>Use the <code>with-reset</code> attribute to add a button that resets the form’s fields.</p>
           <div class="code-preview">
             <div class="code-preview__preview">
-              <div style="display: flex; gap: 10px; align-items: center">
-                <span>Product List</span>
-                <zn-data-table-sort></zn-data-table-sort>
-              </div>
+              <form>
+                <input type="text" name="example" value="Change me, then reset" />
+                <zn-form-actions with-reset=""></zn-form-actions>
+              </form>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-340">
+            <div class="code-preview__source-group" id="code-preview-source-group-556">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-437"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 10px<span class="token punctuation">;</span> <span class="token property">align-items</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">&gt;</span></span>Product List<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table-sort</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table-sort</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-437"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-704"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>example<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Change me, then reset<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-form-actions</span> <span class="token attr-name">with-reset</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-form-actions</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-704"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -729,7 +754,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-340"
+                aria-controls="code-preview-source-group-556"
               >
                 Source
                 <svg
@@ -745,113 +770,39 @@
               </button>
             </div>
           </div>
-          <h3 id="with-action-bar" class="anchor-heading">
-            With Action Bar<a href="#with-action-bar" aria-label='Direct link to "With Action Bar"'></a>
-          </h3>
-          <p>Combine with other table controls in an action bar.</p>
-          <div class="code-preview">
-            <div class="code-preview__preview">
-              <zn-action-bar>
-                <zn-button slot="menu" color="transparent">All Items</zn-button>
-                <zn-button slot="menu" color="transparent">Active</zn-button>
-                <zn-button slot="menu" color="transparent">Archived</zn-button>
-
-                <zn-data-table-sort slot="actions"></zn-data-table-sort>
-                <zn-button slot="actions" icon="filter_alt" color="transparent"></zn-button>
-                <zn-button slot="actions" icon="refresh" color="transparent"></zn-button>
-              </zn-action-bar>
-
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
-            </div>
-
-            <div class="code-preview__source-group" id="code-preview-source-group-341">
-              <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-438"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-action-bar</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>menu<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>transparent<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>All Items<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>menu<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>transparent<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Active<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>menu<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>transparent<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Archived<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
-
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table-sort</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>actions<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table-sort</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>actions<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>filter_alt<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>transparent<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>actions<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>refresh<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>transparent<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-action-bar</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-438"></zn-copy-button></pre>
-              </div>
-            </div>
-
-            <div class="code-preview__buttons">
-              <button
-                type="button"
-                class="code-preview__button code-preview__toggle"
-                aria-expanded="false"
-                aria-controls="code-preview-source-group-341"
-              >
-                Source
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </button>
-            </div>
-          </div>
-          <h3 id="multiple-sort-controls" class="anchor-heading">
-            Multiple Sort Controls<a
-              href="#multiple-sort-controls"
-              aria-label='Direct link to "Multiple Sort Controls"'
+          <h3 id="custom-text-and-icons" class="anchor-heading">
+            Custom Text and Icons<a
+              href="#custom-text-and-icons"
+              aria-label='Direct link to "Custom Text and Icons"'
             ></a>
           </h3>
-          <p>Use multiple sort controls for different sections or views.</p>
+          <p>
+            Each button’s text and icon can be overridden with <code>submit-text</code> / <code>submit-icon</code>,
+            <code>cancel-text</code> / <code>cancel-icon</code> and <code>reset-text</code> / <code>reset-icon</code>.
+          </p>
           <div class="code-preview">
             <div class="code-preview__preview">
-              <div class="form-spacing">
-                <div>
-                  <h4>Customer List</h4>
-                  <zn-data-table-sort></zn-data-table-sort>
-                </div>
-
-                <div>
-                  <h4>Order History</h4>
-                  <zn-data-table-sort></zn-data-table-sort>
-                </div>
-
-                <div>
-                  <h4>Product Inventory</h4>
-                  <zn-data-table-sort></zn-data-table-sort>
-                </div>
-              </div>
+              <form>
+                <zn-form-actions
+                  with-cancel=""
+                  submit-text="Create Ticket"
+                  submit-icon="plus@lu"
+                  cancel-text="Discard"
+                  cancel-icon="trash-2@lu"
+                ></zn-form-actions>
+              </form>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-342">
+            <div class="code-preview__source-group" id="code-preview-source-group-557">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-439"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form-spacing<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h4</span><span class="token punctuation">&gt;</span></span>Customer List<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h4</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table-sort</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table-sort</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h4</span><span class="token punctuation">&gt;</span></span>Order History<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h4</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table-sort</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table-sort</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h4</span><span class="token punctuation">&gt;</span></span>Product Inventory<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h4</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table-sort</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table-sort</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-439"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-705"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-form-actions</span> <span class="token attr-name">with-cancel</span> <span class="token attr-name">submit-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Create Ticket<span class="token punctuation">"</span></span> <span class="token attr-name">submit-icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>plus@lu<span class="token punctuation">"</span></span> <span class="token attr-name">cancel-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Discard<span class="token punctuation">"</span></span> <span class="token attr-name">cancel-icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>trash-2@lu<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-form-actions</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-705"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -860,7 +811,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-342"
+                aria-controls="code-preview-source-group-557"
               >
                 Source
                 <svg
@@ -876,37 +827,31 @@
               </button>
             </div>
           </div>
-          <h3 id="compact-layout" class="anchor-heading">
-            Compact Layout<a href="#compact-layout" aria-label='Direct link to "Compact Layout"'></a>
+          <h3 id="extra-actions" class="anchor-heading">
+            Extra Actions<a href="#extra-actions" aria-label='Direct link to "Extra Actions"'></a>
           </h3>
-          <p>The component automatically uses a compact size suitable for table headers.</p>
+          <p>Extra buttons placed in the default slot appear before the standard buttons.</p>
           <div class="code-preview">
             <div class="code-preview__preview">
-              <div
-                style="
-                  display: flex;
-                  align-items: center;
-                  padding: 10px;
-                  background: var(--zn-color-neutral-50);
-                  border-radius: 4px;
-                "
-              >
-                <span style="font-weight: bold; margin-right: auto">Results (123)</span>
-                <zn-data-table-sort></zn-data-table-sort>
-              </div>
+              <form>
+                <zn-form-actions>
+                  <zn-button color="transparent">Preview</zn-button>
+                </zn-form-actions>
+              </form>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-343">
+            <div class="code-preview__source-group" id="code-preview-source-group-558">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-440"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">align-items</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span> <span class="token property">padding</span><span class="token punctuation">:</span> 10px<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-50<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-weight</span><span class="token punctuation">:</span> bold<span class="token punctuation">;</span> <span class="token property">margin-right</span><span class="token punctuation">:</span> auto<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>Results (123)<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table-sort</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table-sort</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-440"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-706"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-form-actions</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>transparent<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Preview<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-form-actions</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-706"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -915,7 +860,53 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-343"
+                aria-controls="code-preview-source-group-558"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="targeting-a-form-by-id" class="anchor-heading">
+            Targeting a Form by Id<a
+              href="#targeting-a-form-by-id"
+              aria-label='Direct link to "Targeting a Form by Id"'
+            ></a>
+          </h3>
+          <p>When the component can’t live inside the form, point it at one with the <code>form</code> attribute.</p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <form id="standalone-form"></form>
+              <zn-form-actions form="standalone-form"></zn-form-actions>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-559">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-707"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>standalone-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-form-actions</span> <span class="token attr-name">form</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>standalone-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-form-actions</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-707"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-559"
               >
                 Source
                 <svg
@@ -953,7 +944,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-441"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.106/dist/components/data-table-sort/data-table-sort.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-441"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-708"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.106/dist/components/form-actions/form-actions.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-708"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -968,12 +959,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-442"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.106/dist/components/data-table-sort/data-table-sort.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-442"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-709"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.106/dist/components/form-actions/form-actions.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-709"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-443"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/data-table-sort/data-table-sort.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-443"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-710"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/form-actions/form-actions.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-710"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -989,14 +980,7 @@
               <tbody>
                 <tr>
                   <td class="nowrap">(default)</td>
-                  <td>The default slot.</td>
-                </tr>
-
-                <tr>
-                  <td class="nowrap">
-                    <code>example</code>
-                  </td>
-                  <td>An example slot.</td>
+                  <td>Extra actions, placed before the buttons.</td>
                 </tr>
               </tbody>
             </table>
@@ -1004,6 +988,226 @@
 
           <p>
             <em>Learn more about <a href="/getting-started/usage#slots">using slots</a>.</em>
+          </p>
+
+          <h2 id="properties" class="anchor-heading">
+            Properties<a href="#properties" aria-label='Direct link to "Properties"'></a>
+          </h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-reflects">Reflects</th>
+                  <th class="table-type">Type</th>
+                  <th class="table-default">Default</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <code class="nowrap">submitText</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> submit-text </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>The submit button’s text.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>'Save'</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">submitIcon</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> submit-icon </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>The submit button’s icon.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>'check@lu'</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">withCancel</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> with-cancel </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    Adds a cancel button. Closes the containing dialog or slideout, if any, and emits
+                    <code>zn-cancel</code>.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">cancelText</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> cancel-text </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>The cancel button’s text.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>'Cancel'</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">cancelIcon</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> cancel-icon </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>The cancel button’s icon.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>'x@lu'</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">withReset</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> with-reset </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>Adds a reset button that resets the form.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">resetText</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> reset-text </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>The reset button’s text.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>'Reset'</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">resetIcon</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> reset-icon </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>The reset button’s icon.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>'rotate-ccw@lu'</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">form</code>
+                  </td>
+                  <td>The id of the form to act on. If omitted, the closest containing form is used.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>updateComplete</code></td>
+                  <td>
+                    A read-only promise that resolves when the component has
+                    <a href="/getting-started/usage?#component-rendering-and-updating">finished updating</a>.
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em
+              >Learn more about
+              <a href="/getting-started/usage#attributes-and-properties">attributes and properties</a>.</em
+            >
           </p>
 
           <h2 id="events" class="anchor-heading">Events<a href="#events" aria-label='Direct link to "Events"'></a></h2>
@@ -1020,9 +1224,9 @@
               </thead>
               <tbody>
                 <tr>
-                  <td data-flavor="html"><code class="nowrap">zn-event-name</code></td>
+                  <td data-flavor="html"><code class="nowrap">zn-cancel</code></td>
                   <td data-flavor="react"><code class="nowrap"></code></td>
-                  <td>Emitted as an example.</td>
+                  <td>Emitted when the cancel button is clicked.</td>
                   <td>-</td>
                 </tr>
               </tbody>
@@ -1031,36 +1235,6 @@
 
           <p>
             <em>Learn more about <a href="/getting-started/usage#events">events</a>.</em>
-          </p>
-
-          <h2 id="custom-properties" class="anchor-heading">
-            Custom Properties<a href="#custom-properties" aria-label='Direct link to "Custom Properties"'></a>
-          </h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name">Name</th>
-                  <th class="table-description">Description</th>
-                  <th class="table-default">Default</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="nowrap"><code>--example</code></td>
-                  <td>An example CSS custom property.</td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em
-              >Learn more about
-              <a href="/getting-started/customizing#custom-properties">customizing CSS custom properties</a>.</em
-            >
           </p>
 
           <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>
@@ -1075,8 +1249,18 @@
               </thead>
               <tbody>
                 <tr>
-                  <td class="nowrap"><code>base</code></td>
-                  <td>The component’s base wrapper.</td>
+                  <td class="nowrap"><code>cancel-button</code></td>
+                  <td>The cancel button.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>reset-button</code></td>
+                  <td>The reset button.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>submit-button</code></td>
+                  <td>The submit button.</td>
                 </tr>
               </tbody>
             </table>
@@ -1093,7 +1277,13 @@
           <p>This component automatically imports the following dependencies.</p>
 
           <ul>
+            <li><code>&lt;zn-button&gt;</code></li>
+
             <li><code>&lt;zn-example&gt;</code></li>
+
+            <li><code>&lt;zn-icon&gt;</code></li>
+
+            <li><code>&lt;zn-tooltip&gt;</code></li>
           </ul>
         </div>
       </article>

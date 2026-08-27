@@ -9,6 +9,7 @@ import {
   usStateDataProvider,
 } from "./providers/provider";
 import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
+import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property, query} from 'lit/decorators.js';
@@ -71,6 +72,9 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
       }
     }
   }) value: string | string[] = '';
+
+  /** The default value of the form control. Primarily used for resetting the form control. */
+  @defaultValue() defaultValue: string | string[] = '';
 
   /** The provider of the select. */
   @property() provider: 'color' | 'currency' | 'country' | 'phone' | 'us-state';

@@ -1,5 +1,6 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {defaultValue} from "../../internal/default-value";
 import {FormControlController, validValidityState} from "../../internal/form";
 import {HasSlotController} from "../../internal/slot";
 import {property, query, state} from 'lit/decorators.js';
@@ -60,6 +61,9 @@ export default class ZnRating extends ZincElement implements ZincFormControl {
   @property() name: string;
 
   @property({type: Number}) value: number = 0;
+
+  /** The default value of the form control. Primarily used for resetting the form control. */
+  @defaultValue() defaultValue: number = 0;
 
   @property({type: Number}) max: number = 5;
 

@@ -1,4 +1,5 @@
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
 import {property, query} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
@@ -39,6 +40,9 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
 
   @property() name: string = "";
   @property() value: string;
+
+  /** The default value of the form control. Primarily used for resetting the form control. */
+  @defaultValue() defaultValue: string = '';
 
   @property({type: Boolean, reflect: true}) checked = false;
   @property({type: Array}) options: linkedSelectOptions;

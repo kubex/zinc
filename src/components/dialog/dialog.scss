@@ -13,10 +13,14 @@
 }
 
 .dialog-container {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
   border-radius: var(--zn-border-radius);
   background-color: var(--zn-panel-background-color);
   margin: 2px;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .dialog__header + .dialog__body {
@@ -29,12 +33,16 @@
   width: calc(var(--width) + 1px);
   overflow: hidden;
   max-width: calc(100% - var(--zn-spacing-2x-large));
-  max-height: calc(100% - var(--zn-spacing-2x-large));
+  max-height: calc(100% - 20vh);
   background-color: var(--zn-panel-background-color);
   border-radius: var(--zn-border-radius);
   box-shadow: var(--zn-shadow-x-large);
   padding: 0;
   margin: 10vh auto;
+
+  &[open] {
+    display: flex;
+  }
 
   &__header {
     flex: 0 0 auto;
@@ -69,6 +77,7 @@
 
   &__body {
     flex: 1 1 auto;
+    min-height: 0;
     display: block;
     padding: var(--body-spacing);
     overflow: auto;

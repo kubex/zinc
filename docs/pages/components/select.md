@@ -148,7 +148,7 @@ Use the `clearable` attribute to make the control clearable. The clear button on
 
 ### Search
 
-Use the `search` attribute to allow users to type into the select to filter the list of options. When the dropdown opens, the input becomes editable and options are filtered as you type using case-insensitive substring matching against labels and values.
+Use the `search` attribute to allow users to type into the select to filter the list of options. When the dropdown opens, the input becomes editable and options are filtered as you type using case-insensitive substring matching against labels and values. Group labels are matched too — see [Grouping with Search](#grouping-with-search).
 
 ```html:preview
 <zn-select label="Search for a country" search placeholder="Type to search...">
@@ -642,8 +642,10 @@ Use `<zn-opt-group>` to group options under labeled headers, similar to `<optgro
 
 When `search` is enabled, group headers automatically hide when all of their child options are filtered out.
 
+Group labels are searchable as well: typing text that matches a `<zn-opt-group>` label keeps every option in that group visible, so searching `europe` returns the whole European group even though no option label contains the word.
+
 ```html:preview
-<zn-select label="Select a country" search placeholder="Type to search...">
+<zn-select label="Select a country" search placeholder="Try 'europe' or 'japan'...">
   <zn-opt-group label="North America">
     <zn-option value="us">United States</zn-option>
     <zn-option value="ca">Canada</zn-option>

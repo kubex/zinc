@@ -163,6 +163,65 @@ describe('<zn-select>', () => {
     });
   });
 
+  describe('search across opt-group labels', () => {
+    let el: ZnSelect;
+
+    const type = async (text: string) => {
+      const displayInput = el.shadowRoot!.querySelector<HTMLInputElement>('.select__display-input')!;
+      displayInput.value = text;
+      displayInput.dispatchEvent(new Event('input'));
+      await el.updateComplete;
+    };
+
+    const visibleValues = () =>
+      [...el.querySelectorAll<ZnOption>('zn-option')].filter(o => !o.hidden).map(o => o.value);
+
+    beforeEach(async () => {
+      el = await fixture<ZnSelect>(html`
+        <zn-select search>
+          <zn-opt-group label="Citrus">
+            <zn-option value="orange">Orange</zn-option>
+            <zn-option value="lemon">Lemon</zn-option>
+          </zn-opt-group>
+          <zn-opt-group label="Berries">
+            <zn-option value="strawberry">Strawberry</zn-option>
+            <zn-option value="blueberry">Blueberry</zn-option>
+          </zn-opt-group>
+          <zn-option value="citrus-punch">Citrus Punch</zn-option>
+        </zn-select>
+      `);
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+    });
+
+    it('keeps every option in a group whose label matches, alongside option-label matches', async () => {
+      await type('citrus');
+
+      expect(visibleValues()).to.deep.equal(['orange', 'lemon', 'citrus-punch']);
+    });
+
+    it('matches group labels case-insensitively', async () => {
+      await type('BERR');
+
+      expect(visibleValues()).to.deep.equal(['strawberry', 'blueberry']);
+    });
+
+    it('keeps the matching group visible and hides the others', async () => {
+      await type('citrus');
+
+      const groups = el.querySelectorAll('zn-opt-group');
+      expect(groups[0].hidden, 'Citrus group').to.be.false;
+      expect(groups[1].hidden, 'Berries group').to.be.true;
+    });
+
+    it('still matches option labels inside a non-matching group', async () => {
+      await type('lemon');
+
+      expect(visibleValues()).to.deep.equal(['lemon']);
+    });
+  });
+
   describe('Escape key', () => {
     it('blurs the display input when dropdown is closed and Escape is pressed', async () => {
       const el = await fixture<ZnSelect>(html`<zn-select></zn-select>`);

@@ -47,8 +47,10 @@ Use the `disabled` attribute to disable all options within a group. Disabled gro
 
 When used inside a `<zn-select>` with the `search` attribute, group headers automatically hide when all of their child options are filtered out by the search query.
 
+The `label` is matched by the search too: a query matching a group label keeps every option in that group visible, so searching `europe` returns the whole European group even though no option label contains the word. Group-label and option-label matches combine, so `japan` still narrows to the single option within Asia.
+
 ```html:preview
-<zn-select label="Select a country" search placeholder="Type to search...">
+<zn-select label="Select a country" search placeholder="Try 'europe' or 'japan'...">
   <zn-opt-group label="North America">
     <zn-option value="us">United States</zn-option>
     <zn-option value="ca">Canada</zn-option>

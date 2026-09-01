@@ -832,9 +832,20 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       return;
     }
 
+    // A group whose label matches keeps its whole set of options, so searching "citrus" surfaces the group.
+    const matchedGroups = new Set(
+      this.getAllOptGroups().filter(group => group.label.toLowerCase().includes(searchQuery))
+    );
+
     allOptions.forEach(option => {
       // Don't un-hide selected options that are only in the DOM for value preservation
       if (option.selected && option.hidden) return;
+
+      const group = option.closest<ZnOptGroup>('zn-opt-group');
+      if (group && matchedGroups.has(group)) {
+        option.hidden = false;
+        return;
+      }
 
       const label = option.getTextLabel().toLowerCase();
       const value = option.value.toLowerCase();

@@ -499,6 +499,33 @@ describe('<zn-page>', () => {
     expect(navItems[0].getAttribute('tab')).to.equal('');
   });
 
+  it('opens the next tab at the top of the content', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title" style="height: 200px;">
+        <zn-tab caption="Overview">
+          <div style="height: 2000px;">Overview Content</div>
+        </zn-tab>
+        <zn-tab caption="Details">
+          <div style="height: 2000px;">Details Content</div>
+        </zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(60);
+
+    const content = el.shadowRoot!.querySelector<HTMLElement>('#content')!;
+    content.scrollTop = 600;
+    expect(content.scrollTop, 'the content never scrolled').to.be.greaterThan(0);
+
+    // The page's first tab is registered under an empty id, so leaving it is the
+    // case a "did the tab change?" test on the id alone gets wrong.
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    navbar.shadowRoot!.querySelectorAll<HTMLElement>('li:not(.more)')[1].click();
+    await aTimeout(80);
+
+    expect(el.getAttribute('active')).to.equal('details');
+    expect(content.scrollTop).to.equal(0);
+  });
+
   it('shows a header border when scrolled without visible navigation', async () => {
     const el = await fixture<ZnPage>(html`
       <zn-page caption="Page Title" style="height: 120px;">

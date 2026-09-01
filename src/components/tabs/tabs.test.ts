@@ -50,6 +50,70 @@ describe('<zn-tabs>', () => {
     expect(selectedPagePanel.id).to.equal('');
   });
 
+  describe('scroll position', () => {
+    const panels = html`
+      <zn-navbar slot="top">
+        <li tab="first">First</li>
+        <li tab="second">Second</li>
+      </zn-navbar>
+      <div id="first">
+        <div style="height: 2000px;">First panel</div>
+      </div>
+      <div id="second">
+        <div style="height: 2000px;">Second panel</div>
+      </div>
+    `;
+
+    const openSecondTab = async (el: ZnTabs) => {
+      el.querySelector('zn-navbar')!.querySelectorAll<HTMLElement>('li')[1].click();
+      await aTimeout(40);
+      expect(el.getAttribute('active')).to.equal('second');
+    };
+
+    it('opens a newly selected tab at the top of its own scroller', async () => {
+      // zn-tabs is display:contents, so #content only has a height to overflow
+      // when an ancestor gives it one.
+      const wrapper = await fixture<HTMLElement>(html`
+        <div style="height: 200px; display: flex; flex-direction: column;">
+          <zn-tabs active="first">${panels}</zn-tabs>
+        </div>
+      `);
+      const el = wrapper.querySelector<ZnTabs>('zn-tabs')!;
+      await aTimeout(40);
+
+      const content = el.shadowRoot!.querySelector('#content')!;
+      content.scrollTop = 500;
+      expect(content.scrollTop, 'the content never scrolled').to.be.greaterThan(0);
+
+      await openSecondTab(el);
+
+      expect(content.scrollTop).to.equal(0);
+    });
+
+    it('opens a newly selected tab at the top of an enclosing scroller', async () => {
+      // Unconstrained, the panels grow instead of scrolling and something further
+      // out - an app shell, an outer page - is what the reader has scrolled.
+      const wrapper = await fixture<HTMLElement>(html`
+        <div style="height: 200px; overflow: auto;">
+          <div>
+            <zn-tabs active="first">${panels}</zn-tabs>
+          </div>
+        </div>
+      `);
+      const el = wrapper.querySelector<ZnTabs>('zn-tabs')!;
+      await aTimeout(40);
+
+      const content = el.shadowRoot!.querySelector('#content')!;
+      wrapper.scrollTop = 500;
+      expect(wrapper.scrollTop, 'the enclosing scroller never scrolled').to.be.greaterThan(0);
+      expect(content.scrollTop, 'the panels scrolled themselves').to.equal(0);
+
+      await openSecondTab(el);
+
+      expect(wrapper.scrollTop).to.equal(0);
+    });
+  });
+
   describe('selection persistence', () => {
     const storeKey = 'tabs-navigation-test';
     const originalHref = window.location.href;

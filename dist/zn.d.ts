@@ -1939,28 +1939,6 @@ declare module "components/slash-menu/slash-menu-items" {
     /** Forgets the recently used items stored under `key`. */
     export function clearRecentSlashItems(key: string): void;
 }
-declare module "utilities/caret-position" {
-    export interface CaretCoordinates {
-        top: number;
-        left: number;
-        height: number;
-    }
-    export type TextField = HTMLTextAreaElement | HTMLInputElement;
-    /**
-     * Measures where the caret sits inside a text field, relative to the field's own top/left corner.
-     * There is no browser API for this, so the field is mirrored into an off-screen div and the offset
-     * of a marker span at `index` is read back.
-     */
-    export function getCaretCoordinates(field: TextField, index: number): CaretCoordinates;
-    /**
-     * Projects measured caret coordinates onto the viewport, clamped to the field's box so a caret
-     * scrolled out of view doesn't drag anchored content off with it. Split from the measurement so a
-     * cached measurement can be re-projected as the field scrolls or moves.
-     */
-    export function caretRectFrom(field: TextField, { top, left, height }: CaretCoordinates): DOMRect;
-    /** The caret's position as a viewport rect. */
-    export function getCaretRect(field: TextField, index: number): DOMRect;
-}
 declare module "components/slash-menu/slash-menu.component" {
     import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
@@ -2078,6 +2056,28 @@ declare module "components/slash-menu/slash-menu.component" {
         private renderHints;
         render(): TemplateResult<1>;
     }
+}
+declare module "utilities/caret-position" {
+    export interface CaretCoordinates {
+        top: number;
+        left: number;
+        height: number;
+    }
+    export type TextField = HTMLTextAreaElement | HTMLInputElement;
+    /**
+     * Measures where the caret sits inside a text field, relative to the field's own top/left corner.
+     * There is no browser API for this, so the field is mirrored into an off-screen div and the offset
+     * of a marker span at `index` is read back.
+     */
+    export function getCaretCoordinates(field: TextField, index: number): CaretCoordinates;
+    /**
+     * Projects measured caret coordinates onto the viewport, clamped to the field's box so a caret
+     * scrolled out of view doesn't drag anchored content off with it. Split from the measurement so a
+     * cached measurement can be re-projected as the field scrolls or moves.
+     */
+    export function caretRectFrom(field: TextField, { top, left, height }: CaretCoordinates): DOMRect;
+    /** The caret's position as a viewport rect. */
+    export function getCaretRect(field: TextField, index: number): DOMRect;
 }
 declare module "components/slash-menu/slash-menu-controller" {
     import type { TextField } from "utilities/caret-position";
@@ -2215,7 +2215,7 @@ declare module "components/slash-item/index" {
     }
 }
 declare module "components/input/input.component" {
-    import { type SlashMenuItem } from "components/slash-menu/slash-menu-items";
+    import { type SlashMenuItem } from "components/slash-menu/index";
     import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
     import ZnSlashItem from "components/slash-item/index";
@@ -5284,7 +5284,7 @@ declare module "components/icon-picker/index" {
 }
 declare module "components/inline-edit/inline-edit.component" {
     import { type CSSResultGroup, type HTMLTemplateResult, type PropertyValues } from 'lit';
-    import { type SlashMenuItem } from "components/slash-menu/slash-menu-items";
+    import { type SlashMenuItem } from "components/slash-menu/index";
     import ZincElement from "internal/zinc-element";
     import ZnSelect from "components/select/index";
     import type { ZincFormControl } from "internal/zinc-element";
@@ -6676,7 +6676,7 @@ declare module "components/editor/modules/ai/tooltip/ai-tooltip.component" {
 }
 declare module "components/textarea/textarea.component" {
     import { type CSSResultGroup } from 'lit';
-    import { type SlashMenuItem } from "components/slash-menu/slash-menu-items";
+    import { type SlashMenuItem } from "components/slash-menu/index";
     import ZincElement, { type ZincFormControl } from "internal/zinc-element";
     import ZnSlashItem from "components/slash-item/index";
     import ZnSlashMenu from "components/slash-menu/index";
@@ -8956,7 +8956,7 @@ declare module "components/audio-select/index" {
     }
 }
 declare module "components/translations/translations.component" {
-    import { type SlashMenuItem } from "components/slash-menu/slash-menu-items";
+    import { type SlashMenuItem } from "components/slash-menu/index";
     import ZincElement from "internal/zinc-element";
     import ZnButton from "components/button/index";
     import ZnButtonGroup from "components/button-group/index";
@@ -12724,7 +12724,7 @@ declare module "events/zn-theme-submit" {
     }
 }
 declare module "events/zn-slash-select" {
-    import type { SlashMenuItem } from "components/slash-menu/slash-menu-items";
+    import type { SlashMenuItem } from "components/slash-menu/index";
     export type ZnSlashSelectEvent = CustomEvent<{
         item: SlashMenuItem;
         query: string;
@@ -12736,7 +12736,7 @@ declare module "events/zn-slash-select" {
     }
 }
 declare module "events/zn-slash-insert" {
-    import type { SlashMenuItem } from "components/slash-menu/slash-menu-items";
+    import type { SlashMenuItem } from "components/slash-menu/index";
     export type ZnSlashInsertEvent = CustomEvent<{
         item: SlashMenuItem;
         value: string;

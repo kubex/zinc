@@ -1,4 +1,4 @@
-import type {SlashMenuItem} from "../components/slash-menu/slash-menu-items";
+import type {SlashMenuItem} from "../components/slash-menu";
 
 export type ZnSlashSelectEvent = CustomEvent<{ item: SlashMenuItem; query: string }>;
 

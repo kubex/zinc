@@ -1,19 +1,18 @@
 import {classMap} from "lit/directives/class-map.js";
 import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
-import {getSlashMenuPreset, parseSlashItems, type SlashMenuItem} from "../slash-menu/slash-menu-items";
+import {getSlashMenuPreset, parseSlashItems, type SlashMenuItem} from "../slash-menu";
 import {HasSlotController} from "../../internal/slot";
 import {html, unsafeCSS} from 'lit';
 import {ifDefined} from "lit/directives/if-defined.js";
 import {live} from "lit/directives/live.js";
 import {LocalizeController} from "../../utilities/localize";
 import {property, query, state} from 'lit/decorators.js';
-import {SlashMenuController} from "../slash-menu/slash-menu-controller";
 import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
 import ZnIcon from "../icon";
 import ZnSlashItem from "../slash-item";
-import ZnSlashMenu from "../slash-menu";
+import ZnSlashMenu, {SlashMenuController} from "../slash-menu";
 import ZnTooltip from "../tooltip";
 import type {ZincFormControl} from '../../internal/zinc-element';
 
@@ -398,9 +397,9 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     const yn = y / 1.00000;
     const zn = z / 1.08883;
 
-    const fx = xn > 0.008856 ? Math.pow(xn, 1/3) : (7.787 * xn + 16/116);
-    const fy = yn > 0.008856 ? Math.pow(yn, 1/3) : (7.787 * yn + 16/116);
-    const fz = zn > 0.008856 ? Math.pow(zn, 1/3) : (7.787 * zn + 16/116);
+    const fx = xn > 0.008856 ? Math.pow(xn, 1 / 3) : (7.787 * xn + 16 / 116);
+    const fy = yn > 0.008856 ? Math.pow(yn, 1 / 3) : (7.787 * yn + 16 / 116);
+    const fz = zn > 0.008856 ? Math.pow(zn, 1 / 3) : (7.787 * zn + 16 / 116);
 
     const L = 116 * fy - 16;
     const a = 500 * (fx - fy);
@@ -436,23 +435,23 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     const fx = a / 500 + fy;
     const fz = fy - b_lab / 200;
 
-    const xn = fx > 0.206897 ? Math.pow(fx, 3) : (fx - 16/116) / 7.787;
-    const yn = fy > 0.206897 ? Math.pow(fy, 3) : (fy - 16/116) / 7.787;
-    const zn = fz > 0.206897 ? Math.pow(fz, 3) : (fz - 16/116) / 7.787;
+    const xn = fx > 0.206897 ? Math.pow(fx, 3) : (fx - 16 / 116) / 7.787;
+    const yn = fy > 0.206897 ? Math.pow(fy, 3) : (fy - 16 / 116) / 7.787;
+    const zn = fz > 0.206897 ? Math.pow(fz, 3) : (fz - 16 / 116) / 7.787;
 
     const x = xn * 0.95047;
     const y = yn * 1.00000;
     const z = zn * 1.08883;
 
     // Convert XYZ to RGB
-    let r = x *  3.2404542 + y * -1.5371385 + z * -0.4985314;
-    let g = x * -0.9692660 + y *  1.8760108 + z *  0.0415560;
-    let b = x *  0.0556434 + y * -0.2040259 + z *  1.0572252;
+    let r = x * 3.2404542 + y * -1.5371385 + z * -0.4985314;
+    let g = x * -0.9692660 + y * 1.8760108 + z * 0.0415560;
+    let b = x * 0.0556434 + y * -0.2040259 + z * 1.0572252;
 
     // Apply gamma correction
-    r = r > 0.0031308 ? 1.055 * Math.pow(r, 1/2.4) - 0.055 : 12.92 * r;
-    g = g > 0.0031308 ? 1.055 * Math.pow(g, 1/2.4) - 0.055 : 12.92 * g;
-    b = b > 0.0031308 ? 1.055 * Math.pow(b, 1/2.4) - 0.055 : 12.92 * b;
+    r = r > 0.0031308 ? 1.055 * Math.pow(r, 1 / 2.4) - 0.055 : 12.92 * r;
+    g = g > 0.0031308 ? 1.055 * Math.pow(g, 1 / 2.4) - 0.055 : 12.92 * g;
+    b = b > 0.0031308 ? 1.055 * Math.pow(b, 1 / 2.4) - 0.055 : 12.92 * b;
 
     // Clamp and convert to hex
     r = Math.max(0, Math.min(1, r));
@@ -469,9 +468,9 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
   private hexToHsl(hex: string): string {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     if (!result) return '';
-    let r = parseInt(result[1], 16) / 255;
-    let g = parseInt(result[2], 16) / 255;
-    let b = parseInt(result[3], 16) / 255;
+    const r = parseInt(result[1], 16) / 255;
+    const g = parseInt(result[2], 16) / 255;
+    const b = parseInt(result[3], 16) / 255;
 
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
@@ -483,9 +482,15 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
       const d = max - min;
       s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
       switch (max) {
-        case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
-        case g: h = ((b - r) / d + 2) / 6; break;
-        case b: h = ((r - g) / d + 4) / 6; break;
+        case r:
+          h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+          break;
+        case g:
+          h = ((b - r) / d + 2) / 6;
+          break;
+        case b:
+          h = ((r - g) / d + 4) / 6;
+          break;
       }
     }
 
@@ -499,23 +504,25 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     const s = parseInt(match[2]) / 100;
     const l = parseInt(match[3]) / 100;
 
-    let r: number, g: number, b: number;
+    let r: number;
+    let g: number;
+    let b: number;
     if (s === 0) {
       r = g = b = l;
     } else {
       const hue2rgb = (p: number, q: number, t: number) => {
         if (t < 0) t += 1;
         if (t > 1) t -= 1;
-        if (t < 1/6) return p + (q - p) * 6 * t;
-        if (t < 1/2) return q;
-        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+        if (t < 1 / 6) return p + (q - p) * 6 * t;
+        if (t < 1 / 2) return q;
+        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
         return p;
       };
       const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
       const p = 2 * l - q;
-      r = hue2rgb(p, q, h + 1/3);
+      r = hue2rgb(p, q, h + 1 / 3);
       g = hue2rgb(p, q, h);
-      b = hue2rgb(p, q, h - 1/3);
+      b = hue2rgb(p, q, h - 1 / 3);
     }
 
     const rHex = Math.round(r * 255).toString(16).padStart(2, '0');

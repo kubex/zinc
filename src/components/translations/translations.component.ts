@@ -5,7 +5,7 @@ import {html, nothing, unsafeCSS} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {live} from 'lit/directives/live.js';
-import {parseSlashItems, type SlashMenuItem} from '../slash-menu/slash-menu-items';
+import {parseSlashItems, type SlashMenuItem} from '../slash-menu';
 import {property, state} from 'lit/decorators.js';
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import ZincElement from '../../internal/zinc-element';

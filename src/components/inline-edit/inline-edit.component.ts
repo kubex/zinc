@@ -5,7 +5,7 @@ import { defaultValue } from "../../internal/default-value";
 import { FormControlController } from "../../internal/form";
 import { HasSlotController } from "../../internal/slot";
 import { ifDefined } from "lit/directives/if-defined.js";
-import { parseSlashItems, type SlashMenuItem } from "../slash-menu/slash-menu-items";
+import { parseSlashItems, type SlashMenuItem } from "../slash-menu";
 import { property, query, state } from 'lit/decorators.js';
 import { watch } from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';

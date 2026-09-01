@@ -724,6 +724,13 @@ declare module "internal/scroll" {
     export function unlockBodyScrolling(lockingEl: HTMLElement): void;
     /** Scrolls an element into view of its container. If the element is already in view, nothing will happen. */
     export function scrollIntoView(element: HTMLElement, container: HTMLElement, direction?: 'horizontal' | 'vertical' | 'both', behavior?: 'smooth' | 'auto'): void;
+    /**
+     * Every ancestor of `element`, itself included, that is scrolled away from the top. Shadow
+     * boundaries are crossed, so a host's own scroller and the app's outer one are both found.
+     */
+    export function getScrolledAncestors(element: Element | null | undefined): Element[];
+    /** Returns containers to the top. */
+    export function scrollToTop(containers: Iterable<Element>, behavior?: ScrollBehavior): void;
 }
 declare module "components/dialog/dialog.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';

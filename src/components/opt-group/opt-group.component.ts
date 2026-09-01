@@ -1,4 +1,4 @@
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, nothing, unsafeCSS} from 'lit';
 import {property} from 'lit/decorators.js';
 import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
@@ -50,9 +50,9 @@ export default class ZnOptGroup extends ZincElement {
   render() {
     return html`
       <div part="base" class="opt-group">
-        <div part="label" class="opt-group__label" aria-hidden="true">
-          ${this.label}
-        </div>
+        ${this.label
+          ? html`<div part="label" class="opt-group__label" aria-hidden="true">${this.label}</div>`
+          : nothing}
         <div class="opt-group__options" role="none">
           <slot @slotchange=${this.handleSlotChange}></slot>
         </div>

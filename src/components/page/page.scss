@@ -406,3 +406,27 @@ zn-navbar {
 :host .page__tabs #content.page__content {
   padding: 0 var(--zn-gutter, 0);
 }
+
+// On narrow pages the breadcrumb is supporting context, not a second title.
+// Stack it above the current page caption and reduce its visual weight instead
+// of forcing both labels and their separator into the same cramped row.
+@container (max-width: 600px) {
+  .header--has-breadcrumb {
+    .header__caption {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: var(--zn-spacing-3x-small);
+    }
+
+    .breadcrumb {
+      color: rgb(var(--zn-text-muted));
+      font-size: var(--zn-font-size-small);
+      font-weight: var(--zn-font-weight-normal);
+      line-height: var(--zn-line-height-dense);
+    }
+
+    .breadcrumb__separator {
+      display: none;
+    }
+  }
+}

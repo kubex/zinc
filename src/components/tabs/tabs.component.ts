@@ -413,14 +413,20 @@ export default class ZnTabs extends ZincElement {
   _handleClick(event: PointerEvent) {
     // ts-ignore
     const target = (event.relatedTarget ?? event.target) as HTMLElement;
-    if (target) {
-      if ('startViewTransition' in document) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (document as any).startViewTransition(() => this.clickTab(target, event.altKey, true));
-      } else {
-        this.clickTab(target, event.altKey, true)
-      }
+    if (!target) {
+      return;
     }
+
+    if (!('startViewTransition' in document)) {
+      this.clickTab(target, event.altKey, true);
+      return;
+    }
+
+    const transition = document.startViewTransition(() => this.clickTab(target, event.altKey, true));
+
+    void transition.ready.catch(() => undefined);
+    void transition.finished.catch(() => undefined);
+    void transition.updateCallbackDone.catch(() => undefined);
   }
 
   fetchUriTab(target: HTMLElement) {

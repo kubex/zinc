@@ -268,6 +268,7 @@ export default class ZnPopup extends ZincElement {
     if (!this.anchorEl) {
       return;
     }
+    this.cleanup?.();
     this.cleanup = autoUpdate(this.anchorEl, this.popup, () => {
       this.reposition();
     });
@@ -406,7 +407,9 @@ export default class ZnPopup extends ZincElement {
 
       if (!this.popup?.isConnected) return;
 
-      this.popup.showPopover();
+      if (!this.popup.matches(':popover-open')) {
+        this.popup.showPopover();
+      }
 
       if (this.arrow) {
         const arrowX = middlewareData.arrow!.x;
@@ -537,7 +540,7 @@ export default class ZnPopup extends ZincElement {
       <div
         id="popup"
         part="popup"
-        popover
+        popover="manual"
         class="${classMap({
           popup: true,
           'popup--active': this.active,

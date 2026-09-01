@@ -1,5 +1,5 @@
 import '../../../dist/zn.min.js';
-import {expect, fixture, html} from '@open-wc/testing';
+import {expect, fixture, html, waitUntil} from '@open-wc/testing';
 import type ZnOption from '../option/option.component';
 import type ZnSelect from './select.component';
 
@@ -823,5 +823,45 @@ describe('<zn-select>', () => {
       const addRow = el.shadowRoot!.querySelector<HTMLElement>('.select__add-option')!;
       expect(getComputedStyle(addRow).fontSize).to.equal('11px');
     });
+  });
+
+  it('does not flicker the open listbox when a second select is opened', async () => {
+    const wrapper = await fixture(html`
+      <div>
+        <zn-select id="first">
+          <zn-option value="apple">Apple</zn-option>
+          <zn-option value="banana">Banana</zn-option>
+        </zn-select>
+        <zn-select id="second">
+          <zn-option value="cherry">Cherry</zn-option>
+          <zn-option value="date">Date</zn-option>
+        </zn-select>
+      </div>
+    `);
+
+    const first = wrapper.querySelector<ZnSelect>('#first')!;
+    const second = wrapper.querySelector<ZnSelect>('#second')!;
+    await Promise.all([first.updateComplete, second.updateComplete]);
+
+    const popoverOf = (el: ZnSelect) =>
+      el.shadowRoot!.querySelector('zn-popup')!.shadowRoot!.querySelector<HTMLElement>('#popup')!;
+
+    const states: string[] = [];
+    popoverOf(first).addEventListener('beforetoggle', (event: Event) =>
+      states.push((event as ToggleEvent).newState));
+
+    await first.show();
+    states.length = 0;
+
+    // Mimic a click on the second select: the document mousedown closes the first, the combobox
+    // mousedown opens the second
+    document.dispatchEvent(new MouseEvent('mousedown', {bubbles: true, composed: true}));
+    second.shadowRoot!.querySelector('.select__combobox')!
+      .dispatchEvent(new MouseEvent('mousedown', {bubbles: true, composed: true}));
+    await second.updateComplete;
+    await waitUntil(() => !first.open && states.includes('closed'));
+
+    expect(states).to.deep.equal(['closed']);
+    expect(popoverOf(second).matches(':popover-open')).to.be.true;
   });
 });

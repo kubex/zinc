@@ -84,6 +84,49 @@ describe('<zn-priority-list>', () => {
     expect(hiddenInputs[1].value).to.equal('2');
   });
 
+  it('should restore the original order when its form is reset', async () => {
+    const form = await fixture(html`
+      <form>
+        <zn-priority-list name="order">
+          <div value="alpha">Alpha</div>
+          <div value="beta">Beta</div>
+          <div value="gamma">Gamma</div>
+        </zn-priority-list>
+      </form>
+    `) as HTMLFormElement;
+
+    const el = form.querySelector('zn-priority-list') as any;
+    await el.updateComplete;
+    expect(el.value).to.deep.equal(['alpha', 'beta', 'gamma']);
+
+    el.value = ['gamma', 'alpha', 'beta'];
+    await el.updateComplete;
+    expect(el.value).to.deep.equal(['gamma', 'alpha', 'beta']);
+
+    form.reset();
+    await el.updateComplete;
+    expect(el.value).to.deep.equal(['alpha', 'beta', 'gamma']);
+  });
+
+  it('should not empty a populated list on reset', async () => {
+    const form = await fixture(html`
+      <form>
+        <zn-priority-list name="order">
+          <div value="alpha">Alpha</div>
+          <div value="beta">Beta</div>
+        </zn-priority-list>
+      </form>
+    `) as HTMLFormElement;
+
+    const el = form.querySelector('zn-priority-list') as any;
+    await el.updateComplete;
+
+    el.defaultValue = [];
+    form.reset();
+    await el.updateComplete;
+    expect(el.value).to.deep.equal(['alpha', 'beta']);
+  });
+
   it('should have listbox role on the list container', async () => {
     const el = await fixture(html`
       <zn-priority-list label="My List">

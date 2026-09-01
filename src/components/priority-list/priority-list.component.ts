@@ -19,6 +19,14 @@ export interface PriorityItem {
   priority: number;
 }
 
+function safeParse(value: string): unknown {
+  try {
+    return JSON.parse(value);
+  } catch {
+    return undefined;
+  }
+}
+
 /**
  * @summary A reorderable list where each item receives a numerical priority based on its position. Supports drag-and-drop
  *   and keyboard reordering. Priority values are submitted as form data via hidden inputs.
@@ -68,16 +76,14 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
       return JSON.stringify(control.getPriorityMap());
     },
     defaultValue: (control: ZnPriorityList) => control.defaultValue,
-    setValue: (control: ZnPriorityList, value: string) => {
-      if (value) {
-        try {
-          const parsed: unknown = JSON.parse(value);
-          if (Array.isArray(parsed) && parsed.every((item: unknown): item is string => typeof item === 'string')) {
-            control.value = parsed as string[];
-          }
-        } catch {
-          // ignore parse errors
-        }
+    // A form reset passes defaultValue straight back in, so this has to accept the
+    // key array as well as the serialised value other callers set.
+    setValue: (control: ZnPriorityList, value: string | string[]) => {
+      if (!value || (Array.isArray(value) && value.length === 0)) return;
+
+      const keys: unknown = Array.isArray(value) ? value : safeParse(value);
+      if (Array.isArray(keys) && keys.every((item: unknown): item is string => typeof item === 'string')) {
+        control.value = keys as string[];
       }
     },
   });
@@ -199,9 +205,8 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
       } else {
         this._value = domKeys;
       }
-
-      this.defaultValue = [...this._value];
     }
+    this.defaultValue = [...this._value];
     this._assignSlotNames();
     this._syncHiddenInputs();
     this.requestUpdate();

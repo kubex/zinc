@@ -11,6 +11,9 @@ translation of its own or falls back to English; closed, it carries how many lan
 The field itself is a plain input, or a textarea with `input-type="textarea"`, and carries the code of the language
 it is showing whenever more than one is on offer.
 
+Several fields that should share one language picker belong in a
+[`zn-translation-group`](/components/translation-group) instead.
+
 ```html:preview
 <zn-translations
   languages='{"en":"English","fr":"French","de":"German"}'
@@ -52,57 +55,23 @@ Use the `label` slot for rich HTML content in the label.
 </zn-translations>
 ```
 
-### Custom Languages
+### Setting Values
 
-Provide a custom list of available languages via the `languages` property. Each becomes an option in the language
-select, labelled `Name (CODE)` — or the code alone where the configured name already is the code.
-
-```html:preview
-<zn-translations
-  label="Multi-Language Content"
-  languages='{"en":"English","fr":"French","de":"German","es":"Spanish","it":"Italian","pt":"Portuguese"}'
-></zn-translations>
-```
-
-### Pre-filled Values
-
-Set initial translations using the `values` property.
+`values` takes an object keyed by language code. `value` is the same thing as a JSON string, for setting it from
+markup or from a server-rendered template — set one or the other, not both.
 
 ```html:preview
 <zn-translations
-  label="Welcome Message"
+  label="Set with values"
   languages='{"en":"English","fr":"French","es":"Spanish"}'
   values='{"en":"Hello World","fr":"Bonjour le monde","es":"Hola Mundo"}'
 ></zn-translations>
-```
-
-### JSON Value Attribute
-
-Alternatively, use the `value` attribute with a JSON string.
-
-```html:preview
+<br />
 <zn-translations
-  label="Description"
+  label="Set with value"
   languages='{"en":"English","fr":"French"}'
   value='{"en":"This is a product description","fr":"Ceci est une description de produit"}'
 ></zn-translations>
-```
-
-### Required Field
-
-Mark the translations as required for form validation.
-
-```html:preview
-<form>
-  <zn-translations
-    name="description"
-    label="Product Description"
-    required
-    languages='{"en":"English","fr":"French"}'
-  ></zn-translations>
-  <br />
-  <zn-button type="submit" color="success">Submit</zn-button>
-</form>
 ```
 
 ### Disabled State
@@ -160,8 +129,8 @@ Add `inline-edit` to read the translation as text until it is clicked, through
 
 ### Many Languages
 
-The select takes any number of languages without reflowing the header, and its listbox scrolls once the list is longer
-than the space below it.
+Each language becomes an option labelled `Name (CODE)` — or the code alone where the configured name already is the
+code. The select takes any number of them, and its listbox scrolls once the list is longer than the space below it.
 
 ```html:preview
 <zn-translations
@@ -182,20 +151,6 @@ English text as a placeholder. Leave it blank and the English text is what gets 
   languages='{"en":"English","fr":"French","de":"German","pl":"Polish"}'
   values='{"en":"Premium Wireless Headphones","de":"Premium kabellose Kopfhörer"}'
 ></zn-translations>
-```
-
-### Constrained Width
-
-The select spans the field, so a narrow container costs the language name no room.
-
-```html:preview
-<div style="max-width: 320px;">
-  <zn-translations
-    label="Narrow Container"
-    languages='{"en":"English","fr":"French","de":"German","es":"Spanish","it":"Italian","pt":"Portuguese","ja":"Japanese","ko":"Korean","zh-hans":"Simplified Chinese"}'
-    values='{"en":"Hello","fr":"Bonjour","de":"Hallo","es":"Hola","it":"Ciao","pt":"Olá","ja":"こんにちは","ko":"안녕하세요","zh-hans":"你好"}'
-  ></zn-translations>
-</div>
 ```
 
 ### RTL Language Support
@@ -240,7 +195,8 @@ The component emits `zn-change` events when translation values change.
 
 ### Form Integration
 
-Use with standard HTML forms for submission.
+The component submits its translations as a JSON object under `name`. `required` marks the label, though validity is
+not enforced per language.
 
 ```html:preview
 <form class="translations-form">
@@ -304,51 +260,6 @@ Access and modify translation values via JavaScript.
     trans.values = { en: '', fr: '', es: '' };
   });
 </script>
-```
-
-### Real-World Use Case: Content Management
-
-A complete example showing product content management with translations.
-
-```html:preview
-<div style="max-width: 800px;">
-  <zn-panel caption="Product Details" icon="inventory_2">
-    <div style="display: flex; flex-direction: column; gap: 1rem;">
-      <zn-input
-        label="Product SKU"
-        value="PROD-12345"
-        readonly
-      ></zn-input>
-
-      <zn-translations
-        name="name"
-        label="Product Name"
-        required
-        languages='{"en":"English","fr":"French","de":"German","es":"Spanish"}'
-        values='{"en":"Premium Wireless Headphones","fr":"Écouteurs sans fil premium","de":"Premium kabellose Kopfhörer","es":"Auriculares inalámbricos premium"}'
-      ></zn-translations>
-
-      <zn-translations
-        name="description"
-        label="Product Description"
-        languages='{"en":"English","fr":"French","de":"German","es":"Spanish"}'
-        values='{"en":"High-quality wireless headphones with active noise cancellation","fr":"Écouteurs sans fil de haute qualité avec suppression active du bruit","de":"Hochwertige kabellose Kopfhörer mit aktiver Geräuschunterdrückung","es":"Auriculares inalámbricos de alta calidad con cancelación activa de ruido"}'
-      >
-</zn-translations>
-
-      <zn-input
-        label="Price"
-        type="currency"
-        value="299.99"
-      ></zn-input>
-    </div>
-
-    <div slot="footer" style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-      <zn-button color="secondary">Cancel</zn-button>
-      <zn-button color="success">Save Product</zn-button>
-    </div>
-  </zn-panel>
-</div>
 ```
 
 ### Help Text
@@ -448,7 +359,7 @@ way `Enter` otherwise would.
 |----------------------|---------------------------------------------------|
 | `form-control`       | The component's base wrapper                      |
 | `form-control-label` | The label's wrapper                               |
-| `form-control-input` | The wrapper around the inline-editable field      |
+| `form-control-input` | The wrapper around the field being edited         |
 | `language-select`    | The select that chooses the language being edited |
 
 The component uses `zn-select` for the language and `zn-input`, `zn-textarea` or `zn-inline-edit` for the field, each
@@ -459,5 +370,5 @@ of which exposes its own CSS parts for advanced styling.
 - The component automatically detects RTL languages (Arabic, Hebrew) and applies proper text direction
 - The language select is a standard combobox: it opens on `Enter` or `Space` and moves through the languages with the
   arrow keys
-- Keyboard navigation is supported within the inline edit fields
-- Form integration ensures proper submission behavior with the Enter key
+- The field carries the active language's code, so which translation is on screen does not rest on colour alone
+- `Enter` submits the form from a single-line field, and inserts a newline in a textarea

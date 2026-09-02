@@ -77,43 +77,26 @@ counted nor marked as a translation.
 </zn-translation-group>
 ```
 
-### Many Fields
-
-The group scales well with multiple translation inputs under a single select.
-
-```html:preview
-<zn-translation-group
-  label="SEO Metadata"
-  languages='{"en":"English","fr":"French","de":"German"}'>
-  <zn-translations label="Page Title" name="seo-title"></zn-translations>
-  <zn-translations label="Meta Description" name="seo-description"></zn-translations>
-  <zn-translations label="Open Graph Title" name="og-title"></zn-translations>
-  <zn-translations label="Open Graph Description" name="og-description"></zn-translations>
-</zn-translation-group>
-```
-
 ### Many Languages
 
 Every configured language is offered whether or not it has been translated yet, so there is no separate step to add
-one — pick it and start typing. The count above the select tracks how many are done.
+one — pick it and start typing. The chip on the closed select tracks how many are done.
 
 ```html:preview
-<div style="max-width: 480px;">
-  <zn-translation-group
-    label="Release Notes"
-    languages='{"en":"English","ar":"Arabic","de":"German","es":"Spanish","fr":"French","it":"Italian","ja":"Japanese","ko":"Korean","pt":"Portuguese","ru":"Russian","tr":"Turkish","zh-hans":"Simplified Chinese"}'>
-    <zn-translations
-      label="Headline"
-      name="headline"
-      values='{"en":"Now shipping","ar":"متاح الآن","de":"Jetzt verfügbar","es":"Ya disponible","fr":"Disponible dès maintenant","it":"Disponibile ora","ja":"発売開始","ko":"출시됨","pt":"Disponível agora","ru":"Уже в продаже","tr":"Şimdi mevcut","zh-hans":"现已发布"}'
-    ></zn-translations>
-    <zn-translations
-      label="Summary"
-      name="summary"
-      values='{"en":"Tap through the release highlights.","ar":"تصفح أبرز ميزات الإصدار.","de":"Highlights der Version ansehen.","es":"Consulta lo más destacado.","fr":"Découvrez les nouveautés.","it":"Scopri le novità.","ja":"リリースのハイライトをご覧ください。","ko":"업데이트 주요 내용 보기.","pt":"Veja os destaques.","ru":"Ознакомьтесь с обновлениями.","tr":"Sürüm önemli noktaları.","zh-hans":"浏览版本亮点。"}'
-    ></zn-translations>
-  </zn-translation-group>
-</div>
+<zn-translation-group
+  label="Release Notes"
+  languages='{"en":"English","ar":"Arabic","de":"German","es":"Spanish","fr":"French","it":"Italian","ja":"Japanese","ko":"Korean","pt":"Portuguese","ru":"Russian","tr":"Turkish","zh-hans":"Simplified Chinese"}'>
+  <zn-translations
+    label="Headline"
+    name="headline"
+    values='{"en":"Now shipping","ar":"متاح الآن","de":"Jetzt verfügbar","es":"Ya disponible","fr":"Disponible dès maintenant","it":"Disponibile ora","ja":"発売開始","ko":"출시됨","pt":"Disponível agora","ru":"Уже в продаже","tr":"Şimdi mevcut","zh-hans":"现已发布"}'
+  ></zn-translations>
+  <zn-translations
+    label="Summary"
+    name="summary"
+    values='{"en":"Tap through the release highlights.","ar":"تصفح أبرز ميزات الإصدار.","de":"Highlights der Version ansehen.","es":"Consulta lo más destacado.","fr":"Découvrez les nouveautés.","it":"Scopri le novità.","ja":"リリースのハイライトをご覧ください。","ko":"업데이트 주요 내용 보기.","pt":"Veja os destaques.","ru":"Ознакомьтесь с обновлениями.","tr":"Sürüm önemli noktaları.","zh-hans":"浏览版本亮点。"}'
+  ></zn-translations>
+</zn-translation-group>
 ```
 
 ### Custom Accessible Name
@@ -202,60 +185,10 @@ The group emits a `zn-language-change` event when the active language changes.
 </script>
 ```
 
-### Real-World Use Case: Product Content Management
-
-A complete example showing how the translation group simplifies a product editing form.
-
-```html:preview
-<div style="max-width: 800px;">
-  <zn-panel caption="Product Details" icon="inventory_2">
-    <div style="display: flex; flex-direction: column; gap: 1rem;">
-      <zn-input
-        label="Product SKU"
-        value="PROD-12345"
-        readonly
-      ></zn-input>
-
-      <zn-translation-group
-        inline
-        label="Translatable Content"
-        languages='{"en":"English","fr":"French","de":"German","es":"Spanish"}'>
-        <zn-translations
-          name="name"
-          label="Product Name"
-          values='{"en":"Premium Wireless Headphones","fr":"Écouteurs sans fil premium","de":"Premium kabellose Kopfhörer","es":"Auriculares inalámbricos premium"}'
-        ></zn-translations>
-        <zn-translations
-          name="short-description"
-          label="Short Description"
-          values='{"en":"High-quality wireless audio","fr":"Audio sans fil haute qualité","de":"Hochwertiges kabelloses Audio","es":"Audio inalámbrico de alta calidad"}'
-        ></zn-translations>
-        <zn-translations
-          name="description"
-          label="Full Description"
-          values='{"en":"Experience premium sound with active noise cancellation","fr":"Découvrez un son premium avec suppression active du bruit","de":"Erleben Sie Premium-Sound mit aktiver Geräuschunterdrückung","es":"Experimente sonido premium con cancelación activa de ruido"}'
-        ></zn-translations>
-      </zn-translation-group>
-
-      <zn-input
-        label="Price"
-        type="currency"
-        value="299.99"
-      ></zn-input>
-    </div>
-
-    <div slot="footer" style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-      <zn-button color="secondary">Cancel</zn-button>
-      <zn-button color="success">Save Product</zn-button>
-    </div>
-  </zn-panel>
-</div>
-```
-
 ## Properties
 
-| Property    | Type                     | Default      | Description                                            |
-|-------------|--------------------------|--------------|--------------------------------------------------------|
+| Property         | Type                     | Default            | Description                                       |
+|------------------|--------------------------|--------------------|---------------------------------------------------|
 | `label`          | `string`                 | `''`               | Caption displayed in the panel header             |
 | `language-label` | `string`                 | `'Edit Languages'` | The select's accessible name; not shown on screen |
 | `inline`         | `boolean`                | `false`            | Drops the panel border, background and padding    |

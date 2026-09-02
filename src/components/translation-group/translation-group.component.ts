@@ -19,10 +19,11 @@ import styles from './translation-group.scss';
  * @status experimental
  * @since 1.0
  *
- * The select sits above the fields it drives, at the top of the panel body. Choosing a language switches every child
- * at once, and each child hides its own select while it is in a group — `grouped` is set on them from here.
+ * The select sits at the top right of the header, opposite the caption. Choosing a language switches every child at
+ * once, and each child hides its own select while it is in a group — `grouped` is set on them here.
  *
- * Every language carries a chip aggregated across the children:
+ * Closed, the select carries how many target languages are done — `1/5`. Its options each carry a chip aggregated
+ * across the children:
  *
  * - `Translated` — every child has a value for it
  * - `Partial` — only some children do
@@ -45,12 +46,12 @@ import styles from './translation-group.scss';
  * @event zn-language-change - Emitted when the active language changes. Detail: `{ language: string }`.
  *
  * @slot - The `zn-translations` fields the select drives.
- * @slot actions - Actions displayed in the panel header, beside the caption.
- * @slot footer - Content displayed in the panel footer — an auto-translate button, typically.
+ * @slot footer - Content displayed in the panel footer — an auto-translate button, typically. The header belongs to
+ *  the language select; nothing else is slotted into it.
  *
  * @csspart base - The component's base wrapper.
  * @csspart language-field - The label and select that choose the language every child is editing.
- * @csspart language-select - The language select itself.
+ * @csspart language-select - The select itself.
  */
 export default class ZnTranslationGroup extends ZnPanel {
   static styles: CSSResultGroup = [ZnPanel.styles, unsafeCSS(styles)];
@@ -61,7 +62,7 @@ export default class ZnTranslationGroup extends ZnPanel {
     'zn-select': ZnSelect
   };
 
-  private readonly _slotController = new HasSlotController(this, 'actions', 'footer');
+  private readonly _slotController = new HasSlotController(this, 'footer');
 
   /** The caption shown in the panel header. An alias for the inherited `caption`, which wins where both are set. */
   @property() label = '';
@@ -73,7 +74,10 @@ export default class ZnTranslationGroup extends ZnPanel {
    */
   @property({type: Boolean, reflect: true}) inline = false;
 
-  /** The label shown above the language select. The translated count is appended to it. */
+  /**
+   * The select's accessible name. Not shown — the caption is what names the section on screen — but read out by a
+   * screen reader, which has nothing else to go on once the visible label is gone.
+   */
   @property({attribute: 'language-label'}) languageLabel = 'Edit Languages';
 
   /**
@@ -174,7 +178,6 @@ export default class ZnTranslationGroup extends ZnPanel {
   };
 
   render() {
-    const hasActionSlot = this._slotController.test('actions');
     const hasFooterSlot = this._slotController.test('footer');
     const headerCaption = this.caption || this.label;
 
@@ -186,12 +189,17 @@ export default class ZnTranslationGroup extends ZnPanel {
       .forEach(code => extra.add(code)));
     const languageCodes = [...Object.keys(this.languages), ...extra];
     const hasMultipleLanguages = languageCodes.length > 1;
-    const hasHeader = Boolean(headerCaption) || hasActionSlot;
+    const hasHeader = Boolean(headerCaption) || hasMultipleLanguages;
 
     // English is the source every other language falls back to, so it is not itself one of the translations counted.
     const targets = languageCodes.filter(code => code !== 'en');
     const translated = targets.filter(code => this.languageState(code).type === 'success').length;
-    const activeState = this.languageState(this._activeLanguage);
+    // Closed, the select answers "how much is left to do" rather than the state of the one language on show — that
+    // is what the options are for.
+    const summary = {
+      label: `${translated}/${targets.length}`,
+      type: translated === targets.length ? 'success' : translated > 0 ? 'warning' : 'error'
+    };
 
     return html`
       <div class="${classMap({
@@ -200,7 +208,6 @@ export default class ZnTranslationGroup extends ZnPanel {
         'panel--transparent': this.transparent || this.inline,
         'translation-group--inline': this.inline,
         'panel--has-header': hasHeader,
-        'panel--has-actions': hasActionSlot,
         'panel--has-footer': hasFooterSlot,
       })}">
 
@@ -209,27 +216,17 @@ export default class ZnTranslationGroup extends ZnPanel {
             <zn-header class="panel__header"
                        caption="${ifDefined(headerCaption || undefined)}"
                        transparent>
-              ${hasActionSlot ? html`
-                <slot name="actions" slot="actions"></slot>` : null}
-            </zn-header>` : null}
-
-          <div class="panel__content">
-            <div class="panel__body">
               ${hasMultipleLanguages ? html`
-                <div class="translation-group__language-field" part="language-field">
-                  <label class="translation-group__language-label" for="language">
-                    ${this.languageLabel}
-                    <span
-                      class="translation-group__language-count">(${translated} of ${targets.length} translated)</span>
-                  </label>
+                <div slot="actions" class="translation-group__language-field" part="language-field">
                   <zn-select
-                    id="language"
+                    label="${this.languageLabel}"
+                    class="translation-group__language-select"
                     part="language-select"
                     hoist
                     .value="${this._activeLanguage}"
                     @zn-change="${this.handleLanguageSelect}"
                     @zn-input="${this.handleLanguageInput}">
-                    <zn-chip slot="suffix" type="${activeState.type}">${activeState.label}</zn-chip>
+                    <zn-chip slot="suffix" type="${summary.type}">${summary.label}</zn-chip>
                     ${languageCodes.map(code => {
                       const optionState = this.languageState(code);
                       return html`
@@ -240,6 +237,10 @@ export default class ZnTranslationGroup extends ZnPanel {
                     })}
                   </zn-select>
                 </div>` : nothing}
+            </zn-header>` : null}
+
+          <div class="panel__content">
+            <div class="panel__body">
               <slot
                 @slotchange="${this.handleSlotChange}"
                 @zn-change="${this.handleChildChange}"></slot>

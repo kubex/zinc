@@ -6,8 +6,9 @@ layout: component
 ---
 
 The Translation Group component wraps multiple `zn-translations` components in a panel-styled container with a shared
-language select. The select sits above the fields it drives, marks each language as translated, partial or falling back
-to English, and counts how many are done. Choosing a language switches every child input at once.
+language select. The select sits at the top right of the header, opposite the caption. Closed, it carries how many
+languages are done as a `1/5` chip; open, each language is marked translated, partial or falling back to English.
+Choosing a language switches every child at once, and each field carries the code of the language it is showing.
 
 ```html:preview
 <zn-translation-group
@@ -41,8 +42,8 @@ A translation group with two translation inputs sharing one language select.
 
 ### With Label
 
-Use the `label` attribute to add a caption in the panel header. Leave it off and the group starts at the language
-select. `language-label` renames the select's own label, which reads `Edit Languages` by default.
+Use the `label` attribute to add a caption on the left of the header, opposite the language select. `language-label`
+sets the select's accessible name — it is not shown, since the caption names the section on screen.
 
 ```html:preview
 <zn-translation-group
@@ -115,7 +116,9 @@ one — pick it and start typing. The count above the select tracks how many are
 </div>
 ```
 
-### Custom Select Label
+### Custom Accessible Name
+
+`language-label` is read out by a screen reader in place of a visible label.
 
 ```html:preview
 <zn-translation-group
@@ -254,7 +257,7 @@ A complete example showing how the translation group simplifies a product editin
 | Property    | Type                     | Default      | Description                                            |
 |-------------|--------------------------|--------------|--------------------------------------------------------|
 | `label`          | `string`                 | `''`               | Caption displayed in the panel header             |
-| `language-label` | `string`                 | `'Edit Languages'` | Label shown above the language select             |
+| `language-label` | `string`                 | `'Edit Languages'` | The select's accessible name; not shown on screen |
 | `inline`         | `boolean`                | `false`            | Drops the panel border, background and padding    |
 | `languages`      | `Record<string, string>` | `{en: "EN"}`       | Object mapping language codes to display names    |
 | `flush`          | `boolean`                | `false`            | Removes body padding for compact layout           |
@@ -271,13 +274,16 @@ A complete example showing how the translation group simplifies a product editin
 |-----------|------------------------------------------------------------|
 | (default) | Place `<zn-translations>` elements here                    |
 | `label`   | Alternative to the `label` attribute for rich HTML content |
+| `footer`  | Content displayed in the panel footer                     |
+
+There is no `actions` slot: the header carries the caption alone.
 
 ## CSS Parts
 
 | Part              | Description                                                     |
 |-------------------|-----------------------------------------------------------------|
 | `base`            | The outer panel wrapper                                         |
-| `header`          | The header area containing the caption and the `actions` slot   |
-| `language-field`  | The label and select that choose the language being edited      |
-| `language-select` | The language select itself                                      |
+| `header`          | The header area containing the caption and the language select  |
+| `language-field`  | The container holding the language select                       |
+| `language-select` | The select itself                                               |
 | `translations`    | The body container wrapping the slotted children                |

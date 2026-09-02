@@ -22,6 +22,7 @@ import styles from './header.scss';
  * @slot example - An example slot.
  *
  * @csspart base - The component's base wrapper.
+ * @csspart header-right - The container that wraps the actions slot.
  *
  * @cssproperty --example - An example CSS custom property.
  */
@@ -159,7 +160,7 @@ export default class ZnHeader extends ZincElement {
                 </span>
             </div>
 
-            <div class="header__right">
+            <div part="header-right" class="header__right">
               <slot name="actions"></slot>
             </div>
           </div>

@@ -87,6 +87,21 @@ describe('<zn-translations>', () => {
       expect(chips.map(chip => chip.getAttribute('type'))).to.deep.equal(['success', 'error']);
     });
 
+    it('summarises progress on the closed select, leaving the options their own states', async () => {
+      const el = await fixture<ZnTranslations>(html`
+        <zn-translations
+          languages='{"en":"English","fr":"French","de":"German"}'
+          values='{"en":"Hello","de":"Hallo"}'></zn-translations>`);
+      await el.updateComplete;
+
+      const summary = selectOf(el)!.querySelector('zn-chip[slot="suffix"]')!;
+      expect(summary.textContent?.trim()).to.equal('1/2');
+      expect(summary.getAttribute('type')).to.equal('warning');
+
+      const options = [...selectOf(el)!.querySelectorAll('zn-option zn-chip')];
+      expect(options.map(chip => chip.textContent?.trim())).to.deep.equal(['Translated', 'English', 'Translated']);
+    });
+
     it('switches the edited language when the select changes', async () => {
       const el = await fixture<ZnTranslations>(html`
         <zn-translations
@@ -213,6 +228,38 @@ describe('<zn-translations>', () => {
       expect(inlineEdit).to.exist;
       expect(inlineEdit!.value).to.equal('Hello');
       expect(el.shadowRoot!.querySelector('zn-input')).to.be.null;
+    });
+
+    it('marks the field with the active language code once there is more than one', async () => {
+      const el = await fixture<ZnTranslations>(html`
+        <zn-translations
+          languages='{"en":"English","fr":"French"}'
+          values='{"en":"Hello","fr":"Bonjour"}'></zn-translations>`);
+      await el.updateComplete;
+
+      const codeOf = () => el.shadowRoot!.querySelector<HTMLElement>('zn-input [slot="prefix"]');
+      expect(codeOf()?.textContent?.trim()).to.equal('EN');
+
+      el.setActiveLanguage('fr');
+      await el.updateComplete;
+      expect(codeOf()?.textContent?.trim()).to.equal('FR');
+    });
+
+    it('leaves the code off when there is only one language', async () => {
+      const el = await fixture<ZnTranslations>(html`<zn-translations></zn-translations>`);
+      await el.updateComplete;
+
+      expect(el.shadowRoot!.querySelector('zn-input [slot="prefix"]')).to.be.null;
+    });
+
+    it('takes no slotted actions of its own', async () => {
+      const el = await fixture<ZnTranslations>(html`
+        <zn-translations label="Name">
+          <zn-button slot="actions">Auto translate</zn-button>
+        </zn-translations>`);
+      await el.updateComplete;
+
+      expect(el.shadowRoot!.querySelector('slot[name="actions"]')).to.be.null;
     });
 
     it('passes disabled down to the field', async () => {

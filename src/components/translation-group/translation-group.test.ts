@@ -67,25 +67,11 @@ describe('<zn-translation-group>', () => {
 
       const header = group.shadowRoot!.querySelector<HTMLElement>('.panel__header')!;
       const body = group.shadowRoot!.querySelector<HTMLElement>('.panel__body')!;
-
-      // zn-form-group's row gap between stacked controls. The caption heads the same stack, so its gap matches.
+      // zn-form-group's row gap between stacked controls. The header heads the same stack, so its gap matches.
       expect(getComputedStyle(body).rowGap).to.equal('24px');
       expect(getComputedStyle(header).paddingBottom).to.equal('24px');
     });
 
-    it('hugs the caption instead of holding the header at its 36px action-row height', async () => {
-      const group = await fixture<ZnTranslationGroup>(html`
-        <zn-translation-group inline label="Content" .languages=${{en: 'English', fr: 'French'}}>
-          <zn-translations name="heading"></zn-translations>
-        </zn-translation-group>`);
-      await group.updateComplete;
-
-      const header = group.shadowRoot!.querySelector('zn-header')!;
-      await header.updateComplete;
-      const content = header.shadowRoot!.querySelector<HTMLElement>('.content')!;
-
-      expect(getComputedStyle(content).minHeight).to.equal('0px');
-    });
 
     it("does not clip the language select's focus ring once the padding is gone", async () => {
       const group = await fixture<ZnTranslationGroup>(html`
@@ -105,6 +91,68 @@ describe('<zn-translation-group>', () => {
     function selectOf(group: ZnTranslationGroup) {
       return group.shadowRoot!.querySelector<ZnSelect>('zn-select')!;
     }
+
+    it('sits in the header, opposite the caption', async () => {
+      const group = await fixture<ZnTranslationGroup>(html`
+        <zn-translation-group label="Content" .languages=${{en: 'English', fr: 'French'}}>
+          <zn-translations name="heading"></zn-translations>
+        </zn-translation-group>`);
+      await group.updateComplete;
+
+      const field = group.shadowRoot!.querySelector<HTMLElement>('.translation-group__language-field')!;
+      expect(field.getAttribute('slot')).to.equal('actions');
+      expect(field.closest('zn-header')).to.exist;
+      expect(group.shadowRoot!.querySelector('.panel__body zn-select')).to.be.null;
+    });
+
+    it('leaves the caption to the label alone, with the count on the chip', async () => {
+      const group = await fixture<ZnTranslationGroup>(html`
+        <zn-translation-group label="Content" .languages=${{en: 'English', fr: 'French'}}>
+          <zn-translations name="heading" value='{"en":"Hi","fr":"Salut"}'></zn-translations>
+        </zn-translation-group>`);
+      await group.updateComplete;
+
+      const header = group.shadowRoot!.querySelector('.panel__header')!;
+      expect(header.getAttribute('caption')).to.equal('Content');
+      expect(header.querySelector('[slot="caption"]'), 'nothing else rides the caption').to.be.null;
+      expect(group.shadowRoot!.querySelector('.translation-group__language-label')).to.be.null;
+    });
+
+    it('names the select for a screen reader without showing the label', async () => {
+      const group = await fixture<ZnTranslationGroup>(html`
+        <zn-translation-group label="Content" .languages=${{en: 'English', fr: 'French'}}>
+          <zn-translations name="heading"></zn-translations>
+        </zn-translation-group>`);
+      await group.updateComplete;
+
+      const select = selectOf(group);
+      expect(select.label).to.equal('Edit Languages');
+      await select.updateComplete;
+      const label = select.shadowRoot!.querySelector<HTMLElement>('[part~="form-control-label"]')!;
+      expect(label.getBoundingClientRect().width).to.be.lessThan(2);
+    });
+
+    it('renders a header for the select even with no caption', async () => {
+      const group = await fixture<ZnTranslationGroup>(html`
+        <zn-translation-group .languages=${{en: 'English', fr: 'French'}}>
+          <zn-translations name="heading"></zn-translations>
+        </zn-translation-group>`);
+      await group.updateComplete;
+
+      expect(group.shadowRoot!.querySelector('.panel__header')).to.exist;
+      expect(selectOf(group)).to.exist;
+    });
+
+    it('takes no slotted actions of its own', async () => {
+      const group = await fixture<ZnTranslationGroup>(html`
+        <zn-translation-group label="Content" .languages=${{en: 'English', fr: 'French'}}>
+          <zn-button slot="actions">Auto translate</zn-button>
+          <zn-translations name="heading"></zn-translations>
+        </zn-translation-group>`);
+      await group.updateComplete;
+
+      expect(group.shadowRoot!.querySelector('slot[name="actions"]')).to.be.null;
+    });
 
     function chipsOf(group: ZnTranslationGroup) {
       return [...selectOf(group).querySelectorAll('zn-option zn-chip')]
@@ -131,6 +179,28 @@ describe('<zn-translation-group>', () => {
       expect(chipsOf(group)).to.deep.equal(['Translated', 'Translated', 'Partial']);
     });
 
+    it('summarises progress on the closed select, leaving the options their own states', async () => {
+      const group = await groupFixture(
+        {en: 'English', fr: 'French', de: 'German', es: 'Spanish'},
+        ['{"en":"Hello","fr":"Bonjour","de":"Hallo"}', '{"en":"Hi","fr":"Salut"}']);
+
+      const summary = selectOf(group).querySelector('zn-chip[slot="suffix"]')!;
+      expect(summary.textContent?.trim()).to.equal('1/3');
+      expect(summary.getAttribute('type')).to.equal('warning');
+
+      expect(chipsOf(group)).to.deep.equal(['Translated', 'Translated', 'Partial', 'English']);
+    });
+
+    it('marks the summary chip done once every target language is translated', async () => {
+      const group = await groupFixture(
+        {en: 'English', fr: 'French'},
+        ['{"en":"Hello","fr":"Bonjour"}']);
+
+      const summary = selectOf(group).querySelector('zn-chip[slot="suffix"]')!;
+      expect(summary.textContent?.trim()).to.equal('1/1');
+      expect(summary.getAttribute('type')).to.equal('success');
+    });
+
     it('falls back to English where no child has a value', async () => {
       const group = await groupFixture(
         {en: 'English', fr: 'French'},
@@ -144,8 +214,8 @@ describe('<zn-translation-group>', () => {
         {en: 'English', fr: 'French', de: 'German'},
         ['{"en":"Hello","fr":"Bonjour"}']);
 
-      const count = group.shadowRoot!.querySelector('.translation-group__language-count');
-      expect(count?.textContent?.trim()).to.equal('(1 of 2 translated)');
+      const summary = selectOf(group).querySelector('zn-chip[slot="suffix"]')!;
+      expect(summary.textContent?.trim()).to.equal('1/2');
     });
 
     it('switches every child when the select changes', async () => {

@@ -2,54 +2,72 @@
   display: block;
 }
 
-// The body stacks the language select and the fields it drives, so they take the row gap zn-form-group sets between
-// stacked controls. The slotted children are `display: contents` through the slot, putting them in this same flow.
+// The body stacks the fields the select drives, so they take the row gap zn-form-group sets between stacked
+// controls. The slotted children are `display: contents` through the slot, putting them in this same flex flow.
 .panel__body {
   gap: var(--zn-spacing-medium);
 }
 
-// With a header the caption heads that same stack, so the gap below it is the header's to set — the panel's own body
-// padding on top of it would make the caption's gap the odd one out.
+// The header sets its own gap down to the first field; the panel's body padding on top of it would make that one gap
+// the odd one out.
 .panel--has-header .panel__body {
   padding-top: 0;
-}
-
-// zn-header holds its content row at 36px so a caption sits level with action buttons, and centres the caption in
-// it. Here the caption heads the same stack as the fields, so it hugs its text and the gap below it is set here.
-.panel__header::part(content) {
-  min-height: 0;
 }
 
 .panel__header {
   padding-bottom: var(--zn-spacing-medium);
 }
 
-// Inline mode reuses the panel's transparent and flush modifiers, so the header carries the whole gap down to the
-// first label — the same 16px that separates every control from the label under it.
 .translation-group--inline .panel__header {
   padding: 0 0 var(--zn-spacing-medium);
 }
 
+// zn-header holds its content row at 36px so a caption sits level with action buttons. The select is taller than
+// that and sets the height on its own, so the row hugs whichever of the two is bigger.
+.panel__header::part(content) {
+  min-height: 0;
+}
+
+// The actions container is a plain block that clips horizontally: its content would sit at the top rather than level
+// with the caption, and a select flush against its right edge would lose the focus ring.
+.panel__header::part(header-right) {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  overflow: visible;
+}
+
+.translation-group__language-field {
+  display: flex;
+  align-items: center;
+}
+
+// Wide enough that a language name, its chip and the chevron all fit — the listbox syncs its width to this, so a
+// narrow control would truncate the options as well as the value.
+.translation-group__language-select {
+  width: 320px;
+  max-width: 100%;
+}
+
+// The select's label is its accessible name only; the caption names the section on screen.
+.translation-group__language-select::part(form-control-label) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 // The panel clips its content to its rounded corners, and the body scrolls. Neither applies with the chrome gone, and
-// both would cut the focus ring off the language select now that no padding stands between it and the body's edge.
+// both would cut the focus ring off a field now that no padding stands between it and the body's edge.
 .translation-group--inline {
   .panel__inner,
   .panel__content,
   .panel__body {
     overflow: visible;
   }
-}
-
-.translation-group__language-label {
-  display: block;
-  margin-bottom: var(--zn-spacing-x-small);
-  color: var(--zn-input-label-color);
-  font-size: var(--zn-input-label-font-size-medium);
-  font-weight: var(--zn-input-label-font-weight);
-  line-height: var(--zn-input-label-line-height);
-}
-
-.translation-group__language-count {
-  color: var(--zn-input-help-text-color);
-  font-weight: var(--zn-font-weight-normal);
 }

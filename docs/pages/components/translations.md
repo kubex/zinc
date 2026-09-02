@@ -7,8 +7,9 @@ layout: component
 
 The Translations component provides a user-friendly interface for managing multi-language text input. A select above
 the field chooses the language being edited, and each language it offers carries a chip saying whether it has a
-translation of its own or falls back to English. The field itself is a plain input, or a textarea with
-`input-type="textarea"`.
+translation of its own or falls back to English; closed, it carries how many languages are done as a `1/5` chip.
+The field itself is a plain input, or a textarea with `input-type="textarea"`, and carries the code of the language
+it is showing whenever more than one is on offer.
 
 ```html:preview
 <zn-translations
@@ -155,20 +156,6 @@ Add `inline-edit` to read the translation as text until it is clicked, through
   languages='{"en":"English","fr":"French"}'
   values='{"en":"Hello World","fr":"Bonjour le monde"}'
 ></zn-translations>
-```
-
-### With Custom Action Button
-
-Use the `actions` slot to add custom buttons or actions beside the label.
-
-```html:preview
-<zn-translations
-  label="Description"
-  languages='{"en":"English","fr":"French","de":"German"}'>
-  <zn-button slot="actions" color="transparent" icon="translate">
-    Auto-Translate
-  </zn-button>
-</zn-translations>
 ```
 
 ### Many Languages
@@ -347,10 +334,7 @@ A complete example showing product content management with translations.
         languages='{"en":"English","fr":"French","de":"German","es":"Spanish"}'
         values='{"en":"High-quality wireless headphones with active noise cancellation","fr":"Écouteurs sans fil de haute qualité avec suppression active du bruit","de":"Hochwertige kabellose Kopfhörer mit aktiver Geräuschunterdrückung","es":"Auriculares inalámbricos de alta calidad con cancelación activa de ruido"}'
       >
-        <zn-button slot="actions" color="transparent" icon="smart_toy">
-          AI Translate
-        </zn-button>
-      </zn-translations>
+</zn-translations>
 
       <zn-input
         label="Price"
@@ -447,7 +431,6 @@ way `Enter` otherwise would.
 | Slot        | Description                                                      |
 |-------------|------------------------------------------------------------------|
 | `label`     | Alternative to the `label` attribute for rich HTML content       |
-| `actions`   | Action buttons displayed beside the label                        |
 | `help-text` | Alternative to the `help-text` attribute for rich HTML content   |
 
 ## Methods

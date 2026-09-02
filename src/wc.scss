@@ -13,13 +13,16 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-transform: none;
+}
 
-  *, *::before, *::after {
-    box-sizing: border-box;
-    border-width: 0;
-    border-style: solid;
-    border-color: rgb(var(--zn-border-color));
-  }
+// Must stay at zero specificity: shadow roots that re-adopt the global sheet
+// (zn-tabs, zn-data-table, editor toolbar) load it before this one, so a `:host *`
+// reset would win the tie and strip borders off every global class.
+*, *::before, *::after {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: rgb(var(--zn-border-color));
 }
 
 [hidden] {

@@ -17,7 +17,6 @@
   flex-shrink: 1;
   width: 100%;
   container-type: inline-size;
-  overflow: hidden;
   gap: var(--zn-gap);
 
   max-width: 100%;
@@ -68,6 +67,12 @@
 
   &--no-gap {
     gap: 0;
+  }
+
+  // The row rule below each child is drawn by a pseudo reaching to -100vw, so border mode has to clip. Clipping
+  // every layout would cut the focus ring off any control sitting flush against a column edge.
+  &--border {
+    overflow: hidden;
   }
 
   &--border ::slotted(*) {

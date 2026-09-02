@@ -245,6 +245,28 @@ describe('<zn-translations>', () => {
       expect(codeOf()?.textContent?.trim()).to.equal('FR');
     });
 
+    it('divides the code off on the side facing the value, in either direction', async () => {
+      async function codeOf(languages: string, active: string) {
+        const el = await fixture<ZnTranslations>(html`
+          <zn-translations languages=${languages} values='{"en":"Hello"}'></zn-translations>`);
+        // The border tokens live in the theme stylesheet, which the bundle under test does not carry.
+        el.style.setProperty('--zn-input-border-width', '1px');
+        el.style.setProperty('--zn-input-border-color', 'rgb(255, 0, 0)');
+        el.setActiveLanguage(active);
+        await el.updateComplete;
+
+        return getComputedStyle(el.shadowRoot!.querySelector<HTMLElement>('zn-input [slot="prefix"]')!);
+      }
+
+      const ltr = await codeOf('{"en":"English","fr":"French"}', 'fr');
+      expect(ltr.borderRightWidth, 'ltr divides on the right').to.equal('1px');
+      expect(ltr.borderLeftWidth, 'ltr has no left border').to.equal('0px');
+
+      const rtl = await codeOf('{"en":"English","ar":"Arabic"}', 'ar');
+      expect(rtl.borderLeftWidth, 'rtl divides on the left').to.equal('1px');
+      expect(rtl.borderRightWidth, 'rtl has no right border').to.equal('0px');
+    });
+
     it('leaves the code off when there is only one language', async () => {
       const el = await fixture<ZnTranslations>(html`<zn-translations></zn-translations>`);
       await el.updateComplete;

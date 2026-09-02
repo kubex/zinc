@@ -21,7 +21,9 @@
   // zn-input margins its slotted prefixes away from the edge; this one is a cell, so it sits flush against it.
   margin: 0;
   padding-inline: var(--zn-spacing-small);
-  border-right: solid var(--zn-input-border-width) var(--zn-input-border-color);
+  // Logical, not physical: an RTL language puts the code on the right, where a border-right would land on the
+  // input's own edge and vanish.
+  border-inline-end: solid var(--zn-input-border-width) var(--zn-input-border-color);
   color: var(--zn-input-color);
   font-size: var(--zn-input-font-size-medium);
 }

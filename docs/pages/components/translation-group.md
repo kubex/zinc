@@ -1,13 +1,13 @@
 ---
 meta:
   title: Translation Group
-  description: A panel-styled container that provides a shared language toggle for multiple translation inputs.
+  description: A panel-styled container that provides a shared language select for multiple translation inputs.
 layout: component
 ---
 
 The Translation Group component wraps multiple `zn-translations` components in a panel-styled container with a shared
-language toggle. A button group in the top right lets users switch between languages, controlling all child translation
-inputs simultaneously.
+language select. The select sits above the fields it drives, marks each language as translated, partial or falling back
+to English, and counts how many are done. Choosing a language switches every child input at once.
 
 ```html:preview
 <zn-translation-group
@@ -30,7 +30,7 @@ inputs simultaneously.
 
 ### Basic Usage
 
-A translation group with two translation inputs sharing one language button group.
+A translation group with two translation inputs sharing one language select.
 
 ```html:preview
 <zn-translation-group languages='{"en":"English","fr":"French"}'>
@@ -41,7 +41,8 @@ A translation group with two translation inputs sharing one language button grou
 
 ### With Label
 
-Use the `label` attribute to add a descriptive label in the panel header, displayed on the left side alongside the language toggle.
+Use the `label` attribute to add a caption in the panel header. Leave it off and the group starts at the language
+select. `language-label` renames the select's own label, which reads `Edit Languages` by default.
 
 ```html:preview
 <zn-translation-group
@@ -54,8 +55,9 @@ Use the `label` attribute to add a descriptive label in the panel header, displa
 
 ### Pre-filled Values
 
-Set initial translations on each child. The group automatically collects all language codes from children and displays
-them as buttons in the toggle group.
+Set initial translations on each child. A language every child has a value for is marked `Translated`; one only some
+children have is `Partial`; one no child has falls back to English. English itself is the source, so it is neither
+counted nor marked as a translation.
 
 ```html:preview
 <zn-translation-group
@@ -76,7 +78,7 @@ them as buttons in the toggle group.
 
 ### Many Fields
 
-The group scales well with multiple translation inputs under a single toggle.
+The group scales well with multiple translation inputs under a single select.
 
 ```html:preview
 <zn-translation-group
@@ -89,11 +91,10 @@ The group scales well with multiple translation inputs under a single toggle.
 </zn-translation-group>
 ```
 
-### Language Overflow
+### Many Languages
 
-When there are more languages than will fit across the header, the extras collapse into a chevron dropdown beside the
-visible buttons. The dropdown sits before the `+` add-language dropdown and selects the same way — picking a language
-switches every child translation input in the group.
+Every configured language is offered whether or not it has been translated yet, so there is no separate step to add
+one — pick it and start typing. The count above the select tracks how many are done.
 
 ```html:preview
 <div style="max-width: 480px;">
@@ -112,6 +113,48 @@ switches every child translation input in the group.
     ></zn-translations>
   </zn-translation-group>
 </div>
+```
+
+### Custom Select Label
+
+```html:preview
+<zn-translation-group
+  language-label="Language"
+  languages='{"en":"English","fr":"French","de":"German"}'>
+  <zn-translations label="Heading" name="heading" values='{"en":"Now shipping","de":"Jetzt verfügbar"}'></zn-translations>
+  <zn-translations label="Body" name="body" values='{"en":"Tap through the highlights."}'></zn-translations>
+</zn-translation-group>
+```
+
+### Inline (No Panel)
+
+Nested inside another panel, the group's own border and padding indent its fields out of line with everything around
+them. `inline` drops the chrome so the group reads as a section of the form instead.
+
+```html:preview
+<zn-panel caption="Product Details" icon="inventory_2">
+  <div style="display: flex; flex-direction: column; gap: 1rem;">
+    <zn-input label="Product SKU" value="PROD-12345" readonly></zn-input>
+
+    <zn-translation-group
+      inline
+      label="Translatable Content"
+      languages='{"en":"English","fr":"French","de":"German"}'>
+      <zn-translations
+        name="name"
+        label="Product Name"
+        values='{"en":"Premium Wireless Headphones","fr":"Écouteurs sans fil premium","de":"Premium kabellose Kopfhörer"}'
+      ></zn-translations>
+      <zn-translations
+        name="short-description"
+        label="Short Description"
+        values='{"en":"High-quality wireless audio","fr":"Audio sans fil haute qualité","de":"Hochwertiges kabelloses Audio"}'
+      ></zn-translations>
+    </zn-translation-group>
+
+    <zn-input label="Price" type="currency" value="299.99"></zn-input>
+  </div>
+</zn-panel>
 ```
 
 ### Flush Layout
@@ -171,6 +214,7 @@ A complete example showing how the translation group simplifies a product editin
       ></zn-input>
 
       <zn-translation-group
+        inline
         label="Translatable Content"
         languages='{"en":"English","fr":"French","de":"German","es":"Spanish"}'>
         <zn-translations
@@ -209,9 +253,11 @@ A complete example showing how the translation group simplifies a product editin
 
 | Property    | Type                     | Default      | Description                                            |
 |-------------|--------------------------|--------------|--------------------------------------------------------|
-| `label`     | `string`                 | `''`         | Label displayed in the panel header                    |
-| `languages` | `Record<string, string>` | `{en: "EN"}` | Object mapping language codes to display names          |
-| `flush`     | `boolean`                | `false`      | Removes body padding for compact layout                |
+| `label`          | `string`                 | `''`               | Caption displayed in the panel header             |
+| `language-label` | `string`                 | `'Edit Languages'` | Label shown above the language select             |
+| `inline`         | `boolean`                | `false`            | Drops the panel border, background and padding    |
+| `languages`      | `Record<string, string>` | `{en: "EN"}`       | Object mapping language codes to display names    |
+| `flush`          | `boolean`                | `false`            | Removes body padding for compact layout           |
 
 ## Events
 
@@ -228,8 +274,10 @@ A complete example showing how the translation group simplifies a product editin
 
 ## CSS Parts
 
-| Part           | Description                                             |
-|----------------|---------------------------------------------------------|
-| `base`         | The outer panel wrapper                                 |
-| `header`       | The header area containing the label and language toggle |
-| `translations` | The body container wrapping the slotted children        |
+| Part              | Description                                                     |
+|-------------------|-----------------------------------------------------------------|
+| `base`            | The outer panel wrapper                                         |
+| `header`          | The header area containing the caption and the `actions` slot   |
+| `language-field`  | The label and select that choose the language being edited      |
+| `language-select` | The language select itself                                      |
+| `translations`    | The body container wrapping the slotted children                |

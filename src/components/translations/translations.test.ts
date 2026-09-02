@@ -1,6 +1,8 @@
 import '../../../dist/zn.min.js';
 import { expect, fixture, html, waitUntil } from '@open-wc/testing';
 import type ZnInlineEdit from '../inline-edit/inline-edit.component';
+import type ZnInput from '../input/input.component';
+import type ZnSelect from '../select/select.component';
 import type ZnSlashMenu from '../slash-menu/slash-menu.component';
 import type ZnTextarea from '../textarea/textarea.component';
 import type ZnTranslations from './translations.component';
@@ -37,7 +39,7 @@ describe('<zn-translations>', () => {
     el.values = { 'en': 'Hello' };
     await el.updateComplete;
 
-    const input = el.shadowRoot!.querySelector('zn-inline-edit') as ZnInlineEdit | null;
+    const input = el.shadowRoot!.querySelector('zn-input') as ZnInput | null;
     expect(input).to.exist;
     expect(input!.value).to.equal('Hello');
 
@@ -48,6 +50,98 @@ describe('<zn-translations>', () => {
     await el.updateComplete;
     await expect(el.values['en']).to.equal('Hello World');
     await expect(JSON.parse(el.value)).to.deep.equal({'en': 'Hello World'});
+  });
+
+  describe('language select', () => {
+    function selectOf(el: ZnTranslations) {
+      return el.shadowRoot!.querySelector<ZnSelect>('zn-select');
+    }
+
+    it('is not rendered for a single language', async () => {
+      const el = await fixture<ZnTranslations>(html`<zn-translations></zn-translations>`);
+      await el.updateComplete;
+
+      expect(selectOf(el)).to.be.null;
+    });
+
+    it('offers every configured language, translated or not', async () => {
+      const el = await fixture<ZnTranslations>(html`
+        <zn-translations
+          languages='{"en":"English","fr":"French","de":"German"}'
+          values='{"en":"Hello","de":"Hallo"}'></zn-translations>`);
+      await el.updateComplete;
+
+      const options = [...selectOf(el)!.querySelectorAll('zn-option')];
+      expect(options.map(option => option.value)).to.deep.equal(['en', 'fr', 'de']);
+    });
+
+    it('marks a language with a value translated and a blank one as falling back to English', async () => {
+      const el = await fixture<ZnTranslations>(html`
+        <zn-translations
+          languages='{"en":"English","fr":"French"}'
+          values='{"en":"Hello"}'></zn-translations>`);
+      await el.updateComplete;
+
+      const chips = [...selectOf(el)!.querySelectorAll('zn-option zn-chip')];
+      expect(chips.map(chip => chip.textContent?.trim())).to.deep.equal(['Translated', 'English']);
+      expect(chips.map(chip => chip.getAttribute('type'))).to.deep.equal(['success', 'error']);
+    });
+
+    it('switches the edited language when the select changes', async () => {
+      const el = await fixture<ZnTranslations>(html`
+        <zn-translations
+          languages='{"en":"English","fr":"French"}'
+          values='{"en":"Hello","fr":"Bonjour"}'></zn-translations>`);
+      await el.updateComplete;
+
+      const select = selectOf(el)!;
+      select.value = 'fr';
+      select.dispatchEvent(new CustomEvent('zn-change', {bubbles: true, composed: true}));
+      await el.updateComplete;
+
+      expect(el.getActiveLanguage()).to.equal('fr');
+      expect(el.shadowRoot!.querySelector<ZnInput>('zn-input')!.value).to.equal('Bonjour');
+    });
+
+    it("does not report the select's own change as a value change", async () => {
+      const el = await fixture<ZnTranslations>(html`
+        <zn-translations
+          languages='{"en":"English","fr":"French"}'
+          values='{"en":"Hello"}'></zn-translations>`);
+      await el.updateComplete;
+
+      let changes = 0;
+      el.addEventListener('zn-change', () => changes++);
+
+      const select = selectOf(el)!;
+      select.value = 'fr';
+      select.dispatchEvent(new CustomEvent('zn-change', {bubbles: true, composed: true}));
+      await el.updateComplete;
+
+      expect(changes).to.equal(0);
+    });
+
+    it('leaves a browsed language out of the submitted value until it is typed into', async () => {
+      const el = await fixture<ZnTranslations>(html`
+        <zn-translations
+          languages='{"en":"English","fr":"French"}'
+          values='{"en":"Hello"}'></zn-translations>`);
+      el.setActiveLanguage('fr');
+      await el.updateComplete;
+
+      expect(JSON.parse(el.value)).to.deep.equal({en: 'Hello'});
+    });
+
+    it('shows the English text as the placeholder for a blank language', async () => {
+      const el = await fixture<ZnTranslations>(html`
+        <zn-translations
+          languages='{"en":"English","fr":"French"}'
+          values='{"en":"Hello"}'></zn-translations>`);
+      el.setActiveLanguage('fr');
+      await el.updateComplete;
+
+      expect(el.shadowRoot!.querySelector<ZnInput>('zn-input')!.placeholder).to.equal('Hello');
+    });
   });
 
   describe('help text', () => {
@@ -92,18 +186,47 @@ describe('<zn-translations>', () => {
     });
   });
 
+  describe('field', () => {
+    it('renders a plain input by default', async () => {
+      const el = await fixture<ZnTranslations>(html`<zn-translations></zn-translations>`);
+      await el.updateComplete;
+
+      expect(el.shadowRoot!.querySelector('zn-input')).to.exist;
+      expect(el.shadowRoot!.querySelector('zn-inline-edit')).to.be.null;
+    });
+
+    it('renders a plain textarea for input-type="textarea"', async () => {
+      const el = await fixture<ZnTranslations>(html`
+        <zn-translations input-type="textarea"></zn-translations>`);
+      await el.updateComplete;
+
+      expect(el.shadowRoot!.querySelector('zn-textarea')).to.exist;
+      expect(el.shadowRoot!.querySelector('zn-input')).to.be.null;
+    });
+
+    it('renders an inline edit when asked for one', async () => {
+      const el = await fixture<ZnTranslations>(html`
+        <zn-translations inline-edit values='{"en":"Hello"}'></zn-translations>`);
+      await el.updateComplete;
+
+      const inlineEdit = el.shadowRoot!.querySelector<ZnInlineEdit>('zn-inline-edit');
+      expect(inlineEdit).to.exist;
+      expect(inlineEdit!.value).to.equal('Hello');
+      expect(el.shadowRoot!.querySelector('zn-input')).to.be.null;
+    });
+
+    it('passes disabled down to the field', async () => {
+      const el = await fixture<ZnTranslations>(html`<zn-translations disabled></zn-translations>`);
+      await el.updateComplete;
+
+      expect(el.shadowRoot!.querySelector<ZnInput>('zn-input')!.disabled).to.be.true;
+    });
+  });
+
   describe('slash menu', () => {
-    /** Puts the active language's field into edit mode, the way clicking it does. */
     async function textareaOf(el: ZnTranslations) {
       await el.updateComplete;
-      const inlineEdit = el.shadowRoot!.querySelector<ZnInlineEdit>('zn-inline-edit')!;
-      await inlineEdit.updateComplete;
-
-      inlineEdit.shadowRoot!.querySelector<HTMLElement>('.ai__left')!
-        .dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
-      await inlineEdit.updateComplete;
-
-      const textarea = inlineEdit.shadowRoot!.querySelector<ZnTextarea>('zn-textarea')!;
+      const textarea = el.shadowRoot!.querySelector<ZnTextarea>('zn-textarea')!;
       await textarea.updateComplete;
 
       return textarea;

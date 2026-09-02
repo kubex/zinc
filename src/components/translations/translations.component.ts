@@ -7,37 +7,77 @@ import {keyed} from 'lit/directives/keyed.js';
 import {live} from 'lit/directives/live.js';
 import {parseSlashItems, type SlashMenuItem} from '../slash-menu';
 import {property, state} from 'lit/decorators.js';
-import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import ZincElement from '../../internal/zinc-element';
-import ZnButton from '../button';
-import ZnButtonGroup from '../button-group';
-import ZnDropdown from '../dropdown';
+import ZnChip from '../chip';
 import ZnInlineEdit from '../inline-edit';
 import ZnInput from '../input';
-import ZnMenu from '../menu';
+import ZnOption from '../option';
+import ZnSelect from '../select';
+import ZnTextarea from '../textarea';
 import type {PropertyValues} from 'lit';
 import type {ZincFormControl} from '../../internal/zinc-element';
-import type {ZnMenuSelectEvent} from '../../events/zn-menu-select';
 
 import formControlStyles from '../../form-control.scss';
 import styles from './translations.scss';
 
+/**
+ * @summary Collects one piece of text in several languages, one language at a time.
+ * @documentation https://zinc.style/components/translations
+ * @status experimental
+ * @since 1.0
+ *
+ * A select above the field chooses the language being edited, and every language it offers carries a chip saying
+ * whether it has a translation of its own or falls back to English. Blank languages fall back to English at render
+ * time, so a blank field shows the English text as its placeholder rather than looking empty.
+ *
+ * The value submitted is a JSON object keyed by language code. A language stays out of it until it is typed into, so
+ * browsing the languages does not pad the payload with empty translations.
+ *
+ * Put several of these in a `zn-translation-group` to have one select drive all of them.
+ *
+ * @dependency zn-chip
+ * @dependency zn-inline-edit
+ * @dependency zn-input
+ * @dependency zn-option
+ * @dependency zn-select
+ * @dependency zn-textarea
+ *
+ * @slot label - The field's label. Alternatively, use the `label` attribute.
+ * @slot actions - Actions shown beside the label — an auto-translate button, typically. Hidden while `grouped`,
+ *  where the group's own header carries them instead.
+ * @slot help-text - Text describing how to fill the field in, shown below it and shared by every language.
+ *  Alternatively, use the `help-text` attribute.
+ *
+ * @event zn-change - Emitted when a translation's value changes.
+ * @event zn-input - Emitted when a translation receives input.
+ *
+ * @csspart form-control - The form control that wraps the label, the language select, the field and the help text.
+ * @csspart form-control-label - The label's wrapper.
+ * @csspart form-control-input - The wrapper around the field being edited.
+ * @csspart form-control-help-text - The help text's wrapper.
+ * @csspart language-select - The select that chooses the language being edited.
+ */
 export default class ZnTranslations extends ZincElement implements ZincFormControl {
   static styles = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
   static dependencies = {
-    'zn-button': ZnButton,
-    'zn-button-group': ZnButtonGroup,
-    'zn-dropdown': ZnDropdown,
+    'zn-chip': ZnChip,
     'zn-inline-edit': ZnInlineEdit,
     'zn-input': ZnInput,
-    'zn-menu': ZnMenu
+    'zn-option': ZnOption,
+    'zn-select': ZnSelect,
+    'zn-textarea': ZnTextarea
   };
 
   private readonly formControlController: FormControlController = new FormControlController(this);
-  private readonly hasSlotController = new HasSlotController(this, 'label', 'expand', 'help-text');
+  private readonly hasSlotController = new HasSlotController(this, 'label', 'actions', 'help-text');
 
+  /** The name submitted with the form. */
   @property() name = '';
+
+  /** The translations as a JSON object keyed by language code. The mirror of `values` in attribute form. */
   @property() value = '{"en":""}';
+
+  /** The label shown above the field. If you need HTML, use the `label` slot instead. */
   @property() label: string = '';
 
   /**
@@ -45,11 +85,27 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
    * `help-text` slot instead.
    */
   @property({attribute: 'help-text'}) helpText: string = '';
+
+  /** Disables editing in every language. */
   @property({type: Boolean, reflect: true}) disabled = false;
+
+  /** Marks the label required. Validity is not enforced per language. */
   @property({type: Boolean, reflect: true}) required = false;
+
+  /** Removes the component's own padding. */
   @property({type: Boolean, reflect: true}) flush = false;
-  @property({attribute: "input-type"}) inputType: 'select' | 'text' | 'number' | 'textarea' = 'text';
+
+  /** The control each translation is edited through. */
+  @property({attribute: "input-type"}) inputType: 'text' | 'number' | 'textarea' = 'text';
+
+  /** Rows of the textarea, when `input-type` is `textarea`. */
   @property({attribute: "textarea-rows", type: Number}) textareaRows: number | undefined;
+
+  /**
+   * Edits the translation through a `zn-inline-edit` — the value reads as text until it is clicked — rather than a
+   * plain input or textarea.
+   */
+  @property({type: Boolean, reflect: true, attribute: 'inline-edit'}) inlineEdit = false;
 
   /**
    * Quick insertions offered by the slash menu on `text` and `textarea` inputs. Accepts a JSON array of items, or
@@ -82,36 +138,24 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   /** Resolves additional slash menu items each time the menu opens. JavaScript only. */
   @property({attribute: false}) slashItemsProvider?: (query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]>;
 
-  /** When true, hides the individual language navbar and defers language control to a parent zn-translation-group. */
+  /**
+   * Hides this component's own language select and defers the choice to a parent zn-translation-group. The group sets
+   * this on its children itself.
+   */
   @property({type: Boolean, reflect: true}) grouped = false;
 
+  /**
+   * The languages on offer, as language code to display name — `{"en": "English", "fr": "French"}`. Writing the code
+   * as the name (`{"en": "EN"}`) is also accepted. `en` is the language every other one falls back to.
+   */
   @property({type: Object}) languages: Record<string, string> = {
     'en': 'EN'
   };
+
+  /** The translations as an object keyed by language code. The mirror of `value` in property form. */
   @property({type: Object}) values: Record<string, string> = {};
 
   @state() private _activeLanguage = 'en';
-  @state() private _overflowIndex = -1;
-
-  private _lastObservedWidth = 0;
-  private _measureRafId = 0;
-
-  constructor() {
-    super();
-    // eslint-disable-next-line no-new
-    new ResizeController(this, {
-      callback: entries => {
-        const width = entries[0]?.contentRect.width ?? 0;
-        if (Math.abs(width - this._lastObservedWidth) < 1) return;
-        this._lastObservedWidth = width;
-        if (this._overflowIndex !== -1) {
-          this._overflowIndex = -1;
-        } else {
-          this._scheduleLangOverflow();
-        }
-      },
-    });
-  }
 
   get validity(): ValidityState {
     return validValidityState;
@@ -137,9 +181,11 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     // no-op
   }
 
-  /** Sets the active language externally. Used by zn-translation-group. */
+  /**
+   * Sets the active language externally. Used by zn-translation-group. Browsing to a language does not create a key
+   * for it — an untouched language stays absent from `values` so it is not submitted as an empty translation.
+   */
   public setActiveLanguage(language: string) {
-    this.addLanguageKey(language);
     this._activeLanguage = language;
     this.requestUpdate();
   }
@@ -163,6 +209,27 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     return Object.keys(this.pendingValues());
   }
 
+  /** Whether the language carries a translation of its own, rather than falling back to English. */
+  public hasTranslation(language: string): boolean {
+    return (this.pendingValues()[language] ?? '').trim() !== '';
+  }
+
+  /** The chip shown against a language, in the select's value and against each of its options. */
+  private languageState(language: string): {type: 'success' | 'error'; label: string} {
+    if (this.hasTranslation(language)) return {type: 'success', label: 'Translated'};
+    return {type: 'error', label: language === 'en' ? 'Empty' : 'English'};
+  }
+
+  /**
+   * `English (EN)` — the configured name plus its code, unless the name already is the code, in which case the code
+   * alone. `languages` is written both ways: `{"en": "English"}` and `{"en": "EN"}`.
+   */
+  private languageLabel(language: string): string {
+    const name = this.languages[language] ?? language.toUpperCase();
+    const code = language.toUpperCase();
+    return name.toUpperCase() === code ? name : `${name} (${code})`;
+  }
+
   /**
    * `values`, falling back to the `value` attribute it is built from while that is still pending. A parent
    * zn-translation-group syncs its children from its own first update, which runs before theirs, so reading
@@ -177,66 +244,8 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     }
   }
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    if (this._measureRafId) {
-      cancelAnimationFrame(this._measureRafId);
-      this._measureRafId = 0;
-    }
-  }
-
   protected firstUpdated() {
     this.formControlController.updateValidity();
-  }
-
-  protected updated(changedProperties: PropertyValues) {
-    super.updated(changedProperties);
-    this._scheduleLangOverflow();
-  }
-
-  private _scheduleLangOverflow() {
-    if (this._measureRafId) return;
-    this._measureRafId = requestAnimationFrame(() => {
-      this._measureRafId = 0;
-      this._computeLangOverflow();
-    });
-  }
-
-  private _computeLangOverflow() {
-    const group = this.shadowRoot?.querySelector<HTMLElement>('.translations__language-group');
-    if (!group) return;
-
-    const buttons = Array.from(group.querySelectorAll<HTMLElement>('zn-button[data-lang-btn]'));
-    if (buttons.length < 2) {
-      if (this._overflowIndex !== -1) this._overflowIndex = -1;
-      return;
-    }
-
-    const firstTop = buttons[0].getBoundingClientRect().top;
-    let wrapAt = -1;
-    for (let i = 1; i < buttons.length; i++) {
-      if (buttons[i].getBoundingClientRect().top > firstTop + 1) {
-        wrapAt = i;
-        break;
-      }
-    }
-
-    if (wrapAt === -1) {
-      const trailing = group.querySelector<HTMLElement>('[data-lang-overflow], [data-lang-add]');
-      if (trailing && trailing.getBoundingClientRect().top > firstTop + 1) {
-        wrapAt = buttons.length;
-      }
-    }
-
-    if (wrapAt === -1) return;
-
-    const newIndex = this._overflowIndex === -1
-      ? wrapAt
-      : Math.max(1, Math.min(wrapAt, this._overflowIndex - 1));
-
-    if (newIndex !== this._overflowIndex) {
-      this._overflowIndex = newIndex;
-    }
   }
 
   willUpdate(changedProperties: PropertyValues) {
@@ -276,7 +285,9 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
       // In grouped mode the parent zn-translation-group manages the active language,
       // so we must not override what it set via setActiveLanguage().
       if (!this.grouped) {
-        if (!this._activeLanguage || (!Object.prototype.hasOwnProperty.call(this.values, this._activeLanguage) && this._activeLanguage !== 'en')) {
+        const isKnown = Object.prototype.hasOwnProperty.call(this.values, this._activeLanguage)
+          || Object.prototype.hasOwnProperty.call(this.languages, this._activeLanguage);
+        if (!this._activeLanguage || (!isKnown && this._activeLanguage !== 'en')) {
           const keys = Object.keys(this.values);
           if (keys.length > 0) {
             this._activeLanguage = keys[0];
@@ -288,34 +299,30 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     }
   }
 
-  private handleLanguageAdd = (e: ZnMenuSelectEvent) => {
+  /**
+   * The select's own change and input events are stopped here: they describe the language being browsed, not the
+   * translation being edited, and a consumer listening on zn-translations reads either as a value change.
+   */
+  private handleLanguageSelect = (e: Event) => {
     e.stopPropagation();
-    const element = e.detail.element as HTMLElement;
-    const languageCode = element.getAttribute('data-path');
-    if (languageCode) {
-      // Add new language with empty string
-      this.values = {...this.values, [languageCode]: ''};
-      this._activeLanguage = languageCode;
-      this.updateValue();
+    const language = (e.target as ZnSelect).value;
+    if (typeof language === 'string' && language && language !== this._activeLanguage) {
+      this.switchLanguage(language);
     }
   };
 
-  private handleOverflowSelect = (e: ZnMenuSelectEvent) => {
+  private handleLanguageInput = (e: Event) => {
     e.stopPropagation();
-    const element = e.detail.element as HTMLElement;
-    const languageCode = element.getAttribute('data-path');
-    if (languageCode) {
-      this.switchLanguage(languageCode);
-    }
   };
 
+  /** The language shown in the field, without touching `values`. */
   private switchLanguage = (lang: string) => {
     this._activeLanguage = lang;
     this.requestUpdate();
   };
 
   private handleValueUpdate = (e: CustomEvent) => {
-    const target = e.target as (ZnInput | ZnInlineEdit);
+    const target = e.target as (ZnInput | ZnInlineEdit | ZnTextarea);
     if (this._activeLanguage) {
       const newValue: string = target.value as string;
       if (newValue !== this.values[this._activeLanguage]) {
@@ -333,7 +340,8 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
 
   private handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Enter') {
-      if (event.target instanceof ZnInlineEdit) {
+      // An inline edit commits on Enter itself, and a textarea needs it for the newline.
+      if (event.target instanceof ZnInlineEdit || event.target instanceof ZnTextarea) {
         return;
       }
 
@@ -349,45 +357,109 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     this.formControlController.submit();
   };
 
+  /** The control the active language's translation is edited through. */
+  private renderField(value: string, placeholder: string, isRTL: boolean) {
+    const dir = isRTL ? 'rtl' : 'ltr';
+
+    if (this.inlineEdit) {
+      return html`
+        <zn-inline-edit
+          input-type=${this.inputType}
+          textarea-rows=${ifDefined(this.textareaRows)}
+          .value=${live(value)}
+          name="${this.name}"
+          placeholder="${placeholder}"
+          dir="${dir}"
+          ?disabled="${this.disabled}"
+          slash-trigger="${this.slashTrigger}"
+          slash-heading="${this.slashHeading}"
+          slash-preset="${this.slashPreset}"
+          slash-recent-key="${this.slashRecentKey}"
+          ?slash-hide-keys="${this.slashHideKeys}"
+          .slashItems="${this.slashItems}"
+          .slashItemsProvider="${this.slashItemsProvider}"
+          @zn-change="${this.handleValueUpdate}"
+          @zn-input="${this.handleValueUpdate}"
+          @zn-submit="${this.handleSubmit}"
+        ></zn-inline-edit>`;
+    }
+
+    if (this.inputType === 'textarea') {
+      return html`
+        <zn-textarea
+          rows=${ifDefined(this.textareaRows)}
+          resize="auto"
+          .value=${live(value)}
+          name="${this.name}"
+          placeholder="${placeholder}"
+          dir="${dir}"
+          ?disabled="${this.disabled}"
+          slash-trigger="${this.slashTrigger}"
+          slash-heading="${this.slashHeading}"
+          slash-preset="${this.slashPreset}"
+          slash-recent-key="${this.slashRecentKey}"
+          ?slash-hide-keys="${this.slashHideKeys}"
+          .slashItems="${this.slashItems}"
+          .slashItemsProvider="${this.slashItemsProvider}"
+          @zn-change="${this.handleValueUpdate}"
+          @zn-input="${this.handleValueUpdate}"
+        ></zn-textarea>`;
+    }
+
+    return html`
+      <zn-input
+        type="${this.inputType === 'number' ? 'number' : 'text'}"
+        clearable
+        .value=${live(value)}
+        name="${this.name}"
+        placeholder="${placeholder}"
+        dir="${dir}"
+        ?disabled="${this.disabled}"
+        slash-trigger="${this.slashTrigger}"
+        slash-heading="${this.slashHeading}"
+        slash-preset="${this.slashPreset}"
+        slash-recent-key="${this.slashRecentKey}"
+        ?slash-hide-keys="${this.slashHideKeys}"
+        .slashItems="${this.slashItems}"
+        .slashItemsProvider="${this.slashItemsProvider}"
+        @zn-change="${this.handleValueUpdate}"
+        @zn-input="${this.handleValueUpdate}"
+      ></zn-input>`;
+  }
+
+  /** Arabic and Hebrew read right to left, so the field's `dir` follows the language being edited. */
   private isRTLLanguage(languageCode: string): boolean {
-    // Check if language is Arabic or Hebrew (including variants)
     return languageCode.startsWith('ar') || languageCode === 'he' || languageCode === 'iw';
   }
 
   render() {
-    const availableLanguages = Object.entries(this.languages)
-      .filter(([code]) => code !== 'en' && !Object.prototype.hasOwnProperty.call(this.values, code))
-      .map(([code, name]) => ({
-        title: name,
-        type: 'dropdown',
-        path: code
-      }));
-
-    const visibleTabs = Object.keys(this.values);
-    if (!visibleTabs.includes('en')) {
-      visibleTabs.unshift('en');
-    }
-
-    const overflowCutoff = this._overflowIndex === -1 ? visibleTabs.length : this._overflowIndex;
-    const visibleLangTabs = visibleTabs.slice(0, overflowCutoff);
-    const overflowLangTabs = visibleTabs.slice(overflowCutoff);
-    const overflowActions = overflowLangTabs.map(code => ({
-      title: code.toUpperCase(),
-      type: 'dropdown',
-      path: code,
-      icon: code === this._activeLanguage ? 'check' : ''
-    }));
+    // A value can carry a language `languages` does not list — server-rendered content outliving a config change.
+    // Offer those too, or the translation is stranded in the value with no way to reach it.
+    const values = this.pendingValues();
+    const languageCodes = [
+      ...Object.keys(this.languages),
+      ...Object.keys(values).filter(code => !Object.prototype.hasOwnProperty.call(this.languages, code))
+    ];
+    const activeState = this.languageState(this._activeLanguage);
 
     const currentTranslation = this.values[this._activeLanguage] ?? '';
     const isRTL = this.isRTLLanguage(this._activeLanguage);
 
+    // A blank translation falls back to English at render time, so show that English text as the placeholder rather
+    // than leaving the field looking like it has nothing behind it.
+    const englishValue = this.pendingValues().en ?? '';
+    const placeholder = !currentTranslation && this._activeLanguage !== 'en' && englishValue
+      ? englishValue
+      : 'Enter translation...';
+
     const hasLabelSlot = this.hasSlotController.test('label');
     const hasLabel = this.label ? true : hasLabelSlot;
-    const hasExpandSlot = this.hasSlotController.test('expand');
+    const hasActionsSlot = this.hasSlotController.test('actions');
     const hasHelpTextSlot = this.hasSlotController.test('help-text');
     const hasHelpText = this.helpText ? true : hasHelpTextSlot;
-    const hasMultipleLanguages = Object.keys(this.languages).length > 1;
-    const showActions = !this.grouped && (hasMultipleLanguages || hasExpandSlot);
+    const hasMultipleLanguages = languageCodes.length > 1;
+    const showActions = !this.grouped && hasActionsSlot;
+    const showLanguageSelect = !this.grouped && hasMultipleLanguages;
 
     return html`
       <div part="form-control"
@@ -408,73 +480,36 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
           </label>
           ${showActions ? html`
             <div class="translations__actions">
-              ${hasExpandSlot ? html`<slot name="expand"></slot>` : nothing}
-              ${hasMultipleLanguages ? html`
-                <zn-button-group class="translations__language-group">
-                  ${visibleLangTabs.map(code => html`
-                    <zn-button
-                      data-lang-btn
-                      color="default"
-                      ?outline="${code !== this._activeLanguage}"
-                      @click="${() => this.switchLanguage(code)}"
-                    >${code.toUpperCase()}
-                    </zn-button>
-                  `)}
-                  ${overflowActions.length > 0 ? html`
-                    <zn-dropdown placement="bottom-end" data-lang-overflow>
-                      <zn-button
-                        slot="trigger"
-                        color="default"
-                        icon="keyboard_arrow_down"
-                        ?outline="${!overflowLangTabs.includes(this._activeLanguage)}"
-                      ></zn-button>
-                      <zn-menu
-                        .actions=${overflowActions}
-                        @zn-menu-select="${this.handleOverflowSelect}"
-                      ></zn-menu>
-                    </zn-dropdown>
-                  ` : nothing}
-                  ${availableLanguages.length > 0 ? html`
-                    <zn-dropdown placement="bottom-end" data-lang-add>
-                      <zn-button
-                        slot="trigger"
-                        color="default"
-                        outline
-                      >+
-                      </zn-button>
-                      <zn-menu
-                        .actions=${availableLanguages}
-                        @zn-menu-select="${this.handleLanguageAdd}"
-                      ></zn-menu>
-                    </zn-dropdown>
-                  ` : nothing}
-                </zn-button-group>
-              ` : nothing}
+              <slot name="actions"></slot>
             </div>
           ` : nothing}
         </div>
 
+        ${showLanguageSelect ? html`
+          <div class="translations__language">
+            <zn-select
+              class="translations__language-select"
+              part="language-select"
+              hoist
+              ?disabled="${this.disabled}"
+              .value="${this._activeLanguage}"
+              @zn-change="${this.handleLanguageSelect}"
+              @zn-input="${this.handleLanguageInput}">
+              <zn-chip slot="suffix" type="${activeState.type}">${activeState.label}</zn-chip>
+              ${languageCodes.map(code => {
+                const optionState = this.languageState(code);
+                return html`
+                  <zn-option value="${code}">
+                    ${this.languageLabel(code)}
+                    <zn-chip slot="suffix" type="${optionState.type}">${optionState.label}</zn-chip>
+                  </zn-option>`;
+              })}
+            </zn-select>
+          </div>
+        ` : nothing}
+
         <div part="form-control-input" class="translations__body">
-          ${keyed(this._activeLanguage, html`
-            <zn-inline-edit
-              input-type=${this.inputType}
-              textarea-rows=${ifDefined(this.textareaRows)}
-              .value=${live(currentTranslation)}
-              name="${this.name}"
-              placeholder="Enter translation..."
-              dir="${isRTL ? 'rtl' : 'ltr'}"
-              slash-trigger="${this.slashTrigger}"
-              slash-heading="${this.slashHeading}"
-              slash-preset="${this.slashPreset}"
-              slash-recent-key="${this.slashRecentKey}"
-              ?slash-hide-keys="${this.slashHideKeys}"
-              .slashItems="${this.slashItems}"
-              .slashItemsProvider="${this.slashItemsProvider}"
-              @zn-change="${this.handleValueUpdate}"
-              @zn-input="${this.handleValueUpdate}"
-              @zn-submit="${this.handleSubmit}"
-            ></zn-inline-edit>
-          `)}
+          ${keyed(this._activeLanguage, this.renderField(currentTranslation, placeholder, isRTL))}
         </div>
 
         ${hasHelpText ? html`

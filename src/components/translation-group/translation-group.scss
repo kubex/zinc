@@ -2,7 +2,54 @@
   display: block;
 }
 
-.translation-group__languages {
-  display: flex;
-  align-items: center;
+// The body stacks the language select and the fields it drives, so they take the row gap zn-form-group sets between
+// stacked controls. The slotted children are `display: contents` through the slot, putting them in this same flow.
+.panel__body {
+  gap: var(--zn-spacing-medium);
+}
+
+// With a header the caption heads that same stack, so the gap below it is the header's to set — the panel's own body
+// padding on top of it would make the caption's gap the odd one out.
+.panel--has-header .panel__body {
+  padding-top: 0;
+}
+
+// zn-header holds its content row at 36px so a caption sits level with action buttons, and centres the caption in
+// it. Here the caption heads the same stack as the fields, so it hugs its text and the gap below it is set here.
+.panel__header::part(content) {
+  min-height: 0;
+}
+
+.panel__header {
+  padding-bottom: var(--zn-spacing-medium);
+}
+
+// Inline mode reuses the panel's transparent and flush modifiers, so the header carries the whole gap down to the
+// first label — the same 16px that separates every control from the label under it.
+.translation-group--inline .panel__header {
+  padding: 0 0 var(--zn-spacing-medium);
+}
+
+// The panel clips its content to its rounded corners, and the body scrolls. Neither applies with the chrome gone, and
+// both would cut the focus ring off the language select now that no padding stands between it and the body's edge.
+.translation-group--inline {
+  .panel__inner,
+  .panel__content,
+  .panel__body {
+    overflow: visible;
+  }
+}
+
+.translation-group__language-label {
+  display: block;
+  margin-bottom: var(--zn-spacing-x-small);
+  color: var(--zn-input-label-color);
+  font-size: var(--zn-input-label-font-size-medium);
+  font-weight: var(--zn-input-label-font-weight);
+  line-height: var(--zn-input-label-line-height);
+}
+
+.translation-group__language-count {
+  color: var(--zn-input-help-text-color);
+  font-weight: var(--zn-font-weight-normal);
 }

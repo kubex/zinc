@@ -41,6 +41,8 @@ import styles from './select.scss';
  * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.
  * @slot context-note - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.
  * @slot prefix - Used to prepend a presentational icon or similar element to the combobox.
+ * @slot suffix - Used to append a presentational element — a chip marking the selected option's state, for
+ *   instance — to the combobox, between the value and the clear and expand icons.
  * @slot clear-icon - An icon to use in lieu of the default clear icon.
  * @slot expand-icon - The icon to show when the control is expanded and collapsed. Rotates on open and close.
  * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
@@ -66,6 +68,7 @@ import styles from './select.scss';
  * @csspart form-control-help-text - The help text's wrapper.
  * @csspart combobox - The container the wraps the prefix, combobox, clear icon, and expand button.
  * @csspart prefix - The container that wraps the prefix slot.
+ * @csspart suffix - The container that wraps the suffix slot.
  * @csspart display-input - The element that displays the selected option's label, an `<input>` element.
  * @csspart listbox - The listbox container where options are slotted.
  * @csspart tags - The container that houses option tags when `multiselect` is used.
@@ -1917,6 +1920,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                 @focus=${() => this.focus()}
                 @invalid=${this.handleInvalid}
               />
+
+              <slot part="suffix" name="suffix" class="select__suffix"></slot>
 
               ${hasClearIcon
                 ? html`

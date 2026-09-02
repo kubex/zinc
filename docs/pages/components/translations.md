@@ -1,11 +1,14 @@
 ---
 meta:
   title: Translations
-  description: A component for managing multi-language text input with a tabbed interface.
+  description: A component for managing multi-language text input behind a language select.
 layout: component
 ---
 
-The Translations component provides a user-friendly interface for managing multi-language text input. It features a tabbed navigation bar for switching between languages and supports inline editing of translations.
+The Translations component provides a user-friendly interface for managing multi-language text input. A select above
+the field chooses the language being edited, and each language it offers carries a chip saying whether it has a
+translation of its own or falls back to English. The field itself is a plain input, or a textarea with
+`input-type="textarea"`.
 
 ```html:preview
 <zn-translations
@@ -50,7 +53,8 @@ Use the `label` slot for rich HTML content in the label.
 
 ### Custom Languages
 
-Provide a custom list of available languages via the `languages` property. Languages are displayed as tabs with their full names.
+Provide a custom list of available languages via the `languages` property. Each becomes an option in the language
+select, labelled `Name (CODE)` — or the code alone where the configured name already is the code.
 
 ```html:preview
 <zn-translations
@@ -125,15 +129,43 @@ Remove padding for a more compact appearance.
 ></zn-translations>
 ```
 
+### Textarea
+
+Use `input-type="textarea"` for longer copy, and `textarea-rows` to set its height.
+
+```html:preview
+<zn-translations
+  label="Confirmation Message"
+  input-type="textarea"
+  textarea-rows="3"
+  languages='{"en":"English","de":"German"}'
+  values='{"en":"Thanks — your order is on its way.","de":"Danke — Ihre Bestellung ist unterwegs."}'
+></zn-translations>
+```
+
+### Inline Editing
+
+Add `inline-edit` to read the translation as text until it is clicked, through
+[`zn-inline-edit`](/components/inline-edit), rather than showing an input outright.
+
+```html:preview
+<zn-translations
+  inline-edit
+  label="Welcome Message"
+  languages='{"en":"English","fr":"French"}'
+  values='{"en":"Hello World","fr":"Bonjour le monde"}'
+></zn-translations>
+```
+
 ### With Custom Action Button
 
-Use the `expand` slot to add custom buttons or actions.
+Use the `actions` slot to add custom buttons or actions beside the label.
 
 ```html:preview
 <zn-translations
   label="Description"
   languages='{"en":"English","fr":"French","de":"German"}'>
-  <zn-button slot="expand" color="transparent" icon="translate">
+  <zn-button slot="actions" color="transparent" icon="translate">
     Auto-Translate
   </zn-button>
 </zn-translations>
@@ -141,8 +173,8 @@ Use the `expand` slot to add custom buttons or actions.
 
 ### Many Languages
 
-When the language buttons don't all fit on one line, the overflow collapses into a chevron dropdown so the row stays a
-single line. Resizing the container re-measures and expands the buttons back out when space allows.
+The select takes any number of languages without reflowing the header, and its listbox scrolls once the list is longer
+than the space below it.
 
 ```html:preview
 <zn-translations
@@ -152,10 +184,22 @@ single line. Resizing the container re-measures and expands the buttons back out
 ></zn-translations>
 ```
 
+### Blank Languages Fall Back to English
+
+A language you have not translated yet is marked `English` in the select rather than hidden, and its field shows the
+English text as a placeholder. Leave it blank and the English text is what gets used.
+
+```html:preview
+<zn-translations
+  label="Product Name"
+  languages='{"en":"English","fr":"French","de":"German","pl":"Polish"}'
+  values='{"en":"Premium Wireless Headphones","de":"Premium kabellose Kopfhörer"}'
+></zn-translations>
+```
+
 ### Constrained Width
 
-Placing the component in a narrow container forces the chevron overflow to kick in. Selecting a language from the
-dropdown switches the active language just like clicking a visible button.
+The select spans the field, so a narrow container costs the language name no room.
 
 ```html:preview
 <div style="max-width: 320px;">
@@ -303,7 +347,7 @@ A complete example showing product content management with translations.
         languages='{"en":"English","fr":"French","de":"German","es":"Spanish"}'
         values='{"en":"High-quality wireless headphones with active noise cancellation","fr":"Écouteurs sans fil de haute qualité avec suppression active du bruit","de":"Hochwertige kabellose Kopfhörer mit aktiver Geräuschunterdrückung","es":"Auriculares inalámbricos de alta calidad con cancelación activa de ruido"}'
       >
-        <zn-button slot="expand" color="transparent" icon="smart_toy">
+        <zn-button slot="actions" color="transparent" icon="smart_toy">
           AI Translate
         </zn-button>
       </zn-translations>
@@ -382,6 +426,10 @@ way `Enter` otherwise would.
 | `flush`     | `boolean`                   | `false`         | Removes padding for compact layout                                   |
 | `languages` | `Record<string, string>`    | `{en: "EN"}`    | Object mapping language codes to display names                       |
 | `values`    | `Record<string, string>`    | `{}`            | Object mapping language codes to translation text                    |
+| `grouped`   | `boolean`                   | `false`         | Hides the language select; a parent `zn-translation-group` drives it |
+| `input-type`    | `'text' \| 'number' \| 'textarea'` | `'text'` | The control each translation is edited through                |
+| `textarea-rows` | `number`                | —               | Rows of the textarea, when `input-type` is `textarea`                |
+| `inline-edit`   | `boolean`               | `false`         | Edits through `zn-inline-edit` instead of a plain input or textarea   |
 | `slash-items`   | `SlashMenuItem[]`       | `[]`            | Quick insertions offered by the slash menu                           |
 | `slash-preset`  | `string`                | `''`            | Registered item sets to offer, comma separated                       |
 | `slash-trigger` | `string`                | `'/'`           | The characters that open the slash menu                              |
@@ -399,7 +447,7 @@ way `Enter` otherwise would.
 | Slot        | Description                                                      |
 |-------------|------------------------------------------------------------------|
 | `label`     | Alternative to the `label` attribute for rich HTML content       |
-| `expand`    | Action button displayed in the navbar (e.g., translate button)   |
+| `actions`   | Action buttons displayed beside the label                        |
 | `help-text` | Alternative to the `help-text` attribute for rich HTML content   |
 
 ## Methods
@@ -413,10 +461,20 @@ way `Enter` otherwise would.
 
 ## CSS Parts
 
-The component uses `zn-navbar` and `zn-inline-edit` internally, which expose their own CSS parts for advanced styling.
+| Part                 | Description                                       |
+|----------------------|---------------------------------------------------|
+| `form-control`       | The component's base wrapper                      |
+| `form-control-label` | The label's wrapper                               |
+| `form-control-input` | The wrapper around the inline-editable field      |
+| `language-select`    | The select that chooses the language being edited |
+
+The component uses `zn-select` for the language and `zn-input`, `zn-textarea` or `zn-inline-edit` for the field, each
+of which exposes its own CSS parts for advanced styling.
 
 ## Accessibility
 
 - The component automatically detects RTL languages (Arabic, Hebrew) and applies proper text direction
+- The language select is a standard combobox: it opens on `Enter` or `Space` and moves through the languages with the
+  arrow keys
 - Keyboard navigation is supported within the inline edit fields
 - Form integration ensures proper submission behavior with the Enter key

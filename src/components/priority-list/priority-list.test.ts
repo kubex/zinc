@@ -179,4 +179,38 @@ describe('<zn-priority-list>', () => {
     expect(item.getAttribute('draggable')).to.equal('false');
     expect(item.getAttribute('tabindex')).to.equal('-1');
   });
+
+  it('should announce its form before submitting a reorder, so a host can intercept it', async () => {
+    const form = await fixture(html`
+      <form action="/save" method="post">
+        <zn-priority-list name="sections" formaction="/save">
+          <div value="a">A</div>
+          <div value="b">B</div>
+        </zn-priority-list>
+      </form>
+    `) as HTMLFormElement;
+
+    const el = form.querySelector('zn-priority-list') as any;
+    await el.updateComplete;
+
+    const announced: Element[] = [];
+    const onRegister = (e: Event) => announced.push((e as CustomEvent).detail.element);
+    document.addEventListener('zn-register-element', onRegister);
+
+    let submitter: HTMLElement | null = null;
+    form.addEventListener('submit', (e: SubmitEvent) => {
+      submitter = e.submitter;
+      e.preventDefault();
+    });
+
+    const item = el.shadowRoot.querySelector('.priority-list__item');
+    item.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowDown', bubbles: true, composed: true, cancelable: true}));
+    await el.updateComplete;
+
+    document.removeEventListener('zn-register-element', onRegister);
+
+    expect(announced).to.include(form);
+    expect(submitter).to.exist;
+    expect(submitter!.getAttribute('formaction')).to.equal('/save');
+  });
 });

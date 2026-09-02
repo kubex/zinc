@@ -297,15 +297,16 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
 
     const form = this.getForm();
     if (form) {
-      const submitter = document.createElement('button');
+      // Submitting through the controller announces the form before it is
+      // submitted, which is what lets a host intercept the submit: a submit
+      // event raised on a form inside a shadow root never reaches the document,
+      // so submitting it directly navigates the page instead.
+      const submitter = document.createElement('input');
       submitter.type = 'submit';
-      submitter.hidden = true;
       if (this.formAction) {
         submitter.setAttribute('formaction', this.formAction);
       }
-      form.appendChild(submitter);
-      form.requestSubmit(submitter);
-      submitter.remove();
+      this.formControlController.submit(submitter);
     } else if (this.formAction) {
       // No parent form — create a temporary one to submit the priority data
       const tempForm = document.createElement('form');
@@ -324,7 +325,9 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
       });
 
       document.body.appendChild(tempForm);
-      tempForm.submit();
+      // requestSubmit raises a cancellable submit event, so a host can handle
+      // the submission rather than the browser navigating to formaction.
+      tempForm.requestSubmit();
       tempForm.remove();
     }
   }

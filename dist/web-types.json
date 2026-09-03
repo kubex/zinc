@@ -16,6 +16,28 @@
           "js": { "properties": [], "events": [] }
         },
         {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -75,28 +97,6 @@
               { "name": "center", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -4574,7 +4574,7 @@
         },
         {
           "name": "zn-header",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header-right** - The container that wraps the actions slot.",
           "doc-url": "",
           "attributes": [
             { "name": "full-location", "value": { "type": "string" } },
@@ -8967,7 +8967,7 @@
         },
         {
           "name": "zn-select",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the control's value changes.\n- **zn-clear** - Emitted when the control's value is cleared.\n- **zn-input** - Emitted when the control receives input.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-blur** - Emitted when the control loses focus.\n- **zn-show** - Emitted when the select's menu opens.\n- **zn-after-show** - Emitted after the select's menu opens and all animations are complete.\n- **zn-hide** - Emitted when the select's menu closes.\n- **zn-after-hide** - Emitted after the select's menu closes and all animations are complete.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n- **zn-load** - Emitted when options have been successfully loaded from the `src` URL.\n- **zn-error** - Emitted when loading options from the `src` URL fails.\n\n### **Methods:**\n - **fetchOptions(searchQuery: _string_)** - Fetches options from the URL specified by the `data-uri` property. Optionally appends a search query.\n- **show()** - Shows the listbox.\n- **hide()** - Hides the listbox.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n- **focus(options: _FocusOptions_)** - Sets focus on the control.\n- **blur()** - Removes focus from the control.\n\n### **Slots:**\n - _default_ - The listbox options. Must be `<zn-option>` elements. You can use `<zn-opt-group>` to group options under a labeled header, or `<zn-divider>` to group items visually.\n- **label** - The input's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.\n- **prefix** - Used to prepend a presentational icon or similar element to the combobox.\n- **clear-icon** - An icon to use in lieu of the default clear icon.\n- **expand-icon** - The icon to show when the control is expanded and collapsed. Rotates on open and close.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Parts:**\n - **search-loading** - The container shown while a remote search request is in flight.\n- **max-results-indicator** - The message shown when results are truncated by `max-results`.\n- **form-control** - The form control that wraps the label, input, and help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The select's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **combobox** - The container the wraps the prefix, combobox, clear icon, and expand button.\n- **prefix** - The container that wraps the prefix slot.\n- **display-input** - The element that displays the selected option's label, an `<input>` element.\n- **listbox** - The listbox container where options are slotted.\n- **tags** - The container that houses option tags when `multiselect` is used.\n- **tag** - The individual tags that represent each multiselect option.\n- **tag__base** - The tag's base part.\n- **tag__content** - The tag's content part.\n- **tag__remove-button** - The tag's remove button.\n- **tag__remove-button__base** - The tag's remove button base part.\n- **clear-button** - The clear button.\n- **expand-icon** - The container that wraps the expand icon.",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the control's value changes.\n- **zn-clear** - Emitted when the control's value is cleared.\n- **zn-input** - Emitted when the control receives input.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-blur** - Emitted when the control loses focus.\n- **zn-show** - Emitted when the select's menu opens.\n- **zn-after-show** - Emitted after the select's menu opens and all animations are complete.\n- **zn-hide** - Emitted when the select's menu closes.\n- **zn-after-hide** - Emitted after the select's menu closes and all animations are complete.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n- **zn-load** - Emitted when options have been successfully loaded from the `src` URL.\n- **zn-error** - Emitted when loading options from the `src` URL fails.\n\n### **Methods:**\n - **fetchOptions(searchQuery: _string_)** - Fetches options from the URL specified by the `data-uri` property. Optionally appends a search query.\n- **show()** - Shows the listbox.\n- **hide()** - Hides the listbox.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n- **focus(options: _FocusOptions_)** - Sets focus on the control.\n- **blur()** - Removes focus from the control.\n\n### **Slots:**\n - _default_ - The listbox options. Must be `<zn-option>` elements. You can use `<zn-opt-group>` to group options under a labeled header, or `<zn-divider>` to group items visually.\n- **label** - The input's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.\n- **prefix** - Used to prepend a presentational icon or similar element to the combobox.\n- **suffix** - Used to append a presentational element — a chip marking the selected option's state, for instance — to the combobox, between the value and the clear and expand icons.\n- **clear-icon** - An icon to use in lieu of the default clear icon.\n- **expand-icon** - The icon to show when the control is expanded and collapsed. Rotates on open and close.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Parts:**\n - **search-loading** - The container shown while a remote search request is in flight.\n- **max-results-indicator** - The message shown when results are truncated by `max-results`.\n- **form-control** - The form control that wraps the label, input, and help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The select's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **combobox** - The container the wraps the prefix, combobox, clear icon, and expand button.\n- **prefix** - The container that wraps the prefix slot.\n- **suffix** - The container that wraps the suffix slot.\n- **display-input** - The element that displays the selected option's label, an `<input>` element.\n- **listbox** - The listbox container where options are slotted.\n- **tags** - The container that houses option tags when `multiselect` is used.\n- **tag** - The individual tags that represent each multiselect option.\n- **tag__base** - The tag's base part.\n- **tag__content** - The tag's content part.\n- **tag__remove-button** - The tag's remove button.\n- **tag__remove-button__base** - The tag's remove button base part.\n- **clear-button** - The clear button.\n- **expand-icon** - The container that wraps the expand icon.",
           "doc-url": "",
           "attributes": [
             {
@@ -9161,6 +9161,10 @@
             {
               "name": "prefix",
               "description": "Used to prepend a presentational icon or similar element to the combobox."
+            },
+            {
+              "name": "suffix",
+              "description": "Used to append a presentational element — a chip marking the selected option's state, for instance — to the combobox, between the value and the clear and expand icons."
             },
             {
               "name": "clear-icon",
@@ -12207,17 +12211,27 @@
         },
         {
           "name": "zn-translation-group",
-          "description": "A panel-styled container that provides a shared language toggle for multiple zn-translations children.\n---\n\n\n### **Events:**\n - **zn-language-change** - Emitted when the active language changes. Detail: `{ language: string }`.\n\n### **Slots:**\n - _default_ - Default slot for `<zn-translations>` elements.\n- **actions** - Actions displayed in the panel header alongside language buttons.\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "Puts several zn-translations fields behind one language select, so a whole form's worth of copy is\ntranslated a language at a time.\n---\n\n\n### **Events:**\n - **zn-language-change** - Emitted when the active language changes. Detail: `{ language: string }`.\n\n### **Slots:**\n - _default_ - The `zn-translations` fields the select drives.\n- **actions** - Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on the right, as zinc's form action rows do; `align=\"start\"` moves one to the left. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.\n- **footer** - Content displayed in the grey panel footer. The header belongs to the language select; nothing else is slotted into it.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **actions** - The row of buttons at the bottom of the body.\n- **language-field** - The label and select that choose the language every child is editing.\n- **language-select** - The select itself.",
           "doc-url": "",
           "attributes": [
             {
               "name": "label",
-              "description": "The group label displayed in the panel header.",
+              "description": "The caption shown in the panel header. An alias for the inherited `caption`, which wins where both are set.",
               "value": { "type": "string", "default": "''" }
             },
             {
+              "name": "inline",
+              "description": "Drops the panel chrome — border, background and padding — so the group reads as a section of the form around it\nrather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit\nindented behind a second border.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "language-label",
+              "description": "The select's accessible name. Not shown — the caption is what names the section on screen — but read out by a\nscreen reader, which has nothing else to go on once the visible label is gone.",
+              "value": { "type": "string", "default": "'Edit Languages'" }
+            },
+            {
               "name": "languages",
-              "description": "The available languages for the group.",
+              "description": "The languages on offer, as language code to display name — `{\"en\": \"English\", \"fr\": \"French\"}`. Writing the code\nas the name (`{\"en\": \"EN\"}`) is also accepted. `en` is the language every other one falls back to. Set on every\nchild, so they do not need their own copy.",
               "value": {
                 "type": "Record<string, string>",
                 "default": "{ 'en': 'EN' }"
@@ -12239,15 +12253,15 @@
           "slots": [
             {
               "name": "",
-              "description": "Default slot for `<zn-translations>` elements."
+              "description": "The `zn-translations` fields the select drives."
             },
             {
               "name": "actions",
-              "description": "Actions displayed in the panel header alongside language buttons."
+              "description": "Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on the right, as zinc's form action rows do; `align=\"start\"` moves one to the left. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows."
             },
             {
               "name": "footer",
-              "description": "Content displayed in the panel footer."
+              "description": "Content displayed in the grey panel footer. The header belongs to the language select; nothing else is slotted into it."
             }
           ],
           "events": [
@@ -12260,12 +12274,22 @@
             "properties": [
               {
                 "name": "label",
-                "description": "The group label displayed in the panel header.",
+                "description": "The caption shown in the panel header. An alias for the inherited `caption`, which wins where both are set.",
+                "type": "string"
+              },
+              {
+                "name": "inline",
+                "description": "Drops the panel chrome — border, background and padding — so the group reads as a section of the form around it\nrather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit\nindented behind a second border.",
+                "type": "boolean"
+              },
+              {
+                "name": "languageLabel",
+                "description": "The select's accessible name. Not shown — the caption is what names the section on screen — but read out by a\nscreen reader, which has nothing else to go on once the visible label is gone.",
                 "type": "string"
               },
               {
                 "name": "languages",
-                "description": "The available languages for the group.",
+                "description": "The languages on offer, as language code to display name — `{\"en\": \"English\", \"fr\": \"French\"}`. Writing the code\nas the name (`{\"en\": \"EN\"}`) is also accepted. `en` is the language every other one falls back to. Set on every\nchild, so they do not need their own copy.",
                 "type": "Record<string, string>"
               },
               { "name": "basis", "type": "number" },
@@ -12291,15 +12315,24 @@
         },
         {
           "name": "zn-translations",
-          "description": "\n---\n\n\n### **Methods:**\n - **setActiveLanguage(language: _string_)** - Sets the active language externally. Used by zn-translation-group.\n- **getActiveLanguage(): _string_** - Returns the currently active language.\n- **addLanguageKey(languageCode: _string_)** - Adds a language key to this component's values if not already present. Used by zn-translation-group.\n- **getValueLanguages(): _string[]_** - Returns all language codes that have values.",
+          "description": "Collects one piece of text in several languages, one language at a time.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when a translation's value changes.\n- **zn-input** - Emitted when a translation receives input.\n\n### **Methods:**\n - **setActiveLanguage(language: _string_)** - Sets the active language externally. Used by zn-translation-group. Browsing to a language does not create a key\nfor it — an untouched language stays absent from `values` so it is not submitted as an empty translation.\n- **getActiveLanguage(): _string_** - Returns the currently active language.\n- **addLanguageKey(languageCode: _string_)** - Adds a language key to this component's values if not already present. Used by zn-translation-group.\n- **getValueLanguages(): _string[]_** - Returns all language codes that have values.\n- **hasTranslation(language: _string_): _boolean_** - Whether the language carries a translation of its own, rather than falling back to English.\n\n### **Slots:**\n - **label** - The field's label. Alternatively, use the `label` attribute.\n- **help-text** - Text describing how to fill the field in, shown below it and shared by every language. Alternatively, use the `help-text` attribute.\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, the language select, the field and the help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The wrapper around the field being edited.\n- **form-control-help-text** - The help text's wrapper.\n- **language-select** - The select that chooses the language being edited.",
           "doc-url": "",
           "attributes": [
-            { "name": "name", "value": { "type": "string", "default": "''" } },
+            {
+              "name": "name",
+              "description": "The name submitted with the form.",
+              "value": { "type": "string", "default": "''" }
+            },
             {
               "name": "value",
+              "description": "The translations as a JSON object keyed by language code. The mirror of `values` in attribute form.",
               "value": { "type": "string", "default": "'{\"en\":\"\"}'" }
             },
-            { "name": "label", "value": { "type": "string", "default": "''" } },
+            {
+              "name": "label",
+              "description": "The label shown above the field. If you need HTML, use the `label` slot instead.",
+              "value": { "type": "string", "default": "''" }
+            },
             {
               "name": "help-text",
               "description": "Text shown below the field, describing how to fill it in. Applies to every language. If you need HTML, use the\n`help-text` slot instead.",
@@ -12307,26 +12340,36 @@
             },
             {
               "name": "disabled",
+              "description": "Disables editing in every language.",
               "value": { "type": "boolean", "default": "false" }
             },
             {
               "name": "required",
+              "description": "Marks the label required. Validity is not enforced per language.",
               "value": { "type": "boolean", "default": "false" }
             },
             {
               "name": "flush",
+              "description": "Removes the component's own padding.",
               "value": { "type": "boolean", "default": "false" }
             },
             {
               "name": "input-type",
+              "description": "The control each translation is edited through.",
               "value": {
-                "type": "'select' | 'text' | 'number' | 'textarea'",
+                "type": "'text' | 'number' | 'textarea'",
                 "default": "'text'"
               }
             },
             {
               "name": "textarea-rows",
+              "description": "Rows of the textarea, when `input-type` is `textarea`.",
               "value": { "type": "number | undefined" }
+            },
+            {
+              "name": "inline-edit",
+              "description": "Edits the translation through a `zn-inline-edit` — the value reads as text until it is clicked — rather than a\nplain input or textarea.",
+              "value": { "type": "boolean", "default": "false" }
             },
             {
               "name": "slash-items",
@@ -12360,11 +12403,12 @@
             },
             {
               "name": "grouped",
-              "description": "When true, hides the individual language navbar and defers language control to a parent zn-translation-group.",
+              "description": "Hides this component's own language select and defers the choice to a parent zn-translation-group. The group sets\nthis on its children itself.",
               "value": { "type": "boolean", "default": "false" }
             },
             {
               "name": "languages",
+              "description": "The languages on offer, as language code to display name — `{\"en\": \"English\", \"fr\": \"French\"}`. Writing the code\nas the name (`{\"en\": \"EN\"}`) is also accepted. `en` is the language every other one falls back to.",
               "value": {
                 "type": "Record<string, string>",
                 "default": "{ 'en': 'EN' }"
@@ -12372,28 +12416,82 @@
             },
             {
               "name": "values",
+              "description": "The translations as an object keyed by language code. The mirror of `value` in property form.",
               "value": { "type": "Record<string, string>", "default": "{}" }
             }
           ],
-          "events": [],
+          "slots": [
+            {
+              "name": "label",
+              "description": "The field's label. Alternatively, use the `label` attribute."
+            },
+            {
+              "name": "help-text",
+              "description": "Text describing how to fill the field in, shown below it and shared by every language. Alternatively, use the `help-text` attribute."
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-change",
+              "description": "Emitted when a translation's value changes."
+            },
+            {
+              "name": "zn-input",
+              "description": "Emitted when a translation receives input."
+            }
+          ],
           "js": {
             "properties": [
-              { "name": "name", "type": "string" },
-              { "name": "value", "type": "string" },
-              { "name": "label", "type": "string" },
+              {
+                "name": "name",
+                "description": "The name submitted with the form.",
+                "type": "string"
+              },
+              {
+                "name": "value",
+                "description": "The translations as a JSON object keyed by language code. The mirror of `values` in attribute form.",
+                "type": "string"
+              },
+              {
+                "name": "label",
+                "description": "The label shown above the field. If you need HTML, use the `label` slot instead.",
+                "type": "string"
+              },
               {
                 "name": "helpText",
                 "description": "Text shown below the field, describing how to fill it in. Applies to every language. If you need HTML, use the\n`help-text` slot instead.",
                 "type": "string"
               },
-              { "name": "disabled", "type": "boolean" },
-              { "name": "required", "type": "boolean" },
-              { "name": "flush", "type": "boolean" },
+              {
+                "name": "disabled",
+                "description": "Disables editing in every language.",
+                "type": "boolean"
+              },
+              {
+                "name": "required",
+                "description": "Marks the label required. Validity is not enforced per language.",
+                "type": "boolean"
+              },
+              {
+                "name": "flush",
+                "description": "Removes the component's own padding.",
+                "type": "boolean"
+              },
               {
                 "name": "inputType",
-                "type": "'select' | 'text' | 'number' | 'textarea'"
+                "description": "The control each translation is edited through.",
+                "type": "'text' | 'number' | 'textarea'"
               },
-              { "name": "textareaRows", "type": "number | undefined" },
+              {
+                "name": "textareaRows",
+                "description": "Rows of the textarea, when `input-type` is `textarea`.",
+                "type": "number | undefined"
+              },
+              {
+                "name": "inlineEdit",
+                "description": "Edits the translation through a `zn-inline-edit` — the value reads as text until it is clicked — rather than a\nplain input or textarea.",
+                "type": "boolean"
+              },
               {
                 "name": "slashItems",
                 "description": "Quick insertions offered by the slash menu on `text` and `textarea` inputs. Accepts a JSON array of items, or\nthe shorthand `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Every language shares the list.",
@@ -12431,15 +12529,32 @@
               },
               {
                 "name": "grouped",
-                "description": "When true, hides the individual language navbar and defers language control to a parent zn-translation-group.",
+                "description": "Hides this component's own language select and defers the choice to a parent zn-translation-group. The group sets\nthis on its children itself.",
                 "type": "boolean"
               },
-              { "name": "languages", "type": "Record<string, string>" },
-              { "name": "values", "type": "Record<string, string>" },
+              {
+                "name": "languages",
+                "description": "The languages on offer, as language code to display name — `{\"en\": \"English\", \"fr\": \"French\"}`. Writing the code\nas the name (`{\"en\": \"EN\"}`) is also accepted. `en` is the language every other one falls back to.",
+                "type": "Record<string, string>"
+              },
+              {
+                "name": "values",
+                "description": "The translations as an object keyed by language code. The mirror of `value` in property form.",
+                "type": "Record<string, string>"
+              },
               { "name": "validity", "type": "ValidityState" },
               { "name": "validationMessage" }
             ],
-            "events": []
+            "events": [
+              {
+                "name": "zn-change",
+                "description": "Emitted when a translation's value changes."
+              },
+              {
+                "name": "zn-input",
+                "description": "Emitted when a translation receives input."
+              }
+            ]
           }
         },
         {

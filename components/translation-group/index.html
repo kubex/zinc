@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="A panel-styled container that provides a shared language toggle for multiple translation inputs."
+      content="A panel-styled container that provides a shared language select for multiple translation inputs."
     />
     <title>Translation Group</title>
 
@@ -19,7 +19,7 @@
     <meta property="og:title" content="Translation Group" />
     <meta
       property="og:description"
-      content="A panel-styled container that provides a shared language toggle for multiple translation inputs."
+      content="A panel-styled container that provides a shared language select for multiple translation inputs."
     />
     <meta property="og:image" content="https://zinc.style/assets" />
 
@@ -590,15 +590,12 @@
             <li data-level="3"><a href="#basic-usage">Basic Usage</a></li>
             <li data-level="3"><a href="#with-label">With Label</a></li>
             <li data-level="3"><a href="#pre-filled-values">Pre-filled Values</a></li>
-            <li data-level="3"><a href="#many-fields">Many Fields</a></li>
-            <li data-level="3"><a href="#language-overflow">Language Overflow</a></li>
+            <li data-level="3"><a href="#many-languages">Many Languages</a></li>
+            <li data-level="3"><a href="#custom-accessible-name">Custom Accessible Name</a></li>
+            <li data-level="3"><a href="#inline-no-panel">Inline (No Panel)</a></li>
+            <li data-level="3"><a href="#actions">Actions</a></li>
             <li data-level="3"><a href="#flush-layout">Flush Layout</a></li>
             <li data-level="3"><a href="#listening-to-language-changes">Listening to Language Changes</a></li>
-            <li data-level="3">
-              <a href="#real-world-use-case-product-content-management"
-                >Real-World Use Case: Product Content Management</a
-              >
-            </li>
             <li data-level="2"><a href="#properties">Properties</a></li>
             <li data-level="2"><a href="#events">Events</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
@@ -622,19 +619,21 @@
             </div>
 
             <div class="component-header__info">
-              <zn-chip type="info"> Since ? </zn-chip>
-              <zn-chip type="neutral" style="text-transform: capitalize"> </zn-chip>
+              <zn-chip type="info"> Since 1.0 </zn-chip>
+              <zn-chip type="warning" style="text-transform: capitalize"> experimental </zn-chip>
             </div>
           </header>
 
           <p class="component-summary">
-            A panel-styled container that provides a shared language toggle for multiple zn-translations children.
+            Puts several zn-translations fields behind one language select, so a whole form’s worth of copy is
+            translated a language at a time.
           </p>
 
           <p>
             The Translation Group component wraps multiple <code>zn-translations</code> components in a panel-styled
-            container with a shared language toggle. A button group in the top right lets users switch between
-            languages, controlling all child translation inputs simultaneously.
+            container with a shared language select. The select sits at the top right of the header, opposite the
+            caption. Closed, it carries how many languages are done as a <code>1/5</code> chip; open, each language is
+            marked translated, partial or falling back to English. Choosing a language switches every child at once.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -703,7 +702,7 @@
           <h3 id="basic-usage" class="anchor-heading">
             Basic Usage<a href="#basic-usage" aria-label='Direct link to "Basic Usage"'></a>
           </h3>
-          <p>A translation group with two translation inputs sharing one language button group.</p>
+          <p>A translation group with two translation inputs sharing one language select.</p>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-translation-group languages='{"en":"English","fr":"French"}'>
@@ -751,8 +750,9 @@
             With Label<a href="#with-label" aria-label='Direct link to "With Label"'></a>
           </h3>
           <p>
-            Use the <code>label</code> attribute to add a descriptive label in the panel header, displayed on the left
-            side alongside the language toggle.
+            Use the <code>label</code> attribute to add a caption on the left of the header, opposite the language
+            select. <code>language-label</code> sets the select’s accessible name — it is not shown, since the caption
+            names the section on screen.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -803,8 +803,9 @@
             Pre-filled Values<a href="#pre-filled-values" aria-label='Direct link to "Pre-filled Values"'></a>
           </h3>
           <p>
-            Set initial translations on each child. The group automatically collects all language codes from children
-            and displays them as buttons in the toggle group.
+            Set initial translations on each child. A language every child has a value for is marked
+            <code>Translated</code>; one only some children have is <code>Partial</code>; one no child has falls back to
+            English. English itself is the source, so it is neither counted nor marked as a translation.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -870,17 +871,29 @@
               </button>
             </div>
           </div>
-          <h3 id="many-fields" class="anchor-heading">
-            Many Fields<a href="#many-fields" aria-label='Direct link to "Many Fields"'></a>
+          <h3 id="many-languages" class="anchor-heading">
+            Many Languages<a href="#many-languages" aria-label='Direct link to "Many Languages"'></a>
           </h3>
-          <p>The group scales well with multiple translation inputs under a single toggle.</p>
+          <p>
+            Every configured language is offered whether or not it has been translated yet, so there is no separate step
+            to add one — pick it and start typing. The chip on the closed select tracks how many are done.
+          </p>
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-translation-group label="SEO Metadata" languages='{"en":"English","fr":"French","de":"German"}'>
-                <zn-translations label="Page Title" name="seo-title"></zn-translations>
-                <zn-translations label="Meta Description" name="seo-description"></zn-translations>
-                <zn-translations label="Open Graph Title" name="og-title"></zn-translations>
-                <zn-translations label="Open Graph Description" name="og-description"></zn-translations>
+              <zn-translation-group
+                label="Release Notes"
+                languages='{"en":"English","ar":"Arabic","de":"German","es":"Spanish","fr":"French","it":"Italian","ja":"Japanese","ko":"Korean","pt":"Portuguese","ru":"Russian","tr":"Turkish","zh-hans":"Simplified Chinese"}'
+              >
+                <zn-translations
+                  label="Headline"
+                  name="headline"
+                  values='{"en":"Now shipping","ar":"متاح الآن","de":"Jetzt verfügbar","es":"Ya disponible","fr":"Disponible dès maintenant","it":"Disponibile ora","ja":"発売開始","ko":"출시됨","pt":"Disponível agora","ru":"Уже в продаже","tr":"Şimdi mevcut","zh-hans":"现已发布"}'
+                ></zn-translations>
+                <zn-translations
+                  label="Summary"
+                  name="summary"
+                  values='{"en":"Tap through the release highlights.","ar":"تصفح أبرز ميزات الإصدار.","de":"Highlights der Version ansehen.","es":"Consulta lo más destacado.","fr":"Découvrez les nouveautés.","it":"Scopri le novità.","ja":"リリースのハイライトをご覧ください。","ko":"업데이트 주요 내용 보기.","pt":"Veja os destaques.","ru":"Ознакомьтесь с обновлениями.","tr":"Sürüm önemli noktaları.","zh-hans":"浏览版本亮点。"}'
+                ></zn-translations>
               </zn-translation-group>
 
               <div class="code-preview__resizer">
@@ -891,12 +904,18 @@
             <div class="code-preview__source-group" id="code-preview-source-group-1389">
               <div class="code-preview__source code-preview__source--html">
                 <pre><code class="language-html" id="code-block-1763"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translation-group</span>
-  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>SEO Metadata<span class="token punctuation">"</span></span>
-  <span class="token attr-name">languages</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"English","fr":"French","de":"German"}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Page Title<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>seo-title<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translations</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Meta Description<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>seo-description<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translations</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Open Graph Title<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>og-title<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translations</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Open Graph Description<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>og-description<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translations</span><span class="token punctuation">&gt;</span></span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Release Notes<span class="token punctuation">"</span></span>
+  <span class="token attr-name">languages</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"English","ar":"Arabic","de":"German","es":"Spanish","fr":"French","it":"Italian","ja":"Japanese","ko":"Korean","pt":"Portuguese","ru":"Russian","tr":"Turkish","zh-hans":"Simplified Chinese"}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span>
+    <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Headline<span class="token punctuation">"</span></span>
+    <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>headline<span class="token punctuation">"</span></span>
+    <span class="token attr-name">values</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"Now shipping","ar":"متاح الآن","de":"Jetzt verfügbar","es":"Ya disponible","fr":"Disponible dès maintenant","it":"Disponibile ora","ja":"発売開始","ko":"출시됨","pt":"Disponível agora","ru":"Уже в продаже","tr":"Şimdi mevcut","zh-hans":"现已发布"}<span class="token punctuation">'</span></span>
+  <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translations</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span>
+    <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Summary<span class="token punctuation">"</span></span>
+    <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>summary<span class="token punctuation">"</span></span>
+    <span class="token attr-name">values</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"Tap through the release highlights.","ar":"تصفح أبرز ميزات الإصدار.","de":"Highlights der Version ansehen.","es":"Consulta lo más destacado.","fr":"Découvrez les nouveautés.","it":"Scopri le novità.","ja":"リリースのハイライトをご覧ください。","ko":"업데이트 주요 내용 보기.","pt":"Veja os destaques.","ru":"Ознакомьтесь с обновлениями.","tr":"Sürüm önemli noktaları.","zh-hans":"浏览版本亮点。"}<span class="token punctuation">'</span></span>
+  <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translations</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translation-group</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-1763"></zn-copy-button></pre>
               </div>
@@ -923,33 +942,27 @@
               </button>
             </div>
           </div>
-          <h3 id="language-overflow" class="anchor-heading">
-            Language Overflow<a href="#language-overflow" aria-label='Direct link to "Language Overflow"'></a>
+          <h3 id="custom-accessible-name" class="anchor-heading">
+            Custom Accessible Name<a
+              href="#custom-accessible-name"
+              aria-label='Direct link to "Custom Accessible Name"'
+            ></a>
           </h3>
-          <p>
-            When there are more languages than will fit across the header, the extras collapse into a chevron dropdown
-            beside the visible buttons. The dropdown sits before the <code>+</code> add-language dropdown and selects
-            the same way — picking a language switches every child translation input in the group.
-          </p>
+          <p><code>language-label</code> is read out by a screen reader in place of a visible label.</p>
           <div class="code-preview">
             <div class="code-preview__preview">
-              <div style="max-width: 480px">
-                <zn-translation-group
-                  label="Release Notes"
-                  languages='{"en":"English","ar":"Arabic","de":"German","es":"Spanish","fr":"French","it":"Italian","ja":"Japanese","ko":"Korean","pt":"Portuguese","ru":"Russian","tr":"Turkish","zh-hans":"Simplified Chinese"}'
-                >
-                  <zn-translations
-                    label="Headline"
-                    name="headline"
-                    values='{"en":"Now shipping","ar":"متاح الآن","de":"Jetzt verfügbar","es":"Ya disponible","fr":"Disponible dès maintenant","it":"Disponibile ora","ja":"発売開始","ko":"출시됨","pt":"Disponível agora","ru":"Уже в продаже","tr":"Şimdi mevcut","zh-hans":"现已发布"}'
-                  ></zn-translations>
-                  <zn-translations
-                    label="Summary"
-                    name="summary"
-                    values='{"en":"Tap through the release highlights.","ar":"تصفح أبرز ميزات الإصدار.","de":"Highlights der Version ansehen.","es":"Consulta lo más destacado.","fr":"Découvrez les nouveautés.","it":"Scopri le novità.","ja":"リリースのハイライトをご覧ください。","ko":"업데이트 주요 내용 보기.","pt":"Veja os destaques.","ru":"Ознакомьтесь с обновлениями.","tr":"Sürüm önemli noktaları.","zh-hans":"浏览版本亮点。"}'
-                  ></zn-translations>
-                </zn-translation-group>
-              </div>
+              <zn-translation-group language-label="Language" languages='{"en":"English","fr":"French","de":"German"}'>
+                <zn-translations
+                  label="Heading"
+                  name="heading"
+                  values='{"en":"Now shipping","de":"Jetzt verfügbar"}'
+                ></zn-translations>
+                <zn-translations
+                  label="Body"
+                  name="body"
+                  values='{"en":"Tap through the highlights."}'
+                ></zn-translations>
+              </zn-translation-group>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
@@ -958,22 +971,12 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-1390">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1764"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">max-width</span><span class="token punctuation">:</span> 480px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translation-group</span>
-    <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Release Notes<span class="token punctuation">"</span></span>
-    <span class="token attr-name">languages</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"English","ar":"Arabic","de":"German","es":"Spanish","fr":"French","it":"Italian","ja":"Japanese","ko":"Korean","pt":"Portuguese","ru":"Russian","tr":"Turkish","zh-hans":"Simplified Chinese"}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span>
-      <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Headline<span class="token punctuation">"</span></span>
-      <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>headline<span class="token punctuation">"</span></span>
-      <span class="token attr-name">values</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"Now shipping","ar":"متاح الآن","de":"Jetzt verfügbar","es":"Ya disponible","fr":"Disponible dès maintenant","it":"Disponibile ora","ja":"発売開始","ko":"출시됨","pt":"Disponível agora","ru":"Уже в продаже","tr":"Şimdi mevcut","zh-hans":"现已发布"}<span class="token punctuation">'</span></span>
-    <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translations</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span>
-      <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Summary<span class="token punctuation">"</span></span>
-      <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>summary<span class="token punctuation">"</span></span>
-      <span class="token attr-name">values</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"Tap through the release highlights.","ar":"تصفح أبرز ميزات الإصدار.","de":"Highlights der Version ansehen.","es":"Consulta lo más destacado.","fr":"Découvrez les nouveautés.","it":"Scopri le novità.","ja":"リリースのハイライトをご覧ください。","ko":"업데이트 주요 내용 보기.","pt":"Veja os destaques.","ru":"Ознакомьтесь с обновлениями.","tr":"Sürüm önemli noktaları.","zh-hans":"浏览版本亮点。"}<span class="token punctuation">'</span></span>
-    <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translations</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translation-group</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1764"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translation-group</span>
+  <span class="token attr-name">language-label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Language<span class="token punctuation">"</span></span>
+  <span class="token attr-name">languages</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"English","fr":"French","de":"German"}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Heading<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>heading<span class="token punctuation">"</span></span> <span class="token attr-name">values</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"Now shipping","de":"Jetzt verfügbar"}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translations</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Body<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>body<span class="token punctuation">"</span></span> <span class="token attr-name">values</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"Tap through the highlights."}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translations</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translation-group</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-1764"></zn-copy-button></pre>
               </div>
             </div>
@@ -984,6 +987,166 @@
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
                 aria-controls="code-preview-source-group-1390"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="inline-no-panel" class="anchor-heading">
+            Inline (No Panel)<a href="#inline-no-panel" aria-label='Direct link to "Inline (No Panel)"'></a>
+          </h3>
+          <p>
+            Nested inside another panel, the group’s own border and padding indent its fields out of line with
+            everything around them. <code>inline</code> drops the chrome so the group reads as a section of the form
+            instead.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-panel caption="Product Details" icon="inventory_2">
+                <div style="display: flex; flex-direction: column; gap: 1rem">
+                  <zn-input label="Product SKU" value="PROD-12345" readonly=""></zn-input>
+
+                  <zn-translation-group
+                    inline=""
+                    label="Translatable Content"
+                    languages='{"en":"English","fr":"French","de":"German"}'
+                  >
+                    <zn-translations
+                      name="name"
+                      label="Product Name"
+                      values='{"en":"Premium Wireless Headphones","fr":"Écouteurs sans fil premium","de":"Premium kabellose Kopfhörer"}'
+                    ></zn-translations>
+                    <zn-translations
+                      name="short-description"
+                      label="Short Description"
+                      values='{"en":"High-quality wireless audio","fr":"Audio sans fil haute qualité","de":"Hochwertiges kabelloses Audio"}'
+                    ></zn-translations>
+                  </zn-translation-group>
+
+                  <zn-input label="Price" type="currency" value="299.99"></zn-input>
+                </div>
+              </zn-panel>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1391">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1765"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Product Details<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>inventory_2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">flex-direction</span><span class="token punctuation">:</span> column<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Product SKU<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>PROD-12345<span class="token punctuation">"</span></span> <span class="token attr-name">readonly</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translation-group</span>
+      <span class="token attr-name">inline</span>
+      <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Translatable Content<span class="token punctuation">"</span></span>
+      <span class="token attr-name">languages</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"English","fr":"French","de":"German"}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span>
+        <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span>
+        <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Product Name<span class="token punctuation">"</span></span>
+        <span class="token attr-name">values</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"Premium Wireless Headphones","fr":"Écouteurs sans fil premium","de":"Premium kabellose Kopfhörer"}<span class="token punctuation">'</span></span>
+      <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translations</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span>
+        <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>short-description<span class="token punctuation">"</span></span>
+        <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Short Description<span class="token punctuation">"</span></span>
+        <span class="token attr-name">values</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"High-quality wireless audio","fr":"Audio sans fil haute qualité","de":"Hochwertiges kabelloses Audio"}<span class="token punctuation">'</span></span>
+      <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translations</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translation-group</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Price<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>currency<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>299.99<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1765"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1391"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="actions" class="anchor-heading">
+            Actions<a href="#actions" aria-label='Direct link to "Actions"'></a>
+          </h3>
+          <p>
+            Buttons for the bottom of the group go in the <code>actions</code> slot. They sit on the white body rather
+            than the grey <code>footer</code>, and follow zinc’s form action rows in sitting on the right.
+            <code>align="start"</code> moves one to the left; any number can sit on either side. Write them in the order
+            they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-translation-group label="Product Content" languages='{"en":"English","fr":"French","de":"German"}'>
+                <zn-translations
+                  label="Name"
+                  name="name"
+                  values='{"en":"Wireless Headphones","de":"Kabellose Kopfhörer"}'
+                ></zn-translations>
+                <zn-translations
+                  label="Description"
+                  name="description"
+                  values='{"en":"Premium noise-cancelling headphones"}'
+                ></zn-translations>
+
+                <zn-button slot="actions" align="start" color="transparent" icon="translate">Auto-translate</zn-button>
+                <zn-button slot="actions" color="secondary">Cancel</zn-button>
+                <zn-button slot="actions" color="success">Save</zn-button>
+              </zn-translation-group>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1392">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1766"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translation-group</span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Product Content<span class="token punctuation">"</span></span>
+  <span class="token attr-name">languages</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"English","fr":"French","de":"German"}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Name<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span> <span class="token attr-name">values</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"Wireless Headphones","de":"Kabellose Kopfhörer"}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translations</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Description<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>description<span class="token punctuation">"</span></span> <span class="token attr-name">values</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"Premium noise-cancelling headphones"}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translations</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>actions<span class="token punctuation">"</span></span> <span class="token attr-name">align</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>start<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>transparent<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>translate<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Auto-translate<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>actions<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>secondary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Cancel<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>actions<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>success<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Save<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translation-group</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1766"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1392"
               >
                 Source
                 <svg
@@ -1015,16 +1178,16 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1391">
+            <div class="code-preview__source-group" id="code-preview-source-group-1393">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1765"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translation-group</span>
+                <pre><code class="language-html" id="code-block-1767"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translation-group</span>
   <span class="token attr-name">flush</span>
   <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Compact Translations<span class="token punctuation">"</span></span>
   <span class="token attr-name">languages</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"English","fr":"French"}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>label<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translations</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Placeholder<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>placeholder<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translations</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translation-group</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1765"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1767"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1033,7 +1196,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1391"
+                aria-controls="code-preview-source-group-1393"
               >
                 Source
                 <svg
@@ -1086,9 +1249,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1392">
+            <div class="code-preview__source-group" id="code-preview-source-group-1394">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1766"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translation-group</span>
+                <pre><code class="language-html" id="code-block-1768"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translation-group</span>
   <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>group-events<span class="token punctuation">"</span></span>
   <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Event Demo<span class="token punctuation">"</span></span>
   <span class="token attr-name">languages</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"English","fr":"French","de":"German"}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
@@ -1109,7 +1272,7 @@
     display<span class="token punctuation">.</span>textContent <span class="token operator">=</span> event<span class="token punctuation">.</span>detail<span class="token punctuation">.</span>language<span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1766"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1768"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1118,126 +1281,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1392"
-              >
-                Source
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </button>
-            </div>
-          </div>
-          <h3 id="real-world-use-case-product-content-management" class="anchor-heading">
-            Real-World Use Case: Product Content Management<a
-              href="#real-world-use-case-product-content-management"
-              aria-label='Direct link to "Real-World Use Case: Product Content Management"'
-            ></a>
-          </h3>
-          <p>A complete example showing how the translation group simplifies a product editing form.</p>
-          <div class="code-preview">
-            <div class="code-preview__preview">
-              <div style="max-width: 800px">
-                <zn-panel caption="Product Details" icon="inventory_2">
-                  <div style="display: flex; flex-direction: column; gap: 1rem">
-                    <zn-input label="Product SKU" value="PROD-12345" readonly=""></zn-input>
-
-                    <zn-translation-group
-                      label="Translatable Content"
-                      languages='{"en":"English","fr":"French","de":"German","es":"Spanish"}'
-                    >
-                      <zn-translations
-                        name="name"
-                        label="Product Name"
-                        values='{"en":"Premium Wireless Headphones","fr":"Écouteurs sans fil premium","de":"Premium kabellose Kopfhörer","es":"Auriculares inalámbricos premium"}'
-                      ></zn-translations>
-                      <zn-translations
-                        name="short-description"
-                        label="Short Description"
-                        values='{"en":"High-quality wireless audio","fr":"Audio sans fil haute qualité","de":"Hochwertiges kabelloses Audio","es":"Audio inalámbrico de alta calidad"}'
-                      ></zn-translations>
-                      <zn-translations
-                        name="description"
-                        label="Full Description"
-                        values='{"en":"Experience premium sound with active noise cancellation","fr":"Découvrez un son premium avec suppression active du bruit","de":"Erleben Sie Premium-Sound mit aktiver Geräuschunterdrückung","es":"Experimente sonido premium con cancelación activa de ruido"}'
-                      ></zn-translations>
-                    </zn-translation-group>
-
-                    <zn-input label="Price" type="currency" value="299.99"></zn-input>
-                  </div>
-
-                  <div slot="footer" style="display: flex; gap: 0.5rem; justify-content: flex-end">
-                    <zn-button color="secondary">Cancel</zn-button>
-                    <zn-button color="success">Save Product</zn-button>
-                  </div>
-                </zn-panel>
-              </div>
-
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
-            </div>
-
-            <div class="code-preview__source-group" id="code-preview-source-group-1393">
-              <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1767"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">max-width</span><span class="token punctuation">:</span> 800px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Product Details<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>inventory_2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">flex-direction</span><span class="token punctuation">:</span> column<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span>
-        <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Product SKU<span class="token punctuation">"</span></span>
-        <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>PROD-12345<span class="token punctuation">"</span></span>
-        <span class="token attr-name">readonly</span>
-      <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
-
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translation-group</span>
-        <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Translatable Content<span class="token punctuation">"</span></span>
-        <span class="token attr-name">languages</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"English","fr":"French","de":"German","es":"Spanish"}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span>
-          <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span>
-          <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Product Name<span class="token punctuation">"</span></span>
-          <span class="token attr-name">values</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"Premium Wireless Headphones","fr":"Écouteurs sans fil premium","de":"Premium kabellose Kopfhörer","es":"Auriculares inalámbricos premium"}<span class="token punctuation">'</span></span>
-        <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translations</span><span class="token punctuation">&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span>
-          <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>short-description<span class="token punctuation">"</span></span>
-          <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Short Description<span class="token punctuation">"</span></span>
-          <span class="token attr-name">values</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"High-quality wireless audio","fr":"Audio sans fil haute qualité","de":"Hochwertiges kabelloses Audio","es":"Audio inalámbrico de alta calidad"}<span class="token punctuation">'</span></span>
-        <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translations</span><span class="token punctuation">&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span>
-          <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>description<span class="token punctuation">"</span></span>
-          <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Full Description<span class="token punctuation">"</span></span>
-          <span class="token attr-name">values</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"Experience premium sound with active noise cancellation","fr":"Découvrez un son premium avec suppression active du bruit","de":"Erleben Sie Premium-Sound mit aktiver Geräuschunterdrückung","es":"Experimente sonido premium con cancelación activa de ruido"}<span class="token punctuation">'</span></span>
-        <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translations</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translation-group</span><span class="token punctuation">&gt;</span></span>
-
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span>
-        <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Price<span class="token punctuation">"</span></span>
-        <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>currency<span class="token punctuation">"</span></span>
-        <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>299.99<span class="token punctuation">"</span></span>
-      <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>footer<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span> <span class="token property">justify-content</span><span class="token punctuation">:</span> flex-end<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>secondary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Cancel<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>success<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Save Product<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1767"></zn-copy-button></pre>
-              </div>
-            </div>
-
-            <div class="code-preview__buttons">
-              <button
-                type="button"
-                class="code-preview__button code-preview__toggle"
-                aria-expanded="false"
-                aria-controls="code-preview-source-group-1393"
+                aria-controls="code-preview-source-group-1394"
               >
                 Source
                 <svg
@@ -1271,7 +1315,19 @@
                   <td><code>label</code></td>
                   <td><code>string</code></td>
                   <td><code>''</code></td>
-                  <td>Label displayed in the panel header</td>
+                  <td>Caption displayed in the panel header</td>
+                </tr>
+                <tr>
+                  <td><code>language-label</code></td>
+                  <td><code>string</code></td>
+                  <td><code>'Edit Languages'</code></td>
+                  <td>The select’s accessible name; not shown on screen</td>
+                </tr>
+                <tr>
+                  <td><code>inline</code></td>
+                  <td><code>boolean</code></td>
+                  <td><code>false</code></td>
+                  <td>Drops the panel border, background and padding</td>
                 </tr>
                 <tr>
                   <td><code>languages</code></td>
@@ -1325,9 +1381,20 @@
                   <td><code>label</code></td>
                   <td>Alternative to the <code>label</code> attribute for rich HTML content</td>
                 </tr>
+                <tr>
+                  <td><code>actions</code></td>
+                  <td>
+                    Buttons for the bottom of the body; <code>align="start"</code> on a child moves it to the left
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>footer</code></td>
+                  <td>Content displayed in the grey panel footer</td>
+                </tr>
               </tbody>
             </table>
           </div>
+          <p>The header carries the caption and the language select alone; nothing else is slotted into it.</p>
           <h2 id="css-parts" class="anchor-heading">
             CSS Parts<a href="#css-parts" aria-label='Direct link to "CSS Parts"'></a>
           </h2>
@@ -1346,7 +1413,19 @@
                 </tr>
                 <tr>
                   <td><code>header</code></td>
-                  <td>The header area containing the label and language toggle</td>
+                  <td>The header area containing the caption and the language select</td>
+                </tr>
+                <tr>
+                  <td><code>language-field</code></td>
+                  <td>The container holding the language select</td>
+                </tr>
+                <tr>
+                  <td><code>language-select</code></td>
+                  <td>The select itself</td>
+                </tr>
+                <tr>
+                  <td><code>actions</code></td>
+                  <td>The row of buttons at the bottom of the body</td>
                 </tr>
                 <tr>
                   <td><code>translations</code></td>
@@ -1377,7 +1456,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-1768"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.115/dist/components/translation-group/translation-group.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1768"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-1769"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.115/dist/components/translation-group/translation-group.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1769"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1392,12 +1471,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-1769"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.115/dist/components/translation-group/translation-group.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1769"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1770"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.115/dist/components/translation-group/translation-group.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1770"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-1770"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/translation-group/translation-group.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1770"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1771"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/translation-group/translation-group.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1771"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots-1" class="anchor-heading">Slots<a href="#slots-1" aria-label='Direct link to "Slots"'></a></h2>
@@ -1413,21 +1492,29 @@
               <tbody>
                 <tr>
                   <td class="nowrap">(default)</td>
-                  <td>Default slot for <code>&lt;zn-translations&gt;</code> elements.</td>
+                  <td>The <code>zn-translations</code> fields the select drives.</td>
                 </tr>
 
                 <tr>
                   <td class="nowrap">
                     <code>actions</code>
                   </td>
-                  <td>Actions displayed in the panel header alongside language buttons.</td>
+                  <td>
+                    Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on the
+                    right, as zinc’s form action rows do; <code>align="start"</code> moves one to the left. Write them
+                    in the order they should be read — the sides are set by CSS ordering, so markup order is what a
+                    keyboard follows.
+                  </td>
                 </tr>
 
                 <tr>
                   <td class="nowrap">
                     <code>footer</code>
                   </td>
-                  <td>Content displayed in the panel footer.</td>
+                  <td>
+                    Content displayed in the grey panel footer. The header belongs to the language select; nothing else
+                    is slotted into it.
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -1457,7 +1544,10 @@
                   <td>
                     <code class="nowrap">label</code>
                   </td>
-                  <td>The group label displayed in the panel header.</td>
+                  <td>
+                    The caption shown in the panel header. An alias for the inherited <code>caption</code>, which wins
+                    where both are set.
+                  </td>
                   <td style="text-align: center"></td>
                   <td>
                     <code>string</code>
@@ -1469,9 +1559,59 @@
 
                 <tr>
                   <td>
+                    <code class="nowrap">inline</code>
+                  </td>
+                  <td>
+                    Drops the panel chrome — border, background and padding — so the group reads as a section of the
+                    form around it rather than a panel of its own. For groups nested inside another panel, where the
+                    fields would otherwise sit indented behind a second border.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">languageLabel</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> language-label </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    The select’s accessible name. Not shown — the caption is what names the section on screen — but read
+                    out by a screen reader, which has nothing else to go on once the visible label is gone.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>'Edit Languages'</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
                     <code class="nowrap">languages</code>
                   </td>
-                  <td>The available languages for the group.</td>
+                  <td>
+                    The languages on offer, as language code to display name —
+                    <code>{"en": "English", "fr": "French"}</code>. Writing the code as the name (<code
+                      >{"en": "EN"}</code
+                    >) is also accepted. <code>en</code> is the language every other one falls back to. Set on every
+                    child, so they do not need their own copy.
+                  </td>
                   <td style="text-align: center"></td>
                   <td>
                     <code>Record<string, string=""></string,></code>
@@ -1576,6 +1716,21 @@
                   <td class="nowrap"><code>base</code></td>
                   <td>The component’s base wrapper.</td>
                 </tr>
+
+                <tr>
+                  <td class="nowrap"><code>actions</code></td>
+                  <td>The row of buttons at the bottom of the body.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>language-field</code></td>
+                  <td>The label and select that choose the language every child is editing.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>language-select</code></td>
+                  <td>The select itself.</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -1591,19 +1746,23 @@
           <p>This component automatically imports the following dependencies.</p>
 
           <ul>
-            <li><code>&lt;zn-button&gt;</code></li>
-
-            <li><code>&lt;zn-button-group&gt;</code></li>
-
-            <li><code>&lt;zn-dropdown&gt;</code></li>
+            <li><code>&lt;zn-chip&gt;</code></li>
 
             <li><code>&lt;zn-example&gt;</code></li>
 
+            <li><code>&lt;zn-header&gt;</code></li>
+
             <li><code>&lt;zn-icon&gt;</code></li>
 
-            <li><code>&lt;zn-menu&gt;</code></li>
+            <li><code>&lt;zn-opt-group&gt;</code></li>
 
-            <li><code>&lt;zn-tooltip&gt;</code></li>
+            <li><code>&lt;zn-option&gt;</code></li>
+
+            <li><code>&lt;zn-popup&gt;</code></li>
+
+            <li><code>&lt;zn-select&gt;</code></li>
+
+            <li><code>&lt;zn-tag&gt;</code></li>
           </ul>
         </div>
       </article>

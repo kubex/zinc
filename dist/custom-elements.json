@@ -58,6 +58,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -246,79 +319,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -16633,6 +16633,10 @@
             {
               "description": "The component's base wrapper.",
               "name": "base"
+            },
+            {
+              "description": "The container that wraps the actions slot.",
+              "name": "header-right"
             }
           ],
           "slots": [
@@ -16861,7 +16865,7 @@
           "tagNameWithoutPrefix": "header",
           "tagName": "zn-header",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/header\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/header\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n * @csspart header-right - The container that wraps the actions slot.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
           "documentation": "https://zinc.style/components/header",
           "status": "experimental",
           "since": "1.0",
@@ -37951,6 +37955,10 @@
               "name": "prefix"
             },
             {
+              "description": "The container that wraps the suffix slot.",
+              "name": "suffix"
+            },
+            {
               "description": "The element that displays the selected option's label, an `<input>` element.",
               "name": "display-input"
             },
@@ -38011,6 +38019,10 @@
             {
               "description": "Used to prepend a presentational icon or similar element to the combobox.",
               "name": "prefix"
+            },
+            {
+              "description": "Used to append a presentational element — a chip marking the selected option's state, for instance — to the combobox, between the value and the clear and expand icons.",
+              "name": "suffix"
             },
             {
               "description": "An icon to use in lieu of the default clear icon.",
@@ -39462,7 +39474,7 @@
           "tagNameWithoutPrefix": "select",
           "tagName": "zn-select",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/select\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n * @dependency zn-opt-group\n * @dependency zn-option\n * @dependency zn-popup\n * @dependency zn-tag\n *\n * @slot - The listbox options. Must be `<zn-option>` elements. You can use `<zn-opt-group>` to group options under a labeled header, or `<zn-divider>` to group items visually.\n * @slot label - The input's label. Alternatively, you can use the `label` attribute.\n * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n * @slot context-note - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.\n * @slot prefix - Used to prepend a presentational icon or similar element to the combobox.\n * @slot clear-icon - An icon to use in lieu of the default clear icon.\n * @slot expand-icon - The icon to show when the control is expanded and collapsed. Rotates on open and close.\n * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n *\n * @event zn-change - Emitted when the control's value changes.\n * @event zn-clear - Emitted when the control's value is cleared.\n * @event zn-input - Emitted when the control receives input.\n * @event zn-focus - Emitted when the control gains focus.\n * @event zn-blur - Emitted when the control loses focus.\n * @event zn-show - Emitted when the select's menu opens.\n * @event zn-after-show - Emitted after the select's menu opens and all animations are complete.\n * @event zn-hide - Emitted when the select's menu closes.\n * @event zn-after-hide - Emitted after the select's menu closes and all animations are complete.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n * @event zn-load - Emitted when options have been successfully loaded from the `src` URL.\n * @event zn-error - Emitted when loading options from the `src` URL fails.\n *\n * @csspart search-loading - The container shown while a remote search request is in flight.\n * @csspart max-results-indicator - The message shown when results are truncated by `max-results`.\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The select's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart combobox - The container the wraps the prefix, combobox, clear icon, and expand button.\n * @csspart prefix - The container that wraps the prefix slot.\n * @csspart display-input - The element that displays the selected option's label, an `<input>` element.\n * @csspart listbox - The listbox container where options are slotted.\n * @csspart tags - The container that houses option tags when `multiselect` is used.\n * @csspart tag - The individual tags that represent each multiselect option.\n * @csspart tag__base - The tag's base part.\n * @csspart tag__content - The tag's content part.\n * @csspart tag__remove-button - The tag's remove button.\n * @csspart tag__remove-button__base - The tag's remove button base part.\n * @csspart clear-button - The clear button.\n * @csspart expand-icon - The container that wraps the expand icon.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/select\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n * @dependency zn-opt-group\n * @dependency zn-option\n * @dependency zn-popup\n * @dependency zn-tag\n *\n * @slot - The listbox options. Must be `<zn-option>` elements. You can use `<zn-opt-group>` to group options under a labeled header, or `<zn-divider>` to group items visually.\n * @slot label - The input's label. Alternatively, you can use the `label` attribute.\n * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n * @slot context-note - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.\n * @slot prefix - Used to prepend a presentational icon or similar element to the combobox.\n * @slot suffix - Used to append a presentational element — a chip marking the selected option's state, for\n *   instance — to the combobox, between the value and the clear and expand icons.\n * @slot clear-icon - An icon to use in lieu of the default clear icon.\n * @slot expand-icon - The icon to show when the control is expanded and collapsed. Rotates on open and close.\n * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n *\n * @event zn-change - Emitted when the control's value changes.\n * @event zn-clear - Emitted when the control's value is cleared.\n * @event zn-input - Emitted when the control receives input.\n * @event zn-focus - Emitted when the control gains focus.\n * @event zn-blur - Emitted when the control loses focus.\n * @event zn-show - Emitted when the select's menu opens.\n * @event zn-after-show - Emitted after the select's menu opens and all animations are complete.\n * @event zn-hide - Emitted when the select's menu closes.\n * @event zn-after-hide - Emitted after the select's menu closes and all animations are complete.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n * @event zn-load - Emitted when options have been successfully loaded from the `src` URL.\n * @event zn-error - Emitted when loading options from the `src` URL fails.\n *\n * @csspart search-loading - The container shown while a remote search request is in flight.\n * @csspart max-results-indicator - The message shown when results are truncated by `max-results`.\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The select's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart combobox - The container the wraps the prefix, combobox, clear icon, and expand button.\n * @csspart prefix - The container that wraps the prefix slot.\n * @csspart suffix - The container that wraps the suffix slot.\n * @csspart display-input - The element that displays the selected option's label, an `<input>` element.\n * @csspart listbox - The listbox container where options are slotted.\n * @csspart tags - The container that houses option tags when `multiselect` is used.\n * @csspart tag - The individual tags that represent each multiselect option.\n * @csspart tag__base - The tag's base part.\n * @csspart tag__content - The tag's content part.\n * @csspart tag__remove-button - The tag's remove button.\n * @csspart tag__remove-button__base - The tag's remove button base part.\n * @csspart clear-button - The clear button.\n * @csspart expand-icon - The container that wraps the expand icon.\n */",
           "documentation": "https://zinc.style/components/select",
           "status": "experimental",
           "since": "1.0",
@@ -49492,11 +49504,23 @@
                 "name": "ZnPanel",
                 "module": "src/components/panel/panel.component.ts"
               }
+            },
+            {
+              "description": "The row of buttons at the bottom of the body.",
+              "name": "actions"
+            },
+            {
+              "description": "The label and select that choose the language every child is editing.",
+              "name": "language-field"
+            },
+            {
+              "description": "The select itself.",
+              "name": "language-select"
             }
           ],
           "slots": [
             {
-              "description": "Default slot for `<zn-translations>` elements.",
+              "description": "The `zn-translations` fields the select drives.",
               "name": "",
               "inheritedFrom": {
                 "name": "ZnPanel",
@@ -49504,7 +49528,7 @@
               }
             },
             {
-              "description": "Actions displayed in the panel header alongside language buttons.",
+              "description": "Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on the right, as zinc's form action rows do; `align=\"start\"` moves one to the left. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.",
               "name": "actions",
               "inheritedFrom": {
                 "name": "ZnPanel",
@@ -49512,7 +49536,7 @@
               }
             },
             {
-              "description": "Content displayed in the panel footer.",
+              "description": "Content displayed in the grey panel footer. The header belongs to the language select; nothing else is slotted into it.",
               "name": "footer",
               "inheritedFrom": {
                 "name": "ZnPanel",
@@ -49528,7 +49552,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ 'zn-button': ZnButton, 'zn-button-group': ZnButtonGroup, 'zn-dropdown': ZnDropdown, 'zn-header': ZnHeader, 'zn-menu': ZnMenu }"
+              "default": "{ 'zn-chip': ZnChip, 'zn-header': ZnHeader, 'zn-option': ZnOption, 'zn-select': ZnSelect }"
             },
             {
               "kind": "field",
@@ -49544,8 +49568,29 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "The group label displayed in the panel header.",
+              "description": "The caption shown in the panel header. An alias for the inherited `caption`, which wins where both are set.",
               "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "inline",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Drops the panel chrome — border, background and padding — so the group reads as a section of the form around it\nrather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit\nindented behind a second border.",
+              "attribute": "inline",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "languageLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Edit Languages'",
+              "description": "The select's accessible name. Not shown — the caption is what names the section on screen — but read out by a\nscreen reader, which has nothing else to go on once the visible label is gone.",
+              "attribute": "language-label"
             },
             {
               "kind": "field",
@@ -49554,7 +49599,7 @@
                 "text": "Record<string, string>"
               },
               "default": "{ 'en': 'EN' }",
-              "description": "The available languages for the group.",
+              "description": "The languages on offer, as language code to display name — `{\"en\": \"English\", \"fr\": \"French\"}`. Writing the code\nas the name (`{\"en\": \"EN\"}`) is also accepted. `en` is the language every other one falls back to. Set on every\nchild, so they do not need their own copy.",
               "attribute": "languages"
             },
             {
@@ -49564,54 +49609,8 @@
                 "text": "string"
               },
               "privacy": "private",
-              "default": "'en'"
-            },
-            {
-              "kind": "field",
-              "name": "_activatedLanguages",
-              "type": {
-                "text": "string[]"
-              },
-              "privacy": "private",
-              "default": "['en']",
-              "description": "Tracks all language codes that have been activated across children."
-            },
-            {
-              "kind": "field",
-              "name": "_overflowIndex",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "-1"
-            },
-            {
-              "kind": "field",
-              "name": "_lastObservedWidth",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0"
-            },
-            {
-              "kind": "field",
-              "name": "_measureRafId",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0"
-            },
-            {
-              "kind": "method",
-              "name": "_scheduleLangOverflow",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_computeLangOverflow",
-              "privacy": "private"
+              "default": "'en'",
+              "description": "The language every child is currently editing."
             },
             {
               "kind": "method",
@@ -49621,7 +49620,8 @@
                 "type": {
                   "text": "ZnTranslations[]"
                 }
-              }
+              },
+              "description": "The children the select drives. Read live rather than cached, so markup added later is picked up."
             },
             {
               "kind": "method",
@@ -49631,8 +49631,47 @@
             },
             {
               "kind": "method",
+              "name": "languageState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "{ type: 'success' | 'warning' | 'error'; label: string }"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "language",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "A language is translated once every child carries a value for it, partial while only some do. The chips and the\ncount are read off the children, so a child's edit has to bring the group back round."
+            },
+            {
+              "kind": "method",
+              "name": "displayName",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "language",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "`English (EN)`, or the code alone where the configured name already is the code."
+            },
+            {
+              "kind": "method",
               "name": "syncChildLanguages",
-              "privacy": "private"
+              "privacy": "private",
+              "description": "Children take their language list from the group, so a change to `languages` has to reach them."
             },
             {
               "kind": "field",
@@ -49650,17 +49689,25 @@
                     "text": "string"
                   }
                 }
-              ]
+              ],
+              "description": "Moves every child onto `lang` and announces it. Does not touch their values."
             },
             {
               "kind": "field",
-              "name": "handleLanguageAdd",
+              "name": "handleLanguageSelect",
+              "privacy": "private",
+              "description": "The select's own change and input events describe the language being browsed, not a translation being edited, so\nthey are stopped rather than allowed to reach a consumer listening for a child's value change."
+            },
+            {
+              "kind": "field",
+              "name": "handleLanguageInput",
               "privacy": "private"
             },
             {
               "kind": "field",
-              "name": "handleOverflowSelect",
-              "privacy": "private"
+              "name": "handleChildChange",
+              "privacy": "private",
+              "description": "A child's edit changes which chips the select shows, and the translated count above it."
             },
             {
               "kind": "field",
@@ -49831,8 +49878,26 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "The group label displayed in the panel header.",
+              "description": "The caption shown in the panel header. An alias for the inherited `caption`, which wins where both are set.",
               "fieldName": "label"
+            },
+            {
+              "name": "inline",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Drops the panel chrome — border, background and padding — so the group reads as a section of the form around it\nrather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit\nindented behind a second border.",
+              "fieldName": "inline"
+            },
+            {
+              "name": "language-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Edit Languages'",
+              "description": "The select's accessible name. Not shown — the caption is what names the section on screen — but read out by a\nscreen reader, which has nothing else to go on once the visible label is gone.",
+              "fieldName": "languageLabel"
             },
             {
               "name": "languages",
@@ -49840,7 +49905,7 @@
                 "text": "Record<string, string>"
               },
               "default": "{ 'en': 'EN' }",
-              "description": "The available languages for the group.",
+              "description": "The languages on offer, as language code to display name — `{\"en\": \"English\", \"fr\": \"French\"}`. Writing the code\nas the name (`{\"en\": \"EN\"}`) is also accepted. `en` is the language every other one falls back to. Set on every\nchild, so they do not need their own copy.",
               "fieldName": "languages"
             },
             {
@@ -49980,16 +50045,19 @@
             "name": "ZnPanel",
             "module": "/src/components/panel/panel.component"
           },
-          "summary": "A panel-styled container that provides a shared language toggle for multiple zn-translations children.",
+          "summary": "Puts several zn-translations fields behind one language select, so a whole form's worth of copy is\ntranslated a language at a time.",
           "tagNameWithoutPrefix": "translation-group",
           "tagName": "zn-translation-group",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A panel-styled container that provides a shared language toggle for multiple zn-translations children.\n *\n * @dependency zn-button\n * @dependency zn-button-group\n * @dependency zn-dropdown\n * @dependency zn-menu\n *\n * @event zn-language-change - Emitted when the active language changes. Detail: `{ language: string }`.\n *\n * @slot - Default slot for `<zn-translations>` elements.\n * @slot actions - Actions displayed in the panel header alongside language buttons.\n *\n * @csspart base - The component's base wrapper.\n */",
+          "jsDoc": "/**\n * @summary Puts several zn-translations fields behind one language select, so a whole form's worth of copy is\n *  translated a language at a time.\n * @documentation https://zinc.style/components/translation-group\n * @status experimental\n * @since 1.0\n *\n * The select sits at the top right of the header, opposite the caption. Choosing a language switches every child at\n * once, and each child hides its own select while it is in a group — `grouped` is set on them here.\n *\n * Closed, the select carries how many target languages are done — `1/5`. Its options each carry a chip aggregated\n * across the children:\n *\n * - `Translated` — every child has a value for it\n * - `Partial` — only some children do\n * - `English` — none do, so all of them fall back to the English text\n *\n * `Empty` replaces the last of those for English itself, which has nothing to fall back to. English is the source\n * rather than a translation, so it is also left out of the `n of m translated` count beside the label.\n *\n * The children own their values; this component only chooses which language is shown and reports on what they hold.\n * It reads them back on every child `zn-change`, so the chips and the count follow an edit as it is typed.\n *\n * Extends `zn-panel`, so `caption`, `icon`, `flush`, `transparent` and the `footer` slot behave as they do there.\n * Nested inside another panel, add `inline` to drop the chrome and keep the fields aligned with the surrounding form.\n *\n * @dependency zn-chip\n * @dependency zn-header\n * @dependency zn-option\n * @dependency zn-select\n *\n * @event zn-language-change - Emitted when the active language changes. Detail: `{ language: string }`.\n *\n * @slot - The `zn-translations` fields the select drives.\n * @slot actions - Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on\n *  the right, as zinc's form action rows do; `align=\"start\"` moves one to the left. Write them in the order they\n *  should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.\n * @slot footer - Content displayed in the grey panel footer. The header belongs to the language select; nothing\n *  else is slotted into it.\n *\n * @csspart base - The component's base wrapper.\n * @csspart actions - The row of buttons at the bottom of the body.\n * @csspart language-field - The label and select that choose the language every child is editing.\n * @csspart language-select - The select itself.\n */",
+          "documentation": "https://zinc.style/components/translation-group",
+          "status": "experimental",
+          "since": "1.0",
           "dependencies": [
-            "zn-button",
-            "zn-button-group",
-            "zn-dropdown",
-            "zn-menu"
+            "zn-chip",
+            "zn-header",
+            "zn-option",
+            "zn-select"
           ],
           "cssProperties": [
             {
@@ -50022,6 +50090,38 @@
           "kind": "class",
           "description": "",
           "name": "ZnTranslations",
+          "cssParts": [
+            {
+              "description": "The form control that wraps the label, the language select, the field and the help text.",
+              "name": "form-control"
+            },
+            {
+              "description": "The label's wrapper.",
+              "name": "form-control-label"
+            },
+            {
+              "description": "The wrapper around the field being edited.",
+              "name": "form-control-input"
+            },
+            {
+              "description": "The help text's wrapper.",
+              "name": "form-control-help-text"
+            },
+            {
+              "description": "The select that chooses the language being edited.",
+              "name": "language-select"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The field's label. Alternatively, use the `label` attribute.",
+              "name": "label"
+            },
+            {
+              "description": "Text describing how to fill the field in, shown below it and shared by every language. Alternatively, use the `help-text` attribute.",
+              "name": "help-text"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -50030,7 +50130,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ 'zn-button': ZnButton, 'zn-button-group': ZnButtonGroup, 'zn-dropdown': ZnDropdown, 'zn-inline-edit': ZnInlineEdit, 'zn-input': ZnInput, 'zn-menu': ZnMenu }"
+              "default": "{ 'zn-chip': ZnChip, 'zn-inline-edit': ZnInlineEdit, 'zn-input': ZnInput, 'zn-option': ZnOption, 'zn-select': ZnSelect, 'zn-textarea': ZnTextarea }"
             },
             {
               "kind": "field",
@@ -50047,7 +50147,7 @@
               "name": "hasSlotController",
               "privacy": "private",
               "readonly": true,
-              "default": "new HasSlotController(this, 'label', 'expand', 'help-text')"
+              "default": "new HasSlotController(this, 'label', 'help-text')"
             },
             {
               "kind": "field",
@@ -50056,6 +50156,7 @@
                 "text": "string"
               },
               "default": "''",
+              "description": "The name submitted with the form.",
               "attribute": "name"
             },
             {
@@ -50065,6 +50166,7 @@
                 "text": "string"
               },
               "default": "'{\"en\":\"\"}'",
+              "description": "The translations as a JSON object keyed by language code. The mirror of `values` in attribute form.",
               "attribute": "value"
             },
             {
@@ -50074,6 +50176,7 @@
                 "text": "string"
               },
               "default": "''",
+              "description": "The label shown above the field. If you need HTML, use the `label` slot instead.",
               "attribute": "label"
             },
             {
@@ -50093,6 +50196,7 @@
                 "text": "boolean"
               },
               "default": "false",
+              "description": "Disables editing in every language.",
               "attribute": "disabled",
               "reflects": true
             },
@@ -50103,6 +50207,7 @@
                 "text": "boolean"
               },
               "default": "false",
+              "description": "Marks the label required. Validity is not enforced per language.",
               "attribute": "required",
               "reflects": true
             },
@@ -50113,6 +50218,7 @@
                 "text": "boolean"
               },
               "default": "false",
+              "description": "Removes the component's own padding.",
               "attribute": "flush",
               "reflects": true
             },
@@ -50120,9 +50226,10 @@
               "kind": "field",
               "name": "inputType",
               "type": {
-                "text": "'select' | 'text' | 'number' | 'textarea'"
+                "text": "'text' | 'number' | 'textarea'"
               },
               "default": "'text'",
+              "description": "The control each translation is edited through.",
               "attribute": "input-type"
             },
             {
@@ -50131,7 +50238,19 @@
               "type": {
                 "text": "number | undefined"
               },
+              "description": "Rows of the textarea, when `input-type` is `textarea`.",
               "attribute": "textarea-rows"
+            },
+            {
+              "kind": "field",
+              "name": "inlineEdit",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Edits the translation through a `zn-inline-edit` — the value reads as text until it is clicked — rather than a\nplain input or textarea.",
+              "attribute": "inline-edit",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -50208,7 +50327,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "When true, hides the individual language navbar and defers language control to a parent zn-translation-group.",
+              "description": "Hides this component's own language select and defers the choice to a parent zn-translation-group. The group sets\nthis on its children itself.",
               "attribute": "grouped",
               "reflects": true
             },
@@ -50219,6 +50338,7 @@
                 "text": "Record<string, string>"
               },
               "default": "{ 'en': 'EN' }",
+              "description": "The languages on offer, as language code to display name — `{\"en\": \"English\", \"fr\": \"French\"}`. Writing the code\nas the name (`{\"en\": \"EN\"}`) is also accepted. `en` is the language every other one falls back to.",
               "attribute": "languages"
             },
             {
@@ -50228,6 +50348,7 @@
                 "text": "Record<string, string>"
               },
               "default": "{}",
+              "description": "The translations as an object keyed by language code. The mirror of `value` in property form.",
               "attribute": "values"
             },
             {
@@ -50238,33 +50359,6 @@
               },
               "privacy": "private",
               "default": "'en'"
-            },
-            {
-              "kind": "field",
-              "name": "_overflowIndex",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "-1"
-            },
-            {
-              "kind": "field",
-              "name": "_lastObservedWidth",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0"
-            },
-            {
-              "kind": "field",
-              "name": "_measureRafId",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0"
             },
             {
               "kind": "field",
@@ -50307,7 +50401,7 @@
                   }
                 }
               ],
-              "description": "Sets the active language externally. Used by zn-translation-group."
+              "description": "Sets the active language externally. Used by zn-translation-group. Browsing to a language does not create a key\nfor it — an untouched language stays absent from `values` so it is not submitted as an empty translation."
             },
             {
               "kind": "method",
@@ -50347,6 +50441,63 @@
             },
             {
               "kind": "method",
+              "name": "hasTranslation",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "language",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Whether the language carries a translation of its own, rather than falling back to English."
+            },
+            {
+              "kind": "method",
+              "name": "languageState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "{ type: 'success' | 'error'; label: string }"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "language",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The chip shown against a language, in the select's value and against each of its options."
+            },
+            {
+              "kind": "method",
+              "name": "languageLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "language",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "`English (EN)` — the configured name plus its code, unless the name already is the code, in which case the code\nalone. `languages` is written both ways: `{\"en\": \"English\"}` and `{\"en\": \"EN\"}`."
+            },
+            {
+              "kind": "method",
               "name": "pendingValues",
               "privacy": "private",
               "return": {
@@ -50357,29 +50508,21 @@
               "description": "`values`, falling back to the `value` attribute it is built from while that is still pending. A parent\nzn-translation-group syncs its children from its own first update, which runs before theirs, so reading\n`values` alone would see it empty and overwrite the value the server rendered."
             },
             {
-              "kind": "method",
-              "name": "_scheduleLangOverflow",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_computeLangOverflow",
-              "privacy": "private"
+              "kind": "field",
+              "name": "handleLanguageSelect",
+              "privacy": "private",
+              "description": "The select's own change and input events are stopped here: they describe the language being browsed, not the\ntranslation being edited, and a consumer listening on zn-translations reads either as a value change."
             },
             {
               "kind": "field",
-              "name": "handleLanguageAdd",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleOverflowSelect",
+              "name": "handleLanguageInput",
               "privacy": "private"
             },
             {
               "kind": "field",
               "name": "switchLanguage",
-              "privacy": "private"
+              "privacy": "private",
+              "description": "The language shown in the field, without touching `values`."
             },
             {
               "kind": "field",
@@ -50403,6 +50546,32 @@
             },
             {
               "kind": "method",
+              "name": "renderField",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "placeholder",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "isRTL",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "The control the active language's translation is edited through."
+            },
+            {
+              "kind": "method",
               "name": "isRTLLanguage",
               "privacy": "private",
               "return": {
@@ -50417,7 +50586,18 @@
                     "text": "string"
                   }
                 }
-              ]
+              ],
+              "description": "Arabic and Hebrew read right to left, so the field's `dir` follows the language being edited."
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when a translation's value changes.",
+              "name": "zn-change"
+            },
+            {
+              "description": "Emitted when a translation receives input.",
+              "name": "zn-input"
             }
           ],
           "attributes": [
@@ -50427,6 +50607,7 @@
                 "text": "string"
               },
               "default": "''",
+              "description": "The name submitted with the form.",
               "fieldName": "name"
             },
             {
@@ -50435,6 +50616,7 @@
                 "text": "string"
               },
               "default": "'{\"en\":\"\"}'",
+              "description": "The translations as a JSON object keyed by language code. The mirror of `values` in attribute form.",
               "fieldName": "value"
             },
             {
@@ -50443,6 +50625,7 @@
                 "text": "string"
               },
               "default": "''",
+              "description": "The label shown above the field. If you need HTML, use the `label` slot instead.",
               "fieldName": "label"
             },
             {
@@ -50460,6 +50643,7 @@
                 "text": "boolean"
               },
               "default": "false",
+              "description": "Disables editing in every language.",
               "fieldName": "disabled"
             },
             {
@@ -50468,6 +50652,7 @@
                 "text": "boolean"
               },
               "default": "false",
+              "description": "Marks the label required. Validity is not enforced per language.",
               "fieldName": "required"
             },
             {
@@ -50476,14 +50661,16 @@
                 "text": "boolean"
               },
               "default": "false",
+              "description": "Removes the component's own padding.",
               "fieldName": "flush"
             },
             {
               "name": "input-type",
               "type": {
-                "text": "'select' | 'text' | 'number' | 'textarea'"
+                "text": "'text' | 'number' | 'textarea'"
               },
               "default": "'text'",
+              "description": "The control each translation is edited through.",
               "fieldName": "inputType"
             },
             {
@@ -50491,7 +50678,17 @@
               "type": {
                 "text": "number | undefined"
               },
+              "description": "Rows of the textarea, when `input-type` is `textarea`.",
               "fieldName": "textareaRows"
+            },
+            {
+              "name": "inline-edit",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Edits the translation through a `zn-inline-edit` — the value reads as text until it is clicked — rather than a\nplain input or textarea.",
+              "fieldName": "inlineEdit"
             },
             {
               "name": "slash-items",
@@ -50553,7 +50750,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "When true, hides the individual language navbar and defers language control to a parent zn-translation-group.",
+              "description": "Hides this component's own language select and defers the choice to a parent zn-translation-group. The group sets\nthis on its children itself.",
               "fieldName": "grouped"
             },
             {
@@ -50562,6 +50759,7 @@
                 "text": "Record<string, string>"
               },
               "default": "{ 'en': 'EN' }",
+              "description": "The languages on offer, as language code to display name — `{\"en\": \"English\", \"fr\": \"French\"}`. Writing the code\nas the name (`{\"en\": \"EN\"}`) is also accepted. `en` is the language every other one falls back to.",
               "fieldName": "languages"
             },
             {
@@ -50570,6 +50768,7 @@
                 "text": "Record<string, string>"
               },
               "default": "{}",
+              "description": "The translations as an object keyed by language code. The mirror of `value` in property form.",
               "fieldName": "values"
             }
           ],
@@ -50577,9 +50776,22 @@
             "name": "ZincElement",
             "module": "/src/internal/zinc-element"
           },
+          "summary": "Collects one piece of text in several languages, one language at a time.",
           "tagNameWithoutPrefix": "translations",
           "tagName": "zn-translations",
-          "customElement": true
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Collects one piece of text in several languages, one language at a time.\n * @documentation https://zinc.style/components/translations\n * @status experimental\n * @since 1.0\n *\n * A select above the field chooses the language being edited. Closed, it carries how many languages are translated —\n * `1/5`; open, every language it offers carries a chip saying whether it has a translation of its own or falls back\n * to English. Blank languages fall back to English at render\n * time, so a blank field shows the English text as its placeholder rather than looking empty.\n *\n * The value submitted is a JSON object keyed by language code. A language stays out of it until it is typed into, so\n * browsing the languages does not pad the payload with empty translations.\n *\n * Put several of these in a `zn-translation-group` to have one select drive all of them.\n *\n * @dependency zn-chip\n * @dependency zn-inline-edit\n * @dependency zn-input\n * @dependency zn-option\n * @dependency zn-select\n * @dependency zn-textarea\n *\n * @slot label - The field's label. Alternatively, use the `label` attribute.\n * @slot help-text - Text describing how to fill the field in, shown below it and shared by every language.\n *  Alternatively, use the `help-text` attribute.\n *\n * @event zn-change - Emitted when a translation's value changes.\n * @event zn-input - Emitted when a translation receives input.\n *\n * @csspart form-control - The form control that wraps the label, the language select, the field and the help text.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The wrapper around the field being edited.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart language-select - The select that chooses the language being edited.\n */",
+          "documentation": "https://zinc.style/components/translations",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-chip",
+            "zn-inline-edit",
+            "zn-input",
+            "zn-option",
+            "zn-select",
+            "zn-textarea"
+          ]
         }
       ],
       "exports": [

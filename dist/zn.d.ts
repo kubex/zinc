@@ -2765,6 +2765,8 @@ declare module "components/select/select.component" {
      * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.
      * @slot context-note - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.
      * @slot prefix - Used to prepend a presentational icon or similar element to the combobox.
+     * @slot suffix - Used to append a presentational element — a chip marking the selected option's state, for
+     *   instance — to the combobox, between the value and the clear and expand icons.
      * @slot clear-icon - An icon to use in lieu of the default clear icon.
      * @slot expand-icon - The icon to show when the control is expanded and collapsed. Rotates on open and close.
      * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
@@ -2790,6 +2792,7 @@ declare module "components/select/select.component" {
      * @csspart form-control-help-text - The help text's wrapper.
      * @csspart combobox - The container the wraps the prefix, combobox, clear icon, and expand button.
      * @csspart prefix - The container that wraps the prefix slot.
+     * @csspart suffix - The container that wraps the suffix slot.
      * @csspart display-input - The element that displays the selected option's label, an `<input>` element.
      * @csspart listbox - The listbox container where options are slotted.
      * @csspart tags - The container that houses option tags when `multiselect` is used.
@@ -4805,6 +4808,7 @@ declare module "components/header/header.component" {
      * @slot example - An example slot.
      *
      * @csspart base - The component's base wrapper.
+     * @csspart header-right - The container that wraps the actions slot.
      *
      * @cssproperty --example - An example CSS custom property.
      */
@@ -8958,39 +8962,88 @@ declare module "components/audio-select/index" {
 declare module "components/translations/translations.component" {
     import { type SlashMenuItem } from "components/slash-menu/index";
     import ZincElement from "internal/zinc-element";
-    import ZnButton from "components/button/index";
-    import ZnButtonGroup from "components/button-group/index";
-    import ZnDropdown from "components/dropdown/index";
+    import ZnChip from "components/chip/index";
     import ZnInlineEdit from "components/inline-edit/index";
     import ZnInput from "components/input/index";
-    import ZnMenu from "components/menu/index";
+    import ZnOption from "components/option/index";
+    import ZnSelect from "components/select/index";
+    import ZnTextarea from "components/textarea/index";
     import type { PropertyValues } from 'lit';
     import type { ZincFormControl } from "internal/zinc-element";
+    /**
+     * @summary Collects one piece of text in several languages, one language at a time.
+     * @documentation https://zinc.style/components/translations
+     * @status experimental
+     * @since 1.0
+     *
+     * A select above the field chooses the language being edited. Closed, it carries how many languages are translated —
+     * `1/5`; open, every language it offers carries a chip saying whether it has a translation of its own or falls back
+     * to English. Blank languages fall back to English at render
+     * time, so a blank field shows the English text as its placeholder rather than looking empty.
+     *
+     * The value submitted is a JSON object keyed by language code. A language stays out of it until it is typed into, so
+     * browsing the languages does not pad the payload with empty translations.
+     *
+     * Put several of these in a `zn-translation-group` to have one select drive all of them.
+     *
+     * @dependency zn-chip
+     * @dependency zn-inline-edit
+     * @dependency zn-input
+     * @dependency zn-option
+     * @dependency zn-select
+     * @dependency zn-textarea
+     *
+     * @slot label - The field's label. Alternatively, use the `label` attribute.
+     * @slot help-text - Text describing how to fill the field in, shown below it and shared by every language.
+     *  Alternatively, use the `help-text` attribute.
+     *
+     * @event zn-change - Emitted when a translation's value changes.
+     * @event zn-input - Emitted when a translation receives input.
+     *
+     * @csspart form-control - The form control that wraps the label, the language select, the field and the help text.
+     * @csspart form-control-label - The label's wrapper.
+     * @csspart form-control-input - The wrapper around the field being edited.
+     * @csspart form-control-help-text - The help text's wrapper.
+     * @csspart language-select - The select that chooses the language being edited.
+     */
     export default class ZnTranslations extends ZincElement implements ZincFormControl {
         static styles: import("lit").CSSResult[];
         static dependencies: {
-            'zn-button': typeof ZnButton;
-            'zn-button-group': typeof ZnButtonGroup;
-            'zn-dropdown': typeof ZnDropdown;
+            'zn-chip': typeof ZnChip;
             'zn-inline-edit': typeof ZnInlineEdit;
             'zn-input': typeof ZnInput;
-            'zn-menu': typeof ZnMenu;
+            'zn-option': typeof ZnOption;
+            'zn-select': typeof ZnSelect;
+            'zn-textarea': typeof ZnTextarea;
         };
         private readonly formControlController;
         private readonly hasSlotController;
+        /** The name submitted with the form. */
         name: string;
+        /** The translations as a JSON object keyed by language code. The mirror of `values` in attribute form. */
         value: string;
+        /** The label shown above the field. If you need HTML, use the `label` slot instead. */
         label: string;
         /**
          * Text shown below the field, describing how to fill it in. Applies to every language. If you need HTML, use the
          * `help-text` slot instead.
          */
         helpText: string;
+        /** Disables editing in every language. */
         disabled: boolean;
+        /** Marks the label required. Validity is not enforced per language. */
         required: boolean;
+        /** Removes the component's own padding. */
         flush: boolean;
-        inputType: 'select' | 'text' | 'number' | 'textarea';
+        /** The control each translation is edited through. */
+        inputType: 'text' | 'number' | 'textarea';
+        /** Rows of the textarea, when `input-type` is `textarea`. */
         textareaRows: number | undefined;
+        /**
+         * Edits the translation through a `zn-inline-edit` — the value reads as text until it is clicked — rather than a
+         * plain input or textarea.
+         */
+        inlineEdit: boolean;
         /**
          * Quick insertions offered by the slash menu on `text` and `textarea` inputs. Accepts a JSON array of items, or
          * the shorthand `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Every language shares the list.
@@ -9008,22 +9061,29 @@ declare module "components/translations/translations.component" {
         slashRecentKey: string;
         /** Resolves additional slash menu items each time the menu opens. JavaScript only. */
         slashItemsProvider?: (query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]>;
-        /** When true, hides the individual language navbar and defers language control to a parent zn-translation-group. */
+        /**
+         * Hides this component's own language select and defers the choice to a parent zn-translation-group. The group sets
+         * this on its children itself.
+         */
         grouped: boolean;
+        /**
+         * The languages on offer, as language code to display name — `{"en": "English", "fr": "French"}`. Writing the code
+         * as the name (`{"en": "EN"}`) is also accepted. `en` is the language every other one falls back to.
+         */
         languages: Record<string, string>;
+        /** The translations as an object keyed by language code. The mirror of `value` in property form. */
         values: Record<string, string>;
         private _activeLanguage;
-        private _overflowIndex;
-        private _lastObservedWidth;
-        private _measureRafId;
-        constructor();
         get validity(): ValidityState;
         get validationMessage(): string;
         checkValidity(): boolean;
         getForm(): HTMLFormElement | null;
         reportValidity(): boolean;
         setCustomValidity(): void;
-        /** Sets the active language externally. Used by zn-translation-group. */
+        /**
+         * Sets the active language externally. Used by zn-translation-group. Browsing to a language does not create a key
+         * for it — an untouched language stays absent from `values` so it is not submitted as an empty translation.
+         */
         setActiveLanguage(language: string): void;
         /** Returns the currently active language. */
         getActiveLanguage(): string;
@@ -9031,25 +9091,38 @@ declare module "components/translations/translations.component" {
         addLanguageKey(languageCode: string): void;
         /** Returns all language codes that have values. */
         getValueLanguages(): string[];
+        /** Whether the language carries a translation of its own, rather than falling back to English. */
+        hasTranslation(language: string): boolean;
+        /** The chip shown against a language, in the select's value and against each of its options. */
+        private languageState;
+        /**
+         * `English (EN)` — the configured name plus its code, unless the name already is the code, in which case the code
+         * alone. `languages` is written both ways: `{"en": "English"}` and `{"en": "EN"}`.
+         */
+        private languageLabel;
         /**
          * `values`, falling back to the `value` attribute it is built from while that is still pending. A parent
          * zn-translation-group syncs its children from its own first update, which runs before theirs, so reading
          * `values` alone would see it empty and overwrite the value the server rendered.
          */
         private pendingValues;
-        disconnectedCallback(): void;
         protected firstUpdated(): void;
-        protected updated(changedProperties: PropertyValues): void;
-        private _scheduleLangOverflow;
-        private _computeLangOverflow;
         willUpdate(changedProperties: PropertyValues): void;
-        private handleLanguageAdd;
-        private handleOverflowSelect;
+        /**
+         * The select's own change and input events are stopped here: they describe the language being browsed, not the
+         * translation being edited, and a consumer listening on zn-translations reads either as a value change.
+         */
+        private handleLanguageSelect;
+        private handleLanguageInput;
+        /** The language shown in the field, without touching `values`. */
         private switchLanguage;
         private handleValueUpdate;
         private updateValue;
         private handleKeyDown;
         private handleSubmit;
+        /** The control the active language's translation is edited through. */
+        private renderField;
+        /** Arabic and Hebrew read right to left, so the field's `dir` follows the language being edited. */
         private isRTLLanguage;
         render(): import("lit-html").TemplateResult<1>;
     }
@@ -9198,61 +9271,112 @@ declare module "components/animated-button/index" {
 }
 declare module "components/translation-group/translation-group.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZnButton from "components/button/index";
-    import ZnButtonGroup from "components/button-group/index";
-    import ZnDropdown from "components/dropdown/index";
+    import ZnChip from "components/chip/index";
     import ZnHeader from "components/header/index";
-    import ZnMenu from "components/menu/index";
+    import ZnOption from "components/option/index";
     import ZnPanel from "components/panel/panel.component";
+    import ZnSelect from "components/select/index";
     /**
-     * @summary A panel-styled container that provides a shared language toggle for multiple zn-translations children.
+     * @summary Puts several zn-translations fields behind one language select, so a whole form's worth of copy is
+     *  translated a language at a time.
+     * @documentation https://zinc.style/components/translation-group
+     * @status experimental
+     * @since 1.0
      *
-     * @dependency zn-button
-     * @dependency zn-button-group
-     * @dependency zn-dropdown
-     * @dependency zn-menu
+     * The select sits at the top right of the header, opposite the caption. Choosing a language switches every child at
+     * once, and each child hides its own select while it is in a group — `grouped` is set on them here.
+     *
+     * Closed, the select carries how many target languages are done — `1/5`. Its options each carry a chip aggregated
+     * across the children:
+     *
+     * - `Translated` — every child has a value for it
+     * - `Partial` — only some children do
+     * - `English` — none do, so all of them fall back to the English text
+     *
+     * `Empty` replaces the last of those for English itself, which has nothing to fall back to. English is the source
+     * rather than a translation, so it is also left out of the `n of m translated` count beside the label.
+     *
+     * The children own their values; this component only chooses which language is shown and reports on what they hold.
+     * It reads them back on every child `zn-change`, so the chips and the count follow an edit as it is typed.
+     *
+     * Extends `zn-panel`, so `caption`, `icon`, `flush`, `transparent` and the `footer` slot behave as they do there.
+     * Nested inside another panel, add `inline` to drop the chrome and keep the fields aligned with the surrounding form.
+     *
+     * @dependency zn-chip
+     * @dependency zn-header
+     * @dependency zn-option
+     * @dependency zn-select
      *
      * @event zn-language-change - Emitted when the active language changes. Detail: `{ language: string }`.
      *
-     * @slot - Default slot for `<zn-translations>` elements.
-     * @slot actions - Actions displayed in the panel header alongside language buttons.
+     * @slot - The `zn-translations` fields the select drives.
+     * @slot actions - Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on
+     *  the right, as zinc's form action rows do; `align="start"` moves one to the left. Write them in the order they
+     *  should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.
+     * @slot footer - Content displayed in the grey panel footer. The header belongs to the language select; nothing
+     *  else is slotted into it.
      *
      * @csspart base - The component's base wrapper.
+     * @csspart actions - The row of buttons at the bottom of the body.
+     * @csspart language-field - The label and select that choose the language every child is editing.
+     * @csspart language-select - The select itself.
      */
     export default class ZnTranslationGroup extends ZnPanel {
         static styles: CSSResultGroup;
         static dependencies: {
-            'zn-button': typeof ZnButton;
-            'zn-button-group': typeof ZnButtonGroup;
-            'zn-dropdown': typeof ZnDropdown;
+            'zn-chip': typeof ZnChip;
             'zn-header': typeof ZnHeader;
-            'zn-menu': typeof ZnMenu;
+            'zn-option': typeof ZnOption;
+            'zn-select': typeof ZnSelect;
         };
         private readonly _slotController;
-        /** The group label displayed in the panel header. */
+        /** The caption shown in the panel header. An alias for the inherited `caption`, which wins where both are set. */
         label: string;
-        /** The available languages for the group. */
+        /**
+         * Drops the panel chrome — border, background and padding — so the group reads as a section of the form around it
+         * rather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit
+         * indented behind a second border.
+         */
+        inline: boolean;
+        /**
+         * The select's accessible name. Not shown — the caption is what names the section on screen — but read out by a
+         * screen reader, which has nothing else to go on once the visible label is gone.
+         */
+        languageLabel: string;
+        /**
+         * The languages on offer, as language code to display name — `{"en": "English", "fr": "French"}`. Writing the code
+         * as the name (`{"en": "EN"}`) is also accepted. `en` is the language every other one falls back to. Set on every
+         * child, so they do not need their own copy.
+         */
         languages: Record<string, string>;
+        /** The language every child is currently editing. */
         private _activeLanguage;
-        /** Tracks all language codes that have been activated across children. */
-        private _activatedLanguages;
-        private _overflowIndex;
-        private _lastObservedWidth;
-        private _measureRafId;
-        constructor();
-        disconnectedCallback(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         protected updated(changedProperties: PropertyValues): void;
-        private _scheduleLangOverflow;
-        private _computeLangOverflow;
+        /** The children the select drives. Read live rather than cached, so markup added later is picked up. */
         private getAllTranslations;
         /** Sync grouped state, languages, and active language to all children. */
         private syncChildren;
+        /**
+         * A language is translated once every child carries a value for it, partial while only some do. The chips and the
+         * count are read off the children, so a child's edit has to bring the group back round.
+         */
+        private languageState;
+        /** `English (EN)`, or the code alone where the configured name already is the code. */
+        private displayName;
+        /** Children take their language list from the group, so a change to `languages` has to reach them. */
         private syncChildLanguages;
         private handleSlotChange;
+        /** Moves every child onto `lang` and announces it. Does not touch their values. */
         private switchLanguage;
-        private handleLanguageAdd;
-        private handleOverflowSelect;
+        /**
+         * The select's own change and input events describe the language being browsed, not a translation being edited, so
+         * they are stopped rather than allowed to reach a consumer listening for a child's value change.
+         */
+        private handleLanguageSelect;
+        private handleLanguageInput;
+        /** A child's edit changes which chips the select shows, and the translated count above it. */
+        private handleChildChange;
         render(): import("lit-html").TemplateResult<1>;
     }
 }

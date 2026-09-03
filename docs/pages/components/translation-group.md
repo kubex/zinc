@@ -143,6 +143,26 @@ them. `inline` drops the chrome so the group reads as a section of the form inst
 </zn-panel>
 ```
 
+### Actions
+
+Buttons for the bottom of the group go in the `actions` slot. They sit on the white body rather than the grey
+`footer`, and follow zinc's form action rows in sitting on the right. `align="start"` moves one to the left; any
+number can sit on either side. Write them in the order they should be read — the sides are set by CSS ordering, so
+markup order is what a keyboard follows.
+
+```html:preview
+<zn-translation-group
+  label="Product Content"
+  languages='{"en":"English","fr":"French","de":"German"}'>
+  <zn-translations label="Name" name="name" values='{"en":"Wireless Headphones","de":"Kabellose Kopfhörer"}'></zn-translations>
+  <zn-translations label="Description" name="description" values='{"en":"Premium noise-cancelling headphones"}'></zn-translations>
+
+  <zn-button slot="actions" align="start" color="transparent" icon="translate">Auto-translate</zn-button>
+  <zn-button slot="actions" color="secondary">Cancel</zn-button>
+  <zn-button slot="actions" color="success">Save</zn-button>
+</zn-translation-group>
+```
+
 ### Flush Layout
 
 Remove body padding for a more compact appearance using the `flush` attribute.
@@ -207,9 +227,10 @@ The group emits a `zn-language-change` event when the active language changes.
 |-----------|------------------------------------------------------------|
 | (default) | Place `<zn-translations>` elements here                    |
 | `label`   | Alternative to the `label` attribute for rich HTML content |
-| `footer`  | Content displayed in the panel footer                     |
+| `actions` | Buttons for the bottom of the body; `align="start"` on a child moves it to the left |
+| `footer`  | Content displayed in the grey panel footer                |
 
-There is no `actions` slot: the header carries the caption alone.
+The header carries the caption and the language select alone; nothing else is slotted into it.
 
 ## CSS Parts
 
@@ -219,4 +240,5 @@ There is no `actions` slot: the header carries the caption alone.
 | `header`          | The header area containing the caption and the language select  |
 | `language-field`  | The container holding the language select                       |
 | `language-select` | The select itself                                               |
+| `actions`         | The row of buttons at the bottom of the body                    |
 | `translations`    | The body container wrapping the slotted children                |

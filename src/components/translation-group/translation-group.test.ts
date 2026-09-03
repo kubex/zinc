@@ -22,6 +22,64 @@ describe('<zn-translation-group>', () => {
     expect(input.value).to.equal('Chat to us');
   });
 
+  describe('actions', () => {
+    async function actionsFixture() {
+      const group = await fixture<ZnTranslationGroup>(html`
+        <zn-translation-group label="Content" .languages=${{en: 'English', fr: 'French'}}>
+          <zn-translations name="heading"></zn-translations>
+          <zn-button slot="actions" align="start" id="left">Auto translate</zn-button>
+          <zn-button slot="actions" id="cancel">Cancel</zn-button>
+          <zn-button slot="actions" id="save">Save</zn-button>
+        </zn-translation-group>`);
+      group.style.setProperty('--zn-spacing-small', '16px');
+      await group.updateComplete;
+      return group;
+    }
+
+    it('is not rendered when nothing is slotted into it', async () => {
+      const group = await fixture<ZnTranslationGroup>(html`
+        <zn-translation-group label="Content" .languages=${{en: 'English', fr: 'French'}}>
+          <zn-translations name="heading"></zn-translations>
+        </zn-translation-group>`);
+      await group.updateComplete;
+
+      expect(group.shadowRoot!.querySelector('.translation-group__actions')).to.be.null;
+    });
+
+    it('sits at the bottom of the body, not in the footer', async () => {
+      const group = await actionsFixture();
+
+      const actions = group.shadowRoot!.querySelector<HTMLElement>('.translation-group__actions')!;
+      expect(actions.closest('.panel__body'), 'on the white body').to.exist;
+      expect(actions.closest('.panel__footer')).to.be.null;
+
+      const body = [...group.shadowRoot!.querySelectorAll('.panel__body > *')];
+      expect(body.indexOf(actions), 'last thing in the body').to.equal(body.length - 1);
+    });
+
+    it('holds align="start" children left and the rest right, in one group each', async () => {
+      const group = await actionsFixture();
+
+      const left = group.querySelector<HTMLElement>('#left')!.getBoundingClientRect();
+      const cancel = group.querySelector<HTMLElement>('#cancel')!.getBoundingClientRect();
+      const save = group.querySelector<HTMLElement>('#save')!.getBoundingClientRect();
+      const row = group.shadowRoot!.querySelector<HTMLElement>('.translation-group__actions')!
+        .getBoundingClientRect();
+
+      expect(left.left).to.be.closeTo(row.left, 1);
+      expect(save.right).to.be.closeTo(row.right, 1);
+      // The right-hand pair stays together rather than spreading across the free space.
+      expect(cancel.right).to.be.closeTo(save.left - 16, 1);
+    });
+
+    it('takes no border from the panel between the fields and the buttons', async () => {
+      const group = await actionsFixture();
+
+      const actions = group.shadowRoot!.querySelector<HTMLElement>('.translation-group__actions')!;
+      expect(getComputedStyle(actions).borderTopWidth).to.equal('0px');
+    });
+  });
+
   describe('inline', () => {
     it('keeps the panel chrome by default', async () => {
       const group = await fixture<ZnTranslationGroup>(html`
@@ -187,7 +245,7 @@ describe('<zn-translation-group>', () => {
       expect(selectOf(group)).to.exist;
     });
 
-    it('takes no slotted actions of its own', async () => {
+    it('keeps the header to itself, with slotted actions going to the bottom', async () => {
       const group = await fixture<ZnTranslationGroup>(html`
         <zn-translation-group label="Content" .languages=${{en: 'English', fr: 'French'}}>
           <zn-button slot="actions">Auto translate</zn-button>
@@ -195,7 +253,9 @@ describe('<zn-translation-group>', () => {
         </zn-translation-group>`);
       await group.updateComplete;
 
-      expect(group.shadowRoot!.querySelector('slot[name="actions"]')).to.be.null;
+      const actionsSlot = group.shadowRoot!.querySelector('slot[name="actions"]')!;
+      expect(actionsSlot.closest('zn-header'), 'the header takes no actions').to.be.null;
+      expect(actionsSlot.closest('.panel__body'), 'they go to the body').to.exist;
     });
 
     function chipsOf(group: ZnTranslationGroup) {

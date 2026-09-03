@@ -46,10 +46,14 @@ import styles from './translation-group.scss';
  * @event zn-language-change - Emitted when the active language changes. Detail: `{ language: string }`.
  *
  * @slot - The `zn-translations` fields the select drives.
- * @slot footer - Content displayed in the panel footer — an auto-translate button, typically. The header belongs to
- *  the language select; nothing else is slotted into it.
+ * @slot actions - Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on
+ *  the right, as zinc's form action rows do; `align="start"` moves one to the left. Write them in the order they
+ *  should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.
+ * @slot footer - Content displayed in the grey panel footer. The header belongs to the language select; nothing
+ *  else is slotted into it.
  *
  * @csspart base - The component's base wrapper.
+ * @csspart actions - The row of buttons at the bottom of the body.
  * @csspart language-field - The label and select that choose the language every child is editing.
  * @csspart language-select - The select itself.
  */
@@ -62,7 +66,7 @@ export default class ZnTranslationGroup extends ZnPanel {
     'zn-select': ZnSelect
   };
 
-  private readonly _slotController = new HasSlotController(this, 'footer');
+  private readonly _slotController = new HasSlotController(this, 'actions', 'footer');
 
   /** The caption shown in the panel header. An alias for the inherited `caption`, which wins where both are set. */
   @property() label = '';
@@ -178,6 +182,7 @@ export default class ZnTranslationGroup extends ZnPanel {
   };
 
   render() {
+    const hasActionsSlot = this._slotController.test('actions');
     const hasFooterSlot = this._slotController.test('footer');
     const headerCaption = this.caption || this.label;
 
@@ -208,6 +213,7 @@ export default class ZnTranslationGroup extends ZnPanel {
         'panel--transparent': this.transparent || this.inline,
         'translation-group--inline': this.inline,
         'panel--has-header': hasHeader,
+        'panel--has-actions': hasActionsSlot,
         'panel--has-footer': hasFooterSlot,
       })}">
 
@@ -244,6 +250,13 @@ export default class ZnTranslationGroup extends ZnPanel {
               <slot
                 @slotchange="${this.handleSlotChange}"
                 @zn-change="${this.handleChildChange}"></slot>
+
+              ${hasActionsSlot ? html`
+                <div class="translation-group__actions" part="actions">
+                  <slot name="actions"></slot>
+                  <span class="translation-group__actions-spacer"></span>
+                </div>` : nothing}
+
             </div>
           </div>
 

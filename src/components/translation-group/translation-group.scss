@@ -92,6 +92,34 @@
   border: 0;
 }
 
+// Matches zinc's form action rows (.form-actions, zn-form-actions): right-aligned, 16px apart.
+.translation-group__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-small);
+}
+
+// The spacer, not an auto margin, is what splits the two sides: an auto margin on every right-hand button would open
+// a gap between each of them, where one flexing element in the middle holds any number on either side together.
+.translation-group__actions-spacer {
+  order: 1;
+  flex: 1 1 auto;
+}
+
+::slotted([slot="actions"]) {
+  order: 2;
+}
+
+::slotted([slot="actions"][align="start"]) {
+  order: 0;
+}
+
+// The panel draws a border between any two body children, and the actions row is the first real element to follow
+// the fields' slot. Matched on .panel--has-actions to out-specify that rule.
+.panel--has-actions .panel__body > .translation-group__actions {
+  border: 0;
+}
+
 // The panel clips its content to its rounded corners, and the body scrolls. Neither applies with the chrome gone, and
 // both would cut the focus ring off a field now that no padding stands between it and the body's edge.
 .translation-group--inline {

@@ -96,6 +96,20 @@ export default class ZnTranslationGroup extends ZnPanel {
   /** The language every child is currently editing. */
   @state() private _activeLanguage = 'en';
 
+  private _form: HTMLFormElement | null = null;
+
+  connectedCallback() {
+    super.connectedCallback();
+    this._form = this.closest('form');
+    this._form?.addEventListener('reset', this.handleFormReset);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._form?.removeEventListener('reset', this.handleFormReset);
+    this._form = null;
+  }
+
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
     this.syncChildren();
@@ -179,6 +193,14 @@ export default class ZnTranslationGroup extends ZnPanel {
   /** A child's edit changes which chips the select shows, and the translated count above it. */
   private handleChildChange = () => {
     this.requestUpdate();
+  };
+
+  /**
+   * The children restore their own values on the form's reset event without announcing it, and the chips and the
+   * count are read off them — so re-read once every listener on that event has run.
+   */
+  private handleFormReset = () => {
+    requestAnimationFrame(() => this.requestUpdate());
   };
 
   render() {

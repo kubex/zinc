@@ -1,4 +1,5 @@
 import {classMap} from 'lit/directives/class-map.js';
+import {defaultValue} from '../../internal/default-value';
 import {FormControlController, validValidityState} from '../../internal/form';
 import {HasSlotController} from '../../internal/slot';
 import {html, nothing, unsafeCSS} from 'lit';
@@ -154,6 +155,9 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   /** The translations as an object keyed by language code. The mirror of `value` in property form. */
   @property({type: Object}) values: Record<string, string> = {};
 
+  /** The serialized translations a form reset restores. Taken from the `value` attribute where there is one. */
+  @defaultValue() defaultValue = '{"en":""}';
+
   @state() private _activeLanguage = 'en';
 
   get validity(): ValidityState {
@@ -244,6 +248,11 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   }
 
   protected firstUpdated() {
+    // The decorator only follows the `value` attribute; a component given its translations through `values`, or
+    // through either property, would otherwise reset to an empty English translation.
+    if (!this.hasAttribute('value')) {
+      this.defaultValue = this.value;
+    }
     this.formControlController.updateValidity();
   }
 

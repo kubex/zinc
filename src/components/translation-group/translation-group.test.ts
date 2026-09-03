@@ -358,4 +358,34 @@ describe('<zn-translation-group>', () => {
       expect(changes).to.equal(0);
     });
   });
+
+  describe('form reset', () => {
+    it('re-reads the children once the form has restored them', async () => {
+      const form = await fixture<HTMLFormElement>(html`
+        <form>
+          <zn-translation-group .languages=${{en: 'English', fr: 'French'}}>
+            <zn-translations name="a" value='{"en":"Hello","fr":"Bonjour"}'></zn-translations>
+          </zn-translation-group>
+        </form>`);
+      const group = form.querySelector<ZnTranslationGroup>('zn-translation-group')!;
+      const child = group.querySelector<ZnTranslations>('zn-translations')!;
+      await child.updateComplete;
+      group.requestUpdate();
+      await group.updateComplete;
+
+      child.values = {en: 'Hello', fr: ''};
+      child.dispatchEvent(new CustomEvent('zn-change', {bubbles: true, composed: true}));
+      await group.updateComplete;
+
+      const summary = () => group.shadowRoot!.querySelector('zn-select zn-chip[slot="suffix"]')!.textContent?.trim();
+      expect(summary()).to.equal('0/1');
+
+      form.reset();
+      await new Promise(resolve => requestAnimationFrame(() => resolve(null)));
+      await group.updateComplete;
+
+      expect(child.values).to.deep.equal({en: 'Hello', fr: 'Bonjour'});
+      expect(summary()).to.equal('1/1');
+    });
+  });
 });

@@ -248,6 +248,62 @@ describe('<zn-translations>', () => {
     });
   });
 
+  describe('form reset', () => {
+    it('restores the value the attribute rendered', async () => {
+      const form = await fixture<HTMLFormElement>(html`
+        <form>
+          <zn-translations name="heading" value='{"en":"Chat to us","fr":"Parlez-nous"}'></zn-translations>
+        </form>`);
+      const el = form.querySelector<ZnTranslations>('zn-translations')!;
+      await el.updateComplete;
+
+      el.values = {en: 'Edited', fr: ''};
+      await el.updateComplete;
+
+      form.reset();
+      await el.updateComplete;
+
+      expect(el.values).to.deep.equal({en: 'Chat to us', fr: 'Parlez-nous'});
+      expect(el.shadowRoot!.querySelector<ZnInput>('zn-input')!.value).to.equal('Chat to us');
+    });
+
+    it('restores translations given through the values attribute', async () => {
+      const form = await fixture<HTMLFormElement>(html`
+        <form>
+          <zn-translations name="heading" values='{"en":"Chat to us"}'></zn-translations>
+        </form>`);
+      const el = form.querySelector<ZnTranslations>('zn-translations')!;
+      await el.updateComplete;
+
+      el.values = {en: ''};
+      await el.updateComplete;
+
+      form.reset();
+      await el.updateComplete;
+
+      expect(el.values).to.deep.equal({en: 'Chat to us'});
+    });
+
+    it('follows the value attribute when the form is re-rendered around it', async () => {
+      const form = await fixture<HTMLFormElement>(html`
+        <form>
+          <zn-translations name="heading" value='{"en":"Chat to us"}'></zn-translations>
+        </form>`);
+      const el = form.querySelector<ZnTranslations>('zn-translations')!;
+      await el.updateComplete;
+
+      el.setAttribute('value', '{"en":"Talk to us"}');
+      await el.updateComplete;
+      el.values = {en: 'Edited'};
+      await el.updateComplete;
+
+      form.reset();
+      await el.updateComplete;
+
+      expect(el.values).to.deep.equal({en: 'Talk to us'});
+    });
+  });
+
   describe('slash menu', () => {
     async function textareaOf(el: ZnTranslations) {
       await el.updateComplete;

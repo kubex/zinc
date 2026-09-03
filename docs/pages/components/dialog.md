@@ -9,7 +9,8 @@ layout: component
 
 ### Basic Dialog
 
-This is a basic dialog. It has a trigger button that opens the dialog. The dialog has a close button and two buttons in the footer.
+This is a basic dialog. It has a trigger button that opens the dialog. The dialog has a close button and two buttons in
+the footer.
 
 ```html:preview
 <zn-button id="dialog-trigger">Open Basic dialog</zn-button>
@@ -21,9 +22,22 @@ This is a basic dialog. It has a trigger button that opens the dialog. The dialo
 </zn-dialog>
 ```
 
+## test
+
+```html:preview
+<zn-button id="dialog-trigger">Open Basic dialog</zn-button>
+<zn-dialog class="dialog-basic" trigger="dialog-trigger" label="Verify longdomainwhitlotsofcharacters.somethignsomewhere.dev">
+  This is the dialog's body.
+
+  <zn-button color="default" slot="footer">Do Something</zn-button>
+  <zn-button color="secondary" slot="footer" dialog-closer>Close Dialog</zn-button>
+</zn-dialog>
+```
+
 ### Labels
 
-The dialog's label is displayed in the header and is required for proper accessibility. Use the `label` attribute to set the label text.
+The dialog's label is displayed in the header and is required for proper accessibility. Use the `label` attribute to set
+the label text.
 
 ```html:preview
 <zn-button id="dialog-label-trigger">Open Dialog</zn-button>
@@ -48,9 +62,11 @@ For HTML content in the label, use the `label` slot instead.
 
 ### Dialog Variants
 
-Dialogs come in three variants: `default`, `warning`, and `announcement`. Set the `variant` attribute to apply the appropriate theme.
+Dialogs come in three variants: `default`, `warning`, and `announcement`. Set the `variant` attribute to apply the
+appropriate theme.
 
-Use the `header-icon` slot to display an icon to the left of the dialog header label. The icon color is automatically styled based on the dialog variant.
+Use the `header-icon` slot to display an icon to the left of the dialog header label. The icon color is automatically
+styled based on the dialog variant.
 
 #### Default Variant
 
@@ -84,7 +100,8 @@ Use the warning variant for confirmation of destructive actions like deleting or
 
 #### Announcement Variant
 
-Use the announcement variant for special announcements, feature introductions, or welcome messages. This variant supports additional slots for intro text and footer text.
+Use the announcement variant for special announcements, feature introductions, or welcome messages. This variant
+supports additional slots for intro text and footer text.
 
 ```html:preview
 <zn-button id="dialog-announcement-trigger">Open Announcement</zn-button>
@@ -101,7 +118,8 @@ Use the announcement variant for special announcements, feature introductions, o
 
 ### Dialog Sizes
 
-Dialogs come in three different sizes: `small`, `medium`, and `large`. The default size is `medium`. Use the `size` attribute to control the dialog width.
+Dialogs come in three different sizes: `small`, `medium`, and `large`. The default size is `medium`. Use the `size`
+attribute to control the dialog width.
 
 ```html:preview
 <zn-button id="dialog-small-trigger">Open Small Dialog</zn-button>
@@ -134,7 +152,8 @@ Dialogs come in three different sizes: `small`, `medium`, and `large`. The defau
 
 ### Custom Width
 
-You can set a custom dialog width using the `--width` CSS custom property. Note that the dialog will automatically shrink to accommodate smaller screens.
+You can set a custom dialog width using the `--width` CSS custom property. Note that the dialog will automatically
+shrink to accommodate smaller screens.
 
 ```html:preview
 <zn-button id="dialog-custom-width-trigger">Open Custom Width Dialog</zn-button>
@@ -148,7 +167,8 @@ You can set a custom dialog width using the `--width` CSS custom property. Note 
 
 ### Scrolling Content
 
-When the dialog content is longer than the viewport, the body area automatically becomes scrollable while keeping the header and footer fixed.
+When the dialog content is longer than the viewport, the body area automatically becomes scrollable while keeping the
+header and footer fixed.
 
 ```html:preview
 <zn-button id="dialog-scrolling-trigger">Open Scrolling Dialog</zn-button>
@@ -171,10 +191,12 @@ When the dialog content is longer than the viewport, the body area automatically
 
 ### No Header
 
-Use the `no-header` attribute to hide the header, including the default close button. When using this option, ensure you provide an accessible way for users to close the dialog.
+Use the `no-header` attribute to hide the header, including the default close button. When using this option, ensure you
+provide an accessible way for users to close the dialog.
 
 :::warning
-**Note:** Even when using `no-header`, you should still provide a `label` attribute for proper accessibility. The label is used for screen readers even when visually hidden.
+**Note:** Even when using `no-header`, you should still provide a `label` attribute for proper accessibility. The label
+is used for screen readers even when visually hidden.
 :::
 
 ```html:preview
@@ -251,7 +273,8 @@ Use dialogs as forms when you need to collect information from users. This examp
 
 ### Programmatic Control
 
-Dialogs can be controlled programmatically using the `show()` and `hide()` methods. You can also check or set the `open` property to manage the dialog state.
+Dialogs can be controlled programmatically using the `show()` and `hide()` methods. You can also check or set the `open`
+property to manage the dialog state.
 
 ```html:preview
 <div>
@@ -287,7 +310,8 @@ Dialogs can be controlled programmatically using the `show()` and `hide()` metho
 
 ### Listening to Events
 
-The dialog emits several events that you can listen to: `zn-show` when opened, `zn-close` when closed, and `zn-request-close` when a close is requested.
+The dialog emits several events that you can listen to: `zn-show` when opened, `zn-close` when closed, and
+`zn-request-close` when a close is requested.
 
 ```html:preview
 <zn-button id="dialog-events-trigger">Open Dialog</zn-button>
@@ -317,10 +341,12 @@ The dialog emits several events that you can listen to: `zn-show` when opened, `
 
 ### Preventing Close
 
-The `zn-request-close` event can be cancelled to prevent the dialog from closing. This is useful when you need to validate data or confirm an action before allowing the dialog to close.
+The `zn-request-close` event can be cancelled to prevent the dialog from closing. This is useful when you need to
+validate data or confirm an action before allowing the dialog to close.
 
 :::warning
-**Note:** Use this feature sparingly and only when closing the dialog would result in destructive behavior such as data loss. Preventing close can be frustrating for users if overused.
+**Note:** Use this feature sparingly and only when closing the dialog would result in destructive behavior such as data
+loss. Preventing close can be frustrating for users if overused.
 :::
 
 ```html:preview
@@ -376,9 +402,12 @@ You can also prevent close from specific sources by checking the `event.detail.s
 
 ### Dialog Closer Attribute
 
-Add the `dialog-closer` attribute to any element inside the dialog to make it close the dialog when clicked. This is commonly used with buttons in the footer.
+Add the `dialog-closer` attribute to any element inside the dialog to make it close the dialog when clicked. This is
+commonly used with buttons in the footer.
 
-The `modal-closer` attribute works the same way but closes the nearest containing modal of either kind — dialog or slideout — and, unlike `dialog-closer`, works from inside a nested component's shadow root. `<zn-form-actions>` uses it on its cancel button.
+The `modal-closer` attribute works the same way but closes the nearest containing modal of either kind — dialog or
+slideout — and, unlike `dialog-closer`, works from inside a nested component's shadow root. `<zn-form-actions>` uses it
+on its cancel button.
 
 ```html:preview
 <zn-button id="dialog-closer-trigger">Open Dialog</zn-button>

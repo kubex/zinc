@@ -235,7 +235,8 @@ export default class ZnDialog extends ZincElement {
               <h2 part="title" class="dialog__title" id="title">
                 <slot name="header-icon"></slot>
                 <slot name="announcement-intro"></slot>
-                <slot name="label"> ${this.label && this.label.length > 0 ? this.label : String.fromCharCode(65279)}
+                <slot name="label" class="dialog__label">
+                  ${this.label && this.label.length > 0 ? this.label : String.fromCharCode(65279)}
                 </slot>
               </h2>
               <div part="header-actions" class="dialog__header-actions">

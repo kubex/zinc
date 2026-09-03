@@ -42,11 +42,41 @@
   align-items: center;
 }
 
-// Wide enough that a language name, its chip and the chevron all fit — the listbox syncs its width to this, so a
-// narrow control would truncate the options as well as the value.
+// The trigger shows one language, so it sizes to that.
 .translation-group__language-select {
-  width: 320px;
+  width: max-content;
   max-width: 100%;
+}
+
+// Left alone the display input hands the trigger its default 20-character intrinsic width, however short the language
+// name is. Where field-sizing is unsupported that width is what is left, which only makes the trigger a little wider.
+.translation-group__language-select::part(display-input) {
+  width: auto;
+  min-width: 0;
+  field-sizing: content;
+}
+
+// The popup syncs its width to the trigger, which is now sized to the current language rather than the longest one in
+// the list. zn-select runs the popup with auto-size="vertical", so --auto-size-available-width is never set and the
+// listbox's own max-width is inert — this is the only thing keeping a long list on screen.
+.translation-group__language-select::part(listbox) {
+  min-width: 320px;
+  max-width: calc(100vw - var(--zn-spacing-large));
+}
+
+// The select is chrome in the panel header rather than a field to fill in, so it drops the input's fill and shadow.
+// The border stays, marking it out as something to open.
+.translation-group__language-select::part(combobox) {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.translation-group__language-select:hover::part(combobox) {
+  background-color: var(--zn-input-background-color-hover);
+}
+
+.translation-group__language-select:focus-within::part(combobox) {
+  box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color);
 }
 
 // The select's label is its accessible name only; the caption names the section on screen.

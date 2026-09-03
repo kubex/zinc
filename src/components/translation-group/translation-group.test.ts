@@ -118,6 +118,50 @@ describe('<zn-translation-group>', () => {
       expect(group.shadowRoot!.querySelector('.translation-group__language-label')).to.be.null;
     });
 
+    it('drops the fill and shadow but keeps the border, hover and focus', async () => {
+      const group = await fixture<ZnTranslationGroup>(html`
+        <zn-translation-group label="Content" .languages=${{en: 'English', fr: 'French'}}>
+          <zn-translations name="heading"></zn-translations>
+        </zn-translation-group>`);
+      // The input tokens live in the theme stylesheet, which the bundle under test does not carry.
+      group.style.setProperty('--zn-input-border-width', '1px');
+      group.style.setProperty('--zn-input-border-color', 'rgb(9, 9, 9)');
+      group.style.setProperty('--zn-focus-ring-width', '3px');
+      group.style.setProperty('--zn-input-focus-ring-color', 'rgb(4, 5, 6)');
+      await group.updateComplete;
+
+      const select = selectOf(group);
+      await select.updateComplete;
+      const combobox = select.shadowRoot!.querySelector<HTMLElement>('[part~="combobox"]')!;
+
+      const styles = getComputedStyle(combobox);
+      expect(styles.backgroundColor).to.equal('rgba(0, 0, 0, 0)');
+      expect(styles.boxShadow).to.equal('none');
+      expect(styles.borderTopWidth, 'the border stays').to.equal('1px');
+      expect(styles.borderTopColor, 'the border stays').to.equal('rgb(9, 9, 9)');
+
+      select.focus();
+      await select.updateComplete;
+      expect(getComputedStyle(combobox).boxShadow, 'focus stays visible').to.not.equal('none');
+    });
+
+    it('sizes the trigger to its language and holds the listbox open wider', async () => {
+      const group = await fixture<ZnTranslationGroup>(html`
+        <zn-translation-group label="Content" .languages=${{en: 'English', fr: 'French'}}>
+          <zn-translations name="heading"></zn-translations>
+        </zn-translation-group>`);
+      await group.updateComplete;
+
+      const select = selectOf(group);
+      await select.updateComplete;
+
+      // The whole point: the trigger is no longer pinned to the width the options need.
+      expect(select.getBoundingClientRect().width).to.be.lessThan(320);
+
+      const listbox = select.shadowRoot!.querySelector<HTMLElement>('[part~="listbox"]')!;
+      expect(getComputedStyle(listbox).minWidth).to.equal('320px');
+    });
+
     it('names the select for a screen reader without showing the label', async () => {
       const group = await fixture<ZnTranslationGroup>(html`
         <zn-translation-group label="Content" .languages=${{en: 'English', fr: 'French'}}>

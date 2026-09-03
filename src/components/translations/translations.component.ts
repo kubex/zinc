@@ -29,8 +29,7 @@ import styles from './translations.scss';
  * A select above the field chooses the language being edited. Closed, it carries how many languages are translated —
  * `1/5`; open, every language it offers carries a chip saying whether it has a translation of its own or falls back
  * to English. Blank languages fall back to English at render
- * time, so a blank field shows the English text as its placeholder rather than looking empty. Where more than one
- * language is on offer the field carries the active language's code, so a screenshot of it is unambiguous.
+ * time, so a blank field shows the English text as its placeholder rather than looking empty.
  *
  * The value submitted is a JSON object keyed by language code. A language stays out of it until it is typed into, so
  * browsing the languages does not pad the payload with empty translations.
@@ -215,7 +214,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   }
 
   /** The chip shown against a language, in the select's value and against each of its options. */
-  private languageState(language: string): {type: 'success' | 'error'; label: string} {
+  private languageState(language: string): { type: 'success' | 'error'; label: string } {
     if (this.hasTranslation(language)) return {type: 'success', label: 'Translated'};
     return {type: 'error', label: language === 'en' ? 'Empty' : 'English'};
   }
@@ -358,7 +357,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   };
 
   /** The control the active language's translation is edited through. */
-  private renderField(value: string, placeholder: string, isRTL: boolean, showCode: boolean) {
+  private renderField(value: string, placeholder: string, isRTL: boolean) {
     const dir = isRTL ? 'rtl' : 'ltr';
 
     if (this.inlineEdit) {
@@ -424,10 +423,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
         .slashItemsProvider="${this.slashItemsProvider}"
         @zn-change="${this.handleValueUpdate}"
         @zn-input="${this.handleValueUpdate}"
-      >
-        ${showCode ? html`
-          <span slot="prefix" class="translations__code">${this._activeLanguage.toUpperCase()}</span>` : nothing}
-      </zn-input>`;
+      ></zn-input>`;
   }
 
   /** Arabic and Hebrew read right to left, so the field's `dir` follows the language being edited. */
@@ -509,7 +505,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
         ` : nothing}
 
         <div part="form-control-input" class="translations__body">
-          ${keyed(this._activeLanguage, this.renderField(currentTranslation, placeholder, isRTL, languageCodes.length > 1))}
+          ${keyed(this._activeLanguage, this.renderField(currentTranslation, placeholder, isRTL))}
         </div>
 
         ${hasHelpText ? html`

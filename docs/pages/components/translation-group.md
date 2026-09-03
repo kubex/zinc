@@ -8,7 +8,7 @@ layout: component
 The Translation Group component wraps multiple `zn-translations` components in a panel-styled container with a shared
 language select. The select sits at the top right of the header, opposite the caption. Closed, it carries how many
 languages are done as a `1/5` chip; open, each language is marked translated, partial or falling back to English.
-Choosing a language switches every child at once, and each field carries the code of the language it is showing.
+Choosing a language switches every child at once.
 
 ```html:preview
 <zn-translation-group

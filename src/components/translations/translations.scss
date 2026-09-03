@@ -12,22 +12,6 @@
   margin-bottom: var(--zn-spacing-medium);
 }
 
-// The active language's code, slotted into the input's prefix. Divided off from the value like the input's own
-// prefix icons are not — this one is a label for what follows, so it reads as a separate cell.
-.translations__code {
-  align-self: stretch;
-  display: inline-flex;
-  align-items: center;
-  // zn-input margins its slotted prefixes away from the edge; this one is a cell, so it sits flush against it.
-  margin: 0;
-  padding-inline: var(--zn-spacing-small);
-  // Logical, not physical: an RTL language puts the code on the right, where a border-right would land on the
-  // input's own edge and vanish.
-  border-inline-end: solid var(--zn-input-border-width) var(--zn-input-border-color);
-  color: var(--zn-input-color);
-  font-size: var(--zn-input-font-size-medium);
-}
-
 .translations__body {
   display: block;
 }

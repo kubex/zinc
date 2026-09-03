@@ -8,8 +8,7 @@ layout: component
 The Translations component provides a user-friendly interface for managing multi-language text input. A select above
 the field chooses the language being edited, and each language it offers carries a chip saying whether it has a
 translation of its own or falls back to English; closed, it carries how many languages are done as a `1/5` chip.
-The field itself is a plain input, or a textarea with `input-type="textarea"`, and carries the code of the language
-it is showing whenever more than one is on offer.
+The field itself is a plain input, or a textarea with `input-type="textarea"`.
 
 Several fields that should share one language picker belong in a
 [`zn-translation-group`](/components/translation-group) instead.
@@ -370,5 +369,4 @@ of which exposes its own CSS parts for advanced styling.
 - The component automatically detects RTL languages (Arabic, Hebrew) and applies proper text direction
 - The language select is a standard combobox: it opens on `Enter` or `Space` and moves through the languages with the
   arrow keys
-- The field carries the active language's code, so which translation is on screen does not rest on colour alone
 - `Enter` submits the form from a single-line field, and inserts a newline in a textarea

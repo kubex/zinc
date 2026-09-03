@@ -2,7 +2,130 @@
   display: block;
 }
 
-.translation-group__languages {
+// The body stacks the fields the select drives, so they take the row gap zn-form-group sets between stacked
+// controls. The slotted children are `display: contents` through the slot, putting them in this same flex flow.
+.panel__body {
+  gap: var(--zn-spacing-medium);
+}
+
+// The header sets its own gap down to the first field; the panel's body padding on top of it would make that one gap
+// the odd one out.
+.panel--has-header .panel__body {
+  padding-top: 0;
+}
+
+.panel__header {
+  padding-bottom: var(--zn-spacing-medium);
+}
+
+.translation-group--inline .panel__header {
+  padding: 0 0 var(--zn-spacing-medium);
+}
+
+// zn-header holds its content row at 36px so a caption sits level with action buttons. The select is taller than
+// that and sets the height on its own, so the row hugs whichever of the two is bigger.
+.panel__header::part(content) {
+  min-height: 0;
+}
+
+// The actions container is a plain block that clips horizontally: its content would sit at the top rather than level
+// with the caption, and a select flush against its right edge would lose the focus ring.
+.panel__header::part(header-right) {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  overflow: visible;
+}
+
+.translation-group__language-field {
+  display: flex;
+  align-items: center;
+}
+
+// The trigger shows one language, so it sizes to that.
+.translation-group__language-select {
+  width: max-content;
+  max-width: 100%;
+}
+
+// Left alone the display input hands the trigger its default 20-character intrinsic width, however short the language
+// name is. Where field-sizing is unsupported that width is what is left, which only makes the trigger a little wider.
+.translation-group__language-select::part(display-input) {
+  width: auto;
+  min-width: 0;
+  field-sizing: content;
+}
+
+// The popup syncs its width to the trigger, which is now sized to the current language rather than the longest one in
+// the list. zn-select runs the popup with auto-size="vertical", so --auto-size-available-width is never set and the
+// listbox's own max-width is inert — this is the only thing keeping a long list on screen.
+.translation-group__language-select::part(listbox) {
+  min-width: 320px;
+  max-width: calc(100vw - var(--zn-spacing-large));
+}
+
+// The select is chrome in the panel header rather than a field to fill in, so it drops the input's fill and shadow.
+// The border stays, marking it out as something to open.
+.translation-group__language-select::part(combobox) {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.translation-group__language-select:hover::part(combobox) {
+  background-color: var(--zn-input-background-color-hover);
+}
+
+.translation-group__language-select:focus-within::part(combobox) {
+  box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color);
+}
+
+// The select's label is its accessible name only; the caption names the section on screen.
+.translation-group__language-select::part(form-control-label) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Matches zinc's form action rows (.form-actions, zn-form-actions): right-aligned, 16px apart.
+.translation-group__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-small);
+}
+
+// The spacer, not an auto margin, is what splits the two sides: an auto margin on every right-hand button would open
+// a gap between each of them, where one flexing element in the middle holds any number on either side together.
+.translation-group__actions-spacer {
+  order: 1;
+  flex: 1 1 auto;
+}
+
+::slotted([slot="actions"]) {
+  order: 2;
+}
+
+::slotted([slot="actions"][align="start"]) {
+  order: 0;
+}
+
+// The panel draws a border between any two body children, and the actions row is the first real element to follow
+// the fields' slot. Matched on .panel--has-actions to out-specify that rule.
+.panel--has-actions .panel__body > .translation-group__actions {
+  border: 0;
+}
+
+// The panel clips its content to its rounded corners, and the body scrolls. Neither applies with the chrome gone, and
+// both would cut the focus ring off a field now that no padding stands between it and the body's edge.
+.translation-group--inline {
+  .panel__inner,
+  .panel__content,
+  .panel__body {
+    overflow: visible;
+  }
 }

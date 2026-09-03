@@ -3,87 +3,98 @@ import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from
 import {HasSlotController} from '../../internal/slot';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {property, state} from 'lit/decorators.js';
-import {ResizeController} from '@lit-labs/observers/resize-controller.js';
-import ZnButton from '../button';
-import ZnButtonGroup from '../button-group';
-import ZnDropdown from '../dropdown';
+import ZnChip from '../chip';
 import ZnHeader from '../header';
-import ZnMenu from '../menu';
+import ZnOption from '../option';
 import ZnPanel from '../panel/panel.component';
-import type {ZnMenuSelectEvent} from '../../events/zn-menu-select';
+import ZnSelect from '../select';
 import type ZnTranslations from '../translations/translations.component';
 
 import styles from './translation-group.scss';
 
 /**
- * @summary A panel-styled container that provides a shared language toggle for multiple zn-translations children.
+ * @summary Puts several zn-translations fields behind one language select, so a whole form's worth of copy is
+ *  translated a language at a time.
+ * @documentation https://zinc.style/components/translation-group
+ * @status experimental
+ * @since 1.0
  *
- * @dependency zn-button
- * @dependency zn-button-group
- * @dependency zn-dropdown
- * @dependency zn-menu
+ * The select sits at the top right of the header, opposite the caption. Choosing a language switches every child at
+ * once, and each child hides its own select while it is in a group — `grouped` is set on them here.
+ *
+ * Closed, the select carries how many target languages are done — `1/5`. Its options each carry a chip aggregated
+ * across the children:
+ *
+ * - `Translated` — every child has a value for it
+ * - `Partial` — only some children do
+ * - `English` — none do, so all of them fall back to the English text
+ *
+ * `Empty` replaces the last of those for English itself, which has nothing to fall back to. English is the source
+ * rather than a translation, so it is also left out of the `n of m translated` count beside the label.
+ *
+ * The children own their values; this component only chooses which language is shown and reports on what they hold.
+ * It reads them back on every child `zn-change`, so the chips and the count follow an edit as it is typed.
+ *
+ * Extends `zn-panel`, so `caption`, `icon`, `flush`, `transparent` and the `footer` slot behave as they do there.
+ * Nested inside another panel, add `inline` to drop the chrome and keep the fields aligned with the surrounding form.
+ *
+ * @dependency zn-chip
+ * @dependency zn-header
+ * @dependency zn-option
+ * @dependency zn-select
  *
  * @event zn-language-change - Emitted when the active language changes. Detail: `{ language: string }`.
  *
- * @slot - Default slot for `<zn-translations>` elements.
- * @slot actions - Actions displayed in the panel header alongside language buttons.
+ * @slot - The `zn-translations` fields the select drives.
+ * @slot actions - Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on
+ *  the right, as zinc's form action rows do; `align="start"` moves one to the left. Write them in the order they
+ *  should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.
+ * @slot footer - Content displayed in the grey panel footer. The header belongs to the language select; nothing
+ *  else is slotted into it.
  *
  * @csspart base - The component's base wrapper.
+ * @csspart actions - The row of buttons at the bottom of the body.
+ * @csspart language-field - The label and select that choose the language every child is editing.
+ * @csspart language-select - The select itself.
  */
 export default class ZnTranslationGroup extends ZnPanel {
   static styles: CSSResultGroup = [ZnPanel.styles, unsafeCSS(styles)];
   static dependencies = {
-    'zn-button': ZnButton,
-    'zn-button-group': ZnButtonGroup,
-    'zn-dropdown': ZnDropdown,
+    'zn-chip': ZnChip,
     'zn-header': ZnHeader,
-    'zn-menu': ZnMenu
+    'zn-option': ZnOption,
+    'zn-select': ZnSelect
   };
 
   private readonly _slotController = new HasSlotController(this, 'actions', 'footer');
 
-  /** The group label displayed in the panel header. */
+  /** The caption shown in the panel header. An alias for the inherited `caption`, which wins where both are set. */
   @property() label = '';
 
-  /** The available languages for the group. */
+  /**
+   * Drops the panel chrome — border, background and padding — so the group reads as a section of the form around it
+   * rather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit
+   * indented behind a second border.
+   */
+  @property({type: Boolean, reflect: true}) inline = false;
+
+  /**
+   * The select's accessible name. Not shown — the caption is what names the section on screen — but read out by a
+   * screen reader, which has nothing else to go on once the visible label is gone.
+   */
+  @property({attribute: 'language-label'}) languageLabel = 'Edit Languages';
+
+  /**
+   * The languages on offer, as language code to display name — `{"en": "English", "fr": "French"}`. Writing the code
+   * as the name (`{"en": "EN"}`) is also accepted. `en` is the language every other one falls back to. Set on every
+   * child, so they do not need their own copy.
+   */
   @property({type: Object}) languages: Record<string, string> = {
     'en': 'EN'
   };
 
+  /** The language every child is currently editing. */
   @state() private _activeLanguage = 'en';
-
-  /** Tracks all language codes that have been activated across children. */
-  @state() private _activatedLanguages: string[] = ['en'];
-
-  @state() private _overflowIndex = -1;
-
-  private _lastObservedWidth = 0;
-  private _measureRafId = 0;
-
-  constructor() {
-    super();
-    // eslint-disable-next-line no-new
-    new ResizeController(this, {
-      callback: entries => {
-        const width = entries[0]?.contentRect.width ?? 0;
-        if (Math.abs(width - this._lastObservedWidth) < 1) return;
-        this._lastObservedWidth = width;
-        if (this._overflowIndex !== -1) {
-          this._overflowIndex = -1;
-        } else {
-          this._scheduleLangOverflow();
-        }
-      },
-    });
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    if (this._measureRafId) {
-      cancelAnimationFrame(this._measureRafId);
-      this._measureRafId = 0;
-    }
-  }
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
@@ -95,81 +106,43 @@ export default class ZnTranslationGroup extends ZnPanel {
     if (changedProperties.has('languages')) {
       this.syncChildLanguages();
     }
-    this._scheduleLangOverflow();
   }
 
-  private _scheduleLangOverflow() {
-    if (this._measureRafId) return;
-    this._measureRafId = requestAnimationFrame(() => {
-      this._measureRafId = 0;
-      this._computeLangOverflow();
-    });
-  }
-
-  private _computeLangOverflow() {
-    const group = this.shadowRoot?.querySelector<HTMLElement>('.translation-group__languages zn-button-group');
-    if (!group) return;
-
-    const buttons = Array.from(group.querySelectorAll<HTMLElement>('zn-button[data-lang-btn]'));
-    if (buttons.length < 2) {
-      if (this._overflowIndex !== -1) this._overflowIndex = -1;
-      return;
-    }
-
-    const firstTop = buttons[0].getBoundingClientRect().top;
-    let wrapAt = -1;
-    for (let i = 1; i < buttons.length; i++) {
-      if (buttons[i].getBoundingClientRect().top > firstTop + 1) {
-        wrapAt = i;
-        break;
-      }
-    }
-
-    if (wrapAt === -1) {
-      const trailing = group.querySelector<HTMLElement>('[data-lang-overflow], [data-lang-add]');
-      if (trailing && trailing.getBoundingClientRect().top > firstTop + 1) {
-        wrapAt = buttons.length;
-      }
-    }
-
-    if (wrapAt === -1) return;
-
-    const newIndex = this._overflowIndex === -1
-      ? wrapAt
-      : Math.max(1, Math.min(wrapAt, this._overflowIndex - 1));
-
-    if (newIndex !== this._overflowIndex) {
-      this._overflowIndex = newIndex;
-    }
-  }
-
+  /** The children the select drives. Read live rather than cached, so markup added later is picked up. */
   private getAllTranslations(): ZnTranslations[] {
     return [...this.querySelectorAll<ZnTranslations>('zn-translations')];
   }
 
   /** Sync grouped state, languages, and active language to all children. */
   private syncChildren() {
-    const children = this.getAllTranslations();
-
-    // Collect all language codes from children's existing values
-    const allLanguageCodes = new Set<string>(this._activatedLanguages);
-    children.forEach(child => {
-      child.getValueLanguages().forEach(code => allLanguageCodes.add(code));
-    });
-    this._activatedLanguages = [...allLanguageCodes];
-
-    children.forEach(child => {
+    this.getAllTranslations().forEach(child => {
       child.grouped = true;
       child.languages = this.languages;
-      // Ensure every activated language exists in each child's values.
-      // This handles the case where one child has a language that another doesn't.
-      for (const code of this._activatedLanguages) {
-        child.addLanguageKey(code);
-      }
       child.setActiveLanguage(this._activeLanguage);
     });
   }
 
+  /**
+   * A language is translated once every child carries a value for it, partial while only some do. The chips and the
+   * count are read off the children, so a child's edit has to bring the group back round.
+   */
+  private languageState(language: string): { type: 'success' | 'warning' | 'error'; label: string } {
+    const children = this.getAllTranslations();
+    const translated = children.filter(child => child.hasTranslation(language)).length;
+
+    if (children.length > 0 && translated === children.length) return {type: 'success', label: 'Translated'};
+    if (translated > 0) return {type: 'warning', label: 'Partial'};
+    return {type: 'error', label: language === 'en' ? 'Empty' : 'English'};
+  }
+
+  /** `English (EN)`, or the code alone where the configured name already is the code. */
+  private displayName(language: string): string {
+    const name = this.languages[language] ?? language.toUpperCase();
+    const code = language.toUpperCase();
+    return name.toUpperCase() === code ? name : `${name} (${code})`;
+  }
+
+  /** Children take their language list from the group, so a change to `languages` has to reach them. */
   private syncChildLanguages() {
     this.getAllTranslations().forEach(child => {
       child.languages = this.languages;
@@ -180,74 +153,67 @@ export default class ZnTranslationGroup extends ZnPanel {
     this.syncChildren();
   };
 
+  /** Moves every child onto `lang` and announces it. Does not touch their values. */
   private switchLanguage(lang: string) {
     this._activeLanguage = lang;
     this.getAllTranslations().forEach(child => child.setActiveLanguage(lang));
     this.emit('zn-language-change', {detail: {language: lang}});
   }
 
-  private handleLanguageAdd = (e: ZnMenuSelectEvent) => {
+  /**
+   * The select's own change and input events describe the language being browsed, not a translation being edited, so
+   * they are stopped rather than allowed to reach a consumer listening for a child's value change.
+   */
+  private handleLanguageSelect = (e: Event) => {
     e.stopPropagation();
-    const element = e.detail.element as HTMLElement;
-    const languageCode = element.getAttribute('data-path');
-    if (languageCode) {
-      if (!this._activatedLanguages.includes(languageCode)) {
-        this._activatedLanguages = [...this._activatedLanguages, languageCode];
-      }
-
-      // Add language key to all children first so the key exists in values
-      this.getAllTranslations().forEach(child => child.addLanguageKey(languageCode));
-      this.switchLanguage(languageCode);
+    const language = (e.target as ZnSelect).value;
+    if (typeof language === 'string' && language && language !== this._activeLanguage) {
+      this.switchLanguage(language);
     }
   };
 
-  private handleOverflowSelect = (e: ZnMenuSelectEvent) => {
+  private handleLanguageInput = (e: Event) => {
     e.stopPropagation();
-    const element = e.detail.element as HTMLElement;
-    const languageCode = element.getAttribute('data-path');
-    if (languageCode) {
-      this.switchLanguage(languageCode);
-    }
+  };
+
+  /** A child's edit changes which chips the select shows, and the translated count above it. */
+  private handleChildChange = () => {
+    this.requestUpdate();
   };
 
   render() {
-    const hasActionSlot = this._slotController.test('actions');
+    const hasActionsSlot = this._slotController.test('actions');
     const hasFooterSlot = this._slotController.test('footer');
     const headerCaption = this.caption || this.label;
 
-    const availableLanguages = Object.entries(this.languages)
-      .filter(([code]) => code !== 'en' && !this._activatedLanguages.includes(code))
-      .map(([code, name]) => ({
-        title: name,
-        type: 'dropdown',
-        path: code
-      }));
+    // A child's value can carry a language `languages` does not list — server-rendered content outliving a config
+    // change. Offer those too, or the translation is stranded in the value with no way to reach it.
+    const extra = new Set<string>();
+    this.getAllTranslations().forEach(child => child.getValueLanguages()
+      .filter(code => !Object.prototype.hasOwnProperty.call(this.languages, code))
+      .forEach(code => extra.add(code)));
+    const languageCodes = [...Object.keys(this.languages), ...extra];
+    const hasMultipleLanguages = languageCodes.length > 1;
+    const hasHeader = Boolean(headerCaption) || hasMultipleLanguages;
 
-    const visibleTabs = [...this._activatedLanguages];
-    if (!visibleTabs.includes('en')) {
-      visibleTabs.unshift('en');
-    }
-
-    const overflowCutoff = this._overflowIndex === -1 ? visibleTabs.length : this._overflowIndex;
-    const visibleLangTabs = visibleTabs.slice(0, overflowCutoff);
-    const overflowLangTabs = visibleTabs.slice(overflowCutoff);
-    const overflowActions = overflowLangTabs.map(code => ({
-      title: code.toUpperCase(),
-      type: 'dropdown',
-      path: code,
-      icon: code === this._activeLanguage ? 'check' : ''
-    }));
-
-    const hasMultipleLanguages = Object.keys(this.languages).length > 1;
-    const hasHeader = headerCaption || hasMultipleLanguages || hasActionSlot;
+    // English is the source every other language falls back to, so it is not itself one of the translations counted.
+    const targets = languageCodes.filter(code => code !== 'en');
+    const translated = targets.filter(code => this.languageState(code).type === 'success').length;
+    // Closed, the select answers "how much is left to do" rather than the state of the one language on show — that
+    // is what the options are for.
+    const summary = {
+      label: `${translated}/${targets.length}`,
+      type: translated === targets.length ? 'success' : translated > 0 ? 'warning' : 'error'
+    };
 
     return html`
       <div class="${classMap({
         panel: true,
-        'panel--flush': this.flush,
-        'panel--transparent': this.transparent,
+        'panel--flush': this.flush || this.inline,
+        'panel--transparent': this.transparent || this.inline,
+        'translation-group--inline': this.inline,
         'panel--has-header': hasHeader,
-        'panel--has-actions': hasMultipleLanguages || hasActionSlot,
+        'panel--has-actions': hasActionsSlot,
         'panel--has-footer': hasFooterSlot,
       })}">
 
@@ -257,55 +223,40 @@ export default class ZnTranslationGroup extends ZnPanel {
                        caption="${ifDefined(headerCaption || undefined)}"
                        transparent>
               ${hasMultipleLanguages ? html`
-                <div slot="actions" class="translation-group__languages">
-                  <zn-button-group>
-                    ${visibleLangTabs.map(code => html`
-                      <zn-button
-                        data-lang-btn
-                        color="default"
-                        ?outline="${code !== this._activeLanguage}"
-                        @click="${() => this.switchLanguage(code)}"
-                      >${code.toUpperCase()}
-                      </zn-button>
-                    `)}
-                    ${overflowActions.length > 0 ? html`
-                      <zn-dropdown placement="bottom-end" data-lang-overflow>
-                        <zn-button
-                          slot="trigger"
-                          color="default"
-                          icon="keyboard_arrow_down"
-                          ?outline="${!overflowLangTabs.includes(this._activeLanguage)}"
-                        ></zn-button>
-                        <zn-menu
-                          .actions=${overflowActions}
-                          @zn-menu-select="${this.handleOverflowSelect}"
-                        ></zn-menu>
-                      </zn-dropdown>
-                    ` : nothing}
-                    ${availableLanguages.length > 0 ? html`
-                      <zn-dropdown placement="bottom-end" data-lang-add>
-                        <zn-button
-                          slot="trigger"
-                          color="default"
-                          outline
-                        >+
-                        </zn-button>
-                        <zn-menu
-                          .actions=${availableLanguages}
-                          @zn-menu-select="${this.handleLanguageAdd}"
-                        ></zn-menu>
-                      </zn-dropdown>
-                    ` : nothing}
-                  </zn-button-group>
-                </div>
-              ` : nothing}
-              ${hasActionSlot ? html`
-                <slot name="actions" slot="actions"></slot>` : null}
+                <div slot="actions" class="translation-group__language-field" part="language-field">
+                  <zn-select
+                    label="${this.languageLabel}"
+                    class="translation-group__language-select"
+                    part="language-select"
+                    hoist
+                    .value="${this._activeLanguage}"
+                    @zn-change="${this.handleLanguageSelect}"
+                    @zn-input="${this.handleLanguageInput}">
+                    <zn-chip slot="suffix" type="${summary.type}">${summary.label}</zn-chip>
+                    ${languageCodes.map(code => {
+                      const optionState = this.languageState(code);
+                      return html`
+                        <zn-option value="${code}">
+                          ${this.displayName(code)}
+                          <zn-chip slot="suffix" type="${optionState.type}">${optionState.label}</zn-chip>
+                        </zn-option>`;
+                    })}
+                  </zn-select>
+                </div>` : nothing}
             </zn-header>` : null}
 
           <div class="panel__content">
             <div class="panel__body">
-              <slot @slotchange="${this.handleSlotChange}"></slot>
+              <slot
+                @slotchange="${this.handleSlotChange}"
+                @zn-change="${this.handleChildChange}"></slot>
+
+              ${hasActionsSlot ? html`
+                <div class="translation-group__actions" part="actions">
+                  <slot name="actions"></slot>
+                  <span class="translation-group__actions-spacer"></span>
+                </div>` : nothing}
+
             </div>
           </div>
 

@@ -49613,6 +49613,15 @@
               "description": "The language every child is currently editing."
             },
             {
+              "kind": "field",
+              "name": "_form",
+              "type": {
+                "text": "HTMLFormElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
               "kind": "method",
               "name": "getAllTranslations",
               "privacy": "private",
@@ -49708,6 +49717,12 @@
               "name": "handleChildChange",
               "privacy": "private",
               "description": "A child's edit changes which chips the select shows, and the translated count above it."
+            },
+            {
+              "kind": "field",
+              "name": "handleFormReset",
+              "privacy": "private",
+              "description": "The children restore their own values on the form's reset event without announcing it, and the chips and the\ncount are read off them — so re-read once every listener on that event has run."
             },
             {
               "kind": "field",
@@ -50350,6 +50365,15 @@
               "default": "{}",
               "description": "The translations as an object keyed by language code. The mirror of `value` in property form.",
               "attribute": "values"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string"
+              },
+              "default": "'{\"en\":\"\"}'",
+              "description": "The serialized translations a form reset restores. Taken from the `value` attribute where there is one."
             },
             {
               "kind": "field",
@@ -51101,7 +51125,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.115",
+    "version": "1.1.116",
     "author": "",
     "license": "MIT"
   }

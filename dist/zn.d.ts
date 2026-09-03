@@ -9073,6 +9073,8 @@ declare module "components/translations/translations.component" {
         languages: Record<string, string>;
         /** The translations as an object keyed by language code. The mirror of `value` in property form. */
         values: Record<string, string>;
+        /** The serialized translations a form reset restores. Taken from the `value` attribute where there is one. */
+        defaultValue: string;
         private _activeLanguage;
         get validity(): ValidityState;
         get validationMessage(): string;
@@ -9351,6 +9353,9 @@ declare module "components/translation-group/translation-group.component" {
         languages: Record<string, string>;
         /** The language every child is currently editing. */
         private _activeLanguage;
+        private _form;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         protected updated(changedProperties: PropertyValues): void;
         /** The children the select drives. Read live rather than cached, so markup added later is picked up. */
@@ -9377,6 +9382,11 @@ declare module "components/translation-group/translation-group.component" {
         private handleLanguageInput;
         /** A child's edit changes which chips the select shows, and the translated count above it. */
         private handleChildChange;
+        /**
+         * The children restore their own values on the form's reset event without announcing it, and the chips and the
+         * count are read off them — so re-read once every listener on that event has run.
+         */
+        private handleFormReset;
         render(): import("lit-html").TemplateResult<1>;
     }
 }

@@ -7288,7 +7288,7 @@ declare module "components/form-actions/index" {
     }
 }
 declare module "components/form-group/form-group.component" {
-    import { type CSSResultGroup } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
@@ -7298,6 +7298,10 @@ declare module "components/form-group/form-group.component" {
      *
      * @slot - The default slot.
      * @slot chip - A chip displayed under the form group's help text.
+     *
+     * @csspart form-control-text - The column holding the label, help text and chip.
+     *
+     * @cssproperty --zn-form-group-sticky-top - Offset the label column sticks at while the inputs scroll past.
      *
      */
     export default class ZnFormGroup extends ZincElement {
@@ -7318,6 +7322,37 @@ declare module "components/form-group/form-group.component" {
         forceCols: boolean;
         layout: string;
         pad: boolean;
+        /** The scroller the label is tracked against by hand; null while native sticky is enough. */
+        private tracked;
+        private frame;
+        private rebind;
+        private offset;
+        private resizeObserver;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        protected firstUpdated(changedProperties: PropertyValues): void;
+        private get labelColumn();
+        /** Coalesces scroll and resize work into one frame, and out of the ResizeObserver callback. */
+        private schedule;
+        /**
+         * Native sticky only follows the nearest scroll container. Where that container isn't the one
+         * the user actually scrolls — a `zn-panel` body sized to its content inside a scrolling
+         * slideout, say — the label never moves, so it gets translated by hand instead.
+         */
+        private findScroller;
+        private trackScroller;
+        /** The document scrolls through the window, every other scroller reports its own events. */
+        private scrollTarget;
+        private readonly onScroll;
+        private readonly onViewportResize;
+        private positionLabel;
+        /** The box native sticky would anchor to, whether or not it can be scrolled. */
+        private nearestScrollContainer;
+        /** The nearest ancestor the user can actually scroll, falling back to the document. */
+        private scrollingAncestor;
+        private isScrollContainer;
+        /** Walks the flattened tree, so slots and shadow boundaries are crossed the way layout does. */
+        private ancestors;
         render(): import("lit-html").TemplateResult<1>;
     }
 }

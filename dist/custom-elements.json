@@ -16461,6 +16461,18 @@
           "kind": "class",
           "description": "",
           "name": "ZnFormGroup",
+          "cssProperties": [
+            {
+              "description": "Offset the label column sticks at while the inputs scroll past.",
+              "name": "--zn-form-group-sticky-top"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The column holding the label, help text and chip.",
+              "name": "form-control-text"
+            }
+          ],
           "slots": [
             {
               "description": "The default slot.",
@@ -16535,6 +16547,201 @@
               },
               "default": "false",
               "attribute": "pad"
+            },
+            {
+              "kind": "field",
+              "name": "tracked",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The scroller the label is tracked against by hand; null while native sticky is enough."
+            },
+            {
+              "kind": "field",
+              "name": "frame",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "rebind",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "offset",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "resizeObserver",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "labelColumn",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "schedule",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "rebind",
+                  "default": "false",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Coalesces scroll and resize work into one frame, and out of the ResizeObserver callback."
+            },
+            {
+              "kind": "method",
+              "name": "findScroller",
+              "privacy": "private",
+              "description": "Native sticky only follows the nearest scroll container. Where that container isn't the one\nthe user actually scrolls — a `zn-panel` body sized to its content inside a scrolling\nslideout, say — the label never moves, so it gets translated by hand instead."
+            },
+            {
+              "kind": "method",
+              "name": "trackScroller",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "scroller",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "scrollTarget",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "EventTarget | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "scroller",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                }
+              ],
+              "description": "The document scrolls through the window, every other scroller reports its own events."
+            },
+            {
+              "kind": "field",
+              "name": "onScroll",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "onViewportResize",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "positionLabel",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "nearestScrollContainer",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "from",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "The box native sticky would anchor to, whether or not it can be scrolled."
+            },
+            {
+              "kind": "method",
+              "name": "scrollingAncestor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "from",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "The nearest ancestor the user can actually scroll, falling back to the document."
+            },
+            {
+              "kind": "method",
+              "name": "isScrollContainer",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "overflow",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "ancestors",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "from",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "Walks the flattened tree, so slots and shadow boundaries are crossed the way layout does."
             }
           ],
           "attributes": [
@@ -16598,7 +16805,7 @@
           "tagNameWithoutPrefix": "form-group",
           "tagName": "zn-form-group",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/form-group\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot.\n * @slot chip - A chip displayed under the form group's help text.\n *\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/form-group\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot.\n * @slot chip - A chip displayed under the form group's help text.\n *\n * @csspart form-control-text - The column holding the label, help text and chip.\n *\n * @cssproperty --zn-form-group-sticky-top - Offset the label column sticks at while the inputs scroll past.\n *\n */",
           "documentation": "https://zinc.style/components/form-group",
           "status": "experimental",
           "since": "1.0"
@@ -51125,7 +51332,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.116",
+    "version": "1.1.117",
     "author": "",
     "license": "MIT"
   }

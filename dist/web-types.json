@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.1.119",
+  "version": "1.1.120",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -11903,6 +11903,32 @@
           }
         },
         {
+          "name": "zn-tile-group",
+          "description": "Aligns a list of `zn-tile` rows into shared, content-driven columns so values\nand actions line up across every row, with optional dividing borders.\n---\n\n\n### **Slots:**\n - _default_ - One or more `zn-tile` elements.\n\n### **CSS Properties:**\n - **--zn-tile-cols** - The number of value/action columns (set automatically). _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper (the grid container).",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "divide",
+              "description": "Draws a dividing border between rows.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "One or more `zn-tile` elements." }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              {
+                "name": "divide",
+                "description": "Draws a dividing border between rows.",
+                "type": "boolean"
+              }
+            ],
+            "events": []
+          }
+        },
+        {
           "name": "zn-tile-property",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -11930,32 +11956,6 @@
                 "description": "Emitted as an example."
               }
             ]
-          }
-        },
-        {
-          "name": "zn-tile-group",
-          "description": "Aligns a list of `zn-tile` rows into shared, content-driven columns so values\nand actions line up across every row, with optional dividing borders.\n---\n\n\n### **Slots:**\n - _default_ - One or more `zn-tile` elements.\n\n### **CSS Properties:**\n - **--zn-tile-cols** - The number of value/action columns (set automatically). _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper (the grid container).",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "divide",
-              "description": "Draws a dividing border between rows.",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "One or more `zn-tile` elements." }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              {
-                "name": "divide",
-                "description": "Draws a dividing border between rows.",
-                "type": "boolean"
-              }
-            ],
-            "events": []
           }
         },
         {

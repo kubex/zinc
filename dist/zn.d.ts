@@ -7322,30 +7322,49 @@ declare module "components/form-group/form-group.component" {
         forceCols: boolean;
         layout: string;
         pad: boolean;
-        /** The scroll containers we have clipped, against the inline overflow each carried before. */
-        private readonly clipped;
+        /** The scroller the label is moved against by hand; null while native sticky is enough. */
+        private tracked;
+        /** Set while the compositor is running the movement off a scroll timeline instead. */
+        private animation;
+        private stickyTop;
         private frame;
+        private rebind;
+        private offset;
         private resizeObserver;
         connectedCallback(): void;
         disconnectedCallback(): void;
         protected firstUpdated(changedProperties: PropertyValues): void;
         private get labelColumn();
-        /** Coalesces resize work into one frame, and out of the ResizeObserver callback. */
+        /** Coalesces scroll and resize work into one frame, and out of the ResizeObserver callback. */
         private schedule;
-        private readonly onViewportResize;
         /**
-         * Native sticky anchors to the nearest scroll container, even one that cannot scroll — a `zn-panel` body sized to
-         * its content, say — where it then holds the label still for the whole scroll. `overflow: clip` clips without
-         * making a scroll container, so clipping those takes them out of sticky's search and the label follows the box the
-         * user actually scrolls, moved by the compositor rather than by hand.
+         * Native sticky only follows the nearest scroll container. Where that container isn't the one
+         * the user actually scrolls — a `zn-panel` body sized to its content inside a scrolling
+         * slideout, say — the label never moves, so it is moved against the real scroller instead.
          */
-        private freeSticky;
-        private clip;
-        private release;
+        private bind;
+        /**
+         * The label's whole journey, as the scroll positions it turns at: still until the fieldset's top reaches the sticky
+         * line, then a pixel for every pixel of scroll until it has crossed the fieldset. `fill: both` holds it at either
+         * end, which is the clamp the scroll handler applies by hand.
+         */
+        private scrollLinkedTravel;
+        /** Drops everything this component has put on the label or on the scroller. */
+        private detach;
+        /** The document scrolls through the window, every other scroller reports its own events. */
+        private scrollTarget;
+        /** Where the scroller's own top edge sits, which for the document is the top of the viewport. */
+        private visibleTop;
+        private get fieldset();
+        private readonly onScroll;
+        private readonly onScrollEnd;
+        private readonly onViewportResize;
+        private positionLabel;
         /** The box native sticky would anchor to, whether or not it can be scrolled. */
-        private isStickyAnchor;
+        private nearestScrollContainer;
+        /** The nearest ancestor the user can actually scroll, falling back to the document. */
+        private scrollingAncestor;
         private isScrollContainer;
-        private overflows;
         /** Walks the flattened tree, so slots and shadow boundaries are crossed the way layout does. */
         private ancestors;
         render(): import("lit-html").TemplateResult<1>;

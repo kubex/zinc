@@ -16550,15 +16550,54 @@
             },
             {
               "kind": "field",
-              "name": "clipped",
+              "name": "tracked",
+              "type": {
+                "text": "HTMLElement | null"
+              },
               "privacy": "private",
-              "readonly": true,
-              "default": "new Map<HTMLElement, { x: string; y: string }>()",
-              "description": "The scroll containers we have clipped, against the inline overflow each carried before."
+              "default": "null",
+              "description": "The scroller the label is moved against by hand; null while native sticky is enough."
+            },
+            {
+              "kind": "field",
+              "name": "animation",
+              "type": {
+                "text": "Animation | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "Set while the compositor is running the movement off a scroll timeline instead."
+            },
+            {
+              "kind": "field",
+              "name": "stickyTop",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
             },
             {
               "kind": "field",
               "name": "frame",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "rebind",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "offset",
               "type": {
                 "text": "number"
               },
@@ -16587,7 +16626,101 @@
               "kind": "method",
               "name": "schedule",
               "privacy": "private",
-              "description": "Coalesces resize work into one frame, and out of the ResizeObserver callback."
+              "parameters": [
+                {
+                  "name": "rebind",
+                  "default": "false",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Coalesces scroll and resize work into one frame, and out of the ResizeObserver callback."
+            },
+            {
+              "kind": "method",
+              "name": "bind",
+              "privacy": "private",
+              "description": "Native sticky only follows the nearest scroll container. Where that container isn't the one\nthe user actually scrolls — a `zn-panel` body sized to its content inside a scrolling\nslideout, say — the label never moves, so it is moved against the real scroller instead."
+            },
+            {
+              "kind": "method",
+              "name": "scrollLinkedTravel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Animation | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "scroller",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "The label's whole journey, as the scroll positions it turns at: still until the fieldset's top reaches the sticky\nline, then a pixel for every pixel of scroll until it has crossed the fieldset. `fill: both` holds it at either\nend, which is the clamp the scroll handler applies by hand."
+            },
+            {
+              "kind": "method",
+              "name": "detach",
+              "privacy": "private",
+              "description": "Drops everything this component has put on the label or on the scroller."
+            },
+            {
+              "kind": "method",
+              "name": "scrollTarget",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "EventTarget | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "scroller",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                }
+              ],
+              "description": "The document scrolls through the window, every other scroller reports its own events."
+            },
+            {
+              "kind": "method",
+              "name": "visibleTop",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "scroller",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "Where the scroller's own top edge sits, which for the document is the top of the viewport."
+            },
+            {
+              "kind": "field",
+              "name": "fieldset",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "onScroll",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "onScrollEnd",
+              "privacy": "private",
+              "readonly": true
             },
             {
               "kind": "field",
@@ -16597,49 +16730,46 @@
             },
             {
               "kind": "method",
-              "name": "freeSticky",
-              "privacy": "private",
-              "description": "Native sticky anchors to the nearest scroll container, even one that cannot scroll — a `zn-panel` body sized to\nits content, say — where it then holds the label still for the whole scroll. `overflow: clip` clips without\nmaking a scroll container, so clipping those takes them out of sticky's search and the label follows the box the\nuser actually scrolls, moved by the compositor rather than by hand."
+              "name": "positionLabel",
+              "privacy": "private"
             },
             {
               "kind": "method",
-              "name": "clip",
+              "name": "nearestScrollContainer",
               "privacy": "private",
-              "parameters": [
-                {
-                  "name": "element",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
                 }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "release",
-              "privacy": "private",
+              },
               "parameters": [
                 {
-                  "name": "elements",
-                  "type": {
-                    "text": "HTMLElement[]"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "isStickyAnchor",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "element",
+                  "name": "from",
                   "type": {
                     "text": "HTMLElement"
                   }
                 }
               ],
               "description": "The box native sticky would anchor to, whether or not it can be scrolled."
+            },
+            {
+              "kind": "method",
+              "name": "scrollingAncestor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "from",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "The nearest ancestor the user can actually scroll, falling back to the document."
             },
             {
               "kind": "method",
@@ -16650,19 +16780,6 @@
                   "name": "overflow",
                   "type": {
                     "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "overflows",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "element",
-                  "type": {
-                    "text": "HTMLElement"
                   }
                 }
               ]
@@ -48682,6 +48799,103 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/tile-group/tile-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnTileGroup",
+          "cssProperties": [
+            {
+              "description": "The number of value/action columns (set automatically).",
+              "name": "--zn-tile-cols"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper (the grid container).",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "One or more `zn-tile` elements.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "divide",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws a dividing border between rows.",
+              "attribute": "divide",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_mutationObserver",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_sync",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "divide",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws a dividing border between rows.",
+              "fieldName": "divide"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Aligns a list of `zn-tile` rows into shared, content-driven columns so values\nand actions line up across every row, with optional dividing borders.",
+          "tagNameWithoutPrefix": "tile-group",
+          "tagName": "zn-tile-group",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Aligns a list of `zn-tile` rows into shared, content-driven columns so values\n * and actions line up across every row, with optional dividing borders.\n * @documentation https://zinc.style/components/tile-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-tile\n *\n * @slot - One or more `zn-tile` elements.\n *\n * @csspart base - The component's base wrapper (the grid container).\n *\n * @cssproperty --zn-tile-cols - The number of value/action columns (set automatically).\n */",
+          "documentation": "https://zinc.style/components/tile-group",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-tile"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnTileGroup",
+            "module": "components/tile-group/tile-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/tile-property/tile-property.js",
       "declarations": [
         {
@@ -48792,103 +49006,6 @@
           "declaration": {
             "name": "ZnTileProperty",
             "module": "components/tile-property/tile-property.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/tile-group/tile-group.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnTileGroup",
-          "cssProperties": [
-            {
-              "description": "The number of value/action columns (set automatically).",
-              "name": "--zn-tile-cols"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper (the grid container).",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "One or more `zn-tile` elements.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "divide",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws a dividing border between rows.",
-              "attribute": "divide",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "_mutationObserver",
-              "type": {
-                "text": "MutationObserver | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "_handleSlotChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_sync",
-              "privacy": "private"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "divide",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws a dividing border between rows.",
-              "fieldName": "divide"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Aligns a list of `zn-tile` rows into shared, content-driven columns so values\nand actions line up across every row, with optional dividing borders.",
-          "tagNameWithoutPrefix": "tile-group",
-          "tagName": "zn-tile-group",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Aligns a list of `zn-tile` rows into shared, content-driven columns so values\n * and actions line up across every row, with optional dividing borders.\n * @documentation https://zinc.style/components/tile-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-tile\n *\n * @slot - One or more `zn-tile` elements.\n *\n * @csspart base - The component's base wrapper (the grid container).\n *\n * @cssproperty --zn-tile-cols - The number of value/action columns (set automatically).\n */",
-          "documentation": "https://zinc.style/components/tile-group",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-tile"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnTileGroup",
-            "module": "components/tile-group/tile-group.js"
           }
         }
       ]
@@ -51498,7 +51615,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.119",
+    "version": "1.1.120",
     "author": "",
     "license": "MIT"
   }

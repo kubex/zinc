@@ -331,7 +331,7 @@ Second"></zn-remarkd-editor>`);
 
   it('should group the toolbar buttons', async () => {
     const el = await fixture<ZnRemarkdEditor>(html`
-      <zn-remarkd-editor include-url="/includes"></zn-remarkd-editor>`);
+      <zn-remarkd-editor include-url="/includes" link-url="/links"></zn-remarkd-editor>`);
     const groups = el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar .toolbar__group');
 
     expect(groups.length).to.be.greaterThan(5);
@@ -367,7 +367,7 @@ Second"></zn-remarkd-editor>`);
     const reachableButtons = [...el.shadowRoot!.querySelectorAll<HTMLElement>('.toolbar__group')]
       .filter(group => getComputedStyle(group).display !== 'none')
       .flatMap(group => [...group.querySelectorAll('zn-button')]);
-    const expectedCount = EDITOR_ACTIONS.filter(action => action.opens !== 'include').length;
+    const expectedCount = EDITOR_ACTIONS.filter(action => action.opens !== 'include' && action.opens !== 'link').length;
     expect(reachableButtons.length + menuItems.length, 'an action fell through the cracks')
       .to.equal(expectedCount);
   });
@@ -547,10 +547,14 @@ Second"></zn-remarkd-editor>`);
 
   it('should disable inline actions when no block is being edited', async () => {
     const el = await fixture<ZnRemarkdEditor>(html`
-      <zn-remarkd-editor value="hello"></zn-remarkd-editor>`);
+      <zn-remarkd-editor value="hello" link-url="/links"></zn-remarkd-editor>`);
     const strong = [...el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar zn-button')]
       .find(b => b.getAttribute('tooltip') === 'Strong')!;
     expect(strong.hasAttribute('disabled')).to.be.true;
+
+    const link = [...el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar zn-button')]
+      .find(b => b.getAttribute('tooltip') === 'Link to article')!;
+    expect(link.hasAttribute('disabled')).to.be.true;
   });
 
   it('should toggle off an asymmetric mark instead of double-wrapping it', async () => {
@@ -744,7 +748,7 @@ Second"></zn-remarkd-editor>`);
 
   it('should list every action in the slash menu under its group', async () => {
     const el = await fixture<ZnRemarkdEditor>(html`
-      <zn-remarkd-editor value="Hello" include-url="/includes"></zn-remarkd-editor>`);
+      <zn-remarkd-editor value="Hello" include-url="/includes" link-url="/links"></zn-remarkd-editor>`);
     el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
     await el.updateComplete;
     typeInBlock(el, '/');
@@ -764,8 +768,34 @@ Second"></zn-remarkd-editor>`);
     await waitUntil(() => el.shadowRoot!.querySelector('zn-slash-menu[open]'), 'the slash menu never opened');
 
     const menu = el.shadowRoot!.querySelector<ZnSlashMenu>('zn-slash-menu')!;
-    expect(menu.items.length).to.equal(EDITOR_ACTIONS.length - 1);
+    expect(menu.items.length).to.equal(EDITOR_ACTIONS.length - 2);
     expect(menu.items.every(item => item.action !== 'include')).to.be.true;
+  });
+
+  it('should omit the article link action without a link-url', async () => {
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="Hello" include-url="/includes"></zn-remarkd-editor>`);
+    el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
+    await el.updateComplete;
+    typeInBlock(el, '/');
+    await waitUntil(() => el.shadowRoot!.querySelector('zn-slash-menu[open]'), 'the slash menu never opened');
+
+    const menu = el.shadowRoot!.querySelector<ZnSlashMenu>('zn-slash-menu')!;
+    expect(menu.items.length).to.equal(EDITOR_ACTIONS.length - 1);
+    expect(menu.items.every(item => item.action !== 'link')).to.be.true;
+  });
+
+  it('should offer the article link action with a link-url', async () => {
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="Hello" include-url="/includes" link-url="/links"></zn-remarkd-editor>`);
+    el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
+    await el.updateComplete;
+    typeInBlock(el, '/');
+    await waitUntil(() => el.shadowRoot!.querySelector('zn-slash-menu[open]'), 'the slash menu never opened');
+
+    const menu = el.shadowRoot!.querySelector<ZnSlashMenu>('zn-slash-menu')!;
+    expect(menu.items.length).to.equal(EDITOR_ACTIONS.length);
+    expect(menu.items.some(item => item.action === 'link' && item.label === 'Link to article')).to.be.true;
   });
 
   it('should not open the slash menu part-way through a block', async () => {
@@ -1342,5 +1372,299 @@ const x = {product};
 \`\`\`"></zn-remarkd-editor>`);
     await el.updateComplete;
     expect(el.shadowRoot!.querySelectorAll('.remarkd-editor__var').length).to.equal(0);
+  });
+
+  /** Stubs the link options endpoint, capturing every URL it is called with. */
+  function stubLinkSearch(items: {ref: string; kind: string; title: string; context?: string; status?: string}[]) {
+    const original = window.fetch;
+    const calls: string[] = [];
+    window.fetch = (input: RequestInfo | URL) => {
+      calls.push(String(input));
+      return Promise.resolve(new Response(JSON.stringify({items}),
+        {headers: {'Content-Type': 'application/json'}}));
+    };
+    afterEach(() => {
+      window.fetch = original;
+    });
+    return calls;
+  }
+
+  it('should search the link endpoint from the picker', async () => {
+    const calls = stubLinkSearch([
+      {ref: 'kb:document/doc1', kind: 'document', title: 'Refunds', context: 'Billing', status: 'published'},
+    ]);
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="Hello" link-url="/links"></zn-remarkd-editor>`);
+    el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
+    await el.updateComplete;
+    // "article" matches only this action's label — "/link" would leave the plain
+    // Link action active, since its label sorts into the same band first.
+    const input = typeInBlock(el, '/article');
+    await waitUntil(() => el.shadowRoot!.querySelector('zn-slash-menu[open]'), 'the slash menu never opened');
+    input.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true, cancelable: true}));
+
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__link-picker'),
+      'the link picker never opened');
+    const filter = el.shadowRoot!.querySelector<HTMLInputElement>('.remarkd-editor__link-filter')!;
+    filter.value = 'refund';
+    filter.dispatchEvent(new Event('input', {bubbles: true}));
+
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__link-option'),
+      'no results rendered');
+    expect(calls.some(url => url.includes('/links?q=refund'))).to.be.true;
+    const option = el.shadowRoot!.querySelector('.remarkd-editor__link-option')!;
+    expect(option.querySelector('.remarkd-editor__link-option-title')!.textContent).to.contain('Refunds');
+    expect(option.querySelector('.remarkd-editor__link-option-meta')!.textContent).to.contain('Billing');
+  });
+
+  it('should keep the link picker open when opened from the overflow menu', async () => {
+    stubLinkSearch([]);
+    // Narrow enough that every action, including "Link to article", collapses into the
+    // overflow menu — the toolbar-bar buttons guard against blur with @mousedown
+    // preventDefault, but a menu item does not, so this is the path that can race.
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="Hello" link-url="/links" style="width: 240px"></zn-remarkd-editor>`);
+    el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
+    await el.updateComplete;
+
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__toolbar-more'),
+      'the overflow trigger never appeared');
+    const dropdown = el.shadowRoot!.querySelector<ZnDropdown>('.remarkd-editor__toolbar-more')!;
+    await dropdown.show();
+    await new Promise(resolve => requestAnimationFrame(resolve));
+
+    const linkItem = [...dropdown.querySelectorAll('zn-menu-item')]
+      .find(item => item.textContent?.includes('Link to article'));
+    expect(linkItem, 'the article-link action should be reachable through the overflow menu').to.exist;
+    // ZnButton overrides click() without dispatching a DOM event, so the menu item's
+    // own click listener (and zn-menu's selection handling) needs a real event.
+    linkItem!.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+    await el.updateComplete;
+
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__link-picker'),
+      'the link picker never opened');
+    // The dropdown's own @zn-hide fires as the menu closes after the item is chosen; it must
+    // not clear suppressBlurCommit out from under the picker it just opened.
+    expect(el.shadowRoot!.querySelector('.remarkd-editor__link-picker'),
+      'the picker unmounted, so the deferred blur committed the edit and closed the block')
+      .to.exist;
+  });
+
+  it('should apply only the newest search response when an older one resolves later', async () => {
+    const resolvers: Record<string, (response: Response) => void> = {};
+    const original = window.fetch;
+    window.fetch = (input: RequestInfo | URL) => {
+      const q = new URL(String(input), window.location.href).searchParams.get('q') ?? '';
+      return new Promise<Response>(resolve => {
+        resolvers[q] = resolve;
+      });
+    };
+    afterEach(() => {
+      window.fetch = original;
+    });
+    const respond = (items: {ref: string; kind: string; title: string}[]) =>
+      new Response(JSON.stringify({items}), {headers: {'Content-Type': 'application/json'}});
+
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="Hello" link-url="/links"></zn-remarkd-editor>`);
+    el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
+    await el.updateComplete;
+    const input = typeInBlock(el, '/article');
+    await waitUntil(() => el.shadowRoot!.querySelector('zn-slash-menu[open]'), 'the slash menu never opened');
+    input.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true, cancelable: true}));
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__link-picker'),
+      'the link picker never opened');
+
+    const filter = el.shadowRoot!.querySelector<HTMLInputElement>('.remarkd-editor__link-filter')!;
+    filter.value = 'first';
+    filter.dispatchEvent(new Event('input', {bubbles: true}));
+    await aTimeout(250);
+    filter.value = 'second';
+    filter.dispatchEvent(new Event('input', {bubbles: true}));
+    await aTimeout(250);
+
+    // Resolve out of order: the stale "first" request settles after the current
+    // "second" one, and must not be allowed to overwrite it.
+    resolvers['second']!(respond([{ref: 'kb:document/second', kind: 'document', title: 'Second Result'}]));
+    await aTimeout(0);
+    resolvers['first']!(respond([{ref: 'kb:document/first', kind: 'document', title: 'First Result'}]));
+
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__link-option'),
+      'no results rendered');
+    // An option already exists from the "second" response, so waiting on its mere
+    // presence would race the still-settling "first" response — give it time to
+    // land (and, unguarded, overwrite) before asserting it did not.
+    await aTimeout(50);
+    const titles = [...el.shadowRoot!.querySelectorAll('.remarkd-editor__link-option-title')]
+      .map(title => title.textContent);
+    expect(titles).to.eql(['Second Result']);
+  });
+
+  it('should report a failed link search', async () => {
+    const original = window.fetch;
+    window.fetch = () => Promise.resolve(new Response('nope', {status: 500}));
+    afterEach(() => {
+      window.fetch = original;
+    });
+
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="Hello" link-url="/links"></zn-remarkd-editor>`);
+    el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
+    await el.updateComplete;
+    const input = typeInBlock(el, '/article');
+    await waitUntil(() => el.shadowRoot!.querySelector('zn-slash-menu[open]'), 'the slash menu never opened');
+    input.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true, cancelable: true}));
+
+    // The debounced request is still pending when the empty state first renders
+    // ("Searching…"), so wait for the failed message itself, not just the div.
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__link-picker-empty')
+      ?.textContent?.includes('Could not search'), 'the picker never settled');
+    expect(el.shadowRoot!.querySelector('.remarkd-editor__link-picker-empty')!.textContent)
+      .to.contain('Could not search');
+  });
+
+  it('should close the link picker without touching the block', async () => {
+    stubLinkSearch([]);
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="Hello" link-url="/links"></zn-remarkd-editor>`);
+    el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
+    await el.updateComplete;
+    const input = typeInBlock(el, '/article');
+    await waitUntil(() => el.shadowRoot!.querySelector('zn-slash-menu[open]'), 'the slash menu never opened');
+    input.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true, cancelable: true}));
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__link-picker'),
+      'the link picker never opened');
+
+    // ZnButton overrides .click() to skip dispatching a real click event, so the
+    // host's own @click listener needs one dispatched directly, as elsewhere in this file.
+    el.shadowRoot!.querySelector<ZnButton>('.remarkd-editor__link-picker zn-button')!
+      .dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+    await el.updateComplete;
+    expect(el.shadowRoot!.querySelector('.remarkd-editor__link-picker')).to.not.exist;
+    expect(el.value).to.equal('Hello');
+  });
+
+  /**
+   * Opens the picker from the toolbar over the open block, with the given
+   * selection — the slash path never has one, so the toolbar is the only way to
+   * exercise a selected label. The fixtures below are 4000px wide so no toolbar
+   * group has collapsed into the overflow menu.
+   */
+  async function openLinkPicker(el: ZnRemarkdEditor, text: string, from: number, to: number) {
+    await aTimeout(50);
+    el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
+    await el.updateComplete;
+    const input = typeInBlock(el, text);
+    input.setSelectionRange(from, to);
+    el.shadowRoot!.querySelector<ZnButton>('zn-button[tooltip="Link to article"]')!
+      .dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__link-picker'),
+      'the link picker never opened');
+  }
+
+  it('should wrap the selected text as the link label', async () => {
+    stubLinkSearch([{ref: 'kb:document/doc1', kind: 'document', title: 'Refunds'}]);
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor style="width: 4000px" value="Read Refunds now" link-url="/links"></zn-remarkd-editor>`);
+    await openLinkPicker(el, 'Read Refunds now', 5, 12);
+
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__link-option'), 'no results');
+    el.shadowRoot!.querySelector<HTMLButtonElement>('.remarkd-editor__link-option')!.click();
+    await el.updateComplete;
+
+    const input = el.shadowRoot!.querySelector<HTMLTextAreaElement>('.remarkd-editor__input')!;
+    expect(input.value).to.equal('Read [Refunds](kb:document/doc1) now');
+  });
+
+  it('should insert the title as the label with no selection', async () => {
+    stubLinkSearch([{ref: 'kb:document/doc1', kind: 'document', title: 'Refunds [and] more'}]);
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor style="width: 4000px" value="See " link-url="/links"></zn-remarkd-editor>`);
+    await openLinkPicker(el, 'See ', 4, 4);
+
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__link-option'), 'no results');
+    el.shadowRoot!.querySelector<HTMLButtonElement>('.remarkd-editor__link-option')!.click();
+    await el.updateComplete;
+
+    const input = el.shadowRoot!.querySelector<HTMLTextAreaElement>('.remarkd-editor__input')!;
+    expect(input.value).to.equal('See [Refunds (and) more](kb:document/doc1)');
+    expect(el.shadowRoot!.querySelector('.remarkd-editor__link-picker')).to.not.exist;
+  });
+
+  it('should collapse each CRLF character in the title to a space, matching Go byte-for-byte', async () => {
+    // Label formatting must match app-kb's model.ContentLinkMarkup character for character.
+    stubLinkSearch([{ref: 'kb:document/doc1', kind: 'document', title: 'Contact\r\nnow'}]);
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor style="width: 4000px" value="See " link-url="/links"></zn-remarkd-editor>`);
+    await openLinkPicker(el, 'See ', 4, 4);
+
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__link-option'), 'no results');
+    el.shadowRoot!.querySelector<HTMLButtonElement>('.remarkd-editor__link-option')!.click();
+    await el.updateComplete;
+
+    const input = el.shadowRoot!.querySelector<HTMLTextAreaElement>('.remarkd-editor__input')!;
+    expect(input.value).to.equal('See [Contact  now](kb:document/doc1)');
+  });
+
+  it('should commit the inserted link to the value', async () => {
+    stubLinkSearch([{ref: 'kb:category/cat1', kind: 'category', title: 'Billing'}]);
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor style="width: 4000px" value="See " link-url="/links"></zn-remarkd-editor>`);
+    await openLinkPicker(el, 'See ', 4, 4);
+
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__link-option'), 'no results');
+    el.shadowRoot!.querySelector<HTMLButtonElement>('.remarkd-editor__link-option')!.click();
+    await el.updateComplete;
+    el.shadowRoot!.querySelector<HTMLTextAreaElement>('.remarkd-editor__input')!
+      .dispatchEvent(new Event('blur', {bubbles: true}));
+    await el.updateComplete;
+
+    expect(el.value).to.equal('See [Billing](kb:category/cat1)');
+  });
+
+  it('should flag a link whose target the app does not know', async () => {
+    const calls = stubLinkSearch([{ref: 'kb:document/doc1', kind: 'document', title: 'Refunds'}]);
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor link-url="/links"
+                         value="See [Refunds](kb:document/doc1) and [Gone](kb:document/doc9)."></zn-remarkd-editor>`);
+
+    await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__link--missing'),
+      'the missing state never rendered');
+    expect(calls.some(url => url.includes('refs=') && url.includes('doc9'))).to.be.true;
+
+    const anchors = [...el.shadowRoot!.querySelectorAll<HTMLAnchorElement>('a[href^="kb:"]')];
+    const healthy = anchors.find(a => a.getAttribute('href') === 'kb:document/doc1')!;
+    const missing = anchors.find(a => a.getAttribute('href') === 'kb:document/doc9')!;
+    expect(healthy.classList.contains('remarkd-editor__link--missing')).to.be.false;
+    expect(missing.classList.contains('remarkd-editor__link--missing')).to.be.true;
+  });
+
+  // A list that never arrived is not evidence a link is broken.
+  it('should not flag links when the resolve request fails', async () => {
+    const original = window.fetch;
+    const calls: string[] = [];
+    window.fetch = (input: RequestInfo | URL) => {
+      calls.push(String(input));
+      return Promise.resolve(new Response('nope', {status: 500}));
+    };
+    afterEach(() => {
+      window.fetch = original;
+    });
+
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor link-url="/links"
+                         value="See [Gone](kb:document/doc9)."></zn-remarkd-editor>`);
+    await aTimeout(200);
+    expect(calls.some(url => url.includes('refs=') && url.includes('doc9'))).to.be.true;
+    expect(el.shadowRoot!.querySelector('.remarkd-editor__link--missing')).to.not.exist;
+  });
+
+  it('should not flag links without a link-url', async () => {
+    const calls = stubLinkSearch([]);
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="See [Gone](kb:document/doc9)."></zn-remarkd-editor>`);
+    await aTimeout(50);
+    expect(calls).to.have.length(0);
+    expect(el.shadowRoot!.querySelector('.remarkd-editor__link--missing')).to.not.exist;
   });
 });

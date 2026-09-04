@@ -485,3 +485,52 @@
   border: 0;
   padding: 0;
 }
+
+.remarkd-editor__link-picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-spacing-x-small);
+  margin-top: var(--zn-spacing-x-small);
+  padding: var(--zn-spacing-small);
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: var(--zn-border-radius);
+  background: var(--zn-color-neutral-0, white);
+}
+
+.remarkd-editor__link-picker-head {
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-x-small);
+}
+
+.remarkd-editor__link-filter {
+  flex: 1 1 auto;
+}
+
+.remarkd-editor__link-option {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--zn-spacing-small);
+  padding: var(--zn-spacing-x-small) var(--zn-spacing-small);
+  border: 0;
+  border-radius: var(--zn-border-radius);
+  background: none;
+  cursor: pointer;
+  text-align: left;
+
+  &:hover {
+    background: var(--zn-color-neutral-100);
+  }
+}
+
+.remarkd-editor__link-option-meta,
+.remarkd-editor__link-picker-empty {
+  color: var(--zn-color-neutral-400, #9aa4b2);
+  font-size: var(--zn-font-size-small);
+}
+
+.remarkd-editor__link--missing {
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: rgb(var(--zn-color-error));
+}

@@ -49,8 +49,21 @@ interface IncludeOption {
   url?: string;
 }
 
+interface LinkOption {
+  ref: string;
+  kind: string;
+  title: string;
+  context?: string;
+  status?: string;
+}
+
 /** remarkd's include directive on a line of its own: `include::<target>[<label>]`. */
 const INCLUDE_LINE = /^include::([^[]+)\[(.*)]\s*$/;
+
+/** The reference a content link carries: `kb:<kind>/<id>`. */
+const CONTENT_LINK_PATTERN = 'kb:(?:document|category|page)\\/[A-Za-z0-9_-]+';
+const CONTENT_LINK_HREF = new RegExp(`^${CONTENT_LINK_PATTERN}$`);
+const CONTENT_LINK_REFS = new RegExp(CONTENT_LINK_PATTERN, 'g');
 
 /** A document attribute definition: `:name: value`, `:flag:`, or `:flag!:` to unset. */
 const ATTRIBUTE_LINE = /^:([A-Za-z0-9_-]+)(!)?:\s*(.*)$/;
@@ -119,11 +132,27 @@ const CONDITIONAL_INLINE = /^(ifdef|ifndef|iftrue|iffalse|ifempty|ifnempty)::([^
  * directive, so they are replaced rather than escaped.
  */
 function includeMarker(id: string, title: string): string {
+  // Collapses a run of newlines to one space, unlike contentLinkMarkup below —
+  // that one replaces char-for-char to stay byte-for-byte with app-kb's
+  // model.ContentLinkMarkup; don't merge the two formatters.
   const label = title.replace(/[\r\n]+/g, ' ').replace(/\[/g, '(').replace(/]/g, ')').trim();
   return `include::${id}[${label}]`;
 }
 
+/**
+ * The markup a body carries for a link to other knowledge-base content.
+ * Mirrors app-kb's `model.ContentLinkMarkup`: brackets and newlines in the
+ * label would end the link early, so they are replaced rather than escaped.
+ */
+function contentLinkMarkup(ref: string, label: string): string {
+  const text = label.replace(/[\r\n]/g, ' ').replace(/\[/g, '(').replace(/]/g, ')').trim();
+  return `[${text}](${ref})`;
+}
+
 const SLASH_ITEMS = slashItems(EDITOR_ACTIONS);
+
+/** Keystrokes settle before the link endpoint is asked again. */
+const LINK_SEARCH_DEBOUNCE = 200;
 
 /**
  * For an asymmetric mark whose closer embeds a variable payload in parentheses — Link's
@@ -331,9 +360,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     menu: () => this.mountSlashMenu(),
     // The menu only belongs in a block that is nothing but the slash command — a
     // block prefix like "## " is not valid remarkd part-way through a line.
-    items: () => this.isSlashBlock()
-      ? SLASH_ITEMS.filter(item => item.action !== 'include' || !!this.includeUrl)
-      : [],
+    items: () => this.isSlashBlock() ? SLASH_ITEMS.filter(item => this.slashItemAvailable(item)) : [],
     onSelect: item => this.handleSlashSelect(item)
   });
 
@@ -371,6 +398,17 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   @state() private includeLoadFailed = false;
   @state() private includePickerIndex: number | null = null;
   @state() private includeQuery = '';
+  @state() private linkPickerOpen = false;
+  @state() private linkQuery = '';
+  @state() private linkResults: LinkOption[] | null = null;
+  @state() private linkSearchFailed = false;
+  private linkSelection: [number, number] | null = null;
+  private linkSearchTimer?: ReturnType<typeof setTimeout>;
+  private linkSearchToken = 0;
+
+  /** Resolved link targets by reference; a null value is one the app does not know. */
+  private linkRefs = new Map<string, LinkOption | null>();
+  private linkRefsPending = false;
 
   private pendingDragHandle: HTMLElement | null = null;
   private dragStartX = 0;
@@ -404,6 +442,14 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
    * chips rendered for `include::` directives and feeds the include picker.
    */
   @property({attribute: 'include-url'}) includeUrl = '';
+
+  /**
+   * Endpoint the article link picker searches, as
+   * `{"items":[{ref,kind,title,context,status}]}`. Queried with `?q=<term>` as
+   * the author types and with `?refs=a,b` to resolve the references a body
+   * already carries.
+   */
+  @property({attribute: 'link-url'}) linkUrl = '';
 
   /** Adds a toolbar toggle that swaps the block view for the full remarkd source. */
   @property({type: Boolean, attribute: 'allow-raw', reflect: true}) allowRaw = false;
@@ -465,6 +511,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     super.firstUpdated(_changedProperties);
     this.formControlController.updateValidity();
     if (this.hasIncludeBlock()) void this.loadIncludeOptions();
+    this.resolveContentLinks();
   }
 
   protected updated(changedProperties: PropertyValues<this>) {
@@ -472,6 +519,8 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     // Scoped to the parser-rendered branch only — see the class comment on the rendered div.
     this.shadowRoot?.querySelectorAll('.remarkd-editor__rendered--parsed')
       .forEach(rendered => this.markVariables(rendered));
+    this.shadowRoot?.querySelectorAll('.remarkd-editor__rendered--parsed')
+      .forEach(rendered => this.markContentLinks(rendered));
   }
 
   disconnectedCallback() {
@@ -487,6 +536,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     }
     this.blocks = this.splitBlocks(this.value || '');
     if (this.hasUpdated && this.hasIncludeBlock()) void this.loadIncludeOptions();
+    if (this.hasUpdated) this.resolveContentLinks();
   }
 
   @watch('includeUrl', {waitUntilFirstUpdate: true})
@@ -495,6 +545,13 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     this.includeOptions = null;
     this.includeLoadFailed = false;
     if (this.hasIncludeBlock()) void this.loadIncludeOptions();
+  }
+
+  @watch('linkUrl', {waitUntilFirstUpdate: true})
+  handleLinkUrlChange() {
+    this.linkRefs.clear();
+    this.linkRefsPending = false;
+    this.resolveContentLinks();
   }
 
   /**
@@ -682,6 +739,8 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     this.editingDraft = draft ?? this.blocks[index] ?? '';
     this.editingIndex = index;
     this.imageEdit = null;
+    this.linkPickerOpen = false;
+    this.linkSelection = null;
     this.editShell = this.computeEditShell(this.editingDraft);
     this.slashController.close();
     void this.focusInput(align, caretOffset);
@@ -923,6 +982,12 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
 
   /** Returns false for items the controller should not insert text for. */
   private handleSlashSelect(item: SlashMenuItem): boolean {
+    if (item.action === 'link') {
+      // The controller strips the "/…" text first, leaving the caret where the
+      // command was — which is where the link belongs.
+      void this.updateComplete.then(() => this.pickLink());
+      return false;
+    }
     if (item.action !== 'image' && item.action !== 'include') return true;
 
     const index = this.editingIndex ?? this.blocks.length;
@@ -1122,6 +1187,66 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     void this.revealAfterUpdate('.remarkd-editor__include-picker', 'center');
   }
 
+  /**
+   * Opens the picker over the block being edited. The caret range is captured
+   * now: the picker's own filter takes focus, so the textarea's selection is
+   * gone by the time an option is chosen.
+   */
+  private pickLink() {
+    if (this.disabled || this.readonly || !this.linkUrl || this.editingIndex === null) return;
+    const input = this.shadowRoot?.querySelector<HTMLTextAreaElement>('.remarkd-editor__input');
+    if (!input) return;
+    this.linkSelection = [input.selectionStart, input.selectionEnd];
+    this.linkQuery = input.value.slice(input.selectionStart, input.selectionEnd).trim();
+    this.linkResults = null;
+    this.linkSearchFailed = false;
+    this.linkPickerOpen = true;
+    // The picker renders inside the editing block and its filter takes focus,
+    // so the textarea's blur must not commit the edit — that would unmount the
+    // picker mid-interaction.
+    this.suppressBlurCommit = true;
+    this.searchLinks(this.linkQuery);
+    void this.updateComplete.then(() => {
+      this.shadowRoot?.querySelector<HTMLInputElement>('.remarkd-editor__link-filter')?.focus();
+    });
+  }
+
+  private closeLinkPicker = () => {
+    this.linkPickerOpen = false;
+    this.linkSelection = null;
+    this.suppressBlurCommit = false;
+    clearTimeout(this.linkSearchTimer);
+    void this.updateComplete.then(() => {
+      this.shadowRoot?.querySelector<HTMLTextAreaElement>('.remarkd-editor__input')
+        ?.focus({preventScroll: true});
+    });
+  };
+
+  /** Debounced; only the newest response is kept. */
+  private searchLinks(term: string) {
+    clearTimeout(this.linkSearchTimer);
+    const token = ++this.linkSearchToken;
+    this.linkSearchTimer = setTimeout(() => {
+      const url = `${this.linkUrl}${this.linkUrl.includes('?') ? '&' : '?'}q=${encodeURIComponent(term)}`;
+      fetch(url, {headers: {Accept: 'application/json'}})
+        .then(res => {
+          if (!res.ok) throw new Error(`link search failed: ${res.status}`);
+          return res.json() as Promise<{items?: LinkOption[]}>;
+        })
+        .then(data => {
+          if (token !== this.linkSearchToken) return;
+          this.linkResults = data.items ?? [];
+          this.linkSearchFailed = false;
+        })
+        .catch(error => {
+          console.error('[zn-remarkd-editor] link search failed', error);
+          if (token !== this.linkSearchToken) return;
+          this.linkResults = null;
+          this.linkSearchFailed = true;
+        });
+    }, LINK_SEARCH_DEBOUNCE);
+  }
+
   private closeIncludePicker = () => {
     this.includePickerIndex = null;
   };
@@ -1223,6 +1348,50 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
         });
     }
     return this.includeRequest;
+  }
+
+  /**
+   * Resolves the references in the body that have not been resolved yet, so a
+   * link whose target is gone can be marked. A failed request records nothing:
+   * an unanswered reference is not a broken one.
+   */
+  private resolveContentLinks() {
+    if (!this.linkUrl || this.linkRefsPending) return;
+    const refs = [...new Set((this.value || '').match(CONTENT_LINK_REFS) ?? [])]
+      .filter(ref => !this.linkRefs.has(ref));
+    if (!refs.length) return;
+
+    this.linkRefsPending = true;
+    const url = `${this.linkUrl}${this.linkUrl.includes('?') ? '&' : '?'}refs=${encodeURIComponent(refs.join(','))}`;
+    fetch(url, {headers: {Accept: 'application/json'}})
+      .then(res => {
+        if (!res.ok) throw new Error(`link resolve failed: ${res.status}`);
+        return res.json() as Promise<{items?: LinkOption[]}>;
+      })
+      .then(data => {
+        const known = new Map((data.items ?? []).map(item => [item.ref, item]));
+        for (const ref of refs) this.linkRefs.set(ref, known.get(ref) ?? null);
+        this.requestUpdate();
+      })
+      .catch(error => {
+        console.error('[zn-remarkd-editor] link resolve failed', error);
+      })
+      .finally(() => {
+        // Don't retry a failed request here: these refs are still absent from
+        // linkRefs, so the next value change calls this again — retrying in
+        // finally instead would loop forever on a persistent failure.
+        this.linkRefsPending = false;
+      });
+  }
+
+  private markContentLinks(root: Element) {
+    root.querySelectorAll<HTMLAnchorElement>('a[href^="kb:"]').forEach(anchor => {
+      const match = CONTENT_LINK_HREF.exec(anchor.getAttribute('href') ?? '');
+      const missing = !!match && this.linkRefs.get(match[0]) === null;
+      anchor.classList.toggle('remarkd-editor__link--missing', missing);
+      if (missing) anchor.title = 'This article is no longer available';
+      else anchor.removeAttribute('title');
+    });
   }
 
   private autosize(input: HTMLTextAreaElement) {
@@ -1351,7 +1520,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       this.pickImage(index);
     } else if (action.opens === 'include') {
       this.pickInclude(index);
-    } else {
+    } else if (!action.opens) {
       this.insertDraftBlock(index, action.prefix ?? '', action.caretOffset);
     }
   }
@@ -1552,6 +1721,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                       @paste=${this.handleEditPaste}
                       @blur=${this.handleEditBlur}></textarea>
           </div>
+          ${this.linkPickerOpen ? this.renderLinkPicker() : ''}
         </div>`;
     }
 
@@ -1601,16 +1771,31 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       </div>`;
   }
 
-  /** An inline action needs an open block to apply its mark to. */
+  /** Inline marks and the article link both apply into an open block, not a new one. */
   private isActionDisabled(action: EditorAction): boolean {
-    return !!action.inline && this.editingIndex === null;
+    return (!!action.inline || action.opens === 'link') && this.editingIndex === null;
+  }
+
+  /** A picker action with no endpoint configured is not offered at all. */
+  private actionAvailable(action: EditorAction): boolean {
+    if (action.opens === 'include') return !!this.includeUrl;
+    if (action.opens === 'link') return !!this.linkUrl;
+    return true;
+  }
+
+  private slashItemAvailable(item: SlashMenuItem): boolean {
+    if (item.action === 'include') return !!this.includeUrl;
+    if (item.action === 'link') return !!this.linkUrl;
+    return true;
   }
 
   /** Routes a toolbar/menu action to the inline or block insert path — the one place both
    * `renderAction` and `renderMenuAction` call, so the bar and the overflow menu cannot
    * drift out of sync on what a given action actually does. */
   private activateAction(action: EditorAction) {
-    if (action.inline) {
+    if (action.opens === 'link') {
+      this.pickLink();
+    } else if (action.inline) {
       this.applyInline(action.inline);
     } else {
       this.handleToolbarInsert(action);
@@ -1656,7 +1841,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                 .map(group => ({
                   group,
                   actions: EDITOR_ACTIONS.filter(action => action.group === group.id
-                    && (action.opens !== 'include' || !!this.includeUrl)),
+                    && this.actionAvailable(action)),
                 }))
                 .filter(entry => entry.actions.length);
               const visible = this.toolbarOverflow.visibleCount;
@@ -1675,7 +1860,11 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                                }}
                                @zn-hide=${(e: Event) => {
                                  if (e.target !== e.currentTarget) return;
-                                 this.suppressBlurCommit = false;
+                                 // Choosing "Insert link" from this menu opens the link picker,
+                                 // which sets suppressBlurCommit itself; clearing it here
+                                 // unconditionally would race the picker's own flag and blur
+                                 // the textarea out from under it.
+                                 if (!this.linkPickerOpen) this.suppressBlurCommit = false;
                                }}>
                     <zn-button slot="trigger" type="button" icon-button plain icon="ellipsis@lu"
                                icon-size="18" tooltip="More"
@@ -1769,6 +1958,59 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
               </button>`)
             : html`<div class="remarkd-editor__include-picker-empty">No Includes found</div>`}
       </div>`;
+  }
+
+  private renderLinkPicker() {
+    const kinds: Record<string, string> = {document: 'Article', category: 'Category', page: 'Page'};
+    return html`
+      <div part="link-picker" class="remarkd-editor__link-picker">
+        <div class="remarkd-editor__link-picker-head">
+          <input class="remarkd-editor__link-filter"
+                 placeholder="Find an article"
+                 .value=${this.linkQuery}
+                 @input=${(e: Event) => {
+                   this.linkQuery = (e.target as HTMLInputElement).value;
+                   this.searchLinks(this.linkQuery);
+                 }}>
+          <zn-button type="button" icon-button="small" plain icon="x@lu"
+                     tooltip="Cancel" @click=${this.closeLinkPicker}></zn-button>
+        </div>
+        ${this.linkResults === null
+          ? html`<div class="remarkd-editor__link-picker-empty">${
+            this.linkSearchFailed ? 'Could not search for articles' : 'Searching…'}</div>`
+          : this.linkResults.length
+            ? this.linkResults.map(item => html`
+              <button type="button" class="remarkd-editor__link-option"
+                      @click=${() => this.insertLink(item)}>
+                <span class="remarkd-editor__link-option-title">${item.title}</span>
+                <span class="remarkd-editor__link-option-meta">${
+                  [kinds[item.kind] ?? item.kind, item.context, item.status === 'published' ? '' : item.status]
+                    .filter(Boolean).join(' · ')}</span>
+              </button>`)
+            : html`<div class="remarkd-editor__link-picker-empty">No articles found</div>`}
+      </div>`;
+  }
+
+  private insertLink(item: LinkOption) {
+    const input = this.shadowRoot?.querySelector<HTMLTextAreaElement>('.remarkd-editor__input');
+    const range = this.linkSelection;
+    this.linkPickerOpen = false;
+    this.linkSelection = null;
+    this.suppressBlurCommit = false;
+    if (!input || !range) return;
+
+    const [start, end] = range;
+    const selected = input.value.slice(start, end).trim();
+    const markup = contentLinkMarkup(item.ref, selected || item.title);
+    const next = input.value.slice(0, start) + markup + input.value.slice(end);
+
+    this.editingDraft = next;
+    input.value = next;
+    input.setSelectionRange(start + markup.length, start + markup.length);
+    this.editShell = this.computeEditShell(next);
+    this.autosize(input);
+    input.focus({preventScroll: true});
+    this.emit('zn-input');
   }
 
   private renderImagePicker() {

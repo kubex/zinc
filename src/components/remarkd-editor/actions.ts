@@ -25,7 +25,7 @@ export interface EditorAction {
   /** Where the caret lands within `prefix`. Defaults to the end. */
   caretOffset?: number;
   /** Actions that open their own picker instead of inserting text. */
-  opens?: 'image' | 'include';
+  opens?: 'image' | 'include' | 'link';
 }
 
 /** Toolbar order, most-used first — the last groups are the first to collapse. */
@@ -128,6 +128,7 @@ export const EDITOR_ACTIONS: EditorAction[] = [
   {key: 'tooltip', label: 'Tooltip', icon: 'message-circle-question-mark@lu', group: 'inline', keywords: ['term'], inline: {before: '{', after: '}(Explanation)', placeholder: 'Term'}},
   {key: 'cross-reference', label: 'Cross reference', icon: 'link-2@lu', group: 'inline', keywords: ['xref'], inline: {before: '<<', after: '>>', placeholder: 'section,Label'}},
   {key: 'links-and-images', label: 'Link', icon: 'link@lu', group: 'inline', inline: {before: '[', after: '](https://)', placeholder: 'Label'}},
+  {key: 'document-link', label: 'Link to article', icon: 'file-symlink@lu', group: 'inline', keywords: ['article', 'document', 'kb'], opens: 'link'},
   {key: 'passthrough', label: 'Passthrough', icon: 'shield@lu', group: 'inline', keywords: ['raw', 'literal'], inline: {before: 'pass:[', after: ']', placeholder: 'raw'}},
   {key: 'curly-bang-passthrough', label: 'Literal braces', icon: 'braces@lu', group: 'inline', inline: {before: '{!', after: '!}', placeholder: 'raw'}},
 ];

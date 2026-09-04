@@ -45,19 +45,16 @@ export default class ZnFormGroup extends ZincElement {
 
   @property({ attribute: 'pad', type: Boolean }) pad: boolean = false;
 
-  /** The scroller the label is tracked against by hand; null while native sticky is enough. */
-  private tracked: HTMLElement | null = null;
-  private stickyTop: number = 0;
+  /** The scroll containers we have clipped, against the inline overflow each carried before. */
+  private readonly clipped = new Map<HTMLElement, { x: string; y: string }>();
   private frame: number = 0;
-  private rebind: boolean = false;
-  private offset: number = 0;
   private resizeObserver: ResizeObserver | null = null;
 
   connectedCallback() {
     super.connectedCallback();
 
     // Whether an ancestor scrolls depends on how tall this form has grown.
-    this.resizeObserver ??= new ResizeObserver(() => this.schedule(true));
+    this.resizeObserver ??= new ResizeObserver(() => this.schedule());
     this.resizeObserver.observe(this);
     window.addEventListener('resize', this.onViewportResize);
   }
@@ -66,125 +63,93 @@ export default class ZnFormGroup extends ZincElement {
     super.disconnectedCallback();
     this.resizeObserver?.disconnect();
     window.removeEventListener('resize', this.onViewportResize);
-    this.trackScroller(null);
+    this.release([...this.clipped.keys()]);
     cancelAnimationFrame(this.frame);
     this.frame = 0;
   }
 
   protected firstUpdated(changedProperties: PropertyValues) {
     super.firstUpdated(changedProperties);
-    this.schedule(true);
+    this.schedule();
   }
 
   private get labelColumn(): HTMLElement | null {
     return this.shadowRoot?.querySelector('.form-control__text') ?? null;
   }
 
-  /** Coalesces scroll and resize work into one frame, and out of the ResizeObserver callback. */
-  private schedule(rebind: boolean = false) {
-    this.rebind ||= rebind;
+  /** Coalesces resize work into one frame, and out of the ResizeObserver callback. */
+  private schedule() {
     if (this.frame) return;
 
     this.frame = requestAnimationFrame(() => {
       this.frame = 0;
-      if (this.rebind) {
-        this.rebind = false;
-        this.findScroller();
-      }
-      this.positionLabel();
+      this.freeSticky();
     });
   }
 
+  // A shorter viewport can make an ancestor scroll without changing this form's size.
+  private readonly onViewportResize = () => this.schedule();
+
   /**
-   * Native sticky only follows the nearest scroll container. Where that container isn't the one
-   * the user actually scrolls — a `zn-panel` body sized to its content inside a scrolling
-   * slideout, say — the label never moves, so it gets translated by hand instead.
+   * Native sticky anchors to the nearest scroll container, even one that cannot scroll — a `zn-panel` body sized to
+   * its content, say — where it then holds the label still for the whole scroll. `overflow: clip` clips without
+   * making a scroll container, so clipping those takes them out of sticky's search and the label follows the box the
+   * user actually scrolls, moved by the compositor rather than by hand.
    */
-  private findScroller() {
+  private freeSticky() {
     const column = this.labelColumn;
     if (!column) return;
 
-    column.style.top = '';
-    this.stickyTop = parseFloat(getComputedStyle(column).top) || 0;
+    const dead: HTMLElement[] = [];
 
-    const anchor = this.nearestScrollContainer(column);
-    const scroller = anchor ? this.scrollingAncestor(column) : null;
-    const anchored = !anchor || scroller === anchor;
+    for (const element of this.ancestors(column)) {
+      if (!this.clipped.has(element) && !this.isStickyAnchor(element)) continue;
 
-    this.trackScroller(anchored ? null : scroller);
+      // Scroll size reports the overflow through a clip, so a box that has grown into needing to scroll is handed
+      // straight back — and sticky anchors to it, which is now the right answer.
+      if (this.overflows(element)) break;
 
-    // A `top` inset against a box that never scrolls has nothing to hold the label back from:
-    // it only pushes the label down the page, so drop it and let the transform do the work.
-    if (!anchored) column.style.top = '0px';
-  }
-
-  private trackScroller(scroller: HTMLElement | null) {
-    if (scroller === this.tracked) return;
-
-    this.scrollTarget(this.tracked)?.removeEventListener('scroll', this.onScroll);
-    this.tracked = scroller;
-    this.scrollTarget(this.tracked)?.addEventListener('scroll', this.onScroll, { passive: true });
-  }
-
-  /** The document scrolls through the window, every other scroller reports its own events. */
-  private scrollTarget(scroller: HTMLElement | null): EventTarget | null {
-    if (!scroller) return null;
-    return scroller === document.scrollingElement ? window : scroller;
-  }
-
-  private readonly onScroll = () => this.schedule();
-
-  // A shorter viewport can make an ancestor scrollable without changing this form's size.
-  private readonly onViewportResize = () => this.schedule(true);
-
-  private positionLabel() {
-    const column = this.labelColumn;
-    const fieldset = this.shadowRoot?.querySelector<HTMLElement>('.form-control');
-    if (!column || !fieldset) return;
-
-    let offset = 0;
-
-    // The stylesheet drops sticky while the columns are stacked; tracking has to stand down too.
-    if (this.tracked && getComputedStyle(column).position === 'sticky') {
-      const visibleTop = this.tracked === document.scrollingElement
-        ? 0
-        : this.tracked.getBoundingClientRect().top;
-      const restingTop = column.getBoundingClientRect().top - this.offset;
-      const travel = Math.max(0, fieldset.clientHeight - column.offsetHeight);
-
-      offset = Math.min(Math.max(visibleTop + this.stickyTop - restingTop, 0), travel);
+      dead.push(element);
     }
 
-    if (Math.round(offset) === Math.round(this.offset)) return;
+    this.release([...this.clipped.keys()].filter(element => !dead.includes(element)));
+    dead.filter(element => !this.clipped.has(element)).forEach(element => this.clip(element));
+  }
 
-    this.offset = offset;
-    column.style.transform = offset ? `translateY(${offset}px)` : '';
+  private clip(element: HTMLElement) {
+    // A second form group in the same container finds the first one's clip already inline. Recording it as what was
+    // there before would leave the box clipped for good, so it counts as nothing to put back.
+    const kept = (overflow: string) => overflow === 'clip' ? '' : overflow;
+    this.clipped.set(element, { x: kept(element.style.overflowX), y: kept(element.style.overflowY) });
+    element.style.overflowX = 'clip';
+    element.style.overflowY = 'clip';
+
+    // Scrolling has to go back the moment the box is short enough to need it.
+    this.resizeObserver?.observe(element);
+  }
+
+  private release(elements: HTMLElement[]) {
+    elements.forEach(element => {
+      const inline = this.clipped.get(element);
+      element.style.overflowX = inline?.x ?? '';
+      element.style.overflowY = inline?.y ?? '';
+      this.resizeObserver?.unobserve(element);
+      this.clipped.delete(element);
+    });
   }
 
   /** The box native sticky would anchor to, whether or not it can be scrolled. */
-  private nearestScrollContainer(from: HTMLElement): HTMLElement | null {
-    return this.ancestors(from).find(element => {
-      const style = getComputedStyle(element);
-      return this.isScrollContainer(style.overflowY) || this.isScrollContainer(style.overflowX);
-    }) ?? null;
-  }
-
-  /** The nearest ancestor the user can actually scroll, falling back to the document. */
-  private scrollingAncestor(from: HTMLElement): HTMLElement | null {
-    const scroller = this.ancestors(from).find(element => {
-      const overflow = getComputedStyle(element).overflowY;
-      return (overflow === 'auto' || overflow === 'scroll' || overflow === 'overlay')
-        && element.scrollHeight > element.clientHeight + 1;
-    });
-
-    if (scroller) return scroller;
-
-    const root = document.scrollingElement as HTMLElement | null;
-    return root && root.scrollHeight > root.clientHeight + 1 ? root : null;
+  private isStickyAnchor(element: HTMLElement) {
+    const style = getComputedStyle(element);
+    return this.isScrollContainer(style.overflowY) || this.isScrollContainer(style.overflowX);
   }
 
   private isScrollContainer(overflow: string) {
     return overflow === 'auto' || overflow === 'scroll' || overflow === 'hidden' || overflow === 'overlay';
+  }
+
+  private overflows(element: HTMLElement) {
+    return element.scrollHeight > element.clientHeight + 1 || element.scrollWidth > element.clientWidth + 1;
   }
 
   /** Walks the flattened tree, so slots and shadow boundaries are crossed the way layout does. */

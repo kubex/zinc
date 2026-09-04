@@ -1,6 +1,8 @@
 import '../../../dist/zn.min.js';
 import { expect, fixture, html } from '@open-wc/testing';
+import type ZnFormGroup from '../form-group/form-group.component';
 import type ZnInput from '../input/input.component';
+import type ZnOption from '../option/option.component';
 import type ZnSelect from '../select/select.component';
 import type ZnTranslationGroup from './translation-group.component';
 import type ZnTranslations from '../translations/translations.component';
@@ -110,24 +112,30 @@ describe('<zn-translation-group>', () => {
 
       const body = group.shadowRoot!.querySelector<HTMLElement>('.panel__body')!;
       expect(getComputedStyle(body).paddingLeft).to.equal('0px');
-      expect(getComputedStyle(group.shadowRoot!.querySelector<HTMLElement>('.panel__header')!).paddingLeft)
-        .to.equal('0px');
+
+      const formGroup = group.shadowRoot!.querySelector<ZnFormGroup>('zn-form-group')!;
+      expect(formGroup.getBoundingClientRect().left, 'flush with the form around it')
+        .to.equal(group.getBoundingClientRect().left);
     });
 
-    it('leaves the same gap under the caption as between the fields', async () => {
+    it('leaves the same gap between the fields as between the group and its actions', async () => {
       const group = await fixture<ZnTranslationGroup>(html`
         <zn-translation-group inline label="Content" .languages=${{en: 'English', fr: 'French'}}>
           <zn-translations name="heading"></zn-translations>
         </zn-translation-group>`);
-      // The spacing tokens live in the theme stylesheet, which the bundle under test does not carry.
+      // The spacing tokens live in the theme stylesheet, which the bundle under test does not carry. The form
+      // group's gap is one shorthand across both axes, so an unset column gap would void the row gap with it.
       group.style.setProperty('--zn-spacing-medium', '24px');
+      group.style.setProperty('--zn-spacing-small', '16px');
       await group.updateComplete;
 
-      const header = group.shadowRoot!.querySelector<HTMLElement>('.panel__header')!;
+      const formGroup = group.shadowRoot!.querySelector<ZnFormGroup>('zn-form-group')!;
+      await formGroup.updateComplete;
+      const fields = formGroup.shadowRoot!.querySelector<HTMLElement>('.form-control-input')!;
       const body = group.shadowRoot!.querySelector<HTMLElement>('.panel__body')!;
-      // zn-form-group's row gap between stacked controls. The header heads the same stack, so its gap matches.
-      expect(getComputedStyle(body).rowGap).to.equal('24px');
-      expect(getComputedStyle(header).paddingBottom).to.equal('24px');
+
+      expect(getComputedStyle(fields).rowGap, "the form group's gap between fields").to.equal('24px');
+      expect(getComputedStyle(body).rowGap, 'and down to the actions row').to.equal('24px');
     });
 
 
@@ -150,7 +158,7 @@ describe('<zn-translation-group>', () => {
       return group.shadowRoot!.querySelector<ZnSelect>('zn-select')!;
     }
 
-    it('sits in the header, opposite the caption', async () => {
+    it("sits under the caption, in the form group's chip slot", async () => {
       const group = await fixture<ZnTranslationGroup>(html`
         <zn-translation-group label="Content" .languages=${{en: 'English', fr: 'French'}}>
           <zn-translations name="heading"></zn-translations>
@@ -158,66 +166,92 @@ describe('<zn-translation-group>', () => {
       await group.updateComplete;
 
       const field = group.shadowRoot!.querySelector<HTMLElement>('.translation-group__language-field')!;
-      expect(field.getAttribute('slot')).to.equal('actions');
-      expect(field.closest('zn-header')).to.exist;
-      expect(group.shadowRoot!.querySelector('.panel__body zn-select')).to.be.null;
+      expect(field.assignedSlot?.name, 'assigned to the chip slot').to.equal('chip');
+
+      const formGroup = group.shadowRoot!.querySelector<ZnFormGroup>('zn-form-group')!;
+      await formGroup.updateComplete;
+      const label = formGroup.shadowRoot!.querySelector<HTMLElement>('[part="form-control-label"]')!;
+      expect(field.getBoundingClientRect().top, 'below the caption')
+        .to.be.greaterThan(label.getBoundingClientRect().bottom - 1);
     });
 
-    it('leaves the caption to the label alone, with the count on the chip', async () => {
+    it('leaves the caption to the form group label, with the count on the chip', async () => {
       const group = await fixture<ZnTranslationGroup>(html`
         <zn-translation-group label="Content" .languages=${{en: 'English', fr: 'French'}}>
           <zn-translations name="heading" value='{"en":"Hi","fr":"Salut"}'></zn-translations>
         </zn-translation-group>`);
       await group.updateComplete;
 
-      const header = group.shadowRoot!.querySelector('.panel__header')!;
-      expect(header.getAttribute('caption')).to.equal('Content');
-      expect(header.querySelector('[slot="caption"]'), 'nothing else rides the caption').to.be.null;
-      expect(group.shadowRoot!.querySelector('.translation-group__language-label')).to.be.null;
+      const formGroup = group.shadowRoot!.querySelector<ZnFormGroup>('zn-form-group')!;
+      await formGroup.updateComplete;
+      const label = formGroup.shadowRoot!.querySelector<HTMLElement>('[part="form-control-label"]')!;
+      expect(label.textContent?.trim(), 'nothing else rides the caption').to.equal('Content');
+
+      const summary = selectOf(group).querySelector('zn-chip[slot="suffix"]')!;
+      expect(summary.textContent?.trim()).to.equal('1/1');
     });
 
-    it('drops the fill and shadow but keeps the border, hover and focus', async () => {
+    it('wears the same chrome as any other select', async () => {
       const group = await fixture<ZnTranslationGroup>(html`
         <zn-translation-group label="Content" .languages=${{en: 'English', fr: 'French'}}>
           <zn-translations name="heading"></zn-translations>
         </zn-translation-group>`);
       // The input tokens live in the theme stylesheet, which the bundle under test does not carry.
+      group.style.setProperty('--zn-input-background-color', 'rgb(1, 2, 3)');
+      group.style.setProperty('--zn-shadow-x-small', '0 1px 2px rgb(7, 8, 9)');
       group.style.setProperty('--zn-input-border-width', '1px');
       group.style.setProperty('--zn-input-border-color', 'rgb(9, 9, 9)');
-      group.style.setProperty('--zn-focus-ring-width', '3px');
-      group.style.setProperty('--zn-input-focus-ring-color', 'rgb(4, 5, 6)');
       await group.updateComplete;
 
       const select = selectOf(group);
       await select.updateComplete;
-      const combobox = select.shadowRoot!.querySelector<HTMLElement>('[part~="combobox"]')!;
+      const styles = getComputedStyle(select.shadowRoot!.querySelector<HTMLElement>('[part~="combobox"]')!);
 
-      const styles = getComputedStyle(combobox);
-      expect(styles.backgroundColor).to.equal('rgba(0, 0, 0, 0)');
-      expect(styles.boxShadow).to.equal('none');
-      expect(styles.borderTopWidth, 'the border stays').to.equal('1px');
-      expect(styles.borderTopColor, 'the border stays').to.equal('rgb(9, 9, 9)');
-
-      select.focus();
-      await select.updateComplete;
-      expect(getComputedStyle(combobox).boxShadow, 'focus stays visible').to.not.equal('none');
+      expect(styles.backgroundColor, 'the fill').to.equal('rgb(1, 2, 3)');
+      expect(styles.boxShadow, 'the shadow').to.include('rgb(7, 8, 9)');
+      expect(styles.borderTopWidth, 'the border').to.equal('1px');
+      expect(styles.borderTopColor, 'the border').to.equal('rgb(9, 9, 9)');
     });
 
-    it('sizes the trigger to its language and holds the listbox open wider', async () => {
+    it('fills the width of the label column', async () => {
+      const el = await fixture<HTMLElement>(html`
+        <div style="width: 900px">
+          <zn-translation-group label="Content" .languages=${{en: 'English', fr: 'French'}}>
+            <zn-translations name="heading"></zn-translations>
+          </zn-translation-group>
+        </div>`);
+      const group = el.querySelector<ZnTranslationGroup>('zn-translation-group')!;
+      await group.updateComplete;
+
+      const formGroup = group.shadowRoot!.querySelector<ZnFormGroup>('zn-form-group')!;
+      await formGroup.updateComplete;
+      const column = formGroup.shadowRoot!.querySelector<HTMLElement>('[part="form-control-chip"]')!;
+
+      const select = selectOf(group);
+      await select.updateComplete;
+      expect(select.getBoundingClientRect().width).to.be.closeTo(column.getBoundingClientRect().width, 1);
+    });
+
+    it('filters the list on the name or the code, which stays off the option', async () => {
       const group = await fixture<ZnTranslationGroup>(html`
-        <zn-translation-group label="Content" .languages=${{en: 'English', fr: 'French'}}>
+        <zn-translation-group label="Content" .languages=${{en: 'English', fr: 'French', de: 'German'}}>
           <zn-translations name="heading"></zn-translations>
         </zn-translation-group>`);
       await group.updateComplete;
 
       const select = selectOf(group);
       await select.updateComplete;
+      const option = (code: string) => select.querySelector<ZnOption>(`zn-option[value="${code}"]`)!;
+      expect(option('de').getTextLabel().trim(), 'the code is not on show').to.equal('German');
 
-      // The whole point: the trigger is no longer pinned to the width the options need.
-      expect(select.getBoundingClientRect().width).to.be.lessThan(320);
+      await select.show();
+      const input = select.shadowRoot!.querySelector<HTMLInputElement>('[part~="display-input"]')!;
+      input.value = 'de';
+      input.dispatchEvent(new InputEvent('input', {bubbles: true, composed: true}));
+      await select.updateComplete;
 
-      const listbox = select.shadowRoot!.querySelector<HTMLElement>('[part~="listbox"]')!;
-      expect(getComputedStyle(listbox).minWidth).to.equal('320px');
+      expect(option('de').hidden, 'matched on its code').to.be.false;
+      expect(option('fr').hidden, 'and nothing else').to.be.true;
     });
 
     it('names the select for a screen reader without showing the label', async () => {
@@ -234,18 +268,22 @@ describe('<zn-translation-group>', () => {
       expect(label.getBoundingClientRect().width).to.be.lessThan(2);
     });
 
-    it('renders a header for the select even with no caption', async () => {
+    it('stands the select on its own with no caption', async () => {
       const group = await fixture<ZnTranslationGroup>(html`
         <zn-translation-group .languages=${{en: 'English', fr: 'French'}}>
           <zn-translations name="heading"></zn-translations>
         </zn-translation-group>`);
       await group.updateComplete;
 
-      expect(group.shadowRoot!.querySelector('.panel__header')).to.exist;
+      const formGroup = group.shadowRoot!.querySelector<ZnFormGroup>('zn-form-group')!;
+      await formGroup.updateComplete;
+
       expect(selectOf(group)).to.exist;
+      expect(formGroup.shadowRoot!.querySelector('[part="form-control-label"]'), 'no empty caption').to.be.null;
+      expect(formGroup.shadowRoot!.querySelector('[part="form-control-chip"]'), 'the select keeps its column').to.exist;
     });
 
-    it('keeps the header to itself, with slotted actions going to the bottom', async () => {
+    it('keeps the form group to the fields, with slotted actions going to the bottom', async () => {
       const group = await fixture<ZnTranslationGroup>(html`
         <zn-translation-group label="Content" .languages=${{en: 'English', fr: 'French'}}>
           <zn-button slot="actions">Auto translate</zn-button>
@@ -254,7 +292,7 @@ describe('<zn-translation-group>', () => {
       await group.updateComplete;
 
       const actionsSlot = group.shadowRoot!.querySelector('slot[name="actions"]')!;
-      expect(actionsSlot.closest('zn-header'), 'the header takes no actions').to.be.null;
+      expect(actionsSlot.closest('zn-form-group'), 'the form group takes no actions').to.be.null;
       expect(actionsSlot.closest('.panel__body'), 'they go to the body').to.exist;
     });
 

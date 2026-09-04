@@ -128,8 +128,9 @@ Add `inline-edit` to read the translation as text until it is clicked, through
 
 ### Many Languages
 
-Each language becomes an option labelled `Name (CODE)` — or the code alone where the configured name already is the
-code. The select takes any number of them, and its listbox scrolls once the list is longer than the space below it.
+Each language becomes an option labelled with its configured name — or its code, where `languages` does not name it.
+The select takes any number of them, and its listbox scrolls once the list is longer than the space below it. Type to
+filter the list: matching runs over the code as well as the name, so `de` finds German.
 
 ```html:preview
 <zn-translations

@@ -47,6 +47,7 @@ export default class ZnFormGroup extends ZincElement {
 
   /** The scroller the label is tracked against by hand; null while native sticky is enough. */
   private tracked: HTMLElement | null = null;
+  private stickyTop: number = 0;
   private frame: number = 0;
   private rebind: boolean = false;
   private offset: number = 0;
@@ -103,9 +104,18 @@ export default class ZnFormGroup extends ZincElement {
     const column = this.labelColumn;
     if (!column) return;
 
+    column.style.top = '';
+    this.stickyTop = parseFloat(getComputedStyle(column).top) || 0;
+
     const anchor = this.nearestScrollContainer(column);
     const scroller = anchor ? this.scrollingAncestor(column) : null;
-    this.trackScroller(scroller === anchor ? null : scroller);
+    const anchored = !anchor || scroller === anchor;
+
+    this.trackScroller(anchored ? null : scroller);
+
+    // A `top` inset against a box that never scrolls has nothing to hold the label back from:
+    // it only pushes the label down the page, so drop it and let the transform do the work.
+    if (!anchored) column.style.top = '0px';
   }
 
   private trackScroller(scroller: HTMLElement | null) {
@@ -139,11 +149,10 @@ export default class ZnFormGroup extends ZincElement {
       const visibleTop = this.tracked === document.scrollingElement
         ? 0
         : this.tracked.getBoundingClientRect().top;
-      const stickyTop = parseFloat(getComputedStyle(column).top) || 0;
       const restingTop = column.getBoundingClientRect().top - this.offset;
       const travel = Math.max(0, fieldset.clientHeight - column.offsetHeight);
 
-      offset = Math.min(Math.max(visibleTop + stickyTop - restingTop, 0), travel);
+      offset = Math.min(Math.max(visibleTop + this.stickyTop - restingTop, 0), travel);
     }
 
     if (Math.round(offset) === Math.round(this.offset)) return;

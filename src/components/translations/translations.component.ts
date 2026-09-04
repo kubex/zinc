@@ -223,14 +223,9 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     return {type: 'error', label: language === 'en' ? 'Empty' : 'English'};
   }
 
-  /**
-   * `English (EN)` — the configured name plus its code, unless the name already is the code, in which case the code
-   * alone. `languages` is written both ways: `{"en": "English"}` and `{"en": "EN"}`.
-   */
+  /** The configured name, or the code where `languages` does not name the language. */
   private languageLabel(language: string): string {
-    const name = this.languages[language] ?? language.toUpperCase();
-    const code = language.toUpperCase();
-    return name.toUpperCase() === code ? name : `${name} (${code})`;
+    return this.languages[language] ?? language.toUpperCase();
   }
 
   /**
@@ -496,6 +491,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
               class="translations__language-select"
               part="language-select"
               hoist
+              search
               ?disabled="${this.disabled}"
               .value="${this._activeLanguage}"
               @zn-change="${this.handleLanguageSelect}"

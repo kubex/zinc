@@ -6,13 +6,16 @@ layout: component
 ---
 
 The Translation Group component wraps multiple `zn-translations` components in a panel-styled container with a shared
-language select. The select sits at the top right of the header, opposite the caption. Closed, it carries how many
-languages are done as a `1/5` chip; open, each language is marked translated, partial or falling back to English.
-Choosing a language switches every child at once.
+language select. The fields sit in a [form group](/components/form-group), so the caption, help text and the select
+share its label column and the fields line up with every other form group around them. Closed, the select carries how
+many languages are done as a `1/5` chip; open, each language is marked translated, partial or falling back to English.
+Type to filter the list — by name or by language code, so `de` finds German. Choosing a language switches every child
+at once.
 
 ```html:preview
 <zn-translation-group
   label="Product Content"
+  help-text="Every field is translated one language at a time"
   languages='{"en":"English","fr":"French","de":"German"}'>
   <zn-translations
     label="Name"
@@ -40,14 +43,16 @@ A translation group with two translation inputs sharing one language select.
 </zn-translation-group>
 ```
 
-### With Label
+### Label and Help Text
 
-Use the `label` attribute to add a caption on the left of the header, opposite the language select. `language-label`
-sets the select's accessible name — it is not shown, since the caption names the section on screen.
+`label` names the section in the form group's label column, and `help-text` sits under it — the pair behave as they do
+on any other form group. The language select follows them, in the group's chip position. `language-label` sets the
+select's accessible name — it is not shown, since the caption names the section on screen.
 
 ```html:preview
 <zn-translation-group
   label="Page Translations"
+  help-text="Pick a language to edit every field in it"
   languages='{"en":"English","fr":"French","es":"Spanish"}'>
   <zn-translations label="Heading" name="heading"></zn-translations>
   <zn-translations label="Body" name="body"></zn-translations>
@@ -209,7 +214,8 @@ The group emits a `zn-language-change` event when the active language changes.
 
 | Property         | Type                     | Default            | Description                                       |
 |------------------|--------------------------|--------------------|---------------------------------------------------|
-| `label`          | `string`                 | `''`               | Caption displayed in the panel header             |
+| `label`          | `string`                 | `''`               | Names the section, in the form group's label column |
+| `help-text`      | `string`                 | `''`               | Sits under the label, above the language select   |
 | `language-label` | `string`                 | `'Edit Languages'` | The select's accessible name; not shown on screen |
 | `inline`         | `boolean`                | `false`            | Drops the panel border, background and padding    |
 | `languages`      | `Record<string, string>` | `{en: "EN"}`       | Object mapping language codes to display names    |
@@ -226,19 +232,15 @@ The group emits a `zn-language-change` event when the active language changes.
 | Slot      | Description                                                |
 |-----------|------------------------------------------------------------|
 | (default) | Place `<zn-translations>` elements here                    |
-| `label`   | Alternative to the `label` attribute for rich HTML content |
 | `actions` | Buttons for the bottom of the body; `align="start"` on a child moves it to the left |
 | `footer`  | Content displayed in the grey panel footer                |
 
-The header carries the caption and the language select alone; nothing else is slotted into it.
-
 ## CSS Parts
 
-| Part              | Description                                                     |
-|-------------------|-----------------------------------------------------------------|
-| `base`            | The outer panel wrapper                                         |
-| `header`          | The header area containing the caption and the language select  |
-| `language-field`  | The container holding the language select                       |
-| `language-select` | The select itself                                               |
-| `actions`         | The row of buttons at the bottom of the body                    |
-| `translations`    | The body container wrapping the slotted children                |
+| Part              | Description                                                          |
+|-------------------|----------------------------------------------------------------------|
+| `base`            | The outer panel wrapper                                              |
+| `form-group`      | The form group holding the caption, the language select and the fields |
+| `language-field`  | The container holding the language select, in the group's chip slot   |
+| `language-select` | The select itself                                                    |
+| `actions`         | The row of buttons at the bottom of the body                         |

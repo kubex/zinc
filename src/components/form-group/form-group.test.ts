@@ -77,6 +77,22 @@ describe('<zn-form-group>', () => {
       expect(position(narrow)).to.equal('static');
     });
 
+    it('leaves the label level with the inputs while nothing scrolls', async () => {
+      const el = await fixture<HTMLElement>(html`
+        <div style="width: 900px">
+          <zn-panel>
+            <zn-form-group label="Sticky"><zn-input label="Name"></zn-input></zn-form-group>
+          </zn-panel>
+        </div>`);
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      const root = el.querySelector('zn-form-group')!.shadowRoot!;
+      const label = root.querySelector('.form-control__text')!.getBoundingClientRect().top;
+      const inputs = root.querySelector('.form-control-input')!.getBoundingClientRect().top;
+
+      expect(label).to.be.closeTo(inputs, 2);
+    });
+
     it('holds the label in view when a panel sits between the form and the scroll container', async () => {
       const el = await fixture<HTMLElement>(html`
         <div style="max-height: 300px; overflow-y: auto">

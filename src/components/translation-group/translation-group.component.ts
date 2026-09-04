@@ -1,10 +1,9 @@
 import {classMap} from 'lit/directives/class-map.js';
 import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
 import {HasSlotController} from '../../internal/slot';
-import {ifDefined} from 'lit/directives/if-defined.js';
 import {property, state} from 'lit/decorators.js';
 import ZnChip from '../chip';
-import ZnHeader from '../header';
+import ZnFormGroup from '../form-group';
 import ZnOption from '../option';
 import ZnPanel from '../panel/panel.component';
 import ZnSelect from '../select';
@@ -19,8 +18,12 @@ import styles from './translation-group.scss';
  * @status experimental
  * @since 1.0
  *
- * The select sits at the top right of the header, opposite the caption. Choosing a language switches every child at
- * once, and each child hides its own select while it is in a group — `grouped` is set on them here.
+ * The fields sit in a `zn-form-group`, so the caption, help text and the language select share its label column and
+ * the fields line up with every other form group around them. Choosing a language switches every child at once, and
+ * each child hides its own select while it is in a group — `grouped` is set on them here.
+ *
+ * The select is searchable. Each option holds its language code as its value, so typing `de` finds German without the
+ * code being on show.
  *
  * Closed, the select carries how many target languages are done — `1/5`. Its options each carry a chip aggregated
  * across the children:
@@ -35,11 +38,11 @@ import styles from './translation-group.scss';
  * The children own their values; this component only chooses which language is shown and reports on what they hold.
  * It reads them back on every child `zn-change`, so the chips and the count follow an edit as it is typed.
  *
- * Extends `zn-panel`, so `caption`, `icon`, `flush`, `transparent` and the `footer` slot behave as they do there.
- * Nested inside another panel, add `inline` to drop the chrome and keep the fields aligned with the surrounding form.
+ * Extends `zn-panel`, so `caption`, `flush`, `transparent` and the `footer` slot behave as they do there. Nested
+ * inside another panel, add `inline` to drop the chrome and keep the fields aligned with the surrounding form.
  *
  * @dependency zn-chip
- * @dependency zn-header
+ * @dependency zn-form-group
  * @dependency zn-option
  * @dependency zn-select
  *
@@ -49,30 +52,33 @@ import styles from './translation-group.scss';
  * @slot actions - Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on
  *  the right, as zinc's form action rows do; `align="start"` moves one to the left. Write them in the order they
  *  should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.
- * @slot footer - Content displayed in the grey panel footer. The header belongs to the language select; nothing
- *  else is slotted into it.
+ * @slot footer - Content displayed in the grey panel footer.
  *
  * @csspart base - The component's base wrapper.
+ * @csspart form-group - The form group holding the caption, the language select and the fields.
  * @csspart actions - The row of buttons at the bottom of the body.
- * @csspart language-field - The label and select that choose the language every child is editing.
+ * @csspart language-field - The select that chooses the language every child is editing, in the group's chip slot.
  * @csspart language-select - The select itself.
  */
 export default class ZnTranslationGroup extends ZnPanel {
   static styles: CSSResultGroup = [ZnPanel.styles, unsafeCSS(styles)];
   static dependencies = {
     'zn-chip': ZnChip,
-    'zn-header': ZnHeader,
+    'zn-form-group': ZnFormGroup,
     'zn-option': ZnOption,
     'zn-select': ZnSelect
   };
 
   private readonly _slotController = new HasSlotController(this, 'actions', 'footer');
 
-  /** The caption shown in the panel header. An alias for the inherited `caption`, which wins where both are set. */
+  /** The form group's label. An alias for the inherited `caption`, which wins where both are set. */
   @property() label = '';
 
+  /** Sits under the label, above the language select, as help text does in any other form group. */
+  @property({attribute: 'help-text'}) helpText = '';
+
   /**
-   * Drops the panel chrome — border, background and padding — so the group reads as a section of the form around it
+   * Drops the panel chrome — border, background and padding — so the group reads as a section of the surrounding form
    * rather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit
    * indented behind a second border.
    */
@@ -149,11 +155,9 @@ export default class ZnTranslationGroup extends ZnPanel {
     return {type: 'error', label: language === 'en' ? 'Empty' : 'English'};
   }
 
-  /** `English (EN)`, or the code alone where the configured name already is the code. */
+  /** The configured name, or the code where `languages` does not name the language. */
   private displayName(language: string): string {
-    const name = this.languages[language] ?? language.toUpperCase();
-    const code = language.toUpperCase();
-    return name.toUpperCase() === code ? name : `${name} (${code})`;
+    return this.languages[language] ?? language.toUpperCase();
   }
 
   /** Children take their language list from the group, so a change to `languages` has to reach them. */
@@ -206,7 +210,7 @@ export default class ZnTranslationGroup extends ZnPanel {
   render() {
     const hasActionsSlot = this._slotController.test('actions');
     const hasFooterSlot = this._slotController.test('footer');
-    const headerCaption = this.caption || this.label;
+    const caption = this.caption || this.label;
 
     // A child's value can carry a language `languages` does not list — server-rendered content outliving a config
     // change. Offer those too, or the translation is stranded in the value with no way to reach it.
@@ -216,7 +220,6 @@ export default class ZnTranslationGroup extends ZnPanel {
       .forEach(code => extra.add(code)));
     const languageCodes = [...Object.keys(this.languages), ...extra];
     const hasMultipleLanguages = languageCodes.length > 1;
-    const hasHeader = Boolean(headerCaption) || hasMultipleLanguages;
 
     // English is the source every other language falls back to, so it is not itself one of the translations counted.
     const targets = languageCodes.filter(code => code !== 'en');
@@ -229,49 +232,50 @@ export default class ZnTranslationGroup extends ZnPanel {
     };
 
     return html`
-      <div class="${classMap({
+      <div part="base" class="${classMap({
         panel: true,
         'panel--flush': this.flush || this.inline,
         'panel--transparent': this.transparent || this.inline,
         'translation-group--inline': this.inline,
-        'panel--has-header': hasHeader,
         'panel--has-actions': hasActionsSlot,
         'panel--has-footer': hasFooterSlot,
       })}">
 
         <div class="panel__inner">
-          ${hasHeader ? html`
-            <zn-header class="panel__header"
-                       caption="${ifDefined(headerCaption || undefined)}"
-                       transparent>
-              ${hasMultipleLanguages ? html`
-                <div slot="actions" class="translation-group__language-field" part="language-field">
-                  <zn-select
-                    label="${this.languageLabel}"
-                    class="translation-group__language-select"
-                    part="language-select"
-                    hoist
-                    .value="${this._activeLanguage}"
-                    @zn-change="${this.handleLanguageSelect}"
-                    @zn-input="${this.handleLanguageInput}">
-                    <zn-chip slot="suffix" type="${summary.type}">${summary.label}</zn-chip>
-                    ${languageCodes.map(code => {
-                      const optionState = this.languageState(code);
-                      return html`
-                        <zn-option value="${code}">
-                          ${this.displayName(code)}
-                          <zn-chip slot="suffix" type="${optionState.type}">${optionState.label}</zn-chip>
-                        </zn-option>`;
-                    })}
-                  </zn-select>
-                </div>` : nothing}
-            </zn-header>` : null}
-
           <div class="panel__content">
             <div class="panel__body">
-              <slot
-                @slotchange="${this.handleSlotChange}"
-                @zn-change="${this.handleChildChange}"></slot>
+              <zn-form-group
+                part="form-group"
+                label="${caption}"
+                help-text="${this.helpText}">
+
+                ${hasMultipleLanguages ? html`
+                  <div slot="chip" class="translation-group__language-field" part="language-field">
+                    <zn-select
+                      label="${this.languageLabel}"
+                      class="translation-group__language-select"
+                      part="language-select"
+                      hoist
+                      search
+                      .value="${this._activeLanguage}"
+                      @zn-change="${this.handleLanguageSelect}"
+                      @zn-input="${this.handleLanguageInput}">
+                      <zn-chip slot="suffix" type="${summary.type}">${summary.label}</zn-chip>
+                      ${languageCodes.map(code => {
+                        const optionState = this.languageState(code);
+                        return html`
+                          <zn-option value="${code}">
+                            ${this.displayName(code)}
+                            <zn-chip slot="suffix" type="${optionState.type}">${optionState.label}</zn-chip>
+                          </zn-option>`;
+                      })}
+                    </zn-select>
+                  </div>` : nothing}
+
+                <slot
+                  @slotchange="${this.handleSlotChange}"
+                  @zn-change="${this.handleChildChange}"></slot>
+              </zn-form-group>
 
               ${hasActionsSlot ? html`
                 <div class="translation-group__actions" part="actions">

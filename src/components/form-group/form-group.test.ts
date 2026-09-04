@@ -26,4 +26,68 @@ describe('<zn-form-group>', () => {
 
     expect(el.shadowRoot!.querySelector('[part="form-control-chip"]')).to.not.exist;
   });
+
+  describe('sticky label', () => {
+    const tallForm = Array.from({length: 25}, (_, i) => `<zn-input label="Field ${i}"></zn-input>`).join('');
+
+    async function scrollPast(group: HTMLElement) {
+      group.innerHTML = tallForm;
+      await new Promise(resolve => setTimeout(resolve, 400));
+
+      const label = group.shadowRoot!.querySelector<HTMLElement>('.form-control__text')!;
+      const before = label.getBoundingClientRect().top;
+
+      for (let node: Node | null = label; node; node = flatParent(node)) {
+        if (node instanceof HTMLElement && node.scrollHeight > node.clientHeight + 1) node.scrollTop = 500;
+      }
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      return {before, after: label.getBoundingClientRect().top};
+    }
+
+    function flatParent(node: Node): Node | null {
+      if (node instanceof Element && node.assignedSlot) return node.assignedSlot;
+      return node.parentNode instanceof ShadowRoot ? node.parentNode.host : node.parentNode;
+    }
+
+    it('holds the label in view when the scroll container is the nearest one', async () => {
+      const el = await fixture<HTMLElement>(html`
+        <div style="max-height: 300px; overflow-y: auto">
+          <zn-form-group label="Sticky"></zn-form-group>
+        </div>`);
+
+      const {before, after} = await scrollPast(el.querySelector('zn-form-group')!);
+
+      expect(after).to.be.closeTo(before, 4);
+    });
+
+    it('gives up sticky once the columns stack', async () => {
+      const wide = await fixture<HTMLElement>(html`
+        <div style="width: 900px"><zn-form-group label="Sticky"></zn-form-group></div>`);
+      const narrow = await fixture<HTMLElement>(html`
+        <div style="width: 500px"><zn-form-group label="Sticky"></zn-form-group></div>`);
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      const position = (root: HTMLElement) => {
+        const group = root.querySelector('zn-form-group')!;
+        return getComputedStyle(group.shadowRoot!.querySelector('.form-control__text')!).position;
+      };
+
+      expect(position(wide)).to.equal('sticky');
+      expect(position(narrow)).to.equal('static');
+    });
+
+    it('holds the label in view when a panel sits between the form and the scroll container', async () => {
+      const el = await fixture<HTMLElement>(html`
+        <div style="max-height: 300px; overflow-y: auto">
+          <zn-panel>
+            <zn-form-group label="Sticky"></zn-form-group>
+          </zn-panel>
+        </div>`);
+
+      const {before, after} = await scrollPast(el.querySelector('zn-form-group')!);
+
+      expect(after).to.be.closeTo(before, 4);
+    });
+  });
 });

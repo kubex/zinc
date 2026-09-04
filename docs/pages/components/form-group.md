@@ -358,24 +358,57 @@ This ensures forms remain usable on all devices without additional configuration
 </zn-form-group>
 ```
 
-### Styling with CSS Parts
+### Sticky Label
 
-Form groups expose several CSS parts that can be styled to customize their appearance. This example demonstrates how to create custom layouts using CSS grid.
+The label column sticks to the top of the scroll container, so on a long form it stays beside the inputs instead of scrolling away. Use the `--zn-form-group-sticky-top` custom property to change the offset it settles at — useful when the scroll container has a sticky header of its own.
 
 ```html:preview
-<zn-form-group class="custom-form-group" label="Custom Styled Form Group" help-text="This form group has custom spacing and borders">
-  <zn-input label="Field 1" span="3"></zn-input>
-  <zn-input label="Field 2" span="3"></zn-input>
-  <zn-input label="Field 3" span="2"></zn-input>
-  <zn-input label="Field 4" span="2"></zn-input>
-  <zn-input label="Field 5" span="2"></zn-input>
-</zn-form-group>
+<div style="max-height: 300px; overflow-y: auto;">
+  <zn-form-group label="Delivery Details" help-text="This label follows the inputs as you scroll">
+    <zn-input label="Recipient" placeholder="Full name"></zn-input>
+    <zn-input label="Street Address" placeholder="123 Main Street"></zn-input>
+    <zn-input label="Apartment/Unit" placeholder="Apt 4B"></zn-input>
+    <zn-input label="City" placeholder="New York"></zn-input>
+    <zn-input label="Postal Code" placeholder="10001"></zn-input>
+    <zn-input label="Phone" type="tel" placeholder="(555) 123-4567"></zn-input>
+    <zn-textarea label="Delivery Notes" placeholder="Leave with the concierge..." rows="4"></zn-textarea>
+  </zn-form-group>
+</div>
+```
+
+### Styling with CSS Parts
+
+Form groups expose several CSS parts that can be styled to customize their appearance. `form-control-text` is the column holding the label, help text and chip — it is the part that sticks as the fields scroll, so give it the same background as the group to stop the fields showing through underneath it.
+
+```html:preview
+<div class="custom-form-group-scroller">
+  <zn-form-group class="custom-form-group" label="Custom Styled Form Group" help-text="This form group has custom spacing and borders">
+    <zn-input label="Field 1" span="3"></zn-input>
+    <zn-input label="Field 2" span="3"></zn-input>
+    <zn-input label="Field 3" span="2"></zn-input>
+    <zn-input label="Field 4" span="2"></zn-input>
+    <zn-input label="Field 5" span="2"></zn-input>
+    <zn-input label="Field 6" span="3"></zn-input>
+    <zn-input label="Field 7" span="3"></zn-input>
+    <zn-textarea label="Field 8" rows="4"></zn-textarea>
+  </zn-form-group>
+</div>
 
 <style>
+  .custom-form-group-scroller {
+    max-height: 320px;
+    overflow-y: auto;
+  }
+
   .custom-form-group::part(form-control) {
-    padding: var(--zn-spacing-large);
+    padding: var(--zn-spacing-medium);
     border: 2px solid var(--zn-color-primary-300);
     border-radius: var(--zn-border-radius);
+    background-color: var(--zn-color-primary-50);
+  }
+
+  .custom-form-group::part(form-control-text) {
+    padding-bottom: var(--zn-spacing-small);
     background-color: var(--zn-color-primary-50);
   }
 

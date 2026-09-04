@@ -4,7 +4,8 @@
   display: block;
   line-height: var(--zn-line-height-dense);
   max-width: var(--zn-container-lg);
-  --zn-col-gap: calc(var(--zn-spacing-medium, 20px) * 3)
+  --zn-col-gap: calc(var(--zn-spacing-medium, 20px) * 3);
+  --zn-form-group-sticky-top: var(--zn-spacing-medium, 20px);
 }
 
 .form-control {
@@ -27,6 +28,18 @@
   --zn-col-basis: 200px;
 }
 
+// Only while the label sits beside the inputs: once zn-cols wraps them into one column a sticky
+// label would scroll over the fields it labels. zn-cols wraps below the two columns' bases plus
+// the gap, so 670px = --zn-col-basis * (1 + 2) + 70px — keep in step with both values below.
+@container (min-width: 670px) {
+  .form-control__text {
+    position: sticky;
+    top: var(--zn-form-group-sticky-top);
+    // A stretched flex item is as tall as the row, leaving sticky nothing to travel through.
+    align-self: flex-start;
+  }
+}
+
 .form-control__chip {
   margin-top: var(--zn-spacing-x-small);
 }
@@ -45,11 +58,13 @@
 
 .form-control-input {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--zn-spacing-medium) var(--zn-spacing-small);
 
+  // `1fr` floors each track at its min-content width, so one long label steals width from
+  // the other tracks and the spans stop lining up.
   @include wc.media-query(md) {
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
 

@@ -58,79 +58,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -319,6 +246,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -16550,44 +16550,15 @@
             },
             {
               "kind": "field",
-              "name": "tracked",
-              "type": {
-                "text": "HTMLElement | null"
-              },
+              "name": "clipped",
               "privacy": "private",
-              "default": "null",
-              "description": "The scroller the label is tracked against by hand; null while native sticky is enough."
-            },
-            {
-              "kind": "field",
-              "name": "stickyTop",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0"
+              "readonly": true,
+              "default": "new Map<HTMLElement, { x: string; y: string }>()",
+              "description": "The scroll containers we have clipped, against the inline overflow each carried before."
             },
             {
               "kind": "field",
               "name": "frame",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0"
-            },
-            {
-              "kind": "field",
-              "name": "rebind",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "offset",
               "type": {
                 "text": "number"
               },
@@ -16616,60 +16587,7 @@
               "kind": "method",
               "name": "schedule",
               "privacy": "private",
-              "parameters": [
-                {
-                  "name": "rebind",
-                  "default": "false",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "description": "Coalesces scroll and resize work into one frame, and out of the ResizeObserver callback."
-            },
-            {
-              "kind": "method",
-              "name": "findScroller",
-              "privacy": "private",
-              "description": "Native sticky only follows the nearest scroll container. Where that container isn't the one\nthe user actually scrolls — a `zn-panel` body sized to its content inside a scrolling\nslideout, say — the label never moves, so it gets translated by hand instead."
-            },
-            {
-              "kind": "method",
-              "name": "trackScroller",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "scroller",
-                  "type": {
-                    "text": "HTMLElement | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "scrollTarget",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "EventTarget | null"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "scroller",
-                  "type": {
-                    "text": "HTMLElement | null"
-                  }
-                }
-              ],
-              "description": "The document scrolls through the window, every other scroller reports its own events."
-            },
-            {
-              "kind": "field",
-              "name": "onScroll",
-              "privacy": "private",
-              "readonly": true
+              "description": "Coalesces resize work into one frame, and out of the ResizeObserver callback."
             },
             {
               "kind": "field",
@@ -16679,46 +16597,49 @@
             },
             {
               "kind": "method",
-              "name": "positionLabel",
-              "privacy": "private"
+              "name": "freeSticky",
+              "privacy": "private",
+              "description": "Native sticky anchors to the nearest scroll container, even one that cannot scroll — a `zn-panel` body sized to\nits content, say — where it then holds the label still for the whole scroll. `overflow: clip` clips without\nmaking a scroll container, so clipping those takes them out of sticky's search and the label follows the box the\nuser actually scrolls, moved by the compositor rather than by hand."
             },
             {
               "kind": "method",
-              "name": "nearestScrollContainer",
+              "name": "clip",
               "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "HTMLElement | null"
-                }
-              },
               "parameters": [
                 {
-                  "name": "from",
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "release",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "elements",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "isStickyAnchor",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "element",
                   "type": {
                     "text": "HTMLElement"
                   }
                 }
               ],
               "description": "The box native sticky would anchor to, whether or not it can be scrolled."
-            },
-            {
-              "kind": "method",
-              "name": "scrollingAncestor",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "HTMLElement | null"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "from",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                }
-              ],
-              "description": "The nearest ancestor the user can actually scroll, falling back to the document."
             },
             {
               "kind": "method",
@@ -16729,6 +16650,19 @@
                   "name": "overflow",
                   "type": {
                     "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "overflows",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement"
                   }
                 }
               ]
@@ -48748,103 +48682,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/tile-group/tile-group.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnTileGroup",
-          "cssProperties": [
-            {
-              "description": "The number of value/action columns (set automatically).",
-              "name": "--zn-tile-cols"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper (the grid container).",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "One or more `zn-tile` elements.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "divide",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws a dividing border between rows.",
-              "attribute": "divide",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "_mutationObserver",
-              "type": {
-                "text": "MutationObserver | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "_handleSlotChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_sync",
-              "privacy": "private"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "divide",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws a dividing border between rows.",
-              "fieldName": "divide"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Aligns a list of `zn-tile` rows into shared, content-driven columns so values\nand actions line up across every row, with optional dividing borders.",
-          "tagNameWithoutPrefix": "tile-group",
-          "tagName": "zn-tile-group",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Aligns a list of `zn-tile` rows into shared, content-driven columns so values\n * and actions line up across every row, with optional dividing borders.\n * @documentation https://zinc.style/components/tile-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-tile\n *\n * @slot - One or more `zn-tile` elements.\n *\n * @csspart base - The component's base wrapper (the grid container).\n *\n * @cssproperty --zn-tile-cols - The number of value/action columns (set automatically).\n */",
-          "documentation": "https://zinc.style/components/tile-group",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-tile"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnTileGroup",
-            "module": "components/tile-group/tile-group.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/tile-property/tile-property.js",
       "declarations": [
         {
@@ -48955,6 +48792,103 @@
           "declaration": {
             "name": "ZnTileProperty",
             "module": "components/tile-property/tile-property.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/tile-group/tile-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnTileGroup",
+          "cssProperties": [
+            {
+              "description": "The number of value/action columns (set automatically).",
+              "name": "--zn-tile-cols"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper (the grid container).",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "One or more `zn-tile` elements.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "divide",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws a dividing border between rows.",
+              "attribute": "divide",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_mutationObserver",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_sync",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "divide",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws a dividing border between rows.",
+              "fieldName": "divide"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Aligns a list of `zn-tile` rows into shared, content-driven columns so values\nand actions line up across every row, with optional dividing borders.",
+          "tagNameWithoutPrefix": "tile-group",
+          "tagName": "zn-tile-group",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Aligns a list of `zn-tile` rows into shared, content-driven columns so values\n * and actions line up across every row, with optional dividing borders.\n * @documentation https://zinc.style/components/tile-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-tile\n *\n * @slot - One or more `zn-tile` elements.\n *\n * @csspart base - The component's base wrapper (the grid container).\n *\n * @cssproperty --zn-tile-cols - The number of value/action columns (set automatically).\n */",
+          "documentation": "https://zinc.style/components/tile-group",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-tile"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnTileGroup",
+            "module": "components/tile-group/tile-group.js"
           }
         }
       ]
@@ -51564,7 +51498,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.118",
+    "version": "1.1.119",
     "author": "",
     "license": "MIT"
   }

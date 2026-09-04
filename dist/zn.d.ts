@@ -7322,36 +7322,30 @@ declare module "components/form-group/form-group.component" {
         forceCols: boolean;
         layout: string;
         pad: boolean;
-        /** The scroller the label is tracked against by hand; null while native sticky is enough. */
-        private tracked;
-        private stickyTop;
+        /** The scroll containers we have clipped, against the inline overflow each carried before. */
+        private readonly clipped;
         private frame;
-        private rebind;
-        private offset;
         private resizeObserver;
         connectedCallback(): void;
         disconnectedCallback(): void;
         protected firstUpdated(changedProperties: PropertyValues): void;
         private get labelColumn();
-        /** Coalesces scroll and resize work into one frame, and out of the ResizeObserver callback. */
+        /** Coalesces resize work into one frame, and out of the ResizeObserver callback. */
         private schedule;
-        /**
-         * Native sticky only follows the nearest scroll container. Where that container isn't the one
-         * the user actually scrolls — a `zn-panel` body sized to its content inside a scrolling
-         * slideout, say — the label never moves, so it gets translated by hand instead.
-         */
-        private findScroller;
-        private trackScroller;
-        /** The document scrolls through the window, every other scroller reports its own events. */
-        private scrollTarget;
-        private readonly onScroll;
         private readonly onViewportResize;
-        private positionLabel;
+        /**
+         * Native sticky anchors to the nearest scroll container, even one that cannot scroll — a `zn-panel` body sized to
+         * its content, say — where it then holds the label still for the whole scroll. `overflow: clip` clips without
+         * making a scroll container, so clipping those takes them out of sticky's search and the label follows the box the
+         * user actually scrolls, moved by the compositor rather than by hand.
+         */
+        private freeSticky;
+        private clip;
+        private release;
         /** The box native sticky would anchor to, whether or not it can be scrolled. */
-        private nearestScrollContainer;
-        /** The nearest ancestor the user can actually scroll, falling back to the document. */
-        private scrollingAncestor;
+        private isStickyAnchor;
         private isScrollContainer;
+        private overflows;
         /** Walks the flattened tree, so slots and shadow boundaries are crossed the way layout does. */
         private ancestors;
         render(): import("lit-html").TemplateResult<1>;

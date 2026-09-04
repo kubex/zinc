@@ -58,79 +58,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -319,6 +246,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -1101,363 +1101,6 @@
           "declaration": {
             "name": "ZnBackground",
             "module": "components/background/background.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/bulk-actions/bulk-actions.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnBulkActions",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ 'zn-button': ZnButton, 'zn-input': ZnInput, 'zn-option': ZnOption, 'zn-select': ZnSelect, }"
-            },
-            {
-              "kind": "field",
-              "name": "container",
-              "type": {
-                "text": "HTMLDivElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "addRule",
-              "type": {
-                "text": "ZnSelect"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "input",
-              "type": {
-                "text": "HTMLInputElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "name"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "PropertyKey"
-              },
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "actions",
-              "type": {
-                "text": "BulkActionData"
-              },
-              "default": "[]",
-              "attribute": "actions"
-            },
-            {
-              "kind": "field",
-              "name": "_selectedRules",
-              "type": {
-                "text": "Map<string, CreatedRule>"
-              },
-              "privacy": "private",
-              "default": "new Map<string, CreatedRule>()"
-            },
-            {
-              "kind": "field",
-              "name": "_formController",
-              "type": {
-                "text": "FormControlController"
-              },
-              "privacy": "private",
-              "default": "new FormControlController(this, {})"
-            },
-            {
-              "kind": "field",
-              "name": "validationMessage",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "validity",
-              "type": {
-                "text": "ValidityState"
-              },
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "_handleChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_addRule",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "Event | null"
-                  }
-                },
-                {
-                  "name": "value",
-                  "default": "\"\"",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "pos",
-                  "optional": true,
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_createInput",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "ZnSelect | ZnInput | null"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "uniqueId",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "filter",
-                  "type": {
-                    "text": "BulkActionItem"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_updateValue",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "id",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "Event | { target: ZnSelect | ZnInput | HTMLDivElement }"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_getRulePosition",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "number"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "id",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_changeRule",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "id",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "ZnChangeEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_removeRule",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "id",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "Event"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "checkValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getForm",
-              "return": {
-                "type": {
-                  "text": "HTMLFormElement | null"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "reportValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "setCustomValidity",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "message",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "name"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "PropertyKey"
-              },
-              "fieldName": "value"
-            },
-            {
-              "name": "actions",
-              "type": {
-                "text": "BulkActionData"
-              },
-              "default": "[]",
-              "fieldName": "actions"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "bulk-actions",
-          "tagName": "zn-bulk-actions",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/bulk-actions\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-input\n * @dependency zn-option\n * @dependency zn-select\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/bulk-actions",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-button",
-            "zn-input",
-            "zn-option",
-            "zn-select"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnBulkActions",
-            "module": "components/bulk-actions/bulk-actions.js"
           }
         }
       ]
@@ -2413,6 +2056,363 @@
           "declaration": {
             "name": "ZnButton",
             "module": "components/button/button.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/bulk-actions/bulk-actions.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnBulkActions",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-button': ZnButton, 'zn-input': ZnInput, 'zn-option': ZnOption, 'zn-select': ZnSelect, }"
+            },
+            {
+              "kind": "field",
+              "name": "container",
+              "type": {
+                "text": "HTMLDivElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "addRule",
+              "type": {
+                "text": "ZnSelect"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "input",
+              "type": {
+                "text": "HTMLInputElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "PropertyKey"
+              },
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "actions",
+              "type": {
+                "text": "BulkActionData"
+              },
+              "default": "[]",
+              "attribute": "actions"
+            },
+            {
+              "kind": "field",
+              "name": "_selectedRules",
+              "type": {
+                "text": "Map<string, CreatedRule>"
+              },
+              "privacy": "private",
+              "default": "new Map<string, CreatedRule>()"
+            },
+            {
+              "kind": "field",
+              "name": "_formController",
+              "type": {
+                "text": "FormControlController"
+              },
+              "privacy": "private",
+              "default": "new FormControlController(this, {})"
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_handleChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_addRule",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event | null"
+                  }
+                },
+                {
+                  "name": "value",
+                  "default": "\"\"",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "pos",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_createInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ZnSelect | ZnInput | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "uniqueId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "filter",
+                  "type": {
+                    "text": "BulkActionItem"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_updateValue",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event | { target: ZnSelect | ZnInput | HTMLDivElement }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_getRulePosition",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_changeRule",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "ZnChangeEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_removeRule",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "PropertyKey"
+              },
+              "fieldName": "value"
+            },
+            {
+              "name": "actions",
+              "type": {
+                "text": "BulkActionData"
+              },
+              "default": "[]",
+              "fieldName": "actions"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "bulk-actions",
+          "tagName": "zn-bulk-actions",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/bulk-actions\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-input\n * @dependency zn-option\n * @dependency zn-select\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/bulk-actions",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-button",
+            "zn-input",
+            "zn-option",
+            "zn-select"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnBulkActions",
+            "module": "components/bulk-actions/bulk-actions.js"
           }
         }
       ]
@@ -16557,6 +16557,15 @@
               "privacy": "private",
               "default": "null",
               "description": "The scroller the label is tracked against by hand; null while native sticky is enough."
+            },
+            {
+              "kind": "field",
+              "name": "stickyTop",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
             },
             {
               "kind": "field",
@@ -49713,11 +49722,15 @@
               }
             },
             {
+              "description": "The form group holding the caption, the language select and the fields.",
+              "name": "form-group"
+            },
+            {
               "description": "The row of buttons at the bottom of the body.",
               "name": "actions"
             },
             {
-              "description": "The label and select that choose the language every child is editing.",
+              "description": "The select that chooses the language every child is editing, in the group's chip slot.",
               "name": "language-field"
             },
             {
@@ -49743,7 +49756,7 @@
               }
             },
             {
-              "description": "Content displayed in the grey panel footer. The header belongs to the language select; nothing else is slotted into it.",
+              "description": "Content displayed in the grey panel footer.",
               "name": "footer",
               "inheritedFrom": {
                 "name": "ZnPanel",
@@ -49759,7 +49772,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ 'zn-chip': ZnChip, 'zn-header': ZnHeader, 'zn-option': ZnOption, 'zn-select': ZnSelect }"
+              "default": "{ 'zn-chip': ZnChip, 'zn-form-group': ZnFormGroup, 'zn-option': ZnOption, 'zn-select': ZnSelect }"
             },
             {
               "kind": "field",
@@ -49775,8 +49788,18 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "The caption shown in the panel header. An alias for the inherited `caption`, which wins where both are set.",
+              "description": "The form group's label. An alias for the inherited `caption`, which wins where both are set.",
               "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Sits under the label, above the language select, as help text does in any other form group.",
+              "attribute": "help-text"
             },
             {
               "kind": "field",
@@ -49785,7 +49808,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Drops the panel chrome — border, background and padding — so the group reads as a section of the form around it\nrather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit\nindented behind a second border.",
+              "description": "Drops the panel chrome — border, background and padding — so the group reads as a section of the surrounding form\nrather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit\nindented behind a second border.",
               "attribute": "inline",
               "reflects": true
             },
@@ -49881,7 +49904,7 @@
                   }
                 }
               ],
-              "description": "`English (EN)`, or the code alone where the configured name already is the code."
+              "description": "The configured name, or the code where `languages` does not name the language."
             },
             {
               "kind": "method",
@@ -50100,8 +50123,17 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "The caption shown in the panel header. An alias for the inherited `caption`, which wins where both are set.",
+              "description": "The form group's label. An alias for the inherited `caption`, which wins where both are set.",
               "fieldName": "label"
+            },
+            {
+              "name": "help-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Sits under the label, above the language select, as help text does in any other form group.",
+              "fieldName": "helpText"
             },
             {
               "name": "inline",
@@ -50109,7 +50141,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Drops the panel chrome — border, background and padding — so the group reads as a section of the form around it\nrather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit\nindented behind a second border.",
+              "description": "Drops the panel chrome — border, background and padding — so the group reads as a section of the surrounding form\nrather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit\nindented behind a second border.",
               "fieldName": "inline"
             },
             {
@@ -50271,13 +50303,13 @@
           "tagNameWithoutPrefix": "translation-group",
           "tagName": "zn-translation-group",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Puts several zn-translations fields behind one language select, so a whole form's worth of copy is\n *  translated a language at a time.\n * @documentation https://zinc.style/components/translation-group\n * @status experimental\n * @since 1.0\n *\n * The select sits at the top right of the header, opposite the caption. Choosing a language switches every child at\n * once, and each child hides its own select while it is in a group — `grouped` is set on them here.\n *\n * Closed, the select carries how many target languages are done — `1/5`. Its options each carry a chip aggregated\n * across the children:\n *\n * - `Translated` — every child has a value for it\n * - `Partial` — only some children do\n * - `English` — none do, so all of them fall back to the English text\n *\n * `Empty` replaces the last of those for English itself, which has nothing to fall back to. English is the source\n * rather than a translation, so it is also left out of the `n of m translated` count beside the label.\n *\n * The children own their values; this component only chooses which language is shown and reports on what they hold.\n * It reads them back on every child `zn-change`, so the chips and the count follow an edit as it is typed.\n *\n * Extends `zn-panel`, so `caption`, `icon`, `flush`, `transparent` and the `footer` slot behave as they do there.\n * Nested inside another panel, add `inline` to drop the chrome and keep the fields aligned with the surrounding form.\n *\n * @dependency zn-chip\n * @dependency zn-header\n * @dependency zn-option\n * @dependency zn-select\n *\n * @event zn-language-change - Emitted when the active language changes. Detail: `{ language: string }`.\n *\n * @slot - The `zn-translations` fields the select drives.\n * @slot actions - Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on\n *  the right, as zinc's form action rows do; `align=\"start\"` moves one to the left. Write them in the order they\n *  should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.\n * @slot footer - Content displayed in the grey panel footer. The header belongs to the language select; nothing\n *  else is slotted into it.\n *\n * @csspart base - The component's base wrapper.\n * @csspart actions - The row of buttons at the bottom of the body.\n * @csspart language-field - The label and select that choose the language every child is editing.\n * @csspart language-select - The select itself.\n */",
+          "jsDoc": "/**\n * @summary Puts several zn-translations fields behind one language select, so a whole form's worth of copy is\n *  translated a language at a time.\n * @documentation https://zinc.style/components/translation-group\n * @status experimental\n * @since 1.0\n *\n * The fields sit in a `zn-form-group`, so the caption, help text and the language select share its label column and\n * the fields line up with every other form group around them. Choosing a language switches every child at once, and\n * each child hides its own select while it is in a group — `grouped` is set on them here.\n *\n * The select is searchable. Each option holds its language code as its value, so typing `de` finds German without the\n * code being on show.\n *\n * Closed, the select carries how many target languages are done — `1/5`. Its options each carry a chip aggregated\n * across the children:\n *\n * - `Translated` — every child has a value for it\n * - `Partial` — only some children do\n * - `English` — none do, so all of them fall back to the English text\n *\n * `Empty` replaces the last of those for English itself, which has nothing to fall back to. English is the source\n * rather than a translation, so it is also left out of the `n of m translated` count beside the label.\n *\n * The children own their values; this component only chooses which language is shown and reports on what they hold.\n * It reads them back on every child `zn-change`, so the chips and the count follow an edit as it is typed.\n *\n * Extends `zn-panel`, so `caption`, `flush`, `transparent` and the `footer` slot behave as they do there. Nested\n * inside another panel, add `inline` to drop the chrome and keep the fields aligned with the surrounding form.\n *\n * @dependency zn-chip\n * @dependency zn-form-group\n * @dependency zn-option\n * @dependency zn-select\n *\n * @event zn-language-change - Emitted when the active language changes. Detail: `{ language: string }`.\n *\n * @slot - The `zn-translations` fields the select drives.\n * @slot actions - Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on\n *  the right, as zinc's form action rows do; `align=\"start\"` moves one to the left. Write them in the order they\n *  should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.\n * @slot footer - Content displayed in the grey panel footer.\n *\n * @csspart base - The component's base wrapper.\n * @csspart form-group - The form group holding the caption, the language select and the fields.\n * @csspart actions - The row of buttons at the bottom of the body.\n * @csspart language-field - The select that chooses the language every child is editing, in the group's chip slot.\n * @csspart language-select - The select itself.\n */",
           "documentation": "https://zinc.style/components/translation-group",
           "status": "experimental",
           "since": "1.0",
           "dependencies": [
             "zn-chip",
-            "zn-header",
+            "zn-form-group",
             "zn-option",
             "zn-select"
           ],
@@ -50725,7 +50757,7 @@
                   }
                 }
               ],
-              "description": "`English (EN)` — the configured name plus its code, unless the name already is the code, in which case the code\nalone. `languages` is written both ways: `{\"en\": \"English\"}` and `{\"en\": \"EN\"}`."
+              "description": "The configured name, or the code where `languages` does not name the language."
             },
             {
               "kind": "method",
@@ -51332,7 +51364,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.117",
+    "version": "1.1.118",
     "author": "",
     "license": "MIT"
   }

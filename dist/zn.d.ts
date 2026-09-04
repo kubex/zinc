@@ -7324,6 +7324,7 @@ declare module "components/form-group/form-group.component" {
         pad: boolean;
         /** The scroller the label is tracked against by hand; null while native sticky is enough. */
         private tracked;
+        private stickyTop;
         private frame;
         private rebind;
         private offset;
@@ -9132,10 +9133,7 @@ declare module "components/translations/translations.component" {
         hasTranslation(language: string): boolean;
         /** The chip shown against a language, in the select's value and against each of its options. */
         private languageState;
-        /**
-         * `English (EN)` — the configured name plus its code, unless the name already is the code, in which case the code
-         * alone. `languages` is written both ways: `{"en": "English"}` and `{"en": "EN"}`.
-         */
+        /** The configured name, or the code where `languages` does not name the language. */
         private languageLabel;
         /**
          * `values`, falling back to the `value` attribute it is built from while that is still pending. A parent
@@ -9309,7 +9307,7 @@ declare module "components/animated-button/index" {
 declare module "components/translation-group/translation-group.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZnChip from "components/chip/index";
-    import ZnHeader from "components/header/index";
+    import ZnFormGroup from "components/form-group/index";
     import ZnOption from "components/option/index";
     import ZnPanel from "components/panel/panel.component";
     import ZnSelect from "components/select/index";
@@ -9320,8 +9318,12 @@ declare module "components/translation-group/translation-group.component" {
      * @status experimental
      * @since 1.0
      *
-     * The select sits at the top right of the header, opposite the caption. Choosing a language switches every child at
-     * once, and each child hides its own select while it is in a group — `grouped` is set on them here.
+     * The fields sit in a `zn-form-group`, so the caption, help text and the language select share its label column and
+     * the fields line up with every other form group around them. Choosing a language switches every child at once, and
+     * each child hides its own select while it is in a group — `grouped` is set on them here.
+     *
+     * The select is searchable. Each option holds its language code as its value, so typing `de` finds German without the
+     * code being on show.
      *
      * Closed, the select carries how many target languages are done — `1/5`. Its options each carry a chip aggregated
      * across the children:
@@ -9336,11 +9338,11 @@ declare module "components/translation-group/translation-group.component" {
      * The children own their values; this component only chooses which language is shown and reports on what they hold.
      * It reads them back on every child `zn-change`, so the chips and the count follow an edit as it is typed.
      *
-     * Extends `zn-panel`, so `caption`, `icon`, `flush`, `transparent` and the `footer` slot behave as they do there.
-     * Nested inside another panel, add `inline` to drop the chrome and keep the fields aligned with the surrounding form.
+     * Extends `zn-panel`, so `caption`, `flush`, `transparent` and the `footer` slot behave as they do there. Nested
+     * inside another panel, add `inline` to drop the chrome and keep the fields aligned with the surrounding form.
      *
      * @dependency zn-chip
-     * @dependency zn-header
+     * @dependency zn-form-group
      * @dependency zn-option
      * @dependency zn-select
      *
@@ -9350,27 +9352,29 @@ declare module "components/translation-group/translation-group.component" {
      * @slot actions - Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on
      *  the right, as zinc's form action rows do; `align="start"` moves one to the left. Write them in the order they
      *  should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.
-     * @slot footer - Content displayed in the grey panel footer. The header belongs to the language select; nothing
-     *  else is slotted into it.
+     * @slot footer - Content displayed in the grey panel footer.
      *
      * @csspart base - The component's base wrapper.
+     * @csspart form-group - The form group holding the caption, the language select and the fields.
      * @csspart actions - The row of buttons at the bottom of the body.
-     * @csspart language-field - The label and select that choose the language every child is editing.
+     * @csspart language-field - The select that chooses the language every child is editing, in the group's chip slot.
      * @csspart language-select - The select itself.
      */
     export default class ZnTranslationGroup extends ZnPanel {
         static styles: CSSResultGroup;
         static dependencies: {
             'zn-chip': typeof ZnChip;
-            'zn-header': typeof ZnHeader;
+            'zn-form-group': typeof ZnFormGroup;
             'zn-option': typeof ZnOption;
             'zn-select': typeof ZnSelect;
         };
         private readonly _slotController;
-        /** The caption shown in the panel header. An alias for the inherited `caption`, which wins where both are set. */
+        /** The form group's label. An alias for the inherited `caption`, which wins where both are set. */
         label: string;
+        /** Sits under the label, above the language select, as help text does in any other form group. */
+        helpText: string;
         /**
-         * Drops the panel chrome — border, background and padding — so the group reads as a section of the form around it
+         * Drops the panel chrome — border, background and padding — so the group reads as a section of the surrounding form
          * rather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit
          * indented behind a second border.
          */
@@ -9402,7 +9406,7 @@ declare module "components/translation-group/translation-group.component" {
          * count are read off the children, so a child's edit has to bring the group back round.
          */
         private languageState;
-        /** `English (EN)`, or the code alone where the configured name already is the code. */
+        /** The configured name, or the code where `languages` does not name the language. */
         private displayName;
         /** Children take their language list from the group, so a change to `languages` has to reach them. */
         private syncChildLanguages;

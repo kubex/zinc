@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.117">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.118">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -79,7 +79,7 @@
         <a href="/">
           <img src="/assets/images/watermark.svg" alt="zinc" />
         </a>
-        <div class="sidebar-version">1.1.117</div>
+        <div class="sidebar-version">1.1.118</div>
       </header>
 
       <div class="sidebar-buttons">
@@ -588,7 +588,7 @@
             <li class="top"><a href="#">Translation Group</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
             <li data-level="3"><a href="#basic-usage">Basic Usage</a></li>
-            <li data-level="3"><a href="#with-label">With Label</a></li>
+            <li data-level="3"><a href="#label-and-help-text">Label and Help Text</a></li>
             <li data-level="3"><a href="#pre-filled-values">Pre-filled Values</a></li>
             <li data-level="3"><a href="#many-languages">Many Languages</a></li>
             <li data-level="3"><a href="#custom-accessible-name">Custom Accessible Name</a></li>
@@ -631,13 +631,20 @@
 
           <p>
             The Translation Group component wraps multiple <code>zn-translations</code> components in a panel-styled
-            container with a shared language select. The select sits at the top right of the header, opposite the
-            caption. Closed, it carries how many languages are done as a <code>1/5</code> chip; open, each language is
-            marked translated, partial or falling back to English. Choosing a language switches every child at once.
+            container with a shared language select. The fields sit in a
+            <a href="/components/form-group">form group</a>, so the caption, help text and the select share its label
+            column and the fields line up with every other form group around them. Closed, the select carries how many
+            languages are done as a <code>1/5</code> chip; open, each language is marked translated, partial or falling
+            back to English. Type to filter the list — by name or by language code, so <code>de</code> finds German.
+            Choosing a language switches every child at once.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-translation-group label="Product Content" languages='{"en":"English","fr":"French","de":"German"}'>
+              <zn-translation-group
+                label="Product Content"
+                help-text="Every field is translated one language at a time"
+                languages='{"en":"English","fr":"French","de":"German"}'
+              >
                 <zn-translations
                   label="Name"
                   name="name"
@@ -659,6 +666,7 @@
               <div class="code-preview__source code-preview__source--html">
                 <pre><code class="language-html" id="code-block-1760"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translation-group</span>
   <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Product Content<span class="token punctuation">"</span></span>
+  <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Every field is translated one language at a time<span class="token punctuation">"</span></span>
   <span class="token attr-name">languages</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"English","fr":"French","de":"German"}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span>
     <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Name<span class="token punctuation">"</span></span>
@@ -746,17 +754,22 @@
               </button>
             </div>
           </div>
-          <h3 id="with-label" class="anchor-heading">
-            With Label<a href="#with-label" aria-label='Direct link to "With Label"'></a>
+          <h3 id="label-and-help-text" class="anchor-heading">
+            Label and Help Text<a href="#label-and-help-text" aria-label='Direct link to "Label and Help Text"'></a>
           </h3>
           <p>
-            Use the <code>label</code> attribute to add a caption on the left of the header, opposite the language
-            select. <code>language-label</code> sets the select’s accessible name — it is not shown, since the caption
-            names the section on screen.
+            <code>label</code> names the section in the form group’s label column, and <code>help-text</code> sits under
+            it — the pair behave as they do on any other form group. The language select follows them, in the group’s
+            chip position. <code>language-label</code> sets the select’s accessible name — it is not shown, since the
+            caption names the section on screen.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-translation-group label="Page Translations" languages='{"en":"English","fr":"French","es":"Spanish"}'>
+              <zn-translation-group
+                label="Page Translations"
+                help-text="Pick a language to edit every field in it"
+                languages='{"en":"English","fr":"French","es":"Spanish"}'
+              >
                 <zn-translations label="Heading" name="heading"></zn-translations>
                 <zn-translations label="Body" name="body"></zn-translations>
               </zn-translation-group>
@@ -770,6 +783,7 @@
               <div class="code-preview__source code-preview__source--html">
                 <pre><code class="language-html" id="code-block-1762"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translation-group</span>
   <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Page Translations<span class="token punctuation">"</span></span>
+  <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Pick a language to edit every field in it<span class="token punctuation">"</span></span>
   <span class="token attr-name">languages</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"en":"English","fr":"French","es":"Spanish"}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Heading<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>heading<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translations</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-translations</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Body<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>body<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-translations</span><span class="token punctuation">&gt;</span></span>
@@ -1315,7 +1329,13 @@
                   <td><code>label</code></td>
                   <td><code>string</code></td>
                   <td><code>''</code></td>
-                  <td>Caption displayed in the panel header</td>
+                  <td>Names the section, in the form group’s label column</td>
+                </tr>
+                <tr>
+                  <td><code>help-text</code></td>
+                  <td><code>string</code></td>
+                  <td><code>''</code></td>
+                  <td>Sits under the label, above the language select</td>
                 </tr>
                 <tr>
                   <td><code>language-label</code></td>
@@ -1378,10 +1398,6 @@
                   <td>Place <code>&lt;zn-translations&gt;</code> elements here</td>
                 </tr>
                 <tr>
-                  <td><code>label</code></td>
-                  <td>Alternative to the <code>label</code> attribute for rich HTML content</td>
-                </tr>
-                <tr>
                   <td><code>actions</code></td>
                   <td>
                     Buttons for the bottom of the body; <code>align="start"</code> on a child moves it to the left
@@ -1394,7 +1410,6 @@
               </tbody>
             </table>
           </div>
-          <p>The header carries the caption and the language select alone; nothing else is slotted into it.</p>
           <h2 id="css-parts" class="anchor-heading">
             CSS Parts<a href="#css-parts" aria-label='Direct link to "CSS Parts"'></a>
           </h2>
@@ -1412,12 +1427,12 @@
                   <td>The outer panel wrapper</td>
                 </tr>
                 <tr>
-                  <td><code>header</code></td>
-                  <td>The header area containing the caption and the language select</td>
+                  <td><code>form-group</code></td>
+                  <td>The form group holding the caption, the language select and the fields</td>
                 </tr>
                 <tr>
                   <td><code>language-field</code></td>
-                  <td>The container holding the language select</td>
+                  <td>The container holding the language select, in the group’s chip slot</td>
                 </tr>
                 <tr>
                   <td><code>language-select</code></td>
@@ -1426,10 +1441,6 @@
                 <tr>
                   <td><code>actions</code></td>
                   <td>The row of buttons at the bottom of the body</td>
-                </tr>
-                <tr>
-                  <td><code>translations</code></td>
-                  <td>The body container wrapping the slotted children</td>
                 </tr>
               </tbody>
             </table>
@@ -1456,7 +1467,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-1770"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.117/dist/components/translation-group/translation-group.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1770"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-1770"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.118/dist/components/translation-group/translation-group.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1770"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1471,7 +1482,7 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-1771"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.117/dist/components/translation-group/translation-group.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1771"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1771"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.118/dist/components/translation-group/translation-group.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1771"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
@@ -1511,10 +1522,7 @@
                   <td class="nowrap">
                     <code>footer</code>
                   </td>
-                  <td>
-                    Content displayed in the grey panel footer. The header belongs to the language select; nothing else
-                    is slotted into it.
-                  </td>
+                  <td>Content displayed in the grey panel footer.</td>
                 </tr>
               </tbody>
             </table>
@@ -1545,9 +1553,30 @@
                     <code class="nowrap">label</code>
                   </td>
                   <td>
-                    The caption shown in the panel header. An alias for the inherited <code>caption</code>, which wins
-                    where both are set.
+                    The form group’s label. An alias for the inherited <code>caption</code>, which wins where both are
+                    set.
                   </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">helpText</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> help-text </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>Sits under the label, above the language select, as help text does in any other form group.</td>
                   <td style="text-align: center"></td>
                   <td>
                     <code>string</code>
@@ -1563,7 +1592,7 @@
                   </td>
                   <td>
                     Drops the panel chrome — border, background and padding — so the group reads as a section of the
-                    form around it rather than a panel of its own. For groups nested inside another panel, where the
+                    surrounding form rather than a panel of its own. For groups nested inside another panel, where the
                     fields would otherwise sit indented behind a second border.
                   </td>
                   <td style="text-align: center">
@@ -1718,13 +1747,18 @@
                 </tr>
 
                 <tr>
+                  <td class="nowrap"><code>form-group</code></td>
+                  <td>The form group holding the caption, the language select and the fields.</td>
+                </tr>
+
+                <tr>
                   <td class="nowrap"><code>actions</code></td>
                   <td>The row of buttons at the bottom of the body.</td>
                 </tr>
 
                 <tr>
                   <td class="nowrap"><code>language-field</code></td>
-                  <td>The label and select that choose the language every child is editing.</td>
+                  <td>The select that chooses the language every child is editing, in the group’s chip slot.</td>
                 </tr>
 
                 <tr>
@@ -1750,7 +1784,7 @@
 
             <li><code>&lt;zn-example&gt;</code></li>
 
-            <li><code>&lt;zn-header&gt;</code></li>
+            <li><code>&lt;zn-form-group&gt;</code></li>
 
             <li><code>&lt;zn-icon&gt;</code></li>
 

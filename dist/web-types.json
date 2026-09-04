@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.1.117",
+  "version": "1.1.118",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -14,28 +14,6 @@
           "slots": [{ "name": "", "description": "The default slot" }],
           "events": [],
           "js": { "properties": [], "events": [] }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
         },
         {
           "name": "zn-alert",
@@ -97,6 +75,28 @@
               { "name": "center", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -350,44 +350,6 @@
               }
             ],
             "events": []
-          }
-        },
-        {
-          "name": "zn-bulk-actions",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "name", "value": { "type": "string" } },
-            { "name": "value", "value": { "type": "PropertyKey" } },
-            {
-              "name": "actions",
-              "value": { "type": "BulkActionData", "default": "[]" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "container", "type": "HTMLDivElement" },
-              { "name": "addRule", "type": "ZnSelect" },
-              { "name": "input", "type": "HTMLInputElement" },
-              { "name": "name", "type": "string" },
-              { "name": "value", "type": "PropertyKey" },
-              { "name": "actions", "type": "BulkActionData" },
-              { "name": "validationMessage", "type": "string" },
-              { "name": "validity", "type": "ValidityState" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
           }
         },
         {
@@ -662,6 +624,44 @@
               {
                 "name": "zn-invalid",
                 "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-bulk-actions",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "name", "value": { "type": "string" } },
+            { "name": "value", "value": { "type": "PropertyKey" } },
+            {
+              "name": "actions",
+              "value": { "type": "BulkActionData", "default": "[]" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "container", "type": "HTMLDivElement" },
+              { "name": "addRule", "type": "ZnSelect" },
+              { "name": "input", "type": "HTMLInputElement" },
+              { "name": "name", "type": "string" },
+              { "name": "value", "type": "PropertyKey" },
+              { "name": "actions", "type": "BulkActionData" },
+              { "name": "validationMessage", "type": "string" },
+              { "name": "validity", "type": "ValidityState" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
               }
             ]
           }
@@ -12211,17 +12211,22 @@
         },
         {
           "name": "zn-translation-group",
-          "description": "Puts several zn-translations fields behind one language select, so a whole form's worth of copy is\ntranslated a language at a time.\n---\n\n\n### **Events:**\n - **zn-language-change** - Emitted when the active language changes. Detail: `{ language: string }`.\n\n### **Slots:**\n - _default_ - The `zn-translations` fields the select drives.\n- **actions** - Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on the right, as zinc's form action rows do; `align=\"start\"` moves one to the left. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.\n- **footer** - Content displayed in the grey panel footer. The header belongs to the language select; nothing else is slotted into it.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **actions** - The row of buttons at the bottom of the body.\n- **language-field** - The label and select that choose the language every child is editing.\n- **language-select** - The select itself.",
+          "description": "Puts several zn-translations fields behind one language select, so a whole form's worth of copy is\ntranslated a language at a time.\n---\n\n\n### **Events:**\n - **zn-language-change** - Emitted when the active language changes. Detail: `{ language: string }`.\n\n### **Slots:**\n - _default_ - The `zn-translations` fields the select drives.\n- **actions** - Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on the right, as zinc's form action rows do; `align=\"start\"` moves one to the left. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.\n- **footer** - Content displayed in the grey panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **form-group** - The form group holding the caption, the language select and the fields.\n- **actions** - The row of buttons at the bottom of the body.\n- **language-field** - The select that chooses the language every child is editing, in the group's chip slot.\n- **language-select** - The select itself.",
           "doc-url": "",
           "attributes": [
             {
               "name": "label",
-              "description": "The caption shown in the panel header. An alias for the inherited `caption`, which wins where both are set.",
+              "description": "The form group's label. An alias for the inherited `caption`, which wins where both are set.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "help-text",
+              "description": "Sits under the label, above the language select, as help text does in any other form group.",
               "value": { "type": "string", "default": "''" }
             },
             {
               "name": "inline",
-              "description": "Drops the panel chrome — border, background and padding — so the group reads as a section of the form around it\nrather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit\nindented behind a second border.",
+              "description": "Drops the panel chrome — border, background and padding — so the group reads as a section of the surrounding form\nrather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit\nindented behind a second border.",
               "value": { "type": "boolean", "default": "false" }
             },
             {
@@ -12261,7 +12266,7 @@
             },
             {
               "name": "footer",
-              "description": "Content displayed in the grey panel footer. The header belongs to the language select; nothing else is slotted into it."
+              "description": "Content displayed in the grey panel footer."
             }
           ],
           "events": [
@@ -12274,12 +12279,17 @@
             "properties": [
               {
                 "name": "label",
-                "description": "The caption shown in the panel header. An alias for the inherited `caption`, which wins where both are set.",
+                "description": "The form group's label. An alias for the inherited `caption`, which wins where both are set.",
+                "type": "string"
+              },
+              {
+                "name": "helpText",
+                "description": "Sits under the label, above the language select, as help text does in any other form group.",
                 "type": "string"
               },
               {
                 "name": "inline",
-                "description": "Drops the panel chrome — border, background and padding — so the group reads as a section of the form around it\nrather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit\nindented behind a second border.",
+                "description": "Drops the panel chrome — border, background and padding — so the group reads as a section of the surrounding form\nrather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit\nindented behind a second border.",
                 "type": "boolean"
               },
               {

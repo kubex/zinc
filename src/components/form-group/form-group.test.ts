@@ -78,9 +78,8 @@ describe('<zn-form-group>', () => {
     });
 
     it('leaves the label level with the inputs while nothing scrolls', async () => {
-      // Held clear of the viewport's top edge, which sticky's own inset holds the label back from wherever it is.
       const el = await fixture<HTMLElement>(html`
-        <div style="width: 900px; padding-top: 60px">
+        <div style="width: 900px">
           <zn-panel>
             <zn-form-group label="Sticky"><zn-input label="Name"></zn-input></zn-form-group>
           </zn-panel>
@@ -94,23 +93,24 @@ describe('<zn-form-group>', () => {
       expect(label).to.be.closeTo(inputs, 2);
     });
 
-    it('clips a scroll container that cannot scroll, and hands it back when it can', async () => {
+    it('hands the movement to a scroll timeline where the browser has one', async () => {
+      if (!window.ScrollTimeline) return;
+
       const el = await fixture<HTMLElement>(html`
-        <div style="width: 900px; max-height: 300px; overflow-y: auto">
+        <div style="max-height: 300px; overflow-y: auto">
           <zn-panel>
             <zn-form-group label="Sticky"></zn-form-group>
           </zn-panel>
         </div>`);
-      el.querySelector('zn-form-group')!.innerHTML = tallForm;
+      const group = el.querySelector<HTMLElement>('zn-form-group')!;
+      group.innerHTML = tallForm;
       await new Promise(resolve => setTimeout(resolve, 400));
 
-      const body = el.querySelector('zn-panel')!.shadowRoot!.querySelector<HTMLElement>('.panel__body')!;
-      expect(getComputedStyle(body).overflowY, 'sticky has to skip a body that cannot scroll').to.equal('clip');
+      const label = group.shadowRoot!.querySelector<HTMLElement>('.form-control__text')!;
+      const [animation] = label.getAnimations();
 
-      body.style.maxHeight = '120px';
-      await new Promise(resolve => setTimeout(resolve, 400));
-
-      expect(getComputedStyle(body).overflowY, 'and it scrolls again once it must').to.equal('auto');
+      expect(animation, 'the compositor drives the label, not the scroll handler').to.exist;
+      expect(animation.timeline).to.be.instanceOf(window.ScrollTimeline);
     });
 
     it('holds the label in view when a panel sits between the form and the scroll container', async () => {

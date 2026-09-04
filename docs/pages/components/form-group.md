@@ -362,7 +362,7 @@ This ensures forms remain usable on all devices without additional configuration
 
 The label column sticks to the top of the scroll container, so on a long form it stays beside the inputs instead of scrolling away. Use the `--zn-form-group-sticky-top` custom property to change the offset it settles at — useful when the scroll container has a sticky header of its own.
 
-A container that clips its overflow but never scrolls — a `zn-panel` body sized to its content, say — would otherwise catch the label and hold it still for the whole scroll. The group clips such a container instead (`overflow: clip`, which clips without being a scroll container), so the label follows the box that is actually scrolled. Scrolling goes straight back to the container the moment its content outgrows it.
+Where a container clips its overflow but never scrolls — a `zn-panel` body sized to its content, say — native sticky anchors to it and the label would sit still for the whole scroll. The group follows the container that is actually scrolled instead, off a scroll timeline where the browser has them so the compositor keeps the label with the fields, and off a scroll handler where it does not.
 
 ```html:preview
 <div style="max-height: 300px; overflow-y: auto;">

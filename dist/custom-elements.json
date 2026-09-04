@@ -58,6 +58,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -246,79 +319,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -1101,6 +1101,363 @@
           "declaration": {
             "name": "ZnBackground",
             "module": "components/background/background.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/bulk-actions/bulk-actions.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnBulkActions",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-button': ZnButton, 'zn-input': ZnInput, 'zn-option': ZnOption, 'zn-select': ZnSelect, }"
+            },
+            {
+              "kind": "field",
+              "name": "container",
+              "type": {
+                "text": "HTMLDivElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "addRule",
+              "type": {
+                "text": "ZnSelect"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "input",
+              "type": {
+                "text": "HTMLInputElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "PropertyKey"
+              },
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "actions",
+              "type": {
+                "text": "BulkActionData"
+              },
+              "default": "[]",
+              "attribute": "actions"
+            },
+            {
+              "kind": "field",
+              "name": "_selectedRules",
+              "type": {
+                "text": "Map<string, CreatedRule>"
+              },
+              "privacy": "private",
+              "default": "new Map<string, CreatedRule>()"
+            },
+            {
+              "kind": "field",
+              "name": "_formController",
+              "type": {
+                "text": "FormControlController"
+              },
+              "privacy": "private",
+              "default": "new FormControlController(this, {})"
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_handleChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_addRule",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event | null"
+                  }
+                },
+                {
+                  "name": "value",
+                  "default": "\"\"",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "pos",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_createInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ZnSelect | ZnInput | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "uniqueId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "filter",
+                  "type": {
+                    "text": "BulkActionItem"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_updateValue",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event | { target: ZnSelect | ZnInput | HTMLDivElement }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_getRulePosition",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_changeRule",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "ZnChangeEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_removeRule",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "PropertyKey"
+              },
+              "fieldName": "value"
+            },
+            {
+              "name": "actions",
+              "type": {
+                "text": "BulkActionData"
+              },
+              "default": "[]",
+              "fieldName": "actions"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "bulk-actions",
+          "tagName": "zn-bulk-actions",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/bulk-actions\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-input\n * @dependency zn-option\n * @dependency zn-select\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/bulk-actions",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-button",
+            "zn-input",
+            "zn-option",
+            "zn-select"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnBulkActions",
+            "module": "components/bulk-actions/bulk-actions.js"
           }
         }
       ]
@@ -2056,363 +2413,6 @@
           "declaration": {
             "name": "ZnButton",
             "module": "components/button/button.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/bulk-actions/bulk-actions.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnBulkActions",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ 'zn-button': ZnButton, 'zn-input': ZnInput, 'zn-option': ZnOption, 'zn-select': ZnSelect, }"
-            },
-            {
-              "kind": "field",
-              "name": "container",
-              "type": {
-                "text": "HTMLDivElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "addRule",
-              "type": {
-                "text": "ZnSelect"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "input",
-              "type": {
-                "text": "HTMLInputElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "name"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "PropertyKey"
-              },
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "actions",
-              "type": {
-                "text": "BulkActionData"
-              },
-              "default": "[]",
-              "attribute": "actions"
-            },
-            {
-              "kind": "field",
-              "name": "_selectedRules",
-              "type": {
-                "text": "Map<string, CreatedRule>"
-              },
-              "privacy": "private",
-              "default": "new Map<string, CreatedRule>()"
-            },
-            {
-              "kind": "field",
-              "name": "_formController",
-              "type": {
-                "text": "FormControlController"
-              },
-              "privacy": "private",
-              "default": "new FormControlController(this, {})"
-            },
-            {
-              "kind": "field",
-              "name": "validationMessage",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "validity",
-              "type": {
-                "text": "ValidityState"
-              },
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "_handleChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_addRule",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "Event | null"
-                  }
-                },
-                {
-                  "name": "value",
-                  "default": "\"\"",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "pos",
-                  "optional": true,
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_createInput",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "ZnSelect | ZnInput | null"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "uniqueId",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "filter",
-                  "type": {
-                    "text": "BulkActionItem"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_updateValue",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "id",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "Event | { target: ZnSelect | ZnInput | HTMLDivElement }"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_getRulePosition",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "number"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "id",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_changeRule",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "id",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "ZnChangeEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_removeRule",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "id",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "Event"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "checkValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getForm",
-              "return": {
-                "type": {
-                  "text": "HTMLFormElement | null"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "reportValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "setCustomValidity",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "message",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "name"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "PropertyKey"
-              },
-              "fieldName": "value"
-            },
-            {
-              "name": "actions",
-              "type": {
-                "text": "BulkActionData"
-              },
-              "default": "[]",
-              "fieldName": "actions"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "bulk-actions",
-          "tagName": "zn-bulk-actions",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/bulk-actions\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-input\n * @dependency zn-option\n * @dependency zn-select\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/bulk-actions",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-button",
-            "zn-input",
-            "zn-option",
-            "zn-select"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnBulkActions",
-            "module": "components/bulk-actions/bulk-actions.js"
           }
         }
       ]
@@ -34658,7 +34658,7 @@
               "name": "slashController",
               "privacy": "private",
               "readonly": true,
-              "default": "new SlashMenuController(this, { menu: () => this.mountSlashMenu(), // The menu only belongs in a block that is nothing but the slash command — a // block prefix like \"## \" is not valid remarkd part-way through a line. items: () => this.isSlashBlock() ? SLASH_ITEMS.filter(item => item.action !== 'include' || !!this.includeUrl) : [], onSelect: item => this.handleSlashSelect(item) })"
+              "default": "new SlashMenuController(this, { menu: () => this.mountSlashMenu(), // The menu only belongs in a block that is nothing but the slash command — a // block prefix like \"## \" is not valid remarkd part-way through a line. items: () => this.isSlashBlock() ? SLASH_ITEMS.filter(item => this.slashItemAvailable(item)) : [], onSelect: item => this.handleSlashSelect(item) })"
             },
             {
               "kind": "field",
@@ -34858,6 +34858,84 @@
             },
             {
               "kind": "field",
+              "name": "linkPickerOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "linkQuery",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "linkResults",
+              "type": {
+                "text": "LinkOption[] | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "linkSearchFailed",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "linkSelection",
+              "type": {
+                "text": "[number, number] | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "linkSearchTimer",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "linkSearchToken",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "linkRefs",
+              "privacy": "private",
+              "default": "new Map<string, LinkOption | null>()",
+              "description": "Resolved link targets by reference; a null value is one the app does not know."
+            },
+            {
+              "kind": "field",
+              "name": "linkRefsPending",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
               "name": "pendingDragHandle",
               "type": {
                 "text": "HTMLElement | null"
@@ -34968,6 +35046,16 @@
               "default": "''",
               "description": "Endpoint listing the Includes this document may embed, as\n`{\"items\":[{id,title,description,scope,keywords,languages,url}]}`. Labels the\nchips rendered for `include::` directives and feeds the include picker.",
               "attribute": "include-url"
+            },
+            {
+              "kind": "field",
+              "name": "linkUrl",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Endpoint the article link picker searches, as\n`{\"items\":[{ref,kind,title,context,status}]}`. Queried with `?q=<term>` as\nthe author types and with `?refs=a,b` to resolve the references a body\nalready carries.",
+              "attribute": "link-url"
             },
             {
               "kind": "field",
@@ -35090,6 +35178,10 @@
             {
               "kind": "method",
               "name": "handleIncludeUrlChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleLinkUrlChange"
             },
             {
               "kind": "method",
@@ -35700,6 +35792,31 @@
               ]
             },
             {
+              "kind": "method",
+              "name": "pickLink",
+              "privacy": "private",
+              "description": "Opens the picker over the block being edited. The caret range is captured\nnow: the picker's own filter takes focus, so the textarea's selection is\ngone by the time an option is chosen."
+            },
+            {
+              "kind": "field",
+              "name": "closeLinkPicker",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "searchLinks",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "term",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Debounced; only the newest response is kept."
+            },
+            {
               "kind": "field",
               "name": "closeIncludePicker",
               "privacy": "private"
@@ -35803,6 +35920,25 @@
                 }
               },
               "description": "Fetches the include list once; every later caller shares the same promise."
+            },
+            {
+              "kind": "method",
+              "name": "resolveContentLinks",
+              "privacy": "private",
+              "description": "Resolves the references in the body that have not been resolved yet, so a\nlink whose target is gone can be marked. A failed request records nothing:\nan unanswered reference is not a broken one."
+            },
+            {
+              "kind": "method",
+              "name": "markContentLinks",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "Element"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -35981,7 +36117,44 @@
                   }
                 }
               ],
-              "description": "An inline action needs an open block to apply its mark to."
+              "description": "Inline marks and the article link both apply into an open block, not a new one."
+            },
+            {
+              "kind": "method",
+              "name": "actionAvailable",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "action",
+                  "type": {
+                    "text": "EditorAction"
+                  }
+                }
+              ],
+              "description": "A picker action with no endpoint configured is not offered at all."
+            },
+            {
+              "kind": "method",
+              "name": "slashItemAvailable",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "SlashMenuItem"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -36040,6 +36213,24 @@
               "kind": "method",
               "name": "renderIncludePicker",
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "renderLinkPicker",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "insertLink",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "LinkOption"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -36111,6 +36302,15 @@
               "default": "''",
               "description": "Endpoint listing the Includes this document may embed, as\n`{\"items\":[{id,title,description,scope,keywords,languages,url}]}`. Labels the\nchips rendered for `include::` directives and feeds the include picker.",
               "fieldName": "includeUrl"
+            },
+            {
+              "name": "link-url",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Endpoint the article link picker searches, as\n`{\"items\":[{ref,kind,title,context,status}]}`. Queried with `?q=<term>` as\nthe author types and with `?refs=a,b` to resolve the references a body\nalready carries.",
+              "fieldName": "linkUrl"
             },
             {
               "name": "allow-raw",

@@ -9730,7 +9730,7 @@ declare module "components/remarkd-editor/actions" {
         /** Where the caret lands within `prefix`. Defaults to the end. */
         caretOffset?: number;
         /** Actions that open their own picker instead of inserting text. */
-        opens?: 'image' | 'include';
+        opens?: 'image' | 'include' | 'link';
     }
     /** Toolbar order, most-used first — the last groups are the first to collapse. */
     export const ACTION_GROUPS: {
@@ -9846,6 +9846,16 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private includeLoadFailed;
         private includePickerIndex;
         private includeQuery;
+        private linkPickerOpen;
+        private linkQuery;
+        private linkResults;
+        private linkSearchFailed;
+        private linkSelection;
+        private linkSearchTimer?;
+        private linkSearchToken;
+        /** Resolved link targets by reference; a null value is one the app does not know. */
+        private linkRefs;
+        private linkRefsPending;
         private pendingDragHandle;
         private dragStartX;
         private dragStartY;
@@ -9872,6 +9882,13 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
          * chips rendered for `include::` directives and feeds the include picker.
          */
         includeUrl: string;
+        /**
+         * Endpoint the article link picker searches, as
+         * `{"items":[{ref,kind,title,context,status}]}`. Queried with `?q=<term>` as
+         * the author types and with `?refs=a,b` to resolve the references a body
+         * already carries.
+         */
+        linkUrl: string;
         /** Adds a toolbar toggle that swaps the block view for the full remarkd source. */
         allowRaw: boolean;
         /** Makes the editor required for form submission. */
@@ -9895,6 +9912,7 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         disconnectedCallback(): void;
         handleValueChange(): void;
         handleIncludeUrlChange(): void;
+        handleLinkUrlChange(): void;
         /**
          * Splits remarkd source into blocks on blank lines, keeping fenced /
          * delimited containers (``` ==== !!!! .... ---- ____ **** ////) as single blocks.
@@ -9979,6 +9997,15 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private moveDragGhost;
         private pickImage;
         private pickInclude;
+        /**
+         * Opens the picker over the block being edited. The caret range is captured
+         * now: the picker's own filter takes focus, so the textarea's selection is
+         * gone by the time an option is chosen.
+         */
+        private pickLink;
+        private closeLinkPicker;
+        /** Debounced; only the newest response is kept. */
+        private searchLinks;
         private closeIncludePicker;
         private insertInclude;
         private closeImagePicker;
@@ -9996,6 +10023,13 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private hasIncludeBlock;
         /** Fetches the include list once; every later caller shares the same promise. */
         private loadIncludeOptions;
+        /**
+         * Resolves the references in the body that have not been resolved yet, so a
+         * link whose target is gone can be marked. A failed request records nothing:
+         * an unanswered reference is not a broken one.
+         */
+        private resolveContentLinks;
+        private markContentLinks;
         private autosize;
         /**
          * Applies an inline mark to the open block's textarea: wraps the selection, toggles the
@@ -10042,8 +10076,11 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
          */
         private renderConditional;
         private renderBlock;
-        /** An inline action needs an open block to apply its mark to. */
+        /** Inline marks and the article link both apply into an open block, not a new one. */
         private isActionDisabled;
+        /** A picker action with no endpoint configured is not offered at all. */
+        private actionAvailable;
+        private slashItemAvailable;
         /** Routes a toolbar/menu action to the inline or block insert path — the one place both
          * `renderAction` and `renderMenuAction` call, so the bar and the overflow menu cannot
          * drift out of sync on what a given action actually does. */
@@ -10057,6 +10094,8 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         /** The block views, with the inline image picker spliced in when active. */
         private renderBody;
         private renderIncludePicker;
+        private renderLinkPicker;
+        private insertLink;
         private renderImagePicker;
     }
 }

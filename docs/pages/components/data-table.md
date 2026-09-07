@@ -443,6 +443,8 @@ In this preview, filter parameters are sent with the request but the static data
 
 Add complex filtering options above the table using the `filter-top` slot. Perfect for search forms and advanced filters.
 
+Content in this slot renders above the table's own panel rather than inside it, so wrap it in a `zn-panel` when it needs its own frame. It never contributes a header row to the table, and with `standalone` an empty state that has no caption or header controls is left unwrapped, so a `zn-panel` around the `empty-state` slot doesn't end up nested inside another.
+
 :::tip
 This example uses `no-initial-load` so the table starts empty. Submitting the filter form triggers a data load, but the static data file returns the same results regardless of filter values. With a real server, results would be filtered accordingly.
 :::

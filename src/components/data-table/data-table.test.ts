@@ -10,6 +10,40 @@ describe('<zn-data-table>', () => {
     expect(el).to.exist;
   });
 
+  // filter-top renders above the panel, so it must not bring an otherwise empty header row with it
+  it('renders no header when only filter-top is slotted', async () => {
+    const el = await fixture<ZnDataTable>(html`
+      <zn-data-table standalone no-initial-load>
+        <div slot="filter-top">Filters</div>
+        <div slot="empty-state">Nothing yet</div>
+      </zn-data-table>`);
+    await el.updateComplete;
+
+    expect(el.shadowRoot!.querySelector('.table__header__right')).to.not.exist;
+    expect(el.shadowRoot!.querySelector('zn-header')).to.not.exist;
+  });
+
+  it('leaves a bare empty state unwrapped by the standalone panel', async () => {
+    const el = await fixture<ZnDataTable>(html`
+      <zn-data-table standalone no-initial-load>
+        <div slot="empty-state">Nothing yet</div>
+      </zn-data-table>`);
+    await el.updateComplete;
+
+    expect(el.shadowRoot!.querySelector('zn-panel')).to.not.exist;
+    expect(el.shadowRoot!.querySelector('slot[name="empty-state"]')).to.exist;
+  });
+
+  it('keeps the standalone panel for an empty state that has a caption', async () => {
+    const el = await fixture<ZnDataTable>(html`
+      <zn-data-table standalone no-initial-load caption="Customers">
+        <div slot="empty-state">Nothing yet</div>
+      </zn-data-table>`);
+    await el.updateComplete;
+
+    expect(el.shadowRoot!.querySelector('zn-panel')).to.exist;
+  });
+
   it('does not throw when updating selection without a select-all button', async () => {
     const el = await fixture<ZnDataTable>(html` <zn-data-table></zn-data-table> `);
 

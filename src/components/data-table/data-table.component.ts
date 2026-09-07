@@ -435,9 +435,11 @@ export default class ZnDataTable extends ZincElement {
 
     // If no-initial-load is set, do not invoke the Task on the first render
     let tableBody: TemplateResult = html``;
+    let emptyBody = false;
     if (this.noInitialLoad && this._initialLoad) {
       tableBody = html`
         <slot name="empty-state"></slot>`;
+      emptyBody = true;
     } else if (this.dataUri) {
       tableBody = this._dataTask.render({
         pending: () => {
@@ -456,6 +458,7 @@ export default class ZnDataTable extends ZincElement {
           this._initialLoad = false;
           this._hasLoadedData = true;
           this._lastLoadHadRows = ((data as Response)?.rows?.length ?? 0) > 0;
+          emptyBody = !this._lastLoadHadRows;
           this._lastTableContent = html`
             <div>${this.renderTable(data as Response)}</div>`;
           return this._lastTableContent;
@@ -496,11 +499,15 @@ export default class ZnDataTable extends ZincElement {
       || this.hasSlotController.test(ActionSlots.modify.valueOf())
       || this.hasSlotController.test(ActionSlots.create.valueOf())
       || this.hasSlotController.test(ActionSlots.sort.valueOf())
-      || this.hasSlotController.test(ActionSlots.filter_top.valueOf())
       || this.hasSlotController.test(ActionSlots.search.valueOf());
 
     const hasInputs = this.hasSlotController.test(ActionSlots.inputs.valueOf());
     const hasControls = hasActions || this.hasColumnSelect() || this.hasRefresh();
+
+    // An empty state with no header has nothing to hang off the panel, and consumers
+    // often bring their own panel for it, so let it stand on its own
+    const bareEmptyState = emptyBody && !hasControls && !this.caption;
+
     // The filter bar is inline, so it gets its own row rather than a slot in the header
     const filters = this.hasSlotController.test(ActionSlots.filter.valueOf())
       ? html`
@@ -515,7 +522,7 @@ export default class ZnDataTable extends ZincElement {
         ${hasInputs ? html`
           <slot name="${ActionSlots.inputs.valueOf()}" style="display: none"></slot>` : null}
         <slot name="${ActionSlots.filter_top.valueOf()}"></slot>
-        ${this.standalone
+        ${this.standalone && !bareEmptyState
           ? html`
             <zn-panel caption="${ifDefined(this.caption || undefined)}" flush>
               ${hasControls ? html`

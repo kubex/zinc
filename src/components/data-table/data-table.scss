@@ -5,6 +5,11 @@
   @include wc.scrollbars;
 }
 
+// Separates a top-level filter bar from the table's own panel below it
+slot[name="filter-top"]::slotted(*) {
+  margin-bottom: var(--zn-spacing-small);
+}
+
 .table__scroll {
   overflow-x: auto;
   @include wc.scrollbars;

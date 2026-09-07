@@ -5,8 +5,9 @@
   @include wc.scrollbars;
 }
 
-.table-container {
-  overflow: auto;
+.table__scroll {
+  overflow-x: auto;
+  @include wc.scrollbars;
 }
 
 table {
@@ -26,17 +27,6 @@ table {
 
   tbody tr.table__row--details td {
     background-color: rgb(var(--zn-shadow));
-  }
-
-  &.table--standalone {
-    background-color: rgb(var(--zn-panel));
-    border-radius: var(--zn-border-radius);
-    border: 1px solid rgb(var(--zn-border-color));
-    overflow: hidden;
-
-    thead tr th {
-      border-top: 0;
-    }
   }
 
   thead {
@@ -116,6 +106,20 @@ table {
 
       zn-checkbox {
         margin: 0;
+      }
+    }
+  }
+
+  &__panel {
+    &--standalone {
+      background-color: rgb(var(--zn-panel));
+      border: 1px solid rgb(var(--zn-border-color));
+      border-radius: var(--zn-border-radius);
+      overflow: hidden;
+
+      .table__header {
+        padding-inline: var(--zn-spacing-medium);
+        border-bottom: 1px solid rgb(var(--zn-border-color));
       }
     }
   }
@@ -232,16 +236,26 @@ table {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
     padding-block: var(--zn-spacing-small);
     gap: var(--zn-spacing-small);
+    min-height: 56px;
 
     &__actions,
     &__query-builder {
       display: flex;
       flex-direction: row;
-      align-items: baseline;
+      align-items: center;
       gap: var(--zn-spacing-small);
+    }
+
+    &__caption {
+      @include wc.text-style(h1);
+
+      margin: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     &__right {
@@ -274,6 +288,8 @@ table {
       gap: var(--zn-spacing-x-small);
 
       zn-select[name="rowPerPage"] {
+        --zn-input-background-color: rgb(var(--zn-panel));
+
         max-width: 75px;
       }
 
@@ -328,6 +344,16 @@ table {
       font-size: var(--zn-text-table-content-font-size);
     }
   }
+}
+
+zn-menu {
+  --zn-menu-min-width: var(--zn-size-spanel);
+}
+
+// Dropdowns sit over dense rows here, so they need a solid surface rather than
+// zn-menu's translucent default
+zn-menu::part(base) {
+  background-color: rgb(var(--zn-panel));
 }
 
 .reduced-opacity .table tbody {

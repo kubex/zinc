@@ -2,7 +2,7 @@ import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, nothing, type TemplateResult, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
-import {property, query} from 'lit/decorators.js';
+import {property, query, state} from 'lit/decorators.js';
 import {ref} from "lit/directives/ref.js";
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import {Task} from "@lit/task";
@@ -173,13 +173,13 @@ type AllowedInputElement =
  * @dependency zn-data-table-search
  *
  * @slot - The default slot.
- * @slot search - Slot for search component.
- * @slot sort - Slot for sort component.
- * @slot filter - Slot for filter component.
- * @slot filter-top - Slot for top-level filter component.
- * @slot delete-action - Slot for delete action button.
- * @slot modify-action - Slot for modify action button.
- * @slot create-action - Slot for create action button.
+ * @slot search - Slot for search component, in the header's right-hand group.
+ * @slot sort - Slot for sort component, in the header's right-hand group.
+ * @slot filter - Slot for filter component, in the header's right-hand group.
+ * @slot filter-top - Slot for a top-level filter component, rendered above the table's panel.
+ * @slot delete-action - Slot for delete action button, shown beside the caption once rows are selected.
+ * @slot modify-action - Slot for modify action button, shown beside the caption once rows are selected.
+ * @slot create-action - Slot for create action button, at the end of the header's right-hand group.
  * @slot inputs - Slot for additional input controls.
  * @slot empty-state - Slot for custom empty state.
  * @slot no-results - Slot for a custom no-results state, shown when a search on a no-initial-load table returns no rows.
@@ -233,6 +233,12 @@ export default class ZnDataTable extends ZincElement {
 
   // Hide pagination
   @property({attribute: 'hide-pagination', type: Boolean}) hidePagination: boolean;
+
+  // Hide the column select dropdown in the table header
+  @property({attribute: 'hide-column-select', type: Boolean}) hideColumnSelect: boolean = false;
+
+  // Hide the refresh button in the table header
+  @property({attribute: 'hide-refresh', type: Boolean}) hideRefresh: boolean = false;
 
   @property({type: Boolean}) standalone: boolean = false;
 
@@ -361,6 +367,8 @@ export default class ZnDataTable extends ZincElement {
   private _expandedRows: Set<string> = new Set();
   private _hiddenCells: Map<string, Cell[]> = new Map();
   private _secondaryHeaders: HeaderConfig[];
+  @state() private _deselectedColumns: Set<string> = new Set();
+  private _columnDefaultsApplied = false;
   private _formatTemplates: Record<string, DisplayTemplate> = defaultTemplates;
 
   requestParams: Record<string, any> = {};
@@ -371,7 +379,52 @@ export default class ZnDataTable extends ZincElement {
     this._dataTask.run().then(r => r);
   }
 
+  // Headers that make up the visible columns, in header order
+  private visibleHeaders(): HeaderConfig[] {
+    return this.selectableHeaders().filter((header: HeaderConfig) => this.isColumnVisible(header));
+  }
+
+  // Headers the column select can toggle - everything but the permanently hidden and secondary ones
+  private selectableHeaders(): HeaderConfig[] {
+    return (Object.values(this.headers) as HeaderConfig[]).filter((header: HeaderConfig) => {
+      if (header.hideHeader || header.hideColumn || header.secondary) return false;
+
+      return !Object.values(this.hiddenColumns).includes(header.key);
+    });
+  }
+
+  private isColumnVisible(header: HeaderConfig): boolean {
+    return header.required === true || !this._deselectedColumns.has(header.key);
+  }
+
+  private applyColumnDefaults() {
+    if (this._columnDefaultsApplied) return;
+
+    const headers = Object.values(this.headers) as HeaderConfig[];
+    if (headers.length === 0) return;
+
+    this._columnDefaultsApplied = true;
+    const deselected = new Set(this._deselectedColumns);
+    headers.forEach((header: HeaderConfig) => {
+      if (header.default === false && header.required !== true) deselected.add(header.key);
+    });
+    this._deselectedColumns = deselected;
+  }
+
+  private toggleColumn(header: HeaderConfig) {
+    if (header.required === true) return;
+
+    const deselected = new Set(this._deselectedColumns);
+    if (!deselected.delete(header.key)) {
+      // Never let the last visible column be turned off
+      if (this.visibleHeaders().length <= 1) return;
+      deselected.add(header.key);
+    }
+    this._deselectedColumns = deselected;
+  }
+
   render() {
+    this.applyColumnDefaults();
 
     // If no-initial-load is set, do not invoke the Task on the first render
     let tableBody: TemplateResult = html``;
@@ -441,14 +494,25 @@ export default class ZnDataTable extends ZincElement {
       || this.hasSlotController.test(ActionSlots.search.valueOf());
 
     const hasInputs = this.hasSlotController.test(ActionSlots.inputs.valueOf());
+    const hasHeader = hasActions
+      || !!this.caption
+      || this.hasColumnSelect()
+      || this.hasRefresh();
 
     // Headers do not need to be re-rendered with new data
     return html`
       <div class="table-container" ${ref((el) => (this.tableContainer = el))}>
         ${hasInputs ? html`
           <slot name="${ActionSlots.inputs.valueOf()}" style="display: none"></slot>` : null}
-        ${hasActions ? this.getTableHeader() : html``}
-        ${tableBody}
+        <slot name="${ActionSlots.filter_top.valueOf()}"></slot>
+        <div class="${classMap({
+          'table__panel': true,
+          'table__panel--standalone': this.standalone,
+        })}">
+          ${hasHeader ? this.getTableHeader() : nothing}
+          ${tableBody}
+        </div>
+        ${this.getTableFooter()}
       </div>
     `;
   }
@@ -641,14 +705,8 @@ export default class ZnDataTable extends ZincElement {
   }
 
   public renderTableData(data: any, error?: ResponseError) {
-    // Primary (visible) headers exclude those explicitly hidden and those marked as secondary
-    const filteredHeaders = Object.values(this.headers).filter((header: HeaderConfig) => {
-      if (header.hideHeader || header.hideColumn) return false;
-
-      if (Object.values(this.hiddenColumns).includes(header.key)) return false;
-
-      return !header.secondary;
-    });
+    // Primary (visible) headers exclude those explicitly hidden, deselected and those marked as secondary
+    const filteredHeaders = this.visibleHeaders();
 
     // Secondary headers (shown in expandable details)
     this._secondaryHeaders = Object.values(this.headers).filter((header: HeaderConfig) => {
@@ -689,10 +747,9 @@ export default class ZnDataTable extends ZincElement {
     const colCount = filteredHeaders.length + (this.rowHasActions ? 1 : 0) + (anyHidden ? 1 : 0);
 
     return html`
-      <div style="overflow-x: auto">
+      <div class="table__scroll">
         <table class="${classMap({
           'table': true,
-          'table--standalone': this.standalone,
           'with-hover': !this.unsortable && !this.hideCheckboxes,
         })}">
           <thead>
@@ -723,28 +780,88 @@ export default class ZnDataTable extends ZincElement {
           </tbody>
         </table>
       </div>
-
-      ${this.getTableFooter()}
     `;
   }
 
   getTableHeader() {
     return html`
-      <slot name="${ActionSlots.filter_top.valueOf()}"></slot>
       <div class="table__header">
         <div class="table__header__actions">
+          ${this.caption ? html`
+            <h3 class="table__header__caption">${this.caption}</h3>` : nothing}
           ${this.getActions()}
         </div>
         <div class="table__header__right">
-          <slot name="${ActionSlots.search.valueOf()}"></slot>
-          <slot name="${ActionSlots.sort.valueOf()}"></slot>
+          ${this.getColumnSelect()}
           <slot name="${ActionSlots.filter.valueOf()}"></slot>
+          <slot name="${ActionSlots.sort.valueOf()}"></slot>
+          ${this.getRefreshButton()}
+          <slot name="${ActionSlots.search.valueOf()}"></slot>
+          <slot name="${ActionSlots.create.valueOf()}"></slot>
         </div>
       </div>
     `;
   }
 
+  // Nothing to pick columns on or refresh into while the table has no rows
+  private hasRows(): boolean {
+    return this._hasLoadedData && this._lastLoadHadRows;
+  }
+
+  private hasColumnSelect(): boolean {
+    return !this.hideColumnSelect && this.hasRows() && this.selectableHeaders().length > 1;
+  }
+
+  private hasRefresh(): boolean {
+    return !this.hideRefresh && this.hasRows() && !!this.dataUri;
+  }
+
+  private getColumnSelect() {
+    if (!this.hasColumnSelect()) return nothing;
+
+    return html`
+      <zn-dropdown placement="bottom-end" stay-open-on-select>
+        <zn-button slot="trigger"
+                   icon-button="small"
+                   icon="columns-3@lu"
+                   icon-size="18"
+                   tooltip="Columns"
+                   aria-label="Select columns">
+        </zn-button>
+        <zn-menu variant="shell" @zn-menu-select="${this.handleColumnSelect}">
+          ${this.selectableHeaders().map((header: HeaderConfig) => html`
+            <zn-menu-item type="checkbox"
+                          value="${header.key}"
+                          ?checked="${this.isColumnVisible(header)}"
+                          ?disabled="${header.required === true}">${header.label}
+            </zn-menu-item>`)}
+        </zn-menu>
+      </zn-dropdown>`;
+  }
+
+  private getRefreshButton() {
+    if (!this.hasRefresh()) return nothing;
+
+    return html`
+      <zn-button icon-button="small"
+                 icon="refresh-cw@lu"
+                 icon-size="18"
+                 tooltip="Refresh"
+                 aria-label="Refresh data"
+                 @click="${this.refresh}">
+      </zn-button>`;
+  }
+
+  private handleColumnSelect = (event: CustomEvent<{ value: string }>) => {
+    const header = (Object.values(this.headers) as HeaderConfig[])
+      .find((h: HeaderConfig) => h.key === event.detail.value);
+
+    if (header) this.toggleColumn(header);
+  }
+
   getTableFooter() {
+    if (!this._hasLoadedData) return html``;
+
     const rowSelected = this.getRowsSelected();
     const pagination = this.getPagination();
     const rowsPerPage = this.getRowsPerPage();
@@ -859,11 +976,11 @@ export default class ZnDataTable extends ZincElement {
   getActions() {
     const actions = [];
 
-    const hasSlots = this.hasSlotController.test(ActionSlots.delete.valueOf())
-      || this.hasSlotController.test(ActionSlots.modify.valueOf())
-      || this.hasSlotController.test(ActionSlots.create.valueOf());
+    // Select-all only earns its place alongside the bulk actions it feeds
+    const hasBulkActions = this.hasSlotController.test(ActionSlots.delete.valueOf())
+      || this.hasSlotController.test(ActionSlots.modify.valueOf());
 
-    if (!hasSlots) {
+    if (!hasBulkActions) {
       return [];
     }
 
@@ -899,11 +1016,6 @@ export default class ZnDataTable extends ZincElement {
         actions.push(html`
           <slot name="${ActionSlots.modify.valueOf()}"></slot>`);
       }
-    }
-
-    if (this.hasSlotController.test(ActionSlots.create.valueOf())) {
-      actions.push(html`
-        <slot name="${ActionSlots.create.valueOf()}"></slot>`);
     }
 
     return actions;
@@ -1192,16 +1304,7 @@ export default class ZnDataTable extends ZincElement {
   private renderCellHeader(header: HeaderConfig) {
     const sortable = !Object.values(this.unsortableHeaders).includes(header.key) && !Object.values(this.hiddenHeaders).includes(header.key) && !this.unsortable && header.sortable !== false;
 
-    // Determine the last visible header considering secondary flags and hidden columns
-    const lastVisibleHeaderKey = Object.values(this.headers)
-      .filter((h: HeaderConfig) => {
-        if (h.hideHeader || h.hideColumn) return false;
-
-        if (Object.values(this.hiddenColumns).includes(h.key)) return false;
-
-        return !h.secondary;
-      })
-      .slice(-1)[0]?.key;
+    const lastVisibleHeaderKey = this.visibleHeaders().slice(-1)[0]?.key;
 
     return html`
       <th
@@ -1221,13 +1324,7 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private renderCellBody(index: number, value: Cell, row: Row) {
-    const filteredHeaders = Object.values(this.headers).filter((header: HeaderConfig) => {
-      if (header.hideHeader || header.hideColumn) return false;
-
-      if (Object.values(this.hiddenColumns).includes(header.key)) return false;
-
-      return !header.secondary;
-    });
+    const filteredHeaders = this.visibleHeaders();
     const header: HeaderConfig | undefined = filteredHeaders[index];
     const headerKey: string | undefined = header?.key;
 
@@ -1404,11 +1501,8 @@ export default class ZnDataTable extends ZincElement {
 
   private loadingTable() {
     return html`
-      <div class="table-container">
-        <table class="${classMap({
-          'table': true,
-          'table--standalone': this.standalone,
-        })}">
+      <div class="table__scroll">
+        <table class="table">
           <thead>
           <tr>
             <th colspan="30%"></th>
@@ -1493,7 +1587,7 @@ export default class ZnDataTable extends ZincElement {
                      plain
                      aria-label="Row actions">
           </zn-button>
-          <zn-menu>
+          <zn-menu variant="shell">
             ${row.actions?.map((action: ActionConfig) => {
               if (action.confirmContent) {
                 const triggerId = 'confirm-action-' + Math.random().toString(36).substring(2, 15);

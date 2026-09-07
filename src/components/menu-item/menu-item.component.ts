@@ -141,7 +141,10 @@ export default class ZnMenuItem extends ZincElement {
       const closestMenu: Element | null = composedPath.find((el: Element) => el?.getAttribute?.('role') === 'menu') as Element;
       if (this.confirm) return;
 
-      (closestMenu?.closest('zn-dropdown') as ZnDropdown | null)?.hide();
+      const dropdown = closestMenu?.closest('zn-dropdown') as ZnDropdown | null;
+      if (!dropdown?.stayOpenOnSelect) {
+        dropdown?.hide();
+      }
       this.emit('zn-menu-select', {detail: {value: this.value, element: this}});
     }
   };

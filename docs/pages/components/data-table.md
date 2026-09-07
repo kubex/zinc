@@ -195,6 +195,8 @@ Use `hide-checkboxes` to disable row selection functionality.
 
 Add action buttons to the table header for performing operations on selected rows. Use the `delete-action`, `modify-action`, and `create-action` slots.
 
+`delete-action` and `modify-action` sit beside the caption alongside a select-all toggle, and only appear once rows are selected. `create-action` is a primary action rather than a selection one, so it renders at the end of the header's right-hand group, after the search field.
+
 ```html:preview
 <zn-data-table
   data-uri="/data/data-table.json"
@@ -240,9 +242,49 @@ Mark columns as secondary to hide them by default. Users can expand rows to view
 </zn-data-table>
 ```
 
+### Column Select
+
+The header carries a column select dropdown whenever the table has rows and more than one column can be toggled. Mark a header `"required": true` to pin it on, or `"default": false` to start it hidden. Set `hide-column-select` to remove the dropdown.
+
+```html:preview
+<zn-data-table
+  data-uri="/data/data-table.json"
+  method="GET"
+  standalone
+  caption="Customers"
+  headers='[
+    {"key":"name","label":"Name", "required":true},
+    {"key":"email","label":"Email"},
+    {"key":"status","label":"Status"},
+    {"key":"phone","label":"Phone"},
+    {"key":"address","label":"Address", "default":false}
+  ]'>
+</zn-data-table>
+```
+
+### Refresh
+
+Tables with a `data-uri` get a refresh button in the header, which reruns the current request. Set `hide-refresh` to remove it.
+
+Both the refresh and column select buttons are hidden while the table has no rows, so an empty state keeps just the caption and the slotted controls.
+
+```html:preview
+<zn-data-table
+  data-uri="/data/data-table.json"
+  method="GET"
+  standalone
+  caption="Customers"
+  hide-column-select
+  headers='[
+    {"key":"name","label":"Name"},
+    {"key":"email","label":"Email"}
+  ]'>
+</zn-data-table>
+```
+
 ### Hide Columns
 
-Use `hide-columns` to completely hide specific columns from the table.
+Use `hide-columns` to completely hide specific columns from the table. Unlike the column select, these columns cannot be turned back on.
 
 ```html:preview
 <zn-data-table
@@ -591,17 +633,30 @@ Prevent automatic data loading on mount with `no-initial-load`. Call the `refres
 
 ### Standalone Mode
 
-Use `standalone` to render the table without a container wrapper, useful for embedding in other components.
+Use `standalone` when the table supplies its own panel rather than sitting inside one. The caption and header controls sit inside that panel with the rows, and the pagination footer sits below it on the page background. Columns scroll under the panel's edges, so the border stays put on a wide table.
+
+Leave `standalone` off when the table is already inside a `zn-panel`.
 
 ```html:preview
 <zn-data-table
   data-uri="/data/data-table.json"
   method="GET"
   standalone
+  caption="All Customers"
   headers='[
     {"key":"name","label":"Name"},
-    {"key":"email","label":"Email"}
+    {"key":"email","label":"Email"},
+    {"key":"status","label":"Status"},
+    {"key":"date","label":"Date Joined"},
+    {"key":"phone","label":"Phone"},
+    {"key":"address","label":"Address"},
+    {"key":"notes","label":"Notes"}
   ]'>
+
+  <zn-data-table-search slot="search" placeholder="Search"></zn-data-table-search>
+
+  <zn-button slot="create-action" icon="add">New Customer</zn-button>
+
 </zn-data-table>
 ```
 
@@ -730,7 +785,7 @@ Rows can have contextual actions that appear in a dropdown menu.
 
 ### Caption
 
-Add a caption to describe the table data.
+Add a caption to name the table. It renders as the title on the left of the header row, and supplies the wording for the default empty state.
 
 ```html:preview
 <zn-data-table

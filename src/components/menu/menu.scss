@@ -7,7 +7,7 @@
   border: 1px solid rgb(var(--zn-border-color)) !important;
   border-radius: var(--zn-border-radius);
   width: fit-content;
-  min-width: var(--zn-size-spanel);
+  min-width: var(--zn-menu-min-width, var(--zn-size-spanel));
   // Unconstrained by default — a consumer that needs the menu to scroll inside a bounded
   // popup (rather than growing to fit all its items) sets this custom property.
   max-height: var(--zn-menu-max-height, none);
@@ -34,7 +34,7 @@
   padding: var(--zn-spacing-2x-small);
   border: 1px solid rgb(var(--zn-border-color));
   border-radius: var(--zn-border-radius);
-  min-width: 245px;
+  min-width: var(--zn-menu-min-width, 245px);
   max-width: min(320px, calc(100vw - 16px));
   overflow-x: hidden;
   overflow-y: auto;

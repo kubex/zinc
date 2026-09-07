@@ -104,7 +104,10 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
 
   render() {
     return html`
-      <zn-button id="slideout-trigger" color="transparent" icon="filter_alt" icon-size="22"
+      <zn-button id="slideout-trigger"
+                 icon-button="small"
+                 icon="funnel@lu"
+                 icon-size="18"
                  slot="trigger"
                  tooltip="Filter">
       </zn-button>

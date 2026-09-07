@@ -110,20 +110,6 @@ table {
     }
   }
 
-  &__panel {
-    &--standalone {
-      background-color: rgb(var(--zn-panel));
-      border: 1px solid rgb(var(--zn-border-color));
-      border-radius: var(--zn-border-radius);
-      overflow: hidden;
-
-      .table__header {
-        padding-inline: var(--zn-spacing-medium);
-        border-bottom: 1px solid rgb(var(--zn-border-color));
-      }
-    }
-  }
-
   &__head {
     text-transform: capitalize;
 
@@ -272,6 +258,11 @@ table {
     flex-direction: row;
     justify-content: space-between;
     padding: var(--zn-spacing-small) 0;
+
+    // zn-panel's footer supplies its own padding
+    &--panel {
+      padding: 0;
+    }
 
     &__right, &__left {
       display: flex;

@@ -22,6 +22,7 @@ import ZnEmptyState from "../empty-state";
 import ZnHoverContainer from "../hover-container";
 import ZnMenu from "../menu";
 import ZnMenuItem from "../menu-item";
+import ZnPanel from "../panel";
 import ZnSkeleton from "../skeleton";
 import ZnStyle from "../style";
 import type ZnDataSelect from "../data-select";
@@ -167,6 +168,7 @@ type AllowedInputElement =
  * @dependency zn-dropdown
  * @dependency zn-menu
  * @dependency zn-menu-item
+ * @dependency zn-panel
  * @dependency zn-button-group
  * @dependency zn-confirm
  * @dependency zn-skeleton
@@ -199,6 +201,7 @@ export default class ZnDataTable extends ZincElement {
     'zn-dropdown': ZnDropdown,
     'zn-menu': ZnMenu,
     'zn-menu-item': ZnMenuItem,
+    'zn-panel': ZnPanel,
     'zn-button-group': ZnButtonGroup,
     'zn-confirm': ZnConfirm,
     'zn-skeleton': ZnSkeleton,
@@ -240,6 +243,7 @@ export default class ZnDataTable extends ZincElement {
   // Hide the refresh button in the table header
   @property({attribute: 'hide-refresh', type: Boolean}) hideRefresh: boolean = false;
 
+  // Wraps the caption, header controls, rows and pagination in a zn-panel
   @property({type: Boolean}) standalone: boolean = false;
 
   @property() caption: string;
@@ -494,10 +498,7 @@ export default class ZnDataTable extends ZincElement {
       || this.hasSlotController.test(ActionSlots.search.valueOf());
 
     const hasInputs = this.hasSlotController.test(ActionSlots.inputs.valueOf());
-    const hasHeader = hasActions
-      || !!this.caption
-      || this.hasColumnSelect()
-      || this.hasRefresh();
+    const hasControls = hasActions || this.hasColumnSelect() || this.hasRefresh();
 
     // Headers do not need to be re-rendered with new data
     return html`
@@ -505,14 +506,21 @@ export default class ZnDataTable extends ZincElement {
         ${hasInputs ? html`
           <slot name="${ActionSlots.inputs.valueOf()}" style="display: none"></slot>` : null}
         <slot name="${ActionSlots.filter_top.valueOf()}"></slot>
-        <div class="${classMap({
-          'table__panel': true,
-          'table__panel--standalone': this.standalone,
-        })}">
-          ${hasHeader ? this.getTableHeader() : nothing}
-          ${tableBody}
-        </div>
-        ${this.getTableFooter()}
+        ${this.standalone
+          ? html`
+            <zn-panel caption="${ifDefined(this.caption || undefined)}" flush>
+              ${hasControls ? html`
+                <div slot="actions" class="table__header__right">
+                  ${this.getActions()}
+                  ${this.getHeaderControls()}
+                </div>` : nothing}
+              ${tableBody}
+              ${this.getTableFooter('footer')}
+            </zn-panel>`
+          : html`
+            ${hasControls || this.caption ? this.getTableHeader() : nothing}
+            ${tableBody}
+            ${this.getTableFooter()}`}
       </div>
     `;
   }
@@ -792,15 +800,20 @@ export default class ZnDataTable extends ZincElement {
           ${this.getActions()}
         </div>
         <div class="table__header__right">
-          ${this.getColumnSelect()}
-          <slot name="${ActionSlots.filter.valueOf()}"></slot>
-          <slot name="${ActionSlots.sort.valueOf()}"></slot>
-          ${this.getRefreshButton()}
-          <slot name="${ActionSlots.search.valueOf()}"></slot>
-          <slot name="${ActionSlots.create.valueOf()}"></slot>
+          ${this.getHeaderControls()}
         </div>
       </div>
     `;
+  }
+
+  private getHeaderControls() {
+    return html`
+      ${this.getColumnSelect()}
+      <slot name="${ActionSlots.filter.valueOf()}"></slot>
+      <slot name="${ActionSlots.sort.valueOf()}"></slot>
+      ${this.getRefreshButton()}
+      <slot name="${ActionSlots.search.valueOf()}"></slot>
+      <slot name="${ActionSlots.create.valueOf()}"></slot>`;
   }
 
   // Nothing to pick columns on or refresh into while the table has no rows
@@ -859,27 +872,29 @@ export default class ZnDataTable extends ZincElement {
     if (header) this.toggleColumn(header);
   }
 
-  getTableFooter() {
-    if (!this._hasLoadedData) return html``;
+  // Returns null when there is nothing to show, so a panel footer is only slotted when it has content
+  getTableFooter(slot?: string) {
+    if (!this._hasLoadedData) return null;
 
     const rowSelected = this.getRowsSelected();
     const pagination = this.getPagination();
     const rowsPerPage = this.getRowsPerPage();
 
-    if (rowSelected !== null || pagination !== null || rowsPerPage !== null) {
-      return html`
-        <div class="table__footer">
-          <div class="table__footer__left">
-            ${pagination}
-            ${rowSelected}
-          </div>
-          <div class="table__footer__right">
-            ${rowsPerPage}
-          </div>
-        </div>`;
-    }
+    if (rowSelected === null && pagination === null && rowsPerPage === null) return null;
 
-    return html``;
+    return html`
+      <div class="${classMap({
+        'table__footer': true,
+        'table__footer--panel': !!slot,
+      })}" slot="${ifDefined(slot)}">
+        <div class="table__footer__left">
+          ${pagination}
+          ${rowSelected}
+        </div>
+        <div class="table__footer__right">
+          ${rowsPerPage}
+        </div>
+      </div>`;
   }
 
   getRowsSelected() {

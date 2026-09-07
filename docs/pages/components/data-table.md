@@ -633,7 +633,9 @@ Prevent automatic data loading on mount with `no-initial-load`. Call the `refres
 
 ### Standalone Mode
 
-Use `standalone` when the table supplies its own panel rather than sitting inside one. The caption and header controls sit inside that panel with the rows, and the pagination footer sits below it on the page background. Columns scroll under the panel's edges, so the border stays put on a wide table.
+Use `standalone` when the table supplies its own panel rather than sitting inside one. It renders a `zn-panel`, passing `caption` through as the panel's caption, the header controls into its `actions` slot and the pagination into its `footer` slot, with the rows flush against the panel edges. Columns scroll under the panel's edges, so the border stays put on a wide table.
+
+The panel footer is only slotted when there is pagination to show, so an empty table or one with `hide-pagination` gets no footer bar.
 
 Leave `standalone` off when the table is already inside a `zn-panel`.
 

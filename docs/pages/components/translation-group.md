@@ -62,8 +62,8 @@ select's accessible name — it is not shown, since the caption names the sectio
 ### Pre-filled Values
 
 Set initial translations on each child. A language every child has a value for is marked `Translated`; one only some
-children have is `Partial`; one no child has falls back to English. English itself is the source, so it is neither
-counted nor marked as a translation.
+children have is `Partial`; one no child has falls back to English. English itself is marked `Empty` rather than
+falling back, having nothing to fall back to, and counts towards the total like any other language.
 
 ```html:preview
 <zn-translation-group

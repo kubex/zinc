@@ -188,7 +188,7 @@ describe('<zn-translation-group>', () => {
       expect(label.textContent?.trim(), 'nothing else rides the caption').to.equal('Content');
 
       const summary = selectOf(group).querySelector('zn-chip[slot="suffix"]')!;
-      expect(summary.textContent?.trim()).to.equal('1/1');
+      expect(summary.textContent?.trim()).to.equal('2/2');
     });
 
     it('wears the same chrome as any other select', async () => {
@@ -327,19 +327,19 @@ describe('<zn-translation-group>', () => {
         ['{"en":"Hello","fr":"Bonjour","de":"Hallo"}', '{"en":"Hi","fr":"Salut"}']);
 
       const summary = selectOf(group).querySelector('zn-chip[slot="suffix"]')!;
-      expect(summary.textContent?.trim()).to.equal('1/3');
+      expect(summary.textContent?.trim()).to.equal('2/4');
       expect(summary.getAttribute('type')).to.equal('warning');
 
       expect(chipsOf(group)).to.deep.equal(['Translated', 'Translated', 'Partial', 'English']);
     });
 
-    it('marks the summary chip done once every target language is translated', async () => {
+    it('marks the summary chip done once every language is translated', async () => {
       const group = await groupFixture(
         {en: 'English', fr: 'French'},
         ['{"en":"Hello","fr":"Bonjour"}']);
 
       const summary = selectOf(group).querySelector('zn-chip[slot="suffix"]')!;
-      expect(summary.textContent?.trim()).to.equal('1/1');
+      expect(summary.textContent?.trim()).to.equal('2/2');
       expect(summary.getAttribute('type')).to.equal('success');
     });
 
@@ -351,13 +351,13 @@ describe('<zn-translation-group>', () => {
       expect(chipsOf(group)).to.deep.equal(['Translated', 'English']);
     });
 
-    it('counts the target languages, not English', async () => {
+    it('counts English alongside the target languages', async () => {
       const group = await groupFixture(
         {en: 'English', fr: 'French', de: 'German'},
         ['{"en":"Hello","fr":"Bonjour"}']);
 
       const summary = selectOf(group).querySelector('zn-chip[slot="suffix"]')!;
-      expect(summary.textContent?.trim()).to.equal('1/2');
+      expect(summary.textContent?.trim()).to.equal('2/3');
     });
 
     it('switches every child when the select changes', async () => {
@@ -416,14 +416,14 @@ describe('<zn-translation-group>', () => {
       await group.updateComplete;
 
       const summary = () => group.shadowRoot!.querySelector('zn-select zn-chip[slot="suffix"]')!.textContent?.trim();
-      expect(summary()).to.equal('0/1');
+      expect(summary()).to.equal('1/2');
 
       form.reset();
       await new Promise(resolve => requestAnimationFrame(() => resolve(null)));
       await group.updateComplete;
 
       expect(child.values).to.deep.equal({en: 'Hello', fr: 'Bonjour'});
-      expect(summary()).to.equal('1/1');
+      expect(summary()).to.equal('2/2');
     });
   });
 });

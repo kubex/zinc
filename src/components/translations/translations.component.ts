@@ -445,11 +445,10 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     ];
     // Closed, the select answers "how much is left to do" rather than the state of the one language on show — that
     // is what the options are for.
-    const targets = languageCodes.filter(code => code !== 'en');
-    const translated = targets.filter(code => this.hasTranslation(code)).length;
+    const translated = languageCodes.filter(code => this.hasTranslation(code)).length;
     const summary = {
-      label: `${translated}/${targets.length}`,
-      type: translated === targets.length ? 'success' : translated > 0 ? 'warning' : 'error'
+      label: `${translated}/${languageCodes.length}`,
+      type: translated === languageCodes.length ? 'success' : translated > 0 ? 'warning' : 'error'
     };
 
     const currentTranslation = this.values[this._activeLanguage] ?? '';

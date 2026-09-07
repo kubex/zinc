@@ -95,7 +95,7 @@ describe('<zn-translations>', () => {
       await el.updateComplete;
 
       const summary = selectOf(el)!.querySelector('zn-chip[slot="suffix"]')!;
-      expect(summary.textContent?.trim()).to.equal('1/2');
+      expect(summary.textContent?.trim()).to.equal('2/3');
       expect(summary.getAttribute('type')).to.equal('warning');
 
       const options = [...selectOf(el)!.querySelectorAll('zn-option zn-chip')];

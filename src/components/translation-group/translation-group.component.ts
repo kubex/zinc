@@ -32,8 +32,8 @@ import styles from './translation-group.scss';
  * - `Partial` — only some children do
  * - `English` — none do, so all of them fall back to the English text
  *
- * `Empty` replaces the last of those for English itself, which has nothing to fall back to. English is the source
- * rather than a translation, so it is also left out of the `n of m translated` count beside the label.
+ * `Empty` replaces the last of those for English itself, which has nothing to fall back to. English counts towards
+ * the `n of m` beside the label like any other language.
  *
  * The children own their values; this component only chooses which language is shown and reports on what they hold.
  * It reads them back on every child `zn-change`, so the chips and the count follow an edit as it is typed.
@@ -221,14 +221,12 @@ export default class ZnTranslationGroup extends ZnPanel {
     const languageCodes = [...Object.keys(this.languages), ...extra];
     const hasMultipleLanguages = languageCodes.length > 1;
 
-    // English is the source every other language falls back to, so it is not itself one of the translations counted.
-    const targets = languageCodes.filter(code => code !== 'en');
-    const translated = targets.filter(code => this.languageState(code).type === 'success').length;
     // Closed, the select answers "how much is left to do" rather than the state of the one language on show — that
     // is what the options are for.
+    const translated = languageCodes.filter(code => this.languageState(code).type === 'success').length;
     const summary = {
-      label: `${translated}/${targets.length}`,
-      type: translated === targets.length ? 'success' : translated > 0 ? 'warning' : 'error'
+      label: `${translated}/${languageCodes.length}`,
+      type: translated === languageCodes.length ? 'success' : translated > 0 ? 'warning' : 'error'
     };
 
     return html`

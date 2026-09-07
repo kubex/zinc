@@ -17,8 +17,13 @@ import styles from './panel.scss';
  * @slot footer - Content displayed in the panel footer.
  *
  * @csspart base - The component's base wrapper.
+ * @csspart header - The header region, when a caption or actions are given.
+ * @csspart header-content - The padded row inside the header, forwarded from zn-header.
+ * @csspart footer - The footer region, when the footer slot is filled.
  *
  * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.
+ * @cssproperty --zn-panel-header-padding - Padding around the header row. Defaults to `--zn-base-gap`.
+ * @cssproperty --zn-panel-footer-padding - Padding around the footer row.
  */
 export default class ZnPanel extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -100,10 +105,12 @@ export default class ZnPanel extends ZincElement {
 
         <div class="panel__inner">
           ${hasHeader ? html`
-            <zn-header class="${classMap({
-              "panel__header": true,
-              "panel__header--underline": underlineHeader,
-            })}"
+            <zn-header part="header"
+                       exportparts="content:header-content"
+                       class="${classMap({
+                         "panel__header": true,
+                         "panel__header--underline": underlineHeader,
+                       })}"
                        icon="${this.icon}"
                        caption="${this.caption}"
                        transparent>
@@ -118,7 +125,7 @@ export default class ZnPanel extends ZincElement {
           </div>
 
           ${hasFooterSlot ? html`
-            <slot name="footer" class="panel__footer"></slot>` : null}
+            <slot name="footer" part="footer" class="panel__footer"></slot>` : null}
         </div>
       </div>`;
   }

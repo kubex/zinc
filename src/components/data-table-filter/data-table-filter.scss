@@ -4,19 +4,38 @@
   display: block;
 }
 
-.data-table-filter {
+.filter-bar {
   display: flex;
-  flex-direction: column;
-  gap: var(--zn-spacing-small);
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--zn-spacing-x-small);
 
-  &__item {
+  &__clear::part(base) {
+    height: 32px;
+    min-height: 32px;
+    padding: 0 var(--zn-spacing-x-small);
+    font-weight: var(--zn-font-weight-normal);
+    text-transform: none;
+    white-space: nowrap;
+  }
+
+  &__clear::part(base) {
+    color: rgb(var(--zn-primary));
+  }
+
+  // Spans a checkbox item's check column plus the flex gap its empty prefix slot adds,
+  // so Remove's label lines up with the option labels above it
+  &__remove__icon {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--zn-text-menu-link-font-size);
+    width: calc(1.5em + var(--zn-spacing-x-small));
+  }
 
-    &__name {
-      font-weight: 500;
-      color: rgb(var(--zn-text-heading));
-      width: 100%;
-    }
+  &__input {
+    padding: var(--zn-spacing-2x-small);
+    min-width: 180px;
   }
 }

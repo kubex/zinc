@@ -84,6 +84,9 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @property({type: Boolean}) plain = false;
   /** Disables the hover background, for contexts where the tint doesn't fit. */
   @property({type: Boolean, attribute: 'no-hover'}) noHover = false;
+  /** Renders the button as a pill: fully rounded, sentence case and regular
+   * weight. For label-like triggers such as filter chips. */
+  @property({type: Boolean, reflect: true}) pill = false;
   @property({type: Boolean, attribute: 'panel-bg'}) panelBackground = false;
 
   @property({attribute: 'dropdown-closer', type: Boolean}) dropdownCloser = false;
@@ -386,6 +389,9 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
       '--icon-button-hover-color': this.getIconButtonColor(this.hoverColor || 'primary')
     } : {};
 
+    // A removed `notification` attribute lands here as null, not undefined
+    const notification = this.notification ?? undefined;
+
     const buttonContent = html`
       <${tag}
         part="base"
@@ -404,6 +410,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--text': (this.text && !this.outline),
           'button--icon-button': !!this.iconButton,
           'button--plain': !!this.iconButton && this.plain,
+          'button--pill': this.pill,
           'button--no-hover': this.noHover,
           'button--icon-button-small': this.iconButton === 'small',
           'button--icon-button-round': this.iconButton === 'round',
@@ -414,9 +421,9 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--icon-right': this.iconPosition === 'right',
           'button--with-content': this.hasSlotController.test('[default]') || this.content,
           'button--square': this.square,
-          'button--has-notification': this.notification !== undefined && this.notification !== 0,
-          'button--muted-notification': this.mutedNotifications || (this.notification !== undefined && this.notification === -2),
-          'button--notification-dot': this.notification !== undefined && this.notification < 0,
+          'button--has-notification': notification !== undefined && notification !== 0,
+          'button--muted-notification': this.mutedNotifications || notification === -2,
+          'button--notification-dot': notification !== undefined && notification < 0,
         })}"
         type="${ifDefined(this.type)}"
         href="${ifDefined(this.href)}"
@@ -425,7 +432,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         rel="${ifDefined(isLink ? this.rel : undefined)}"
         gaid="${ifDefined(this.gaid)}"
         aria-label="${ifDefined(ariaLabel)}"
-        data-notification="${ifDefined(this.notification)}"
+        data-notification="${ifDefined(notification)}"
         disabled="${this.disabled || nothing}"
         style=${styleMap(iconButtonStyles)}
         @click="${this.handleClick}">

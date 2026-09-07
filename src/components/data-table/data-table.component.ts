@@ -36,6 +36,8 @@ import styles from './data-table.scss';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PER_PAGE = 10;
+// Numbered page buttons shown at once; the window slides so the control never grows
+const PAGE_WINDOW = 3;
 
 interface Cell {
   text: string;
@@ -372,6 +374,7 @@ export default class ZnDataTable extends ZincElement {
   private _hiddenCells: Map<string, Cell[]> = new Map();
   private _secondaryHeaders: HeaderConfig[];
   @state() private _deselectedColumns: Set<string> = new Set();
+  @state() private _filtersOpen = false;
   private _columnDefaultsApplied = false;
   private _formatTemplates: Record<string, DisplayTemplate> = defaultTemplates;
 
@@ -493,12 +496,18 @@ export default class ZnDataTable extends ZincElement {
       || this.hasSlotController.test(ActionSlots.modify.valueOf())
       || this.hasSlotController.test(ActionSlots.create.valueOf())
       || this.hasSlotController.test(ActionSlots.sort.valueOf())
-      || this.hasSlotController.test(ActionSlots.filter.valueOf())
       || this.hasSlotController.test(ActionSlots.filter_top.valueOf())
       || this.hasSlotController.test(ActionSlots.search.valueOf());
 
     const hasInputs = this.hasSlotController.test(ActionSlots.inputs.valueOf());
     const hasControls = hasActions || this.hasColumnSelect() || this.hasRefresh();
+    // The filter bar is inline, so it gets its own row rather than a slot in the header
+    const filters = this.hasSlotController.test(ActionSlots.filter.valueOf())
+      ? html`
+        <div class="table__filters" ?hidden="${!this._filtersOpen}">
+          <slot name="${ActionSlots.filter.valueOf()}"></slot>
+        </div>`
+      : nothing;
 
     // Headers do not need to be re-rendered with new data
     return html`
@@ -514,11 +523,13 @@ export default class ZnDataTable extends ZincElement {
                   ${this.getActions()}
                   ${this.getHeaderControls()}
                 </div>` : nothing}
+              ${filters}
               ${tableBody}
               ${this.getTableFooter('footer')}
             </zn-panel>`
           : html`
             ${hasControls || this.caption ? this.getTableHeader() : nothing}
+            ${filters}
             ${tableBody}
             ${this.getTableFooter()}`}
       </div>
@@ -528,6 +539,7 @@ export default class ZnDataTable extends ZincElement {
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('zn-filter-change', this.filterChangeListener);
+    this.addEventListener('zn-clear', this.filterClearListener);
     this.addEventListener('zn-search-change', this.searchChangeListener);
   }
 
@@ -538,7 +550,15 @@ export default class ZnDataTable extends ZincElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('zn-filter-change', this.filterChangeListener);
+    this.removeEventListener('zn-clear', this.filterClearListener);
     this.removeEventListener('zn-search-change', this.searchChangeListener);
+  }
+
+  // Clearing the filters leaves an empty row behind, so fold it away
+  filterClearListener = (e: Event) => {
+    if (e.target instanceof ZnDataTableFilter) {
+      this._filtersOpen = false;
+    }
   }
 
   filterChangeListener = (e: ZnFilterChangeEvent) => {
@@ -809,9 +829,9 @@ export default class ZnDataTable extends ZincElement {
   private getHeaderControls() {
     return html`
       ${this.getColumnSelect()}
-      <slot name="${ActionSlots.filter.valueOf()}"></slot>
-      <slot name="${ActionSlots.sort.valueOf()}"></slot>
+      ${this.getFilterToggle()}
       ${this.getRefreshButton()}
+      <slot name="${ActionSlots.sort.valueOf()}"></slot>
       <slot name="${ActionSlots.search.valueOf()}"></slot>
       <slot name="${ActionSlots.create.valueOf()}"></slot>`;
   }
@@ -819,6 +839,39 @@ export default class ZnDataTable extends ZincElement {
   // Nothing to pick columns on or refresh into while the table has no rows
   private hasRows(): boolean {
     return this._hasLoadedData && this._lastLoadHadRows;
+  }
+
+  private getFilterToggle() {
+    if (!this.hasSlotController.test(ActionSlots.filter.valueOf())) return nothing;
+
+    const applied = this.appliedFilterCount();
+
+    return html`
+      <zn-button icon-button="small"
+                 icon="funnel@lu"
+                 icon-size="18"
+                 tooltip="Filter"
+                 aria-label="Filter"
+                 notification="${applied || nothing}"
+                 aria-pressed="${this._filtersOpen}"
+                 class="${classMap({'table__header__toggle--active': applied > 0})}"
+                 @click="${this.toggleFilters}">
+      </zn-button>`;
+  }
+
+  private toggleFilters = () => {
+    this._filtersOpen = !this._filtersOpen;
+  }
+
+  private appliedFilterCount(): number {
+    if (!this.filter) return 0;
+
+    try {
+      const applied: unknown = JSON.parse(atob(this.filter));
+      return Array.isArray(applied) ? applied.length : 0;
+    } catch {
+      return 0;
+    }
   }
 
   private hasColumnSelect(): boolean {
@@ -912,7 +965,7 @@ export default class ZnDataTable extends ZincElement {
 
     return html`
       <div class="table__footer__rows-per-page">
-        <p>Rows per page</p>
+        <p>Rows</p>
         <zn-select name="rowPerPage"
                    size="small"
                    value="${this.itemsPerPage}"
@@ -926,66 +979,56 @@ export default class ZnDataTable extends ZincElement {
       </div>`;
   }
 
-  private getPageRange(): (number | 'ellipsis')[] {
-    const total = this.totalPages;
-    const current = this.page;
+  // A window of PAGE_WINDOW pages that slides with the current page and stays inside the page
+  // count; the first/last buttons cover jumping to either end
+  private getPageRange(): number[] {
+    const size = Math.min(PAGE_WINDOW, this.totalPages);
+    const start = Math.min(
+      Math.max(1, this.page - Math.floor(size / 2)),
+      this.totalPages - size + 1
+    );
 
-    if (total <= 7) {
-      return Array.from({length: total}, (_, i) => i + 1);
-    }
-
-    const showLeftEllipsis = current > 4;
-    const showRightEllipsis = current < total - 3;
-
-    if (!showLeftEllipsis && showRightEllipsis) {
-      return [1, 2, 3, 4, 5, 'ellipsis', total];
-    }
-
-    if (showLeftEllipsis && !showRightEllipsis) {
-      return [1, 'ellipsis', total - 4, total - 3, total - 2, total - 1, total];
-    }
-
-    return [1, 'ellipsis', current - 1, current, current + 1, 'ellipsis', total];
+    return Array.from({length: size}, (_, i) => start + i);
   }
 
   getPagination() {
     if (this.hidePagination || this.totalPages <= 1) return null;
 
     return html`
-      <div class="table__footer__pagination-buttons">
+      <zn-button-group>
         <zn-button @click="${this.page !== 1 ? this.goToFirstPage : undefined}"
                    ?disabled="${this.page === 1}"
                    icon="chevrons-left@lu"
                    icon-button="small"
-                   panel-bg>
+                   label="First page">
         </zn-button>
         <zn-button @click="${this.page !== 1 ? this.goToPreviousPage : undefined}"
                    ?disabled="${this.page === 1}"
                    icon="chevron-left@lu"
                    icon-button="small"
-                   panel-bg>
+                   label="Previous page">
         </zn-button>
-        ${this.getPageRange().map((p) => p === 'ellipsis'
-          ? html`<span class="table__footer__pagination-ellipsis">…</span>`
-          : html`
-            <zn-button @click="${p !== this.page ? () => this.goToPage(p) : undefined}"
-                       icon-button="small"
-                       class="${p === this.page ? 'table__footer__pagination-page--active' : ''}">${p}
-            </zn-button>`
-        )}
+        ${this.getPageRange().map((p: number) => html`
+          <zn-button @click="${p !== this.page ? () => this.goToPage(p) : undefined}"
+                     class="${classMap({
+                       'table__footer__pagination-page': true,
+                       'table__footer__pagination-page--active': p === this.page,
+                     })}"
+                     aria-current="${ifDefined(p === this.page ? 'page' : undefined)}">${p}
+          </zn-button>`)}
         <zn-button @click="${this.page !== this.totalPages ? this.goToNextPage : undefined}"
                    ?disabled="${this.page === this.totalPages}"
                    icon="chevron-right@lu"
                    icon-button="small"
-                   panel-bg>
+                   label="Next page">
         </zn-button>
         <zn-button @click="${this.page !== this.totalPages ? this.goToLastPage : undefined}"
                    ?disabled="${this.page === this.totalPages}"
                    icon="chevrons-right@lu"
                    icon-button="small"
-                   panel-bg>
+                   label="Last page">
         </zn-button>
-      </div>`;
+      </zn-button-group>`;
   }
 
   getActions() {

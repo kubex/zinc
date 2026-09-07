@@ -235,6 +235,10 @@ table {
       gap: var(--zn-spacing-small);
     }
 
+    &__toggle--active::part(base) {
+      background-color: rgb(var(--zn-color-tab));
+    }
+
     &__caption {
       @include wc.text-style(h1);
 
@@ -253,11 +257,26 @@ table {
     }
   }
 
+  &__filters {
+    padding: var(--zn-spacing-x-small) var(--zn-spacing-medium);
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
   &__footer {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--zn-spacing-small);
     padding: var(--zn-spacing-small) 0;
+
+    // The joined control must never break across lines
+    zn-button-group::part(base) {
+      flex-wrap: nowrap;
+    }
 
     // zn-panel's footer supplies its own padding
     &--panel {
@@ -275,42 +294,50 @@ table {
       display: flex;
       flex-direction: row;
       align-items: center;
-      opacity: 0.8;
       gap: var(--zn-spacing-x-small);
+
+      p {
+        margin: 0;
+        color: rgb(var(--zn-text));
+        opacity: 0.7;
+        white-space: nowrap;
+      }
 
       zn-select[name="rowPerPage"] {
         --zn-input-background-color: rgb(var(--zn-panel));
 
-        max-width: 75px;
+        width: 66px;
       }
 
+      // Matches the height of the pagination control it sits beside
       zn-select[name="rowPerPage"]::part(combobox) {
-        padding-inline-end: 8px;
+        min-height: 36px;
+        padding-inline: var(--zn-spacing-x-small);
       }
 
-       zn-select[name="rowPerPage"]::part(expand-icon) {
+      zn-select[name="rowPerPage"]::part(expand-icon) {
         margin-inline-start: 0;
       }
     }
 
-    &__pagination-buttons {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: var(--zn-spacing-x-small);
+    // Sized to match the icon-button arrows it is joined to, but free to grow for large page numbers
+    &__pagination-page::part(base) {
+      height: 36px;
+      min-height: 36px;
+      max-height: 36px;
+      min-width: 32px;
+      padding: 0 var(--zn-spacing-2x-small);
+      justify-content: center;
+      background-color: rgb(var(--zn-panel));
+      border-color: rgb(var(--zn-border-color));
+      color: rgb(var(--zn-text));
+      font-weight: var(--zn-font-weight-normal);
+      white-space: nowrap;
     }
 
     &__pagination-page--active::part(base) {
       background-color: var(--zn-color-neutral-300);
       border-color: var(--zn-color-neutral-300);
-      color: rgb(var(--zn-text));
-    }
-
-    &__pagination-ellipsis {
-      display: flex;
-      align-items: center;
-      padding: 0 var(--zn-spacing-x-small);
-      color: rgb(var(--zn-text));
     }
   }
 
@@ -339,6 +366,20 @@ table {
 
 zn-menu {
   --zn-menu-min-width: var(--zn-size-spanel);
+}
+
+// A table's header and footer are chrome around the rows, so they sit tighter than
+// the panel's own content padding. The header's trailing edge tucks in further still,
+// since the controls there are already inset by their own button padding.
+zn-panel {
+  --zn-panel-header-padding: var(--zn-spacing-x-small) var(--zn-spacing-x-small)
+    var(--zn-spacing-x-small) var(--zn-spacing-medium);
+  --zn-panel-footer-padding: var(--zn-spacing-x-small) var(--zn-spacing-medium);
+}
+
+// Closes the rows off from the footer, which the panel border would otherwise do
+zn-panel::part(footer) {
+  border-top: 1px solid rgb(var(--zn-border-color));
 }
 
 // Dropdowns sit over dense rows here, so they need a solid surface rather than

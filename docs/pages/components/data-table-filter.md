@@ -1,7 +1,7 @@
 ---
 meta:
   title: Data Table Filter
-  description: A comprehensive filtering component that opens a slideout panel with a query builder interface. Supports text, number, date fields, dropdown options, and multiple filter operators.
+  description: An inline filter bar for data tables. Each active filter is a pill whose dropdown sets its value, alongside an add-filter control and a clear.
 layout: component
 ---
 
@@ -11,6 +11,29 @@ layout: component
   filters="[{&quot;id&quot;:&quot;title&quot;,&quot;name&quot;:&quot;Title&quot;,&quot;operators&quot;:[&quot;eq&quot;]},{&quot;id&quot;:&quot;author&quot;,&quot;name&quot;:&quot;Author&quot;,&quot;operators&quot;:[&quot;eq&quot;,&quot;fuzzy&quot;]},{&quot;id&quot;:&quot;genre&quot;,&quot;name&quot;:&quot;Genre&quot;,&quot;options&quot;:{&quot;action&quot;:&quot;Action&quot;,&quot;comedy&quot;:&quot;Comedy&quot;,&quot;drama&quot;:&quot;Drama&quot;,&quot;fantasy&quot;:&quot;Fantasy&quot;,&quot;horror&quot;:&quot;Horror&quot;,&quot;mystery&quot;:&quot;Mystery&quot;,&quot;romance&quot;:&quot;Romance&quot;,&quot;thriller&quot;:&quot;Thriller&quot;,&quot;sci-fi&quot;:&quot;ScienceFiction&quot;},&quot;maxOptionsVisible&quot;:&quot;3&quot;,&quot;operators&quot;:[&quot;eq&quot;,&quot;in&quot;]},{&quot;id&quot;:&quot;rating&quot;,&quot;name&quot;:&quot;Rating&quot;,&quot;type&quot;:&quot;number&quot;,&quot;operators&quot;:[&quot;eq&quot;,&quot;gt&quot;,&quot;gte&quot;,&quot;lt&quot;,&quot;lte&quot;]},{&quot;id&quot;:&quot;created&quot;,&quot;name&quot;:&quot;Created&quot;,&quot;type&quot;:&quot;date&quot;,&quot;operators&quot;:[&quot;eq&quot;,&quot;before&quot;,&quot;after&quot;]}]">
 </zn-data-table-filter>
 ```
+
+Filters render inline rather than in a slideout. Each active filter is a pill showing its name, and its value once set; the pill's dropdown lists the filter's `options` as checkable values, or a text input for a filter that declares none. `+ Add filter` lists the filters that are not yet active, and `Clear` removes them all.
+
+Each filter applies its **first declared operator**. Declare `in` or `nin` to let a filter hold several values at once — the pill then counts them, e.g. `Role (2)`, and its dropdown stays open so you can pick more. Any other operator holds a single value: the dropdown closes on select, and picking the same value again clears it.
+
+`default-filters` takes a comma-separated list of filter ids to show a pill for up front. Inside a `zn-data-table` the bar is hidden until the header's filter toggle is clicked, and `activeCount` reports how many filters currently hold a value.
+
+```html:preview
+<zn-data-table-filter
+  default-filters="status"
+  filters='[
+    {"id":"status","name":"Status","options":{"open":"Open","closed":"Closed"},"operators":["eq"]},
+    {"id":"tag","name":"Tag","options":{"bug":"Bug","chore":"Chore","feature":"Feature"},"operators":["in"]},
+    {"id":"owner","name":"Owner","operators":["contains"]}
+  ]'>
+</zn-data-table-filter>
+```
+
+The component emits `zn-filter-change` and exposes the query on `value`, encoded exactly as `zn-query-builder` encodes it — base64 of `[{key, comparator, value}]` — so a backend built against the query builder needs no changes.
+
+:::warning
+`date` and `dateTime` filters currently fall back to a text input; they have no calendar editor in the pill dropdown yet.
+:::
 
 ## Examples
 

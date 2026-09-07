@@ -116,7 +116,9 @@ Use `local-sort` to sort data client-side without making server requests. Best f
 
 ### Pagination
 
-Data tables automatically display pagination controls when the total number of records exceeds the per-page limit. Users can navigate between pages and adjust rows per page.
+Data tables automatically display pagination controls when the total number of records exceeds the per-page limit. Users can navigate between pages and adjust the rows per page.
+
+Pagination renders as a single joined control: first, previous, a sliding window of three page numbers, next, last. The window keeps the control a fixed width whatever the dataset — the same at 30 pages as at 3000 — while the first and last buttons cover jumping to either end. On narrow widths the footer wraps so pagination sits above the rows selector.
 
 :::tip
 Pagination controls appear based on the `total` and `perPage` values in the response. In this preview, changing pages re-fetches the same static data. With a real server, each page request would return the corresponding slice of data.
@@ -404,7 +406,7 @@ Or use the built-in empty state with custom text:
 
 ### Filtering
 
-Add advanced filtering with the `zn-data-table-filter` component. The filter opens a slideout with a query builder.
+Add filtering with the `zn-data-table-filter` component. The header carries a filter toggle beside the refresh button; clicking it reveals a row between the header and the rows holding the `filter` slot, where the filter component shows one pill per active filter alongside add-filter and clear controls. The row stays hidden until the toggle is clicked, and the toggle carries a count of the filters currently applied. Use `default-filters` to show a pill for a filter before the user adds it.
 
 :::tip
 In this preview, filter parameters are sent with the request but the static data file returns the same results regardless. With a real server endpoint, results would be filtered based on the applied criteria.
@@ -412,6 +414,8 @@ In this preview, filter parameters are sent with the request but the static data
 
 ```html:preview
 <zn-data-table
+  standalone
+  caption="Users"
   data-uri="/data/data-table.json"
   method="GET"
   headers='[
@@ -424,9 +428,11 @@ In this preview, filter parameters are sent with the request but the static data
 
   <zn-data-table-filter
     slot="filter"
+    default-filters="status"
     filters='[
-      {"id":"name","name":"Name","operators":["eq","contains"]},
-      {"id":"status","name":"Status","options":{"active":"Active","inactive":"Inactive"},"operators":["eq"]}
+      {"id":"name","name":"Name","operators":["contains"]},
+      {"id":"status","name":"Status","options":{"active":"Active","inactive":"Inactive"},"operators":["eq"]},
+      {"id":"role","name":"Role","options":{"admin":"Admin","user":"User"},"operators":["in"]}
     ]'>
   </zn-data-table-filter>
 

@@ -9345,8 +9345,8 @@ declare module "components/translation-group/translation-group.component" {
      * - `Partial` — only some children do
      * - `English` — none do, so all of them fall back to the English text
      *
-     * `Empty` replaces the last of those for English itself, which has nothing to fall back to. English is the source
-     * rather than a translation, so it is also left out of the `n of m translated` count beside the label.
+     * `Empty` replaces the last of those for English itself, which has nothing to fall back to. English counts towards
+     * the `n of m` beside the label like any other language.
      *
      * The children own their values; this component only chooses which language is shown and reports on what they hold.
      * It reads them back on every child `zn-change`, so the chips and the count follow an edit as it is typed.

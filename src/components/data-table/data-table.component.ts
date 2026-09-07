@@ -60,6 +60,11 @@ interface Cell {
   title?: string;
 }
 
+interface RowGroup {
+  label: string;
+  rows: Row[];
+}
+
 interface Row {
   id: string;
   uri?: string;
@@ -288,8 +293,9 @@ export default class ZnDataTable extends ZincElement {
   // private itemsPerPage: number = DEFAULT_PER_PAGE;
   private page: number = DEFAULT_PAGE;
   private totalPages: number;
+  private _totalRows = 0;
 
-  private _rows: any[] = [];
+  private _rows: Row[] = [];
 
   private numberOfRowsSelected: number = 0;
   private selectedRows: any[] = [];
@@ -641,6 +647,7 @@ export default class ZnDataTable extends ZincElement {
   renderTable(data: Response) {
     this.itemsPerPage = Math.max(DEFAULT_PER_PAGE, data.perPage ?? DEFAULT_PER_PAGE);
     this.page = Math.max(1, data.page ?? DEFAULT_PAGE);
+    this._totalRows = Math.max(0, data.total ?? 0);
     this.totalPages = Math.ceil(Math.max(1, data.total) / this.itemsPerPage);
 
     const error = data?.error?.text ? data.error : undefined;
@@ -709,21 +716,15 @@ export default class ZnDataTable extends ZincElement {
         }
       });
 
-      // render a table for each group
-      return html`
-        <zn-sp flush>
-          ${Object.keys(groupedRows).map((groupKey, index) => html`
-            <div class="table-group">
-              <h3 class="table-group__title">${(groupKey === "Ungrouped" || groupKey === "*") ? "" : groupKey}</h3>
-              ${this.renderTableData(groupedRows[groupKey], index === 0 ? error : undefined)}
-            </div>`
-          )}
-        </zn-sp>
-      `;
+      const groups: RowGroup[] = Object.keys(groupedRows).map((groupKey) => ({
+        label: (groupKey === 'Ungrouped' || groupKey === '*') ? '' : groupKey,
+        rows: groupedRows[groupKey],
+      }));
+
+      return this.renderTableData(groups, error);
     }
 
-
-    return this.renderTableData(this._rows, error);
+    return this.renderTableData([{label: '', rows: this._rows}], error);
   }
 
   private renderErrorAlert(error: ResponseError) {
@@ -739,7 +740,7 @@ export default class ZnDataTable extends ZincElement {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  public renderTableData(data: any, error?: ResponseError) {
+  public renderTableData(groups: RowGroup[], error?: ResponseError) {
     // Primary (visible) headers exclude those explicitly hidden, deselected and those marked as secondary
     const filteredHeaders = this.visibleHeaders();
 
@@ -801,16 +802,22 @@ export default class ZnDataTable extends ZincElement {
             <tr class="table__row--error">
               <td colspan="${colCount}">${this.renderErrorAlert(error)}</td>
             </tr>` : nothing}
-          ${(data as Row[]).map((row: Row) => html`
-            <tr class="${classMap({
-              'table__row--selected': this.isRowSelected(row),
-              'table__row--data': true,
-            })}" data-row-id="${row.id}">
-              ${anyHidden ? this.renderExpanderCell(row) : nothing}
-              ${(visibleRowCells.get(row.id) || row.cells).map((value: Cell, index: number) => this.renderCellBody(index, value, row))}
-              ${this.rowHasActions ? this.renderActions(row) : nothing}
-            </tr>
-            ${this._expandedRows.has(row.id) ? this.renderDetailsRow(row, colCount) : nothing}
+          ${groups.map((group: RowGroup) => html`
+            ${group.label ? html`
+              <tr class="table__row--group">
+                <th colspan="${colCount}" scope="colgroup">${group.label}</th>
+              </tr>` : nothing}
+            ${group.rows.map((row: Row) => html`
+              <tr class="${classMap({
+                'table__row--selected': this.isRowSelected(row),
+                'table__row--data': true,
+              })}" data-row-id="${row.id}">
+                ${anyHidden ? this.renderExpanderCell(row) : nothing}
+                ${(visibleRowCells.get(row.id) || row.cells).map((value: Cell, index: number) => this.renderCellBody(index, value, row))}
+                ${this.rowHasActions ? this.renderActions(row) : nothing}
+              </tr>
+              ${this._expandedRows.has(row.id) ? this.renderDetailsRow(row, colCount) : nothing}
+            `)}
           `)}
           </tbody>
         </table>
@@ -965,10 +972,13 @@ export default class ZnDataTable extends ZincElement {
   }
 
   getRowsPerPage() {
-    if (this.hidePagination || (this.totalPages <= 1 && this._rows.length <= this.itemsPerPage)) return null;
+    if (this.hidePagination) return null;
 
     const optionsRowsPerPage = [10, 20, 30, 40, 50];
-    optionsRowsPerPage.filter((option) => option <= this._rows.length);
+
+    // Keyed to the dataset, not the current page size - raising the size past the total
+    // must not hide the only control that can lower it again
+    if (this._totalRows <= optionsRowsPerPage[0]) return null;
 
     return html`
       <div class="table__footer__rows-per-page">

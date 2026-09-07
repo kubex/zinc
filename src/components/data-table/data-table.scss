@@ -228,9 +228,8 @@ table {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding-block: var(--zn-spacing-small);
+    padding: var(--zn-spacing-x-small) var(--zn-spacing-medium);
     gap: var(--zn-spacing-small);
-    min-height: 56px;
 
     &__actions,
     &__query-builder {
@@ -276,7 +275,7 @@ table {
     justify-content: space-between;
     flex-wrap: wrap;
     gap: var(--zn-spacing-small);
-    padding: var(--zn-spacing-small) 0;
+    padding: var(--zn-spacing-x-small) var(--zn-spacing-medium);
 
     // The joined control must never break across lines
     zn-button-group::part(base) {
@@ -480,16 +479,18 @@ table:has(tbody tr:first-of-type.table__row--selected) thead tr th {
   border-bottom-color: var(--zn-color-purple-600) !important;
 }
 
-.table-group__title {
+tbody tr.table__row--group th {
+  padding: var(--zn-spacing-small) var(--zn-spacing-medium);
+  text-align: left;
+  white-space: nowrap;
+  background-color: rgb(var(--zn-panel));
+  color: rgba(var(--zn-text-panel-title), 100%);
   font-weight: var(--zn-font-weight-semibold);
   font-size: var(--zn-font-size-large);
-  color: rgba(var(--zn-text-panel-title), 100%);
-  line-height: var(--zn-line-height-looser);
-  padding-left: var(--zn-spacing-medium);
-  margin: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+}
+
+tbody tr.table__row--group:not(:first-of-type) th {
+  border-top: 1px solid rgb(var(--zn-border-color));
 }
 
 tbody tr.table__row--error td {

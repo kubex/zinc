@@ -564,7 +564,9 @@ In this preview, the input values are sent as parameters with each request but t
 
 ### Grouping Data
 
-Group rows by a specific column using the `group-by` property. This loads all data and splits it into separate tables.
+Group rows by a specific column using the `group-by` property. This loads all data and splits it into groups.
+
+Groups render as header rows inside a single table, so every group shares the same column widths, one set of column headers and one horizontal scrollbar.
 
 ```html:preview
 <zn-data-table

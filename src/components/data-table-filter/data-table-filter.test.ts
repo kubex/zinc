@@ -1,12 +1,16 @@
 import '../../../dist/zn.min.js';
 import {expect, fixture, html, waitUntil} from '@open-wc/testing';
 import type ZnDataTableFilter from './data-table-filter.component';
+import type ZnDatepicker from '../datepicker/datepicker.component';
 import type ZnDropdown from '../dropdown/dropdown.component';
+import type ZnInput from '../input/input.component';
 
 const FILTERS = [
   {id: 'role', name: 'role', operators: ['in'], options: {pm: 'Project Manager', eng: 'Engineer'}},
   {id: 'status', name: 'status', operators: ['eq'], options: {active: 'Active', inactive: 'Inactive'}},
-  {id: 'email', name: 'email', operators: ['contains']}
+  {id: 'email', name: 'email', operators: ['contains']},
+  {id: 'created', name: 'created', type: 'date', operators: ['eq'], dateSubmitFormat: 'timestamp'},
+  {id: 'age', name: 'age', type: 'number', operators: ['eq', 'gte']}
 ];
 
 const clickOn = (el: Element | null | undefined) =>
@@ -111,10 +115,139 @@ describe('<zn-data-table-filter>', () => {
     expect(single.stayOpenOnSelect).to.be.false;
   });
 
+  it('counts a typed value as one, however many spaces it contains', async () => {
+    const el = await filterBar('email');
+
+    const input = el.shadowRoot!.querySelector<ZnInput>('zn-input')!;
+    input.value = 'thats really bad';
+    input.dispatchEvent(new Event('zn-input', {bubbles: true, composed: true}));
+    await waitUntil(() => el.value.length > 0);
+    await el.updateComplete;
+
+    expect(pills(el)).to.deep.equal(['Email: thats really bad']);
+  });
+
+  it('matches suggestions without regard to case', async () => {
+    const el = await filterBar('email');
+    el.suggestions = {email: ['Ada@example.com', 'grace@example.com']};
+
+    const input = el.shadowRoot!.querySelector<ZnInput>('zn-input')!;
+    input.value = 'ADA';
+    input.dispatchEvent(new Event('zn-input', {bubbles: true, composed: true}));
+    await waitUntil(() => el.shadowRoot!.querySelectorAll('.filter-bar__suggestion').length > 0);
+
+    const shown = [...el.shadowRoot!.querySelectorAll('.filter-bar__suggestion')].map(b => b.textContent!.trim());
+
+    expect(shown).to.deep.equal(['Ada@example.com']);
+  });
+
   it('renders a text input for a filter with no options', async () => {
     const el = await filterBar('email');
 
-    expect(el.shadowRoot!.querySelector('.filter-bar__input zn-input')).to.exist;
+    expect(el.shadowRoot!.querySelector('.filter-bar__editor zn-input')).to.exist;
+  });
+
+  it('renders an inline calendar for a date filter', async () => {
+    const el = await filterBar('created');
+
+    const picker = el.shadowRoot!.querySelector('.filter-bar__editor zn-datepicker');
+
+    expect(picker).to.exist;
+    expect(picker!.hasAttribute('inline')).to.be.true;
+  });
+
+  it('encodes a picked date and labels the pill with it', async () => {
+    const el = await filterBar('created');
+    const picker = el.shadowRoot!.querySelector<ZnDatepicker>('zn-datepicker')!;
+    await picker.updateComplete;
+
+    picker.shadowRoot!.querySelector<HTMLElement>('.air-datepicker-cell.-day-:not(.-other-month-)')!.click();
+    // AirDatepicker reports a selection on the next task, not synchronously
+    await waitUntil(() => el.value.length > 0);
+    await el.updateComplete;
+
+    const [filter] = decode(el.value);
+
+    expect(filter.key).to.equal('created');
+    expect(filter.comparator).to.equal('eq');
+    expect(Number(filter.value)).to.be.greaterThan(0);
+    expect(pills(el)[0]).to.equal(`Created: ${picker.value as string}`);
+  });
+
+  it('offers each operator when a filter defines more than one', async () => {
+    const el = await filterBar('age');
+
+    const operators = [...el.shadowRoot!.querySelectorAll('.filter-bar__operator')].map(o => o.textContent!.trim());
+
+    expect(operators).to.deep.equal(['is', '\u2265']);
+  });
+
+  it('re-encodes the value with the operator the user picks', async () => {
+    const el = await filterBar('age');
+
+    const input = el.shadowRoot!.querySelector<ZnInput>('zn-input')!;
+    input.value = '18';
+    input.dispatchEvent(new Event('zn-input', {bubbles: true, composed: true}));
+    await waitUntil(() => el.value.length > 0);
+
+    clickOn(el.shadowRoot!.querySelectorAll('.filter-bar__operator')[1]);
+    await el.updateComplete;
+
+    expect(decode(el.value)).to.deep.equal([{key: 'age', comparator: 'gte', value: '18'}]);
+    expect(pills(el)).to.deep.equal(['Age \u2265 18']);
+  });
+
+  it('lists operators above the options for a filter that has both', async () => {
+    const el = await fixture<ZnDataTableFilter>(html`
+      <zn-data-table-filter default-filters="state"
+                            .filters="${[{
+                              id: 'state',
+                              name: 'state',
+                              operators: ['eq', 'in'],
+                              options: {open: 'Open', closed: 'Closed'}
+                            }]}"></zn-data-table-filter>`);
+    await el.updateComplete;
+
+    const items = [...el.shadowRoot!.querySelectorAll('zn-menu-item')].map(i => i.textContent!.trim());
+
+    expect(items).to.deep.equal(['is', 'is any of', 'Open', 'Closed', 'Remove']);
+  });
+
+  it('opens the new pill so its value can be set without a second click', async () => {
+    const el = await filterBar();
+
+    clickOn(el.shadowRoot!.querySelector('zn-menu-item[value="status"]'));
+    await el.updateComplete;
+
+    const pill = [...el.shadowRoot!.querySelectorAll<ZnDropdown>('zn-dropdown')]
+      .find(dropdown => dropdown.dataset.key === 'status')!;
+
+    await waitUntil(() => pill.open, 'the new filter\'s panel never opened');
+    expect(pill.open).to.be.true;
+  });
+
+  it('keeps the panel open for an operator but closes it for a value', async () => {
+    const el = await fixture<ZnDataTableFilter>(html`
+      <zn-data-table-filter default-filters="state"
+                            .filters="${[{
+                              id: 'state',
+                              name: 'state',
+                              operators: ['eq', 'in'],
+                              options: {open: 'Open', closed: 'Closed'}
+                            }]}"></zn-data-table-filter>`);
+    await el.updateComplete;
+
+    const pill = el.shadowRoot!.querySelector<ZnDropdown>('zn-dropdown')!;
+    await pill.show();
+
+    const [operator] = [...pill.querySelectorAll('zn-menu-item')];
+    clickOn(operator);
+    await el.updateComplete;
+    expect(pill.open, 'picking an operator should leave the panel open').to.be.true;
+
+    clickOn(pill.querySelector('zn-menu-item[value="open"]'));
+    await waitUntil(() => !pill.open, 'picking a value should close the panel');
+    expect(pill.open).to.be.false;
   });
 
   it('clear() removes every pill and empties the value', async () => {

@@ -187,7 +187,7 @@ export default class ZnDataTableSearch extends ZincElement implements ZincFormCo
           clearable
           @zn-input="${this.handleInput}"
           @zn-clear="${this.handleClear}">
-          <zn-icon slot="suffix" src="search@lu" size="18"></zn-icon>
+          <zn-icon slot="suffix" src="search@lu" size="20"></zn-icon>
         </zn-input>
         <slot style="display: none"></slot>
       </div>

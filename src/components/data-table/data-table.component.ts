@@ -1,5 +1,5 @@
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, nothing, type TemplateResult, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, nothing, type PropertyValues, type TemplateResult, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property, query, state} from 'lit/decorators.js';
@@ -38,6 +38,7 @@ const DEFAULT_PAGE = 1;
 const DEFAULT_PER_PAGE = 10;
 // Numbered page buttons shown at once; the window slides so the control never grows
 const PAGE_WINDOW = 3;
+const SUGGESTION_LIMIT = 25;
 
 interface Cell {
   text: string;
@@ -297,6 +298,8 @@ export default class ZnDataTable extends ZincElement {
 
   private _rows: Row[] = [];
 
+  private _suggestionsKey = '';
+
   private numberOfRowsSelected: number = 0;
   private selectedRows: any[] = [];
   private tableContainer: Element | undefined;
@@ -554,6 +557,33 @@ export default class ZnDataTable extends ZincElement {
     this.addEventListener('zn-filter-change', this.filterChangeListener);
     this.addEventListener('zn-clear', this.filterClearListener);
     this.addEventListener('zn-search-change', this.searchChangeListener);
+  }
+
+  protected updated(changed: PropertyValues) {
+    super.updated(changed);
+    this.publishFilterSuggestions();
+  }
+
+  // The filter bar can't see the data, so hand it the values already on screen to type against
+  private publishFilterSuggestions() {
+    const bar = this.querySelector('zn-data-table-filter');
+    if (!bar || this._rows.length === 0) return;
+
+    const suggestions: Record<string, string[]> = {};
+
+    this._rows.forEach((row: Row) => row.cells.forEach((cell: Cell) => {
+      const text = cell.text?.trim();
+      if (!text) return;
+
+      const values = suggestions[cell.column] ?? (suggestions[cell.column] = []);
+      if (values.length < SUGGESTION_LIMIT && !values.includes(text)) values.push(text);
+    }));
+
+    const key = JSON.stringify(suggestions);
+    if (key === this._suggestionsKey) return;
+
+    this._suggestionsKey = key;
+    bar.suggestions = suggestions;
   }
 
   private getTemplate(name: string): DisplayTemplate | undefined {
@@ -866,6 +896,7 @@ export default class ZnDataTable extends ZincElement {
                  icon-size="18"
                  tooltip="Filter"
                  aria-label="Filter"
+                 muted-notifications
                  notification="${applied || nothing}"
                  aria-pressed="${this._filtersOpen}"
                  class="${classMap({'table__header__toggle--active': applied > 0})}"
@@ -1031,6 +1062,7 @@ export default class ZnDataTable extends ZincElement {
                        'table__footer__pagination-page': true,
                        'table__footer__pagination-page--active': p === this.page,
                      })}"
+                     icon-button="small"
                      aria-current="${ifDefined(p === this.page ? 'page' : undefined)}">${p}
           </zn-button>`)}
         <zn-button @click="${this.page !== this.totalPages ? this.goToNextPage : undefined}"
@@ -1425,14 +1457,15 @@ export default class ZnDataTable extends ZincElement {
       <td class="table__cell table__cell--expander"></td>`;
 
     const expanded = this._expandedRows.has(row.id);
-    const icon = expanded ? 'chevron_down@lu' : 'chevron_right';
+    const icon = expanded ? 'chevron_down@lu' : 'chevron_right@lu';
 
     return html`
       <td class="table__cell table__cell--expander">
         <zn-button
-          color="transparent"
+          icon-button="small"
+          plain
           icon="${icon}"
-          icon-size="18"
+          icon-size="20"
           aria-label="${expanded ? 'Collapse row' : 'Expand row'}"
           @click="${(e: Event) => this.toggleRowExpansion(e, row)}">
         </zn-button>

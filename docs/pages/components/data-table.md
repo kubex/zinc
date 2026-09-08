@@ -408,6 +408,8 @@ Or use the built-in empty state with custom text:
 
 Add filtering with the `zn-data-table-filter` component. The header carries a filter toggle beside the refresh button; clicking it reveals a row between the header and the rows holding the `filter` slot, where the filter component shows one pill per active filter alongside add-filter and clear controls. The row stays hidden until the toggle is clicked, and the toggle carries a count of the filters currently applied. Use `default-filters` to show a pill for a filter before the user adds it.
 
+The table also feeds the bar typeahead values for its text filters, taken from the rows it has loaded and keyed on the column whose name matches the filter's id.
+
 :::tip
 In this preview, filter parameters are sent with the request but the static data file returns the same results regardless. With a real server endpoint, results would be filtered based on the applied criteria.
 :::

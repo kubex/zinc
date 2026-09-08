@@ -34,8 +34,97 @@
     width: calc(1.5em + var(--zn-spacing-x-small));
   }
 
-  &__input {
-    padding: var(--zn-spacing-2x-small);
-    min-width: 180px;
+  // Value editors get their own panel: a calendar has no business inside a menu's
+  // scroll container. The panel draws the only edge, so the editor inside it runs
+  // flush to it
+  &__editor {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: hidden;
+    border: 1px solid rgb(var(--zn-border-color));
+    border-radius: var(--zn-border-radius);
+    background-color: rgb(var(--zn-panel));
+    filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.04)) drop-shadow(0 4px 3px rgba(0, 0, 0, 0.1));
+
+    zn-datepicker {
+      --zn-datepicker-inline-border-color: transparent;
+    }
+
+    zn-input {
+      --zn-input-box-shadow: none;
+      --zn-input-background-color: transparent;
+      --zn-input-background-color-hover: transparent;
+      --zn-input-background-color-focus: transparent;
+      --zn-input-border-color: transparent;
+      --zn-input-border-color-hover: transparent;
+      --zn-input-border-color-focus: transparent;
+      --zn-input-focus-ring-color: transparent;
+      min-width: 200px;
+    }
+  }
+
+  &__remove-button {
+    border-top: 1px solid rgb(var(--zn-border-color));
+  }
+
+  &__suggestions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    max-height: 220px;
+    overflow-y: auto;
+    border-top: 1px solid rgb(var(--zn-border-color));
+    @include wc.scrollbars;
+  }
+
+  &__suggestion::part(base) {
+    justify-content: flex-start;
+    padding: var(--zn-spacing-x-small) var(--zn-spacing-small);
+    font-weight: var(--zn-font-weight-normal);
+    text-transform: none;
+    color: rgb(var(--zn-text));
+    text-align: left;
+  }
+
+  // Segmented operator picker at the top of a value editor
+  &__operators {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--zn-spacing-2x-small);
+    padding: var(--zn-spacing-x-small);
+    border-bottom: 1px solid rgb(var(--zn-border-color));
+  }
+
+  &__operator::part(base) {
+    height: 26px;
+    min-height: 26px;
+    min-width: 30px;
+    padding: 0 var(--zn-spacing-x-small);
+    font-size: var(--zn-font-size-small);
+    font-weight: var(--zn-font-weight-normal);
+    text-transform: none;
+    color: rgb(var(--zn-text));
+    background-color: transparent;
+    border-color: rgb(var(--zn-border-color));
+  }
+
+  &__operator--selected::part(base) {
+    color: rgb(var(--zn-primary));
+    border-color: rgb(var(--zn-primary));
+    background-color: rgba(var(--zn-primary), 0.05);
+  }
+
+  &__separator {
+    height: 1px;
+    margin: var(--zn-spacing-2x-small) 0;
+    background-color: rgb(var(--zn-border-color));
+  }
+
+  &__remove-button::part(base) {
+    justify-content: flex-start;
+    padding: var(--zn-spacing-x-small) var(--zn-spacing-small);
+    font-weight: var(--zn-font-weight-normal);
+    text-transform: none;
   }
 }

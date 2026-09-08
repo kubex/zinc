@@ -1,5 +1,5 @@
 import '../../../dist/zn.min.js';
-import {expect, fixture, html} from '@open-wc/testing';
+import {expect, fixture, html, waitUntil} from '@open-wc/testing';
 import type ZnDatepicker from './datepicker.component';
 
 describe('<zn-datepicker>', () => {
@@ -7,6 +7,33 @@ describe('<zn-datepicker>', () => {
     const el = await fixture(html` <zn-datepicker></zn-datepicker> `);
 
     expect(el).to.exist;
+  });
+
+  describe('inline', () => {
+    it('renders the calendar in place and hides the text input', async () => {
+      const el = await fixture<ZnDatepicker>(html`<zn-datepicker inline></zn-datepicker>`);
+      await el.updateComplete;
+
+      const calendar = el.shadowRoot!.querySelector('.air-datepicker');
+
+      expect(calendar, 'calendar should live in the datepicker shadow root').to.exist;
+      expect(calendar!.classList.contains('-inline-')).to.be.true;
+      expect(getComputedStyle(el.input).display).to.equal('none');
+    });
+
+    it('emits zn-change when a day is picked', async () => {
+      const el = await fixture<ZnDatepicker>(html`<zn-datepicker inline></zn-datepicker>`);
+      await el.updateComplete;
+
+      let emitted = 0;
+      el.addEventListener('zn-change', () => emitted++);
+
+      const day = el.shadowRoot!.querySelector<HTMLElement>('.air-datepicker-cell.-day-:not(.-other-month-)')!;
+      day.click();
+      await waitUntil(() => emitted > 0);
+
+      expect(el.value).to.not.equal('');
+    });
   });
 
   describe('Escape key', () => {

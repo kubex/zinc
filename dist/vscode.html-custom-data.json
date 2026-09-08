@@ -14,17 +14,6 @@
       ]
     },
     {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
-        }
-      ]
-    },
-    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -61,6 +50,17 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
+        }
+      ]
+    },
+    {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -243,6 +243,11 @@
         {
           "name": "no-hover",
           "description": "Disables the hover background, for contexts where the tint doesn't fit.",
+          "values": []
+        },
+        {
+          "name": "pill",
+          "description": "Renders the button as a pill: fully rounded, sentence case and regular\nweight. For label-like triggers such as filter chips.",
           "values": []
         },
         { "name": "panel-bg", "values": [] },
@@ -1188,7 +1193,7 @@
     },
     {
       "name": "zn-data-table",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **search** - Slot for search component.\n- **sort** - Slot for sort component.\n- **filter** - Slot for filter component.\n- **filter-top** - Slot for top-level filter component.\n- **delete-action** - Slot for delete action button.\n- **modify-action** - Slot for modify action button.\n- **create-action** - Slot for create action button.\n- **inputs** - Slot for additional input controls.\n- **empty-state** - Slot for custom empty state.\n- **no-results** - Slot for a custom no-results state, shown when a search on a no-initial-load table returns no rows.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **search** - Slot for search component, in the header's right-hand group.\n- **sort** - Slot for sort component, in the header's right-hand group.\n- **filter** - Slot for filter component, in the header's right-hand group.\n- **filter-top** - Slot for a top-level filter component, rendered above the table's panel.\n- **delete-action** - Slot for delete action button, shown beside the caption once rows are selected.\n- **modify-action** - Slot for modify action button, shown beside the caption once rows are selected.\n- **create-action** - Slot for create action button, at the end of the header's right-hand group.\n- **inputs** - Slot for additional input controls.\n- **empty-state** - Slot for custom empty state.\n- **no-results** - Slot for a custom no-results state, shown when a search on a no-initial-load table returns no rows.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
         { "name": "data-uri", "values": [] },
         { "name": "data", "values": [{ "name": "Row[]" }, { "name": "Row" }] },
@@ -1208,6 +1213,8 @@
         { "name": "unsortable-headers", "values": [] },
         { "name": "unsortable", "values": [] },
         { "name": "hide-pagination", "values": [] },
+        { "name": "hide-column-select", "values": [] },
+        { "name": "hide-refresh", "values": [] },
         { "name": "standalone", "values": [] },
         { "name": "caption", "values": [] },
         { "name": "empty-state-caption", "values": [] },
@@ -1229,11 +1236,16 @@
     },
     {
       "name": "zn-data-table-filter",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "An inline filter bar for data tables. Each active filter is a pill whose dropdown sets its value.\n---\n\n\n### **Events:**\n - **zn-filter-change** - Emitted when the active filters change. Read the encoded query off `value`.\n\n### **Methods:**\n - **clear()** - Removes every active filter.",
       "attributes": [
-        { "name": "filters", "values": [] },
+        { "name": "filters", "values": [{ "name": "QueryBuilderData" }] },
         { "name": "name", "values": [] },
-        { "name": "value", "values": [] }
+        { "name": "value", "values": [] },
+        {
+          "name": "default-filters",
+          "description": "Filter keys to show a pill for before the user adds any.",
+          "values": []
+        }
       ],
       "references": [
         {
@@ -1297,7 +1309,7 @@
     },
     {
       "name": "zn-datepicker",
-      "description": "A date picker component with calendar popup and input validation.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the date value changes.\n- **zn-input** - Emitted when the input value changes.\n- **zn-blur** - Emitted when the input loses focus.\n- **zn-focus** - Emitted when the input gains focus.\n\n### **Methods:**\n - **focus(options: _FocusOptions_)** - Sets focus on the input.\n- **blur()** - Removes focus from the input.\n- **select()** - Selects all the text in the input.\n- **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - **label** - The datepicker's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Tooltip content for the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Additional context text displayed above the input. Alternatively, you can use the `context-note` attribute.\n- **help-text** - Help text displayed below the input. Alternatively, you can use the `help-text` attribute.\n- **prefix** - Content to display before the input (in addition to the default calendar icon).\n- **suffix** - Content to display after the input.\n\n### **CSS Properties:**\n - **--zn-input-*** - Inherited input component CSS custom properties. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **form-control** - The form control wrapper.\n- **form-control-label** - The label element.\n- **form-control-input** - The input wrapper.\n- **form-control-help-text** - The help text element.",
+      "description": "A date picker component with calendar popup and input validation.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the date value changes.\n- **zn-input** - Emitted when the input value changes.\n- **zn-blur** - Emitted when the input loses focus.\n- **zn-focus** - Emitted when the input gains focus.\n\n### **Methods:**\n - **focus(options: _FocusOptions_)** - Sets focus on the input.\n- **blur()** - Removes focus from the input.\n- **select()** - Selects all the text in the input.\n- **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - **label** - The datepicker's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Tooltip content for the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Additional context text displayed above the input. Alternatively, you can use the `context-note` attribute.\n- **help-text** - Help text displayed below the input. Alternatively, you can use the `help-text` attribute.\n- **prefix** - Content to display before the input (in addition to the default calendar icon).\n- **suffix** - Content to display after the input.\n\n### **CSS Properties:**\n - **--zn-input-*** - Inherited input component CSS custom properties. _(default: undefined)_\n- **--zn-datepicker-inline-border-color** - Border colour of the calendar in `inline` mode. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **form-control** - The form control wrapper.\n- **form-control-label** - The label element.\n- **form-control-input** - The input wrapper.\n- **form-control-help-text** - The help text element.",
       "attributes": [
         { "name": "title", "values": [] },
         {
@@ -1360,6 +1372,11 @@
           "values": []
         },
         { "name": "flush", "values": [] },
+        {
+          "name": "inline",
+          "description": "Renders the calendar in place instead of a popup, hiding the text input.",
+          "values": []
+        },
         {
           "name": "required",
           "description": "Makes the input a required field.",
@@ -2189,7 +2206,7 @@
     },
     {
       "name": "zn-input",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the control loses focus.\n- **zn-change** - Emitted when an alteration to the control's value is committed by the user.\n- **zn-clear** - Emitted when the clear button is activated.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-input** - Emitted when the control receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n- **zn-slash-select** - Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to suppress the insertion and handle the item yourself.\n- **zn-slash-insert** - Emitted after a slash menu item's value has been inserted.\n\n### **Methods:**\n - **resolveSlashItems(search): _Promise<SlashMenuItem[]>_** - The insertions the slash menu offers, gathered from every source, in the order they were declared.\n- **showSlashMenu()** - Opens the slash menu at the caret, inserting the trigger if it isn't already there.\n- **hideSlashMenu()** - Closes the slash menu.\n- **focus(options: _FocusOptions_)** - Sets focus on the input.\n- **blur()** - Removes focus from the input.\n- **select()** - Selects all the text in the input.\n- **setSelectionRange(selectionStart: _number_, selectionEnd: _number_, selectionDirection: _'forward' | 'backward' | 'none'_)** - Sets the start and end positions of the text selection (0-based).\n- **setRangeText(replacement: _string_, start: _number_, end: _number_, selectMode: _'select' | 'start' | 'end' | 'preserve'_)** - Replaces a range of text with a new string.\n- **showPicker()** - Displays the browser picker for an input element (only works if the browser supports it for the input type).\n- **stepUp()** - Increments the value of a numeric input type by the value of the step attribute.\n- **stepDown()** - Decrements the value of a numeric input type by the value of the step attribute.\n- **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - **label** - The input's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute. Range inputs display their live value here unless this is set.\n- **prefix** - Used to prepend a presentational icon or similar element to the input.\n- **suffix** - Used to append a presentational icon or similar element to the input.\n- **clear-icon** - An icon to use in lieu of the default clear icon.\n- **show-password-icon** - An icon to use in lieu of the default show password icon.\n- **hide-password-icon** - An icon to use in lieu of the default hide password icon.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n- **slash-items** - `<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are picked up wherever they sit inside the input, so this slot name is optional.\n- **slash-menu** - A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can be set in markup. Any `<zn-slash-item>` children of it become the menu's items.\n\n### **CSS Properties:**\n - **--zn-range-track-height** - The height of a range input's track. _(default: undefined)_\n- **--zn-range-track-color** - The color of a range input's track. _(default: undefined)_\n- **--zn-range-thumb-size** - The diameter of a range input's thumb. _(default: undefined)_\n- **--zn-range-thumb-color** - The color of a range input's thumb. _(default: undefined)_\n- **--zn-range-thumb-ring-width** - The width of the ring drawn around a range input's thumb. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **slash-menu** - The slash menu shown at the caret.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **input** - The internal `<input>` control.\n- **prefix** - The container that wraps the prefix.\n- **clear-button** - The clear button.\n- **password-toggle-button** - The password toggle button.\n- **suffix** - The container that wraps the suffix.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the control loses focus.\n- **zn-change** - Emitted when an alteration to the control's value is committed by the user.\n- **zn-clear** - Emitted when the clear button is activated.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-input** - Emitted when the control receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n- **zn-slash-select** - Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to suppress the insertion and handle the item yourself.\n- **zn-slash-insert** - Emitted after a slash menu item's value has been inserted.\n\n### **Methods:**\n - **resolveSlashItems(search): _Promise<SlashMenuItem[]>_** - The insertions the slash menu offers, gathered from every source, in the order they were declared.\n- **showSlashMenu()** - Opens the slash menu at the caret, inserting the trigger if it isn't already there.\n- **hideSlashMenu()** - Closes the slash menu.\n- **focus(options: _FocusOptions_)** - Sets focus on the input.\n- **blur()** - Removes focus from the input.\n- **select()** - Selects all the text in the input.\n- **setSelectionRange(selectionStart: _number_, selectionEnd: _number_, selectionDirection: _'forward' | 'backward' | 'none'_)** - Sets the start and end positions of the text selection (0-based).\n- **setRangeText(replacement: _string_, start: _number_, end: _number_, selectMode: _'select' | 'start' | 'end' | 'preserve'_)** - Replaces a range of text with a new string.\n- **showPicker()** - Displays the browser picker for an input element (only works if the browser supports it for the input type).\n- **stepUp()** - Increments the value of a numeric input type by the value of the step attribute.\n- **stepDown()** - Decrements the value of a numeric input type by the value of the step attribute.\n- **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - **label** - The input's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute. Range inputs display their live value here unless this is set.\n- **prefix** - Used to prepend a presentational icon or similar element to the input.\n- **suffix** - Used to append a presentational icon or similar element to the input.\n- **clear-icon** - An icon to use in lieu of the default clear icon.\n- **show-password-icon** - An icon to use in lieu of the default show password icon.\n- **hide-password-icon** - An icon to use in lieu of the default hide password icon.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n- **slash-items** - `<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are picked up wherever they sit inside the input, so this slot name is optional.\n- **slash-menu** - A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can be set in markup. Any `<zn-slash-item>` children of it become the menu's items.\n\n### **CSS Properties:**\n - **--zn-input-box-shadow** - Shadow cast by the field; set to `none` inside a panel that draws its own edge. _(default: undefined)_\n- **--zn-range-track-height** - The height of a range input's track. _(default: undefined)_\n- **--zn-range-track-color** - The color of a range input's track. _(default: undefined)_\n- **--zn-range-thumb-size** - The diameter of a range input's thumb. _(default: undefined)_\n- **--zn-range-thumb-color** - The color of a range input's thumb. _(default: undefined)_\n- **--zn-range-thumb-ring-width** - The width of the ring drawn around a range input's thumb. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **slash-menu** - The slash menu shown at the caret.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **input** - The internal `<input>` control.\n- **prefix** - The container that wraps the prefix.\n- **clear-button** - The clear button.\n- **password-toggle-button** - The password toggle button.\n- **suffix** - The container that wraps the suffix.",
       "attributes": [
         { "name": "title", "values": [] },
         {
@@ -2586,7 +2603,7 @@
     },
     {
       "name": "zn-markdown-editor",
-      "description": "A markdown editor with live preview, split view, and a fullscreen mode.\n---\n\n\n### **Events:**\n - **zn-view-mode-change** - Emitted when the user switches between editor / split / preview.\n- **zn-change** - Emitted when the markdown content changes.\n- **zn-input** - Emitted on each keystroke in the editor.\n\n### **Methods:**\n - **focus(options: _FocusOptions_)** - Sets focus on the editor.\n- **blur()** - Removes focus from the editor.\n\n### **Slots:**\n - **label** - The editor label. Alternatively, use the `label` attribute.\n- **help-text** - Help text shown below the editor. Alternatively, use the `help-text` attribute.\n- _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The toolbar containing the view-mode and fullscreen controls.\n- **editor** - The textarea wrapper.\n- **preview** - The rendered markdown preview.",
+      "description": "A markdown editor with live preview, split view, and a fullscreen mode.\n---\n\n\n### **Events:**\n - **zn-view-mode-change** - Emitted when the user switches between editor / split / preview.\n- **zn-change** - Emitted when the markdown content changes.\n- **zn-input** - Emitted on each keystroke in the editor.\n\n### **Methods:**\n - **focus(options: _FocusOptions_)** - Sets focus on the editor.\n- **blur()** - Removes focus from the editor.\n\n### **Slots:**\n - **label** - The editor label. Alternatively, use the `label` attribute.\n- **help-text** - Help text shown below the editor. Alternatively, use the `help-text` attribute.\n- _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n- **--zn-panel-header-padding** - Padding around the header row. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-footer-padding** - Padding around the footer row. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The toolbar containing the view-mode and fullscreen controls.\n- **editor** - The textarea wrapper.\n- **preview** - The rendered markdown preview.\n- **header** - The header region, when a caption or actions are given.\n- **header-content** - The padded row inside the header, forwarded from zn-header.\n- **footer** - The footer region, when the footer slot is filled.",
       "attributes": [
         {
           "name": "name",
@@ -2670,7 +2687,7 @@
     },
     {
       "name": "zn-menu",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n- **--zn-menu-max-height** - Caps the menu's height and makes it scroll internally. Unset (`none`) by default, so the menu grows to fit its items unless a consumer sets this. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n- **--zn-menu-max-height** - Caps the menu's height and makes it scroll internally. Unset (`none`) by default, so the menu grows to fit its items unless a consumer sets this. _(default: undefined)_\n- **--zn-menu-min-width** - Overrides the menu's resting width. Defaults to `--zn-size-spanel`, or 245px for `variant=\"shell\"`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
         { "name": "actions", "values": [{ "name": "array" }] },
         {
@@ -2744,6 +2761,11 @@
         { "name": "rel", "values": [] },
         { "name": "gaid", "values": [] },
         { "name": "confirm", "values": [] },
+        {
+          "name": "keep-open",
+          "description": "Leaves a containing dropdown open when this item is selected, whatever the dropdown's own setting.",
+          "values": []
+        },
         {
           "name": "flush",
           "description": "Removes all padding from the menu item.",
@@ -3027,7 +3049,7 @@
     },
     {
       "name": "zn-panel",
-      "description": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n---\n\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n---\n\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n- **--zn-panel-header-padding** - Padding around the header row. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-footer-padding** - Padding around the footer row. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The header region, when a caption or actions are given.\n- **header-content** - The padded row inside the header, forwarded from zn-header.\n- **footer** - The footer region, when the footer slot is filled.",
       "attributes": [
         { "name": "basis-px", "values": [] },
         { "name": "caption", "values": [] },
@@ -5186,7 +5208,7 @@
     },
     {
       "name": "zn-translation-group",
-      "description": "Puts several zn-translations fields behind one language select, so a whole form's worth of copy is\ntranslated a language at a time.\n---\n\n\n### **Events:**\n - **zn-language-change** - Emitted when the active language changes. Detail: `{ language: string }`.\n\n### **Slots:**\n - _default_ - The `zn-translations` fields the select drives.\n- **actions** - Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on the right, as zinc's form action rows do; `align=\"start\"` moves one to the left. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.\n- **footer** - Content displayed in the grey panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **form-group** - The form group holding the caption, the language select and the fields.\n- **actions** - The row of buttons at the bottom of the body.\n- **language-field** - The select that chooses the language every child is editing, in the group's chip slot.\n- **language-select** - The select itself.",
+      "description": "Puts several zn-translations fields behind one language select, so a whole form's worth of copy is\ntranslated a language at a time.\n---\n\n\n### **Events:**\n - **zn-language-change** - Emitted when the active language changes. Detail: `{ language: string }`.\n\n### **Slots:**\n - _default_ - The `zn-translations` fields the select drives.\n- **actions** - Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on the right, as zinc's form action rows do; `align=\"start\"` moves one to the left. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.\n- **footer** - Content displayed in the grey panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n- **--zn-panel-header-padding** - Padding around the header row. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-footer-padding** - Padding around the footer row. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **form-group** - The form group holding the caption, the language select and the fields.\n- **actions** - The row of buttons at the bottom of the body.\n- **language-field** - The select that chooses the language every child is editing, in the group's chip slot.\n- **language-select** - The select itself.\n- **header** - The header region, when a caption or actions are given.\n- **header-content** - The padded row inside the header, forwarded from zn-header.\n- **footer** - The footer region, when the footer slot is filled.",
       "attributes": [
         {
           "name": "label",

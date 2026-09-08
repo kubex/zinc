@@ -650,6 +650,8 @@ declare module "components/menu-item/menu-item.component" {
         rel: string;
         gaid: string;
         confirm: boolean;
+        /** Leaves a containing dropdown open when this item is selected, whatever the dropdown's own setting. */
+        keepOpen: boolean;
         /** Removes all padding from the menu item. */
         flush: boolean;
         /** Removes horizontal (left/right) padding only. Ignored if flush is set. */
@@ -1000,6 +1002,8 @@ declare module "components/menu/menu.component" {
      * @cssproperty --example - An example CSS custom property.
      * @cssproperty --zn-menu-max-height - Caps the menu's height and makes it scroll internally.
      *  Unset (`none`) by default, so the menu grows to fit its items unless a consumer sets this.
+     * @cssproperty --zn-menu-min-width - Overrides the menu's resting width. Defaults to
+     *  `--zn-size-spanel`, or 245px for `variant="shell"`.
      */
     export default class ZnMenu extends ZincElement {
         static styles: CSSResultGroup;
@@ -1204,6 +1208,9 @@ declare module "components/button/button.component" {
         plain: boolean;
         /** Disables the hover background, for contexts where the tint doesn't fit. */
         noHover: boolean;
+        /** Renders the button as a pill: fully rounded, sentence case and regular
+         * weight. For label-like triggers such as filter chips. */
+        pill: boolean;
         panelBackground: boolean;
         dropdownCloser: boolean;
         notification: number;
@@ -1839,55 +1846,9 @@ declare module "events/zn-search-change" {
         }
     }
 }
-declare module "components/data-table-filter/data-table-filter.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement, { type ZincFormControl } from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/data-table-filter
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnDataTableFilter extends ZincElement implements ZincFormControl {
-        static styles: CSSResultGroup;
-        private _formController;
-        filters: string;
-        name: string;
-        value: string;
-        get validationMessage(): string;
-        get validity(): ValidityState;
-        checkValidity(): boolean;
-        getForm(): HTMLFormElement | null;
-        reportValidity(): boolean;
-        setCustomValidity(): void;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        handleQBClear: () => void;
-        handleQBReset: () => void;
-        handleQBUpdate: () => void;
-        closeSlideout(): void;
-        render(): import("lit-html").TemplateResult<1>;
-    }
-}
-declare module "components/data-table-filter/index" {
-    import ZnDataTableFilter from "components/data-table-filter/data-table-filter.component";
-    export * from "components/data-table-filter/data-table-filter.component";
-    export default ZnDataTableFilter;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-data-table-filter': ZnDataTableFilter;
-        }
-    }
+declare module "utilities/lit-to-html" {
+    import { type TemplateResult } from "lit";
+    export function litToHTML<T extends HTMLElement>(templateResult: TemplateResult): T | null;
 }
 declare module "components/slash-menu/slash-menu-items" {
     export interface SlashMenuItem {
@@ -2271,6 +2232,7 @@ declare module "components/input/input.component" {
      * @csspart password-toggle-button - The password toggle button.
      * @csspart suffix - The container that wraps the suffix.
      *
+     * @cssproperty --zn-input-box-shadow - Shadow cast by the field; set to `none` inside a panel that draws its own edge.
      * @cssproperty --zn-range-track-height - The height of a range input's track.
      * @cssproperty --zn-range-track-color - The color of a range input's track.
      * @cssproperty --zn-range-thumb-size - The diameter of a range input's thumb.
@@ -2508,53 +2470,6 @@ declare module "components/input/index" {
             'zn-input': ZnInput;
         }
     }
-}
-declare module "components/data-select/providers/country-data-provider" {
-    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
-    export const countryDataProvider: LocalDataProvider<DataProviderOption>;
-}
-declare module "components/data-select/providers/currency-data-provider" {
-    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
-    export const currencyDataProvider: (allowCommon?: boolean) => LocalDataProvider<DataProviderOption>;
-}
-declare module "components/data-select/providers/color-data-provider" {
-    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
-    export const colors: string[];
-    export const colorDataProvider: LocalDataProvider<DataProviderOption>;
-}
-declare module "components/data-select/providers/country-code-data-provider" {
-    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
-    export const countryDialPrefixDataProvider: LocalDataProvider<DataProviderOption>;
-}
-declare module "components/data-select/providers/us-state-data-provider" {
-    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
-    export const usStateDataProvider: LocalDataProvider<DataProviderOption>;
-}
-declare module "components/data-select/providers/provider" {
-    import type { HTMLTemplateResult } from "lit";
-    /**
-     * Providers are what the data select component uses to get data. They are
-     * responsible for defining the data.
-     */
-    export interface LocalDataProvider<T> {
-        getName: string;
-        getData: T[];
-    }
-    export interface RemoteDataProvider<T> {
-        getName: string;
-        getData: () => Promise<T[]>;
-    }
-    export interface DataProviderOption {
-        key: string;
-        value: string;
-        prefix?: string | HTMLTemplateResult;
-    }
-    export const emptyDataProvider: LocalDataProvider<DataProviderOption>;
-    export * from "components/data-select/providers/country-data-provider";
-    export * from "components/data-select/providers/currency-data-provider";
-    export * from "components/data-select/providers/color-data-provider";
-    export * from "components/data-select/providers/country-code-data-provider";
-    export * from "components/data-select/providers/us-state-data-provider";
 }
 declare module "components/option/option.component" {
     import { type CSSResultGroup } from 'lit';
@@ -3105,6 +3020,522 @@ declare module "components/select/index" {
         }
     }
 }
+declare module "events/zn-change" {
+    export type ZnChangeEvent = CustomEvent<Record<PropertyKey, never>>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-change': ZnChangeEvent;
+        }
+    }
+}
+declare module "components/datepicker/datepicker.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    import ZnTooltip from "components/tooltip/index";
+    import type { ZincFormControl } from "internal/zinc-element";
+    /**
+     * @summary A date picker component with calendar popup and input validation.
+     * @documentation https://zinc.style/components/datepicker
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     * @dependency zn-tooltip
+     *
+     * @event zn-change - Emitted when the date value changes.
+     * @event zn-input - Emitted when the input value changes.
+     * @event zn-blur - Emitted when the input loses focus.
+     * @event zn-focus - Emitted when the input gains focus.
+     *
+     * @slot label - The datepicker's label. Alternatively, you can use the `label` attribute.
+     * @slot label-tooltip - Tooltip content for the label. Alternatively, you can use the `label-tooltip` attribute.
+     * @slot context-note - Additional context text displayed above the input. Alternatively, you can use the `context-note` attribute.
+     * @slot help-text - Help text displayed below the input. Alternatively, you can use the `help-text` attribute.
+     * @slot prefix - Content to display before the input (in addition to the default calendar icon).
+     * @slot suffix - Content to display after the input.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart form-control - The form control wrapper.
+     * @csspart form-control-label - The label element.
+     * @csspart form-control-input - The input wrapper.
+     * @csspart form-control-help-text - The help text element.
+     *
+     * @property format - Date format using AirDatepicker tokens. Default: 'dd/MM/yyyy'
+     *   Supported formats:
+     *   - dd/MM/yyyy (31/12/2024) - Default
+     *   - MM/dd/yyyy (12/31/2024)
+     *   - yyyy-MM-dd (2024-12-31)
+     *   - dd-MM-yyyy (31-12-2024)
+     *   - yyyy/MM/dd (2024/12/31)
+     *
+     * @cssproperty --zn-input-* - Inherited input component CSS custom properties.
+     * @cssproperty --zn-datepicker-inline-border-color - Border colour of the calendar in `inline` mode.
+     */
+    export default class ZnDatepicker extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+            'zn-tooltip': typeof ZnTooltip;
+        };
+        private readonly formControlController;
+        private readonly hasSlotController;
+        input: HTMLInputElement;
+        private hasFocus;
+        title: string;
+        /** The name of the input, submitted as a name/value pair with form data. */
+        name: string;
+        /** The current value of the input, submitted as a name/value pair with form data. */
+        value: any;
+        /** The default value of the form control. Primarily used for resetting the form control. */
+        defaultValue: string;
+        /** The inputs size **/
+        size: 'small' | 'medium' | 'large';
+        /** The inputs label. If you need to display HTML, use the `label` slot. **/
+        label: string;
+        /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the
+         * `label-tooltip` slot.
+         * **/
+        labelTooltip: string;
+        /**
+         * Text that appears above the input, on the right, to add additional context. If you need to display HTML
+         * in this text, use the `context-note` slot instead
+         */
+        contextNote: string;
+        /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
+        helpText: string;
+        /** Disables the input **/
+        disabled: boolean;
+        /** Placeholder text to show as a hint when the input is empty. */
+        placeholder: string;
+        /** Makes the input read-only **/
+        readonly: boolean;
+        /**
+         * By default, form-controls are associated with the nearest containing `<form>` element. This attribute allows you
+         * to place the form control outside a form and associate it with the form that has this `id`. The form must be
+         * in the same document or shadow root for this to work.
+         */
+        form: string;
+        flush: boolean;
+        /** Renders the calendar in place instead of a popup, hiding the text input. */
+        inline: boolean;
+        /** Makes the input a required field. */
+        required: boolean;
+        /** Adds a clear button to the calendar for removing a selected date. **/
+        clearable: boolean;
+        /** Makes the input a range picker. **/
+        range: boolean;
+        /** Disallows selecting past dates. **/
+        disablePastDates: boolean;
+        /** Minimum date that can be selected. Overrides disable-past-dates if both are set. Accepts Date object or date string. **/
+        minDate?: string | Date;
+        /** Maximum date that can be selected. Accepts Date object or date string. **/
+        maxDate?: string | Date;
+        /**
+         * Date format for display and input. Uses AirDatepicker format tokens.
+         *
+         * Common formats:
+         * - 'dd/MM/yyyy' (31/12/2024) - Default, European style
+         * - 'MM/dd/yyyy' (12/31/2024) - US style
+         * - 'yyyy-MM-dd' (2024-12-31) - ISO style
+         * - 'dd-MM-yyyy' (31-12-2024) - Alternative European
+         * - 'yyyy/MM/dd' (2024/12/31) - Alternative ISO
+         *
+         * Format tokens:
+         * - dd: Day with leading zero (01-31)
+         * - MM: Month with leading zero (01-12)
+         * - yyyy: Full year (2024)
+         */
+        format: string;
+        /** Display time selector. **/
+        timePicker?: boolean;
+        /** Display only time selector, without date. **/
+        onlyTimepicker?: boolean;
+        /**
+         * Time format for display and input selector. Uses AirDatepicker format tokens.
+         * Default : hh:mm AA
+         *
+         * Possible symbols:
+         * h — hours in 12-hour mode
+         * hh — hours in 12-hour mode with leading zero
+         * H — hours in 24-hour mode
+         * HH — hours in 24-hour mode with leading zero
+         * m — minutes
+         * mm — minutes with leading zero
+         * aa — day period lower case
+         * AA — day period upper case
+         */
+        timeFormat?: string;
+        /**
+         * Overrides where the calendar popup is mounted. By default it renders at the document level
+         * (or inside the containing dialog/popover) so it can't be clipped by ancestor shadow roots
+         * or overflow containers — you rarely need to set this.
+         */
+        container?: string | HTMLElement;
+        private _instance;
+        get timestamp(): number;
+        /** Gets the validity state object */
+        get validity(): ValidityState;
+        /** Gets the validation message */
+        get validationMessage(): string;
+        handleDisabledChange(): void;
+        handleValueChange(): Promise<void>;
+        handleDatepickerOptionsChange(): void;
+        /** Sets focus on the input. */
+        focus(options?: FocusOptions): void;
+        /** Removes focus from the input. */
+        blur(): void;
+        /** Selects all the text in the input. */
+        select(): void;
+        /** Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
+        checkValidity(): boolean;
+        /** Gets the associated form, if one exists. */
+        getForm(): HTMLFormElement | null;
+        /** Checks for validity and shows the browser's validation message if the control is invalid. */
+        reportValidity(): boolean;
+        /** Sets a custom validation message. Pass an empty string to restore validity. */
+        setCustomValidity(message: string): void;
+        init(): void;
+        /**
+         * Resolves where the calendar should be mounted. By default AirDatepicker mounts it in a global
+         * container on `document.body`, so ancestor shadow roots and overflow containers can't clip it.
+         * However, when the datepicker is inside a top-layer element (a modal `<dialog>` or a popover),
+         * a document-level calendar would render behind it and be inert, so we mount inside that element.
+         */
+        private getCalendarContainer;
+        private adoptCalendarStyles;
+        /** Finds the closest `<dialog>` or popover ancestor, crossing shadow DOM boundaries. */
+        private findTopLayerAncestor;
+        private handleInput;
+        private handleChange;
+        private handleInvalid;
+        private handleKeyDown;
+        private handlePaste;
+        private handleBlur;
+        private isValidDateString;
+        private parseDate;
+        private parseDateString;
+        private isDateInRange;
+        private clearInvalidDate;
+        private getFormatSeparator;
+        private escapeRegex;
+        private normalizeDate;
+        private autoFormatDate;
+        updated(_changedProperties: PropertyValues): void;
+        firstUpdated(): void;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/datepicker/index" {
+    import ZnDatepicker from "components/datepicker/datepicker.component";
+    export * from "components/datepicker/datepicker.component";
+    export default ZnDatepicker;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-datepicker': ZnDatepicker;
+        }
+    }
+}
+declare module "components/query-builder/query-builder.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    import ZnInput from "components/input/index";
+    import ZnOption from "components/option/index";
+    import ZnSelect from "components/select/index";
+    import type { ZincFormControl } from "internal/zinc-element";
+    export type QueryBuilderData = QueryBuilderItem[];
+    export interface QueryBuilderItem {
+        id: string;
+        name: string;
+        type?: QueryBuilderType;
+        options?: QueryBuilderOptions;
+        operators: QueryBuilderOperators[];
+        dateSubmitFormat?: QueryBuilderDateSubmitFormat;
+        maxOptionsVisible?: string;
+    }
+    /**
+     * Controls how `date` and `dateTime` filter values are serialized when the
+     * query is submitted.
+     *
+     * - `'iso'` — RFC 3339 / ISO 8601 (e.g. `2026-06-09T16:05:00Z`).
+     * - `'timestamp'` — Unix timestamp in seconds since epoch.
+     * - `'legacy'` — whatever format the current system emits. Kept so existing
+     *                   backends keep working while consumers migrate to one of the
+     *                   formats above. - DEFAULT
+     */
+    export type QueryBuilderDateSubmitFormat = 'iso' | 'timestamp' | 'legacy';
+    export type QueryBuilderType = 'bool' | 'boolean' | 'date' | 'dateTime' | 'number';
+    export interface QueryBuilderOptions {
+        [key: string | number]: string | number;
+    }
+    export enum QueryBuilderOperators {
+        Eq = "eq",
+        Neq = "neq",
+        Eqi = "eqi",
+        Neqi = "neqi",
+        Before = "before",
+        After = "after",
+        In = "in",
+        Nin = "nin",
+        MatchPhrasePre = "matchphrasepre",
+        NMatchPhrasePre = "nmatchphrasepre",
+        MatchPhrase = "matchphrase",
+        NMatchPhrase = "nmatchphrase",
+        Match = "match",
+        NMatch = "nmatch",
+        Contains = "contains",
+        DoesNotContain = "doesnotcontain",
+        Starts = "starts",
+        NStarts = "nstarts",
+        Ends = "ends",
+        NEnds = "nends",
+        Wild = "wild",
+        NWild = "nwild",
+        Like = "like",
+        NLike = "nlike",
+        Fuzzy = "fuzzy",
+        NFuzzy = "nfuzzy",
+        Gte = "gte",
+        Gt = "gt",
+        Lt = "lt",
+        Lte = "lte"
+    }
+    export const operatorText: {
+        [key in QueryBuilderOperators]: string;
+    };
+    export interface CreatedRule {
+        id: string;
+        name: string;
+        operator: string;
+        value: string;
+    }
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/query-builder
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-button
+     * @dependency zn-input
+     * @dependency zn-option
+     * @dependency zn-select
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnQueryBuilder extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-button': typeof ZnButton;
+            'zn-input': typeof ZnInput;
+            'zn-option': typeof ZnOption;
+            'zn-select': typeof ZnSelect;
+        };
+        private _selectedRules;
+        private _formController;
+        private _previousOperator;
+        container: HTMLDivElement;
+        addRule: ZnSelect;
+        input: HTMLInputElement;
+        filters: QueryBuilderData;
+        dropdown: boolean;
+        name: string;
+        value: PropertyKey;
+        showValues: string[];
+        private get _usedFilterIds();
+        get validationMessage(): string;
+        get validity(): ValidityState;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        render(): import("lit-html").TemplateResult<1>;
+        private _handleChange;
+        private _addRule;
+        private _createInput;
+        private _changeValueInput;
+        private _createBooleanInput;
+        private _createNumberInput;
+        private _createDateInput;
+        private _createSelectInput;
+        private _createDefaultInput;
+        private _updateOperatorValue;
+        private _updateDateValue;
+        private _updateValue;
+        private updateInValue;
+        private _changeRule;
+        private _getRulePosition;
+        private _removeRule;
+        clear(): void;
+        reset(): void;
+        checkValidity(): boolean;
+        getForm(): HTMLFormElement | null;
+        reportValidity(): boolean;
+        setCustomValidity(message: string): void;
+    }
+}
+declare module "components/query-builder/index" {
+    import ZnQueryBuilder from "components/query-builder/query-builder.component";
+    export * from "components/query-builder/query-builder.component";
+    export default ZnQueryBuilder;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-query-builder': ZnQueryBuilder;
+        }
+    }
+}
+declare module "components/data-table-filter/data-table-filter.component" {
+    import { type CSSResultGroup, nothing, type PropertyValues } from 'lit';
+    import { type QueryBuilderData } from "components/query-builder/index";
+    import ZincElement, { type ZincFormControl } from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    import ZnDatepicker from "components/datepicker/index";
+    import ZnDropdown from "components/dropdown/index";
+    import ZnInput from "components/input/index";
+    import ZnMenu from "components/menu/index";
+    import ZnMenuItem from "components/menu-item/index";
+    /**
+     * @summary An inline filter bar for data tables. Each active filter is a pill whose dropdown sets its value.
+     * @documentation https://zinc.style/components/data-table-filter
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-button
+     * @dependency zn-datepicker
+     * @dependency zn-dropdown
+     * @dependency zn-input
+     * @dependency zn-menu
+     * @dependency zn-menu-item
+     *
+     * @event zn-filter-change - Emitted when the active filters change. Read the encoded query off `value`.
+     */
+    export default class ZnDataTableFilter extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-button': typeof ZnButton;
+            'zn-datepicker': typeof ZnDatepicker;
+            'zn-dropdown': typeof ZnDropdown;
+            'zn-input': typeof ZnInput;
+            'zn-menu': typeof ZnMenu;
+            'zn-menu-item': typeof ZnMenuItem;
+        };
+        private _formController;
+        private _textTimeout?;
+        private _pendingOpen?;
+        filters: QueryBuilderData;
+        name: string;
+        value: string;
+        /** Filter keys to show a pill for before the user adds any. */
+        defaultFilters: string;
+        /** Typeahead values per filter key. `zn-data-table` fills this from the rows it has loaded. */
+        suggestions: Record<string, string[]>;
+        private _active;
+        private _typing;
+        private _optionQuery;
+        get validationMessage(): string;
+        get validity(): ValidityState;
+        checkValidity(): boolean;
+        getForm(): HTMLFormElement | null;
+        reportValidity(): boolean;
+        setCustomValidity(): void;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        protected updated(changed: PropertyValues): void;
+        protected willUpdate(changed: PropertyValues): void;
+        disconnectedCallback(): void;
+        /** Number of filters with a value set. */
+        get activeCount(): number;
+        /** Removes every active filter. */
+        clear(): void;
+        private definition;
+        private operatorsFor;
+        private comparatorFor;
+        private operatorLabel;
+        private isMultiple;
+        private optionsFor;
+        private addFilter;
+        private removeFilter;
+        private setValue;
+        private setComparator;
+        private toggleOption;
+        private selectedValues;
+        private emitChange;
+        private handleDateInput;
+        private serializeDate;
+        private handleTextInput;
+        private suggestionsFor;
+        private applySuggestion;
+        private humanize;
+        private pillLabel;
+        private renderOperators;
+        private renderPill;
+        private isDateFilter;
+        private renderValueInput;
+        private handleOptionSearch;
+        private renderOptionSearch;
+        private renderOptionItems;
+        private renderAddFilter;
+        render(): import("lit-html").TemplateResult<1> | typeof nothing;
+    }
+}
+declare module "components/data-table-filter/index" {
+    import ZnDataTableFilter from "components/data-table-filter/data-table-filter.component";
+    export * from "components/data-table-filter/data-table-filter.component";
+    export default ZnDataTableFilter;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-data-table-filter': ZnDataTableFilter;
+        }
+    }
+}
+declare module "components/data-select/providers/country-data-provider" {
+    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
+    export const countryDataProvider: LocalDataProvider<DataProviderOption>;
+}
+declare module "components/data-select/providers/currency-data-provider" {
+    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
+    export const currencyDataProvider: (allowCommon?: boolean) => LocalDataProvider<DataProviderOption>;
+}
+declare module "components/data-select/providers/color-data-provider" {
+    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
+    export const colors: string[];
+    export const colorDataProvider: LocalDataProvider<DataProviderOption>;
+}
+declare module "components/data-select/providers/country-code-data-provider" {
+    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
+    export const countryDialPrefixDataProvider: LocalDataProvider<DataProviderOption>;
+}
+declare module "components/data-select/providers/us-state-data-provider" {
+    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
+    export const usStateDataProvider: LocalDataProvider<DataProviderOption>;
+}
+declare module "components/data-select/providers/provider" {
+    import type { HTMLTemplateResult } from "lit";
+    /**
+     * Providers are what the data select component uses to get data. They are
+     * responsible for defining the data.
+     */
+    export interface LocalDataProvider<T> {
+        getName: string;
+        getData: T[];
+    }
+    export interface RemoteDataProvider<T> {
+        getName: string;
+        getData: () => Promise<T[]>;
+    }
+    export interface DataProviderOption {
+        key: string;
+        value: string;
+        prefix?: string | HTMLTemplateResult;
+    }
+    export const emptyDataProvider: LocalDataProvider<DataProviderOption>;
+    export * from "components/data-select/providers/country-data-provider";
+    export * from "components/data-select/providers/currency-data-provider";
+    export * from "components/data-select/providers/color-data-provider";
+    export * from "components/data-select/providers/country-code-data-provider";
+    export * from "components/data-select/providers/us-state-data-provider";
+}
 declare module "components/data-select/data-select.component" {
     import { type DataProviderOption, type LocalDataProvider } from "components/data-select/providers/provider";
     import { type CSSResultGroup, type PropertyValues } from 'lit';
@@ -3221,369 +3652,6 @@ declare module "components/data-select/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-data-select': ZnDataSelect;
-        }
-    }
-}
-declare module "utilities/lit-to-html" {
-    import { type TemplateResult } from "lit";
-    export function litToHTML<T extends HTMLElement>(templateResult: TemplateResult): T | null;
-}
-declare module "events/zn-change" {
-    export type ZnChangeEvent = CustomEvent<Record<PropertyKey, never>>;
-    global {
-        interface GlobalEventHandlersEventMap {
-            'zn-change': ZnChangeEvent;
-        }
-    }
-}
-declare module "components/datepicker/datepicker.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    import ZnIcon from "components/icon/index";
-    import ZnTooltip from "components/tooltip/index";
-    import type { ZincFormControl } from "internal/zinc-element";
-    /**
-     * @summary A date picker component with calendar popup and input validation.
-     * @documentation https://zinc.style/components/datepicker
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-icon
-     * @dependency zn-tooltip
-     *
-     * @event zn-change - Emitted when the date value changes.
-     * @event zn-input - Emitted when the input value changes.
-     * @event zn-blur - Emitted when the input loses focus.
-     * @event zn-focus - Emitted when the input gains focus.
-     *
-     * @slot label - The datepicker's label. Alternatively, you can use the `label` attribute.
-     * @slot label-tooltip - Tooltip content for the label. Alternatively, you can use the `label-tooltip` attribute.
-     * @slot context-note - Additional context text displayed above the input. Alternatively, you can use the `context-note` attribute.
-     * @slot help-text - Help text displayed below the input. Alternatively, you can use the `help-text` attribute.
-     * @slot prefix - Content to display before the input (in addition to the default calendar icon).
-     * @slot suffix - Content to display after the input.
-     *
-     * @csspart base - The component's base wrapper.
-     * @csspart form-control - The form control wrapper.
-     * @csspart form-control-label - The label element.
-     * @csspart form-control-input - The input wrapper.
-     * @csspart form-control-help-text - The help text element.
-     *
-     * @property format - Date format using AirDatepicker tokens. Default: 'dd/MM/yyyy'
-     *   Supported formats:
-     *   - dd/MM/yyyy (31/12/2024) - Default
-     *   - MM/dd/yyyy (12/31/2024)
-     *   - yyyy-MM-dd (2024-12-31)
-     *   - dd-MM-yyyy (31-12-2024)
-     *   - yyyy/MM/dd (2024/12/31)
-     *
-     * @cssproperty --zn-input-* - Inherited input component CSS custom properties.
-     */
-    export default class ZnDatepicker extends ZincElement implements ZincFormControl {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-icon': typeof ZnIcon;
-            'zn-tooltip': typeof ZnTooltip;
-        };
-        private readonly formControlController;
-        private readonly hasSlotController;
-        input: HTMLInputElement;
-        private hasFocus;
-        title: string;
-        /** The name of the input, submitted as a name/value pair with form data. */
-        name: string;
-        /** The current value of the input, submitted as a name/value pair with form data. */
-        value: any;
-        /** The default value of the form control. Primarily used for resetting the form control. */
-        defaultValue: string;
-        /** The inputs size **/
-        size: 'small' | 'medium' | 'large';
-        /** The inputs label. If you need to display HTML, use the `label` slot. **/
-        label: string;
-        /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the
-         * `label-tooltip` slot.
-         * **/
-        labelTooltip: string;
-        /**
-         * Text that appears above the input, on the right, to add additional context. If you need to display HTML
-         * in this text, use the `context-note` slot instead
-         */
-        contextNote: string;
-        /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
-        helpText: string;
-        /** Disables the input **/
-        disabled: boolean;
-        /** Placeholder text to show as a hint when the input is empty. */
-        placeholder: string;
-        /** Makes the input read-only **/
-        readonly: boolean;
-        /**
-         * By default, form-controls are associated with the nearest containing `<form>` element. This attribute allows you
-         * to place the form control outside a form and associate it with the form that has this `id`. The form must be
-         * in the same document or shadow root for this to work.
-         */
-        form: string;
-        flush: boolean;
-        /** Makes the input a required field. */
-        required: boolean;
-        /** Adds a clear button to the calendar for removing a selected date. **/
-        clearable: boolean;
-        /** Makes the input a range picker. **/
-        range: boolean;
-        /** Disallows selecting past dates. **/
-        disablePastDates: boolean;
-        /** Minimum date that can be selected. Overrides disable-past-dates if both are set. Accepts Date object or date string. **/
-        minDate?: string | Date;
-        /** Maximum date that can be selected. Accepts Date object or date string. **/
-        maxDate?: string | Date;
-        /**
-         * Date format for display and input. Uses AirDatepicker format tokens.
-         *
-         * Common formats:
-         * - 'dd/MM/yyyy' (31/12/2024) - Default, European style
-         * - 'MM/dd/yyyy' (12/31/2024) - US style
-         * - 'yyyy-MM-dd' (2024-12-31) - ISO style
-         * - 'dd-MM-yyyy' (31-12-2024) - Alternative European
-         * - 'yyyy/MM/dd' (2024/12/31) - Alternative ISO
-         *
-         * Format tokens:
-         * - dd: Day with leading zero (01-31)
-         * - MM: Month with leading zero (01-12)
-         * - yyyy: Full year (2024)
-         */
-        format: string;
-        /** Display time selector. **/
-        timePicker?: boolean;
-        /** Display only time selector, without date. **/
-        onlyTimepicker?: boolean;
-        /**
-         * Time format for display and input selector. Uses AirDatepicker format tokens.
-         * Default : hh:mm AA
-         *
-         * Possible symbols:
-         * h — hours in 12-hour mode
-         * hh — hours in 12-hour mode with leading zero
-         * H — hours in 24-hour mode
-         * HH — hours in 24-hour mode with leading zero
-         * m — minutes
-         * mm — minutes with leading zero
-         * aa — day period lower case
-         * AA — day period upper case
-         */
-        timeFormat?: string;
-        /**
-         * Overrides where the calendar popup is mounted. By default it renders at the document level
-         * (or inside the containing dialog/popover) so it can't be clipped by ancestor shadow roots
-         * or overflow containers — you rarely need to set this.
-         */
-        container?: string | HTMLElement;
-        private _instance;
-        get timestamp(): number;
-        /** Gets the validity state object */
-        get validity(): ValidityState;
-        /** Gets the validation message */
-        get validationMessage(): string;
-        handleDisabledChange(): void;
-        handleValueChange(): Promise<void>;
-        handleDatepickerOptionsChange(): void;
-        /** Sets focus on the input. */
-        focus(options?: FocusOptions): void;
-        /** Removes focus from the input. */
-        blur(): void;
-        /** Selects all the text in the input. */
-        select(): void;
-        /** Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
-        checkValidity(): boolean;
-        /** Gets the associated form, if one exists. */
-        getForm(): HTMLFormElement | null;
-        /** Checks for validity and shows the browser's validation message if the control is invalid. */
-        reportValidity(): boolean;
-        /** Sets a custom validation message. Pass an empty string to restore validity. */
-        setCustomValidity(message: string): void;
-        init(): void;
-        /**
-         * Resolves where the calendar should be mounted. By default AirDatepicker mounts it in a global
-         * container on `document.body`, so ancestor shadow roots and overflow containers can't clip it.
-         * However, when the datepicker is inside a top-layer element (a modal `<dialog>` or a popover),
-         * a document-level calendar would render behind it and be inert, so we mount inside that element.
-         */
-        private getCalendarContainer;
-        /** Finds the closest `<dialog>` or popover ancestor, crossing shadow DOM boundaries. */
-        private findTopLayerAncestor;
-        private handleInput;
-        private handleChange;
-        private handleInvalid;
-        private handleKeyDown;
-        private handlePaste;
-        private handleBlur;
-        private isValidDateString;
-        private parseDate;
-        private parseDateString;
-        private isDateInRange;
-        private clearInvalidDate;
-        private getFormatSeparator;
-        private escapeRegex;
-        private normalizeDate;
-        private autoFormatDate;
-        updated(_changedProperties: PropertyValues): void;
-        firstUpdated(): void;
-        render(): import("lit-html").TemplateResult<1>;
-    }
-}
-declare module "components/datepicker/index" {
-    import ZnDatepicker from "components/datepicker/datepicker.component";
-    export * from "components/datepicker/datepicker.component";
-    export default ZnDatepicker;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-datepicker': ZnDatepicker;
-        }
-    }
-}
-declare module "components/query-builder/query-builder.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    import ZnButton from "components/button/index";
-    import ZnInput from "components/input/index";
-    import ZnOption from "components/option/index";
-    import ZnSelect from "components/select/index";
-    import type { ZincFormControl } from "internal/zinc-element";
-    export type QueryBuilderData = QueryBuilderItem[];
-    export interface QueryBuilderItem {
-        id: string;
-        name: string;
-        type?: QueryBuilderType;
-        options?: QueryBuilderOptions;
-        operators: QueryBuilderOperators[];
-        dateSubmitFormat?: QueryBuilderDateSubmitFormat;
-        maxOptionsVisible?: string;
-    }
-    /**
-     * Controls how `date` and `dateTime` filter values are serialized when the
-     * query is submitted.
-     *
-     * - `'iso'` — RFC 3339 / ISO 8601 (e.g. `2026-06-09T16:05:00Z`).
-     * - `'timestamp'` — Unix timestamp in seconds since epoch.
-     * - `'legacy'` — whatever format the current system emits. Kept so existing
-     *                   backends keep working while consumers migrate to one of the
-     *                   formats above. - DEFAULT
-     */
-    export type QueryBuilderDateSubmitFormat = 'iso' | 'timestamp' | 'legacy';
-    export type QueryBuilderType = 'bool' | 'boolean' | 'date' | 'dateTime' | 'number';
-    export interface QueryBuilderOptions {
-        [key: string | number]: string | number;
-    }
-    export enum QueryBuilderOperators {
-        Eq = "eq",
-        Neq = "neq",
-        Eqi = "eqi",
-        Neqi = "neqi",
-        Before = "before",
-        After = "after",
-        In = "in",
-        Nin = "nin",
-        MatchPhrasePre = "matchphrasepre",
-        NMatchPhrasePre = "nmatchphrasepre",
-        MatchPhrase = "matchphrase",
-        NMatchPhrase = "nmatchphrase",
-        Match = "match",
-        NMatch = "nmatch",
-        Contains = "contains",
-        DoesNotContain = "doesnotcontain",
-        Starts = "starts",
-        NStarts = "nstarts",
-        Ends = "ends",
-        NEnds = "nends",
-        Wild = "wild",
-        NWild = "nwild",
-        Like = "like",
-        NLike = "nlike",
-        Fuzzy = "fuzzy",
-        NFuzzy = "nfuzzy",
-        Gte = "gte",
-        Gt = "gt",
-        Lt = "lt",
-        Lte = "lte"
-    }
-    export interface CreatedRule {
-        id: string;
-        name: string;
-        operator: string;
-        value: string;
-    }
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/query-builder
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-button
-     * @dependency zn-input
-     * @dependency zn-option
-     * @dependency zn-select
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnQueryBuilder extends ZincElement implements ZincFormControl {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-button': typeof ZnButton;
-            'zn-input': typeof ZnInput;
-            'zn-option': typeof ZnOption;
-            'zn-select': typeof ZnSelect;
-        };
-        private _selectedRules;
-        private _formController;
-        private _previousOperator;
-        container: HTMLDivElement;
-        addRule: ZnSelect;
-        input: HTMLInputElement;
-        filters: QueryBuilderData;
-        dropdown: boolean;
-        name: string;
-        value: PropertyKey;
-        showValues: string[];
-        private get _usedFilterIds();
-        get validationMessage(): string;
-        get validity(): ValidityState;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        render(): import("lit-html").TemplateResult<1>;
-        private _handleChange;
-        private _addRule;
-        private _createInput;
-        private _changeValueInput;
-        private _createBooleanInput;
-        private _createNumberInput;
-        private _createDateInput;
-        private _createSelectInput;
-        private _createDefaultInput;
-        private _updateOperatorValue;
-        private _updateDateValue;
-        private _updateValue;
-        private updateInValue;
-        private _changeRule;
-        private _getRulePosition;
-        private _removeRule;
-        clear(): void;
-        reset(): void;
-        checkValidity(): boolean;
-        getForm(): HTMLFormElement | null;
-        reportValidity(): boolean;
-        setCustomValidity(message: string): void;
-    }
-}
-declare module "components/query-builder/index" {
-    import ZnQueryBuilder from "components/query-builder/query-builder.component";
-    export * from "components/query-builder/query-builder.component";
-    export default ZnQueryBuilder;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-query-builder': ZnQueryBuilder;
         }
     }
 }
@@ -3760,6 +3828,58 @@ declare module "components/hover-container/index" {
         }
     }
 }
+declare module "components/panel/panel.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Panels are versatile containers that provide structure for organizing content with optional headers and footers.
+     * @documentation https://zinc.style/components/panel
+     * @status experimental
+     * @since 1.0
+     *
+     * @slot - The panel's main content.
+     * @slot actions - Actions displayed in the panel header (buttons, chips, etc).
+     * @slot footer - Content displayed in the panel footer.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart header - The header region, when a caption or actions are given.
+     * @csspart header-content - The padded row inside the header, forwarded from zn-header.
+     * @csspart footer - The footer region, when the footer slot is filled.
+     *
+     * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.
+     * @cssproperty --zn-panel-header-padding - Padding around the header row. Defaults to `--zn-base-gap`.
+     * @cssproperty --zn-panel-footer-padding - Padding around the footer row.
+     */
+    export default class ZnPanel extends ZincElement {
+        static styles: CSSResultGroup;
+        private readonly hasSlotController;
+        basis: number;
+        caption: string;
+        icon: string;
+        tabbed: boolean;
+        headerBorderless: boolean;
+        cosmic: boolean;
+        flush: boolean;
+        flushX: boolean;
+        flushY: boolean;
+        flushFooter: boolean;
+        transparent: boolean;
+        shadow: boolean;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        connectedCallback(): void;
+        protected render(): unknown;
+    }
+}
+declare module "components/panel/index" {
+    import ZnPanel from "components/panel/panel.component";
+    export * from "components/panel/panel.component";
+    export default ZnPanel;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-panel': ZnPanel;
+        }
+    }
+}
 declare module "components/skeleton/skeleton.component" {
     import ZincElement from "internal/zinc-element";
     import type { CSSResultGroup } from "lit";
@@ -3833,7 +3953,7 @@ declare module "components/style/index" {
     }
 }
 declare module "components/data-table/data-table.component" {
-    import { type CSSResultGroup, type TemplateResult } from 'lit';
+    import { type CSSResultGroup, type PropertyValues, type TemplateResult } from 'lit';
     import { type ZnFilterChangeEvent } from "events/zn-filter-change";
     import { type ZnSearchChangeEvent } from "events/zn-search-change";
     import ZincElement from "internal/zinc-element";
@@ -3848,6 +3968,7 @@ declare module "components/data-table/data-table.component" {
     import ZnHoverContainer from "components/hover-container/index";
     import ZnMenu from "components/menu/index";
     import ZnMenuItem from "components/menu-item/index";
+    import ZnPanel from "components/panel/index";
     import ZnSkeleton from "components/skeleton/index";
     import ZnStyle from "components/style/index";
     interface Cell {
@@ -3869,6 +3990,10 @@ declare module "components/data-table/data-table.component" {
         target?: string;
         copyable?: boolean;
         title?: string;
+    }
+    interface RowGroup {
+        label: string;
+        rows: Row[];
     }
     interface Row {
         id: string;
@@ -3941,19 +4066,20 @@ declare module "components/data-table/data-table.component" {
      * @dependency zn-dropdown
      * @dependency zn-menu
      * @dependency zn-menu-item
+     * @dependency zn-panel
      * @dependency zn-button-group
      * @dependency zn-confirm
      * @dependency zn-skeleton
      * @dependency zn-data-table-search
      *
      * @slot - The default slot.
-     * @slot search - Slot for search component.
-     * @slot sort - Slot for sort component.
-     * @slot filter - Slot for filter component.
-     * @slot filter-top - Slot for top-level filter component.
-     * @slot delete-action - Slot for delete action button.
-     * @slot modify-action - Slot for modify action button.
-     * @slot create-action - Slot for create action button.
+     * @slot search - Slot for search component, in the header's right-hand group.
+     * @slot sort - Slot for sort component, in the header's right-hand group.
+     * @slot filter - Slot for filter component, in the header's right-hand group.
+     * @slot filter-top - Slot for a top-level filter component, rendered above the table's panel.
+     * @slot delete-action - Slot for delete action button, shown beside the caption once rows are selected.
+     * @slot modify-action - Slot for modify action button, shown beside the caption once rows are selected.
+     * @slot create-action - Slot for create action button, at the end of the header's right-hand group.
      * @slot inputs - Slot for additional input controls.
      * @slot empty-state - Slot for custom empty state.
      * @slot no-results - Slot for a custom no-results state, shown when a search on a no-initial-load table returns no rows.
@@ -3973,6 +4099,7 @@ declare module "components/data-table/data-table.component" {
             'zn-dropdown': typeof ZnDropdown;
             'zn-menu': typeof ZnMenu;
             'zn-menu-item': typeof ZnMenuItem;
+            'zn-panel': typeof ZnPanel;
             'zn-button-group': typeof ZnButtonGroup;
             'zn-confirm': typeof ZnConfirm;
             'zn-skeleton': typeof ZnSkeleton;
@@ -3995,6 +4122,8 @@ declare module "components/data-table/data-table.component" {
         unsortableHeaders: string;
         unsortable: boolean;
         hidePagination: boolean;
+        hideColumnSelect: boolean;
+        hideRefresh: boolean;
         standalone: boolean;
         caption: string;
         emptyStateCaption: string;
@@ -4014,7 +4143,9 @@ declare module "components/data-table/data-table.component" {
         private readonly resizeObserver;
         private page;
         private totalPages;
+        private _totalRows;
         private _rows;
+        private _suggestionsKey;
         private numberOfRowsSelected;
         private selectedRows;
         private tableContainer;
@@ -4024,22 +4155,43 @@ declare module "components/data-table/data-table.component" {
         private _expandedRows;
         private _hiddenCells;
         private _secondaryHeaders;
+        private _deselectedColumns;
+        private _filtersOpen;
+        private _columnDefaultsApplied;
         private _formatTemplates;
         requestParams: Record<string, any>;
         refresh(): void;
+        private visibleHeaders;
+        private selectableHeaders;
+        private isColumnVisible;
+        private applyColumnDefaults;
+        private toggleColumn;
         render(): TemplateResult<1>;
         connectedCallback(): void;
+        protected updated(changed: PropertyValues): void;
+        private publishFilterSuggestions;
         private getTemplate;
         disconnectedCallback(): void;
+        filterClearListener: (e: Event) => void;
         filterChangeListener: (e: ZnFilterChangeEvent) => void;
         searchChangeListener: (e: ZnSearchChangeEvent) => void;
         emptyState(): TemplateResult<1>;
         renderTable(data: Response): TemplateResult<1>;
         private renderErrorAlert;
         humanize(str: string): string;
-        renderTableData(data: any, error?: ResponseError): TemplateResult<1>;
+        renderTableData(groups: RowGroup[], error?: ResponseError): TemplateResult<1>;
         getTableHeader(): TemplateResult<1>;
-        getTableFooter(): TemplateResult<1>;
+        private getHeaderControls;
+        private hasRows;
+        private getFilterToggle;
+        private toggleFilters;
+        private appliedFilterCount;
+        private hasColumnSelect;
+        private hasRefresh;
+        private getColumnSelect;
+        private getRefreshButton;
+        private handleColumnSelect;
+        getTableFooter(slot?: string): TemplateResult<1> | null;
         getRowsSelected(): TemplateResult<1> | null;
         getRowsPerPage(): TemplateResult<1> | null;
         private getPageRange;
@@ -5554,53 +5706,6 @@ declare module "components/timer/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-timer': ZnTimer;
-        }
-    }
-}
-declare module "components/panel/panel.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    /**
-     * @summary Panels are versatile containers that provide structure for organizing content with optional headers and footers.
-     * @documentation https://zinc.style/components/panel
-     * @status experimental
-     * @since 1.0
-     *
-     * @slot - The panel's main content.
-     * @slot actions - Actions displayed in the panel header (buttons, chips, etc).
-     * @slot footer - Content displayed in the panel footer.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.
-     */
-    export default class ZnPanel extends ZincElement {
-        static styles: CSSResultGroup;
-        private readonly hasSlotController;
-        basis: number;
-        caption: string;
-        icon: string;
-        tabbed: boolean;
-        headerBorderless: boolean;
-        cosmic: boolean;
-        flush: boolean;
-        flushX: boolean;
-        flushY: boolean;
-        flushFooter: boolean;
-        transparent: boolean;
-        shadow: boolean;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        connectedCallback(): void;
-        protected render(): unknown;
-    }
-}
-declare module "components/panel/index" {
-    import ZnPanel from "components/panel/panel.component";
-    export * from "components/panel/panel.component";
-    export default ZnPanel;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-panel': ZnPanel;
         }
     }
 }

@@ -80,7 +80,7 @@ export enum QueryBuilderOperators {
   Lte = 'lte'
 }
 
-const operatorText: { [key in QueryBuilderOperators]: string } = {
+export const operatorText: { [key in QueryBuilderOperators]: string } = {
   [QueryBuilderOperators.Eq]: 'Equals',
   [QueryBuilderOperators.Neq]: 'Not Equals',
   [QueryBuilderOperators.Eqi]: 'Equals (Insensitive)',

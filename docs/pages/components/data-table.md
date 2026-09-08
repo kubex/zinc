@@ -116,7 +116,9 @@ Use `local-sort` to sort data client-side without making server requests. Best f
 
 ### Pagination
 
-Data tables automatically display pagination controls when the total number of records exceeds the per-page limit. Users can navigate between pages and adjust rows per page.
+Data tables automatically display pagination controls when the total number of records exceeds the per-page limit. Users can navigate between pages and adjust the rows per page.
+
+Pagination renders as a single joined control: first, previous, a sliding window of three page numbers, next, last. The window keeps the control a fixed width whatever the dataset — the same at 30 pages as at 3000 — while the first and last buttons cover jumping to either end. On narrow widths the footer wraps so pagination sits above the rows selector.
 
 :::tip
 Pagination controls appear based on the `total` and `perPage` values in the response. In this preview, changing pages re-fetches the same static data. With a real server, each page request would return the corresponding slice of data.
@@ -195,6 +197,8 @@ Use `hide-checkboxes` to disable row selection functionality.
 
 Add action buttons to the table header for performing operations on selected rows. Use the `delete-action`, `modify-action`, and `create-action` slots.
 
+`delete-action` and `modify-action` sit beside the caption alongside a select-all toggle, and only appear once rows are selected. `create-action` is a primary action rather than a selection one, so it renders at the end of the header's right-hand group, after the search field.
+
 ```html:preview
 <zn-data-table
   data-uri="/data/data-table.json"
@@ -240,9 +244,49 @@ Mark columns as secondary to hide them by default. Users can expand rows to view
 </zn-data-table>
 ```
 
+### Column Select
+
+The header carries a column select dropdown whenever the table has rows and more than one column can be toggled. Mark a header `"required": true` to pin it on, or `"default": false` to start it hidden. Set `hide-column-select` to remove the dropdown.
+
+```html:preview
+<zn-data-table
+  data-uri="/data/data-table.json"
+  method="GET"
+  standalone
+  caption="Customers"
+  headers='[
+    {"key":"name","label":"Name", "required":true},
+    {"key":"email","label":"Email"},
+    {"key":"status","label":"Status"},
+    {"key":"phone","label":"Phone"},
+    {"key":"address","label":"Address", "default":false}
+  ]'>
+</zn-data-table>
+```
+
+### Refresh
+
+Tables with a `data-uri` get a refresh button in the header, which reruns the current request. Set `hide-refresh` to remove it.
+
+Both the refresh and column select buttons are hidden while the table has no rows, so an empty state keeps just the caption and the slotted controls.
+
+```html:preview
+<zn-data-table
+  data-uri="/data/data-table.json"
+  method="GET"
+  standalone
+  caption="Customers"
+  hide-column-select
+  headers='[
+    {"key":"name","label":"Name"},
+    {"key":"email","label":"Email"}
+  ]'>
+</zn-data-table>
+```
+
 ### Hide Columns
 
-Use `hide-columns` to completely hide specific columns from the table.
+Use `hide-columns` to completely hide specific columns from the table. Unlike the column select, these columns cannot be turned back on.
 
 ```html:preview
 <zn-data-table
@@ -362,7 +406,9 @@ Or use the built-in empty state with custom text:
 
 ### Filtering
 
-Add advanced filtering with the `zn-data-table-filter` component. The filter opens a slideout with a query builder.
+Add filtering with the `zn-data-table-filter` component. The header carries a filter toggle beside the refresh button; clicking it reveals a row between the header and the rows holding the `filter` slot, where the filter component shows one pill per active filter alongside add-filter and clear controls. The row stays hidden until the toggle is clicked, and the toggle carries a count of the filters currently applied. Use `default-filters` to show a pill for a filter before the user adds it.
+
+The table also feeds the bar typeahead values for its text filters, taken from the rows it has loaded and keyed on the column whose name matches the filter's id.
 
 :::tip
 In this preview, filter parameters are sent with the request but the static data file returns the same results regardless. With a real server endpoint, results would be filtered based on the applied criteria.
@@ -370,6 +416,8 @@ In this preview, filter parameters are sent with the request but the static data
 
 ```html:preview
 <zn-data-table
+  standalone
+  caption="Users"
   data-uri="/data/data-table.json"
   method="GET"
   headers='[
@@ -382,9 +430,11 @@ In this preview, filter parameters are sent with the request but the static data
 
   <zn-data-table-filter
     slot="filter"
+    default-filters="status"
     filters='[
-      {"id":"name","name":"Name","operators":["eq","contains"]},
-      {"id":"status","name":"Status","options":{"active":"Active","inactive":"Inactive"},"operators":["eq"]}
+      {"id":"name","name":"Name","operators":["contains"]},
+      {"id":"status","name":"Status","options":{"active":"Active","inactive":"Inactive"},"operators":["eq"]},
+      {"id":"role","name":"Role","options":{"admin":"Admin","user":"User"},"operators":["in"]}
     ]'>
   </zn-data-table-filter>
 
@@ -394,6 +444,8 @@ In this preview, filter parameters are sent with the request but the static data
 ### Filter Top Slot
 
 Add complex filtering options above the table using the `filter-top` slot. Perfect for search forms and advanced filters.
+
+Content in this slot renders above the table's own panel rather than inside it, so wrap it in a `zn-panel` when it needs its own frame. It never contributes a header row to the table, and with `standalone` an empty state that has no caption or header controls is left unwrapped, so a `zn-panel` around the `empty-state` slot doesn't end up nested inside another.
 
 :::tip
 This example uses `no-initial-load` so the table starts empty. Submitting the filter form triggers a data load, but the static data file returns the same results regardless of filter values. With a real server, results would be filtered accordingly.
@@ -514,7 +566,9 @@ In this preview, the input values are sent as parameters with each request but t
 
 ### Grouping Data
 
-Group rows by a specific column using the `group-by` property. This loads all data and splits it into separate tables.
+Group rows by a specific column using the `group-by` property. This loads all data and splits it into groups.
+
+Groups render as header rows inside a single table, so every group shares the same column widths, one set of column headers and one horizontal scrollbar.
 
 ```html:preview
 <zn-data-table
@@ -591,17 +645,32 @@ Prevent automatic data loading on mount with `no-initial-load`. Call the `refres
 
 ### Standalone Mode
 
-Use `standalone` to render the table without a container wrapper, useful for embedding in other components.
+Use `standalone` when the table supplies its own panel rather than sitting inside one. It renders a `zn-panel`, passing `caption` through as the panel's caption, the header controls into its `actions` slot and the pagination into its `footer` slot, with the rows flush against the panel edges. Columns scroll under the panel's edges, so the border stays put on a wide table.
+
+The panel footer is only slotted when there is pagination to show, so an empty table or one with `hide-pagination` gets no footer bar.
+
+Leave `standalone` off when the table is already inside a `zn-panel`.
 
 ```html:preview
 <zn-data-table
   data-uri="/data/data-table.json"
   method="GET"
   standalone
+  caption="All Customers"
   headers='[
     {"key":"name","label":"Name"},
-    {"key":"email","label":"Email"}
+    {"key":"email","label":"Email"},
+    {"key":"status","label":"Status"},
+    {"key":"date","label":"Date Joined"},
+    {"key":"phone","label":"Phone"},
+    {"key":"address","label":"Address"},
+    {"key":"notes","label":"Notes"}
   ]'>
+
+  <zn-data-table-search slot="search" placeholder="Search"></zn-data-table-search>
+
+  <zn-button slot="create-action" icon="add">New Customer</zn-button>
+
 </zn-data-table>
 ```
 
@@ -730,7 +799,7 @@ Rows can have contextual actions that appear in a dropdown menu.
 
 ### Caption
 
-Add a caption to describe the table data.
+Add a caption to name the table. It renders as the title on the left of the header row, and supplies the wording for the default empty state.
 
 ```html:preview
 <zn-data-table

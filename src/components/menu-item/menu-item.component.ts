@@ -82,6 +82,9 @@ export default class ZnMenuItem extends ZincElement {
 
   @property({type: Boolean, reflect: true}) confirm = false;
 
+  /** Leaves a containing dropdown open when this item is selected, whatever the dropdown's own setting. */
+  @property({type: Boolean, reflect: true, attribute: 'keep-open'}) keepOpen = false;
+
   /** Removes all padding from the menu item. */
   @property({type: Boolean, reflect: true}) flush = false;
 
@@ -141,7 +144,10 @@ export default class ZnMenuItem extends ZincElement {
       const closestMenu: Element | null = composedPath.find((el: Element) => el?.getAttribute?.('role') === 'menu') as Element;
       if (this.confirm) return;
 
-      (closestMenu?.closest('zn-dropdown') as ZnDropdown | null)?.hide();
+      const dropdown = closestMenu?.closest('zn-dropdown') as ZnDropdown | null;
+      if (!dropdown?.stayOpenOnSelect && !this.keepOpen) {
+        dropdown?.hide();
+      }
       this.emit('zn-menu-select', {detail: {value: this.value, element: this}});
     }
   };

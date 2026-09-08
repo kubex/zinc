@@ -43,7 +43,7 @@
 
 
   &__header {
-    padding: var(--zn-base-gap);
+    padding: var(--zn-panel-header-padding, var(--zn-base-gap));
 
     // background-color: rgba(var(--zn-panel-highlight), 0.6);
     // border-bottom: 1px solid rgb(var(--zn-border-color));
@@ -81,8 +81,8 @@
   &__footer {
     font-size: var(--zn-font-size-small);
     display: block;
-    padding: var(--zn-spacing-small) var(--zn-base-gap);
-    background: rgb(var(--zn-panel-secondary));
+    padding: var(--zn-panel-footer-padding, var(--zn-spacing-small) var(--zn-base-gap));
+    background: rgb(var(--zn-body));
     border-bottom-left-radius: var(--zn-border-radius);
     border-bottom-right-radius: var(--zn-border-radius);
   }

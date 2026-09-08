@@ -1,22 +1,176 @@
 @use "../../wc";
 
+// Fields inside a panel that already draws its own edge
+@mixin flush-input {
+  --zn-input-box-shadow: none;
+  --zn-input-background-color: transparent;
+  --zn-input-background-color-hover: transparent;
+  --zn-input-background-color-focus: transparent;
+  --zn-input-border-color: transparent;
+  --zn-input-border-color-hover: transparent;
+  --zn-input-border-color-focus: transparent;
+  --zn-input-focus-ring-color: transparent;
+}
+
 :host {
   display: block;
 }
 
-.data-table-filter {
+.filter-bar {
   display: flex;
-  flex-direction: column;
-  gap: var(--zn-spacing-small);
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--zn-spacing-x-small);
 
-  &__item {
-    display: flex;
-    justify-content: space-between;
+  &__clear::part(base) {
+    height: 32px;
+    min-height: 32px;
+    padding: 0 var(--zn-spacing-x-small);
+    font-weight: var(--zn-font-weight-normal);
+    text-transform: none;
+    white-space: nowrap;
+  }
 
-    &__name {
-      font-weight: 500;
-      color: rgb(var(--zn-text-heading));
-      width: 100%;
+  &__clear::part(base) {
+    color: rgb(var(--zn-primary));
+  }
+
+  // The chip draws the outline so its trigger and remove button read as one control
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding-right: var(--zn-spacing-x-small);
+    border: 1px solid rgb(var(--zn-border-color));
+    border-radius: var(--zn-border-radius-pill);
+    background-color: rgb(var(--zn-panel));
+
+    &:hover {
+      background-color: rgba(var(--zn-color-tab), 0.5);
     }
+  }
+
+  // The X's own box carries the trailing gap, so the trigger adds none
+  &__pill::part(base),
+  &__pill::part(base):hover {
+    border-color: transparent;
+    background: transparent;
+    padding-right: 0;
+  }
+
+  // Same box as the trigger, so the X centres on the chip's axis rather than
+  // inside a smaller box centred within it. The hover tint is clipped to the
+  // padded content box so it reads as a disc on the icon, not a full-height bar
+  &__remove::part(base) {
+    width: 24px;
+    min-width: 24px;
+    height: 32px;
+    min-height: 32px;
+    max-height: 32px;
+    padding: 4px 0;
+    background: transparent;
+    background-clip: content-box;
+    border-radius: var(--zn-border-radius-circle);
+    color: var(--zn-text-color);
+  }
+
+  &__remove::part(base):hover {
+    background: rgb(var(--zn-color-border));
+    background-clip: content-box;
+  }
+
+  // Value editors get their own panel: a calendar has no business inside a menu's
+  // scroll container. The panel draws the only edge, so the editor inside it runs
+  // flush to it
+  &__editor {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: hidden;
+    border: 1px solid rgb(var(--zn-border-color));
+    border-radius: var(--zn-border-radius);
+    background-color: rgb(var(--zn-panel));
+    filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.04)) drop-shadow(0 4px 3px rgba(0, 0, 0, 0.1));
+
+    zn-datepicker {
+      --zn-datepicker-inline-border-color: transparent;
+    }
+
+    zn-input {
+      @include flush-input;
+      min-width: 200px;
+    }
+  }
+
+  // A long option list has to scroll rather than run off the screen, and its search
+  // field stays put while it does
+  zn-menu {
+    --zn-menu-max-height: 320px;
+  }
+
+  // Full-bleed so the rows scrolling underneath never show around or above it
+  &__option-search {
+    @include flush-input;
+    position: sticky;
+    top: calc(-1 * var(--zn-spacing-2x-small));
+    z-index: 1;
+    margin: calc(-1 * var(--zn-spacing-2x-small)) calc(-1 * var(--zn-spacing-2x-small)) 0;
+    background-color: rgb(var(--zn-panel));
+    border-bottom: 1px solid rgb(var(--zn-border-color));
+  }
+
+  &__suggestions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    max-height: 220px;
+    overflow-y: auto;
+    border-top: 1px solid rgb(var(--zn-border-color));
+    @include wc.scrollbars;
+  }
+
+  &__suggestion::part(base) {
+    justify-content: flex-start;
+    padding: var(--zn-spacing-x-small) var(--zn-spacing-small);
+    font-weight: var(--zn-font-weight-normal);
+    text-transform: none;
+    color: rgb(var(--zn-text));
+    text-align: left;
+  }
+
+  // Segmented operator picker at the top of a value editor
+  &__operators {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--zn-spacing-2x-small);
+    padding: var(--zn-spacing-x-small);
+    border-bottom: 1px solid rgb(var(--zn-border-color));
+  }
+
+  &__operator::part(base) {
+    height: 26px;
+    min-height: 26px;
+    min-width: 30px;
+    padding: 0 var(--zn-spacing-x-small);
+    font-size: var(--zn-font-size-small);
+    font-weight: var(--zn-font-weight-normal);
+    text-transform: none;
+    color: rgb(var(--zn-text));
+    background-color: transparent;
+    border-color: rgb(var(--zn-border-color));
+  }
+
+  &__operator--selected::part(base) {
+    color: rgb(var(--zn-primary));
+    border-color: rgb(var(--zn-primary));
+    background-color: rgba(var(--zn-primary), 0.05);
+  }
+
+  &__separator {
+    flex: none;
+    height: 1px;
+    margin: var(--zn-spacing-2x-small) 0;
+    background-color: rgb(var(--zn-border-color));
   }
 }

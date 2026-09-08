@@ -462,7 +462,7 @@
   border-right: 0 !important;
 }
 
-:host([data-zn-button-group__button]:not([data-zn-button-group__button--first]):not(:hover)) {
+:host([data-zn-button-group__button]:not([data-zn-button-group__button--first])) {
   .button:after {
     content: '';
     position: absolute;
@@ -486,6 +486,17 @@
 :host([data-zn-button-group__button--last]:not([data-zn-button-group__button--first])) .button {
   border-radius: 0 5px 5px 0 !important;
   border-left: 0 !important;
+}
+
+/* Pill: a label-like trigger (filter chips and similar) rather than an action */
+.button.button--pill {
+  border-radius: var(--zn-border-radius-pill);
+  padding: 0 var(--zn-spacing-small);
+  height: 32px;
+  min-height: 32px;
+  font-weight: var(--zn-font-weight-normal);
+  text-transform: none;
+  white-space: nowrap;
 }
 
 .button--panel-bg {

@@ -53,6 +53,7 @@ import styles from './datepicker.scss';
  *   - yyyy/MM/dd (2024/12/31)
  *
  * @cssproperty --zn-input-* - Inherited input component CSS custom properties.
+ * @cssproperty --zn-datepicker-inline-border-color - Border colour of the calendar in `inline` mode.
  */
 export default class ZnDatepicker extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
@@ -119,6 +120,9 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
   @property({reflect: true}) form: string;
 
   @property({type: Boolean, reflect: true}) flush = false;
+
+  /** Renders the calendar in place instead of a popup, hiding the text input. */
+  @property({type: Boolean, reflect: true}) inline = false;
 
   /** Makes the input a required field. */
   @property({type: Boolean, reflect: true}) required = false;
@@ -232,6 +236,7 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
   @watch('disablePastDates', {waitUntilFirstUpdate: true})
   @watch('timePicker', {waitUntilFirstUpdate: true})
   @watch('timeFormat', {waitUntilFirstUpdate: true})
+  @watch('inline', {waitUntilFirstUpdate: true})
   handleDatepickerOptionsChange() {
     this.init();
   }
@@ -285,6 +290,7 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
 
       const options: AirDatepickerOptions = {
         locale: enLocale,
+        inline: this.inline,
         dateFormat: this.format,
         range: this.range,
         toggleSelected: false,
@@ -296,6 +302,10 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
         onSelect: ({date}) => {
         // Blur the input after selection to prevent invisible keyboard navigation
         if (this.timePicker || this.onlyTimepicker){
+          // An inline calendar never hides, so there's no later event to report the time on
+          if (this.inline) {
+            this.handleChange();
+          }
           return
         }
         if (date && !this.range) {
@@ -333,6 +343,10 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
         options.buttons = ['clear'];
       }
 
+      if (this.inline) {
+        this.adoptCalendarStyles(this.shadowRoot!);
+      }
+
       this._instance = new AirDatepicker(inputElement, options);
     }
   }
@@ -361,11 +375,18 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
 
     // Document-level calendar styles can't pierce a shadow root, so adopt them where needed
     const root = container.getRootNode();
-    if (root instanceof ShadowRoot && !root.adoptedStyleSheets.includes(getAirDatepickerSheet())) {
-      root.adoptedStyleSheets = [...root.adoptedStyleSheets, getAirDatepickerSheet()];
+    if (root instanceof ShadowRoot) {
+      this.adoptCalendarStyles(root);
     }
 
     return container;
+  }
+
+  private adoptCalendarStyles(root: ShadowRoot) {
+    const sheet = getAirDatepickerSheet();
+    if (!root.adoptedStyleSheets.includes(sheet)) {
+      root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
+    }
   }
 
   /** Finds the closest `<dialog>` or popover ancestor, crossing shadow DOM boundaries. */

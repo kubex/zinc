@@ -46,6 +46,8 @@ interface NavItem {
  * @cssproperty --example - An example CSS custom property.
  * @cssproperty --zn-menu-max-height - Caps the menu's height and makes it scroll internally.
  *  Unset (`none`) by default, so the menu grows to fit its items unless a consumer sets this.
+ * @cssproperty --zn-menu-min-width - Overrides the menu's resting width. Defaults to
+ *  `--zn-size-spanel`, or 245px for `variant="shell"`.
  */
 export default class ZnMenu extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);

@@ -225,3 +225,28 @@
   margin-inline-end: 0;
   margin-inline-start: 0;
 }
+
+// Inline mode keeps the input in the DOM to carry the value and format, but the
+// calendar is inserted as its sibling - so the input chrome has to stop clipping
+// and sizing the row
+:host([inline]) .input {
+  display: block;
+  height: auto;
+  overflow: visible;
+  border: none;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  cursor: default;
+}
+
+// Lets a host that already draws a panel edge suppress the calendar's own
+:host([inline]) .air-datepicker {
+  --adp-border-color-inline: var(--zn-datepicker-inline-border-color, rgb(var(--zn-border-color)));
+}
+
+:host([inline]) .input__control,
+:host([inline]) .input__prefix,
+:host([inline]) .input__suffix {
+  display: none;
+}

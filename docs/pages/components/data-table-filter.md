@@ -1,7 +1,7 @@
 ---
 meta:
   title: Data Table Filter
-  description: A comprehensive filtering component that opens a slideout panel with a query builder interface. Supports text, number, date fields, dropdown options, and multiple filter operators.
+  description: An inline filter bar for data tables. Each active filter is a pill whose dropdown sets its value, alongside an add-filter control and a clear.
 layout: component
 ---
 
@@ -11,6 +11,56 @@ layout: component
   filters="[{&quot;id&quot;:&quot;title&quot;,&quot;name&quot;:&quot;Title&quot;,&quot;operators&quot;:[&quot;eq&quot;]},{&quot;id&quot;:&quot;author&quot;,&quot;name&quot;:&quot;Author&quot;,&quot;operators&quot;:[&quot;eq&quot;,&quot;fuzzy&quot;]},{&quot;id&quot;:&quot;genre&quot;,&quot;name&quot;:&quot;Genre&quot;,&quot;options&quot;:{&quot;action&quot;:&quot;Action&quot;,&quot;comedy&quot;:&quot;Comedy&quot;,&quot;drama&quot;:&quot;Drama&quot;,&quot;fantasy&quot;:&quot;Fantasy&quot;,&quot;horror&quot;:&quot;Horror&quot;,&quot;mystery&quot;:&quot;Mystery&quot;,&quot;romance&quot;:&quot;Romance&quot;,&quot;thriller&quot;:&quot;Thriller&quot;,&quot;sci-fi&quot;:&quot;ScienceFiction&quot;},&quot;maxOptionsVisible&quot;:&quot;3&quot;,&quot;operators&quot;:[&quot;eq&quot;,&quot;in&quot;]},{&quot;id&quot;:&quot;rating&quot;,&quot;name&quot;:&quot;Rating&quot;,&quot;type&quot;:&quot;number&quot;,&quot;operators&quot;:[&quot;eq&quot;,&quot;gt&quot;,&quot;gte&quot;,&quot;lt&quot;,&quot;lte&quot;]},{&quot;id&quot;:&quot;created&quot;,&quot;name&quot;:&quot;Created&quot;,&quot;type&quot;:&quot;date&quot;,&quot;operators&quot;:[&quot;eq&quot;,&quot;before&quot;,&quot;after&quot;]}]">
 </zn-data-table-filter>
 ```
+
+Filters render inline rather than in a slideout. Each active filter is a pill showing its name, and its value once set; the pill's dropdown lists the filter's `options` as checkable values, or a text input for a filter that declares none. Each pill carries an X that drops that filter. `+ Add filter` lists the filters that are not yet active, and `Clear` removes them all.
+
+A filter starts on its **first declared operator**. Declare more than one and the pill offers a choice: a value editor gets a row of operator chips above it, an options menu lists the operators above its values, and the pill then reads `Age ≥ 18` rather than `Age: 18`. Switching operator keeps the value — a date is re-encoded for the new comparator.
+
+Declare `in` or `nin` to let a filter hold several values at once — the pill then counts them, e.g. `Role (2)`, and its dropdown stays open so you can pick more. Any other operator holds a single value: the dropdown closes on select, and picking the same value again clears it.
+
+Picking a filter from `+ Add filter` opens its pill straight away, with a text field focused, so naming a filter and giving it a value is one pass. A typed value is one value however many spaces it contains; only a comma starts another.
+
+`default-filters` takes a comma-separated list of filter ids to show a pill for up front. Inside a `zn-data-table` the bar is hidden until the header's filter toggle is clicked, and `activeCount` reports how many filters currently hold a value.
+
+```html:preview
+<zn-data-table-filter
+  default-filters="status"
+  filters='[
+    {"id":"status","name":"Status","options":{"open":"Open","closed":"Closed"},"operators":["eq"]},
+    {"id":"tag","name":"Tag","options":{"bug":"Bug","chore":"Chore","feature":"Feature"},"operators":["in"]},
+    {"id":"owner","name":"Owner","operators":["contains"]}
+  ]'>
+</zn-data-table-filter>
+```
+
+The component emits `zn-filter-change` and exposes the query on `value`, encoded exactly as `zn-query-builder` encodes it — base64 of `[{key, comparator, value}]` — so a backend built against the query builder needs no changes.
+
+### Long Option Lists
+
+An option list caps its height at 320px and scrolls inside the panel rather than running off the
+screen, with the scrollbar drawn rather than left to the platform's overlay one. Past eight options
+the pill also gains a search field, merged into the top of the panel and pinned there, that narrows
+the list case-insensitively.
+
+```html:preview
+<zn-data-table-filter
+  default-filters="category"
+  filters='[
+    {"id":"category","name":"Category","operators":["eq","in"],"options":{
+      "how-to":"How To","linux":"Linux","beta":"Beta","router":"Router","tv":"TV","other":"Other",
+      "mac":"Mac Hotspot Shield","general":"General","android":"Android Hotspot Shield",
+      "educational":"Educational","windows":"Windows Hotspot Shield","ios":"iOS",
+      "getting-started":"Getting Started","payments":"Payments & Subscriptions",
+      "accounts":"Manage Account & Devices","troubleshoot":"Troubleshoot issues",
+      "releases":"Release Notes","archived":"Archived Articles","internal":"Internal Information",
+      "tutorials":"Tutorials"}}
+  ]'>
+</zn-data-table-filter>
+```
+
+### Typeahead
+
+Inside a `zn-data-table` a text filter suggests values from the rows the table has already loaded, matched case-insensitively against what has been typed, keyed on the column whose name matches the filter's id. Set `suggestions` yourself — `{[filterId]: string[]}` — to offer something else.
 
 ## Examples
 
@@ -27,7 +77,8 @@ Create simple text-based filters with equality and fuzzy search operators.
 
 ### Number Filters with Operators
 
-Use number type filters with comparison operators like equal, greater than, less than.
+Use number type filters with comparison operators like equal, greater than, less than. The pill's
+editor shows a chip per operator; `>`, `≥`, `<` and `≤` keep their symbols, and the rest read as words.
 
 ```html:preview
 <zn-data-table-filter
@@ -38,11 +89,16 @@ Use number type filters with comparison operators like equal, greater than, less
 
 ### Date Filters
 
-Filter by dates with before, after, and equal operators.
+Filter by dates with before, after, and equal operators. A `date` pill opens a calendar and closes
+once a day is picked; a `dateTime` pill adds a time selector and stays open while it's set.
+
+Values are encoded the way `zn-query-builder` encodes them, so `dateSubmitFormat` picks the wire
+format: `legacy` (the default — seconds for `eq`/`neq`, otherwise minutes from now, negated for
+`before`), `timestamp` (milliseconds) or `iso`.
 
 ```html:preview
 <zn-data-table-filter
-  filters="[{&quot;id&quot;:&quot;created&quot;,&quot;name&quot;:&quot;Created Date&quot;,&quot;type&quot;:&quot;date&quot;,&quot;operators&quot;:[&quot;eq&quot;,&quot;before&quot;,&quot;after&quot;]},{&quot;id&quot;:&quot;modified&quot;,&quot;name&quot;:&quot;Modified Date&quot;,&quot;type&quot;:&quot;date&quot;,&quot;operators&quot;:[&quot;before&quot;,&quot;after&quot;]},{&quot;id&quot;:&quot;due_date&quot;,&quot;name&quot;:&quot;Due Date&quot;,&quot;type&quot;:&quot;date&quot;,&quot;operators&quot;:[&quot;eq&quot;,&quot;before&quot;,&quot;after&quot;]}]"
+  filters="[{&quot;id&quot;:&quot;created&quot;,&quot;name&quot;:&quot;Created Date&quot;,&quot;type&quot;:&quot;date&quot;,&quot;operators&quot;:[&quot;eq&quot;,&quot;before&quot;,&quot;after&quot;]},{&quot;id&quot;:&quot;modified&quot;,&quot;name&quot;:&quot;Modified Date&quot;,&quot;type&quot;:&quot;date&quot;,&quot;operators&quot;:[&quot;before&quot;,&quot;after&quot;]},{&quot;id&quot;:&quot;due_date&quot;,&quot;name&quot;:&quot;Due Date&quot;,&quot;type&quot;:&quot;dateTime&quot;,&quot;dateSubmitFormat&quot;:&quot;iso&quot;,&quot;operators&quot;:[&quot;eq&quot;,&quot;before&quot;,&quot;after&quot;]}]"
   name="date-filters">
 </zn-data-table-filter>
 ```

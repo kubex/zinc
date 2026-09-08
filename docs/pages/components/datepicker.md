@@ -428,6 +428,16 @@ Displays time.
 </zn-datepicker>
 ```
 
+### Inline Calendar
+
+`inline` renders the calendar in place and hides the text input, which suits a panel or dropdown that
+is already open. Set `--zn-datepicker-inline-border-color: transparent` when the surrounding panel
+already draws the edge.
+
+```html:preview
+<zn-datepicker inline></zn-datepicker>
+```
+
 ### Dialogs & Shadow DOM
 
 The calendar popup renders at the document level, so it is never clipped by ancestor shadow roots or

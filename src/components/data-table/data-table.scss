@@ -5,8 +5,14 @@
   @include wc.scrollbars;
 }
 
-.table-container {
-  overflow: auto;
+// Separates a top-level filter bar from the table's own panel below it
+slot[name="filter-top"]::slotted(*) {
+  margin-bottom: var(--zn-spacing-small);
+}
+
+.table__scroll {
+  overflow-x: auto;
+  @include wc.scrollbars;
 }
 
 table {
@@ -26,17 +32,6 @@ table {
 
   tbody tr.table__row--details td {
     background-color: rgb(var(--zn-shadow));
-  }
-
-  &.table--standalone {
-    background-color: rgb(var(--zn-panel));
-    border-radius: var(--zn-border-radius);
-    border: 1px solid rgb(var(--zn-border-color));
-    overflow: hidden;
-
-    thead tr th {
-      border-top: 0;
-    }
   }
 
   thead {
@@ -232,16 +227,29 @@ table {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: baseline;
-    padding-block: var(--zn-spacing-small);
+    align-items: center;
+    padding: var(--zn-spacing-x-small) var(--zn-spacing-medium);
     gap: var(--zn-spacing-small);
 
     &__actions,
     &__query-builder {
       display: flex;
       flex-direction: row;
-      align-items: baseline;
+      align-items: center;
       gap: var(--zn-spacing-small);
+    }
+
+    &__toggle--active::part(base) {
+      background-color: rgb(var(--zn-color-tab));
+    }
+
+    &__caption {
+      @include wc.text-style(h1);
+
+      margin: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     &__right {
@@ -253,11 +261,31 @@ table {
     }
   }
 
+  &__filters {
+    padding: var(--zn-spacing-x-small) var(--zn-spacing-medium);
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
   &__footer {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: var(--zn-spacing-small) 0;
+    flex-wrap: wrap;
+    gap: var(--zn-spacing-small);
+    padding: var(--zn-spacing-x-small) var(--zn-spacing-medium);
+
+    // The joined control must never break across lines
+    zn-button-group::part(base) {
+      flex-wrap: nowrap;
+    }
+
+    // zn-panel's footer supplies its own padding
+    &--panel {
+      padding: 0;
+    }
 
     &__right, &__left {
       display: flex;
@@ -270,40 +298,49 @@ table {
       display: flex;
       flex-direction: row;
       align-items: center;
-      opacity: 0.8;
       gap: var(--zn-spacing-x-small);
 
+      p {
+        margin: 0;
+        color: rgb(var(--zn-text));
+        opacity: 0.7;
+        white-space: nowrap;
+      }
+
       zn-select[name="rowPerPage"] {
-        max-width: 75px;
+        --zn-input-background-color: rgb(var(--zn-panel));
+
+        width: 66px;
       }
 
+      // Matches the height of the pagination control it sits beside
       zn-select[name="rowPerPage"]::part(combobox) {
-        padding-inline-end: 8px;
+        min-height: 36px;
+        padding-inline: var(--zn-spacing-x-small);
       }
 
-       zn-select[name="rowPerPage"]::part(expand-icon) {
+      zn-select[name="rowPerPage"]::part(expand-icon) {
         margin-inline-start: 0;
       }
     }
 
-    &__pagination-buttons {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: var(--zn-spacing-x-small);
+    // Sized to match the icon-button arrows it is joined to, but free to grow for large page numbers
+    &__pagination-page::part(base) {
+      height: 36px;
+      min-height: 36px;
+      max-height: 36px;
+      min-width: 32px;
+      padding: 0 var(--zn-spacing-2x-small);
+      justify-content: center;
+      border-color: rgb(var(--zn-border-color));
+      color: rgb(var(--zn-text));
+      font-weight: var(--zn-font-weight-normal);
+      white-space: nowrap;
     }
 
     &__pagination-page--active::part(base) {
       background-color: var(--zn-color-neutral-300);
       border-color: var(--zn-color-neutral-300);
-      color: rgb(var(--zn-text));
-    }
-
-    &__pagination-ellipsis {
-      display: flex;
-      align-items: center;
-      padding: 0 var(--zn-spacing-x-small);
-      color: rgb(var(--zn-text));
     }
   }
 
@@ -328,6 +365,30 @@ table {
       font-size: var(--zn-text-table-content-font-size);
     }
   }
+}
+
+zn-menu {
+  --zn-menu-min-width: var(--zn-size-spanel);
+}
+
+// A table's header and footer are chrome around the rows, so they sit tighter than
+// the panel's own content padding. The header's trailing edge tucks in further still,
+// since the controls there are already inset by their own button padding.
+zn-panel {
+  --zn-panel-header-padding: var(--zn-spacing-x-small) var(--zn-spacing-x-small)
+    var(--zn-spacing-x-small) var(--zn-spacing-medium);
+  --zn-panel-footer-padding: var(--zn-spacing-x-small) var(--zn-spacing-medium);
+}
+
+// Closes the rows off from the footer, which the panel border would otherwise do
+zn-panel::part(footer) {
+  border-top: 1px solid rgb(var(--zn-border-color));
+}
+
+// Dropdowns sit over dense rows here, so they need a solid surface rather than
+// zn-menu's translucent default
+zn-menu::part(base) {
+  background-color: rgb(var(--zn-panel));
 }
 
 .reduced-opacity .table tbody {
@@ -417,16 +478,18 @@ table:has(tbody tr:first-of-type.table__row--selected) thead tr th {
   border-bottom-color: var(--zn-color-purple-600) !important;
 }
 
-.table-group__title {
+tbody tr.table__row--group th {
+  padding: var(--zn-spacing-small) var(--zn-spacing-medium);
+  text-align: left;
+  white-space: nowrap;
+  background-color: rgb(var(--zn-panel));
+  color: rgba(var(--zn-text-panel-title), 100%);
   font-weight: var(--zn-font-weight-semibold);
   font-size: var(--zn-font-size-large);
-  color: rgba(var(--zn-text-panel-title), 100%);
-  line-height: var(--zn-line-height-looser);
-  padding-left: var(--zn-spacing-medium);
-  margin: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+}
+
+tbody tr.table__row--group:not(:first-of-type) th {
+  border-top: 1px solid rgb(var(--zn-border-color));
 }
 
 tbody tr.table__row--error td {

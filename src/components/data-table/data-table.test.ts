@@ -10,6 +10,116 @@ describe('<zn-data-table>', () => {
     expect(el).to.exist;
   });
 
+  // filter-top renders above the panel, so it must not bring an otherwise empty header row with it
+  it('renders no header when only filter-top is slotted', async () => {
+    const el = await fixture<ZnDataTable>(html`
+      <zn-data-table standalone no-initial-load>
+        <div slot="filter-top">Filters</div>
+        <div slot="empty-state">Nothing yet</div>
+      </zn-data-table>`);
+    await el.updateComplete;
+
+    expect(el.shadowRoot!.querySelector('.table__header__right')).to.not.exist;
+    expect(el.shadowRoot!.querySelector('zn-header')).to.not.exist;
+  });
+
+  it('leaves a bare empty state unwrapped by the standalone panel', async () => {
+    const el = await fixture<ZnDataTable>(html`
+      <zn-data-table standalone no-initial-load>
+        <div slot="empty-state">Nothing yet</div>
+      </zn-data-table>`);
+    await el.updateComplete;
+
+    expect(el.shadowRoot!.querySelector('zn-panel')).to.not.exist;
+    expect(el.shadowRoot!.querySelector('slot[name="empty-state"]')).to.exist;
+  });
+
+  it('keeps the standalone panel for an empty state that has a caption', async () => {
+    const el = await fixture<ZnDataTable>(html`
+      <zn-data-table standalone no-initial-load caption="Customers">
+        <div slot="empty-state">Nothing yet</div>
+      </zn-data-table>`);
+    await el.updateComplete;
+
+    expect(el.shadowRoot!.querySelector('zn-panel')).to.exist;
+  });
+
+  // Raising the page size past the total used to drop the whole footer, leaving no way back
+  it('keeps the rows-per-page selector when the page size covers every row', async () => {
+    const originalFetch = window.fetch;
+    window.fetch = () => Promise.resolve(new Response(JSON.stringify({
+      rows: Array.from({length: 24}, (_, i) => ({id: String(i), cells: [{text: 'Row', column: 'name'}]})),
+      page: 1,
+      perPage: 50,
+      total: 24,
+    }), {status: 200, headers: {'Content-Type': 'application/json'}}));
+
+    try {
+      const el = await fixture<ZnDataTable>(html`
+        <zn-data-table data-uri="/test-data" headers='{"name": {"key": "name", "label": "Name"}}'></zn-data-table>`);
+      await waitUntil(() => el.shadowRoot!.querySelector('tbody tr.table__row--data'));
+
+      expect(el.shadowRoot!.querySelector('zn-select[name="rowPerPage"]')).to.exist;
+      expect(el.shadowRoot!.querySelector('.table__footer__pagination-page')).to.not.exist;
+    } finally {
+      window.fetch = originalFetch;
+    }
+  });
+
+  it('hides the rows-per-page selector when the dataset fits the smallest page size', async () => {
+    const originalFetch = window.fetch;
+    window.fetch = () => Promise.resolve(new Response(JSON.stringify({
+      rows: [{id: '1', cells: [{text: 'Row', column: 'name'}]}],
+      page: 1,
+      perPage: 10,
+      total: 1,
+    }), {status: 200, headers: {'Content-Type': 'application/json'}}));
+
+    try {
+      const el = await fixture<ZnDataTable>(html`
+        <zn-data-table data-uri="/test-data" headers='{"name": {"key": "name", "label": "Name"}}'></zn-data-table>`);
+      await waitUntil(() => el.shadowRoot!.querySelector('tbody tr.table__row--data'));
+
+      expect(el.shadowRoot!.querySelector('zn-select[name="rowPerPage"]')).to.not.exist;
+      expect(el.shadowRoot!.querySelector('.table__footer')).to.not.exist;
+    } finally {
+      window.fetch = originalFetch;
+    }
+  });
+
+  // One table per group meant two scrollbars and columns that did not line up between groups
+  it('renders grouped rows as group header rows inside a single table', async () => {
+    const originalFetch = window.fetch;
+    const row = (id: string, status: string) => ({
+      id,
+      cells: [{text: 'Card ' + id, column: 'name'}, {text: status, column: 'status'}],
+    });
+    window.fetch = () => Promise.resolve(new Response(JSON.stringify({
+      rows: [row('1', 'active'), row('2', 'active'), row('3', 'archived')],
+      page: 1,
+      perPage: 10,
+      total: 3,
+    }), {status: 200, headers: {'Content-Type': 'application/json'}}));
+
+    try {
+      const el = await fixture<ZnDataTable>(html`
+        <zn-data-table data-uri="/test-data"
+                       group-by="status"
+                       groups="active,archived"
+                       headers='{"name": {"key": "name", "label": "Name"}, "status": {"key": "status", "label": "Status", "hideColumn": true}}'></zn-data-table>`);
+      await waitUntil(() => el.shadowRoot!.querySelector('tbody tr.table__row--data'));
+
+      const root = el.shadowRoot!;
+      expect(root.querySelectorAll('table')).to.have.length(1);
+      expect(root.querySelectorAll('.table__scroll')).to.have.length(1);
+      expect([...root.querySelectorAll('tr.table__row--group')].map(r => r.textContent!.trim()))
+        .to.deep.equal(['Active', 'Archived']);
+      expect(root.querySelectorAll('tbody tr.table__row--data')).to.have.length(3);
+    } finally {
+      window.fetch = originalFetch;
+    }
+  });
+
   it('does not throw when updating selection without a select-all button', async () => {
     const el = await fixture<ZnDataTable>(html` <zn-data-table></zn-data-table> `);
 

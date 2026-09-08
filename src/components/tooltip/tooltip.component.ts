@@ -83,7 +83,7 @@ export default class ZnTooltip extends ZincElement {
   }
 
   private handleBlur = () => {
-    if (this.hasTrigger('focus') && !topLayerManager.isDropdownOpen()) {
+    if (this.hasTrigger('focus')) {
       this.hide();
     }
   };
@@ -118,7 +118,7 @@ export default class ZnTooltip extends ZincElement {
   }
 
   private handleMouseOut() {
-    if (this.hasTrigger('hover') && !topLayerManager.isDropdownOpen()) {
+    if (this.hasTrigger('hover')) {
       clearTimeout(this.hoverTimeout);
       this.hoverTimeout = window.setTimeout(() => this.hide(), 0);
     }

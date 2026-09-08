@@ -34,6 +34,7 @@ interface ActiveFilter {
 const BOOLEAN_OPTIONS: QueryBuilderOptions = {1: 'True', 0: 'False'};
 const TEXT_DEBOUNCE = 350;
 const SUGGESTION_LIMIT = 8;
+const OPTION_SEARCH_THRESHOLD = 8;
 
 // Pills have to stay short, so the wordier operators get a compact label
 const OPERATOR_LABELS: Partial<Record<QueryBuilderOperators, string>> = {
@@ -95,6 +96,8 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
 
   // What the user has typed so far, which the debounced value hasn't caught up with yet
   @state() private _typing: Record<string, string> = {};
+
+  @state() private _optionQuery: Record<string, string> = {};
 
   get validationMessage(): string {
     return '';
@@ -429,6 +432,7 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
                     ${this.operatorLabel(operator)}
                   </zn-menu-item>`)}
                 <div class="filter-bar__separator"></div>` : nothing}
+              ${this.renderOptionSearch(filter, active)}
               ${this.renderOptionItems(filter, active)}
               <zn-menu-item class="filter-bar__remove"
                             @zn-menu-select="${() => this.removeFilter(active.key)}">
@@ -485,11 +489,36 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
         </div>` : nothing}`;
   }
 
+  private handleOptionSearch(key: string, event: ZnInputEvent) {
+    const input = event.target as ZnInput;
+    this._optionQuery = {...this._optionQuery, [key]: input.value as string};
+  }
+
+  private renderOptionSearch(filter: QueryBuilderItem, active: ActiveFilter) {
+    if (Object.keys(this.optionsFor(filter)!).length <= OPTION_SEARCH_THRESHOLD) return nothing;
+
+    return html`
+      <zn-input class="filter-bar__option-search"
+                size="small"
+                placeholder="Search ${this.humanize(filter.name)}"
+                value="${this._optionQuery[active.key] ?? ''}"
+                @zn-input="${(e: ZnInputEvent) => this.handleOptionSearch(active.key, e)}"
+                @keydown="${(e: KeyboardEvent) => e.stopPropagation()}">
+      </zn-input>`;
+  }
+
   private renderOptionItems(filter: QueryBuilderItem, active: ActiveFilter) {
     const options = this.optionsFor(filter)!;
     const selected = this.selectedValues(filter, active);
+    const query = (this._optionQuery[active.key] ?? '').trim().toLowerCase();
+    const matches = Object.keys(options).filter(key => String(options[key]).toLowerCase().includes(query));
 
-    return Object.keys(options).map(key => html`
+    if (matches.length === 0) {
+      return html`
+        <zn-menu-item class="filter-bar__no-matches" disabled>No matches</zn-menu-item>`;
+    }
+
+    return matches.map(key => html`
       <zn-menu-item type="checkbox"
                     value="${key}"
                     ?checked="${selected.includes(key)}"

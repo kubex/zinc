@@ -22,6 +22,26 @@
   background-color: rgba(var(--zn-color-navigation, 255, 255, 255), 0.95);
 }
 
+// A capped menu has to look scrollable, so the bar is always drawn rather than
+// left to the platform's overlay scrollbar
+.menu {
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border: 3px solid transparent;
+    border-radius: 5px;
+    background: rgba(var(--inverse-base), 0.3);
+    background-clip: content-box;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(var(--inverse-base), 0.5);
+    background-clip: content-box;
+  }
+}
+
 // Dropdown vs shell hover/row styling lives on zn-menu-item, keyed by the
 // `variant` the menu sets on its items (see menu.component.ts).
 
@@ -36,6 +56,7 @@
   border-radius: var(--zn-border-radius);
   min-width: var(--zn-menu-min-width, 245px);
   max-width: min(320px, calc(100vw - 16px));
+  max-height: var(--zn-menu-max-height, none);
   overflow-x: hidden;
   overflow-y: auto;
   box-shadow: none;

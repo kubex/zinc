@@ -250,6 +250,64 @@ describe('<zn-data-table-filter>', () => {
     expect(pill.open).to.be.false;
   });
 
+  describe('long option lists', () => {
+    const many = Object.fromEntries(
+      ['How To', 'Linux', 'Beta', 'Router', 'TV', 'Other', 'Mac Hotspot Shield', 'General', 'iOS', 'Tutorials']
+        .map((label, index) => [`c${index}`, label])
+    );
+
+    async function categoryBar() {
+      const el = await fixture<ZnDataTableFilter>(html`
+        <zn-data-table-filter default-filters="category"
+                              .filters="${[{
+                                id: 'category',
+                                name: 'category',
+                                operators: ['eq'],
+                                options: many
+                              }]}"></zn-data-table-filter>`);
+      await el.updateComplete;
+      return el;
+    }
+
+    const search = async (el: ZnDataTableFilter, term: string) => {
+      const input = el.shadowRoot!.querySelector<ZnInput>('.filter-bar__option-search')!;
+      input.value = term;
+      input.dispatchEvent(new Event('zn-input', {bubbles: true, composed: true}));
+      await el.updateComplete;
+    };
+
+    const labels = (el: ZnDataTableFilter) =>
+      [...el.shadowRoot!.querySelectorAll('zn-menu-item')].map(item => item.textContent!.trim());
+
+    it('offers a search above the options', async () => {
+      const el = await categoryBar();
+
+      expect(el.shadowRoot!.querySelector('.filter-bar__option-search')).to.exist;
+    });
+
+    it('leaves the search off a short list', async () => {
+      const el = await filterBar('status');
+
+      expect(el.shadowRoot!.querySelector('.filter-bar__option-search')).to.not.exist;
+    });
+
+    it('narrows the options without regard to case', async () => {
+      const el = await categoryBar();
+
+      await search(el, 'HOTSPOT');
+
+      expect(labels(el)).to.deep.equal(['Mac Hotspot Shield', 'Remove']);
+    });
+
+    it('says so when nothing matches', async () => {
+      const el = await categoryBar();
+
+      await search(el, 'nothing here');
+
+      expect(labels(el)).to.deep.equal(['No matches', 'Remove']);
+    });
+  });
+
   it('clear() removes every pill and empties the value', async () => {
     const el = await filterBar('role,status');
     clickOn(el.shadowRoot!.querySelector('zn-menu-item[value="active"]'));

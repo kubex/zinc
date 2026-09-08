@@ -35,6 +35,29 @@ Picking a filter from `+ Add filter` opens its pill straight away, with a text f
 
 The component emits `zn-filter-change` and exposes the query on `value`, encoded exactly as `zn-query-builder` encodes it — base64 of `[{key, comparator, value}]` — so a backend built against the query builder needs no changes.
 
+### Long Option Lists
+
+An option list caps its height at 320px and scrolls inside the panel rather than running off the
+screen, with the scrollbar drawn rather than left to the platform's overlay one. Past eight options
+the pill also gains a search field, merged into the top of the panel and pinned there, that narrows
+the list case-insensitively.
+
+```html:preview
+<zn-data-table-filter
+  default-filters="category"
+  filters='[
+    {"id":"category","name":"Category","operators":["eq","in"],"options":{
+      "how-to":"How To","linux":"Linux","beta":"Beta","router":"Router","tv":"TV","other":"Other",
+      "mac":"Mac Hotspot Shield","general":"General","android":"Android Hotspot Shield",
+      "educational":"Educational","windows":"Windows Hotspot Shield","ios":"iOS",
+      "getting-started":"Getting Started","payments":"Payments & Subscriptions",
+      "accounts":"Manage Account & Devices","troubleshoot":"Troubleshoot issues",
+      "releases":"Release Notes","archived":"Archived Articles","internal":"Internal Information",
+      "tutorials":"Tutorials"}}
+  ]'>
+</zn-data-table-filter>
+```
+
 ### Typeahead
 
 Inside a `zn-data-table` a text filter suggests values from the rows the table has already loaded, matched case-insensitively against what has been typed, keyed on the column whose name matches the filter's id. Set `suggestions` yourself — `{[filterId]: string[]}` — to offer something else.

@@ -1,5 +1,17 @@
 @use "../../wc";
 
+// Fields inside a panel that already draws its own edge
+@mixin flush-input {
+  --zn-input-box-shadow: none;
+  --zn-input-background-color: transparent;
+  --zn-input-background-color-hover: transparent;
+  --zn-input-background-color-focus: transparent;
+  --zn-input-border-color: transparent;
+  --zn-input-border-color-hover: transparent;
+  --zn-input-border-color-focus: transparent;
+  --zn-input-focus-ring-color: transparent;
+}
+
 :host {
   display: block;
 }
@@ -52,20 +64,30 @@
     }
 
     zn-input {
-      --zn-input-box-shadow: none;
-      --zn-input-background-color: transparent;
-      --zn-input-background-color-hover: transparent;
-      --zn-input-background-color-focus: transparent;
-      --zn-input-border-color: transparent;
-      --zn-input-border-color-hover: transparent;
-      --zn-input-border-color-focus: transparent;
-      --zn-input-focus-ring-color: transparent;
+      @include flush-input;
       min-width: 200px;
     }
   }
 
   &__remove-button {
     border-top: 1px solid rgb(var(--zn-border-color));
+  }
+
+  // A long option list has to scroll rather than run off the screen, and its search
+  // field stays put while it does
+  zn-menu {
+    --zn-menu-max-height: 320px;
+  }
+
+  // Full-bleed so the rows scrolling underneath never show around or above it
+  &__option-search {
+    @include flush-input;
+    position: sticky;
+    top: calc(-1 * var(--zn-spacing-2x-small));
+    z-index: 1;
+    margin: calc(-1 * var(--zn-spacing-2x-small)) calc(-1 * var(--zn-spacing-2x-small)) 0;
+    background-color: rgb(var(--zn-panel));
+    border-bottom: 1px solid rgb(var(--zn-border-color));
   }
 
   &__suggestions {

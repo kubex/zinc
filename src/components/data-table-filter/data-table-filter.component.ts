@@ -409,51 +409,48 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
     const operators = this.operatorsFor(filter);
 
     return html`
-      <zn-dropdown placement="bottom-start"
-                   data-key="${active.key}"
-                   ?stay-open-on-select="${this.isMultiple(active.comparator)}">
-        <zn-button slot="trigger"
-                   class="filter-bar__pill"
-                   pill
-                   panel-bg
-                   icon="chevron-down@lu"
+      <div class="filter-bar__chip">
+        <zn-dropdown placement="bottom-start"
+                     data-key="${active.key}"
+                     ?stay-open-on-select="${this.isMultiple(active.comparator)}">
+          <zn-button slot="trigger"
+                     class="filter-bar__pill"
+                     pill
+                     panel-bg
+                     icon="chevron-down@lu"
+                     icon-size="16"
+                     icon-position="right">${this.pillLabel(filter, active)}
+          </zn-button>
+          ${this.optionsFor(filter)
+            ? html`
+              <zn-menu variant="shell">
+                ${operators.length > 1 ? html`
+                  ${operators.map(operator => html`
+                    <zn-menu-item type="checkbox"
+                                  keep-open
+                                  ?checked="${operator === active.comparator}"
+                                  @zn-menu-select="${() => this.setComparator(filter, active, operator)}">
+                      ${this.operatorLabel(operator)}
+                    </zn-menu-item>`)}
+                  <div class="filter-bar__separator"></div>` : nothing}
+                ${this.renderOptionSearch(filter, active)}
+                ${this.renderOptionItems(filter, active)}
+              </zn-menu>`
+            : html`
+              <div class="filter-bar__editor">
+                ${this.renderOperators(filter, active)}
+                ${this.renderValueInput(filter, active)}
+              </div>`}
+        </zn-dropdown>
+        <zn-button class="filter-bar__remove"
+                   icon-button="small"
+                   plain
+                   icon="x@lu"
                    icon-size="16"
-                   icon-position="right">${this.pillLabel(filter, active)}
+                   label="Remove ${this.humanize(filter.name)} filter"
+                   @click="${() => this.removeFilter(active.key)}">
         </zn-button>
-        ${this.optionsFor(filter)
-          ? html`
-            <zn-menu variant="shell">
-              ${operators.length > 1 ? html`
-                ${operators.map(operator => html`
-                  <zn-menu-item type="checkbox"
-                                keep-open
-                                ?checked="${operator === active.comparator}"
-                                @zn-menu-select="${() => this.setComparator(filter, active, operator)}">
-                    ${this.operatorLabel(operator)}
-                  </zn-menu-item>`)}
-                <div class="filter-bar__separator"></div>` : nothing}
-              ${this.renderOptionSearch(filter, active)}
-              ${this.renderOptionItems(filter, active)}
-              <zn-menu-item class="filter-bar__remove"
-                            @zn-menu-select="${() => this.removeFilter(active.key)}">
-                <span slot="prefix" class="filter-bar__remove__icon">
-                  <zn-icon src="trash-2@lu" size="16"></zn-icon>
-                </span>
-                Remove
-              </zn-menu-item>
-            </zn-menu>`
-          : html`
-            <div class="filter-bar__editor">
-              ${this.renderOperators(filter, active)}
-              ${this.renderValueInput(filter, active)}
-              <zn-button class="filter-bar__remove-button"
-                         text
-                         icon="trash-2@lu"
-                         icon-size="16"
-                         @click="${() => this.removeFilter(active.key)}">Remove
-              </zn-button>
-            </div>`}
-      </zn-dropdown>`;
+      </div>`;
   }
 
   private isDateFilter(filter: QueryBuilderItem): boolean {

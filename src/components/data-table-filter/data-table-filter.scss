@@ -36,14 +36,48 @@
     color: rgb(var(--zn-primary));
   }
 
-  // Spans a checkbox item's check column plus the flex gap its empty prefix slot adds,
-  // so Remove's label lines up with the option labels above it
-  &__remove__icon {
-    display: flex;
+  // The chip draws the outline so its trigger and remove button read as one control
+  &__chip {
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    font-size: var(--zn-text-menu-link-font-size);
-    width: calc(1.5em + var(--zn-spacing-x-small));
+    height: 32px;
+    padding-right: var(--zn-spacing-x-small);
+    border: 1px solid rgb(var(--zn-border-color));
+    border-radius: var(--zn-border-radius-pill);
+    background-color: rgb(var(--zn-panel));
+
+    &:hover {
+      background-color: rgba(var(--zn-color-tab), 0.5);
+    }
+  }
+
+  // The X's own box carries the trailing gap, so the trigger adds none
+  &__pill::part(base),
+  &__pill::part(base):hover {
+    border-color: transparent;
+    background: transparent;
+    padding-right: 0;
+  }
+
+  // Same box as the trigger, so the X centres on the chip's axis rather than
+  // inside a smaller box centred within it. The hover tint is clipped to the
+  // padded content box so it reads as a disc on the icon, not a full-height bar
+  &__remove::part(base) {
+    width: 24px;
+    min-width: 24px;
+    height: 32px;
+    min-height: 32px;
+    max-height: 32px;
+    padding: 4px 0;
+    background: transparent;
+    background-clip: content-box;
+    border-radius: var(--zn-border-radius-circle);
+    color: var(--zn-text-color);
+  }
+
+  &__remove::part(base):hover {
+    background: rgb(var(--zn-color-border));
+    background-clip: content-box;
   }
 
   // Value editors get their own panel: a calendar has no business inside a menu's
@@ -67,10 +101,6 @@
       @include flush-input;
       min-width: 200px;
     }
-  }
-
-  &__remove-button {
-    border-top: 1px solid rgb(var(--zn-border-color));
   }
 
   // A long option list has to scroll rather than run off the screen, and its search
@@ -138,15 +168,9 @@
   }
 
   &__separator {
+    flex: none;
     height: 1px;
     margin: var(--zn-spacing-2x-small) 0;
     background-color: rgb(var(--zn-border-color));
-  }
-
-  &__remove-button::part(base) {
-    justify-content: flex-start;
-    padding: var(--zn-spacing-x-small) var(--zn-spacing-small);
-    font-weight: var(--zn-font-weight-normal);
-    text-transform: none;
   }
 }

@@ -12,7 +12,7 @@ layout: component
 </zn-data-table-filter>
 ```
 
-Filters render inline rather than in a slideout. Each active filter is a pill showing its name, and its value once set; the pill's dropdown lists the filter's `options` as checkable values, or a text input for a filter that declares none. `+ Add filter` lists the filters that are not yet active, and `Clear` removes them all.
+Filters render inline rather than in a slideout. Each active filter is a pill showing its name, and its value once set; the pill's dropdown lists the filter's `options` as checkable values, or a text input for a filter that declares none. Each pill carries an X that drops that filter. `+ Add filter` lists the filters that are not yet active, and `Clear` removes them all.
 
 A filter starts on its **first declared operator**. Declare more than one and the pill offers a choice: a value editor gets a row of operator chips above it, an options menu lists the operators above its values, and the pill then reads `Age ≥ 18` rather than `Age: 18`. Switching operator keeps the value — a date is re-encoded for the new comparator.
 

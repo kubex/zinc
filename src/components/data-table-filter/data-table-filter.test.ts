@@ -210,7 +210,7 @@ describe('<zn-data-table-filter>', () => {
 
     const items = [...el.shadowRoot!.querySelectorAll('zn-menu-item')].map(i => i.textContent!.trim());
 
-    expect(items).to.deep.equal(['is', 'is any of', 'Open', 'Closed', 'Remove']);
+    expect(items).to.deep.equal(['is', 'is any of', 'Open', 'Closed']);
   });
 
   it('opens the new pill so its value can be set without a second click', async () => {
@@ -296,7 +296,7 @@ describe('<zn-data-table-filter>', () => {
 
       await search(el, 'HOTSPOT');
 
-      expect(labels(el)).to.deep.equal(['Mac Hotspot Shield', 'Remove']);
+      expect(labels(el)).to.deep.equal(['Mac Hotspot Shield']);
     });
 
     it('says so when nothing matches', async () => {
@@ -304,8 +304,22 @@ describe('<zn-data-table-filter>', () => {
 
       await search(el, 'nothing here');
 
-      expect(labels(el)).to.deep.equal(['No matches', 'Remove']);
+      expect(labels(el)).to.deep.equal(['No matches']);
     });
+  });
+
+  it('drops a filter when its chip\'s remove button is clicked', async () => {
+    const el = await filterBar('role,status');
+    clickOn(el.shadowRoot!.querySelector('zn-menu-item[value="active"]'));
+    await el.updateComplete;
+
+    const chip = [...el.shadowRoot!.querySelectorAll('.filter-bar__chip')]
+      .find(item => item.querySelector('zn-dropdown')!.getAttribute('data-key') === 'status')!;
+    clickOn(chip.querySelector('.filter-bar__remove'));
+    await el.updateComplete;
+
+    expect(pills(el)).to.deep.equal(['Role']);
+    expect(el.value).to.equal('');
   });
 
   it('clear() removes every pill and empties the value', async () => {

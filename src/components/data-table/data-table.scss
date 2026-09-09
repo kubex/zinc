@@ -227,7 +227,7 @@ table {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     padding: var(--zn-spacing-x-small) var(--zn-spacing-medium);
     gap: var(--zn-spacing-small);
 
@@ -246,16 +246,20 @@ table {
     &__caption {
       @include wc.text-style(h1);
 
+      // Sits on the same 36px line as the controls opposite it
+      line-height: 36px;
       margin: 0;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
     }
 
+    // Controls are a uniform 36px, so topping them out keeps them on one line while
+    // a search's help text grows the header downwards
     &__right {
       display: flex;
       flex-direction: row;
-      align-items: center;
+      align-items: flex-start;
       gap: var(--zn-spacing-x-small);
       margin-left: auto;
     }

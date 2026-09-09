@@ -11,6 +11,11 @@
   min-width: 200px;
 }
 
+// Flush so the input box is exactly the 36px control height the toolbar tops align on
+zn-input::part(form-control-input) {
+  margin: 0;
+}
+
 zn-input::part(form-control-help-text) {
   font-size: var(--zn-input-help-text-font-size-small);
   padding-left: var(--zn-spacing-2x-small);

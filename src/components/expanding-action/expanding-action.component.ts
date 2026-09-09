@@ -309,11 +309,13 @@ export default class ZnExpandingAction extends ZincElement {
     return html`
       <zn-dropdown class="expanding-action__dropdown"
                    placement="bottom-end"
-                   @zn-show="${() => {
+                   @zn-show="${(e: Event) => {
+                     if (e.target !== e.currentTarget) return;
                      this.open = true;
                      this._observePlacement();
                    }}"
-                   @zn-hide="${() => {
+                   @zn-hide="${(e: Event) => {
+                     if (e.target !== e.currentTarget) return;
                      this.open = false;
                    }}">
         <zn-button slot="trigger"

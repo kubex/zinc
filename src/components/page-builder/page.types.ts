@@ -8,7 +8,9 @@ export interface PageSection {
   label?: string;
   /** Section content, keyed by field name (the inspector's `name` attributes). */
   data: Record<string, unknown>;
-  /** Slot contents for container sections, sized to the type's `slots`. Empty slots are null. */
+  /** Slots per row for a container whose type allows a choice; the type's default applies otherwise. */
+  columns?: number;
+  /** Slot contents for container sections, sized to {@link slotCount}. Empty slots are null. */
   children?: (PageSection | null)[];
 }
 
@@ -39,17 +41,50 @@ export interface PageSectionType {
   /** Programmatic inspector body — takes precedence over `configTemplate`. */
   renderConfig?: (section: PageSection, update: (data: Record<string, unknown>) => void) => TemplateResult;
   /**
-   * Number of child slots this section offers on the canvas (a container tile);
-   * rendered as a 3-column grid. Containers cannot be placed inside other containers.
+   * Slots per row on the canvas, and what makes a section a container. Rows are
+   * added as they fill, so this is a width and not a capacity. Containers cannot
+   * be placed inside other containers.
    */
   slots?: number;
+  /** Lower bound of a per-section column count. Defaults to 1 when `slotsMax` is set. */
+  slotsMin?: number;
+  /** Upper bound of a per-section column count. Its presence is what makes the width editable. */
+  slotsMax?: number;
   /** Section type keys allowed in this container's slots. Omit to allow any non-container type. */
   accepts?: string[];
 }
 
-/** A container section's slot contents, padded/truncated to the type's slot count. */
+/** Per-container children beyond this are dropped when external state is applied. */
+export const MAX_SLOTS = 24;
+
+/**
+ * Slots per row for a placed container: its own choice when the type allows one,
+ * clamped to the declared bounds, else the type's fixed width.
+ */
+export function slotColumns(section: PageSection, type: PageSectionType): number {
+  const columns = type.slots ?? 0;
+  if (type.slotsMax === undefined) return columns;
+  return Math.min(Math.max(section.columns ?? columns, type.slotsMin ?? 1), type.slotsMax);
+}
+
+/**
+ * How many slots a placed container shows: enough rows to hold every child it
+ * already has, plus a fresh row once the last one fills. Empty rows are never
+ * offered ahead of being needed, and the total stays within {@link MAX_SLOTS}.
+ */
+export function slotCount(section: PageSection, type: PageSectionType): number {
+  const columns = slotColumns(section, type);
+  if (columns < 1) return 0;
+  const placed = section.children?.reduce((last, c, i) => (c ? i + 1 : last), 0) ?? 0;
+  const rows = Math.ceil(placed / columns) || 1;
+  const full = section.children?.slice((rows - 1) * columns, rows * columns)
+    .filter(Boolean).length === columns;
+  return Math.min(columns * (full ? rows + 1 : rows), Math.floor(MAX_SLOTS / columns) * columns);
+}
+
+/** A container section's slot contents, padded/truncated to its slot count. */
 export function sectionChildren(section: PageSection, type: PageSectionType): (PageSection | null)[] {
-  return Array.from({length: type.slots ?? 0}, (_, i) => section.children?.[i] ?? null);
+  return Array.from({length: slotCount(section, type)}, (_, i) => section.children?.[i] ?? null);
 }
 
 /** Drag-and-drop MIME carrying a section type id from the palette to the canvas. */

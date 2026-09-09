@@ -416,6 +416,96 @@ describe('<zn-page-builder>', () => {
     expect(el.addSectionToSlot('article-tile', 'grid', 1), 'occupied slot').to.be.null;
   });
 
+  it('should grow a container by a row as its last row fills', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder config='{"sections":[{"id":"grid","type":"article-grid","data":{}}]}'>
+        <template type="article-grid" slot="config" label="Article Grid" slots="3"></template>
+        <template type="article-tile" slot="config" label="Article"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    const slots = () => el.shadowRoot?.querySelectorAll('.slot, .slot__card').length;
+    expect(slots(), 'one empty row to start').to.equal(3);
+
+    el.addSectionToSlot('article-tile', 'grid', 0);
+    el.addSectionToSlot('article-tile', 'grid', 1);
+    await el.updateComplete;
+    expect(slots(), 'a part-filled row grows nothing').to.equal(3);
+
+    el.addSectionToSlot('article-tile', 'grid', 2);
+    await el.updateComplete;
+    expect(slots(), 'the full row adds the next one').to.equal(6);
+
+    el.addSectionToSlot('article-tile', 'grid', 3);
+    await el.updateComplete;
+    expect(slots(), 'and stays at two rows until that one fills').to.equal(6);
+  });
+
+  it('should lay a container out at its own width and reflow children when it changes', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder config='{"sections":[{"id":"row","type":"category-row","data":{}}]}'>
+        <template type="category-row" slot="config" label="Category Row" slots="6" slots-max="6"></template>
+        <template type="category-tile" slot="config" label="Category"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    const grid = () => el.shadowRoot?.querySelector<HTMLElement>('.slots');
+    expect(grid()?.style.getPropertyValue('--pb-slot-columns'), 'declared width').to.equal('6');
+    expect(el.shadowRoot?.querySelectorAll('.slot--empty'), 'one row of six').to.have.length(6);
+
+    el.shadowRoot?.querySelector('.canvas zn-page-section-card')?.dispatchEvent(new Event('click'));
+    await el.updateComplete;
+
+    const width = el.shadowRoot?.querySelector<HTMLInputElement>('.inspector__slots');
+    expect(width, 'slots-per-row control').to.exist;
+    expect(width!.getAttribute('min')).to.equal('1');
+    expect(width!.getAttribute('max')).to.equal('6');
+    expect(width!.value).to.equal('6');
+
+    const kept = el.addSectionToSlot('category-tile', 'row', 4)!;
+    await el.updateComplete;
+
+    width!.value = '3';
+    width!.dispatchEvent(new Event('zn-change', {bubbles: true}));
+    await el.updateComplete;
+
+    expect(el.state.sections[0].columns).to.equal(3);
+    expect(grid()?.style.getPropertyValue('--pb-slot-columns')).to.equal('3');
+    expect(el.state.sections[0].children?.[4]?.id, 'narrowing reflows rather than drops').to.equal(kept.id);
+    expect(el.shadowRoot?.querySelectorAll('.slot, .slot__card'), 'six slots hold it as two rows of three')
+      .to.have.length(6);
+  });
+
+  it('should clamp a container width to the declared bounds', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder config='{"sections":[{"id":"row","type":"category-row","data":{},"columns":99}]}'>
+        <template type="category-row" slot="config" label="Category Row" slots="3" slots-max="6"></template>
+        <template type="category-tile" slot="config" label="Category"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    expect(el.state.sections[0].columns, 'clamped to the max').to.equal(6);
+
+    el.setSectionColumns('row', 0);
+    await el.updateComplete;
+    expect(el.state.sections[0].columns, 'clamped to the min').to.equal(1);
+  });
+
+  it('should offer no width control for a fixed-width container', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder config='{"sections":[{"id":"grid","type":"article-grid","data":{},"columns":6}]}'>
+        <template type="article-grid" slot="config" label="Article Grid" slots="4"></template>
+        <template type="article-tile" slot="config" label="Article"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    expect(el.shadowRoot?.querySelectorAll('.slot--empty'), 'per-instance width ignored').to.have.length(4);
+
+    el.shadowRoot?.querySelector('.canvas zn-page-section-card')?.dispatchEvent(new Event('click'));
+    await el.updateComplete;
+    expect(el.shadowRoot?.querySelector('.inspector__slots')).to.not.exist;
+  });
+
   it('should swap children when dropping one filled slot onto another', async () => {
     const el = await fixture<ZnPageBuilder>(html`
       <zn-page-builder config='{"sections":[{"id":"grid","type":"article-grid","data":{}}]}'>

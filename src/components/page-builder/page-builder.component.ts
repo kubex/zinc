@@ -2,6 +2,7 @@ import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
 import {
   emptyPageState,
   generateSectionId,
+  MAX_SLOTS,
   PAGE_SECTION_MIME,
   PAGE_TYPE_MIME,
   type PageSection,
@@ -9,6 +10,8 @@ import {
   type PageState,
   sectionChildren,
   sectionSummary,
+  slotColumns,
+  slotCount,
 } from './page.types';
 import { FormControlController, validValidityState } from '../../internal/form';
 import { HasSlotController } from '../../internal/slot';
@@ -28,8 +31,6 @@ import styles from './page-builder.scss';
 const HISTORY_LIMIT = 50;
 /** Sections beyond this are dropped (with a warning) when external state is applied. */
 const MAX_SECTIONS = 500;
-/** Per-container children beyond this are dropped when external state is applied. */
-const MAX_CHILDREN = 24;
 /** Builder width below which the palette auto-collapses — keep in sync with the @container query in page-builder.scss. */
 const NARROW_WIDTH = 768;
 
@@ -67,8 +68,9 @@ function timeAgo(ms: number): string {
  * @slot config - `<template type="…">` declarations; never displayed. Each template's attributes
  *   (type, label, icon, icon-library, color, category, description, slots, accepts) declare a
  *   palette entry and its content declares the inspector form for that type. `slots` makes the
- *   section a container with that many child slots; `accepts` is a comma-separated list of the
- *   type keys its slots allow.
+ *   section a container that many slots wide — rows are added as they fill — and `slots-min`/
+ *   `slots-max` let each placed section choose its own width; `accepts` is a comma-separated
+ *   list of the type keys its slots allow.
  * @slot header-left - Actions shown on the left of the header bar.
  * @slot header-right - Actions shown on the right of the header bar.
  *
@@ -407,7 +409,6 @@ export default class ZnPageBuilder extends ZincElement {
   private _typeFromTemplate(el: HTMLTemplateElement): PageSectionType | null {
     const type = el.getAttribute('type');
     if (!type) return null;
-    const slots = parseInt(el.getAttribute('slots') ?? '', 10);
     return {
       type,
       label: el.getAttribute('label') ?? type,
@@ -417,9 +418,27 @@ export default class ZnPageBuilder extends ZincElement {
       category: el.getAttribute('category') ?? undefined,
       description: el.getAttribute('description') ?? undefined,
       configTemplate: el,
-      slots: slots > 0 ? slots : undefined,
+      ...this._slotsFromAttributes(el),
       accepts: el.getAttribute('accepts')?.split(',').map(s => s.trim()).filter(Boolean),
     };
+  }
+
+  /**
+   * `slots="N"` is a container N slots wide; adding `slots-max` lets each placed
+   * section choose its own width between `slots-min` (1 by default) and that. A
+   * width past the slot cap would leave a container with no usable row, so an
+   * out-of-bounds bound is ignored rather than honoured.
+   */
+  private _slotsFromAttributes(el: HTMLTemplateElement): Pick<PageSectionType, 'slots' | 'slotsMin' | 'slotsMax'> {
+    const bound = (name: string) => {
+      const value = parseInt(el.getAttribute(name) ?? '', 10);
+      return value > 0 && value <= MAX_SLOTS ? value : undefined;
+    };
+    const slots = bound('slots');
+    if (!slots) return {};
+    const max = bound('slots-max');
+    if (max === undefined || max < slots) return { slots };
+    return { slots, slotsMin: Math.min(bound('slots-min') ?? 1, slots), slotsMax: max };
   }
 
   private _registerSlottedTemplates = () => {
@@ -446,14 +465,19 @@ export default class ZnPageBuilder extends ZincElement {
     const normalise = (s: PageSection, depth: number): PageSection => {
       const id = !s.id || seen.has(s.id) ? generateSectionId() : s.id;
       seen.add(id);
-      if (depth === 0 && (s.children?.length ?? 0) > MAX_CHILDREN) clippedChildren = true;
+      if (depth === 0 && (s.children?.length ?? 0) > MAX_SLOTS) clippedChildren = true;
+      const type = this.registry.get(s.type);
+      // A hand-edited config can name any width; clamp it to the declared bounds so
+      // the canvas lays the children out the same way the site will.
+      const columns = type?.slotsMax === undefined ? undefined : slotColumns(s, type);
       return {
         id,
         type: s.type,
         label: s.label,
+        ...(columns === undefined ? {} : { columns }),
         data: structuredClone(s.data ?? {}),
         ...(s.children && depth === 0
-          ? { children: s.children.slice(0, MAX_CHILDREN).map(c => (c && typeof c.type === 'string' ? normalise(c, depth + 1) : null)) }
+          ? { children: s.children.slice(0, MAX_SLOTS).map(c => (c && typeof c.type === 'string' ? normalise(c, depth + 1) : null)) }
           : {}),
       };
     };
@@ -463,7 +487,7 @@ export default class ZnPageBuilder extends ZincElement {
     }
     const sections = incoming.slice(0, MAX_SECTIONS).map(s => normalise(s, 0));
     if (clippedChildren) {
-      console.warn(`<zn-page-builder> some sections had more than ${MAX_CHILDREN} children; extras were dropped`);
+      console.warn(`<zn-page-builder> some sections had more than ${MAX_SLOTS} children; extras were dropped`);
     }
     this._history = [];
     this._redoStack = [];
@@ -615,7 +639,7 @@ export default class ZnPageBuilder extends ZincElement {
     const container = this._findSection(containerId);
     const containerType = container ? this.registry.get(container.type) : undefined;
     if (!sectionType || sectionType.slots || !container || !containerType?.slots) return null;
-    if (slotIndex < 0 || slotIndex >= containerType.slots) return null;
+    if (slotIndex < 0 || slotIndex >= slotCount(container, containerType)) return null;
     if (containerType.accepts && !containerType.accepts.includes(type)) return null;
     const children = sectionChildren(container, containerType);
     if (children[slotIndex]) return null;
@@ -625,6 +649,21 @@ export default class ZnPageBuilder extends ZincElement {
     this._commit({ sections: this._patchSection(containerId, s => ({ ...s, children })) });
     this._select(section.id);
     return section;
+  }
+
+  /**
+   * Sets how many slots per row a container whose type allows a choice lays out,
+   * clamped to the declared bounds. Children keep their order and reflow into the
+   * new width, so nothing is lost by narrowing one.
+   */
+  setSectionColumns(id: string, columns: number) {
+    const section = this._findSection(id);
+    const type = section ? this.registry.get(section.type) : undefined;
+    if (!section || type?.slotsMax === undefined) return;
+    const next = slotColumns({ ...section, columns }, type);
+    if (next === slotColumns(section, type)) return;
+    this._pushHistory();
+    this._commit({ sections: this._patchSection(id, s => ({ ...s, columns: next })) });
   }
 
   private _removeSection(id: string) {
@@ -706,7 +745,7 @@ export default class ZnPageBuilder extends ZincElement {
     if (this._isPinned(id)) return; // the pinned section stays at the top of the page
     if (this.registry.get(moved.type)?.slots) return; // no containers inside slots
     if (containerType.accepts && !containerType.accepts.includes(moved.type)) return;
-    if (slotIndex < 0 || slotIndex >= containerType.slots) return;
+    if (slotIndex < 0 || slotIndex >= slotCount(container, containerType)) return;
 
     const target = container.children?.[slotIndex] ?? null;
     if (target?.id === id) return;
@@ -716,7 +755,7 @@ export default class ZnPageBuilder extends ZincElement {
     this._pushHistory();
     const sections = structuredClone(this._state.sections);
     const containerRef = sections.find(s => s.id === containerId)!;
-    containerRef.children = Array.from({ length: containerType.slots }, (_, i) => containerRef.children?.[i] ?? null);
+    containerRef.children = sectionChildren(containerRef, containerType);
     const movedCopy = structuredClone(moved);
 
     if (fromTop) {
@@ -973,7 +1012,7 @@ export default class ZnPageBuilder extends ZincElement {
     return html`
       <div class="container">
         ${card}
-        <div class="slots">
+        <div class="slots" style="--pb-slot-columns:${slotColumns(section, type)}">
           ${sectionChildren(section, type).map((child, i) => this._renderSlot(section, child, i))}
         </div>
       </div>`;
@@ -1183,6 +1222,16 @@ export default class ZnPageBuilder extends ZincElement {
             label="Section name"
             .value="${section.label ?? type?.label ?? ''}"
             @zn-change="${(e: Event) => this._renameSection(section.id, String((e.target as ZnInput).value ?? ''))}"></zn-input>
+          ${type?.slotsMax === undefined ? '' : html`
+            <zn-input
+              class="inspector__slots"
+              type="number"
+              label="Slots per row"
+              min="${type.slotsMin ?? 1}"
+              max="${type.slotsMax}"
+              help-text="A new row is added as the last one fills."
+              .value="${String(slotColumns(section, type))}"
+              @zn-change="${(e: Event) => this.setSectionColumns(section.id, Number((e.target as ZnInput).value))}"></zn-input>`}
           ${type?.renderConfig
             ? type.renderConfig(section, data => this._updateSectionData(section.id, data))
             : this._form}

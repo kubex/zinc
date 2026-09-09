@@ -80,6 +80,9 @@
 // constant so the content never reflows (and re-wraps) mid-transition.
 .content {
   display: grid;
+  // minmax(0, 1fr), not the implicit auto track: auto floors the column at the
+  // content's min-content width, so nowrap children overflow the host.
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: 0fr;
   opacity: 0;
   transition: grid-template-rows var(--zn-transition-medium) cubic-bezier(0.32, 0.72, 0, 1),

@@ -510,7 +510,7 @@ zn-page-palette-item {
   display: grid;
   // minmax(0) lets cells shrink below their content's min width — otherwise a
   // child card's text forces the tracks wider than the parent tile.
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--pb-slot-columns, 3), minmax(0, 1fr));
   gap: 8px;
 }
 

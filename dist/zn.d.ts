@@ -3659,6 +3659,7 @@ declare module "components/data-table-search/data-table-search.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement, { type ZincFormControl } from "internal/zinc-element";
     import ZnInput from "components/input/index";
+    import ZnTooltip from "components/tooltip/index";
     /**
      * @summary A search component for data tables.
      * @documentation https://zinc.style/components/data-table-search
@@ -3666,6 +3667,7 @@ declare module "components/data-table-search/data-table-search.component" {
      * @since 1.0
      *
      * @dependency zn-input
+     * @dependency zn-tooltip
      *
      * @event zn-search-change - Emitted when the search value changes (debounced).
      *
@@ -3676,7 +3678,7 @@ declare module "components/data-table-search/data-table-search.component" {
      * @property {string} name - The name of the search input field (default: "search").
      * @property {string} value - The current search value.
      * @property {string} placeholder - The placeholder text for the search input (default: "Search...").
-     * @property {string} helpText - Help text displayed below the search input.
+     * @property {string} helpText - Help text, shown from an information icon inside the search input.
      * @property {string} searchUri - Optional URI to use for search operations.
      * @property {number} debounceDelay - The delay in milliseconds before triggering a search (default: 500).
      */
@@ -3684,6 +3686,7 @@ declare module "components/data-table-search/data-table-search.component" {
         static styles: CSSResultGroup;
         static dependencies: {
             'zn-input': typeof ZnInput;
+            'zn-tooltip': typeof ZnTooltip;
         };
         private _formController;
         private _searchTimeout?;

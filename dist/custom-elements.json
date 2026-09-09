@@ -10835,7 +10835,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ 'zn-input': ZnInput, }"
+              "default": "{ 'zn-input': ZnInput, 'zn-tooltip': ZnTooltip, }"
             },
             {
               "kind": "field",
@@ -10891,7 +10891,7 @@
                 "text": "string"
               },
               "default": "\"\"",
-              "description": "Help text displayed below the search input.",
+              "description": "Help text, shown from an information icon inside the search input.",
               "attribute": "help-text"
             },
             {
@@ -11030,7 +11030,7 @@
                 "text": "string"
               },
               "default": "\"\"",
-              "description": "Help text displayed below the search input.",
+              "description": "Help text, shown from an information icon inside the search input.",
               "fieldName": "helpText"
             },
             {
@@ -11059,12 +11059,13 @@
           "tagNameWithoutPrefix": "data-table-search",
           "tagName": "zn-data-table-search",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A search component for data tables.\n * @documentation https://zinc.style/components/data-table-search\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-input\n *\n * @event zn-search-change - Emitted when the search value changes (debounced).\n *\n * @slot - The default slot for additional form inputs.\n *\n * @csspart base - The component's base wrapper.\n *\n * @property {string} name - The name of the search input field (default: \"search\").\n * @property {string} value - The current search value.\n * @property {string} placeholder - The placeholder text for the search input (default: \"Search...\").\n * @property {string} helpText - Help text displayed below the search input.\n * @property {string} searchUri - Optional URI to use for search operations.\n * @property {number} debounceDelay - The delay in milliseconds before triggering a search (default: 500).\n */",
+          "jsDoc": "/**\n * @summary A search component for data tables.\n * @documentation https://zinc.style/components/data-table-search\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-input\n * @dependency zn-tooltip\n *\n * @event zn-search-change - Emitted when the search value changes (debounced).\n *\n * @slot - The default slot for additional form inputs.\n *\n * @csspart base - The component's base wrapper.\n *\n * @property {string} name - The name of the search input field (default: \"search\").\n * @property {string} value - The current search value.\n * @property {string} placeholder - The placeholder text for the search input (default: \"Search...\").\n * @property {string} helpText - Help text, shown from an information icon inside the search input.\n * @property {string} searchUri - Optional URI to use for search operations.\n * @property {number} debounceDelay - The delay in milliseconds before triggering a search (default: 500).\n */",
           "documentation": "https://zinc.style/components/data-table-search",
           "status": "experimental",
           "since": "1.0",
           "dependencies": [
-            "zn-input"
+            "zn-input",
+            "zn-tooltip"
           ]
         }
       ],
@@ -49512,6 +49513,103 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/tile-group/tile-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnTileGroup",
+          "cssProperties": [
+            {
+              "description": "The number of value/action columns (set automatically).",
+              "name": "--zn-tile-cols"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper (the grid container).",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "One or more `zn-tile` elements.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "divide",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws a dividing border between rows.",
+              "attribute": "divide",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_mutationObserver",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_sync",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "divide",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws a dividing border between rows.",
+              "fieldName": "divide"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Aligns a list of `zn-tile` rows into shared, content-driven columns so values\nand actions line up across every row, with optional dividing borders.",
+          "tagNameWithoutPrefix": "tile-group",
+          "tagName": "zn-tile-group",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Aligns a list of `zn-tile` rows into shared, content-driven columns so values\n * and actions line up across every row, with optional dividing borders.\n * @documentation https://zinc.style/components/tile-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-tile\n *\n * @slot - One or more `zn-tile` elements.\n *\n * @csspart base - The component's base wrapper (the grid container).\n *\n * @cssproperty --zn-tile-cols - The number of value/action columns (set automatically).\n */",
+          "documentation": "https://zinc.style/components/tile-group",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-tile"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnTileGroup",
+            "module": "components/tile-group/tile-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/tile/tile.js",
       "declarations": [
         {
@@ -49784,103 +49882,6 @@
           "declaration": {
             "name": "ZnTile",
             "module": "components/tile/tile.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/tile-group/tile-group.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnTileGroup",
-          "cssProperties": [
-            {
-              "description": "The number of value/action columns (set automatically).",
-              "name": "--zn-tile-cols"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper (the grid container).",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "One or more `zn-tile` elements.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "divide",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws a dividing border between rows.",
-              "attribute": "divide",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "_mutationObserver",
-              "type": {
-                "text": "MutationObserver | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "_handleSlotChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_sync",
-              "privacy": "private"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "divide",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws a dividing border between rows.",
-              "fieldName": "divide"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Aligns a list of `zn-tile` rows into shared, content-driven columns so values\nand actions line up across every row, with optional dividing borders.",
-          "tagNameWithoutPrefix": "tile-group",
-          "tagName": "zn-tile-group",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Aligns a list of `zn-tile` rows into shared, content-driven columns so values\n * and actions line up across every row, with optional dividing borders.\n * @documentation https://zinc.style/components/tile-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-tile\n *\n * @slot - One or more `zn-tile` elements.\n *\n * @csspart base - The component's base wrapper (the grid container).\n *\n * @cssproperty --zn-tile-cols - The number of value/action columns (set automatically).\n */",
-          "documentation": "https://zinc.style/components/tile-group",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-tile"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnTileGroup",
-            "module": "components/tile-group/tile-group.js"
           }
         }
       ]
@@ -52646,7 +52647,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.123",
+    "version": "1.1.124",
     "author": "",
     "license": "MIT"
   }

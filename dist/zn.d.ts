@@ -2232,7 +2232,6 @@ declare module "components/input/input.component" {
      * @csspart password-toggle-button - The password toggle button.
      * @csspart suffix - The container that wraps the suffix.
      *
-     * @cssproperty --zn-input-box-shadow - Shadow cast by the field; set to `none` inside a panel that draws its own edge.
      * @cssproperty --zn-range-track-height - The height of a range input's track.
      * @cssproperty --zn-range-track-color - The color of a range input's track.
      * @cssproperty --zn-range-thumb-size - The diameter of a range input's thumb.

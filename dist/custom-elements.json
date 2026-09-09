@@ -20461,10 +20461,6 @@
           "name": "ZnInput",
           "cssProperties": [
             {
-              "description": "Shadow cast by the field; set to `none` inside a panel that draws its own edge.",
-              "name": "--zn-input-box-shadow"
-            },
-            {
               "description": "The height of a range input's track.",
               "name": "--zn-range-track-height"
             },
@@ -21996,7 +21992,7 @@
           "tagNameWithoutPrefix": "input",
           "tagName": "zn-input",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/input\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n * @dependency zn-tooltip\n *\n * @event zn-blur - Emitted when the control loses focus.\n * @event zn-change - Emitted when an alteration to the control's value is committed by the user.\n * @event zn-clear - Emitted when the clear button is activated.\n * @event zn-focus - Emitted when the control gains focus.\n * @event zn-input - Emitted when the control receives input.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n *\n * @slot label - The input's label. Alternatively, you can use the `label` attribute.\n * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n * @slot context-note - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute. Range inputs display their live value here unless this is set.\n * @slot prefix - Used to prepend a presentational icon or similar element to the input.\n * @slot suffix - Used to append a presentational icon or similar element to the input.\n * @slot clear-icon - An icon to use in lieu of the default clear icon.\n * @slot show-password-icon - An icon to use in lieu of the default show password icon.\n * @slot hide-password-icon - An icon to use in lieu of the default hide password icon.\n * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n * @slot slash-items - `<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are\n *  picked up wherever they sit inside the input, so this slot name is optional.\n * @slot slash-menu - A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can\n *  be set in markup. Any `<zn-slash-item>` children of it become the menu's items.\n *\n * @dependency zn-slash-item\n * @dependency zn-slash-menu\n *\n * @event zn-slash-select - Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to\n *  suppress the insertion and handle the item yourself.\n * @event zn-slash-insert - Emitted after a slash menu item's value has been inserted.\n *\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart slash-menu - The slash menu shown at the caret.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart base - The component's base wrapper.\n * @csspart input - The internal `<input>` control.\n * @csspart prefix - The container that wraps the prefix.\n * @csspart clear-button - The clear button.\n * @csspart password-toggle-button - The password toggle button.\n * @csspart suffix - The container that wraps the suffix.\n *\n * @cssproperty --zn-input-box-shadow - Shadow cast by the field; set to `none` inside a panel that draws its own edge.\n * @cssproperty --zn-range-track-height - The height of a range input's track.\n * @cssproperty --zn-range-track-color - The color of a range input's track.\n * @cssproperty --zn-range-thumb-size - The diameter of a range input's thumb.\n * @cssproperty --zn-range-thumb-color - The color of a range input's thumb.\n * @cssproperty --zn-range-thumb-ring-width - The width of the ring drawn around a range input's thumb.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/input\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n * @dependency zn-tooltip\n *\n * @event zn-blur - Emitted when the control loses focus.\n * @event zn-change - Emitted when an alteration to the control's value is committed by the user.\n * @event zn-clear - Emitted when the clear button is activated.\n * @event zn-focus - Emitted when the control gains focus.\n * @event zn-input - Emitted when the control receives input.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n *\n * @slot label - The input's label. Alternatively, you can use the `label` attribute.\n * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n * @slot context-note - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute. Range inputs display their live value here unless this is set.\n * @slot prefix - Used to prepend a presentational icon or similar element to the input.\n * @slot suffix - Used to append a presentational icon or similar element to the input.\n * @slot clear-icon - An icon to use in lieu of the default clear icon.\n * @slot show-password-icon - An icon to use in lieu of the default show password icon.\n * @slot hide-password-icon - An icon to use in lieu of the default hide password icon.\n * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n * @slot slash-items - `<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are\n *  picked up wherever they sit inside the input, so this slot name is optional.\n * @slot slash-menu - A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can\n *  be set in markup. Any `<zn-slash-item>` children of it become the menu's items.\n *\n * @dependency zn-slash-item\n * @dependency zn-slash-menu\n *\n * @event zn-slash-select - Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to\n *  suppress the insertion and handle the item yourself.\n * @event zn-slash-insert - Emitted after a slash menu item's value has been inserted.\n *\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart slash-menu - The slash menu shown at the caret.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart base - The component's base wrapper.\n * @csspart input - The internal `<input>` control.\n * @csspart prefix - The container that wraps the prefix.\n * @csspart clear-button - The clear button.\n * @csspart password-toggle-button - The password toggle button.\n * @csspart suffix - The container that wraps the suffix.\n *\n * @cssproperty --zn-range-track-height - The height of a range input's track.\n * @cssproperty --zn-range-track-color - The color of a range input's track.\n * @cssproperty --zn-range-thumb-size - The diameter of a range input's thumb.\n * @cssproperty --zn-range-thumb-color - The color of a range input's thumb.\n * @cssproperty --zn-range-thumb-ring-width - The width of the ring drawn around a range input's thumb.\n */",
           "documentation": "https://zinc.style/components/input",
           "status": "experimental",
           "since": "1.0",
@@ -24774,6 +24770,116 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/opt-group/opt-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnOptGroup",
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The group label element.",
+              "name": "label"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot for `<zn-option>` elements.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The label for the opt-group, displayed as a non-selectable header above the grouped options.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables all options within the group.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "handleLabelChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleDisabledChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "propagateDisabled",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The label for the opt-group, displayed as a non-selectable header above the grouped options.",
+              "fieldName": "label"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables all options within the group.",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Groups options within a `<zn-select>` under a labeled header, similar to `<optgroup>` in native HTML.",
+          "tagNameWithoutPrefix": "opt-group",
+          "tagName": "zn-opt-group",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Groups options within a `<zn-select>` under a labeled header, similar to `<optgroup>` in native HTML.\n * @documentation https://zinc.style/components/opt-group\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot for `<zn-option>` elements.\n *\n * @csspart base - The component's base wrapper.\n * @csspart label - The group label element.\n */",
+          "documentation": "https://zinc.style/components/opt-group",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnOptGroup",
+            "module": "components/opt-group/opt-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/navbar/navbar.js",
       "declarations": [
         {
@@ -25712,116 +25818,6 @@
           "declaration": {
             "name": "ZnNote",
             "module": "components/note/note.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/opt-group/opt-group.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnOptGroup",
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            },
-            {
-              "description": "The group label element.",
-              "name": "label"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot for `<zn-option>` elements.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The label for the opt-group, displayed as a non-selectable header above the grouped options.",
-              "attribute": "label"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Disables all options within the group.",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "method",
-              "name": "handleLabelChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleDisabledChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleSlotChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "propagateDisabled",
-              "privacy": "private"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The label for the opt-group, displayed as a non-selectable header above the grouped options.",
-              "fieldName": "label"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Disables all options within the group.",
-              "fieldName": "disabled"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Groups options within a `<zn-select>` under a labeled header, similar to `<optgroup>` in native HTML.",
-          "tagNameWithoutPrefix": "opt-group",
-          "tagName": "zn-opt-group",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Groups options within a `<zn-select>` under a labeled header, similar to `<optgroup>` in native HTML.\n * @documentation https://zinc.style/components/opt-group\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot for `<zn-option>` elements.\n *\n * @csspart base - The component's base wrapper.\n * @csspart label - The group label element.\n */",
-          "documentation": "https://zinc.style/components/opt-group",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnOptGroup",
-            "module": "components/opt-group/opt-group.js"
           }
         }
       ]
@@ -49513,103 +49509,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/tile-group/tile-group.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnTileGroup",
-          "cssProperties": [
-            {
-              "description": "The number of value/action columns (set automatically).",
-              "name": "--zn-tile-cols"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper (the grid container).",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "One or more `zn-tile` elements.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "divide",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws a dividing border between rows.",
-              "attribute": "divide",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "_mutationObserver",
-              "type": {
-                "text": "MutationObserver | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "_handleSlotChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_sync",
-              "privacy": "private"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "divide",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws a dividing border between rows.",
-              "fieldName": "divide"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Aligns a list of `zn-tile` rows into shared, content-driven columns so values\nand actions line up across every row, with optional dividing borders.",
-          "tagNameWithoutPrefix": "tile-group",
-          "tagName": "zn-tile-group",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Aligns a list of `zn-tile` rows into shared, content-driven columns so values\n * and actions line up across every row, with optional dividing borders.\n * @documentation https://zinc.style/components/tile-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-tile\n *\n * @slot - One or more `zn-tile` elements.\n *\n * @csspart base - The component's base wrapper (the grid container).\n *\n * @cssproperty --zn-tile-cols - The number of value/action columns (set automatically).\n */",
-          "documentation": "https://zinc.style/components/tile-group",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-tile"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnTileGroup",
-            "module": "components/tile-group/tile-group.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/tile/tile.js",
       "declarations": [
         {
@@ -49882,6 +49781,103 @@
           "declaration": {
             "name": "ZnTile",
             "module": "components/tile/tile.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/tile-group/tile-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnTileGroup",
+          "cssProperties": [
+            {
+              "description": "The number of value/action columns (set automatically).",
+              "name": "--zn-tile-cols"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper (the grid container).",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "One or more `zn-tile` elements.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "divide",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws a dividing border between rows.",
+              "attribute": "divide",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_mutationObserver",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_sync",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "divide",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws a dividing border between rows.",
+              "fieldName": "divide"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Aligns a list of `zn-tile` rows into shared, content-driven columns so values\nand actions line up across every row, with optional dividing borders.",
+          "tagNameWithoutPrefix": "tile-group",
+          "tagName": "zn-tile-group",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Aligns a list of `zn-tile` rows into shared, content-driven columns so values\n * and actions line up across every row, with optional dividing borders.\n * @documentation https://zinc.style/components/tile-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-tile\n *\n * @slot - One or more `zn-tile` elements.\n *\n * @csspart base - The component's base wrapper (the grid container).\n *\n * @cssproperty --zn-tile-cols - The number of value/action columns (set automatically).\n */",
+          "documentation": "https://zinc.style/components/tile-group",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-tile"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnTileGroup",
+            "module": "components/tile-group/tile-group.js"
           }
         }
       ]
@@ -52647,7 +52643,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.124",
+    "version": "1.1.125",
     "author": "",
     "license": "MIT"
   }

@@ -11,12 +11,36 @@
   min-width: 200px;
 }
 
-// Flush so the input box is exactly the 36px control height the toolbar tops align on
+// Keeps the focus ring inside the component's own box, so a toolbar or header that
+// hugs the input can't clip it
 zn-input::part(form-control-input) {
-  margin: 0;
+  margin: var(--zn-focus-ring-width);
 }
 
+// The help text is shown from the info icon instead, but zn-input still points the
+// input's aria-describedby at it, so hide it rather than dropping it
 zn-input::part(form-control-help-text) {
-  font-size: var(--zn-input-help-text-font-size-small);
-  padding-left: var(--zn-spacing-2x-small);
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+// zn-input pads the clear button out to 1em + 2 * --zn-input-spacing-medium, which
+// leaves it sitting further from its neighbour than the suffix icons are from theirs
+zn-input::part(clear-button) {
+  width: auto;
+  margin-inline-end: var(--zn-spacing-small);
+}
+
+// Slotted into the input's suffix, out of reach of zn-input's own icon rules
+.data-table-search__tooltip {
+  display: flex;
+  align-items: center;
+
+  zn-icon {
+    color: var(--zn-input-icon-color);
+    cursor: help;
+  }
 }

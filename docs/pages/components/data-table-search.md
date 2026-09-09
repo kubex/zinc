@@ -29,7 +29,8 @@ Use the `placeholder` attribute to customize the input placeholder text.
 
 ### Help Text
 
-Add descriptive help text to guide users with the `help-text` attribute.
+Use the `help-text` attribute to explain what can be searched. It shows an information icon inside the search field,
+before the search icon, and reads out as a tooltip on hover or focus.
 
 ```html:preview
 <zn-data-table-search
@@ -404,7 +405,7 @@ The component is built with accessibility in mind:
 - Includes a visible trailing search icon for visual recognition
 - Supports keyboard navigation and clearing via the clearable input
 - Integrates with form validation and submission
-- Provides proper labeling through the help-text attribute
+- Explains what is searchable through the help-text attribute, shown from an information icon
 
 ## Properties
 
@@ -413,7 +414,7 @@ The component is built with accessibility in mind:
 | `name`         | `name`           | `string` | `'search'`   | The name of the search input field for form submission |
 | `value`        | `value`          | `string` | `''`         | The current search value |
 | `placeholder`  | `placeholder`    | `string` | `'Search...'`| The placeholder text for the search input |
-| `helpText`     | `help-text`      | `string` | `''`         | Help text displayed below the search input |
+| `helpText`     | `help-text`      | `string` | `''`         | Help text, shown from an information icon inside the search input |
 | `searchUri`    | `search-uri`     | `string` | `undefined`  | Optional URI to use for search operations |
 | `debounceDelay`| `debounce-delay` | `number` | `350`        | The delay in milliseconds before triggering a search after the user stops typing |
 

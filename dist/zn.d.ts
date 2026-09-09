@@ -11372,7 +11372,9 @@ declare module "components/page-builder/page.types" {
         label?: string;
         /** Section content, keyed by field name (the inspector's `name` attributes). */
         data: Record<string, unknown>;
-        /** Slot contents for container sections, sized to the type's `slots`. Empty slots are null. */
+        /** Slots per row for a container whose type allows a choice; the type's default applies otherwise. */
+        columns?: number;
+        /** Slot contents for container sections, sized to {@link slotCount}. Empty slots are null. */
         children?: (PageSection | null)[];
     }
     /** The complete serialisable state of a page. Order = render order. */
@@ -11401,14 +11403,32 @@ declare module "components/page-builder/page.types" {
         /** Programmatic inspector body — takes precedence over `configTemplate`. */
         renderConfig?: (section: PageSection, update: (data: Record<string, unknown>) => void) => TemplateResult;
         /**
-         * Number of child slots this section offers on the canvas (a container tile);
-         * rendered as a 3-column grid. Containers cannot be placed inside other containers.
+         * Slots per row on the canvas, and what makes a section a container. Rows are
+         * added as they fill, so this is a width and not a capacity. Containers cannot
+         * be placed inside other containers.
          */
         slots?: number;
+        /** Lower bound of a per-section column count. Defaults to 1 when `slotsMax` is set. */
+        slotsMin?: number;
+        /** Upper bound of a per-section column count. Its presence is what makes the width editable. */
+        slotsMax?: number;
         /** Section type keys allowed in this container's slots. Omit to allow any non-container type. */
         accepts?: string[];
     }
-    /** A container section's slot contents, padded/truncated to the type's slot count. */
+    /** Per-container children beyond this are dropped when external state is applied. */
+    export const MAX_SLOTS = 24;
+    /**
+     * Slots per row for a placed container: its own choice when the type allows one,
+     * clamped to the declared bounds, else the type's fixed width.
+     */
+    export function slotColumns(section: PageSection, type: PageSectionType): number;
+    /**
+     * How many slots a placed container shows: enough rows to hold every child it
+     * already has, plus a fresh row once the last one fills. Empty rows are never
+     * offered ahead of being needed, and the total stays within {@link MAX_SLOTS}.
+     */
+    export function slotCount(section: PageSection, type: PageSectionType): number;
+    /** A container section's slot contents, padded/truncated to its slot count. */
     export function sectionChildren(section: PageSection, type: PageSectionType): (PageSection | null)[];
     /** Drag-and-drop MIME carrying a section type id from the palette to the canvas. */
     export const PAGE_TYPE_MIME = "application/x-zn-page-type";
@@ -11569,8 +11589,9 @@ declare module "components/page-builder/page-builder.component" {
      * @slot config - `<template type="…">` declarations; never displayed. Each template's attributes
      *   (type, label, icon, icon-library, color, category, description, slots, accepts) declare a
      *   palette entry and its content declares the inspector form for that type. `slots` makes the
-     *   section a container with that many child slots; `accepts` is a comma-separated list of the
-     *   type keys its slots allow.
+     *   section a container that many slots wide — rows are added as they fill — and `slots-min`/
+     *   `slots-max` let each placed section choose its own width; `accepts` is a comma-separated
+     *   list of the type keys its slots allow.
      * @slot header-left - Actions shown on the left of the header bar.
      * @slot header-right - Actions shown on the right of the header bar.
      *
@@ -11701,6 +11722,13 @@ declare module "components/page-builder/page-builder.component" {
         protected willUpdate(changed: PropertyValues): void;
         protected firstUpdated(changed: PropertyValues): void;
         private _typeFromTemplate;
+        /**
+         * `slots="N"` is a container N slots wide; adding `slots-max` lets each placed
+         * section choose its own width between `slots-min` (1 by default) and that. A
+         * width past the slot cap would leave a container with no usable row, so an
+         * out-of-bounds bound is ignored rather than honoured.
+         */
+        private _slotsFromAttributes;
         private _registerSlottedTemplates;
         /** Normalises and installs an externally provided state; resets selection. */
         private _applyExternalState;
@@ -11736,6 +11764,12 @@ declare module "components/page-builder/page-builder.component" {
         addSection(type: string, index?: number): PageSection | null;
         /** Adds a new section of a registered type into a container's slot. Returns null if not allowed. */
         addSectionToSlot(type: string, containerId: string, slotIndex: number): PageSection | null;
+        /**
+         * Sets how many slots per row a container whose type allows a choice lays out,
+         * clamped to the declared bounds. Children keep their order and reflow into the
+         * new width, so nothing is lost by narrowing one.
+         */
+        setSectionColumns(id: string, columns: number): void;
         private _removeSection;
         private _duplicateSection;
         /** Moves a section (top-level or slotted) to a top-level position. */

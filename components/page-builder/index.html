@@ -1183,8 +1183,9 @@
                     <code>&lt;template type="…"&gt;</code> declarations; never displayed. Each template’s attributes
                     (type, label, icon, icon-library, color, category, description, slots, accepts) declare a palette
                     entry and its content declares the inspector form for that type. <code>slots</code> makes the
-                    section a container with that many child slots; <code>accepts</code> is a comma-separated list of
-                    the type keys its slots allow.
+                    section a container that many slots wide — rows are added as they fill — and <code>slots-min</code>/
+                    <code>slots-max</code> let each placed section choose its own width; <code>accepts</code> is a
+                    comma-separated list of the type keys its slots allow.
                   </td>
                 </tr>
 
@@ -1564,6 +1565,18 @@
                   <td>Adds a new section of a registered type into a container’s slot. Returns null if not allowed.</td>
                   <td>
                     <code> type: string, containerId: string, slotIndex: number </code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>setSectionColumns()</code></td>
+                  <td>
+                    Sets how many slots per row a container whose type allows a choice lays out, clamped to the declared
+                    bounds. Children keep their order and reflow into the new width, so nothing is lost by narrowing
+                    one.
+                  </td>
+                  <td>
+                    <code> id: string, columns: number </code>
                   </td>
                 </tr>
               </tbody>

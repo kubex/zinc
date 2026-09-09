@@ -1934,7 +1934,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                     @click=${this.handleClearClick}
                     tabindex="-1">
                     <slot name="clear-icon">
-                      <zn-icon src="cancel"></zn-icon>
+                      <zn-icon src="circle-x@lu" size="20"></zn-icon>
                     </slot>
                   </button>`
                 : ''}

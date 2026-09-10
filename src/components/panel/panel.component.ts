@@ -92,27 +92,25 @@ export default class ZnPanel extends ZincElement {
     this.resizeObserver = null;
   }
 
-  private get bodySlot(): HTMLSlotElement | null {
-    return this.renderRoot?.querySelector('.panel__body > slot') ?? null;
-  }
-
-  // Slotted content can grow without the body's own box changing, so the observers go on the
-  // slotted elements rather than the body.
   private observeBodyContent() {
-    const slot = this.bodySlot;
-    if (!slot) return;
+    const body = this.renderRoot?.querySelector('.panel__body');
+    if (!body) return;
 
     this.resizeObserver ??= new ResizeObserver(() => this.measureBodyContent());
     this.resizeObserver.disconnect();
-    slot.assignedElements({flatten: true}).forEach(el => this.resizeObserver!.observe(el));
+    this.resizeObserver.observe(body);
     this.measureBodyContent();
   }
 
+  // Measured on the body, not on the slotted elements: `display: contents` hosts such as zn-stat
+  // render content but have no box of their own to read or observe.
   private measureBodyContent() {
-    const nodes = this.bodySlot?.assignedNodes({flatten: true}) ?? [];
-    this.bodyEmpty = !nodes.some(node => node.nodeType === Node.TEXT_NODE
-      ? node.textContent!.trim() !== ''
-      : (node as Element).getBoundingClientRect().height > 0);
+    const body = this.renderRoot?.querySelector('.panel__body');
+    if (!body) return;
+
+    const style = getComputedStyle(body);
+    const padding = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+    this.bodyEmpty = body.scrollHeight - padding <= 0;
   }
 
   protected render(): unknown {

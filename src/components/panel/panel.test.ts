@@ -1,5 +1,5 @@
 import '../../../dist/zn.min.js';
-import { expect, fixture, html, waitUntil } from '@open-wc/testing';
+import { aTimeout, expect, fixture, html, waitUntil } from '@open-wc/testing';
 
 describe('<zn-panel>', () => {
   it('should render a component', async () => {
@@ -39,6 +39,20 @@ describe('<zn-panel>', () => {
     await waitUntil(() => !header.classList.contains('panel__header--underline'));
 
     expect(el.shadowRoot!.querySelector('.panel')!.classList.contains('panel--empty')).to.be.true;
+  });
+
+  it('keeps the padded body when slotted content has no box of its own', async () => {
+    const el = await fixture(html` <zn-panel caption="Example">
+      <div style="display: contents">
+        <div style="height: 20px"></div>
+      </div>
+    </zn-panel> `);
+    const header = el.shadowRoot!.querySelector('.panel__header')!;
+
+    await aTimeout(50);
+
+    expect(header.classList.contains('panel__header--underline')).to.be.true;
+    expect(el.shadowRoot!.querySelector('.panel')!.classList.contains('panel--empty')).to.be.false;
   });
 
   it('restores the header underline when slotted content gains height', async () => {

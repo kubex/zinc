@@ -4177,6 +4177,7 @@ declare module "components/data-table/data-table.component" {
         filterClearListener: (e: Event) => void;
         filterChangeListener: (e: ZnFilterChangeEvent) => void;
         searchChangeListener: (e: ZnSearchChangeEvent) => void;
+        private get isNarrowed();
         emptyState(): TemplateResult<1>;
         renderTable(data: Response): TemplateResult<1>;
         private renderErrorAlert;

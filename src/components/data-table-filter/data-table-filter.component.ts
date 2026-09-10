@@ -148,6 +148,13 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
   protected willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
 
+    // Rebuild the active filters from an externally-set value (e.g. restored from a shareable URL)
+    // once both the value and the filters schema are available. Must run before the default-filters
+    // seeding so a shared filter wins over defaults.
+    if (changed.has('value') || changed.has('filters')) {
+      this.hydrateFromValue();
+    }
+
     if (changed.has('filters') && this._active.length === 0) {
       this.defaultFilters
         .split(',')
@@ -277,6 +284,44 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
     this.value = data.length > 0 ? btoa(JSON.stringify(data)) : '';
     this._formController.updateValidity();
     this.emit('zn-filter-change');
+  }
+
+  /**
+   * Rebuild the active filters from an encoded `value` (the inverse of emitChange), so a filter
+   * restored from a shareable URL shows its pills. Runs only while there are no active filters and
+   * needs the filters schema present to resolve each key. Sets `_active` directly so it neither
+   * re-emits nor overwrites the value it just read.
+   */
+  private hydrateFromValue() {
+    // Guard on valued filters (not just any pill) so default-filters' empty pills don't block a
+    // shared filter, and so a user's in-progress filter is never clobbered by a later value change.
+    if (!this.value || this.filters.length === 0 || this.activeCount > 0) return;
+
+    let decoded: unknown;
+    try {
+      decoded = JSON.parse(atob(this.value));
+    } catch {
+      return;
+    }
+    if (!Array.isArray(decoded)) return;
+
+    const active: ActiveFilter[] = [];
+    decoded.forEach((entry) => {
+      if (typeof entry !== 'object' || entry === null) return;
+      const cond = entry as {key?: string; comparator?: string; value?: unknown};
+      if (typeof cond.key !== 'string') return;
+
+      const filter = this.definition(cond.key);
+      if (!filter) return;
+
+      const comparator = (cond.comparator as QueryBuilderOperators) || this.comparatorFor(filter);
+      // Multi-value filters serialize as a joined string; tolerate an array form too.
+      const value = Array.isArray(cond.value) ? cond.value.join(' ') : String(cond.value ?? '');
+
+      active.push({key: cond.key, comparator, value});
+    });
+
+    if (active.length > 0) this._active = active;
   }
 
   private handleDateInput(filter: QueryBuilderItem, active: ActiveFilter, event: Event) {

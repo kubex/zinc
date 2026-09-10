@@ -3460,6 +3460,13 @@ declare module "components/data-table-filter/data-table-filter.component" {
         private toggleOption;
         private selectedValues;
         private emitChange;
+        /**
+         * Rebuild the active filters from an encoded `value` (the inverse of emitChange), so a filter
+         * restored from a shareable URL shows its pills. Runs only while there are no active filters and
+         * needs the filters schema present to resolve each key. Sets `_active` directly so it neither
+         * re-emits nor overwrites the value it just read.
+         */
+        private hydrateFromValue;
         private handleDateInput;
         private serializeDate;
         private handleTextInput;
@@ -3679,7 +3686,7 @@ declare module "components/data-table-search/data-table-search.component" {
      * @property {string} placeholder - The placeholder text for the search input (default: "Search...").
      * @property {string} helpText - Help text, shown from an information icon inside the search input.
      * @property {string} searchUri - Optional URI to use for search operations.
-     * @property {number} debounceDelay - The delay in milliseconds before triggering a search (default: 500).
+     * @property {number} debounceDelay - The delay in milliseconds before triggering a search (default: 350).
      */
     export default class ZnDataTableSearch extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
@@ -4139,6 +4146,11 @@ declare module "components/data-table/data-table.component" {
         filters: [];
         method: 'GET' | 'POST';
         noInitialLoad: boolean;
+        /**
+         * When set, the table's non-default state (search, filter, sort, page, per-page and field values)
+         *is mirrored to the URL query string and restored from it on load, so the view is shareable.
+         */
+        sharable: boolean;
         groupBy: string;
         groups: string;
         itemsPerPage: number;
@@ -4147,6 +4159,9 @@ declare module "components/data-table/data-table.component" {
         private _hasLoadedData;
         private _lastLoadHadRows;
         private _lastTableContent;
+        private _sharableInitialised;
+        private _sharableDefaults;
+        private readonly _urlManagedKeys;
         private readonly resizeObserver;
         private page;
         private totalPages;
@@ -4173,8 +4188,36 @@ declare module "components/data-table/data-table.component" {
         private isColumnVisible;
         private applyColumnDefaults;
         private toggleColumn;
+        private static readonly _sharableKnownKeys;
+        /**
+         * Snapshot the initial (attribute-provided) value of every managed key, so the URL writer can
+         * omit any key still holding its default - e.g. the table's default sort/direction, page 1 or the
+         * default page size. Captured once, before the URL is read, so URL values are treated as deltas.
+         */
+        private _captureSharableDefaults;
+        /**
+         * Seed the table state from the URL query string (raw param names) when `sharable` is set. Runs
+         * once, before the first render, so the initial data request already carries the shared state.
+         */
+        private _readSharableState;
+        /**
+         * Push the shared state back into the actual DOM fields so the UI reflects it. The search value
+         * lives on the slotted <zn-data-table-search>, the filter on <zn-data-table-filter>, and extra
+         * field params on the search/inputs fields (all light-DOM descendants).
+         */
+        private _populateSharableFields;
+        private _hasFieldNamed;
+        private _setSharableFieldValue;
+        /**
+         * Mirror the current table state to the URL query string (raw param names) via replaceState.
+         * A key is written only when its value differs from the captured default, so the default sort,
+         * page 1, the default page size and empty search/filter/fields never clutter the URL. Unrelated
+         * params (e.g. utm_*) are preserved.
+         */
+        private _updateSharableUrl;
         render(): TemplateResult<1>;
         connectedCallback(): void;
+        protected firstUpdated(): void;
         protected updated(changed: PropertyValues): void;
         private publishFilterSuggestions;
         private getTemplate;

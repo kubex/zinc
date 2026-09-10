@@ -16,28 +16,6 @@
           "js": { "properties": [], "events": [] }
         },
         {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -97,6 +75,28 @@
               { "name": "center", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -2747,6 +2747,11 @@
               "value": { "type": "boolean", "default": "false" }
             },
             {
+              "name": "sharable",
+              "description": "When set, the table's non-default state (search, filter, sort, page, per-page and field values)\nis mirrored to the URL query string and restored from it on load, so the view is shareable.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
               "name": "group-by",
               "value": { "type": "string", "default": "''" }
             },
@@ -2834,6 +2839,11 @@
               { "name": "filters", "type": "[]" },
               { "name": "method", "type": "'GET' | 'POST'" },
               { "name": "noInitialLoad", "type": "boolean" },
+              {
+                "name": "sharable",
+                "description": "When set, the table's non-default state (search, filter, sort, page, per-page and field values)\nis mirrored to the URL query string and restored from it on load, so the view is shareable.",
+                "type": "boolean"
+              },
               { "name": "groupBy", "type": "string" },
               { "name": "groups", "type": "string" },
               { "name": "itemsPerPage", "type": "number" },
@@ -2935,7 +2945,7 @@
             },
             {
               "name": "debounce-delay",
-              "description": "The delay in milliseconds before triggering a search (default: 500).",
+              "description": "The delay in milliseconds before triggering a search (default: 350).",
               "value": { "type": "number", "default": "350" }
             }
           ],
@@ -2980,7 +2990,7 @@
               },
               {
                 "name": "debounceDelay",
-                "description": "The delay in milliseconds before triggering a search (default: 500).",
+                "description": "The delay in milliseconds before triggering a search (default: 350).",
                 "type": "number"
               },
               { "name": "validationMessage", "type": "string" },

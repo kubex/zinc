@@ -58,79 +58,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -319,6 +246,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -8858,6 +8858,16 @@
             },
             {
               "kind": "field",
+              "name": "sharable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "When set, the table's non-default state (search, filter, sort, page, per-page and field values)\nis mirrored to the URL query string and restored from it on load, so the view is shareable.",
+              "attribute": "sharable"
+            },
+            {
+              "kind": "field",
               "name": "groupBy",
               "type": {
                 "text": "string"
@@ -8925,6 +8935,31 @@
               },
               "privacy": "private",
               "default": "html``"
+            },
+            {
+              "kind": "field",
+              "name": "_sharableInitialised",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_sharableDefaults",
+              "type": {
+                "text": "Record<string, string> | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_urlManagedKeys",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>(['search', 'filter', 'sortColumn', 'sortDirection', 'page', 'perPage'])"
             },
             {
               "kind": "field",
@@ -9013,7 +9048,7 @@
               "kind": "field",
               "name": "_dataTask",
               "privacy": "private",
-              "default": "new Task(this, { task: async ([dataUri, requestParams], {signal}) => { if (dataUri === undefined || this.noInitialLoad && this._initialLoad) { return {rows: [], page: 1, perPage: this.itemsPerPage, total: 0}; } if (this.groupBy) { // we want to load all the data possible so we can group and show multiple tables this.itemsPerPage = 1000; } const requestData: DataRequest = { page: this.page, perPage: this.itemsPerPage, sortColumn: this.sortColumn, sortDirection: this.sortDirection, filter: this.filter, search: this.search, }; // get all inputs that are in the inputs slot and add them to the const inputs = this.hasSlotController.getSlots(ActionSlots.inputs.valueOf()); const params: Record<string, any> = {}; if (inputs) { inputs.forEach((input) => { const allowedInputs = ['zn-input', 'zn-select', 'zn-query-builder', 'zn-multiselect', 'zn-params-select', 'zn-datepicker', 'input', 'select', 'textarea']; if (allowedInputs.includes(input.tagName.toLowerCase())) { const value = (input as AllowedInputElement).value as string || input.getAttribute('value'); const name = (input as AllowedInputElement).name || input.getAttribute('name'); if (name) { params[name] = value; } } }); Object.assign(requestData, params); } // Add any extra request params if (requestParams && typeof requestParams === 'object') { Object.assign(requestData, requestParams); } // This is also used for Rubix, so it may not work for your application. const response = await fetch(dataUri, { method: this.method, headers: { 'x-kx-fetch-style': 'zn-data-table', }, signal, credentials: 'same-origin', body: this.method === 'POST' ? JSON.stringify(requestData) : undefined }); if (!response.ok) throw new Error(response.statusText); return response.json(); }, args: () => [this.dataUri, this.requestParams] })"
+              "default": "new Task(this, { task: async ([dataUri, requestParams], {signal}) => { // Every request path funnels through the task, so this is the single place to mirror the // current (non-default) state to the URL when `sharable` is set. this._updateSharableUrl(); if (dataUri === undefined || this.noInitialLoad && this._initialLoad) { return {rows: [], page: 1, perPage: this.itemsPerPage, total: 0}; } if (this.groupBy) { // we want to load all the data possible so we can group and show multiple tables this.itemsPerPage = 1000; } const requestData: DataRequest = { page: this.page, perPage: this.itemsPerPage, sortColumn: this.sortColumn, sortDirection: this.sortDirection, filter: this.filter, search: this.search, }; // Inputs-slot values are context/system params (e.g. csrf token, package name) sent with // every request - they stay at the root of the payload. const inputs = this.hasSlotController.getSlots(ActionSlots.inputs.valueOf()); const params: Record<string, any> = {}; if (inputs) { inputs.forEach((input) => { const allowedInputs = ['zn-input', 'zn-select', 'zn-query-builder', 'zn-multiselect', 'zn-params-select', 'zn-datepicker', 'input', 'select', 'textarea']; if (allowedInputs.includes(input.tagName.toLowerCase())) { const value = (input as AllowedInputElement).value as string || input.getAttribute('value'); const name = (input as AllowedInputElement).name || input.getAttribute('name'); if (name) { params[name] = value; } } }); Object.assign(requestData, params); } // Search-related fields (from <zn-data-table-search>'s `fields` slot, delivered via // requestParams) are wrapped under `searchFields` so the backend can bind them to a single // map rather than arbitrary root-level keys. `q` mirrors the search text; the root `search` // key is still sent for back-compatibility. Empty values are dropped, and `searchFields` is // null when nothing meaningful remains so the backend can treat it as \"no search\". const searchFields: Record<string, any> = {}; if (requestParams && typeof requestParams === 'object') { for (const [key, value] of Object.entries(requestParams as Record<string, unknown>)) { if (value !== undefined && value !== null && value !== '') { searchFields[key] = value; } } } if (this.search || Object.keys(searchFields).length > 0) { searchFields.q = this.search; } requestData.searchFields = Object.keys(searchFields).length > 0 ? searchFields : null; // This is also used for Rubix, so it may not work for your application. const response = await fetch(dataUri, { method: this.method, headers: { 'x-kx-fetch-style': 'zn-data-table', }, signal, credentials: 'same-origin', body: this.method === 'POST' ? JSON.stringify(requestData) : undefined }); if (!response.ok) throw new Error(response.statusText); return response.json(); }, args: () => [this.dataUri, this.requestParams] })"
             },
             {
               "kind": "field",
@@ -9153,6 +9188,78 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "field",
+              "name": "_sharableKnownKeys",
+              "type": {
+                "text": "array"
+              },
+              "privacy": "private",
+              "static": true,
+              "readonly": true,
+              "default": "['search', 'filter', 'sortColumn', 'sortDirection', 'page', 'perPage']"
+            },
+            {
+              "kind": "method",
+              "name": "_captureSharableDefaults",
+              "privacy": "private",
+              "description": "Snapshot the initial (attribute-provided) value of every managed key, so the URL writer can\nomit any key still holding its default - e.g. the table's default sort/direction, page 1 or the\ndefault page size. Captured once, before the URL is read, so URL values are treated as deltas."
+            },
+            {
+              "kind": "method",
+              "name": "_readSharableState",
+              "privacy": "private",
+              "description": "Seed the table state from the URL query string (raw param names) when `sharable` is set. Runs\nonce, before the first render, so the initial data request already carries the shared state."
+            },
+            {
+              "kind": "method",
+              "name": "_populateSharableFields",
+              "privacy": "private",
+              "description": "Push the shared state back into the actual DOM fields so the UI reflects it. The search value\nlives on the slotted <zn-data-table-search>, the filter on <zn-data-table-filter>, and extra\nfield params on the search/inputs fields (all light-DOM descendants)."
+            },
+            {
+              "kind": "method",
+              "name": "_hasFieldNamed",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_setSharableFieldValue",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_updateSharableUrl",
+              "privacy": "private",
+              "description": "Mirror the current table state to the URL query string (raw param names) via replaceState.\nA key is written only when its value differs from the captured default, so the default sort,\npage 1, the default page size and empty search/filter/fields never clutter the URL. Unrelated\nparams (e.g. utm_*) are preserved."
             },
             {
               "kind": "method",
@@ -9952,6 +10059,15 @@
               "fieldName": "noInitialLoad"
             },
             {
+              "name": "sharable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "When set, the table's non-default state (search, filter, sort, page, per-page and field values)\nis mirrored to the URL query string and restored from it on load, so the view is shareable.",
+              "fieldName": "sharable"
+            },
+            {
               "name": "group-by",
               "type": {
                 "text": "string"
@@ -10450,6 +10566,12 @@
             },
             {
               "kind": "method",
+              "name": "hydrateFromValue",
+              "privacy": "private",
+              "description": "Rebuild the active filters from an encoded `value` (the inverse of emitChange), so a filter\nrestored from a shareable URL shows its pills. Runs only while there are no active filters and\nneeds the filters schema present to resolve each key. Sets `_active` directly so it neither\nre-emits nor overwrites the value it just read."
+            },
+            {
+              "kind": "method",
               "name": "handleDateInput",
               "privacy": "private",
               "parameters": [
@@ -10919,7 +11041,7 @@
                 "text": "number"
               },
               "default": "350",
-              "description": "The delay in milliseconds before triggering a search (default: 500).",
+              "description": "The delay in milliseconds before triggering a search (default: 350).",
               "attribute": "debounce-delay"
             },
             {
@@ -11056,7 +11178,7 @@
                 "text": "number"
               },
               "default": "350",
-              "description": "The delay in milliseconds before triggering a search (default: 500).",
+              "description": "The delay in milliseconds before triggering a search (default: 350).",
               "fieldName": "debounceDelay"
             }
           ],
@@ -11068,7 +11190,7 @@
           "tagNameWithoutPrefix": "data-table-search",
           "tagName": "zn-data-table-search",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A search component for data tables.\n * @documentation https://zinc.style/components/data-table-search\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-input\n * @dependency zn-tooltip\n *\n * @event zn-search-change - Emitted when the search value changes (debounced).\n *\n * @slot - The default slot for additional form inputs.\n *\n * @csspart base - The component's base wrapper.\n *\n * @property {string} name - The name of the search input field (default: \"search\").\n * @property {string} value - The current search value.\n * @property {string} placeholder - The placeholder text for the search input (default: \"Search...\").\n * @property {string} helpText - Help text, shown from an information icon inside the search input.\n * @property {string} searchUri - Optional URI to use for search operations.\n * @property {number} debounceDelay - The delay in milliseconds before triggering a search (default: 500).\n */",
+          "jsDoc": "/**\n * @summary A search component for data tables.\n * @documentation https://zinc.style/components/data-table-search\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-input\n * @dependency zn-tooltip\n *\n * @event zn-search-change - Emitted when the search value changes (debounced).\n *\n * @slot - The default slot for additional form inputs.\n *\n * @csspart base - The component's base wrapper.\n *\n * @property {string} name - The name of the search input field (default: \"search\").\n * @property {string} value - The current search value.\n * @property {string} placeholder - The placeholder text for the search input (default: \"Search...\").\n * @property {string} helpText - Help text, shown from an information icon inside the search input.\n * @property {string} searchUri - Optional URI to use for search operations.\n * @property {number} debounceDelay - The delay in milliseconds before triggering a search (default: 350).\n */",
           "documentation": "https://zinc.style/components/data-table-search",
           "status": "experimental",
           "since": "1.0",

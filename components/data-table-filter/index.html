@@ -752,6 +752,20 @@
             exactly as <code>zn-query-builder</code> encodes it — base64 of <code>[{key, comparator, value}]</code> — so
             a backend built against the query builder needs no changes.
           </p>
+          <p>
+            Setting <code>value</code> round-trips: assigning that same base64 string back — for example restoring it
+            from a shared URL via <code>zn-data-table</code>’s
+            <a href="/components/data-table#shareable-url-state"><code>sharable</code></a> sync — rebuilds the active
+            pills, so the bar reopens in the state it was encoded in. Restoration needs the <code>filters</code> schema
+            present to resolve each key, and it stands down once any filter already holds a value, so a shared filter
+            still wins over an empty <code>default-filters</code> pill while a filter the user is mid-way through
+            setting is never clobbered.
+          </p>
+          <p>
+            One caveat: a restored <strong>date</strong> filter shows its raw encoded value on the pill (a timestamp, or
+            a minutes-from-now offset) rather than a formatted date, because the human-readable label is not part of the
+            encoded query. The filter still applies correctly; only the pill text differs until the value is re-picked.
+          </p>
           <h3 id="long-option-lists" class="anchor-heading">
             Long Option Lists<a href="#long-option-lists" aria-label='Direct link to "Long Option Lists"'></a>
           </h3>

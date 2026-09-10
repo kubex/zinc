@@ -3867,8 +3867,14 @@ declare module "components/panel/panel.component" {
         flushFooter: boolean;
         transparent: boolean;
         shadow: boolean;
+        private bodyEmpty;
+        private resizeObserver;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         connectedCallback(): void;
+        disconnectedCallback(): void;
+        private get bodySlot();
+        private observeBodyContent;
+        private measureBodyContent;
         protected render(): unknown;
     }
 }

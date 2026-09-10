@@ -476,6 +476,38 @@ describe('<zn-page-builder>', () => {
       .to.have.length(6);
   });
 
+  it('should snap an out-of-range width back on every entry and state the range', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder config='{"sections":[{"id":"row","type":"category-row","data":{}}]}'>
+        <template type="category-row" slot="config" label="Category Row" slots="3" slots-max="4"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    el.shadowRoot?.querySelector('.canvas zn-page-section-card')?.dispatchEvent(new Event('click'));
+    await el.updateComplete;
+
+    const width = el.shadowRoot!.querySelector<HTMLInputElement>('.inspector__slots')!;
+    expect(width.getAttribute('help-text'), 'the control names its range').to.contain('1 and 4');
+
+    const enter = async (value: string) => {
+      width.value = value;
+      width.dispatchEvent(new Event('zn-change', {bubbles: true}));
+      await el.updateComplete;
+    };
+
+    await enter('9');
+    expect(el.state.sections[0].columns, 'clamped to the max').to.equal(4);
+    expect(width.value, 'and shown clamped').to.equal('4');
+
+    await enter('9');
+    expect(width.value, 'a second over-max entry snaps back too').to.equal('4');
+    expect(el.state.sections[0].columns).to.equal(4);
+
+    await enter('0');
+    expect(el.state.sections[0].columns, 'clamped to the min').to.equal(1);
+    expect(width.value).to.equal('1');
+  });
+
   it('should clamp a container width to the declared bounds', async () => {
     const el = await fixture<ZnPageBuilder>(html`
       <zn-page-builder config='{"sections":[{"id":"row","type":"category-row","data":{},"columns":99}]}'>

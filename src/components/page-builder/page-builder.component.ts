@@ -666,6 +666,19 @@ export default class ZnPageBuilder extends ZincElement {
     this._commit({ sections: this._patchSection(id, s => ({ ...s, columns: next })) });
   }
 
+  /**
+   * Snaps the field back to the width the container will use. A re-render alone
+   * would not: once the state already sits at a bound, an out-of-range entry
+   * changes nothing to re-render from.
+   */
+  private _onColumnsEntered(section: PageSection, input: ZnInput) {
+    const type = this.registry.get(section.type);
+    if (type?.slotsMax === undefined) return;
+    const next = slotColumns({...section, columns: Number(input.value)}, type);
+    input.value = String(next);
+    this.setSectionColumns(section.id, next);
+  }
+
   private _removeSection(id: string) {
     if (this._isPinned(id)) return;
     const [removed, sections] = this._extract(id);
@@ -1229,9 +1242,9 @@ export default class ZnPageBuilder extends ZincElement {
               label="Slots per row"
               min="${type.slotsMin ?? 1}"
               max="${type.slotsMax}"
-              help-text="A new row is added as the last one fills."
+              help-text="Between ${type.slotsMin ?? 1} and ${type.slotsMax}. A new row is added as the last one fills."
               .value="${String(slotColumns(section, type))}"
-              @zn-change="${(e: Event) => this.setSectionColumns(section.id, Number((e.target as ZnInput).value))}"></zn-input>`}
+              @zn-change="${(e: Event) => this._onColumnsEntered(section, e.target as ZnInput)}"></zn-input>`}
           ${type?.renderConfig
             ? type.renderConfig(section, data => this._updateSectionData(section.id, data))
             : this._form}

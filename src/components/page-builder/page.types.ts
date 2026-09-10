@@ -64,7 +64,8 @@ export const MAX_SLOTS = 24;
 export function slotColumns(section: PageSection, type: PageSectionType): number {
   const columns = type.slots ?? 0;
   if (type.slotsMax === undefined) return columns;
-  return Math.min(Math.max(section.columns ?? columns, type.slotsMin ?? 1), type.slotsMax);
+  const chosen = Math.round(Number(section.columns ?? NaN));
+  return Math.min(Math.max(Number.isFinite(chosen) ? chosen : columns, type.slotsMin ?? 1), type.slotsMax);
 }
 
 /**

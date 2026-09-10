@@ -169,45 +169,6 @@ The component supports slotting additional form controls that will be included i
 Slotted form controls are hidden from view but their values are collected and included in the `formData` property of the `zn-search-change` event. This allows you to manage additional search parameters without cluttering the UI.
 :::
 
-### Filter Fields
-
-Slot filter controls into the **`fields`** slot to render them to the **left of the search input**, where they stay visible as part of the search UI. Changing any of them — a `zn-select`, a native `<select>`, a datepicker, and so on — fires the same debounced `zn-search-change` event as typing in the search box, so filters and free-text search reload the table together. Their values are collected into `formData` by `getFormData()` alongside the default-slot inputs.
-
-Unlike the default slot (which is hidden and only carries values), the `fields` slot is visible. It accepts the same input types listed under [Supported Slotted Input Types](#supported-slotted-input-types).
-
-```html:preview
-<zn-data-table-search class="fields-demo" placeholder="Search tickets...">
-  <zn-select slot="fields" name="status" value="open">
-    <zn-option value="open">Open</zn-option>
-    <zn-option value="pending">Pending</zn-option>
-    <zn-option value="closed">Closed</zn-option>
-  </zn-select>
-
-  <zn-select slot="fields" name="priority" value="all">
-    <zn-option value="all">Any priority</zn-option>
-    <zn-option value="high">High</zn-option>
-    <zn-option value="low">Low</zn-option>
-  </zn-select>
-</zn-data-table-search>
-
-<div class="fields-results" style="margin-top: 1rem; padding: 1rem; background: var(--zn-color-neutral-50); border-radius: var(--zn-border-radius);">
-  <strong>Search Parameters:</strong>
-  <pre class="fields-content" style="margin-top: 0.5rem; font-size: 0.875rem;">Change a filter or type to search</pre>
-</div>
-
-<script type="module">
-  const fieldsSearch = document.querySelector('.fields-demo');
-  const fieldsResults = document.querySelector('.fields-content');
-
-  await customElements.whenDefined('zn-data-table-search');
-
-  fieldsSearch.addEventListener('zn-search-change', (event) => {
-    const { value, formData } = event.detail;
-    fieldsResults.textContent = JSON.stringify({ search: value, ...formData }, null, 2);
-  });
-</script>
-```
-
 ### Supported Slotted Input Types
 
 The following input types are supported in the default slot and will have their values included in the form data:
@@ -478,7 +439,6 @@ The component is built with accessibility in mind:
 | Name      | Description |
 |-----------|-------------|
 | (default) | Additional form inputs to be included in the search form data. Slotted elements are hidden but their values are collected. |
-| `fields`  | Filter controls rendered to the left of the search input and kept visible. Changing any of them triggers the same debounced `zn-search-change` as typing, and their values are included in `formData`. |
 
 ## CSS Parts
 

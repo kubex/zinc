@@ -31,7 +31,6 @@ type AllowedInputElement =
  * @event zn-search-change - Emitted when the search value changes (debounced).
  *
  * @slot - The default slot for additional form inputs.
- * @slot fields - Filter fields rendered to the left of the search input; changing any of them triggers a debounced search.
  *
  * @csspart base - The component's base wrapper.
  *
@@ -94,7 +93,7 @@ export default class ZnDataTableSearch extends ZincElement implements ZincFormCo
   }
 
   /**
-   * Collects form data from slotted input elements (both the default slot and the fields slot)
+   * Collects form data from slotted input elements
    */
   getFormData(): Record<string, any> {
     const params: Record<string, any> = {};
@@ -147,23 +146,6 @@ export default class ZnDataTableSearch extends ZincElement implements ZincFormCo
     }, this.debounceDelay);
   }
 
-  handleFieldChange = (e: Event) => {
-    // Only react to changes originating inside the fields slot; ignore the main
-    // search input (which has its own handler) and anything else.
-    const target = e.target as Element | null;
-    if (!target?.closest('[slot="fields"]')) {
-      return;
-    }
-
-    if (this._searchTimeout) {
-      window.clearTimeout(this._searchTimeout);
-    }
-
-    this._searchTimeout = window.setTimeout(() => {
-      this.emitSearchChange();
-    }, this.debounceDelay);
-  }
-
   handleClear = () => {
     if (this._searchTimeout) {
       window.clearTimeout(this._searchTimeout);
@@ -178,18 +160,8 @@ export default class ZnDataTableSearch extends ZincElement implements ZincFormCo
     this.emitSearchChange();
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    // Selects/dropdowns fire zn-change; native controls fire change. Delegate
-    // at the host so wrapped/nested fields in the fields slot are covered.
-    this.addEventListener('zn-change', this.handleFieldChange);
-    this.addEventListener('change', this.handleFieldChange);
-  }
-
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener('zn-change', this.handleFieldChange);
-    this.removeEventListener('change', this.handleFieldChange);
     if (this._searchTimeout) {
       window.clearTimeout(this._searchTimeout);
     }
@@ -212,7 +184,6 @@ export default class ZnDataTableSearch extends ZincElement implements ZincFormCo
   render() {
     return html`
       <div class="data-table-search">
-        <slot name="fields" class="data-table-search__fields"></slot>
         <zn-input
           type="search"
           name="${this.name}"

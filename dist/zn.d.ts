@@ -11770,6 +11770,12 @@ declare module "components/page-builder/page-builder.component" {
          * new width, so nothing is lost by narrowing one.
          */
         setSectionColumns(id: string, columns: number): void;
+        /**
+         * Snaps the field back to the width the container will use. A re-render alone
+         * would not: once the state already sits at a bound, an out-of-range entry
+         * changes nothing to re-render from.
+         */
+        private _onColumnsEntered;
         private _removeSection;
         private _duplicateSection;
         /** Moves a section (top-level or slotted) to a top-level position. */

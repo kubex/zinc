@@ -641,36 +641,32 @@ export default class ZnDataTable extends ZincElement {
     }
   }
 
+  // A table narrowed by a search or filter has rows, just none matching them, so
+  // its empty state must not claim there is nothing to create
+  private get isNarrowed(): boolean {
+    return this.search.length > 0 || this.filter.length > 0;
+  }
+
   emptyState() {
-    if (this.noInitialLoad && !this._initialLoad) {
-      if (this.hasSlotController.test('no-results')) {
-        return html`
-          <div class="table--empty">
-            <slot name="no-results"></slot>
-          </div>`;
-      }
-
+    if (this.isNarrowed || (this.noInitialLoad && !this._initialLoad)) {
       return html`
         <div class="table--empty">
-          <zn-empty-state caption="No Results Found" icon="search">
-            <p>Nothing matched your search. Try adjusting your filters.</p>
-          </zn-empty-state>
-        </div>`;
-    }
-
-    if (this.hasSlotController.test('empty-state')) {
-      return html`
-        <div class="table--empty">
-          <slot name="empty-state"></slot>
+          <slot name="no-results">
+            <zn-empty-state caption="No Results Found" icon="search">
+              <p>Nothing matched your search. Try adjusting your filters.</p>
+            </zn-empty-state>
+          </slot>
         </div>`;
     }
 
     return html`
       <div class="table--empty">
-        <zn-empty-state
-          caption="${this.emptyStateCaption ? this.emptyStateCaption : (this.caption ? "No " + this.caption.toLowerCase() + " found" : "No data found")}"
-          icon="${this.emptyStateIcon}">
-        </zn-empty-state>
+        <slot name="empty-state">
+          <zn-empty-state
+            caption="${this.emptyStateCaption ? this.emptyStateCaption : (this.caption ? "No " + this.caption.toLowerCase() + " found" : "No data found")}"
+            icon="${this.emptyStateIcon}">
+          </zn-empty-state>
+        </slot>
       </div>`;
   }
 
@@ -1323,9 +1319,9 @@ export default class ZnDataTable extends ZincElement {
           size="${ifDefined(size)}"
           color="${ifDefined(color)}"
           ${ref(el => {
-        if (!el) return;
-        tokens.forEach(t => el.setAttribute(t, ''));
-      })}
+            if (!el) return;
+            tokens.forEach(t => el.setAttribute(t, ''));
+          })}
           title="${ifDefined(data.title)}"
         ></zn-icon> ${content}`;
     }
@@ -1345,7 +1341,7 @@ export default class ZnDataTable extends ZincElement {
           <zn-hover-container placement="${placement}" flip>
             ${content}
             <div slot="content">
-                ${unsafeHTML(data.hoverContent)}
+              ${unsafeHTML(data.hoverContent)}
             </div>
           </zn-hover-container>`;
       }

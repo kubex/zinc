@@ -230,6 +230,52 @@ describe('<zn-data-table>', () => {
     }
   });
 
+  it('shows a no-results state when a filter empties a normally loading table', async () => {
+    const originalFetch = window.fetch;
+    window.fetch = () => Promise.resolve(new Response(JSON.stringify({rows: [], page: 1, perPage: 10, total: 0}),
+      {status: 200, headers: {'Content-Type': 'application/json'}}));
+
+    try {
+      const el = await fixture<ZnDataTable>(html`
+        <zn-data-table data-uri="/test-data" headers='{"name": {"key": "name", "label": "Name"}}'>
+          <div slot="empty-state" id="nothing-created">Nothing created yet</div>
+          <div slot="no-results" id="nothing-matched">Nothing matched</div>
+        </zn-data-table>`);
+
+      await waitUntil(() => el.shadowRoot?.querySelector('slot[name="empty-state"]'));
+      expect(el.shadowRoot!.querySelector('slot[name="empty-state"]')).to.exist;
+
+      el.filter = 'eyJrZXkiOiJ0eXBlIn0=';
+      el.refresh();
+      await waitUntil(() => el.shadowRoot?.querySelector('slot[name="no-results"]'));
+
+      expect(el.shadowRoot!.querySelector('slot[name="no-results"]')).to.exist;
+      expect(el.shadowRoot!.querySelector('slot[name="empty-state"]')).to.not.exist;
+    } finally {
+      window.fetch = originalFetch;
+    }
+  });
+
+  it('shows a no-results state when a search empties a normally loading table', async () => {
+    const originalFetch = window.fetch;
+    window.fetch = () => Promise.resolve(new Response(JSON.stringify({rows: [], page: 1, perPage: 10, total: 0}),
+      {status: 200, headers: {'Content-Type': 'application/json'}}));
+
+    try {
+      const el = await fixture<ZnDataTable>(html`
+        <zn-data-table data-uri="/test-data" search="nothing" headers='{"name": {"key": "name", "label": "Name"}}'>
+          <div slot="empty-state">Nothing created yet</div>
+        </zn-data-table>`);
+
+      await waitUntil(() => el.shadowRoot?.querySelector('zn-empty-state'));
+
+      expect(el.shadowRoot!.querySelector('slot[name="empty-state"]')).to.not.exist;
+      expect(el.shadowRoot!.querySelector('zn-empty-state')!.getAttribute('caption')).to.equal('No Results Found');
+    } finally {
+      window.fetch = originalFetch;
+    }
+  });
+
   it('exposes displayTemplates as an object property', async () => {
     const el = await fixture<ZnDataTable>(html` <zn-data-table></zn-data-table> `);
     const templates = (el as unknown as {displayTemplates: Record<string, unknown>}).displayTemplates;

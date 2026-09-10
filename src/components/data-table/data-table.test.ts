@@ -276,4 +276,209 @@ describe('<zn-data-table>', () => {
     expect(link).to.exist;
     expect(link?.hasAttribute('title')).to.be.false;
   });
+
+  // Search-component field values are nested under `searchFields` in the POST body, with `q`
+  // mirroring the search text, while the root `search` key is retained for back-compatibility.
+  describe('searchFields request wrapping', () => {
+    const rowResponse = () => new Response(JSON.stringify({
+      rows: [{id: '1', cells: [{text: 'Row', column: 'name'}]}],
+      page: 1,
+      perPage: 10,
+      total: 1,
+    }), {status: 200, headers: {'Content-Type': 'application/json'}});
+
+    it('wraps search-component field values under searchFields with q mirroring the search text', async () => {
+      const originalFetch = window.fetch;
+      const bodies: Record<string, unknown>[] = [];
+      window.fetch = (_url: RequestInfo | URL, options?: RequestInit) => {
+        if (options?.body) bodies.push(JSON.parse(options.body as string) as Record<string, unknown>);
+        return Promise.resolve(rowResponse());
+      };
+
+      try {
+        const el = await fixture<ZnDataTable>(html`
+          <zn-data-table data-uri="/test-data" headers='{"name": {"key": "name", "label": "Name"}}'></zn-data-table>`);
+        await waitUntil(() => bodies.length > 0);
+
+        // Mirror what the search component's zn-search-change listener does: set the search text and
+        // merge its field values into requestParams, then reload.
+        el.search = 'foo';
+        el.requestParams = {status: 'open'};
+        el.refresh();
+        await waitUntil(() => bodies.some(b => b.search === 'foo'));
+
+        const body = bodies[bodies.length - 1];
+        expect(body.search).to.equal('foo');
+        expect(body.searchFields).to.deep.equal({status: 'open', q: 'foo'});
+      } finally {
+        window.fetch = originalFetch;
+      }
+    });
+
+    it('sends searchFields as null when no search or field values are set', async () => {
+      const originalFetch = window.fetch;
+      const bodies: Record<string, unknown>[] = [];
+      window.fetch = (_url: RequestInfo | URL, options?: RequestInit) => {
+        if (options?.body) bodies.push(JSON.parse(options.body as string) as Record<string, unknown>);
+        return Promise.resolve(rowResponse());
+      };
+
+      try {
+        await fixture<ZnDataTable>(html`
+          <zn-data-table data-uri="/test-data" headers='{"name": {"key": "name", "label": "Name"}}'></zn-data-table>`);
+        await waitUntil(() => bodies.length > 0);
+
+        expect(bodies[bodies.length - 1].searchFields).to.be.null;
+      } finally {
+        window.fetch = originalFetch;
+      }
+    });
+
+    it('keeps inputs-slot params at the request root, not inside searchFields', async () => {
+      const originalFetch = window.fetch;
+      const bodies: Record<string, unknown>[] = [];
+      window.fetch = (_url: RequestInfo | URL, options?: RequestInit) => {
+        if (options?.body) bodies.push(JSON.parse(options.body as string) as Record<string, unknown>);
+        return Promise.resolve(rowResponse());
+      };
+
+      try {
+        const el = await fixture<ZnDataTable>(html`
+          <zn-data-table data-uri="/test-data" headers='{"name": {"key": "name", "label": "Name"}}'>
+            <input slot="inputs" name="csrf" value="tok">
+          </zn-data-table>`);
+        await waitUntil(() => bodies.length > 0);
+        el.refresh();
+        await waitUntil(() => bodies.length > 1);
+
+        const body = bodies[bodies.length - 1];
+        expect(body.csrf).to.equal('tok');
+        expect(body.searchFields).to.be.null;
+      } finally {
+        window.fetch = originalFetch;
+      }
+    });
+  });
+
+  // `sharable` mirrors non-default state to the URL query string and restores it on load. These
+  // tests mutate window.location/history, so each one restores the original URL in a finally block
+  // and preserves the pre-existing query (web-test-runner keeps its session id there).
+  describe('sharable URL state', () => {
+    const okResponse = () => new Response(JSON.stringify({
+      rows: [{id: '1', cells: [{text: 'Row', column: 'name'}]}],
+      page: 1,
+      perPage: 10,
+      total: 1,
+    }), {status: 200, headers: {'Content-Type': 'application/json'}});
+
+    const MANAGED = ['search', 'filter', 'sortColumn', 'sortDirection', 'page', 'perPage'];
+
+    // Start from the live query (keeping unmanaged params like the WTR session id) with every
+    // managed key cleared, then overlay whatever the test wants to seed.
+    const seedUrl = (overlay: Record<string, string> = {}) => {
+      const params = new URLSearchParams(window.location.search);
+      MANAGED.forEach(key => params.delete(key));
+      Object.entries(overlay).forEach(([key, value]) => params.set(key, value));
+      const query = params.toString();
+      window.history.replaceState(window.history.state, '', `${window.location.pathname}${query ? `?${query}` : ''}`);
+    };
+
+    it('seeds the table state from the URL query string on load', async () => {
+      const originalFetch = window.fetch;
+      const originalUrl = window.location.href;
+      const bodies: Record<string, unknown>[] = [];
+      window.fetch = (_url: RequestInfo | URL, options?: RequestInit) => {
+        if (options?.body) bodies.push(JSON.parse(options.body as string) as Record<string, unknown>);
+        return Promise.resolve(okResponse());
+      };
+      seedUrl({search: 'foo', page: '2'});
+
+      try {
+        await fixture<ZnDataTable>(html`
+          <zn-data-table sharable data-uri="/test-data" headers='{"name": {"key": "name", "label": "Name"}}'></zn-data-table>`);
+        await waitUntil(() => bodies.length > 0);
+
+        // The very first request already carries the shared state.
+        expect(bodies[0].search).to.equal('foo');
+        expect(bodies[0].page).to.equal(2);
+      } finally {
+        window.fetch = originalFetch;
+        window.history.replaceState(window.history.state, '', originalUrl);
+      }
+    });
+
+    it('writes only changed state to the URL, omitting keys still at their default', async () => {
+      const originalFetch = window.fetch;
+      const originalUrl = window.location.href;
+      window.fetch = () => Promise.resolve(okResponse());
+      seedUrl();
+
+      try {
+        const el = await fixture<ZnDataTable>(html`
+          <zn-data-table sharable data-uri="/test-data" headers='{"name": {"key": "name", "label": "Name"}}'></zn-data-table>`);
+        await waitUntil(() => el.shadowRoot!.querySelector('tbody tr.table__row--data'));
+
+        el.search = 'bar';
+        el.refresh();
+        await waitUntil(() => window.location.search.includes('search=bar'));
+
+        const params = new URLSearchParams(window.location.search);
+        expect(params.get('search')).to.equal('bar');
+        // Page 1 and the unset/default sort are omitted rather than written out.
+        expect(params.has('page')).to.be.false;
+        expect(params.has('sortColumn')).to.be.false;
+        expect(params.has('perPage')).to.be.false;
+      } finally {
+        window.fetch = originalFetch;
+        window.history.replaceState(window.history.state, '', originalUrl);
+      }
+    });
+
+    it('preserves unrelated query params when syncing state', async () => {
+      const originalFetch = window.fetch;
+      const originalUrl = window.location.href;
+      window.fetch = () => Promise.resolve(okResponse());
+      seedUrl({utm_source: 'news'});
+
+      try {
+        const el = await fixture<ZnDataTable>(html`
+          <zn-data-table sharable data-uri="/test-data" headers='{"name": {"key": "name", "label": "Name"}}'></zn-data-table>`);
+        await waitUntil(() => el.shadowRoot!.querySelector('tbody tr.table__row--data'));
+
+        el.search = 'bar';
+        el.refresh();
+        await waitUntil(() => window.location.search.includes('search=bar'));
+
+        const params = new URLSearchParams(window.location.search);
+        expect(params.get('utm_source')).to.equal('news');
+        expect(params.get('search')).to.equal('bar');
+      } finally {
+        window.fetch = originalFetch;
+        window.history.replaceState(window.history.state, '', originalUrl);
+      }
+    });
+
+    it('forces the first load under no-initial-load when the URL carries relevant params', async () => {
+      const originalFetch = window.fetch;
+      const originalUrl = window.location.href;
+      const bodies: Record<string, unknown>[] = [];
+      window.fetch = (_url: RequestInfo | URL, options?: RequestInit) => {
+        if (options?.body) bodies.push(JSON.parse(options.body as string) as Record<string, unknown>);
+        return Promise.resolve(okResponse());
+      };
+      seedUrl({search: 'foo'});
+
+      try {
+        await fixture<ZnDataTable>(html`
+          <zn-data-table sharable no-initial-load data-uri="/test-data" headers='{"name": {"key": "name", "label": "Name"}}'></zn-data-table>`);
+        // Despite no-initial-load, a shared link must render results, so the first load fires.
+        await waitUntil(() => bodies.length > 0);
+
+        expect(bodies[0].search).to.equal('foo');
+      } finally {
+        window.fetch = originalFetch;
+        window.history.replaceState(window.history.state, '', originalUrl);
+      }
+    });
+  });
 });

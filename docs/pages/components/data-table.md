@@ -643,6 +643,41 @@ Prevent automatic data loading on mount with `no-initial-load`. Call the `refres
 </script>
 ```
 
+### Shareable URL State
+
+Set `sharable` to mirror the table's **non-default** state to the URL query string and restore it on load, so a view can be copied straight from the address bar and reproduced elsewhere. What syncs: the search text, the filter, the sort column and direction, the current page, the page size, and any search `fields` values.
+
+Only state that differs from its initial/default value is written, so the URL stays clean — the default sort and direction, page 1, the default page size and an empty search/filter/fields are all omitted. Unrelated query parameters (for example `utm_*`) are left untouched. Updates use `history.replaceState`, so they never add browser-history entries.
+
+On load, the table seeds its state from the query string before the first request. A URL parameter is only adopted as a field value when a matching `[name="…"]` control exists in the table's light DOM; anything else is left alone as an unrelated parameter. When combined with `no-initial-load`, a URL that carries relevant parameters forces the first load anyway, so a shared link never lands on an empty table.
+
+```html
+<zn-data-table
+  sharable
+  standalone
+  caption="Users"
+  data-uri="/api/users"
+  headers='[
+    {"key":"name","label":"Name", "sortable":true},
+    {"key":"email","label":"Email", "sortable":true},
+    {"key":"status","label":"Status", "sortable":true}
+  ]'>
+
+  <zn-data-table-search slot="search" placeholder="Search users..."></zn-data-table-search>
+
+  <zn-data-table-filter
+    slot="filter"
+    default-filters="status"
+    filters='[
+      {"id":"status","name":"Status","options":{"active":"Active","inactive":"Inactive"},"operators":["eq"]}
+    ]'>
+  </zn-data-table-filter>
+
+</zn-data-table>
+```
+
+Opening `/users?search=acme&status=<encoded>&page=2` reproduces that exact search, filter and page; sorting a column or paging then rewrites the query in place.
+
 ### Standalone Mode
 
 Use `standalone` when the table supplies its own panel rather than sitting inside one. It renders a `zn-panel`, passing `caption` through as the panel's caption, the header controls into its `actions` slot and the pagination into its `footer` slot, with the rows flush against the panel edges. Columns scroll under the panel's edges, so the border stays put on a wide table.
@@ -889,7 +924,7 @@ The data table expects responses in the following format:
 
 ## Request Format
 
-For POST requests, the table sends:
+For POST requests, the table sends a JSON body:
 
 ```json
 {
@@ -898,8 +933,14 @@ For POST requests, the table sends:
   "sortColumn": "name",
   "sortDirection": "asc",
   "filter": "",
-  "search": "search term"
+  "search": "search term",
+  "searchFields": {
+    "q": "search term",
+    "status": "open"
+  }
 }
 ```
 
-Additional parameters from the `inputs` slot are merged into the request.
+Field values from a slotted `zn-data-table-search`'s [`fields` slot](/components/data-table-search#filter-fields) are wrapped under `searchFields`, keeping them out of the request root so the backend can bind them to a single map rather than arbitrary top-level keys. `q` mirrors the `search` text, and the root `search` key is retained for back-compatibility. Empty values are dropped, and `searchFields` is `null` when nothing meaningful remains — no search text and no field values — so the backend can treat that as "no search".
+
+Parameters from the `inputs` slot are context/system values (a CSRF token, a package name, and the like) sent with every request. They are merged at the **root** of the body, not inside `searchFields`.

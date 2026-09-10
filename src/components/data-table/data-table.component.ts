@@ -151,6 +151,9 @@ interface DataRequest {
   sortDirection: string;
   filter: string;
   search: string;
+  // Search-related fields (from the search component's `fields` slot) plus `q` (the search text),
+  // wrapped so the backend can bind them to a single map instead of arbitrary root-level keys.
+  searchFields?: Record<string, any> | null;
 }
 
 type AllowedInputElement =
@@ -269,6 +272,12 @@ export default class ZnDataTable extends ZincElement {
 
   @property({attribute: "no-initial-load", type: Boolean}) noInitialLoad: boolean = false;
 
+  /**
+   * When set, the table's non-default state (search, filter, sort, page, per-page and field values)
+   *is mirrored to the URL query string and restored from it on load, so the view is shareable.
+   */
+  @property({attribute: 'sharable', type: Boolean}) sharable: boolean = false;
+
   @property({attribute: 'group-by'}) groupBy = '';
 
   @property() groups = '';
@@ -281,6 +290,11 @@ export default class ZnDataTable extends ZincElement {
   private _hasLoadedData = false;
   private _lastLoadHadRows = false;
   private _lastTableContent: TemplateResult = html``;
+
+  // Sharable (URL <-> state) sync
+  private _sharableInitialised = false;
+  private _sharableDefaults: Record<string, string> | null = null;
+  private readonly _urlManagedKeys = new Set<string>(['search', 'filter', 'sortColumn', 'sortDirection', 'page', 'perPage']);
 
   private readonly resizeObserver = new ResizeController(this, {
     target: null,
@@ -320,6 +334,10 @@ export default class ZnDataTable extends ZincElement {
 
   private _dataTask = new Task(this, {
     task: async ([dataUri, requestParams], {signal}) => {
+      // Every request path funnels through the task, so this is the single place to mirror the
+      // current (non-default) state to the URL when `sharable` is set.
+      this._updateSharableUrl();
+
       if (dataUri === undefined || this.noInitialLoad && this._initialLoad) {
         return {rows: [], page: 1, perPage: this.itemsPerPage, total: 0};
       }
@@ -338,7 +356,8 @@ export default class ZnDataTable extends ZincElement {
         search: this.search,
       };
 
-      // get all inputs that are in the inputs slot and add them to the
+      // Inputs-slot values are context/system params (e.g. csrf token, package name) sent with
+      // every request - they stay at the root of the payload.
       const inputs = this.hasSlotController.getSlots(ActionSlots.inputs.valueOf());
       const params: Record<string, any> = {};
       if (inputs) {
@@ -355,10 +374,24 @@ export default class ZnDataTable extends ZincElement {
         Object.assign(requestData, params);
       }
 
-      // Add any extra request params
+      // Search-related fields (from <zn-data-table-search>'s `fields` slot, delivered via
+      // requestParams) are wrapped under `searchFields` so the backend can bind them to a single
+      // map rather than arbitrary root-level keys. `q` mirrors the search text; the root `search`
+      // key is still sent for back-compatibility. Empty values are dropped, and `searchFields` is
+      // null when nothing meaningful remains so the backend can treat it as "no search".
+      const searchFields: Record<string, any> = {};
       if (requestParams && typeof requestParams === 'object') {
-        Object.assign(requestData, requestParams);
+        for (const [key, value] of Object.entries(requestParams as Record<string, unknown>)) {
+          if (value !== undefined && value !== null && value !== '') {
+            searchFields[key] = value;
+          }
+        }
       }
+      if (this.search || Object.keys(searchFields).length > 0) {
+        searchFields.q = this.search;
+      }
+
+      requestData.searchFields = Object.keys(searchFields).length > 0 ? searchFields : null;
 
       // This is also used for Rubix, so it may not work for your application.
       const response = await fetch(dataUri, {
@@ -437,6 +470,177 @@ export default class ZnDataTable extends ZincElement {
       deselected.add(header.key);
     }
     this._deselectedColumns = deselected;
+  }
+
+  // Reserved (non-field) URL param names that map onto dedicated table state.
+  private static readonly _sharableKnownKeys = ['search', 'filter', 'sortColumn', 'sortDirection', 'page', 'perPage'];
+
+  /**
+   * Snapshot the initial (attribute-provided) value of every managed key, so the URL writer can
+   * omit any key still holding its default - e.g. the table's default sort/direction, page 1 or the
+   * default page size. Captured once, before the URL is read, so URL values are treated as deltas.
+   */
+  private _captureSharableDefaults() {
+    if (this._sharableDefaults) return;
+    this._sharableDefaults = {
+      search: this.search || '',
+      filter: this.filter || '',
+      sortColumn: this.sortColumn || '',
+      sortDirection: this.sortDirection || '',
+      page: String(this.page),
+      perPage: String(this.itemsPerPage),
+    };
+  }
+
+  /**
+   * Seed the table state from the URL query string (raw param names) when `sharable` is set. Runs
+   * once, before the first render, so the initial data request already carries the shared state.
+   */
+  private _readSharableState() {
+    if (!this.sharable || this._sharableInitialised) return;
+    if (typeof window === 'undefined') return;
+    this._sharableInitialised = true;
+
+    const params = new URLSearchParams(window.location.search);
+    let hasRelevant = false;
+
+    if (params.has('search')) {
+      this.search = params.get('search')!;
+      hasRelevant = true;
+    }
+    if (params.has('filter')) {
+      this.filter = params.get('filter')!;
+      hasRelevant = true;
+    }
+    if (params.has('sortColumn')) {
+      this.sortColumn = params.get('sortColumn')!;
+      hasRelevant = true;
+    }
+    if (params.has('sortDirection')) {
+      this.sortDirection = params.get('sortDirection')!;
+      hasRelevant = true;
+    }
+    if (params.has('page')) {
+      const page = parseInt(params.get('page')!, 10);
+      if (!isNaN(page) && page > 0) this.page = page;
+      hasRelevant = true;
+    }
+    if (params.has('perPage')) {
+      const perPage = parseInt(params.get('perPage')!, 10);
+      if (!isNaN(perPage) && perPage > 0) this.itemsPerPage = perPage;
+      hasRelevant = true;
+    }
+
+    // Any remaining param is adopted as an extra field value only when it maps to an actual field in
+    // the table. Unrelated params (e.g. utm_*) are left untouched so they survive the round-trip.
+    const known = new Set(ZnDataTable._sharableKnownKeys);
+    const extras: Record<string, any> = {};
+    params.forEach((value, key) => {
+      if (known.has(key) || !this._hasFieldNamed(key)) return;
+      hasRelevant = true;
+      this._urlManagedKeys.add(key);
+      extras[key] = value;
+    });
+    if (Object.keys(extras).length > 0) {
+      this.requestParams = {...this.requestParams, ...extras};
+    }
+
+    // A shared link must render results even when no-initial-load is set - otherwise the recipient
+    // would land on an empty table. Force the first load when the URL carries relevant params.
+    if (hasRelevant && this.noInitialLoad) {
+      this._initialLoad = false;
+    }
+  }
+
+  /**
+   * Push the shared state back into the actual DOM fields so the UI reflects it. The search value
+   * lives on the slotted <zn-data-table-search>, the filter on <zn-data-table-filter>, and extra
+   * field params on the search/inputs fields (all light-DOM descendants).
+   */
+  private _populateSharableFields() {
+    if (this.search) {
+      const searchEl = this.querySelector('zn-data-table-search') as (Element & { value?: unknown }) | null;
+      if (searchEl) searchEl.value = this.search;
+    }
+
+    if (this.filter) {
+      const filterEl = this.querySelector('zn-data-table-filter') as (Element & { value?: unknown }) | null;
+      if (filterEl) filterEl.value = this.filter;
+    }
+
+    const known = new Set(ZnDataTable._sharableKnownKeys);
+    Object.entries(this.requestParams).forEach(([name, value]) => {
+      if (known.has(name) || name === 'searchUri' || value === undefined || value === null) return;
+      this._setSharableFieldValue(name, String(value));
+    });
+  }
+
+  private _hasFieldNamed(name: string): boolean {
+    try {
+      const selector = `[name="${window.CSS && CSS.escape ? CSS.escape(name) : name}"]`;
+      return this.querySelector(selector) !== null;
+    } catch {
+      return false;
+    }
+  }
+
+  private _setSharableFieldValue(name: string, value: string) {
+    let selector: string;
+    try {
+      selector = `[name="${window.CSS && CSS.escape ? CSS.escape(name) : name}"]`;
+    } catch {
+      selector = `[name="${name}"]`;
+    }
+
+    this.querySelectorAll(selector).forEach((field) => {
+      (field as Element & { value?: unknown }).value = value;
+      // Custom elements may read the value from the attribute (and it survives an upgrade).
+      if (field.tagName.includes('-')) {
+        field.setAttribute('value', value);
+      }
+    });
+  }
+
+  /**
+   * Mirror the current table state to the URL query string (raw param names) via replaceState.
+   * A key is written only when its value differs from the captured default, so the default sort,
+   * page 1, the default page size and empty search/filter/fields never clutter the URL. Unrelated
+   * params (e.g. utm_*) are preserved.
+   */
+  private _updateSharableUrl() {
+    if (!this.sharable || !window?.history) return;
+    const defaults: Record<string, string> = this._sharableDefaults ?? {};
+
+    const params = new URLSearchParams(window.location.search);
+
+    // Drop every key the table manages, then re-add only the ones that differ from their default.
+    this._urlManagedKeys.forEach((key) => params.delete(key));
+
+    const setParam = (key: string, value: unknown) => {
+      this._urlManagedKeys.add(key);
+      const str = value === undefined || value === null ? '' : String(value);
+      if (str === '' || str === (defaults[key] || '')) return;
+      params.set(key, str);
+    };
+
+    // Extra field values (searchFields) - their default is empty, so setParam writes them only when set.
+    const known = new Set(ZnDataTable._sharableKnownKeys);
+    Object.entries(this.requestParams).forEach(([key, value]) => {
+      if (known.has(key) || key === 'searchUri') return;
+      setParam(key, value);
+    });
+
+    setParam('search', this.search);
+    setParam('filter', this.filter);
+    setParam('sortColumn', this.sortColumn);
+    setParam('sortDirection', this.sortDirection);
+    setParam('page', this.page);
+    setParam('perPage', this.itemsPerPage);
+
+
+    const queryString = params.toString();
+    const newUrl = `${window.location.pathname}${queryString ? `?${queryString}` : ''}${window.location.hash}`;
+    window.history.replaceState(window.history.state, '', newUrl);
   }
 
   render() {
@@ -557,6 +761,16 @@ export default class ZnDataTable extends ZincElement {
     this.addEventListener('zn-filter-change', this.filterChangeListener);
     this.addEventListener('zn-clear', this.filterClearListener);
     this.addEventListener('zn-search-change', this.searchChangeListener);
+    // Capture defaults before reading the URL so URL values are treated as deltas, then seed state.
+    this._captureSharableDefaults();
+    this._readSharableState();
+  }
+
+  protected firstUpdated() {
+    // Push the shared state back into the slotted fields once they exist in the DOM.
+    if (this.sharable) {
+      this._populateSharableFields();
+    }
   }
 
   protected updated(changed: PropertyValues) {
@@ -1238,6 +1452,8 @@ export default class ZnDataTable extends ZincElement {
 
       if (this.localSort) {
         this._rows = this.sortLocalData(this._rows as Row[]);
+        // Local sort never runs the data task (our URL-sync choke point), so mirror it here.
+        this._updateSharableUrl();
         this.requestUpdate();
       } else {
         this._dataTask.run().then(r => r);

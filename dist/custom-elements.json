@@ -58,6 +58,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -246,79 +319,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -23752,19 +23752,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "bodySlot",
-              "type": {
-                "text": "HTMLSlotElement | null"
-              },
-              "privacy": "private",
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
               "kind": "method",
               "name": "observeBodyContent",
               "privacy": "private",
@@ -31138,15 +31125,6 @@
               },
               "privacy": "private",
               "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "bodySlot",
-              "type": {
-                "text": "HTMLSlotElement | null"
-              },
-              "privacy": "private",
-              "readonly": true
             },
             {
               "kind": "method",
@@ -48507,719 +48485,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/tile/tile.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnTile",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, '[default]', 'properties', 'actions', 'image')"
-            },
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "caption"
-            },
-            {
-              "kind": "field",
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "description"
-            },
-            {
-              "kind": "field",
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "href"
-            },
-            {
-              "kind": "field",
-              "name": "dataTarget",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "data-target"
-            },
-            {
-              "kind": "field",
-              "name": "gaid",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "gaid"
-            },
-            {
-              "kind": "field",
-              "name": "dataUri",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "data-uri"
-            },
-            {
-              "kind": "field",
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush"
-            },
-            {
-              "kind": "field",
-              "name": "flushX",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush-x"
-            },
-            {
-              "kind": "field",
-              "name": "flushY",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush-y"
-            },
-            {
-              "kind": "field",
-              "name": "inline",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "inline"
-            },
-            {
-              "kind": "field",
-              "name": "plain",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Renders the caption in the normal table-content weight instead of bold.",
-              "attribute": "plain"
-            },
-            {
-              "kind": "field",
-              "name": "grouped",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row.",
-              "attribute": "grouped",
-              "reflects": true
-            },
-            {
-              "kind": "method",
-              "name": "_isLink",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_handleActionsClick",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "caption"
-            },
-            {
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "description"
-            },
-            {
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "href"
-            },
-            {
-              "name": "data-target",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "dataTarget"
-            },
-            {
-              "name": "gaid",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "gaid"
-            },
-            {
-              "name": "data-uri",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "dataUri"
-            },
-            {
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flush"
-            },
-            {
-              "name": "flush-x",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flushX"
-            },
-            {
-              "name": "flush-y",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flushY"
-            },
-            {
-              "name": "inline",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "inline"
-            },
-            {
-              "name": "plain",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Renders the caption in the normal table-content weight instead of bold.",
-              "fieldName": "plain"
-            },
-            {
-              "name": "grouped",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row.",
-              "fieldName": "grouped"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "tile",
-          "tagName": "zn-tile",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/tile\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/tile",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnTile",
-            "module": "components/tile/tile.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/thumbnail-group/thumbnail-group.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnThumbnailGroup",
-          "cssProperties": [
-            {
-              "description": "Track width of a thumbnail. Defaults to 180px. Also settable with the `thumbnail-width` attribute.",
-              "name": "--zn-thumbnail-width"
-            },
-            {
-              "description": "Gap between thumbnails. Also settable with the `gap` attribute.",
-              "name": "--zn-thumbnail-gap"
-            },
-            {
-              "description": "Aspect ratio of every thumbnail in the group. Also settable with the `aspect-ratio` attribute. Any `zn-thumbnail` custom property set here is inherited by the slotted thumbnails.",
-              "name": "--zn-thumbnail-aspect-ratio"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            },
-            {
-              "description": "The header row holding the caption and toggle.",
-              "name": "header"
-            },
-            {
-              "description": "The heading text.",
-              "name": "caption"
-            },
-            {
-              "description": "The show all / show less button.",
-              "name": "toggle"
-            },
-            {
-              "description": "The scrolling row / expanded grid that holds the thumbnails.",
-              "name": "items"
-            }
-          ],
-          "slots": [
-            {
-              "description": "One or more `zn-thumbnail` elements.",
-              "name": ""
-            },
-            {
-              "description": "Replaces the heading text.",
-              "name": "caption"
-            },
-            {
-              "description": "Extra content in the header, before the toggle.",
-              "name": "actions"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The heading shown at the top left of the group.",
-              "attribute": "caption"
-            },
-            {
-              "kind": "field",
-              "name": "expanded",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Expands the group into the full wrapping grid.",
-              "attribute": "expanded",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "total",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "Total number of thumbnails in the underlying set, shown in the \"Show All (n)\" label. Set this when\nthe row only holds the first page of a larger set; otherwise the slotted thumbnails are counted.",
-              "attribute": "total"
-            },
-            {
-              "kind": "field",
-              "name": "showAllLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Show All'",
-              "description": "Label of the expand toggle. The count is appended in brackets.",
-              "attribute": "show-all-label"
-            },
-            {
-              "kind": "field",
-              "name": "showLessLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Show Less'",
-              "description": "Label of the collapse toggle.",
-              "attribute": "show-less-label"
-            },
-            {
-              "kind": "field",
-              "name": "hideToggle",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Never render the toggle, even when the row overflows.",
-              "attribute": "hide-toggle"
-            },
-            {
-              "kind": "field",
-              "name": "alwaysToggle",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Always render the toggle, even when every thumbnail already fits on the row.",
-              "attribute": "always-toggle"
-            },
-            {
-              "kind": "field",
-              "name": "selectable",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Manages single selection across the slotted thumbnails.",
-              "attribute": "selectable",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "aspectRatio",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Aspect ratio for every thumbnail in the group, as any CSS `aspect-ratio` value (e.g. `1 / 1`).\nShorthand for setting `--zn-thumbnail-aspect-ratio` on the group. A thumbnail's own\n`aspect-ratio` attribute still wins.",
-              "attribute": "aspect-ratio",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "thumbnailWidth",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Track width of each thumbnail (e.g. `140px`). Shorthand for `--zn-thumbnail-width`.",
-              "attribute": "thumbnail-width",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "gap",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Gap between thumbnails (e.g. `8px`). Shorthand for `--zn-thumbnail-gap`.",
-              "attribute": "gap",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The `value` of the selected thumbnail (`selectable` groups only).",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "_overflowing",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_count",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0"
-            },
-            {
-              "kind": "field",
-              "name": "_items",
-              "type": {
-                "text": "HTMLElement"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_resizeObserver",
-              "type": {
-                "text": "ResizeObserver | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "_observe",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_syncCustomProperties",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "changed",
-                  "type": {
-                    "text": "PropertyValues"
-                  }
-                }
-              ],
-              "description": "Mirrors the shorthand attributes onto host custom properties. They go on the host rather than\nanywhere in the shadow root because the thumbnails are light-DOM children — inheriting from the\nhost is the only way the values reach them."
-            },
-            {
-              "kind": "method",
-              "name": "show",
-              "description": "Expands the group into the full grid."
-            },
-            {
-              "kind": "method",
-              "name": "hide",
-              "description": "Collapses the group back to a single row."
-            },
-            {
-              "kind": "field",
-              "name": "_thumbnails",
-              "type": {
-                "text": "ZnThumbnail[]"
-              },
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_handleSlotChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_sync",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_measure",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_handleSelect",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_handleToggle",
-              "privacy": "private"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted when the group expands into the full grid.",
-              "name": "zn-expand"
-            },
-            {
-              "description": "Emitted when the group collapses back to a single row.",
-              "name": "zn-collapse"
-            },
-            {
-              "description": "Emitted when the selected thumbnail changes (`selectable` groups only).",
-              "name": "zn-change"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The heading shown at the top left of the group.",
-              "fieldName": "caption"
-            },
-            {
-              "name": "expanded",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Expands the group into the full wrapping grid.",
-              "fieldName": "expanded"
-            },
-            {
-              "name": "total",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "Total number of thumbnails in the underlying set, shown in the \"Show All (n)\" label. Set this when\nthe row only holds the first page of a larger set; otherwise the slotted thumbnails are counted.",
-              "fieldName": "total"
-            },
-            {
-              "name": "show-all-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Show All'",
-              "description": "Label of the expand toggle. The count is appended in brackets.",
-              "fieldName": "showAllLabel"
-            },
-            {
-              "name": "show-less-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Show Less'",
-              "description": "Label of the collapse toggle.",
-              "fieldName": "showLessLabel"
-            },
-            {
-              "name": "hide-toggle",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Never render the toggle, even when the row overflows.",
-              "fieldName": "hideToggle"
-            },
-            {
-              "name": "always-toggle",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Always render the toggle, even when every thumbnail already fits on the row.",
-              "fieldName": "alwaysToggle"
-            },
-            {
-              "name": "selectable",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Manages single selection across the slotted thumbnails.",
-              "fieldName": "selectable"
-            },
-            {
-              "name": "aspect-ratio",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Aspect ratio for every thumbnail in the group, as any CSS `aspect-ratio` value (e.g. `1 / 1`).\nShorthand for setting `--zn-thumbnail-aspect-ratio` on the group. A thumbnail's own\n`aspect-ratio` attribute still wins.",
-              "fieldName": "aspectRatio"
-            },
-            {
-              "name": "thumbnail-width",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Track width of each thumbnail (e.g. `140px`). Shorthand for `--zn-thumbnail-width`.",
-              "fieldName": "thumbnailWidth"
-            },
-            {
-              "name": "gap",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Gap between thumbnails (e.g. `8px`). Shorthand for `--zn-thumbnail-gap`.",
-              "fieldName": "gap"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The `value` of the selected thumbnail (`selectable` groups only).",
-              "fieldName": "value"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Lays a set of `zn-thumbnail` elements out as a single scrollable row, with a\n\"Show All\" toggle that expands them into a wrapping grid.",
-          "tagNameWithoutPrefix": "thumbnail-group",
-          "tagName": "zn-thumbnail-group",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Lays a set of `zn-thumbnail` elements out as a single scrollable row, with a\n * \"Show All\" toggle that expands them into a wrapping grid.\n * @documentation https://zinc.style/components/thumbnail-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-thumbnail\n *\n * @event zn-expand - Emitted when the group expands into the full grid.\n * @event zn-collapse - Emitted when the group collapses back to a single row.\n * @event zn-change - Emitted when the selected thumbnail changes (`selectable` groups only).\n *\n * @slot - One or more `zn-thumbnail` elements.\n * @slot caption - Replaces the heading text.\n * @slot actions - Extra content in the header, before the toggle.\n *\n * @csspart base - The component's base wrapper.\n * @csspart header - The header row holding the caption and toggle.\n * @csspart caption - The heading text.\n * @csspart toggle - The show all / show less button.\n * @csspart items - The scrolling row / expanded grid that holds the thumbnails.\n *\n * @cssproperty --zn-thumbnail-width - Track width of a thumbnail. Defaults to 180px. Also settable\n *  with the `thumbnail-width` attribute.\n * @cssproperty --zn-thumbnail-gap - Gap between thumbnails. Also settable with the `gap` attribute.\n * @cssproperty --zn-thumbnail-aspect-ratio - Aspect ratio of every thumbnail in the group. Also\n *  settable with the `aspect-ratio` attribute. Any `zn-thumbnail` custom property set here is\n *  inherited by the slotted thumbnails.\n */",
-          "documentation": "https://zinc.style/components/thumbnail-group",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-thumbnail"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnThumbnailGroup",
-            "module": "components/thumbnail-group/thumbnail-group.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/thumbnail/thumbnail.js",
       "declarations": [
         {
@@ -49942,6 +49207,719 @@
           "declaration": {
             "name": "ZnThumbnail",
             "module": "components/thumbnail/thumbnail.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/thumbnail-group/thumbnail-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnThumbnailGroup",
+          "cssProperties": [
+            {
+              "description": "Track width of a thumbnail. Defaults to 180px. Also settable with the `thumbnail-width` attribute.",
+              "name": "--zn-thumbnail-width"
+            },
+            {
+              "description": "Gap between thumbnails. Also settable with the `gap` attribute.",
+              "name": "--zn-thumbnail-gap"
+            },
+            {
+              "description": "Aspect ratio of every thumbnail in the group. Also settable with the `aspect-ratio` attribute. Any `zn-thumbnail` custom property set here is inherited by the slotted thumbnails.",
+              "name": "--zn-thumbnail-aspect-ratio"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The header row holding the caption and toggle.",
+              "name": "header"
+            },
+            {
+              "description": "The heading text.",
+              "name": "caption"
+            },
+            {
+              "description": "The show all / show less button.",
+              "name": "toggle"
+            },
+            {
+              "description": "The scrolling row / expanded grid that holds the thumbnails.",
+              "name": "items"
+            }
+          ],
+          "slots": [
+            {
+              "description": "One or more `zn-thumbnail` elements.",
+              "name": ""
+            },
+            {
+              "description": "Replaces the heading text.",
+              "name": "caption"
+            },
+            {
+              "description": "Extra content in the header, before the toggle.",
+              "name": "actions"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The heading shown at the top left of the group.",
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "expanded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Expands the group into the full wrapping grid.",
+              "attribute": "expanded",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "total",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Total number of thumbnails in the underlying set, shown in the \"Show All (n)\" label. Set this when\nthe row only holds the first page of a larger set; otherwise the slotted thumbnails are counted.",
+              "attribute": "total"
+            },
+            {
+              "kind": "field",
+              "name": "showAllLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Show All'",
+              "description": "Label of the expand toggle. The count is appended in brackets.",
+              "attribute": "show-all-label"
+            },
+            {
+              "kind": "field",
+              "name": "showLessLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Show Less'",
+              "description": "Label of the collapse toggle.",
+              "attribute": "show-less-label"
+            },
+            {
+              "kind": "field",
+              "name": "hideToggle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Never render the toggle, even when the row overflows.",
+              "attribute": "hide-toggle"
+            },
+            {
+              "kind": "field",
+              "name": "alwaysToggle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Always render the toggle, even when every thumbnail already fits on the row.",
+              "attribute": "always-toggle"
+            },
+            {
+              "kind": "field",
+              "name": "selectable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Manages single selection across the slotted thumbnails.",
+              "attribute": "selectable",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "aspectRatio",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Aspect ratio for every thumbnail in the group, as any CSS `aspect-ratio` value (e.g. `1 / 1`).\nShorthand for setting `--zn-thumbnail-aspect-ratio` on the group. A thumbnail's own\n`aspect-ratio` attribute still wins.",
+              "attribute": "aspect-ratio",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "thumbnailWidth",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Track width of each thumbnail (e.g. `140px`). Shorthand for `--zn-thumbnail-width`.",
+              "attribute": "thumbnail-width",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "gap",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Gap between thumbnails (e.g. `8px`). Shorthand for `--zn-thumbnail-gap`.",
+              "attribute": "gap",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The `value` of the selected thumbnail (`selectable` groups only).",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "_overflowing",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_count",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_items",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_resizeObserver",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "_observe",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_syncCustomProperties",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "changed",
+                  "type": {
+                    "text": "PropertyValues"
+                  }
+                }
+              ],
+              "description": "Mirrors the shorthand attributes onto host custom properties. They go on the host rather than\nanywhere in the shadow root because the thumbnails are light-DOM children — inheriting from the\nhost is the only way the values reach them."
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "description": "Expands the group into the full grid."
+            },
+            {
+              "kind": "method",
+              "name": "hide",
+              "description": "Collapses the group back to a single row."
+            },
+            {
+              "kind": "field",
+              "name": "_thumbnails",
+              "type": {
+                "text": "ZnThumbnail[]"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_sync",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_measure",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handleSelect",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handleToggle",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the group expands into the full grid.",
+              "name": "zn-expand"
+            },
+            {
+              "description": "Emitted when the group collapses back to a single row.",
+              "name": "zn-collapse"
+            },
+            {
+              "description": "Emitted when the selected thumbnail changes (`selectable` groups only).",
+              "name": "zn-change"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The heading shown at the top left of the group.",
+              "fieldName": "caption"
+            },
+            {
+              "name": "expanded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Expands the group into the full wrapping grid.",
+              "fieldName": "expanded"
+            },
+            {
+              "name": "total",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Total number of thumbnails in the underlying set, shown in the \"Show All (n)\" label. Set this when\nthe row only holds the first page of a larger set; otherwise the slotted thumbnails are counted.",
+              "fieldName": "total"
+            },
+            {
+              "name": "show-all-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Show All'",
+              "description": "Label of the expand toggle. The count is appended in brackets.",
+              "fieldName": "showAllLabel"
+            },
+            {
+              "name": "show-less-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Show Less'",
+              "description": "Label of the collapse toggle.",
+              "fieldName": "showLessLabel"
+            },
+            {
+              "name": "hide-toggle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Never render the toggle, even when the row overflows.",
+              "fieldName": "hideToggle"
+            },
+            {
+              "name": "always-toggle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Always render the toggle, even when every thumbnail already fits on the row.",
+              "fieldName": "alwaysToggle"
+            },
+            {
+              "name": "selectable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Manages single selection across the slotted thumbnails.",
+              "fieldName": "selectable"
+            },
+            {
+              "name": "aspect-ratio",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Aspect ratio for every thumbnail in the group, as any CSS `aspect-ratio` value (e.g. `1 / 1`).\nShorthand for setting `--zn-thumbnail-aspect-ratio` on the group. A thumbnail's own\n`aspect-ratio` attribute still wins.",
+              "fieldName": "aspectRatio"
+            },
+            {
+              "name": "thumbnail-width",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Track width of each thumbnail (e.g. `140px`). Shorthand for `--zn-thumbnail-width`.",
+              "fieldName": "thumbnailWidth"
+            },
+            {
+              "name": "gap",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Gap between thumbnails (e.g. `8px`). Shorthand for `--zn-thumbnail-gap`.",
+              "fieldName": "gap"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The `value` of the selected thumbnail (`selectable` groups only).",
+              "fieldName": "value"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Lays a set of `zn-thumbnail` elements out as a single scrollable row, with a\n\"Show All\" toggle that expands them into a wrapping grid.",
+          "tagNameWithoutPrefix": "thumbnail-group",
+          "tagName": "zn-thumbnail-group",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Lays a set of `zn-thumbnail` elements out as a single scrollable row, with a\n * \"Show All\" toggle that expands them into a wrapping grid.\n * @documentation https://zinc.style/components/thumbnail-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-thumbnail\n *\n * @event zn-expand - Emitted when the group expands into the full grid.\n * @event zn-collapse - Emitted when the group collapses back to a single row.\n * @event zn-change - Emitted when the selected thumbnail changes (`selectable` groups only).\n *\n * @slot - One or more `zn-thumbnail` elements.\n * @slot caption - Replaces the heading text.\n * @slot actions - Extra content in the header, before the toggle.\n *\n * @csspart base - The component's base wrapper.\n * @csspart header - The header row holding the caption and toggle.\n * @csspart caption - The heading text.\n * @csspart toggle - The show all / show less button.\n * @csspart items - The scrolling row / expanded grid that holds the thumbnails.\n *\n * @cssproperty --zn-thumbnail-width - Track width of a thumbnail. Defaults to 180px. Also settable\n *  with the `thumbnail-width` attribute.\n * @cssproperty --zn-thumbnail-gap - Gap between thumbnails. Also settable with the `gap` attribute.\n * @cssproperty --zn-thumbnail-aspect-ratio - Aspect ratio of every thumbnail in the group. Also\n *  settable with the `aspect-ratio` attribute. Any `zn-thumbnail` custom property set here is\n *  inherited by the slotted thumbnails.\n */",
+          "documentation": "https://zinc.style/components/thumbnail-group",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-thumbnail"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnThumbnailGroup",
+            "module": "components/thumbnail-group/thumbnail-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/tile/tile.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnTile",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, '[default]', 'properties', 'actions', 'image')"
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "description"
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "dataTarget",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "data-target"
+            },
+            {
+              "kind": "field",
+              "name": "gaid",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "gaid"
+            },
+            {
+              "kind": "field",
+              "name": "dataUri",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "data-uri"
+            },
+            {
+              "kind": "field",
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush"
+            },
+            {
+              "kind": "field",
+              "name": "flushX",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-x"
+            },
+            {
+              "kind": "field",
+              "name": "flushY",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-y"
+            },
+            {
+              "kind": "field",
+              "name": "inline",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "inline"
+            },
+            {
+              "kind": "field",
+              "name": "plain",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Renders the caption in the normal table-content weight instead of bold.",
+              "attribute": "plain"
+            },
+            {
+              "kind": "field",
+              "name": "grouped",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row.",
+              "attribute": "grouped",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "_isLink",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_handleActionsClick",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "caption"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "description"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "href"
+            },
+            {
+              "name": "data-target",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "dataTarget"
+            },
+            {
+              "name": "gaid",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "gaid"
+            },
+            {
+              "name": "data-uri",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "dataUri"
+            },
+            {
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flush"
+            },
+            {
+              "name": "flush-x",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushX"
+            },
+            {
+              "name": "flush-y",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushY"
+            },
+            {
+              "name": "inline",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "inline"
+            },
+            {
+              "name": "plain",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Renders the caption in the normal table-content weight instead of bold.",
+              "fieldName": "plain"
+            },
+            {
+              "name": "grouped",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row.",
+              "fieldName": "grouped"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "tile",
+          "tagName": "zn-tile",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/tile\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/tile",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnTile",
+            "module": "components/tile/tile.js"
           }
         }
       ]
@@ -51560,19 +51538,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "bodySlot",
-              "type": {
-                "text": "HTMLSlotElement | null"
-              },
-              "privacy": "private",
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
               "kind": "method",
               "name": "observeBodyContent",
               "privacy": "private",
@@ -52861,7 +52826,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.131",
+    "version": "1.1.132",
     "author": "",
     "license": "MIT"
   }

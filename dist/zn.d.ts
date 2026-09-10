@@ -3872,7 +3872,6 @@ declare module "components/panel/panel.component" {
         protected firstUpdated(_changedProperties: PropertyValues): void;
         connectedCallback(): void;
         disconnectedCallback(): void;
-        private get bodySlot();
         private observeBodyContent;
         private measureBodyContent;
         protected render(): unknown;

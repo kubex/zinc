@@ -1,7 +1,7 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
-import {property} from 'lit/decorators.js';
+import {property, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './panel.scss';
@@ -43,8 +43,13 @@ export default class ZnPanel extends ZincElement {
   @property({type: Boolean}) transparent: boolean;
   @property({type: Boolean}) shadow: boolean;
 
+  @state() private bodyEmpty = false;
+
+  private resizeObserver: ResizeObserver | null = null;
+
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
+    this.observeBodyContent();
     if (this.basis) {
       this.style.setProperty('--zn-panel-basis', this.basis.toString() + 'px');
     }
@@ -63,6 +68,10 @@ export default class ZnPanel extends ZincElement {
 
   connectedCallback() {
     super.connectedCallback();
+    if (this.hasUpdated) {
+      this.observeBodyContent();
+    }
+
     if (window.CSS.registerProperty) {
       try {
         window.CSS.registerProperty({
@@ -77,14 +86,42 @@ export default class ZnPanel extends ZincElement {
     }
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = null;
+  }
+
+  private get bodySlot(): HTMLSlotElement | null {
+    return this.renderRoot?.querySelector('.panel__body > slot') ?? null;
+  }
+
+  // Slotted content can grow without the body's own box changing, so the observers go on the
+  // slotted elements rather than the body.
+  private observeBodyContent() {
+    const slot = this.bodySlot;
+    if (!slot) return;
+
+    this.resizeObserver ??= new ResizeObserver(() => this.measureBodyContent());
+    this.resizeObserver.disconnect();
+    slot.assignedElements({flatten: true}).forEach(el => this.resizeObserver!.observe(el));
+    this.measureBodyContent();
+  }
+
+  private measureBodyContent() {
+    const nodes = this.bodySlot?.assignedNodes({flatten: true}) ?? [];
+    this.bodyEmpty = !nodes.some(node => node.nodeType === Node.TEXT_NODE
+      ? node.textContent!.trim() !== ''
+      : (node as Element).getBoundingClientRect().height > 0);
+  }
+
   protected render(): unknown {
     const hasActionSlot = this.hasSlotController.test('actions');
     const hasFooterSlot = this.hasSlotController.test('footer');
     const hasHeader = this.caption || hasActionSlot;
-    // Transparent panels with no vertical body padding have nothing to separate the header from,
-    // so the underline is just a stray rule across the page.
+    const isBodyEmpty = !this.hasSlotController.test('[default]') || this.bodyEmpty;
     const isFlushY = this.flush || this.tabbed || this.flushY;
-    const underlineHeader = !this.headerBorderless && !(this.transparent && isFlushY);
+    const underlineHeader = !this.headerBorderless && !(this.transparent && isFlushY) && !isBodyEmpty;
 
     return html`
       <div class="${classMap({
@@ -97,6 +134,7 @@ export default class ZnPanel extends ZincElement {
         'panel--transparent': this.transparent,
         'panel--has-actions': hasActionSlot,
         'panel--has-footer': hasFooterSlot,
+        'panel--empty': isBodyEmpty,
         'panel--has-header': hasHeader,
         'panel--borderless-header': this.headerBorderless,
         'panel--cosmic': this.cosmic,
@@ -120,7 +158,7 @@ export default class ZnPanel extends ZincElement {
 
           <div class="panel__content">
             <div class="panel__body">
-              <slot></slot>
+              <slot @slotchange="${this.observeBodyContent}"></slot>
             </div>
           </div>
 

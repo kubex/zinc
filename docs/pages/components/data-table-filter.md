@@ -35,6 +35,10 @@ Picking a filter from `+ Add filter` opens its pill straight away, with a text f
 
 The component emits `zn-filter-change` and exposes the query on `value`, encoded exactly as `zn-query-builder` encodes it — base64 of `[{key, comparator, value}]` — so a backend built against the query builder needs no changes.
 
+Setting `value` round-trips: assigning that same base64 string back — for example restoring it from a shared URL via `zn-data-table`'s [`sharable`](/components/data-table#shareable-url-state) sync — rebuilds the active pills, so the bar reopens in the state it was encoded in. Restoration needs the `filters` schema present to resolve each key, and it stands down once any filter already holds a value, so a shared filter still wins over an empty `default-filters` pill while a filter the user is mid-way through setting is never clobbered.
+
+One caveat: a restored **date** filter shows its raw encoded value on the pill (a timestamp, or a minutes-from-now offset) rather than a formatted date, because the human-readable label is not part of the encoded query. The filter still applies correctly; only the pill text differs until the value is re-picked.
+
 ### Long Option Lists
 
 An option list caps its height at 320px and scrolls inside the panel rather than running off the

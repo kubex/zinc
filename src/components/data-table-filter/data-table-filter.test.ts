@@ -333,4 +333,46 @@ describe('<zn-data-table-filter>', () => {
     expect(pills(el)).to.deep.equal([]);
     expect(el.value).to.equal('');
   });
+
+  // Setting `value` (the inverse of emitChange) rebuilds the active pills, so a filter restored
+  // from a shared URL renders exactly as it was when encoded.
+  describe('restore from value', () => {
+    const encode = (conditions: {key: string; comparator: string; value: string}[]) =>
+      btoa(JSON.stringify(conditions));
+
+    it('rebuilds the active pills from an encoded value', async () => {
+      const value = encode([
+        {key: 'status', comparator: 'eq', value: 'active'},
+        {key: 'email', comparator: 'contains', value: 'acme'},
+      ]);
+
+      const el = await fixture<ZnDataTableFilter>(html`
+        <zn-data-table-filter .filters="${FILTERS}" .value="${value}"></zn-data-table-filter>`);
+      await el.updateComplete;
+
+      expect(pills(el)).to.deep.equal(['Status: Active', 'Email: acme']);
+    });
+
+    it('renders no pills for an absent value', async () => {
+      const el = await fixture<ZnDataTableFilter>(html`
+        <zn-data-table-filter .filters="${FILTERS}"></zn-data-table-filter>`);
+      await el.updateComplete;
+
+      expect(pills(el)).to.deep.equal([]);
+    });
+
+    // The production flow sets `value` after `filters` (and after default-filters seeds an empty
+    // pill), so a later value must still win over the valueless default pill.
+    it('lets a value set after default-filters win over the empty default pill', async () => {
+      const el = await fixture<ZnDataTableFilter>(html`
+        <zn-data-table-filter default-filters="role" .filters="${FILTERS}"></zn-data-table-filter>`);
+      await el.updateComplete;
+      expect(pills(el)).to.deep.equal(['Role']);
+
+      el.value = encode([{key: 'status', comparator: 'eq', value: 'active'}]);
+      await el.updateComplete;
+
+      expect(pills(el)).to.deep.equal(['Status: Active']);
+    });
+  });
 });

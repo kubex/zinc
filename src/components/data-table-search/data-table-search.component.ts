@@ -39,7 +39,7 @@ type AllowedInputElement =
  * @property {string} placeholder - The placeholder text for the search input (default: "Search...").
  * @property {string} helpText - Help text, shown from an information icon inside the search input.
  * @property {string} searchUri - Optional URI to use for search operations.
- * @property {number} debounceDelay - The delay in milliseconds before triggering a search (default: 500).
+ * @property {number} debounceDelay - The delay in milliseconds before triggering a search (default: 350).
  */
 export default class ZnDataTableSearch extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -97,10 +97,6 @@ export default class ZnDataTableSearch extends ZincElement implements ZincFormCo
    */
   getFormData(): Record<string, any> {
     const params: Record<string, any> = {};
-    const slot = this.shadowRoot?.querySelector('slot');
-    if (!slot) return params;
-
-    const elements = slot.assignedElements({flatten: true});
     const allowedInputs = [
       'zn-input',
       'zn-select',
@@ -115,15 +111,22 @@ export default class ZnDataTableSearch extends ZincElement implements ZincFormCo
       'zn-input-group',
     ];
 
-    elements.forEach((element) => {
-      if (allowedInputs.includes(element.tagName.toLowerCase())) {
-        const input = element as AllowedInputElement;
-        const value = input.value as string || element.getAttribute('value');
-        const name = input.name || element.getAttribute('name');
-        if (name) {
-          params[name] = value;
-        }
+    const collect = (element: Element): void => {
+      if (!allowedInputs.includes(element.tagName.toLowerCase())) return;
+      const input = element as AllowedInputElement;
+      const value = input.value as string;
+      const name = input.name || element.getAttribute('name');
+      if (name) {
+        params[name] = value;
       }
+    };
+
+    const slots = this.shadowRoot?.querySelectorAll('slot');
+    slots?.forEach((slot) => {
+      slot.assignedElements({flatten: true}).forEach((element) => {
+        collect(element);
+        element.querySelectorAll(allowedInputs.join(',')).forEach((descendant) => collect(descendant));
+      });
     });
 
     return params;

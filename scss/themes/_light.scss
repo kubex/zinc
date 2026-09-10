@@ -191,6 +191,9 @@
   --zn-focus-ring-width: 3px;
   --zn-focus-ring: var(--zn-focus-ring-style) var(--zn-focus-ring-width) var(--zn-focus-ring-color);
   --zn-focus-ring-offset: 1px;
+  // Space a focus ring needs outside a control's box, for boxes that clip around
+  // one. Must stay a plain length: overflow-clip-margin rejects calc(), silently 0.
+  --zn-focus-ring-outset: 4px;
 
   /**************************************************************
    * Forms

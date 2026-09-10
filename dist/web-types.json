@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.1.128",
+  "version": "1.1.129",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -1903,6 +1903,72 @@
           }
         },
         {
+          "name": "zn-collapsible",
+          "description": "Toggles between showing and hiding content when clicked\n---\n\n\n### **Slots:**\n - **header** - Clicking will toggle the show state of the data\n\n### **CSS Parts:**\n - **header** - The header row (toggle).\n- **caption** - The caption text.\n- **content** - The expandable content wrapper.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "caption",
+              "value": { "type": "string", "default": "''" }
+            },
+            { "name": "description", "value": { "type": "string" } },
+            { "name": "label", "value": { "type": "string", "default": "''" } },
+            {
+              "name": "show-number",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "count-element",
+              "value": { "type": "string", "default": "'*'" }
+            },
+            {
+              "name": "expanded",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "default", "value": { "type": "'open' | 'closed'" } },
+            { "name": "local-storage", "value": { "type": "boolean" } },
+            {
+              "name": "store-key",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            {
+              "name": "store-ttl",
+              "value": { "type": "number", "default": "0" }
+            },
+            {
+              "name": "flush",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            {
+              "name": "header",
+              "description": "Clicking will toggle the show state of the data"
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "caption", "type": "string" },
+              { "name": "description", "type": "string" },
+              { "name": "label", "type": "string" },
+              { "name": "showNumber", "type": "boolean" },
+              { "name": "countElement", "type": "string" },
+              { "name": "expanded", "type": "boolean" },
+              { "name": "defaultState", "type": "'open' | 'closed'" },
+              { "name": "localStorage", "type": "boolean" },
+              { "name": "storeKey", "type": "string" },
+              { "name": "storeTtl", "type": "number" },
+              { "name": "flush", "type": "boolean" },
+              { "name": "numberOfItems", "type": "number" },
+              { "name": "handleCaptionToggle" },
+              { "name": "handleCollapse" },
+              { "name": "recalculateNumberOfItems" }
+            ],
+            "events": []
+          }
+        },
+        {
           "name": "zn-color-select",
           "description": "A simple color picker. The dropdown lists color swatches with names; the closed control shows only the selected color's swatch.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted when the selected color changes.\n- **zn-clear** - Emitted when the clear button is activated.\n\n### **CSS Parts:**\n - **swatch** - The color swatch shown in the closed control.\n- **combobox** - The container that wraps the swatch and expand button (forwarded from zn-select).\n- **form-control-help-text** - The help text's wrapper (forwarded from zn-select).\n- **form-control-input** - The select's wrapper (forwarded from zn-select).",
           "doc-url": "",
@@ -2004,72 +2070,6 @@
                 "description": "Emitted when the clear button is activated."
               }
             ]
-          }
-        },
-        {
-          "name": "zn-collapsible",
-          "description": "Toggles between showing and hiding content when clicked\n---\n\n\n### **Slots:**\n - **header** - Clicking will toggle the show state of the data\n\n### **CSS Parts:**\n - **header** - The header row (toggle).\n- **caption** - The caption text.\n- **content** - The expandable content wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "caption",
-              "value": { "type": "string", "default": "''" }
-            },
-            { "name": "description", "value": { "type": "string" } },
-            { "name": "label", "value": { "type": "string", "default": "''" } },
-            {
-              "name": "show-number",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "count-element",
-              "value": { "type": "string", "default": "'*'" }
-            },
-            {
-              "name": "expanded",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "default", "value": { "type": "'open' | 'closed'" } },
-            { "name": "local-storage", "value": { "type": "boolean" } },
-            {
-              "name": "store-key",
-              "value": { "type": "string", "default": "\"\"" }
-            },
-            {
-              "name": "store-ttl",
-              "value": { "type": "number", "default": "0" }
-            },
-            {
-              "name": "flush",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "slots": [
-            {
-              "name": "header",
-              "description": "Clicking will toggle the show state of the data"
-            }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              { "name": "caption", "type": "string" },
-              { "name": "description", "type": "string" },
-              { "name": "label", "type": "string" },
-              { "name": "showNumber", "type": "boolean" },
-              { "name": "countElement", "type": "string" },
-              { "name": "expanded", "type": "boolean" },
-              { "name": "defaultState", "type": "'open' | 'closed'" },
-              { "name": "localStorage", "type": "boolean" },
-              { "name": "storeKey", "type": "string" },
-              { "name": "storeTtl", "type": "number" },
-              { "name": "flush", "type": "boolean" },
-              { "name": "numberOfItems", "type": "number" },
-              { "name": "handleCaptionToggle" },
-              { "name": "handleCollapse" },
-              { "name": "recalculateNumberOfItems" }
-            ],
-            "events": []
           }
         },
         {
@@ -8409,94 +8409,49 @@
           }
         },
         {
-          "name": "zn-rating",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity()** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n- **help-text** - Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n- **--preview-color** - The color of the preview value. _(default: undefined)_\n- **--preview-size** - The font size of the preview value. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the symbols and help text.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **preview** - The value shown next to the symbols when `preview` is enabled.",
+          "name": "zn-reveal",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
           "attributes": [
-            { "name": "label", "value": { "type": "string" } },
             {
-              "name": "help-text",
-              "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
+              "name": "duration",
+              "value": { "type": "number", "default": "2000" }
+            },
+            {
+              "name": "initial",
               "value": { "type": "string", "default": "''" }
             },
-            { "name": "name", "value": { "type": "string" } },
-            { "name": "value", "value": { "type": "number", "default": "0" } },
-            { "name": "max", "value": { "type": "number", "default": "5" } },
             {
-              "name": "precision",
-              "value": { "type": "number", "default": "1" }
+              "name": "revealed",
+              "value": { "type": "string", "default": "''" }
             },
             {
-              "name": "readonly",
+              "name": "hide-delay",
+              "value": { "type": "number", "default": "150" }
+            },
+            {
+              "name": "no-toggle",
+              "description": "Disables click-to-toggle so the value is only revealed on hover. Clicks still bubble to the parent.",
               "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "disabled",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "preview",
-              "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "size",
-              "value": {
-                "type": "'small' | 'medium' | 'large'",
-                "default": "'medium'"
-              }
-            },
-            {
-              "name": "getSymbol",
-              "value": { "type": "(value: number) => string" }
             }
           ],
           "slots": [
             { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." },
-            {
-              "name": "help-text",
-              "description": "Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute."
-            }
+            { "name": "example", "description": "An example slot." }
           ],
           "events": [
             { "name": "zn-event-name", "description": "Emitted as an example." }
           ],
           "js": {
             "properties": [
-              { "name": "rating", "type": "HTMLElement" },
-              { "name": "symbols", "type": "HTMLElement" },
-              { "name": "label", "type": "string" },
+              { "name": "duration", "type": "number" },
+              { "name": "initial", "type": "string" },
+              { "name": "revealed", "type": "string" },
+              { "name": "hideDelay", "type": "number" },
               {
-                "name": "helpText",
-                "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
-                "type": "string"
-              },
-              { "name": "name", "type": "string" },
-              { "name": "value", "type": "number" },
-              {
-                "name": "defaultValue",
-                "description": "The default value of the form control. Primarily used for resetting the form control.",
-                "type": "number"
-              },
-              { "name": "max", "type": "number" },
-              { "name": "precision", "type": "number" },
-              { "name": "readonly", "type": "boolean" },
-              { "name": "disabled", "type": "boolean" },
-              {
-                "name": "preview",
-                "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
+                "name": "noToggle",
+                "description": "Disables click-to-toggle so the value is only revealed on hover. Clicks still bubble to the parent.",
                 "type": "boolean"
-              },
-              { "name": "size", "type": "'small' | 'medium' | 'large'" },
-              { "name": "getSymbol", "type": "(value: number) => string" },
-              {
-                "name": "validity",
-                "description": "Gets the validity state object"
-              },
-              {
-                "name": "validationMessage",
-                "description": "Gets the validation message"
               }
             ],
             "events": [
@@ -8656,49 +8611,94 @@
           }
         },
         {
-          "name": "zn-reveal",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "name": "zn-rating",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity()** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n- **help-text** - Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n- **--preview-color** - The color of the preview value. _(default: undefined)_\n- **--preview-size** - The font size of the preview value. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the symbols and help text.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **preview** - The value shown next to the symbols when `preview` is enabled.",
           "doc-url": "",
           "attributes": [
+            { "name": "label", "value": { "type": "string" } },
             {
-              "name": "duration",
-              "value": { "type": "number", "default": "2000" }
-            },
-            {
-              "name": "initial",
+              "name": "help-text",
+              "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
               "value": { "type": "string", "default": "''" }
             },
+            { "name": "name", "value": { "type": "string" } },
+            { "name": "value", "value": { "type": "number", "default": "0" } },
+            { "name": "max", "value": { "type": "number", "default": "5" } },
             {
-              "name": "revealed",
-              "value": { "type": "string", "default": "''" }
+              "name": "precision",
+              "value": { "type": "number", "default": "1" }
             },
             {
-              "name": "hide-delay",
-              "value": { "type": "number", "default": "150" }
-            },
-            {
-              "name": "no-toggle",
-              "description": "Disables click-to-toggle so the value is only revealed on hover. Clicks still bubble to the parent.",
+              "name": "readonly",
               "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "disabled",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "preview",
+              "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "size",
+              "value": {
+                "type": "'small' | 'medium' | 'large'",
+                "default": "'medium'"
+              }
+            },
+            {
+              "name": "getSymbol",
+              "value": { "type": "(value: number) => string" }
             }
           ],
           "slots": [
             { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
+            { "name": "example", "description": "An example slot." },
+            {
+              "name": "help-text",
+              "description": "Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute."
+            }
           ],
           "events": [
             { "name": "zn-event-name", "description": "Emitted as an example." }
           ],
           "js": {
             "properties": [
-              { "name": "duration", "type": "number" },
-              { "name": "initial", "type": "string" },
-              { "name": "revealed", "type": "string" },
-              { "name": "hideDelay", "type": "number" },
+              { "name": "rating", "type": "HTMLElement" },
+              { "name": "symbols", "type": "HTMLElement" },
+              { "name": "label", "type": "string" },
               {
-                "name": "noToggle",
-                "description": "Disables click-to-toggle so the value is only revealed on hover. Clicks still bubble to the parent.",
+                "name": "helpText",
+                "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
+                "type": "string"
+              },
+              { "name": "name", "type": "string" },
+              { "name": "value", "type": "number" },
+              {
+                "name": "defaultValue",
+                "description": "The default value of the form control. Primarily used for resetting the form control.",
+                "type": "number"
+              },
+              { "name": "max", "type": "number" },
+              { "name": "precision", "type": "number" },
+              { "name": "readonly", "type": "boolean" },
+              { "name": "disabled", "type": "boolean" },
+              {
+                "name": "preview",
+                "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
                 "type": "boolean"
+              },
+              { "name": "size", "type": "'small' | 'medium' | 'large'" },
+              { "name": "getSymbol", "type": "(value: number) => string" },
+              {
+                "name": "validity",
+                "description": "Gets the validity state object"
+              },
+              {
+                "name": "validationMessage",
+                "description": "Gets the validation message"
               }
             ],
             "events": [

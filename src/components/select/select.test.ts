@@ -865,3 +865,106 @@ describe('<zn-select>', () => {
     expect(popoverOf(second).matches(':popover-open')).to.be.true;
   });
 });
+
+describe('<zn-select> disabled', () => {
+  it('should not open when the expand icon is clicked', async () => {
+    const el: any = await fixture(html`
+      <zn-select disabled>
+        <zn-option value="a">A</zn-option>
+      </zn-select>`);
+    await el.updateComplete;
+
+    el.shadowRoot.querySelector('.select__expand-icon')
+      .dispatchEvent(new MouseEvent('mousedown', {bubbles: true, composed: true}));
+    await el.updateComplete;
+
+    expect(el.open).to.be.false;
+  });
+
+  it('should open from the expand icon when enabled', async () => {
+    const el: any = await fixture(html`
+      <zn-select>
+        <zn-option value="a">A</zn-option>
+      </zn-select>`);
+    await el.updateComplete;
+
+    el.shadowRoot.querySelector('.select__expand-icon')
+      .dispatchEvent(new MouseEvent('mousedown', {bubbles: true, composed: true}));
+    await el.updateComplete;
+
+    expect(el.open).to.be.true;
+  });
+});
+
+describe('<zn-select> requires', () => {
+  const pair = () => fixture(html`
+    <div>
+      <zn-select id="parent" name="parent">
+        <zn-option value="p1">P1</zn-option>
+      </zn-select>
+      <zn-select id="child" name="child" requires="parent" disabled>
+        <zn-option value="c1">C1</zn-option>
+      </zn-select>
+    </div>`);
+
+  it('should stay disabled while the required control is empty', async () => {
+    const root: any = await pair();
+    const child = root.querySelector('#child');
+    await child.updateComplete;
+
+    expect(child.disabled).to.be.true;
+  });
+
+  it('should enable once the required control has a value', async () => {
+    const root: any = await pair();
+    const parent = root.querySelector('#parent');
+    const child = root.querySelector('#child');
+    await child.updateComplete;
+
+    parent.value = 'p1';
+    parent.dispatchEvent(new CustomEvent('zn-change', {bubbles: true, composed: true}));
+    await child.updateComplete;
+
+    expect(child.disabled).to.be.false;
+  });
+
+  it('should disable again when the required control is cleared', async () => {
+    const root: any = await pair();
+    const parent = root.querySelector('#parent');
+    const child = root.querySelector('#child');
+    await child.updateComplete;
+
+    parent.value = 'p1';
+    parent.dispatchEvent(new CustomEvent('zn-change', {bubbles: true, composed: true}));
+    await child.updateComplete;
+
+    parent.value = '';
+    parent.dispatchEvent(new CustomEvent('zn-change', {bubbles: true, composed: true}));
+    await child.updateComplete;
+
+    expect(child.disabled).to.be.true;
+  });
+
+  it('should require every named control', async () => {
+    const root: any = await fixture(html`
+      <div>
+        <zn-select id="a" name="a"><zn-option value="1">1</zn-option></zn-select>
+        <zn-select id="b" name="b"><zn-option value="2">2</zn-option></zn-select>
+        <zn-select id="c" name="c" requires="a,b" disabled></zn-select>
+      </div>`);
+    const a = root.querySelector('#a');
+    const b = root.querySelector('#b');
+    const c = root.querySelector('#c');
+    await c.updateComplete;
+
+    a.value = '1';
+    a.dispatchEvent(new CustomEvent('zn-change', {bubbles: true, composed: true}));
+    await c.updateComplete;
+    expect(c.disabled, 'one of two filled').to.be.true;
+
+    b.value = '2';
+    b.dispatchEvent(new CustomEvent('zn-change', {bubbles: true, composed: true}));
+    await c.updateComplete;
+    expect(c.disabled, 'both filled').to.be.false;
+  });
+});

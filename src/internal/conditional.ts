@@ -3,13 +3,26 @@ import type {ReactiveController, ReactiveControllerHost} from 'lit';
 
 export interface ConditionalHost {
   conditional: string;
+  requires: string;
   disabled: boolean;
 }
 
-/** A reactive controller that disables the host when linked selects have a value. */
+type ValuedElement = Element & { value: string | string[] };
+
+function hasValue(el: ValuedElement): boolean {
+  const values = Array.isArray(el.value) ? el.value : [el.value];
+  return values.some(v => v !== '' && v !== '0');
+}
+
+/**
+ * A reactive controller that drives the host's disabled state from other form
+ * controls: `conditional` disables the host once a linked control has a value,
+ * `requires` keeps it disabled until every named control has one.
+ */
 export class ConditionalController implements ReactiveController {
   host: ReactiveControllerHost & Element & ConditionalHost;
-  private conditionals: (Element & { value: string | string[] })[] = [];
+  private conditionals: ValuedElement[] = [];
+  private required: ValuedElement[] = [];
   private initiallyDisabled = false;
   private readonly handleChange = () => this.checkConditionals();
 
@@ -19,43 +32,48 @@ export class ConditionalController implements ReactiveController {
 
   /** Call from the host's `firstUpdated()` to parse IDs, find elements, attach listeners, and run the initial check. */
   setup() {
-    if (this.host.conditional === '') {
-      return;
-    }
-
-    const ids = this.host.conditional.split(',').map(id => id.trim());
-
-    ids.forEach(id => {
-      const byId = deepQuerySelectorAll(idSelector(id), document.documentElement, '') as (Element & {
-        value: string | string[];
-      })[];
-      const byName = deepQuerySelectorAll(`[name="${id}"]`, document.documentElement, '') as (Element & {
-        value: string | string[];
-      })[];
-
-      // de-duplicate in case the same element matches both id and name
-      const seen = new Set<Element>();
-      [...byId, ...byName].forEach(el => {
-        if (!seen.has(el)) {
-          seen.add(el);
-          this.conditionals.push(el);
-        }
-      });
-    });
+    this.conditionals = this.resolve(this.host.conditional);
+    this.required = this.resolve(this.host.requires);
 
     this.initiallyDisabled = this.host.disabled;
 
-    if (ids.length === 0) {
+    const watched = [...this.conditionals, ...this.required];
+    if (watched.length === 0) {
       return;
     }
 
-    this.conditionals.forEach(select => {
-      select.addEventListener('zn-change', this.handleChange);
-      select.addEventListener('zn-input', this.handleChange);
+    watched.forEach(el => {
+      el.addEventListener('zn-change', this.handleChange);
+      el.addEventListener('zn-input', this.handleChange);
     });
 
     // trigger the check once to initialize
     this.checkConditionals();
+  }
+
+  /** Resolve a comma-separated list of ids or names to the controls they name. */
+  private resolve(list: string): ValuedElement[] {
+    if (!list) {
+      return [];
+    }
+
+    const found: ValuedElement[] = [];
+    const seen = new Set<Element>();
+
+    list.split(',').map(id => id.trim()).filter(Boolean).forEach(id => {
+      const byId = deepQuerySelectorAll(idSelector(id), document.documentElement, '') as ValuedElement[];
+      const byName = deepQuerySelectorAll(`[name="${id}"]`, document.documentElement, '') as ValuedElement[];
+
+      // de-duplicate in case the same element matches both id and name
+      [...byId, ...byName].forEach(el => {
+        if (!seen.has(el)) {
+          seen.add(el);
+          found.push(el);
+        }
+      });
+    });
+
+    return found;
   }
 
   hostConnected() {
@@ -63,12 +81,13 @@ export class ConditionalController implements ReactiveController {
   }
 
   hostDisconnected() {
-    this.conditionals.forEach(select => {
-      select.removeEventListener('zn-change', this.handleChange);
-      // select.removeEventListener('zn-input', this.handleChange);
+    [...this.conditionals, ...this.required].forEach(el => {
+      el.removeEventListener('zn-change', this.handleChange);
+      el.removeEventListener('zn-input', this.handleChange);
     });
 
     this.conditionals = [];
+    this.required = [];
   }
 
   /** Re-evaluate the conditional state. Call from the host when needed. */
@@ -77,12 +96,11 @@ export class ConditionalController implements ReactiveController {
   }
 
   private checkConditionals() {
-    const shouldDisable = this.conditionals.some(select => {
-      let linkedValues = Array.isArray(select.value) ? select.value : [select.value];
-      linkedValues = linkedValues.filter(v => (v !== '' && v !== "0"));
-      return linkedValues.length > 0;
-    });
+    const blocked = this.conditionals.some(hasValue);
+    const unmet = this.required.length > 0 && !this.required.every(hasValue);
 
-    this.host.disabled = this.initiallyDisabled || shouldDisable;
+    const latched = this.required.length > 0 ? false : this.initiallyDisabled;
+
+    this.host.disabled = latched || blocked || unmet;
   }
 }

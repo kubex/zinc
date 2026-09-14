@@ -74,6 +74,12 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   @property() conditional = '';
 
+  /**
+   * Ids or names of controls that must have a value before this one becomes
+   * usable, comma separated.
+   */
+  @property() requires = '';
+
   @property({ type: Boolean }) disabled: boolean
 
   @property({ type: Boolean }) inline: boolean

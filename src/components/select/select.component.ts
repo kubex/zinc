@@ -357,6 +357,13 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   @property() conditional = "";
 
   /**
+   * Ids or names of controls that must have a value before this one becomes
+   * usable, comma separated. The control stays disabled until every one of them
+   * is filled, and is disabled again if any is cleared.
+   */
+  @property() requires = "";
+
+  /**
    * The URL to fetch options from. When set, the component fetches JSON from this URL and renders the results as
    * options. The expected format is an array of objects with `key` and `value` properties:
    * `[{"key": "us", "value": "United States"}, ...]`
@@ -691,8 +698,15 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     const isExpandIcon = path.some(el => el instanceof Element && el.classList.contains('select__expand-icon'));
     // if click is inside the prefix area (e.g. checkbox), don't toggle the select
     const inPrefix = path.some(el => el instanceof Element && el.classList.contains('select__prefix'));
-    // Ignore disabled controls, fetch loading/error, and clicks on tags (remove buttons)
-    if (((this.disabled || this._fetchLoading || this._fetchError || isIcon) && !isExpandIcon) || inPrefix) {
+    // A control that cannot be used never toggles, whatever was clicked — the
+    // expand icon included, or a disabled select still opens from its chevron.
+    if (this.disabled || this._fetchLoading || this._fetchError) {
+      return;
+    }
+    // Icon clicks (e.g. a tag's remove button) don't toggle, but the expand
+    // icon is what opens the control; the prefix area (e.g. a checkbox) never
+    // toggles.
+    if ((isIcon && !isExpandIcon) || inPrefix) {
       return;
     }
 

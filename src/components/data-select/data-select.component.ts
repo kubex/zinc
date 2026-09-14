@@ -137,6 +137,12 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
 
   @property() conditional = "";
 
+  /**
+   * Ids or names of controls that must have a value before this one becomes
+   * usable, comma separated. Forwarded to the underlying select.
+   */
+  @property() requires = "";
+
   protected readonly formControlController = new FormControlController(this);
 
   private readonly selectObserver = new MutationController(this, {
@@ -316,6 +322,7 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
                  ?disabled="${this.disabled}"
                  ?select-first="${this.selectFirst}"
                  conditional="${this.conditional}"
+                 requires="${this.requires}"
                  @zn-input="${this.handleInput}"
                  @zn-clear="${this.handleClear}"
                  @blur=${this.blur}

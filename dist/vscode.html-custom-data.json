@@ -1182,7 +1182,12 @@
         { "name": "multiple", "values": [] },
         { "name": "select-first", "values": [] },
         { "name": "distinct", "values": [] },
-        { "name": "conditional", "values": [] }
+        { "name": "conditional", "values": [] },
+        {
+          "name": "requires",
+          "description": "Ids or names of controls that must have a value before this one becomes\nusable, comma separated. Forwarded to the underlying select.",
+          "values": []
+        }
       ],
       "references": [
         {
@@ -2098,6 +2103,11 @@
           "values": []
         },
         { "name": "conditional", "values": [] },
+        {
+          "name": "requires",
+          "description": "Ids or names of controls that must have a value before this one becomes\nusable, comma separated.",
+          "values": []
+        },
         { "name": "disabled", "values": [] },
         { "name": "inline", "values": [] },
         { "name": "padded", "values": [] },
@@ -4008,6 +4018,11 @@
         },
         { "name": "distinct", "values": [] },
         { "name": "conditional", "values": [] },
+        {
+          "name": "requires",
+          "description": "Ids or names of controls that must have a value before this one becomes\nusable, comma separated. The control stays disabled until every one of them\nis filled, and is disabled again if any is cleared.",
+          "values": []
+        },
         {
           "name": "data-uri",
           "description": "The URL to fetch options from. When set, the component fetches JSON from this URL and renders the results as\noptions. The expected format is an array of objects with `key` and `value` properties:\n`[{\"key\": \"us\", \"value\": \"United States\"}, ...]`\nWhen not set, the component works exactly as before using slotted `<zn-option>` elements.",

@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.1.134",
+  "version": "1.1.135",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -2515,6 +2515,11 @@
             {
               "name": "conditional",
               "value": { "type": "string", "default": "\"\"" }
+            },
+            {
+              "name": "requires",
+              "description": "Ids or names of controls that must have a value before this one becomes\nusable, comma separated. Forwarded to the underlying select.",
+              "value": { "type": "string", "default": "\"\"" }
             }
           ],
           "slots": [
@@ -2642,6 +2647,11 @@
               { "name": "selectFirst", "type": "boolean" },
               { "name": "distinct", "type": "string" },
               { "name": "conditional", "type": "string" },
+              {
+                "name": "requires",
+                "description": "Ids or names of controls that must have a value before this one becomes\nusable, comma separated. Forwarded to the underlying select.",
+                "type": "string"
+              },
               { "name": "validationMessage" },
               { "name": "validity", "type": "ValidityState" },
               { "name": "closeOnTab" },
@@ -4977,6 +4987,11 @@
               "name": "conditional",
               "value": { "type": "string", "default": "''" }
             },
+            {
+              "name": "requires",
+              "description": "Ids or names of controls that must have a value before this one becomes\nusable, comma separated.",
+              "value": { "type": "string", "default": "''" }
+            },
             { "name": "disabled", "value": { "type": "boolean" } },
             { "name": "inline", "value": { "type": "boolean" } },
             { "name": "padded", "value": { "type": "boolean" } },
@@ -5111,6 +5126,11 @@
                 "type": "boolean"
               },
               { "name": "conditional", "type": "string" },
+              {
+                "name": "requires",
+                "description": "Ids or names of controls that must have a value before this one becomes\nusable, comma separated.",
+                "type": "string"
+              },
               { "name": "disabled", "type": "boolean" },
               { "name": "inline", "type": "boolean" },
               { "name": "padded", "type": "boolean" },
@@ -9197,6 +9217,11 @@
               "value": { "type": "string", "default": "\"\"" }
             },
             {
+              "name": "requires",
+              "description": "Ids or names of controls that must have a value before this one becomes\nusable, comma separated. The control stays disabled until every one of them\nis filled, and is disabled again if any is cleared.",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            {
               "name": "data-uri",
               "description": "The URL to fetch options from. When set, the component fetches JSON from this URL and renders the results as\noptions. The expected format is an array of objects with `key` and `value` properties:\n`[{\"key\": \"us\", \"value\": \"United States\"}, ...]`\nWhen not set, the component works exactly as before using slotted `<zn-option>` elements.",
               "value": { "type": "string" }
@@ -9450,6 +9475,11 @@
               },
               { "name": "distinct", "type": "string" },
               { "name": "conditional", "type": "string" },
+              {
+                "name": "requires",
+                "description": "Ids or names of controls that must have a value before this one becomes\nusable, comma separated. The control stays disabled until every one of them\nis filled, and is disabled again if any is cleared.",
+                "type": "string"
+              },
               {
                 "name": "dataUri",
                 "description": "The URL to fetch options from. When set, the component fetches JSON from this URL and renders the results as\noptions. The expected format is an array of objects with `key` and `value` properties:\n`[{\"key\": \"us\", \"value\": \"United States\"}, ...]`\nWhen not set, the component works exactly as before using slotted `<zn-option>` elements.",

@@ -8184,6 +8184,16 @@
             },
             {
               "kind": "field",
+              "name": "requires",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Ids or names of controls that must have a value before this one becomes\nusable, comma separated. Forwarded to the underlying select.",
+              "attribute": "requires"
+            },
+            {
+              "kind": "field",
               "name": "formControlController",
               "privacy": "protected",
               "readonly": true,
@@ -8523,6 +8533,15 @@
               },
               "default": "\"\"",
               "fieldName": "conditional"
+            },
+            {
+              "name": "requires",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Ids or names of controls that must have a value before this one becomes\nusable, comma separated. Forwarded to the underlying select.",
+              "fieldName": "requires"
             }
           ],
           "superclass": {
@@ -19784,6 +19803,16 @@
             },
             {
               "kind": "field",
+              "name": "requires",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Ids or names of controls that must have a value before this one becomes\nusable, comma separated.",
+              "attribute": "requires"
+            },
+            {
+              "kind": "field",
               "name": "disabled",
               "type": {
                 "text": "boolean"
@@ -20324,6 +20353,15 @@
               },
               "default": "''",
               "fieldName": "conditional"
+            },
+            {
+              "name": "requires",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Ids or names of controls that must have a value before this one becomes\nusable, comma separated.",
+              "fieldName": "requires"
             },
             {
               "name": "disabled",
@@ -40207,6 +40245,16 @@
             },
             {
               "kind": "field",
+              "name": "requires",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Ids or names of controls that must have a value before this one becomes\nusable, comma separated. The control stays disabled until every one of them\nis filled, and is disabled again if any is cleared.",
+              "attribute": "requires"
+            },
+            {
+              "kind": "field",
               "name": "dataUri",
               "type": {
                 "text": "string"
@@ -41128,6 +41176,15 @@
               },
               "default": "\"\"",
               "fieldName": "conditional"
+            },
+            {
+              "name": "requires",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Ids or names of controls that must have a value before this one becomes\nusable, comma separated. The control stays disabled until every one of them\nis filled, and is disabled again if any is cleared.",
+              "fieldName": "requires"
             },
             {
               "name": "data-uri",
@@ -52948,7 +53005,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.134",
+    "version": "1.1.135",
     "author": "",
     "license": "MIT"
   }

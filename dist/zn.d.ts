@@ -2560,17 +2560,25 @@ declare module "internal/conditional" {
     import type { ReactiveController, ReactiveControllerHost } from 'lit';
     export interface ConditionalHost {
         conditional: string;
+        requires: string;
         disabled: boolean;
     }
-    /** A reactive controller that disables the host when linked selects have a value. */
+    /**
+     * A reactive controller that drives the host's disabled state from other form
+     * controls: `conditional` disables the host once a linked control has a value,
+     * `requires` keeps it disabled until every named control has one.
+     */
     export class ConditionalController implements ReactiveController {
         host: ReactiveControllerHost & Element & ConditionalHost;
         private conditionals;
+        private required;
         private initiallyDisabled;
         private readonly handleChange;
         constructor(host: ReactiveControllerHost & Element & ConditionalHost);
         /** Call from the host's `firstUpdated()` to parse IDs, find elements, attach listeners, and run the initial check. */
         setup(): void;
+        /** Resolve a comma-separated list of ids or names to the controls they name. */
+        private resolve;
         hostConnected(): void;
         hostDisconnected(): void;
         /** Re-evaluate the conditional state. Call from the host when needed. */
@@ -2862,6 +2870,12 @@ declare module "components/select/select.component" {
         selectFirst: boolean;
         distinct: string;
         conditional: string;
+        /**
+         * Ids or names of controls that must have a value before this one becomes
+         * usable, comma separated. The control stays disabled until every one of them
+         * is filled, and is disabled again if any is cleared.
+         */
+        requires: string;
         /**
          * The URL to fetch options from. When set, the component fetches JSON from this URL and renders the results as
          * options. The expected format is an array of objects with `key` and `value` properties:
@@ -3623,6 +3637,11 @@ declare module "components/data-select/data-select.component" {
         selectFirst: boolean;
         distinct: string;
         conditional: string;
+        /**
+         * Ids or names of controls that must have a value before this one becomes
+         * usable, comma separated. Forwarded to the underlying select.
+         */
+        requires: string;
         protected readonly formControlController: FormControlController;
         private readonly selectObserver;
         get validationMessage(): string;
@@ -5534,6 +5553,11 @@ declare module "components/inline-edit/inline-edit.component" {
          */
         clearOnEdit: boolean;
         conditional: string;
+        /**
+         * Ids or names of controls that must have a value before this one becomes
+         * usable, comma separated.
+         */
+        requires: string;
         disabled: boolean;
         inline: boolean;
         padded: boolean;

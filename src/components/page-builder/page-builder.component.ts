@@ -684,6 +684,9 @@ export default class ZnPageBuilder extends ZincElement {
     const [removed, sections] = this._extract(id);
     if (!removed) return;
     this._pushHistory();
+    // Cards are rendered unkeyed, so the focused action button survives the
+    // re-render as part of whichever section shifts into this slot.
+    this._blurActiveCard();
     // Clear selection for the removed section AND anything inside it.
     if (this._selectedId === id || removed.children?.some(c => c?.id === this._selectedId)) {
       this._select(null);
@@ -702,6 +705,7 @@ export default class ZnPageBuilder extends ZincElement {
       sections.splice(index + 1, 0, copy);
       this._commit({ sections });
       this._select(copy.id);
+      void this._focusCard(copy.id);
       return;
     }
     // A slotted child duplicates into its container's next empty slot, if any.
@@ -719,8 +723,30 @@ export default class ZnPageBuilder extends ZincElement {
       this._pushHistory();
       this._commit({ sections: this._patchSection(s.id, x => ({ ...x, children })) });
       this._select(copy.id);
+      void this._focusCard(copy.id);
       return;
     }
+  }
+
+  /**
+   * Hands focus to a card, moving it off the action button that was just used.
+   * Cards render unkeyed, so focus left behind stays with the original card's
+   * element and keeps its hover actions showing after the pointer leaves.
+   */
+  private async _focusCard(id: string) {
+    this._blurActiveCard();
+    await this.updateComplete;
+    this.shadowRoot?.querySelector<HTMLElement>(`zn-page-section-card[data-id="${id}"]`)?.focus();
+  }
+
+  private _blurActiveCard() {
+    const focused = this.shadowRoot?.activeElement;
+    if (!(focused instanceof HTMLElement) || !focused.closest('zn-page-section-card')) return;
+    let active: HTMLElement = focused;
+    // activeElement retargets to the card host; the real focus is the action
+    // button nested in its shadow root, and only that responds to blur().
+    while (active.shadowRoot?.activeElement instanceof HTMLElement) active = active.shadowRoot.activeElement;
+    active.blur();
   }
 
   /** Moves a section (top-level or slotted) to a top-level position. */
@@ -993,6 +1019,7 @@ export default class ZnPageBuilder extends ZincElement {
     return html`
       <zn-page-section-card
         class="${extraClass}"
+        data-id="${section.id}"
         draggable="${pinned ? 'false' : 'true'}"
         tabindex="0"
         label="${section.label ?? type?.label ?? section.type}"

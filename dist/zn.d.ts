@@ -11851,6 +11851,13 @@ declare module "components/page-builder/page-builder.component" {
         private _onColumnsEntered;
         private _removeSection;
         private _duplicateSection;
+        /**
+         * Hands focus to a card, moving it off the action button that was just used.
+         * Cards render unkeyed, so focus left behind stays with the original card's
+         * element and keeps its hover actions showing after the pointer leaves.
+         */
+        private _focusCard;
+        private _blurActiveCard;
         /** Moves a section (top-level or slotted) to a top-level position. */
         private _moveSection;
         /**

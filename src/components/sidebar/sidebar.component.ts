@@ -1,10 +1,10 @@
+import {classMap} from "lit/directives/class-map.js";
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property} from 'lit/decorators.js';
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './sidebar.scss';
-import {classMap} from "lit/directives/class-map.js";
 
 /**
  * @summary Short summary of the component's intended use.

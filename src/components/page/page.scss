@@ -167,7 +167,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 2px;
+    gap: var(--zn-spacing-x-small);
     max-width: 100%;
     min-width: 0;
     min-height: 36px;
@@ -212,6 +212,7 @@
     gap: var(--zn-spacing-2x-small);
     align-items: center;
     text-wrap: auto;
+    min-height: 36px; // Keep in step with the actions row: both bands share a centre line.
   }
 
   &__description {
@@ -257,6 +258,7 @@
   slot[name="actions"] {
     justify-content: end;
     flex-wrap: nowrap;
+    min-height: 36px;
   }
 
   slot[name="actions"]::slotted(zn-button-menu) {

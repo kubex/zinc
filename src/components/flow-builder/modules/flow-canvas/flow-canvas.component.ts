@@ -1089,7 +1089,7 @@ export default class ZnFlowCanvas extends ZincElement {
       const src = this.nodes.find(n => n.id === this._linking!.nodeId);
       if (src) {
         const branch = this._outputLayout(src).branches.find(b => b.port.id === this._linking!.port);
-        const from = branch && branch.pillTop !== null
+        const from = branch !== undefined && branch.pillTop !== null
           ? {x: branch.x, y: branch.exitY}
           : {x: src.x + NODE_WIDTH / 2, y: src.y + NODE_HEIGHT};
         const target = this._linkTarget ? this.nodes.find(n => n.id === this._linkTarget) : undefined;

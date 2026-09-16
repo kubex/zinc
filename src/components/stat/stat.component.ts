@@ -45,7 +45,7 @@ export default class ZnStatsTile extends ZincElement {
   }
 
   getCurrentAmount() {
-    if (this.currency == "") {
+    if (this.currency === "") {
       return this.amount;
     }
     // convert string to money

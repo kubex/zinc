@@ -508,7 +508,9 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     let g: number;
     let b: number;
     if (s === 0) {
-      r = g = b = l;
+      r = l;
+      g = l;
+      b = l;
     } else {
       const hue2rgb = (p: number, q: number, t: number) => {
         if (t < 0) t += 1;

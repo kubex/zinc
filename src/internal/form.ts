@@ -36,11 +36,11 @@ const interactions = new WeakMap<ZincFormControl, string[]>();
 
 const formStorePrefix = 'znform:';
 
-type StoredFormControlValue = {
+interface StoredFormControlValue {
   checked?: boolean;
   indeterminate?: boolean;
   value?: unknown;
-};
+}
 
 type PersistableNativeControl = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
 

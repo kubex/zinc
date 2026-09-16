@@ -156,7 +156,7 @@ export function untangledPositions(
   nodes.forEach(n => {
     const raw = xs.get(n.id);
     out.set(n.id, {
-      x: snapToGrid(Number.isFinite(raw) ? (raw as number) - minX + MARGIN : MARGIN),
+      x: snapToGrid(Number.isFinite(raw) ? raw! - minX + MARGIN : MARGIN),
       y: MARGIN + layerOf.get(n.id)! * LAYOUT_V_GAP,
     });
   });

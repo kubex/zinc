@@ -31,6 +31,16 @@
     gap: var(--menu-gap);
     margin: 0;
     max-width: calc(100% - 34px);
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  // Buttons are hoisted into __container, so anything left in the default slot
+  // is non-visual (zn-confirm) and must not claim a flex gap.
+  ::slotted(*) {
+    display: contents;
   }
 
   zn-button {

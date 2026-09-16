@@ -11516,6 +11516,12 @@ declare module "components/page-builder/page.types" {
      * so a tile reads as its linked item however its other fields were filled in.
      */
     export function sectionSummary(section: PageSection, type?: PageSectionType): string;
+    /**
+     * A cached 1×1 transparent image for `dataTransfer.setDragImage()`. The browser
+     * composites its own snapshot of the dragged node onto an opaque surface, which
+     * squares off a card's rounded corners; the builder draws its own ghost instead.
+     */
+    export function emptyDragImage(): HTMLImageElement;
 }
 declare module "components/page-builder/page-registry" {
     import type { PageSectionType } from "components/page-builder/page.types";
@@ -11720,6 +11726,8 @@ declare module "components/page-builder/page-builder.component" {
         /** Index of the drop zone whose "+" type picker is open, if any. */
         private _pickerIndex;
         private _dragOverIndex;
+        private _draggingId;
+        private _dragGhost;
         /** The container slot a drag is currently over, if any. */
         private _slotDragOver;
         /** The container slot whose "+" type picker is open, if any. */
@@ -11867,6 +11875,18 @@ declare module "components/page-builder/page-builder.component" {
          */
         private _moveToSlot;
         private _onCardDragStart;
+        private _ghostEl;
+        /** Where in the card the pointer grabbed it, so the ghost keeps that grip. */
+        private _ghostGrip;
+        /** The host's viewport origin; the ghost is positioned against the host. */
+        private _ghostOrigin;
+        private _startGhost;
+        private _onGhostDragOver;
+        private _onGhostDrop;
+        private _onGhostDragLeave;
+        private _moveGhost;
+        private _endGhost;
+        private _renderDragGhost;
         /** Whether a drag carries one of the builder's own payloads. */
         private _isPageDrag;
         private _onSlotDragOver;

@@ -93,12 +93,9 @@ export default class ZnFilterContainer extends ZincElement {
         this.appendChild(noResultsMessage);
       }
       noResultsMessage.style.display = '';
-    } else {
-      if (noResultsMessage) {
-        noResultsMessage.style.display = 'none';
-      }
+    } else if (noResultsMessage) {
+      noResultsMessage.style.display = 'none';
     }
-
   }
 
   render() {

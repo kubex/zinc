@@ -4,7 +4,7 @@ import {HasSlotController} from "../../internal/slot";
 import {property} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
-import ZnNavbar from "../navbar";
+import type ZnNavbar from "../navbar";
 
 import styles from './header.scss';
 

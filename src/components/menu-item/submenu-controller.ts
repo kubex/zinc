@@ -201,14 +201,14 @@ export class SubmenuController implements ReactiveController {
   // Set the safe triangle values for the submenu when the position changes
   private handlePopupReposition = () => {
     const submenuSlot: HTMLSlotElement | null = this.host.renderRoot.querySelector("slot[name='submenu']");
-    const menu = submenuSlot?.assignedElements({ flatten: true }).filter(el => el.localName === 'zn-menu')[0];
+    const menu = submenuSlot?.assignedElements({flatten: true}).filter(el => el.localName === 'zn-menu')[0];
     const isRtl = this.localize.dir() === 'rtl';
 
     if (!menu) {
       return;
     }
 
-    const { left, top, width, height } = menu.getBoundingClientRect();
+    const {left, top, width, height} = menu.getBoundingClientRect();
 
     this.host.style.setProperty('--safe-triangle-submenu-start-x', `${isRtl ? left + width : left}px`);
     this.host.style.setProperty('--safe-triangle-submenu-start-y', `${top}px`);

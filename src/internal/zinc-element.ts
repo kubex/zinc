@@ -1,6 +1,6 @@
 import {LitElement, type PropertyValues} from "lit";
-import {property} from "lit/decorators.js";
 import {modeSignal, SignalWatcher, themeSignal} from "./theme";
+import {property} from "lit/decorators.js";
 import type {
   EventTypeDoesNotRequireDetail,
   EventTypeRequiresDetail,

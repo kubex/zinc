@@ -84,7 +84,7 @@ export default class ZnFilterContainer extends ZincElement {
       return (el as HTMLElement).style.display !== 'none';
     });
 
-    let noResultsMessage = this.querySelector('.no-results-message') as HTMLElement;
+    let noResultsMessage = this.querySelector<HTMLElement>('.no-results-message');
     if (!anyVisibleElements) {
       if (!noResultsMessage) {
         noResultsMessage = document.createElement('div');

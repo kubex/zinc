@@ -91,7 +91,7 @@ export default class ZnSidebar extends ZincElement {
       </div>`;
   }
 
-  handleClick(e: any) {
+  handleClick(e: Event) {
     this.open = !this.open;
     e.stopPropagation();
   }

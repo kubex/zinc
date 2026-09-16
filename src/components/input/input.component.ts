@@ -831,7 +831,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
   }
 
   @watch('colorFormat', {waitUntilFirstUpdate: true})
-  async handleColorFormatChange() {
+  handleColorFormatChange() {
     // When color format changes, convert the current value to the new format
     if (this.type === 'color' && this.value) {
       const hexValue = this.convertToHex(this.value);

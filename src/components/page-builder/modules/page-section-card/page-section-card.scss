@@ -21,6 +21,9 @@
 }
 
 .card {
+  --card-actions-inset: 14px;
+
+  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -90,11 +93,21 @@
   opacity: 0.45;
 }
 
-// Space is always reserved (visibility, not display) so the card never
-// changes size or shifts its text when the actions appear on hover.
+:host([locked]) .card {
+  // Clear the always-visible lock: its 14px icon plus the row gap.
+  --card-actions-inset: 40px;
+}
+
+// Overlaid rather than laid out, so the text gets the full card width and never
+// reflows on hover; the gradient pad hides whatever text runs underneath.
 .card__actions {
+  position: absolute;
+  inset: 0 var(--card-actions-inset) 0 auto;
   display: flex;
-  gap: 4px;
+  align-items: center;
+  gap: var(--zn-spacing-2x-small);
+  padding-left: 28px;
+  background: linear-gradient(to right, rgba(var(--zn-panel), 0), rgb(var(--zn-panel)) 28px);
   visibility: hidden;
 }
 

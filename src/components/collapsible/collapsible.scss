@@ -79,6 +79,11 @@
 // Height animates via grid-template-rows 0fr -> 1fr; the inline padding is
 // constant so the content never reflows (and re-wraps) mid-transition.
 .content {
+  // Padding counts toward a grid item's minimum contribution, so a 0fr track
+  // cannot collapse below it and a closed panel would keep the padding's
+  // height. Held at zero here and transitioned in with the row.
+  --content-block-padding: 0px;
+
   display: grid;
   // minmax(0, 1fr), not the implicit auto track: auto floors the column at the
   // content's min-content width, so nowrap children overflow the host.
@@ -90,9 +95,10 @@
 
   &__inner {
     min-height: 0;
-    padding: 0 var(--zn-spacing-medium) var(--zn-spacing-medium);
+    padding: 0 var(--zn-spacing-medium) var(--content-block-padding);
     transform: translateY(-4px);
-    transition: transform var(--zn-transition-medium) cubic-bezier(0.32, 0.72, 0, 1);
+    transition: transform var(--zn-transition-medium) cubic-bezier(0.32, 0.72, 0, 1),
+    padding-bottom var(--zn-transition-medium) cubic-bezier(0.32, 0.72, 0, 1);
   }
 
   &--flush &__inner {
@@ -108,6 +114,8 @@
 }
 
 :host([expanded]) .content {
+  --content-block-padding: var(--zn-spacing-medium);
+
   grid-template-rows: 1fr;
   opacity: 1;
 

@@ -8,6 +8,7 @@
   --pb-card-width: 1024px;
 
   display: block;
+  position: relative; // anchors the drag ghost
   width: 100%;
   height: 100%;
   min-height: 480px;
@@ -496,6 +497,14 @@ zn-page-palette-item {
   }
 }
 
+// Out of the flow while its drag ghost stands in: the canvas would otherwise
+// hold the card's height *and* the expanded drop placeholder, growing the page
+// by a placeholder's worth for the length of every drag.
+zn-page-section-card.dragging,
+.container--dragging {
+  display: none;
+}
+
 // A container section: its card spans the row with a grid of child slots below.
 .container {
   width: 100%;
@@ -648,4 +657,17 @@ zn-page-palette-item {
       background: rgb(var(--zn-color-tab));
     }
   }
+}
+
+// The builder's own drag image, moved by hand against the host. It sits outside
+// .builder so that panel's overflow clip can't cut it, and draws its shadow with
+// a filter so the falloff follows the card's rounded corners rather than its box.
+.drag-ghost {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  opacity: 0.9;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 16px rgba(var(--zn-shadow), 0.35));
 }

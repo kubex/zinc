@@ -1,5 +1,6 @@
 import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
 import {
+  emptyDragImage,
   emptyPageState,
   generateSectionId,
   MAX_SLOTS,
@@ -149,6 +150,8 @@ export default class ZnPageBuilder extends ZincElement {
   /** Index of the drop zone whose "+" type picker is open, if any. */
   @state() private _pickerIndex: number | null = null;
   @state() private _dragOverIndex: number | null = null;
+  @state() private _draggingId: string | null = null;
+  @state() private _dragGhost: { section: PageSection } | { type: PageSectionType } | null = null;
   /** The container slot a drag is currently over, if any. */
   @state() private _slotDragOver: { containerId: string; index: number } | null = null;
   /** The container slot whose "+" type picker is open, if any. */
@@ -277,11 +280,13 @@ export default class ZnPageBuilder extends ZincElement {
 
   connectedCallback() {
     super.connectedCallback();
+    emptyDragImage(); // decoded up front, before a drag can ask for it
     this._registerSlottedTemplates();
     this._resizeObserver.observe(this);
   }
 
   disconnectedCallback() {
+    this._endGhost();
     this._resizeObserver.disconnect();
     this._stopAutoSave();
     if (this._justSavedTimer !== null) {
@@ -820,6 +825,111 @@ export default class ZnPageBuilder extends ZincElement {
     e.stopPropagation(); // a child card's drag must not also start its container's
     e.dataTransfer.setData(PAGE_SECTION_MIME, id);
     e.dataTransfer.effectAllowed = 'move';
+    const section = this._findSection(id);
+    if (section) this._startGhost(e, { section });
+    // Deferred: pulling the source out of the flow during the dragstart handler
+    // aborts the drag.
+    setTimeout(() => (this._draggingId = id));
+  }
+
+  // --- Drag ghost ---------------------------------------------------------------
+  // The browser's own drag image is a snapshot composited onto an opaque
+  // surface, so everything the card leaves transparent outside its 8px radius
+  // comes back as square white corners — not something the page can style away.
+  // The builder suppresses it and moves a real card of its own instead.
+
+  private _ghostEl: HTMLElement | null = null;
+  /** Where in the card the pointer grabbed it, so the ghost keeps that grip. */
+  private _ghostGrip = { x: 0, y: 0 };
+  /** The host's viewport origin; the ghost is positioned against the host. */
+  private _ghostOrigin = { x: 0, y: 0 };
+
+  private _startGhost(e: DragEvent, ghost: NonNullable<typeof this._dragGhost>) {
+    if (!e.dataTransfer) return;
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const host = this.getBoundingClientRect();
+    this._ghostGrip = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    this._ghostOrigin = { x: host.left, y: host.top };
+    this._dragGhost = ghost;
+    e.dataTransfer.setDragImage(emptyDragImage(), 0, 0);
+    // dragover is stopped short by the zone handlers, so listen at the document
+    // in capture: the ghost has to track the pointer wherever it goes.
+    document.addEventListener('dragover', this._onGhostDragOver, true);
+    document.addEventListener('drop', this._onGhostDrop, true);
+    document.addEventListener('dragleave', this._onGhostDragLeave, true);
+    void this.updateComplete.then(() => {
+      this._ghostEl = this.shadowRoot?.querySelector<HTMLElement>('.drag-ghost') ?? null;
+      if (!this._ghostEl) return;
+      this._ghostEl.style.width = `${rect.width}px`;
+      this._moveGhost(e.clientX, e.clientY);
+    });
+  }
+
+  private _onGhostDragOver = (e: DragEvent) => {
+    // Holds the whole document open as a drop target for the length of our own
+    // drag. Only the canvas calls preventDefault, so anywhere else the drag has
+    // no target and the OS drag session stalls for seconds hunting for one.
+    e.preventDefault();
+    // The last dragover of a cancelled drag reports 0,0 — it would fling the
+    // ghost into the corner for the frame before dragend clears it.
+    if (e.clientX === 0 && e.clientY === 0) return;
+    this._moveGhost(e.clientX, e.clientY);
+  };
+
+  // Follows from holding the document open above: a release outside the canvas
+  // would otherwise be left to the browser's default handling of the payload.
+  private _onGhostDrop = (e: DragEvent) => e.preventDefault();
+
+  // A null relatedTarget means the pointer left the window, where no dragover
+  // reaches us — the ghost would sit frozen wherever it was. The OS carries the
+  // drag from here; the ghost comes back on the first dragover on re-entry.
+  private _onGhostDragLeave = (e: DragEvent) => {
+    if (e.relatedTarget === null && this._ghostEl) this._ghostEl.style.visibility = 'hidden';
+  };
+
+  private _moveGhost(clientX: number, clientY: number) {
+    if (!this._ghostEl) return;
+    this._ghostEl.style.visibility = '';
+    const x = clientX - this._ghostOrigin.x - this._ghostGrip.x;
+    const y = clientY - this._ghostOrigin.y - this._ghostGrip.y;
+    this._ghostEl.style.transform = `translate(${x}px, ${y}px)`;
+  }
+
+  private _endGhost() {
+    document.removeEventListener('dragover', this._onGhostDragOver, true);
+    document.removeEventListener('drop', this._onGhostDrop, true);
+    document.removeEventListener('dragleave', this._onGhostDragLeave, true);
+    this._ghostEl = null;
+    this._dragGhost = null;
+  }
+
+  private _renderDragGhost() {
+    const ghost = this._dragGhost;
+    if (!ghost) return '';
+    if ('type' in ghost) {
+      const t = ghost.type;
+      return html`
+        <zn-page-palette-item
+          class="drag-ghost"
+          type="${t.type}"
+          label="${t.label}"
+          description="${ifDefined(t.description)}"
+          icon="${ifDefined(t.icon)}"
+          icon-library="${ifDefined(t.iconLibrary)}"
+          color="${ifDefined(t.color)}"></zn-page-palette-item>`;
+    }
+    const section = ghost.section;
+    const type = this.registry.get(section.type);
+    return html`
+      <zn-page-section-card
+        class="drag-ghost"
+        label="${section.label ?? type?.label ?? section.type}"
+        summary="${type ? sectionSummary(section, type) : `Unknown type "${section.type}"`}"
+        icon="${ifDefined(type?.icon)}"
+        icon-library="${ifDefined(type?.iconLibrary)}"
+        color="${ifDefined(type?.color)}"
+        ?unknown="${!type}"
+        ?locked="${this._isPinned(section.id)}"></zn-page-section-card>`;
   }
 
   /** Whether a drag carries one of the builder's own payloads. */
@@ -840,6 +950,8 @@ export default class ZnPageBuilder extends ZincElement {
     e.preventDefault();
     e.stopPropagation();
     this._slotDragOver = null;
+    this._draggingId = null;
+    this._endGhost();
     const typeKey = e.dataTransfer?.getData(PAGE_TYPE_MIME);
     const sectionId = e.dataTransfer?.getData(PAGE_SECTION_MIME);
     if (typeKey) this.addSectionToSlot(typeKey, containerId, index);
@@ -857,6 +969,8 @@ export default class ZnPageBuilder extends ZincElement {
     e.preventDefault();
     e.stopPropagation();
     this._dragOverIndex = null;
+    this._draggingId = null;
+    this._endGhost();
     const typeKey = e.dataTransfer?.getData(PAGE_TYPE_MIME);
     const sectionId = e.dataTransfer?.getData(PAGE_SECTION_MIME);
     if (typeKey) this.addSection(typeKey, index);
@@ -924,6 +1038,7 @@ export default class ZnPageBuilder extends ZincElement {
   private _renderPaletteItem(type: PageSectionType) {
     return html`
       <zn-page-palette-item
+        @dragstart="${(e: DragEvent) => this._startGhost(e, { type })}"
         type="${type.type}"
         label="${type.label}"
         description="${ifDefined(type.description)}"
@@ -1018,7 +1133,7 @@ export default class ZnPageBuilder extends ZincElement {
     const pinned = this._isPinned(section.id);
     return html`
       <zn-page-section-card
-        class="${extraClass}"
+        class="${extraClass} ${this._draggingId === section.id ? 'dragging' : ''}"
         data-id="${section.id}"
         draggable="${pinned ? 'false' : 'true'}"
         tabindex="0"
@@ -1050,7 +1165,7 @@ export default class ZnPageBuilder extends ZincElement {
     });
     if (!type?.slots) return card;
     return html`
-      <div class="container">
+      <div class="container ${this._draggingId === section.id ? 'container--dragging' : ''}">
         ${card}
         <div class="slots" style="--pb-slot-columns:${slotColumns(section, type)}">
           ${sectionChildren(section, type).map((child, i) => this._renderSlot(section, child, i))}
@@ -1290,6 +1405,8 @@ export default class ZnPageBuilder extends ZincElement {
         @dragend="${() => {
           this._dragOverIndex = null;
           this._slotDragOver = null;
+          this._draggingId = null;
+          this._endGhost();
         }}">
         <header part="header" class="header" ?hidden="${!hasHeader}">
           <div class="header__group">
@@ -1304,6 +1421,7 @@ export default class ZnPageBuilder extends ZincElement {
         ${this._renderInspector()}
         <slot name="config" class="declarations" @slotchange="${this._registerSlottedTemplates}"></slot>
       </div>
+      ${this._renderDragGhost()}
     `;
   }
 }

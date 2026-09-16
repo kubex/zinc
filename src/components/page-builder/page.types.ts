@@ -129,3 +129,23 @@ export function sectionSummary(section: PageSection, type?: PageSectionType): st
   }
   return strings[0]?.[1] ?? type?.description ?? '';
 }
+
+let _emptyDragImage: HTMLImageElement | undefined;
+
+/**
+ * A cached 1×1 transparent image for `dataTransfer.setDragImage()`. The browser
+ * composites its own snapshot of the dragged node onto an opaque surface, which
+ * squares off a card's rounded corners; the builder draws its own ghost instead.
+ */
+export function emptyDragImage(): HTMLImageElement {
+  if (!_emptyDragImage) {
+    _emptyDragImage = new Image();
+    _emptyDragImage.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+    // `complete` goes true synchronously for a data URL but the bitmap is not
+    // decoded yet, and a drag image the compositor has never rasterized is
+    // dropped in favor of the browser's own — a globe icon dragged alongside
+    // the builder's ghost, on the first drag only
+    void _emptyDragImage.decode().catch(() => undefined);
+  }
+  return _emptyDragImage;
+}

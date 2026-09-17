@@ -102,7 +102,9 @@ $control-positions: (
     flex-direction: column;
     flex-wrap: nowrap;
     align-items: stretch;
-    justify-content: center;
+    /* Grid rows stretch cards to one height; centring would float a short card's
+       image off the row's shared line, so pin to the image's named edge. */
+    justify-content: flex-start;
 
     .selection-card__image-container {
       align-self: center;
@@ -122,6 +124,10 @@ $control-positions: (
         }
       }
     }
+  }
+
+  &.selection-card--image-bottom {
+    justify-content: flex-end;
   }
 
   /* Positioned controls */

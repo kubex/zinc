@@ -220,6 +220,16 @@ describe('<zn-select>', () => {
 
       expect(visibleValues()).to.deep.equal(['lemon']);
     });
+
+    it('drops the separator on the first visible group when earlier groups are filtered out', async () => {
+      const groups = el.querySelectorAll('zn-opt-group');
+
+      await type('berr');
+      expect(groups[1].hasAttribute('data-first-visible'), 'Berries group while alone').to.be.true;
+
+      await type('');
+      expect(groups[1].hasAttribute('data-first-visible'), 'Berries group with Citrus restored').to.be.false;
+    });
   });
 
   describe('Escape key', () => {

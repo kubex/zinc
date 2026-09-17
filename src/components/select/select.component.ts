@@ -845,6 +845,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       this.getAllOptGroups().forEach(group => {
         group.hidden = false;
       });
+      this.updateOptGroupSeparators();
       this._noResultsVisible = false;
       return;
     }
@@ -872,6 +873,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
     // Update opt-group visibility based on whether any child options are visible
     this.getAllOptGroups().forEach(group => group.updateVisibility());
+    this.updateOptGroupSeparators();
 
     // Show empty state when no non-selected options match (selected-but-hidden items are value anchors, not results)
     this._noResultsVisible = allOptions.filter(o => !o.selected).every(option => option.hidden);
@@ -907,6 +909,12 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     this.getAllOptGroups().forEach(group => {
       group.hidden = false;
     });
+    this.updateOptGroupSeparators();
+  }
+
+  // Runs after every visibility change so group separators reflect which groups are actually showing
+  private updateOptGroupSeparators() {
+    this.getAllOptGroups().forEach(group => group.updateSeparator());
   }
 
   /**
@@ -1098,6 +1106,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
     // Select only the options that match the new value (re-query in case options were materialised)
     this.setSelectedOptions(this.getAllOptions().filter(el => value.includes(el.value)));
+
+    this.updateOptGroupSeparators();
 
     // of check if an option has selected attribute set initially
     if (!this.valueHasChanged) {
@@ -1328,6 +1338,11 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   private handleInvalid(event: Event) {
     this.formControlController.setValidity(false);
     this.formControlController.emitInvalidEvent(event);
+  }
+
+  protected updated(_changedProperties: PropertyValues) {
+    super.updated(_changedProperties);
+    this.updateOptGroupSeparators();
   }
 
   protected firstUpdated(_changedProperties: PropertyValues) {

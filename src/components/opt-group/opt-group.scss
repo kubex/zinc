@@ -8,7 +8,7 @@
   display: none !important;
 }
 
-:host(:not(:first-child)) {
+:host(:not(:first-child):not([data-first-visible])) {
   border-block-start: solid var(--zn-panel-border-width) var(--zn-panel-border-color);
   margin-block-start: var(--zn-spacing-2x-small);
 }

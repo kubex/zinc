@@ -47,6 +47,25 @@ export default class ZnOptGroup extends ZincElement {
     this.hidden = options.length > 0 && options.every(option => option.hidden);
   }
 
+  /**
+   * @internal - Marks the group as the first visible one so it doesn't draw a separator against the top of the
+   * listbox. Structural `:first-child` can't see that earlier siblings were hidden by a search filter.
+   */
+  updateSeparator() {
+    let previous = this.previousElementSibling;
+    while (previous && !ZnOptGroup.isRendered(previous)) {
+      previous = previous.previousElementSibling;
+    }
+    this.toggleAttribute('data-first-visible', previous === null);
+  }
+
+  private static isRendered(el: Element): boolean {
+    if (el instanceof HTMLSlotElement) {
+      return el.assignedElements().some(assigned => ZnOptGroup.isRendered(assigned));
+    }
+    return !(el instanceof HTMLElement) || !el.hidden;
+  }
+
   render() {
     return html`
       <div part="base" class="opt-group">

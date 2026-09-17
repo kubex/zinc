@@ -7639,9 +7639,9 @@ declare module "components/linked-select/linked-select.component" {
     export default class ZnLinkedSelect extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
         name: string;
-        value: string;
+        value: string | string[];
         /** The default value of the form control. Primarily used for resetting the form control. */
-        defaultValue: string;
+        defaultValue: string | string[];
         checked: boolean;
         options: linkedSelectOptions;
         linkedSelect: string;
@@ -7649,6 +7649,12 @@ declare module "components/linked-select/linked-select.component" {
         label: string;
         /** Automatically select the first option of the linked group when no value is set. */
         selectFirst: boolean;
+        /** Allows more than one option of the linked group to be selected. */
+        multiple: boolean;
+        placeholder: string;
+        clearable: boolean;
+        search: boolean;
+        helpText: string;
         input: ZnSelect;
         private linkedSelectElement;
         private readonly formControlController;
@@ -7656,6 +7662,7 @@ declare module "components/linked-select/linked-select.component" {
         get validity(): ValidityState;
         get validationMessage(): string;
         connectedCallback(): void;
+        protected willUpdate(_changedProperties: PropertyValues): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         disconnectedCallback(): void;
         checkValidity(): boolean;
@@ -7663,6 +7670,7 @@ declare module "components/linked-select/linked-select.component" {
         reportValidity(): boolean;
         setCustomValidity(message: string): void;
         handleLinkedSelectChange: () => void;
+        private serialisedValue;
         handleChange(e: Event): void;
         handleSelectChange: (e: ZnSelectEvent) => void;
         /** The options of the group the linked select currently points at. */
@@ -9196,6 +9204,409 @@ declare module "components/audio-select/index" {
         }
     }
 }
+declare module "components/remarkd-editor/actions" {
+    import type { SlashMenuItem } from "components/slash-menu/index";
+    export type ActionGroup = 'text' | 'lists' | 'admonitions' | 'blocks' | 'structured' | 'media' | 'objects' | 'breaks' | 'logic' | 'inline';
+    /** What an inline action wraps the selection in. `after` defaults to `before`. */
+    export interface InlineMark {
+        before: string;
+        after?: string;
+        placeholder?: string;
+    }
+    export interface EditorAction {
+        /** Stable id, used for toolbar keys and tests. */
+        key: string;
+        label: string;
+        icon: string;
+        group: ActionGroup;
+        /** Extra search terms for the slash menu, e.g. "bold" finds Strong. */
+        keywords?: string[];
+        /** Block actions: spliced in as a new block. */
+        prefix?: string;
+        /** Inline actions: applied to the selection in the open block. */
+        inline?: InlineMark;
+        /** Where the caret lands within `prefix`. Defaults to the end. */
+        caretOffset?: number;
+        /** Actions that open their own picker instead of inserting text. */
+        opens?: 'image' | 'include' | 'link';
+    }
+    /** Toolbar order, most-used first — the last groups are the first to collapse. */
+    export const ACTION_GROUPS: {
+        id: ActionGroup;
+        label: string;
+    }[];
+    export const EDITOR_ACTIONS: EditorAction[];
+    /** The registry as slash menu entries. Picker actions insert nothing; the menu emits their action id. */
+    export function slashItems(actions: EditorAction[]): SlashMenuItem[];
+}
+declare module "internal/toolbar-overflow" {
+    import type { ReactiveController, ReactiveControllerHost } from 'lit';
+    interface ToolbarOverflowOptions {
+        /** The measurable group elements, in toolbar order. */
+        groups: () => HTMLElement[];
+        /** The element whose width the groups have to fit inside. */
+        container: () => HTMLElement | null | undefined;
+        /** Space to keep for the overflow trigger. Defaults to 44px. */
+        reserve?: number;
+    }
+    /**
+     * Reports how many leading toolbar groups fit the container, so the host can render the
+     * rest into an overflow menu. Two passes: the first ignores the trigger, because when
+     * everything fits there is no trigger to make room for.
+     */
+    export class ToolbarOverflowController implements ReactiveController {
+        visibleCount: number;
+        private readonly host;
+        private readonly options;
+        private resizeRafId;
+        constructor(host: ReactiveControllerHost & Element, options: ToolbarOverflowOptions);
+        hostUpdated(): void;
+        private measure;
+        private countThatFit;
+    }
+}
+declare module "components/remarkd-editor/remarkd-editor.component" {
+    import { type CSSResultGroup, type PropertyValues, type TemplateResult } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnDropdown from "components/dropdown/index";
+    import ZnMenu from "components/menu/index";
+    import ZnMenuItem from "components/menu-item/index";
+    import ZnSlashMenu from "components/slash-menu/index";
+    import type { ZincFormControl } from "internal/zinc-element";
+    /**
+     * @summary A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.
+     * @documentation https://zinc.style/components/remarkd-editor
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-button
+     * @dependency zn-button-group
+     * @dependency zn-dropdown
+     * @dependency zn-icon
+     * @dependency zn-file
+     * @dependency zn-menu
+     * @dependency zn-menu-item
+     * @dependency zn-slash-menu
+     *
+     * @event zn-input - Emitted on each keystroke while editing a block.
+     * @event zn-change - Emitted when a block edit is committed and the value changes.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart toolbar - The always-visible block-insert and inline-formatting toolbar.
+     * @csspart raw-toggle - The button that switches between the block view and the raw source view.
+     * @csspart block - A rendered block wrapper.
+     * @csspart rendered - The rendered remarkd output of a block.
+     * @csspart conditional - A labelled wrapper for an ifdef/ifndef/ifeval/iftrue/iffalse/ifempty/ifnempty range.
+     * @csspart variable - A chip rendered for a document attribute, title, or bracket line.
+     * @csspart input - The textarea shown while editing a block.
+     * @csspart raw - The full-document textarea shown in raw source mode.
+     * @csspart slash-menu - The `zn-slash-menu` opened by typing "/" in an empty block.
+     * @csspart image-controls - The caption / alignment / size panel shown when an image block is clicked.
+     * @csspart include - The chip rendered in place of an `include::` directive.
+     * @csspart include-picker - The inline Include picker opened from the toolbar or "/include".
+     *
+     * @cssproperty --remarkd-editor-max-height - The tallest the editor grows before its body scrolls. Defaults to `100dvh`.
+     */
+    export default class ZnRemarkdEditor extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-dropdown': typeof ZnDropdown;
+            'zn-menu': typeof ZnMenu;
+            'zn-menu-item': typeof ZnMenuItem;
+            'zn-slash-menu': typeof ZnSlashMenu;
+        };
+        private readonly formControlController;
+        private readonly slashController;
+        private readonly toolbarOverflow;
+        private editingDraft;
+        private includeRequest;
+        private rawEntryValue;
+        private suppressValueSync;
+        private suppressBlurCommit;
+        private validationInput;
+        private slashMenuElement;
+        private blocks;
+        private editingIndex;
+        /**
+         * Lists the blocks most recently inserted here above the rest of the slash menu, remembered in
+         * `localStorage` under this key. Leave unset to offer no recently used section.
+         */
+        slashRecentKey: string;
+        /** Renders the slash menu only once it has been needed. */
+        private hasSlashMenu;
+        private imagePickerIndex;
+        private imageEdit;
+        private dropIndicator;
+        private dragIndex;
+        private editShell;
+        private rawMode;
+        private includeOptions;
+        private includeLoadFailed;
+        private includePickerIndex;
+        private includeQuery;
+        private linkPickerOpen;
+        private linkQuery;
+        private linkResults;
+        private linkSearchFailed;
+        private linkSelection;
+        private linkSearchTimer?;
+        private linkSearchToken;
+        /** Resolved link targets by reference; a null value is one the app does not know. */
+        private linkRefs;
+        private linkRefsPending;
+        private pendingDragHandle;
+        private dragStartX;
+        private dragStartY;
+        private dragGhost;
+        private dragPointerY;
+        private autoScrollFrame;
+        /** The name of the control, submitted as part of form data. */
+        name: string;
+        /** The current remarkd source. */
+        value: string;
+        /** The default value — used when resetting the form. */
+        defaultValue: string;
+        /** Placeholder shown when the document is empty. */
+        placeholder: string;
+        /**
+         * Endpoint for image uploads — required for image support. Posting the file
+         * metadata here must return `{uploadPath, uploadUrl}`; the file is then PUT
+         * to `uploadUrl` and the returned `uploadPath` is embedded as the image URL.
+         */
+        attachmentUrl: string;
+        /**
+         * Endpoint listing the Includes this document may embed, as
+         * `{"items":[{id,title,description,scope,keywords,languages,url}]}`. Labels the
+         * chips rendered for `include::` directives and feeds the include picker.
+         */
+        includeUrl: string;
+        /**
+         * Endpoint the article link picker searches, as
+         * `{"items":[{ref,kind,title,context,status}]}`. Queried with `?q=<term>` as
+         * the author types and with `?refs=a,b` to resolve the references a body
+         * already carries.
+         */
+        linkUrl: string;
+        /** Adds a toolbar toggle that swaps the block view for the full remarkd source. */
+        allowRaw: boolean;
+        /** Makes the editor required for form submission. */
+        required: boolean;
+        /** Makes the editor read-only. */
+        readonly: boolean;
+        /** Disables the editor. */
+        disabled: boolean;
+        get validity(): ValidityState;
+        get validationMessage(): string;
+        checkValidity(): boolean;
+        getForm(): HTMLFormElement | null;
+        reportValidity(): boolean;
+        setCustomValidity(message: string): void;
+        /** Starts editing the first block, or a new block if the document is empty. */
+        focus(): void;
+        /** Commits any in-progress block or raw edit. */
+        blur(): void;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        protected updated(changedProperties: PropertyValues<this>): void;
+        disconnectedCallback(): void;
+        handleValueChange(): void;
+        handleIncludeUrlChange(): void;
+        handleLinkUrlChange(): void;
+        /**
+         * Splits remarkd source into blocks on blank lines, keeping fenced /
+         * delimited containers (``` ==== !!!! .... ---- ____ **** ////) as single blocks.
+         */
+        private splitBlocks;
+        private fenceMarker;
+        private closesFence;
+        private updateBlocks;
+        private handleRenderedClick;
+        /** Parses a block that is purely an image (with optional caption/align lines). */
+        private parseImageBlock;
+        /** Parses a block that is nothing but an include directive. */
+        private parseIncludeBlock;
+        private serializeImageBlock;
+        private toggleCheckbox;
+        private startEdit;
+        private updateImageEdit;
+        private saveImageEdit;
+        private closeImageEdit;
+        private deleteImageBlock;
+        private editImageSource;
+        private handleImageControlsKeydown;
+        /**
+         * The remarkd chrome the editing block should keep, derived from its first
+         * line — so a NOTE still looks like a note while its source is edited.
+         */
+        private computeEditShell;
+        private focusInput;
+        /**
+         * Scrolls the editor's own body to bring `el` into view. Never `scrollIntoView()` and
+         * never `focus()` without preventScroll: both walk every scrollable ancestor, and an
+         * `overflow: hidden`/`auto` panel around the editor is scrollable too — that shifts a
+         * container the user never asked to move.
+         */
+        private reveal;
+        private revealAfterUpdate;
+        /**
+         * Centres a block added without opening an editor. An image has no height until it
+         * loads, so the first pass scrolls against a layout that is still short — the second
+         * pass corrects it once the real dimensions are in.
+         */
+        private revealBlock;
+        private addBlockAt;
+        private deleteBlock;
+        /** Inserts a draft block — committed (or dropped, if left empty) on blur. */
+        private insertDraftBlock;
+        /**
+         * Blur handler for the editing textarea. Re-renders that replace the
+         * focused textarea (e.g. Shift+Enter committing and opening the next
+         * block) fire blur mid-transition — `suppressBlurCommit` masks those.
+         */
+        private handleEditBlur;
+        /** Commits the in-progress edit; returns the index after the committed parts. */
+        private commitEdit;
+        private handleDraftInput;
+        private handleEditKeydown;
+        /** Whether the block being edited is nothing but the slash command. */
+        private isSlashBlock;
+        private mountSlashMenu;
+        /** Returns false for items the controller should not insert text for. */
+        private handleSlashSelect;
+        private handleEditPaste;
+        private handleDragOver;
+        private handleDrop;
+        /** The insertion index a drop at `y` maps to, from the rendered block positions. */
+        private insertionIndexFromY;
+        private handleHandlePointerDown;
+        private handleDragPointerMove;
+        /**
+         * Holding the pointer near a scroll edge keeps the content moving, so a block can
+         * be dragged past the visible slice of a long document. Runs per frame rather than
+         * per pointermove — a pointer parked at the edge stops emitting moves.
+         */
+        private stepAutoScroll;
+        /** Scrolls the editor body, falling through to the page once the body is at its limit. */
+        private autoScroll;
+        /** Scroll step for this frame: nothing until the pointer is within `edge` of a boundary. */
+        private edgeScrollDelta;
+        private handleDragPointerUp;
+        private cancelDrag;
+        private createDragGhost;
+        private moveDragGhost;
+        private pickImage;
+        private pickInclude;
+        /**
+         * Opens the picker over the block being edited. The caret range is captured
+         * now: the picker's own filter takes focus, so the textarea's selection is
+         * gone by the time an option is chosen.
+         */
+        private pickLink;
+        private closeLinkPicker;
+        /** Debounced; only the newest response is kept. */
+        private searchLinks;
+        private closeIncludePicker;
+        private insertInclude;
+        private closeImagePicker;
+        private handleImagePicked;
+        private insertImage;
+        private uploadImage;
+        /**
+         * Resolves an app-relative path the way the console's pagelet handler does:
+         * an app fragment's URLs sit under the app base, and the console puts the app's
+         * `gaid` on the host element. Links rendered here live in the shadow root,
+         * where a click retargets to the host, so that handler never sees them — the
+         * href has to carry the base itself.
+         */
+        private appPath;
+        private hasIncludeBlock;
+        /** Fetches the include list once; every later caller shares the same promise. */
+        private loadIncludeOptions;
+        /**
+         * Resolves the references in the body that have not been resolved yet, so a
+         * link whose target is gone can be marked. A failed request records nothing:
+         * an unanswered reference is not a broken one.
+         */
+        private resolveContentLinks;
+        private markContentLinks;
+        private autosize;
+        /**
+         * Applies an inline mark to the open block's textarea: wraps the selection, toggles the
+         * mark off when it is already wrapped, or inserts a selected placeholder when there is
+         * no selection. Goes through `editingDraft` so `zn-input` still fires.
+         */
+        private applyInline;
+        private toggleRawMode;
+        private focusRaw;
+        /**
+         * Raw mode keeps the whole document in one textarea, so the textarea — not
+         * the block list — is authoritative while it is open: re-splitting on every
+         * keystroke would normalise blank lines out from under the cursor.
+         */
+        private handleRawInput;
+        /**
+         * Re-splits the raw source into blocks. Not `updateBlocks` — that only
+         * reports a change when the re-join differs from the value, and raw edits
+         * have already written straight to the value.
+         */
+        private commitRaw;
+        private handleToolbarInsert;
+        private renderImageControls;
+        private renderIncludeChip;
+        /** A metadata-only block parses to nothing, so show each of its lines as a chip instead. */
+        private renderMetaChips;
+        /**
+         * One shared chip treatment for every metadata line kind — each kind just supplies an
+         * icon, a name, and an optional value/state, display-only in all three cases.
+         */
+        private renderMetaChip;
+        /**
+         * Wraps `{name}` references so they read as variables rather than literal text. Walks text
+         * nodes and skips code, so a brace in a sample stays a brace, and no regex touches markup.
+         */
+        private markVariables;
+        /**
+         * A conditional range as a labelled wrapper. The inner content is parsed without the
+         * directive lines: evaluating instead would blank the block whenever the flag is not
+         * defined in this same block, hiding the author's content while they edit it. It also
+         * keeps both halves of an if/else idiom visible — with evaluation you could never see
+         * the `ifndef` branch while the `ifdef` condition held. Nesting is handled by
+         * `splitConditionalParts`/`renderConditionalWrapper` below, recursively.
+         */
+        private renderConditional;
+        private renderBlock;
+        /** Inline marks and the article link both apply into an open block, not a new one. */
+        private isActionDisabled;
+        /** A picker action with no endpoint configured is not offered at all. */
+        private actionAvailable;
+        private slashItemAvailable;
+        /** Routes a toolbar/menu action to the inline or block insert path — the one place both
+         * `renderAction` and `renderMenuAction` call, so the bar and the overflow menu cannot
+         * drift out of sync on what a given action actually does. */
+        private activateAction;
+        /** A single toolbar action button, shared by the toolbar bar and the overflow menu. */
+        private renderAction;
+        /** The same action, rendered as a menu item for the overflow menu. */
+        private renderMenuAction;
+        render(): TemplateResult<1>;
+        private renderRaw;
+        /** The block views, with the inline image picker spliced in when active. */
+        private renderBody;
+        private renderIncludePicker;
+        private renderLinkPicker;
+        private insertLink;
+        private renderImagePicker;
+    }
+}
+declare module "components/remarkd-editor/index" {
+    import ZnRemarkdEditor from "components/remarkd-editor/remarkd-editor.component";
+    export * from "components/remarkd-editor/remarkd-editor.component";
+    export default ZnRemarkdEditor;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-remarkd-editor': ZnRemarkdEditor;
+        }
+    }
+}
 declare module "components/translations/translations.component" {
     import { type SlashMenuItem } from "components/slash-menu/index";
     import ZincElement from "internal/zinc-element";
@@ -9203,6 +9614,7 @@ declare module "components/translations/translations.component" {
     import ZnInlineEdit from "components/inline-edit/index";
     import ZnInput from "components/input/index";
     import ZnOption from "components/option/index";
+    import ZnRemarkdEditor from "components/remarkd-editor/index";
     import ZnSelect from "components/select/index";
     import ZnTextarea from "components/textarea/index";
     import type { PropertyValues } from 'lit';
@@ -9250,6 +9662,7 @@ declare module "components/translations/translations.component" {
             'zn-inline-edit': typeof ZnInlineEdit;
             'zn-input': typeof ZnInput;
             'zn-option': typeof ZnOption;
+            'zn-remarkd-editor': typeof ZnRemarkdEditor;
             'zn-select': typeof ZnSelect;
             'zn-textarea': typeof ZnTextarea;
         };
@@ -9273,9 +9686,17 @@ declare module "components/translations/translations.component" {
         /** Removes the component's own padding. */
         flush: boolean;
         /** The control each translation is edited through. */
-        inputType: 'text' | 'number' | 'textarea';
+        inputType: 'text' | 'number' | 'textarea' | 'remarkd';
         /** Rows of the textarea, when `input-type` is `textarea`. */
         textareaRows: number | undefined;
+        /** Allows raw HTML blocks, when `input-type` is `remarkd`. */
+        allowRaw: boolean;
+        /** Where the remarkd editor uploads images, when `input-type` is `remarkd`. */
+        attachmentUrl: string;
+        /** Where the remarkd editor lists embeddable includes, when `input-type` is `remarkd`. */
+        includeUrl: string;
+        /** Where the remarkd editor searches link targets, when `input-type` is `remarkd`. */
+        linkUrl: string;
         /**
          * Edits the translation through a `zn-inline-edit` — the value reads as text until it is clicked — rather than a
          * plain input or textarea.
@@ -9904,409 +10325,6 @@ declare module "components/markdown-editor/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-markdown-editor': ZnMarkdownEditor;
-        }
-    }
-}
-declare module "components/remarkd-editor/actions" {
-    import type { SlashMenuItem } from "components/slash-menu/index";
-    export type ActionGroup = 'text' | 'lists' | 'admonitions' | 'blocks' | 'structured' | 'media' | 'objects' | 'breaks' | 'logic' | 'inline';
-    /** What an inline action wraps the selection in. `after` defaults to `before`. */
-    export interface InlineMark {
-        before: string;
-        after?: string;
-        placeholder?: string;
-    }
-    export interface EditorAction {
-        /** Stable id, used for toolbar keys and tests. */
-        key: string;
-        label: string;
-        icon: string;
-        group: ActionGroup;
-        /** Extra search terms for the slash menu, e.g. "bold" finds Strong. */
-        keywords?: string[];
-        /** Block actions: spliced in as a new block. */
-        prefix?: string;
-        /** Inline actions: applied to the selection in the open block. */
-        inline?: InlineMark;
-        /** Where the caret lands within `prefix`. Defaults to the end. */
-        caretOffset?: number;
-        /** Actions that open their own picker instead of inserting text. */
-        opens?: 'image' | 'include' | 'link';
-    }
-    /** Toolbar order, most-used first — the last groups are the first to collapse. */
-    export const ACTION_GROUPS: {
-        id: ActionGroup;
-        label: string;
-    }[];
-    export const EDITOR_ACTIONS: EditorAction[];
-    /** The registry as slash menu entries. Picker actions insert nothing; the menu emits their action id. */
-    export function slashItems(actions: EditorAction[]): SlashMenuItem[];
-}
-declare module "internal/toolbar-overflow" {
-    import type { ReactiveController, ReactiveControllerHost } from 'lit';
-    interface ToolbarOverflowOptions {
-        /** The measurable group elements, in toolbar order. */
-        groups: () => HTMLElement[];
-        /** The element whose width the groups have to fit inside. */
-        container: () => HTMLElement | null | undefined;
-        /** Space to keep for the overflow trigger. Defaults to 44px. */
-        reserve?: number;
-    }
-    /**
-     * Reports how many leading toolbar groups fit the container, so the host can render the
-     * rest into an overflow menu. Two passes: the first ignores the trigger, because when
-     * everything fits there is no trigger to make room for.
-     */
-    export class ToolbarOverflowController implements ReactiveController {
-        visibleCount: number;
-        private readonly host;
-        private readonly options;
-        private resizeRafId;
-        constructor(host: ReactiveControllerHost & Element, options: ToolbarOverflowOptions);
-        hostUpdated(): void;
-        private measure;
-        private countThatFit;
-    }
-}
-declare module "components/remarkd-editor/remarkd-editor.component" {
-    import { type CSSResultGroup, type PropertyValues, type TemplateResult } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    import ZnDropdown from "components/dropdown/index";
-    import ZnMenu from "components/menu/index";
-    import ZnMenuItem from "components/menu-item/index";
-    import ZnSlashMenu from "components/slash-menu/index";
-    import type { ZincFormControl } from "internal/zinc-element";
-    /**
-     * @summary A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.
-     * @documentation https://zinc.style/components/remarkd-editor
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-button
-     * @dependency zn-button-group
-     * @dependency zn-dropdown
-     * @dependency zn-icon
-     * @dependency zn-file
-     * @dependency zn-menu
-     * @dependency zn-menu-item
-     * @dependency zn-slash-menu
-     *
-     * @event zn-input - Emitted on each keystroke while editing a block.
-     * @event zn-change - Emitted when a block edit is committed and the value changes.
-     *
-     * @csspart base - The component's base wrapper.
-     * @csspart toolbar - The always-visible block-insert and inline-formatting toolbar.
-     * @csspart raw-toggle - The button that switches between the block view and the raw source view.
-     * @csspart block - A rendered block wrapper.
-     * @csspart rendered - The rendered remarkd output of a block.
-     * @csspart conditional - A labelled wrapper for an ifdef/ifndef/ifeval/iftrue/iffalse/ifempty/ifnempty range.
-     * @csspart variable - A chip rendered for a document attribute, title, or bracket line.
-     * @csspart input - The textarea shown while editing a block.
-     * @csspart raw - The full-document textarea shown in raw source mode.
-     * @csspart slash-menu - The `zn-slash-menu` opened by typing "/" in an empty block.
-     * @csspart image-controls - The caption / alignment / size panel shown when an image block is clicked.
-     * @csspart include - The chip rendered in place of an `include::` directive.
-     * @csspart include-picker - The inline Include picker opened from the toolbar or "/include".
-     *
-     * @cssproperty --remarkd-editor-max-height - The tallest the editor grows before its body scrolls. Defaults to `100dvh`.
-     */
-    export default class ZnRemarkdEditor extends ZincElement implements ZincFormControl {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-dropdown': typeof ZnDropdown;
-            'zn-menu': typeof ZnMenu;
-            'zn-menu-item': typeof ZnMenuItem;
-            'zn-slash-menu': typeof ZnSlashMenu;
-        };
-        private readonly formControlController;
-        private readonly slashController;
-        private readonly toolbarOverflow;
-        private editingDraft;
-        private includeRequest;
-        private rawEntryValue;
-        private suppressValueSync;
-        private suppressBlurCommit;
-        private validationInput;
-        private slashMenuElement;
-        private blocks;
-        private editingIndex;
-        /**
-         * Lists the blocks most recently inserted here above the rest of the slash menu, remembered in
-         * `localStorage` under this key. Leave unset to offer no recently used section.
-         */
-        slashRecentKey: string;
-        /** Renders the slash menu only once it has been needed. */
-        private hasSlashMenu;
-        private imagePickerIndex;
-        private imageEdit;
-        private dropIndicator;
-        private dragIndex;
-        private editShell;
-        private rawMode;
-        private includeOptions;
-        private includeLoadFailed;
-        private includePickerIndex;
-        private includeQuery;
-        private linkPickerOpen;
-        private linkQuery;
-        private linkResults;
-        private linkSearchFailed;
-        private linkSelection;
-        private linkSearchTimer?;
-        private linkSearchToken;
-        /** Resolved link targets by reference; a null value is one the app does not know. */
-        private linkRefs;
-        private linkRefsPending;
-        private pendingDragHandle;
-        private dragStartX;
-        private dragStartY;
-        private dragGhost;
-        private dragPointerY;
-        private autoScrollFrame;
-        /** The name of the control, submitted as part of form data. */
-        name: string;
-        /** The current remarkd source. */
-        value: string;
-        /** The default value — used when resetting the form. */
-        defaultValue: string;
-        /** Placeholder shown when the document is empty. */
-        placeholder: string;
-        /**
-         * Endpoint for image uploads — required for image support. Posting the file
-         * metadata here must return `{uploadPath, uploadUrl}`; the file is then PUT
-         * to `uploadUrl` and the returned `uploadPath` is embedded as the image URL.
-         */
-        attachmentUrl: string;
-        /**
-         * Endpoint listing the Includes this document may embed, as
-         * `{"items":[{id,title,description,scope,keywords,languages,url}]}`. Labels the
-         * chips rendered for `include::` directives and feeds the include picker.
-         */
-        includeUrl: string;
-        /**
-         * Endpoint the article link picker searches, as
-         * `{"items":[{ref,kind,title,context,status}]}`. Queried with `?q=<term>` as
-         * the author types and with `?refs=a,b` to resolve the references a body
-         * already carries.
-         */
-        linkUrl: string;
-        /** Adds a toolbar toggle that swaps the block view for the full remarkd source. */
-        allowRaw: boolean;
-        /** Makes the editor required for form submission. */
-        required: boolean;
-        /** Makes the editor read-only. */
-        readonly: boolean;
-        /** Disables the editor. */
-        disabled: boolean;
-        get validity(): ValidityState;
-        get validationMessage(): string;
-        checkValidity(): boolean;
-        getForm(): HTMLFormElement | null;
-        reportValidity(): boolean;
-        setCustomValidity(message: string): void;
-        /** Starts editing the first block, or a new block if the document is empty. */
-        focus(): void;
-        /** Commits any in-progress block or raw edit. */
-        blur(): void;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        protected updated(changedProperties: PropertyValues<this>): void;
-        disconnectedCallback(): void;
-        handleValueChange(): void;
-        handleIncludeUrlChange(): void;
-        handleLinkUrlChange(): void;
-        /**
-         * Splits remarkd source into blocks on blank lines, keeping fenced /
-         * delimited containers (``` ==== !!!! .... ---- ____ **** ////) as single blocks.
-         */
-        private splitBlocks;
-        private fenceMarker;
-        private closesFence;
-        private updateBlocks;
-        private handleRenderedClick;
-        /** Parses a block that is purely an image (with optional caption/align lines). */
-        private parseImageBlock;
-        /** Parses a block that is nothing but an include directive. */
-        private parseIncludeBlock;
-        private serializeImageBlock;
-        private toggleCheckbox;
-        private startEdit;
-        private updateImageEdit;
-        private saveImageEdit;
-        private closeImageEdit;
-        private deleteImageBlock;
-        private editImageSource;
-        private handleImageControlsKeydown;
-        /**
-         * The remarkd chrome the editing block should keep, derived from its first
-         * line — so a NOTE still looks like a note while its source is edited.
-         */
-        private computeEditShell;
-        private focusInput;
-        /**
-         * Scrolls the editor's own body to bring `el` into view. Never `scrollIntoView()` and
-         * never `focus()` without preventScroll: both walk every scrollable ancestor, and an
-         * `overflow: hidden`/`auto` panel around the editor is scrollable too — that shifts a
-         * container the user never asked to move.
-         */
-        private reveal;
-        private revealAfterUpdate;
-        /**
-         * Centres a block added without opening an editor. An image has no height until it
-         * loads, so the first pass scrolls against a layout that is still short — the second
-         * pass corrects it once the real dimensions are in.
-         */
-        private revealBlock;
-        private addBlockAt;
-        private deleteBlock;
-        /** Inserts a draft block — committed (or dropped, if left empty) on blur. */
-        private insertDraftBlock;
-        /**
-         * Blur handler for the editing textarea. Re-renders that replace the
-         * focused textarea (e.g. Shift+Enter committing and opening the next
-         * block) fire blur mid-transition — `suppressBlurCommit` masks those.
-         */
-        private handleEditBlur;
-        /** Commits the in-progress edit; returns the index after the committed parts. */
-        private commitEdit;
-        private handleDraftInput;
-        private handleEditKeydown;
-        /** Whether the block being edited is nothing but the slash command. */
-        private isSlashBlock;
-        private mountSlashMenu;
-        /** Returns false for items the controller should not insert text for. */
-        private handleSlashSelect;
-        private handleEditPaste;
-        private handleDragOver;
-        private handleDrop;
-        /** The insertion index a drop at `y` maps to, from the rendered block positions. */
-        private insertionIndexFromY;
-        private handleHandlePointerDown;
-        private handleDragPointerMove;
-        /**
-         * Holding the pointer near a scroll edge keeps the content moving, so a block can
-         * be dragged past the visible slice of a long document. Runs per frame rather than
-         * per pointermove — a pointer parked at the edge stops emitting moves.
-         */
-        private stepAutoScroll;
-        /** Scrolls the editor body, falling through to the page once the body is at its limit. */
-        private autoScroll;
-        /** Scroll step for this frame: nothing until the pointer is within `edge` of a boundary. */
-        private edgeScrollDelta;
-        private handleDragPointerUp;
-        private cancelDrag;
-        private createDragGhost;
-        private moveDragGhost;
-        private pickImage;
-        private pickInclude;
-        /**
-         * Opens the picker over the block being edited. The caret range is captured
-         * now: the picker's own filter takes focus, so the textarea's selection is
-         * gone by the time an option is chosen.
-         */
-        private pickLink;
-        private closeLinkPicker;
-        /** Debounced; only the newest response is kept. */
-        private searchLinks;
-        private closeIncludePicker;
-        private insertInclude;
-        private closeImagePicker;
-        private handleImagePicked;
-        private insertImage;
-        private uploadImage;
-        /**
-         * Resolves an app-relative path the way the console's pagelet handler does:
-         * an app fragment's URLs sit under the app base, and the console puts the app's
-         * `gaid` on the host element. Links rendered here live in the shadow root,
-         * where a click retargets to the host, so that handler never sees them — the
-         * href has to carry the base itself.
-         */
-        private appPath;
-        private hasIncludeBlock;
-        /** Fetches the include list once; every later caller shares the same promise. */
-        private loadIncludeOptions;
-        /**
-         * Resolves the references in the body that have not been resolved yet, so a
-         * link whose target is gone can be marked. A failed request records nothing:
-         * an unanswered reference is not a broken one.
-         */
-        private resolveContentLinks;
-        private markContentLinks;
-        private autosize;
-        /**
-         * Applies an inline mark to the open block's textarea: wraps the selection, toggles the
-         * mark off when it is already wrapped, or inserts a selected placeholder when there is
-         * no selection. Goes through `editingDraft` so `zn-input` still fires.
-         */
-        private applyInline;
-        private toggleRawMode;
-        private focusRaw;
-        /**
-         * Raw mode keeps the whole document in one textarea, so the textarea — not
-         * the block list — is authoritative while it is open: re-splitting on every
-         * keystroke would normalise blank lines out from under the cursor.
-         */
-        private handleRawInput;
-        /**
-         * Re-splits the raw source into blocks. Not `updateBlocks` — that only
-         * reports a change when the re-join differs from the value, and raw edits
-         * have already written straight to the value.
-         */
-        private commitRaw;
-        private handleToolbarInsert;
-        private renderImageControls;
-        private renderIncludeChip;
-        /** A metadata-only block parses to nothing, so show each of its lines as a chip instead. */
-        private renderMetaChips;
-        /**
-         * One shared chip treatment for every metadata line kind — each kind just supplies an
-         * icon, a name, and an optional value/state, display-only in all three cases.
-         */
-        private renderMetaChip;
-        /**
-         * Wraps `{name}` references so they read as variables rather than literal text. Walks text
-         * nodes and skips code, so a brace in a sample stays a brace, and no regex touches markup.
-         */
-        private markVariables;
-        /**
-         * A conditional range as a labelled wrapper. The inner content is parsed without the
-         * directive lines: evaluating instead would blank the block whenever the flag is not
-         * defined in this same block, hiding the author's content while they edit it. It also
-         * keeps both halves of an if/else idiom visible — with evaluation you could never see
-         * the `ifndef` branch while the `ifdef` condition held. Nesting is handled by
-         * `splitConditionalParts`/`renderConditionalWrapper` below, recursively.
-         */
-        private renderConditional;
-        private renderBlock;
-        /** Inline marks and the article link both apply into an open block, not a new one. */
-        private isActionDisabled;
-        /** A picker action with no endpoint configured is not offered at all. */
-        private actionAvailable;
-        private slashItemAvailable;
-        /** Routes a toolbar/menu action to the inline or block insert path — the one place both
-         * `renderAction` and `renderMenuAction` call, so the bar and the overflow menu cannot
-         * drift out of sync on what a given action actually does. */
-        private activateAction;
-        /** A single toolbar action button, shared by the toolbar bar and the overflow menu. */
-        private renderAction;
-        /** The same action, rendered as a menu item for the overflow menu. */
-        private renderMenuAction;
-        render(): TemplateResult<1>;
-        private renderRaw;
-        /** The block views, with the inline image picker spliced in when active. */
-        private renderBody;
-        private renderIncludePicker;
-        private renderLinkPicker;
-        private insertLink;
-        private renderImagePicker;
-    }
-}
-declare module "components/remarkd-editor/index" {
-    import ZnRemarkdEditor from "components/remarkd-editor/remarkd-editor.component";
-    export * from "components/remarkd-editor/remarkd-editor.component";
-    export default ZnRemarkdEditor;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-remarkd-editor': ZnRemarkdEditor;
         }
     }
 }
@@ -11742,6 +11760,8 @@ declare module "components/page-builder/page-builder.component" {
         private _slotPicker;
         /** The stamped config form for the selected section; rebuilt on selection change. */
         private _form;
+        private _inspectorWidth;
+        private _inspectorWide;
         private readonly _hasSlot;
         private _history;
         private _redoStack;
@@ -11929,6 +11949,11 @@ declare module "components/page-builder/page-builder.component" {
         private _onInspectorInput;
         private _updateSectionData;
         private _renameSection;
+        /** Width the inspector may be dragged to, against the builder's own width. */
+        private _clampInspector;
+        private _inspectorRect;
+        private _onResizeStart;
+        private _onResizeKey;
         private _renderInspector;
         render(): import("lit-html").TemplateResult<1>;
     }

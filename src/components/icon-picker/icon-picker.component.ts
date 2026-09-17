@@ -301,7 +301,7 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
 
   private handleColorInput(e: Event) {
     const input = e.target as ZnInput;
-    this._pendingColor = input.value;
+    this._pendingColor = String(input.value);
   }
 
   private handleFreeInput(e: Event) {

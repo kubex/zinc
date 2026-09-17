@@ -1,7 +1,7 @@
 import {classMap} from 'lit/directives/class-map.js';
 import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
 import {defaultValue} from '../../internal/default-value';
-import {FormControlController} from '../../internal/form';
+import {FormControlController, validValidityState, valueMissingValidityState} from '../../internal/form';
 import {property, query, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from '../button';
@@ -95,20 +95,7 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
   }
 
   get validity(): ValidityState {
-    if (this.required && !this.icon && !this._file) {
-      return {
-        valid: false,
-        valueMissing: true,
-        badInput: false, customError: false, patternMismatch: false,
-        rangeOverflow: false, rangeUnderflow: false, stepMismatch: false,
-        tooLong: false, tooShort: false, typeMismatch: false,
-      } as ValidityState;
-    }
-    return {
-      valid: true, valueMissing: false, badInput: false, customError: false,
-      patternMismatch: false, rangeOverflow: false, rangeUnderflow: false,
-      stepMismatch: false, tooLong: false, tooShort: false, typeMismatch: false,
-    } as ValidityState;
+    return this.required && !this.icon && !this._file ? valueMissingValidityState : validValidityState;
   }
 
   get validationMessage(): string {

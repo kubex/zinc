@@ -1,10 +1,10 @@
 import {animateTo} from "../../internal/animate";
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
-import {LocalizeController} from "../../utilities/localize";
-import {property, query} from 'lit/decorators.js';
 import {getAnimation, setDefaultAnimation} from "../../utilities/animation-registry";
 import {idSelector} from "../../utilities/query";
+import {LocalizeController} from "../../utilities/localize";
+import {property, query} from 'lit/decorators.js';
 import {unlockBodyScrolling} from "../../internal/scroll";
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from "../button";

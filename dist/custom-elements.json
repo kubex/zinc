@@ -10234,279 +10234,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/data-table-search/data-table-search.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnDataTableSearch",
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot for additional form inputs.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ 'zn-input': ZnInput, 'zn-tooltip': ZnTooltip, }"
-            },
-            {
-              "kind": "field",
-              "name": "_formController",
-              "type": {
-                "text": "FormControlController"
-              },
-              "privacy": "private",
-              "default": "new FormControlController(this, {})"
-            },
-            {
-              "kind": "field",
-              "name": "_searchTimeout",
-              "type": {
-                "text": "number | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"search\"",
-              "description": "The name of the search input field (default: \"search\").",
-              "attribute": "name"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "description": "The current search value.",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "placeholder",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"Search...\"",
-              "description": "The placeholder text for the search input (default: \"Search...\").",
-              "attribute": "placeholder"
-            },
-            {
-              "kind": "field",
-              "name": "helpText",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "description": "Help text, shown from an information icon inside the search input.",
-              "attribute": "help-text"
-            },
-            {
-              "kind": "field",
-              "name": "searchUri",
-              "type": {
-                "text": "string"
-              },
-              "description": "Optional URI to use for search operations.",
-              "attribute": "search-uri"
-            },
-            {
-              "kind": "field",
-              "name": "debounceDelay",
-              "type": {
-                "text": "number"
-              },
-              "default": "350",
-              "description": "The delay in milliseconds before triggering a search (default: 350).",
-              "attribute": "debounce-delay"
-            },
-            {
-              "kind": "field",
-              "name": "validationMessage",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "validity",
-              "type": {
-                "text": "ValidityState"
-              },
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "checkValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getForm",
-              "return": {
-                "type": {
-                  "text": "HTMLFormElement | null"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "reportValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "setCustomValidity",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getFormData",
-              "return": {
-                "type": {
-                  "text": "Record<string, any>"
-                }
-              },
-              "description": "Collects form data from slotted input elements"
-            },
-            {
-              "kind": "field",
-              "name": "handleInput"
-            },
-            {
-              "kind": "field",
-              "name": "handleClear"
-            },
-            {
-              "kind": "method",
-              "name": "emitSearchChange",
-              "privacy": "private",
-              "description": "Emit the search change event with form data"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted when the search value changes (debounced).",
-              "name": "zn-search-change"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"search\"",
-              "description": "The name of the search input field (default: \"search\").",
-              "fieldName": "name"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "description": "The current search value.",
-              "fieldName": "value"
-            },
-            {
-              "name": "placeholder",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"Search...\"",
-              "description": "The placeholder text for the search input (default: \"Search...\").",
-              "fieldName": "placeholder"
-            },
-            {
-              "name": "help-text",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "description": "Help text, shown from an information icon inside the search input.",
-              "fieldName": "helpText"
-            },
-            {
-              "name": "search-uri",
-              "type": {
-                "text": "string"
-              },
-              "description": "Optional URI to use for search operations.",
-              "fieldName": "searchUri"
-            },
-            {
-              "name": "debounce-delay",
-              "type": {
-                "text": "number"
-              },
-              "default": "350",
-              "description": "The delay in milliseconds before triggering a search (default: 350).",
-              "fieldName": "debounceDelay"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "A search component for data tables.",
-          "tagNameWithoutPrefix": "data-table-search",
-          "tagName": "zn-data-table-search",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary A search component for data tables.\n * @documentation https://zinc.style/components/data-table-search\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-input\n * @dependency zn-tooltip\n *\n * @event zn-search-change - Emitted when the search value changes (debounced).\n *\n * @slot - The default slot for additional form inputs.\n *\n * @csspart base - The component's base wrapper.\n *\n * @property {string} name - The name of the search input field (default: \"search\").\n * @property {string} value - The current search value.\n * @property {string} placeholder - The placeholder text for the search input (default: \"Search...\").\n * @property {string} helpText - Help text, shown from an information icon inside the search input.\n * @property {string} searchUri - Optional URI to use for search operations.\n * @property {number} debounceDelay - The delay in milliseconds before triggering a search (default: 350).\n */",
-          "documentation": "https://zinc.style/components/data-table-search",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-input",
-            "zn-tooltip"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnDataTableSearch",
-            "module": "components/data-table-search/data-table-search.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/data-table-filter/data-table-filter.js",
       "declarations": [
         {
@@ -11307,6 +11034,279 @@
           "declaration": {
             "name": "ZnDataTableFilter",
             "module": "components/data-table-filter/data-table-filter.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/data-table-search/data-table-search.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnDataTableSearch",
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot for additional form inputs.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-input': ZnInput, 'zn-tooltip': ZnTooltip, }"
+            },
+            {
+              "kind": "field",
+              "name": "_formController",
+              "type": {
+                "text": "FormControlController"
+              },
+              "privacy": "private",
+              "default": "new FormControlController(this, {})"
+            },
+            {
+              "kind": "field",
+              "name": "_searchTimeout",
+              "type": {
+                "text": "number | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"search\"",
+              "description": "The name of the search input field (default: \"search\").",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "The current search value.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Search...\"",
+              "description": "The placeholder text for the search input (default: \"Search...\").",
+              "attribute": "placeholder"
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Help text, shown from an information icon inside the search input.",
+              "attribute": "help-text"
+            },
+            {
+              "kind": "field",
+              "name": "searchUri",
+              "type": {
+                "text": "string"
+              },
+              "description": "Optional URI to use for search operations.",
+              "attribute": "search-uri"
+            },
+            {
+              "kind": "field",
+              "name": "debounceDelay",
+              "type": {
+                "text": "number"
+              },
+              "default": "350",
+              "description": "The delay in milliseconds before triggering a search (default: 350).",
+              "attribute": "debounce-delay"
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getFormData",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "description": "Collects form data from slotted input elements"
+            },
+            {
+              "kind": "field",
+              "name": "handleInput"
+            },
+            {
+              "kind": "field",
+              "name": "handleClear"
+            },
+            {
+              "kind": "method",
+              "name": "emitSearchChange",
+              "privacy": "private",
+              "description": "Emit the search change event with form data"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the search value changes (debounced).",
+              "name": "zn-search-change"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"search\"",
+              "description": "The name of the search input field (default: \"search\").",
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "The current search value.",
+              "fieldName": "value"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Search...\"",
+              "description": "The placeholder text for the search input (default: \"Search...\").",
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "help-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Help text, shown from an information icon inside the search input.",
+              "fieldName": "helpText"
+            },
+            {
+              "name": "search-uri",
+              "type": {
+                "text": "string"
+              },
+              "description": "Optional URI to use for search operations.",
+              "fieldName": "searchUri"
+            },
+            {
+              "name": "debounce-delay",
+              "type": {
+                "text": "number"
+              },
+              "default": "350",
+              "description": "The delay in milliseconds before triggering a search (default: 350).",
+              "fieldName": "debounceDelay"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A search component for data tables.",
+          "tagNameWithoutPrefix": "data-table-search",
+          "tagName": "zn-data-table-search",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A search component for data tables.\n * @documentation https://zinc.style/components/data-table-search\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-input\n * @dependency zn-tooltip\n *\n * @event zn-search-change - Emitted when the search value changes (debounced).\n *\n * @slot - The default slot for additional form inputs.\n *\n * @csspart base - The component's base wrapper.\n *\n * @property {string} name - The name of the search input field (default: \"search\").\n * @property {string} value - The current search value.\n * @property {string} placeholder - The placeholder text for the search input (default: \"Search...\").\n * @property {string} helpText - Help text, shown from an information icon inside the search input.\n * @property {string} searchUri - Optional URI to use for search operations.\n * @property {number} debounceDelay - The delay in milliseconds before triggering a search (default: 350).\n */",
+          "documentation": "https://zinc.style/components/data-table-search",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-input",
+            "zn-tooltip"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnDataTableSearch",
+            "module": "components/data-table-search/data-table-search.js"
           }
         }
       ]
@@ -53472,7 +53472,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.143",
+    "version": "1.1.144",
     "author": "",
     "license": "MIT"
   }

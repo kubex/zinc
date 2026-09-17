@@ -1245,6 +1245,26 @@
       ]
     },
     {
+      "name": "zn-data-table-filter",
+      "description": "An inline filter bar for data tables. Each active filter is a pill whose dropdown sets its value.\n---\n\n\n### **Events:**\n - **zn-filter-change** - Emitted when the active filters change. Read the encoded query off `value`.\n\n### **Methods:**\n - **clear()** - Removes every active filter.",
+      "attributes": [
+        { "name": "filters", "values": [{ "name": "QueryBuilderData" }] },
+        { "name": "name", "values": [] },
+        { "name": "value", "values": [] },
+        {
+          "name": "default-filters",
+          "description": "Filter keys to show a pill for before the user adds any.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/data-table-filter"
+        }
+      ]
+    },
+    {
       "name": "zn-data-table-search",
       "description": "A search component for data tables.\n---\n\n\n### **Events:**\n - **zn-search-change** - Emitted when the search value changes (debounced).\n\n### **Methods:**\n - **getFormData(): _Record<string, any>_** - Collects form data from slotted input elements\n\n### **Slots:**\n - _default_ - The default slot for additional form inputs.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -1283,26 +1303,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/data-table-search"
-        }
-      ]
-    },
-    {
-      "name": "zn-data-table-filter",
-      "description": "An inline filter bar for data tables. Each active filter is a pill whose dropdown sets its value.\n---\n\n\n### **Events:**\n - **zn-filter-change** - Emitted when the active filters change. Read the encoded query off `value`.\n\n### **Methods:**\n - **clear()** - Removes every active filter.",
-      "attributes": [
-        { "name": "filters", "values": [{ "name": "QueryBuilderData" }] },
-        { "name": "name", "values": [] },
-        { "name": "value", "values": [] },
-        {
-          "name": "default-filters",
-          "description": "Filter keys to show a pill for before the user adds any.",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/data-table-filter"
         }
       ]
     },

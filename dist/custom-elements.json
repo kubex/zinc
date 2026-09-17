@@ -844,269 +844,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/background/background.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnBackground",
-          "cssProperties": [
-            {
-              "description": "Fallback colour when the `color` attribute is not set.",
-              "name": "--zn-background-color"
-            },
-            {
-              "description": "Position of the background image. Defaults to `center`.",
-              "name": "--zn-background-image-position"
-            },
-            {
-              "description": "Direction of the overlay gradient. Defaults to `110deg`.",
-              "name": "--zn-background-overlay-angle"
-            },
-            {
-              "description": "Colour of the floating icons. Defaults to `currentColor`.",
-              "name": "--zn-background-floating-icon-color"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's full-size background canvas.",
-              "name": "base"
-            },
-            {
-              "description": "The decorative background image.",
-              "name": "image"
-            },
-            {
-              "description": "The contrast overlay between the image and content.",
-              "name": "overlay"
-            },
-            {
-              "description": "The non-interactive layer containing the floating icons.",
-              "name": "floating-icons"
-            },
-            {
-              "description": "Each floating `zn-icon`.",
-              "name": "floating-icon"
-            },
-            {
-              "description": "The wrapper around the default slot.",
-              "name": "content"
-            }
-          ],
-          "slots": [
-            {
-              "description": "Content displayed above the background layers.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{'zn-icon': ZnIcon}"
-            },
-            {
-              "kind": "field",
-              "name": "resizeObserver",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new ResizeController<number>(this, { callback: entries => { const width = entries[0]?.contentRect.width ?? this.offsetWidth; return Math.max(1, Math.min(width * 0.05, 150)); }, })"
-            },
-            {
-              "kind": "field",
-              "name": "image",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "URL of the decorative background image.",
-              "attribute": "image"
-            },
-            {
-              "kind": "field",
-              "name": "color",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "CSS colour painted beneath the image.",
-              "attribute": "color"
-            },
-            {
-              "kind": "field",
-              "name": "imageStrength",
-              "type": {
-                "text": "BackgroundImageStrength"
-              },
-              "default": "'full'",
-              "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
-              "attribute": "image-strength",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "motion",
-              "type": {
-                "text": "BackgroundMotion"
-              },
-              "default": "'none'",
-              "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
-              "attribute": "motion",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "overlay",
-              "type": {
-                "text": "BackgroundOverlay"
-              },
-              "default": "'soft'",
-              "description": "Strength of the contrast gradient above the image.",
-              "attribute": "overlay",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "overlayTone",
-              "type": {
-                "text": "BackgroundOverlayTone"
-              },
-              "default": "'light'",
-              "description": "Whether the overlay uses a light or dark contrast treatment.",
-              "attribute": "overlay-tone",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "floatingIcons",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
-              "attribute": "floating-icons"
-            },
-            {
-              "kind": "field",
-              "name": "paused",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Pauses background motion without changing the selected motion treatment.",
-              "attribute": "paused",
-              "reflects": true
-            }
-          ],
-          "attributes": [
-            {
-              "name": "image",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "URL of the decorative background image.",
-              "fieldName": "image"
-            },
-            {
-              "name": "color",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "CSS colour painted beneath the image.",
-              "fieldName": "color"
-            },
-            {
-              "name": "image-strength",
-              "type": {
-                "text": "BackgroundImageStrength"
-              },
-              "default": "'full'",
-              "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
-              "fieldName": "imageStrength"
-            },
-            {
-              "name": "motion",
-              "type": {
-                "text": "BackgroundMotion"
-              },
-              "default": "'none'",
-              "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
-              "fieldName": "motion"
-            },
-            {
-              "name": "overlay",
-              "type": {
-                "text": "BackgroundOverlay"
-              },
-              "default": "'soft'",
-              "description": "Strength of the contrast gradient above the image.",
-              "fieldName": "overlay"
-            },
-            {
-              "name": "overlay-tone",
-              "type": {
-                "text": "BackgroundOverlayTone"
-              },
-              "default": "'light'",
-              "description": "Whether the overlay uses a light or dark contrast treatment.",
-              "fieldName": "overlayTone"
-            },
-            {
-              "name": "floating-icons",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
-              "fieldName": "floatingIcons"
-            },
-            {
-              "name": "paused",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Pauses background motion without changing the selected motion treatment.",
-              "fieldName": "paused"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.",
-          "tagNameWithoutPrefix": "background",
-          "tagName": "zn-background",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n *\n * @documentation https://zinc.style/components/background\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - Content displayed above the background layers.\n *\n * @csspart base - The component's full-size background canvas.\n * @csspart image - The decorative background image.\n * @csspart overlay - The contrast overlay between the image and content.\n * @csspart floating-icons - The non-interactive layer containing the floating icons.\n * @csspart floating-icon - Each floating `zn-icon`.\n * @csspart content - The wrapper around the default slot.\n *\n * @cssproperty --zn-background-color - Fallback colour when the `color` attribute is not set.\n * @cssproperty --zn-background-image-position - Position of the background image. Defaults to `center`.\n * @cssproperty --zn-background-overlay-angle - Direction of the overlay gradient. Defaults to `110deg`.\n * @cssproperty --zn-background-floating-icon-color - Colour of the floating icons. Defaults to `currentColor`.\n */",
-          "documentation": "https://zinc.style/components/background",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-icon"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnBackground",
-            "module": "components/background/background.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/bulk-actions/bulk-actions.js",
       "declarations": [
         {
@@ -1458,6 +1195,269 @@
           "declaration": {
             "name": "ZnBulkActions",
             "module": "components/bulk-actions/bulk-actions.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/background/background.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnBackground",
+          "cssProperties": [
+            {
+              "description": "Fallback colour when the `color` attribute is not set.",
+              "name": "--zn-background-color"
+            },
+            {
+              "description": "Position of the background image. Defaults to `center`.",
+              "name": "--zn-background-image-position"
+            },
+            {
+              "description": "Direction of the overlay gradient. Defaults to `110deg`.",
+              "name": "--zn-background-overlay-angle"
+            },
+            {
+              "description": "Colour of the floating icons. Defaults to `currentColor`.",
+              "name": "--zn-background-floating-icon-color"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's full-size background canvas.",
+              "name": "base"
+            },
+            {
+              "description": "The decorative background image.",
+              "name": "image"
+            },
+            {
+              "description": "The contrast overlay between the image and content.",
+              "name": "overlay"
+            },
+            {
+              "description": "The non-interactive layer containing the floating icons.",
+              "name": "floating-icons"
+            },
+            {
+              "description": "Each floating `zn-icon`.",
+              "name": "floating-icon"
+            },
+            {
+              "description": "The wrapper around the default slot.",
+              "name": "content"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Content displayed above the background layers.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{'zn-icon': ZnIcon}"
+            },
+            {
+              "kind": "field",
+              "name": "resizeObserver",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ResizeController<number>(this, { callback: entries => { const width = entries[0]?.contentRect.width ?? this.offsetWidth; return Math.max(1, Math.min(width * 0.05, 150)); }, })"
+            },
+            {
+              "kind": "field",
+              "name": "image",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "URL of the decorative background image.",
+              "attribute": "image"
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "CSS colour painted beneath the image.",
+              "attribute": "color"
+            },
+            {
+              "kind": "field",
+              "name": "imageStrength",
+              "type": {
+                "text": "BackgroundImageStrength"
+              },
+              "default": "'full'",
+              "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
+              "attribute": "image-strength",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "motion",
+              "type": {
+                "text": "BackgroundMotion"
+              },
+              "default": "'none'",
+              "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
+              "attribute": "motion",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "overlay",
+              "type": {
+                "text": "BackgroundOverlay"
+              },
+              "default": "'soft'",
+              "description": "Strength of the contrast gradient above the image.",
+              "attribute": "overlay",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "overlayTone",
+              "type": {
+                "text": "BackgroundOverlayTone"
+              },
+              "default": "'light'",
+              "description": "Whether the overlay uses a light or dark contrast treatment.",
+              "attribute": "overlay-tone",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "floatingIcons",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
+              "attribute": "floating-icons"
+            },
+            {
+              "kind": "field",
+              "name": "paused",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Pauses background motion without changing the selected motion treatment.",
+              "attribute": "paused",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "image",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "URL of the decorative background image.",
+              "fieldName": "image"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "CSS colour painted beneath the image.",
+              "fieldName": "color"
+            },
+            {
+              "name": "image-strength",
+              "type": {
+                "text": "BackgroundImageStrength"
+              },
+              "default": "'full'",
+              "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
+              "fieldName": "imageStrength"
+            },
+            {
+              "name": "motion",
+              "type": {
+                "text": "BackgroundMotion"
+              },
+              "default": "'none'",
+              "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
+              "fieldName": "motion"
+            },
+            {
+              "name": "overlay",
+              "type": {
+                "text": "BackgroundOverlay"
+              },
+              "default": "'soft'",
+              "description": "Strength of the contrast gradient above the image.",
+              "fieldName": "overlay"
+            },
+            {
+              "name": "overlay-tone",
+              "type": {
+                "text": "BackgroundOverlayTone"
+              },
+              "default": "'light'",
+              "description": "Whether the overlay uses a light or dark contrast treatment.",
+              "fieldName": "overlayTone"
+            },
+            {
+              "name": "floating-icons",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
+              "fieldName": "floatingIcons"
+            },
+            {
+              "name": "paused",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Pauses background motion without changing the selected motion treatment.",
+              "fieldName": "paused"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.",
+          "tagNameWithoutPrefix": "background",
+          "tagName": "zn-background",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n *\n * @documentation https://zinc.style/components/background\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - Content displayed above the background layers.\n *\n * @csspart base - The component's full-size background canvas.\n * @csspart image - The decorative background image.\n * @csspart overlay - The contrast overlay between the image and content.\n * @csspart floating-icons - The non-interactive layer containing the floating icons.\n * @csspart floating-icon - Each floating `zn-icon`.\n * @csspart content - The wrapper around the default slot.\n *\n * @cssproperty --zn-background-color - Fallback colour when the `color` attribute is not set.\n * @cssproperty --zn-background-image-position - Position of the background image. Defaults to `center`.\n * @cssproperty --zn-background-overlay-angle - Direction of the overlay gradient. Defaults to `110deg`.\n * @cssproperty --zn-background-floating-icon-color - Colour of the floating icons. Defaults to `currentColor`.\n */",
+          "documentation": "https://zinc.style/components/background",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-icon"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnBackground",
+            "module": "components/background/background.js"
           }
         }
       ]
@@ -17305,6 +17305,275 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/form-actions/form-actions.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnFormActions",
+          "cssParts": [
+            {
+              "description": "The cancel button.",
+              "name": "cancel-button"
+            },
+            {
+              "description": "The reset button.",
+              "name": "reset-button"
+            },
+            {
+              "description": "The submit button.",
+              "name": "submit-button"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Extra actions, placed before the buttons. `align=\"start\"` on a child moves it to the start of the row; any number can sit on either side. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-button': ZnButton }"
+            },
+            {
+              "kind": "field",
+              "name": "submitText",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Save'",
+              "description": "The submit button's text.",
+              "attribute": "submit-text"
+            },
+            {
+              "kind": "field",
+              "name": "submitIcon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'check@lu'",
+              "description": "The submit button's icon.",
+              "attribute": "submit-icon"
+            },
+            {
+              "kind": "field",
+              "name": "withCancel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Adds a cancel button. Closes the containing dialog or slideout, if any, and emits `zn-cancel`.",
+              "attribute": "with-cancel"
+            },
+            {
+              "kind": "field",
+              "name": "cancelText",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Cancel'",
+              "description": "The cancel button's text.",
+              "attribute": "cancel-text"
+            },
+            {
+              "kind": "field",
+              "name": "cancelIcon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'x@lu'",
+              "description": "The cancel button's icon.",
+              "attribute": "cancel-icon"
+            },
+            {
+              "kind": "field",
+              "name": "withReset",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Adds a reset button that resets the form.",
+              "attribute": "with-reset"
+            },
+            {
+              "kind": "field",
+              "name": "resetText",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Reset'",
+              "description": "The reset button's text.",
+              "attribute": "reset-text"
+            },
+            {
+              "kind": "field",
+              "name": "resetIcon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'rotate-ccw@lu'",
+              "description": "The reset button's icon.",
+              "attribute": "reset-icon"
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "The id of the form to act on. If omitted, the closest containing form is used.",
+              "attribute": "form"
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "handleCancel",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleReset",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleSubmit",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the cancel button is clicked.",
+              "name": "zn-cancel"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "submit-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Save'",
+              "description": "The submit button's text.",
+              "fieldName": "submitText"
+            },
+            {
+              "name": "submit-icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'check@lu'",
+              "description": "The submit button's icon.",
+              "fieldName": "submitIcon"
+            },
+            {
+              "name": "with-cancel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Adds a cancel button. Closes the containing dialog or slideout, if any, and emits `zn-cancel`.",
+              "fieldName": "withCancel"
+            },
+            {
+              "name": "cancel-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Cancel'",
+              "description": "The cancel button's text.",
+              "fieldName": "cancelText"
+            },
+            {
+              "name": "cancel-icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'x@lu'",
+              "description": "The cancel button's icon.",
+              "fieldName": "cancelIcon"
+            },
+            {
+              "name": "with-reset",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Adds a reset button that resets the form.",
+              "fieldName": "withReset"
+            },
+            {
+              "name": "reset-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Reset'",
+              "description": "The reset button's text.",
+              "fieldName": "resetText"
+            },
+            {
+              "name": "reset-icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'rotate-ccw@lu'",
+              "description": "The reset button's icon.",
+              "fieldName": "resetIcon"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "The id of the form to act on. If omitted, the closest containing form is used.",
+              "fieldName": "form"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Standard action row for the bottom of a form. Renders a submit button by default; opt in to more\nwith `with-cancel` and `with-reset`.",
+          "tagNameWithoutPrefix": "form-actions",
+          "tagName": "zn-form-actions",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Standard action row for the bottom of a form. Renders a submit button by default; opt in to more\n * with `with-cancel` and `with-reset`.\n * @documentation https://zinc.style/components/form-actions\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n *\n * @event zn-cancel - Emitted when the cancel button is clicked.\n *\n * @slot - Extra actions, placed before the buttons. `align=\"start\"` on a child moves it to the start of the row; any\n * number can sit on either side. Write them in the order they should be read — the sides are set by CSS ordering, so\n * markup order is what a keyboard follows.\n *\n * @csspart cancel-button - The cancel button.\n * @csspart reset-button - The reset button.\n * @csspart submit-button - The submit button.\n */",
+          "documentation": "https://zinc.style/components/form-actions",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-button"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnFormActions",
+            "module": "components/form-actions/form-actions.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/form-group/form-group.js",
       "declarations": [
         {
@@ -17728,275 +17997,6 @@
           "declaration": {
             "name": "ZnFormGroup",
             "module": "components/form-group/form-group.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/form-actions/form-actions.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnFormActions",
-          "cssParts": [
-            {
-              "description": "The cancel button.",
-              "name": "cancel-button"
-            },
-            {
-              "description": "The reset button.",
-              "name": "reset-button"
-            },
-            {
-              "description": "The submit button.",
-              "name": "submit-button"
-            }
-          ],
-          "slots": [
-            {
-              "description": "Extra actions, placed before the buttons. `align=\"start\"` on a child moves it to the start of the row; any number can sit on either side. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ 'zn-button': ZnButton }"
-            },
-            {
-              "kind": "field",
-              "name": "submitText",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Save'",
-              "description": "The submit button's text.",
-              "attribute": "submit-text"
-            },
-            {
-              "kind": "field",
-              "name": "submitIcon",
-              "type": {
-                "text": "string"
-              },
-              "default": "'check@lu'",
-              "description": "The submit button's icon.",
-              "attribute": "submit-icon"
-            },
-            {
-              "kind": "field",
-              "name": "withCancel",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Adds a cancel button. Closes the containing dialog or slideout, if any, and emits `zn-cancel`.",
-              "attribute": "with-cancel"
-            },
-            {
-              "kind": "field",
-              "name": "cancelText",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Cancel'",
-              "description": "The cancel button's text.",
-              "attribute": "cancel-text"
-            },
-            {
-              "kind": "field",
-              "name": "cancelIcon",
-              "type": {
-                "text": "string"
-              },
-              "default": "'x@lu'",
-              "description": "The cancel button's icon.",
-              "attribute": "cancel-icon"
-            },
-            {
-              "kind": "field",
-              "name": "withReset",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Adds a reset button that resets the form.",
-              "attribute": "with-reset"
-            },
-            {
-              "kind": "field",
-              "name": "resetText",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Reset'",
-              "description": "The reset button's text.",
-              "attribute": "reset-text"
-            },
-            {
-              "kind": "field",
-              "name": "resetIcon",
-              "type": {
-                "text": "string"
-              },
-              "default": "'rotate-ccw@lu'",
-              "description": "The reset button's icon.",
-              "attribute": "reset-icon"
-            },
-            {
-              "kind": "field",
-              "name": "form",
-              "type": {
-                "text": "string"
-              },
-              "description": "The id of the form to act on. If omitted, the closest containing form is used.",
-              "attribute": "form"
-            },
-            {
-              "kind": "method",
-              "name": "getForm",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "HTMLFormElement | null"
-                }
-              }
-            },
-            {
-              "kind": "field",
-              "name": "handleCancel",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleReset",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleSubmit",
-              "privacy": "private"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted when the cancel button is clicked.",
-              "name": "zn-cancel"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "submit-text",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Save'",
-              "description": "The submit button's text.",
-              "fieldName": "submitText"
-            },
-            {
-              "name": "submit-icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "'check@lu'",
-              "description": "The submit button's icon.",
-              "fieldName": "submitIcon"
-            },
-            {
-              "name": "with-cancel",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Adds a cancel button. Closes the containing dialog or slideout, if any, and emits `zn-cancel`.",
-              "fieldName": "withCancel"
-            },
-            {
-              "name": "cancel-text",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Cancel'",
-              "description": "The cancel button's text.",
-              "fieldName": "cancelText"
-            },
-            {
-              "name": "cancel-icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "'x@lu'",
-              "description": "The cancel button's icon.",
-              "fieldName": "cancelIcon"
-            },
-            {
-              "name": "with-reset",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Adds a reset button that resets the form.",
-              "fieldName": "withReset"
-            },
-            {
-              "name": "reset-text",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Reset'",
-              "description": "The reset button's text.",
-              "fieldName": "resetText"
-            },
-            {
-              "name": "reset-icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "'rotate-ccw@lu'",
-              "description": "The reset button's icon.",
-              "fieldName": "resetIcon"
-            },
-            {
-              "name": "form",
-              "type": {
-                "text": "string"
-              },
-              "description": "The id of the form to act on. If omitted, the closest containing form is used.",
-              "fieldName": "form"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Standard action row for the bottom of a form. Renders a submit button by default; opt in to more\nwith `with-cancel` and `with-reset`.",
-          "tagNameWithoutPrefix": "form-actions",
-          "tagName": "zn-form-actions",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Standard action row for the bottom of a form. Renders a submit button by default; opt in to more\n * with `with-cancel` and `with-reset`.\n * @documentation https://zinc.style/components/form-actions\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n *\n * @event zn-cancel - Emitted when the cancel button is clicked.\n *\n * @slot - Extra actions, placed before the buttons. `align=\"start\"` on a child moves it to the start of the row; any\n * number can sit on either side. Write them in the order they should be read — the sides are set by CSS ordering, so\n * markup order is what a keyboard follows.\n *\n * @csspart cancel-button - The cancel button.\n * @csspart reset-button - The reset button.\n * @csspart submit-button - The submit button.\n */",
-          "documentation": "https://zinc.style/components/form-actions",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-button"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnFormActions",
-            "module": "components/form-actions/form-actions.js"
           }
         }
       ]
@@ -53472,7 +53472,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.145",
+    "version": "1.1.146",
     "author": "",
     "license": "MIT"
   }

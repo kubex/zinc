@@ -416,14 +416,14 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
                       size="small"
                       color=${this._mode === 'icon' ? 'secondary' : 'transparent'}
                       icon="apps"
-                      @click=${() => this._mode = 'icon'}>
+                      @click=${() => { this._mode = 'icon'; }}>
                       Icon Library
                     </zn-button>
                     <zn-button
                       size="small"
                       color=${this._mode === 'upload' ? 'secondary' : 'transparent'}
                       icon="upload"
-                      @click=${() => this._mode = 'upload'}>
+                      @click=${() => { this._mode = 'upload'; }}>
                       Upload Image
                     </zn-button>
                   </div>

@@ -14,6 +14,17 @@
       ]
     },
     {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
+        }
+      ]
+    },
+    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -50,17 +61,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
-        }
-      ]
-    },
-    {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -1891,6 +1891,36 @@
       ]
     },
     {
+      "name": "zn-form-group",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **chip** - A chip displayed under the form group's help text.\n\n### **CSS Properties:**\n - **--zn-form-group-sticky-top** - Offset the label column sticks at while the inputs scroll past. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control-text** - The column holding the label, help text and chip.",
+      "attributes": [
+        {
+          "name": "label",
+          "description": "The form group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
+          "values": []
+        },
+        {
+          "name": "label-tooltip",
+          "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the\n`label-tooltip` slot instead.",
+          "values": []
+        },
+        {
+          "name": "help-text",
+          "description": "The form groups help text. If you need to display HTML, use the `help-text` slot instead.",
+          "values": []
+        },
+        { "name": "cols", "values": [] },
+        { "name": "layout", "values": [] },
+        { "name": "pad", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/form-group"
+        }
+      ]
+    },
+    {
       "name": "zn-form-actions",
       "description": "Standard action row for the bottom of a form. Renders a submit button by default; opt in to more\nwith `with-cancel` and `with-reset`.\n---\n\n\n### **Events:**\n - **zn-cancel** - Emitted when the cancel button is clicked.\n\n### **Slots:**\n - _default_ - Extra actions, placed before the buttons. `align=\"start\"` on a child moves it to the start of the row; any number can sit on either side. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.\n\n### **CSS Parts:**\n - **cancel-button** - The cancel button.\n- **reset-button** - The reset button.\n- **submit-button** - The submit button.",
       "attributes": [
@@ -1944,36 +1974,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/form-actions"
-        }
-      ]
-    },
-    {
-      "name": "zn-form-group",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **chip** - A chip displayed under the form group's help text.\n\n### **CSS Properties:**\n - **--zn-form-group-sticky-top** - Offset the label column sticks at while the inputs scroll past. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control-text** - The column holding the label, help text and chip.",
-      "attributes": [
-        {
-          "name": "label",
-          "description": "The form group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
-          "values": []
-        },
-        {
-          "name": "label-tooltip",
-          "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the\n`label-tooltip` slot instead.",
-          "values": []
-        },
-        {
-          "name": "help-text",
-          "description": "The form groups help text. If you need to display HTML, use the `help-text` slot instead.",
-          "values": []
-        },
-        { "name": "cols", "values": [] },
-        { "name": "layout", "values": [] },
-        { "name": "pad", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/form-group"
         }
       ]
     },

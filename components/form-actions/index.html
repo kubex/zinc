@@ -591,6 +591,7 @@
             <li data-level="3"><a href="#with-a-reset-button">With a Reset Button</a></li>
             <li data-level="3"><a href="#custom-text-and-icons">Custom Text and Icons</a></li>
             <li data-level="3"><a href="#extra-actions">Extra Actions</a></li>
+            <li data-level="3"><a href="#start-aligned-actions">Start-Aligned Actions</a></li>
             <li data-level="3"><a href="#targeting-a-form-by-id">Targeting a Form by Id</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
@@ -876,6 +877,64 @@
               </button>
             </div>
           </div>
+          <h3 id="start-aligned-actions" class="anchor-heading">
+            Start-Aligned Actions<a
+              href="#start-aligned-actions"
+              aria-label='Direct link to "Start-Aligned Actions"'
+            ></a>
+          </h3>
+          <p>
+            <code>align="start"</code> on a slotted child moves it to the start of the row; any number can sit on either
+            side. Write the buttons in the order they should be read — the sides are set by CSS ordering, so markup
+            order is what a keyboard follows.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <form>
+                <zn-form-actions with-cancel="">
+                  <zn-button align="start" color="transparent" icon="languages@lu">Translate Missing</zn-button>
+                  <zn-button align="start" color="transparent" icon="refresh-cw@lu">Regenerate Slug</zn-button>
+                </zn-form-actions>
+              </form>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-566">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-715"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-form-actions</span> <span class="token attr-name">with-cancel</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">align</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>start<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>transparent<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>languages@lu<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Translate Missing<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">align</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>start<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>transparent<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>refresh-cw@lu<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Regenerate Slug<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-form-actions</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-715"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-566"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
           <h3 id="targeting-a-form-by-id" class="anchor-heading">
             Targeting a Form by Id<a
               href="#targeting-a-form-by-id"
@@ -893,11 +952,11 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-566">
+            <div class="code-preview__source-group" id="code-preview-source-group-567">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-715"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>standalone-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-716"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>standalone-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-form-actions</span> <span class="token attr-name">form</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>standalone-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-form-actions</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-715"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-716"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -906,7 +965,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-566"
+                aria-controls="code-preview-source-group-567"
               >
                 Source
                 <svg
@@ -944,7 +1003,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-716"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.142/dist/components/form-actions/form-actions.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-716"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-717"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.142/dist/components/form-actions/form-actions.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-717"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -959,12 +1018,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-717"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.142/dist/components/form-actions/form-actions.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-717"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-718"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.142/dist/components/form-actions/form-actions.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-718"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-718"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/form-actions/form-actions.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-718"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-719"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/form-actions/form-actions.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-719"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -980,7 +1039,11 @@
               <tbody>
                 <tr>
                   <td class="nowrap">(default)</td>
-                  <td>Extra actions, placed before the buttons.</td>
+                  <td>
+                    Extra actions, placed before the buttons. <code>align="start"</code> on a child moves it to the
+                    start of the row; any number can sit on either side. Write them in the order they should be read —
+                    the sides are set by CSS ordering, so markup order is what a keyboard follows.
+                  </td>
                 </tr>
               </tbody>
             </table>

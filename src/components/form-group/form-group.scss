@@ -102,8 +102,18 @@
   }
 }
 
+// The 70px is the gutter between the label column and the fields. Once zn-cols
+// wraps them into one column it is dead space above the fields instead, so it
+// only applies at the width the two columns actually fit — the same 670px the
+// sticky label uses.
 zn-cols::part(base) {
-  gap: 70px;
+  gap: var(--zn-gap);
+}
+
+@container (min-width: 670px) {
+  zn-cols::part(base) {
+    gap: 70px;
+  }
 }
 
 

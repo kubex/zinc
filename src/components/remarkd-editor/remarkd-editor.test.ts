@@ -331,7 +331,7 @@ Second"></zn-remarkd-editor>`);
 
   it('should group the toolbar buttons', async () => {
     const el = await fixture<ZnRemarkdEditor>(html`
-      <zn-remarkd-editor include-url="/includes" link-url="/links"></zn-remarkd-editor>`);
+      <zn-remarkd-editor attachment-url="/attachments" include-url="/includes" link-url="/links"></zn-remarkd-editor>`);
     const groups = el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar .toolbar__group');
 
     expect(groups.length).to.be.greaterThan(5);
@@ -343,7 +343,7 @@ Second"></zn-remarkd-editor>`);
 
   it('should move toolbar groups into an overflow menu when narrow', async () => {
     const el = await fixture<ZnRemarkdEditor>(html`
-      <zn-remarkd-editor style="width: 240px"></zn-remarkd-editor>`);
+      <zn-remarkd-editor attachment-url="/attachments" style="width: 240px"></zn-remarkd-editor>`);
     await el.updateComplete;
     await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__toolbar-more'),
       'the overflow trigger never appeared');
@@ -748,7 +748,7 @@ Second"></zn-remarkd-editor>`);
 
   it('should list every action in the slash menu under its group', async () => {
     const el = await fixture<ZnRemarkdEditor>(html`
-      <zn-remarkd-editor value="Hello" include-url="/includes" link-url="/links"></zn-remarkd-editor>`);
+      <zn-remarkd-editor value="Hello" attachment-url="/attachments" include-url="/includes" link-url="/links"></zn-remarkd-editor>`);
     el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
     await el.updateComplete;
     typeInBlock(el, '/');
@@ -761,20 +761,32 @@ Second"></zn-remarkd-editor>`);
 
   it('should omit the Include action from the slash menu without an include-url', async () => {
     const el = await fixture<ZnRemarkdEditor>(html`
-      <zn-remarkd-editor value="Hello"></zn-remarkd-editor>`);
+      <zn-remarkd-editor value="Hello" attachment-url="/attachments" link-url="/links"></zn-remarkd-editor>`);
     el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
     await el.updateComplete;
     typeInBlock(el, '/');
     await waitUntil(() => el.shadowRoot!.querySelector('zn-slash-menu[open]'), 'the slash menu never opened');
 
     const menu = el.shadowRoot!.querySelector<ZnSlashMenu>('zn-slash-menu')!;
-    expect(menu.items.length).to.equal(EDITOR_ACTIONS.length - 2);
+    expect(menu.items.length).to.equal(EDITOR_ACTIONS.length - 1);
     expect(menu.items.every(item => item.action !== 'include')).to.be.true;
+  });
+
+  it('should omit the Image action from the slash menu without an attachment-url', async () => {
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="Hello" include-url="/includes" link-url="/links"></zn-remarkd-editor>`);
+    el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
+    await el.updateComplete;
+    typeInBlock(el, '/');
+    await waitUntil(() => el.shadowRoot!.querySelector('zn-slash-menu[open]'), 'the slash menu never opened');
+
+    const menu = el.shadowRoot!.querySelector<ZnSlashMenu>('zn-slash-menu')!;
+    expect(menu.items.every(item => item.action !== 'image')).to.be.true;
   });
 
   it('should omit the article link action without a link-url', async () => {
     const el = await fixture<ZnRemarkdEditor>(html`
-      <zn-remarkd-editor value="Hello" include-url="/includes"></zn-remarkd-editor>`);
+      <zn-remarkd-editor value="Hello" attachment-url="/attachments" include-url="/includes"></zn-remarkd-editor>`);
     el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
     await el.updateComplete;
     typeInBlock(el, '/');
@@ -787,7 +799,7 @@ Second"></zn-remarkd-editor>`);
 
   it('should offer the article link action with a link-url', async () => {
     const el = await fixture<ZnRemarkdEditor>(html`
-      <zn-remarkd-editor value="Hello" include-url="/includes" link-url="/links"></zn-remarkd-editor>`);
+      <zn-remarkd-editor value="Hello" attachment-url="/attachments" include-url="/includes" link-url="/links"></zn-remarkd-editor>`);
     el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
     await el.updateComplete;
     typeInBlock(el, '/');
@@ -1177,6 +1189,22 @@ include::inc-1[Payment Terms]"></zn-remarkd-editor>`);
     const options = el.shadowRoot!.querySelectorAll('.remarkd-editor__include-option');
     expect(options.length).to.equal(1);
     expect(options[0].textContent).to.contain('Refund Policy');
+  });
+
+  it('should offer no image entry points without an attachment-url', async () => {
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="# Title"></zn-remarkd-editor>`);
+    const tooltips = Array.from(el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar zn-button'))
+      .map(button => button.getAttribute('tooltip'));
+    expect(tooltips).to.not.contain('Image');
+  });
+
+  it('should offer the Image action with an attachment-url', async () => {
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="# Title" attachment-url="/attachments"></zn-remarkd-editor>`);
+    const tooltips = Array.from(el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar zn-button'))
+      .map(button => button.getAttribute('tooltip'));
+    expect(tooltips).to.contain('Image');
   });
 
   it('should offer no include entry points without an include-url', async () => {

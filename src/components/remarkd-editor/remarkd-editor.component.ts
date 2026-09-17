@@ -1778,12 +1778,14 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
 
   /** A picker action with no endpoint configured is not offered at all. */
   private actionAvailable(action: EditorAction): boolean {
+    if (action.opens === 'image') return !!this.attachmentUrl;
     if (action.opens === 'include') return !!this.includeUrl;
     if (action.opens === 'link') return !!this.linkUrl;
     return true;
   }
 
   private slashItemAvailable(item: SlashMenuItem): boolean {
+    if (item.action === 'image') return !!this.attachmentUrl;
     if (item.action === 'include') return !!this.includeUrl;
     if (item.action === 'link') return !!this.linkUrl;
     return true;

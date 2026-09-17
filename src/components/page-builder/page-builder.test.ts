@@ -12,6 +12,21 @@ describe('<zn-page-builder>', () => {
     expect(el.shadowRoot?.querySelector('[part="canvas"]')).to.exist;
   });
 
+  it('should fill the height it is given inside a growing panel', async () => {
+    const parent = await fixture(html`
+      <div style="display: flex; flex-direction: column; height: 700px; width: 900px;">
+        <zn-sp grow flush>
+          <form>
+            <zn-page-builder name="config"></zn-page-builder>
+          </form>
+        </zn-sp>
+      </div>`);
+    const el = parent.querySelector<ZnPageBuilder>('zn-page-builder')!;
+    await el.updateComplete;
+
+    expect(el.getBoundingClientRect().height).to.equal(700);
+  });
+
   it('should build the palette from slotted config templates', async () => {
     const el = await fixture<ZnPageBuilder>(html`
       <zn-page-builder>
@@ -310,6 +325,201 @@ describe('<zn-page-builder>', () => {
     const unnamed = el.shadowRoot?.querySelector('[part="inspector-header"]');
     expect(unnamed?.querySelector('.inspector-head__title')?.textContent?.trim()).to.equal('Hero');
     expect(unnamed?.querySelector('.inspector-head__type'), 'no duplicate type line').to.not.exist;
+  });
+
+  it('should resize the inspector by dragging its edge handle', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder style="width: 1200px; height: 600px" config='{"sections":[{"id":"s1","type":"hero","data":{}}]}'>
+        <template type="hero" slot="config" label="Hero">
+          <zn-input name="title" label="Title"></zn-input>
+        </template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    el.shadowRoot?.querySelector('zn-page-section-card')?.dispatchEvent(new Event('click'));
+    await el.updateComplete;
+
+    const builder = el.shadowRoot!.querySelector<HTMLElement>('.builder')!;
+    const handle = el.shadowRoot!.querySelector<HTMLElement>('.inspector-resize');
+    expect(handle, 'resize handle').to.exist;
+
+    const before = el.shadowRoot!.querySelector('.inspector')!.getBoundingClientRect().width;
+    handle!.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true, clientX: 800, pointerId: 1}));
+    window.dispatchEvent(new PointerEvent('pointermove', {bubbles: true, clientX: 600, pointerId: 1}));
+    window.dispatchEvent(new PointerEvent('pointerup', {bubbles: true, pointerId: 1}));
+    await el.updateComplete;
+
+    expect(builder.style.getPropertyValue('--inspector-col')).to.equal(`${Math.round(before + 200)}px`);
+  });
+
+  it('should hold the dragged inspector above its minimum width', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder style="width: 1200px; height: 600px" config='{"sections":[{"id":"s1","type":"hero","data":{}}]}'>
+        <template type="hero" slot="config" label="Hero"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    el.shadowRoot?.querySelector('zn-page-section-card')?.dispatchEvent(new Event('click'));
+    await el.updateComplete;
+
+    const builder = el.shadowRoot!.querySelector<HTMLElement>('.builder')!;
+    const handle = el.shadowRoot!.querySelector<HTMLElement>('.inspector-resize')!;
+    handle.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true, clientX: 800, pointerId: 1}));
+    window.dispatchEvent(new PointerEvent('pointermove', {bubbles: true, clientX: 5000, pointerId: 1}));
+    window.dispatchEvent(new PointerEvent('pointerup', {bubbles: true, pointerId: 1}));
+    await el.updateComplete;
+
+    expect(parseInt(builder.style.getPropertyValue('--inspector-col'), 10)).to.equal(300);
+  });
+
+  it('should resize the inspector from the keyboard', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder style="width: 1200px; height: 600px" config='{"sections":[{"id":"s1","type":"hero","data":{}}]}'>
+        <template type="hero" slot="config" label="Hero"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    el.shadowRoot?.querySelector('zn-page-section-card')?.dispatchEvent(new Event('click'));
+    await el.updateComplete;
+
+    const builder = el.shadowRoot!.querySelector<HTMLElement>('.builder')!;
+    const handle = el.shadowRoot!.querySelector<HTMLElement>('.inspector-resize')!;
+    expect(handle.getAttribute('role')).to.equal('separator');
+
+    handle.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowLeft', bubbles: true}));
+    await el.updateComplete;
+    expect(parseInt(builder.style.getPropertyValue('--inspector-col'), 10)).to.equal(363);
+
+    handle.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true}));
+    await el.updateComplete;
+    expect(parseInt(builder.style.getPropertyValue('--inspector-col'), 10)).to.equal(343);
+  });
+
+  it('should still tuck a resized inspector fully away', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder style="width: 1200px; height: 600px" config='{"sections":[{"id":"s1","type":"hero","data":{}}]}'>
+        <template type="hero" slot="config" label="Hero"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    el.shadowRoot?.querySelector('zn-page-section-card')?.dispatchEvent(new Event('click'));
+    await el.updateComplete;
+
+    const handle = el.shadowRoot!.querySelector<HTMLElement>('.inspector-resize')!;
+    handle.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true, clientX: 800, pointerId: 1}));
+    window.dispatchEvent(new PointerEvent('pointermove', {bubbles: true, clientX: 600, pointerId: 1}));
+    window.dispatchEvent(new PointerEvent('pointerup', {bubbles: true, pointerId: 1}));
+    await el.updateComplete;
+
+    const builder = el.shadowRoot!.querySelector<HTMLElement>('.builder')!;
+    expect(parseInt(builder.style.getPropertyValue('--inspector-col'), 10), 'resized').to.be.greaterThan(343);
+
+    // An inline width outranks the collapsed rule's 0px, so it has to step aside.
+    el.inspectorCollapsed = true;
+    await el.updateComplete;
+    expect(getComputedStyle(builder).getPropertyValue('--inspector-col').trim()).to.equal('0px');
+  });
+
+  const richBuilder = (height: number) => fixture<ZnPageBuilder>(html`
+    <zn-page-builder style="width: 1200px; height: ${height}px" config='{"sections":[{"id":"s1","type":"rich","data":{}}]}'>
+      <template type="rich" slot="config" label="Rich Text">
+        <zn-translations name="content" label="Content" input-type="remarkd"></zn-translations>
+      </template>
+    </zn-page-builder>`);
+
+  it('should widen the inspector by default for a remarkd editor', async () => {
+    const el = await richBuilder(600);
+    await el.updateComplete;
+
+    el.shadowRoot?.querySelector('zn-page-section-card')?.dispatchEvent(new Event('click'));
+    await el.updateComplete;
+
+    const builder = el.shadowRoot!.querySelector<HTMLElement>('.builder')!;
+    expect(builder.classList.contains('builder--inspector-wide'), 'wide').to.be.true;
+    expect(getComputedStyle(builder).getPropertyValue('--inspector-col').trim()).to.equal('520px');
+  });
+
+  it('should leave the inspector at its usual width without a remarkd editor', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder style="width: 1200px; height: 600px" config='{"sections":[{"id":"s1","type":"hero","data":{}}]}'>
+        <template type="hero" slot="config" label="Hero">
+          <zn-input name="title" label="Title"></zn-input>
+        </template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    el.shadowRoot?.querySelector('zn-page-section-card')?.dispatchEvent(new Event('click'));
+    await el.updateComplete;
+
+    const builder = el.shadowRoot!.querySelector<HTMLElement>('.builder')!;
+    expect(builder.classList.contains('builder--inspector-wide')).to.be.false;
+    expect(getComputedStyle(builder).getPropertyValue('--inspector-col').trim()).to.equal('343px');
+  });
+
+  it('should prefill translations stamped inside a translation group', async () => {
+    const state = JSON.stringify({
+      sections: [{
+        id: 's1', type: 'tile', data: {
+          title: JSON.stringify({en: 'Billing'}),
+          subtitle: JSON.stringify({en: 'How to pay'})
+        }
+      }]
+    });
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder .config="${state}">
+        <template type="tile" slot="config" label="Tile">
+          <zn-translation-group inline languages='{"en":"English","fr":"French"}'>
+            <zn-translations name="title" label="Title"></zn-translations>
+            <zn-translations name="subtitle" label="Subtitle"></zn-translations>
+          </zn-translation-group>
+        </template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    el.shadowRoot?.querySelector('zn-page-section-card')?.dispatchEvent(new Event('click'));
+    await el.updateComplete;
+
+    const fields = [...el.shadowRoot!.querySelectorAll<HTMLElement & {
+      values: Record<string, string>; languages: Record<string, string>; grouped: boolean;
+      updateComplete: Promise<unknown>;
+    }>('.inspector__form zn-translations')];
+    expect(fields.length, 'both fields stamped').to.equal(2);
+    await Promise.all(fields.map(f => f.updateComplete));
+
+    expect(fields[0].values.en).to.equal('Billing');
+    expect(fields[1].values.en).to.equal('How to pay');
+    // The group owns the select and the language list, so the children drop theirs.
+    fields.forEach(field => {
+      expect(field.grouped, 'grouped').to.be.true;
+      expect(field.languages).to.have.property('fr');
+      expect(field.shadowRoot!.querySelector('[part="language-select"]'), 'child select').to.not.exist;
+    });
+    expect(el.shadowRoot!.querySelectorAll('.inspector__form [part="language-select"]').length).to.equal(0);
+  });
+
+  it('should not strand the group language select above its fields', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder style="width: 1200px; height: 600px" config='{"sections":[{"id":"s1","type":"tile","data":{}}]}'>
+        <template type="tile" slot="config" label="Tile">
+          <zn-translation-group inline languages='{"en":"English","fr":"French"}'>
+            <zn-translations name="title" label="Title" flush></zn-translations>
+            <zn-translations name="subtitle" label="Subtitle" flush></zn-translations>
+          </zn-translation-group>
+        </template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    el.shadowRoot?.querySelector('zn-page-section-card')?.dispatchEvent(new Event('click'));
+    await el.updateComplete;
+
+    const group = el.shadowRoot!.querySelector<HTMLElement & { updateComplete: Promise<unknown> }>(
+      '.inspector__form zn-translation-group')!;
+    await group.updateComplete;
+    const select = group.shadowRoot!.querySelector<HTMLElement>('[part="language-field"]')!;
+    const first = group.querySelector<HTMLElement>('zn-translations')!;
+
+    const gap = first.getBoundingClientRect().top - select.getBoundingClientRect().bottom;
+    expect(gap, 'gap under the language select').to.be.at.most(24);
   });
 
   it('should clear the selection from the inspector close button', async () => {

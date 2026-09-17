@@ -219,6 +219,47 @@ describe('<zn-translations>', () => {
       expect(el.shadowRoot!.querySelector('zn-input')).to.be.null;
     });
 
+    it('renders a remarkd editor for input-type="remarkd"', async () => {
+      const el = await fixture<ZnTranslations>(html`
+        <zn-translations input-type="remarkd" values='{"en":"= Hello"}'></zn-translations>`);
+      await el.updateComplete;
+
+      const editor = el.shadowRoot!.querySelector<HTMLElement & { value: string }>('zn-remarkd-editor');
+      expect(editor).to.exist;
+      expect(editor!.value).to.equal('= Hello');
+      expect(el.shadowRoot!.querySelector('zn-input')).to.be.null;
+      expect(el.shadowRoot!.querySelector('zn-textarea')).to.be.null;
+    });
+
+    it('passes its editor endpoints through to the remarkd editor', async () => {
+      const el = await fixture<ZnTranslations>(html`
+        <zn-translations input-type="remarkd"
+                         allow-raw
+                         attachment-url="/a"
+                         include-url="/i"
+                         link-url="/l"></zn-translations>`);
+      await el.updateComplete;
+
+      const editor = el.shadowRoot!.querySelector('zn-remarkd-editor')!;
+      expect(editor.getAttribute('attachment-url')).to.equal('/a');
+      expect(editor.getAttribute('include-url')).to.equal('/i');
+      expect(editor.getAttribute('link-url')).to.equal('/l');
+      expect(editor.hasAttribute('allow-raw')).to.be.true;
+    });
+
+    it('writes a remarkd edit back to the active language', async () => {
+      const el = await fixture<ZnTranslations>(html`
+        <zn-translations input-type="remarkd" values='{"en":"one"}'></zn-translations>`);
+      await el.updateComplete;
+
+      const editor = el.shadowRoot!.querySelector<HTMLElement & { value: string }>('zn-remarkd-editor')!;
+      editor.value = 'two';
+      editor.dispatchEvent(new CustomEvent('zn-change', {bubbles: true, composed: true}));
+      await el.updateComplete;
+
+      expect(el.values.en).to.equal('two');
+    });
+
     it('renders an inline edit when asked for one', async () => {
       const el = await fixture<ZnTranslations>(html`
         <zn-translations inline-edit values='{"en":"Hello"}'></zn-translations>`);

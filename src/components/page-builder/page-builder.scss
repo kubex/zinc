@@ -39,6 +39,13 @@
 
   // Side panels tuck away via the canvas-edge chevrons (flow-builder pattern).
   // Their border would floor the width above zero, so it collapses too.
+  // A section whose settings are mostly a remarkd editor needs a writing
+  // measure, not a form column. Declared before the collapsed rules so tucking
+  // the panel away still wins.
+  &--inspector-wide {
+    --inspector-col: 520px;
+  }
+
   &--palette-collapsed {
     --palette-col: 0px;
 
@@ -254,6 +261,7 @@ zn-page-palette-item {
 // Right column — anatomy shared with flow-builder's inspector (icon tile +
 // title/type head over a scrolling body), so the two builders read alike.
 .inspector {
+  position: relative;
   display: flex;
   flex-direction: column;
   border-left: 1px solid rgb(var(--zn-border-color));
@@ -328,6 +336,10 @@ zn-page-palette-item {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
+    // Fields inside a narrow panel have to answer to its width, not the whole
+    // builder's — the host is the only container otherwise, and a form group
+    // would lay out as if it had the canvas to spread into.
+    container-type: inline-size;
     // Extra bottom padding so the last field isn't flush against the scroll end.
     padding: 18px 16px 24px;
     gap: var(--pb-field-gap);
@@ -388,6 +400,35 @@ zn-page-palette-item {
     margin: 0;
     font-size: 0.75rem;
     color: rgb(var(--zn-color-muted-text));
+  }
+}
+
+// Straddles the inspector's left border so the grab area is wider than the 1px
+// line it appears to be.
+.inspector-resize {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -3px;
+  z-index: 5;
+  width: 7px;
+  cursor: col-resize;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0 3px;
+    background: transparent;
+    transition: background 0.15s ease;
+  }
+
+  &:hover::after,
+  &:focus-visible::after {
+    background: rgb(var(--zn-color-primary));
+  }
+
+  &:focus-visible {
+    outline: none;
   }
 }
 

@@ -15,6 +15,12 @@
   height: 100%;
 }
 
+// A form wrapping the whole panel is there to submit it, not to lay it out —
+// leaving it in the box tree floors the panel at the form's content height.
+:host([grow]) ::slotted(form:only-child) {
+  display: contents;
+}
+
 :host([max-full]) {
   max-height: 100%;
   overflow: hidden;

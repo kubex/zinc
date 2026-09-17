@@ -13,6 +13,7 @@ import ZnChip from '../chip';
 import ZnInlineEdit from '../inline-edit';
 import ZnInput from '../input';
 import ZnOption from '../option';
+import ZnRemarkdEditor from '../remarkd-editor';
 import ZnSelect from '../select';
 import ZnTextarea from '../textarea';
 import type {PropertyValues} from 'lit';
@@ -64,6 +65,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     'zn-inline-edit': ZnInlineEdit,
     'zn-input': ZnInput,
     'zn-option': ZnOption,
+    'zn-remarkd-editor': ZnRemarkdEditor,
     'zn-select': ZnSelect,
     'zn-textarea': ZnTextarea
   };
@@ -96,10 +98,22 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   @property({type: Boolean, reflect: true}) flush = false;
 
   /** The control each translation is edited through. */
-  @property({attribute: "input-type"}) inputType: 'text' | 'number' | 'textarea' = 'text';
+  @property({attribute: "input-type"}) inputType: 'text' | 'number' | 'textarea' | 'remarkd' = 'text';
 
   /** Rows of the textarea, when `input-type` is `textarea`. */
   @property({attribute: "textarea-rows", type: Number}) textareaRows: number | undefined;
+
+  /** Allows raw HTML blocks, when `input-type` is `remarkd`. */
+  @property({type: Boolean, attribute: 'allow-raw'}) allowRaw = false;
+
+  /** Where the remarkd editor uploads images, when `input-type` is `remarkd`. */
+  @property({attribute: 'attachment-url'}) attachmentUrl = '';
+
+  /** Where the remarkd editor lists embeddable includes, when `input-type` is `remarkd`. */
+  @property({attribute: 'include-url'}) includeUrl = '';
+
+  /** Where the remarkd editor searches link targets, when `input-type` is `remarkd`. */
+  @property({attribute: 'link-url'}) linkUrl = '';
 
   /**
    * Edits the translation through a `zn-inline-edit` — the value reads as text until it is clicked — rather than a
@@ -325,7 +339,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   };
 
   private handleValueUpdate = (e: CustomEvent) => {
-    const target = e.target as (ZnInput | ZnInlineEdit | ZnTextarea);
+    const target = e.target as (ZnInput | ZnInlineEdit | ZnRemarkdEditor | ZnTextarea);
     if (this._activeLanguage) {
       const newValue: string = target.value as string;
       if (newValue !== this.values[this._activeLanguage]) {
@@ -385,6 +399,23 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
           @zn-input="${this.handleValueUpdate}"
           @zn-submit="${this.handleSubmit}"
         ></zn-inline-edit>`;
+    }
+
+    if (this.inputType === 'remarkd') {
+      return html`
+        <zn-remarkd-editor
+          .value=${live(value)}
+          name="${this.name}"
+          placeholder="${placeholder}"
+          dir="${dir}"
+          ?disabled="${this.disabled}"
+          ?allow-raw="${this.allowRaw}"
+          attachment-url="${this.attachmentUrl}"
+          include-url="${this.includeUrl}"
+          link-url="${this.linkUrl}"
+          @zn-change="${this.handleValueUpdate}"
+          @zn-input="${this.handleValueUpdate}"
+        ></zn-remarkd-editor>`;
     }
 
     if (this.inputType === 'textarea') {

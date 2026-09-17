@@ -126,4 +126,20 @@ describe('<zn-form-group>', () => {
       expect(after).to.be.closeTo(before, 4);
     });
   });
+
+  it('should gutter the label column only while it sits beside the fields', async () => {
+    const wide = await fixture<HTMLElement>(html`
+      <div style="width: 900px; container-type: inline-size;">
+        <zn-form-group label="Wide"><div>Field</div></zn-form-group>
+      </div>`);
+    const wideCols = wide.querySelector('zn-form-group')!.shadowRoot!.querySelector('zn-cols')!;
+    expect(getComputedStyle(wideCols.shadowRoot!.querySelector('.cols')!).columnGap).to.equal('70px');
+
+    const narrow = await fixture<HTMLElement>(html`
+      <div style="width: 400px; container-type: inline-size;">
+        <zn-form-group label="Narrow"><div>Field</div></zn-form-group>
+      </div>`);
+    const narrowCols = narrow.querySelector('zn-form-group')!.shadowRoot!.querySelector('zn-cols')!;
+    expect(getComputedStyle(narrowCols.shadowRoot!.querySelector('.cols')!).rowGap).to.not.equal('70px');
+  });
 });

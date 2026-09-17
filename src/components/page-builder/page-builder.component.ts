@@ -1,4 +1,4 @@
-import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
+import { type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS } from 'lit';
 import {
   emptyDragImage,
   emptyPageState,
@@ -34,6 +34,12 @@ const HISTORY_LIMIT = 50;
 const MAX_SECTIONS = 500;
 /** Builder width below which the palette auto-collapses — keep in sync with the @container query in page-builder.scss. */
 const NARROW_WIDTH = 768;
+
+// 300 matches the narrow-container floor in the stylesheet: below it the
+// inspector's toggle rows wrap their switch under the label.
+const MIN_INSPECTOR_WIDTH = 300;
+const MIN_CANVAS_WIDTH = 200;
+const RESIZE_STEP = 20;
 
 const AUTO_SAVE_DEFAULT_MINUTES = 5;
 const AUTO_SAVE_TTL_MS = 24 * 60 * 60 * 1000;
@@ -158,6 +164,8 @@ export default class ZnPageBuilder extends ZincElement {
   @state() private _slotPicker: { containerId: string; index: number } | null = null;
   /** The stamped config form for the selected section; rebuilt on selection change. */
   @state() private _form: HTMLDivElement | null = null;
+  @state() private _inspectorWidth: number | null = null;
+  @state() private _inspectorWide = false;
 
   private readonly _hasSlot = new HasSlotController(this, 'header-left', 'header-right');
 
@@ -1301,6 +1309,7 @@ export default class ZnPageBuilder extends ZincElement {
     // A content-free template stamps no controls — leave the form null so the
     // inspector shows its "no settings" hint rather than a blank gap.
     this._form = form.childElementCount ? form : null;
+    this._inspectorWide = Boolean(this._form?.querySelector('zn-remarkd-editor, [input-type="remarkd"]'));
   }
 
   private _isBooleanControl(control: HTMLElement, value: unknown): boolean {
@@ -1336,6 +1345,41 @@ export default class ZnPageBuilder extends ZincElement {
     this._commit({ sections: this._patchSection(id, s => ({ ...s, label: label || undefined })) });
   }
 
+  /** Width the inspector may be dragged to, against the builder's own width. */
+  private _clampInspector(width: number): number {
+    const room = this.getBoundingClientRect().width - MIN_CANVAS_WIDTH;
+    return Math.round(Math.min(Math.max(width, MIN_INSPECTOR_WIDTH), Math.max(room, MIN_INSPECTOR_WIDTH)));
+  }
+
+  private _inspectorRect(): number {
+    return this.shadowRoot?.querySelector('.inspector')?.getBoundingClientRect().width ?? MIN_INSPECTOR_WIDTH;
+  }
+
+  private _onResizeStart = (e: PointerEvent) => {
+    e.preventDefault();
+    const startX = e.clientX;
+    const startWidth = this._inspectorWidth ?? this._inspectorRect();
+    // The handle is on the inspector's left edge, so dragging left widens it.
+    const move = (ev: PointerEvent) => {
+      this._inspectorWidth = this._clampInspector(startWidth + startX - ev.clientX);
+    };
+    const stop = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', stop);
+      window.removeEventListener('pointercancel', stop);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', stop);
+    window.addEventListener('pointercancel', stop);
+  };
+
+  private _onResizeKey = (e: KeyboardEvent) => {
+    const step = e.key === 'ArrowLeft' ? RESIZE_STEP : e.key === 'ArrowRight' ? -RESIZE_STEP : 0;
+    if (!step) return;
+    e.preventDefault();
+    this._inspectorWidth = this._clampInspector((this._inspectorWidth ?? this._inspectorRect()) + step);
+  };
+
   private _renderInspector() {
     const section = this._selectedSection();
     if (!section) return html``;
@@ -1345,6 +1389,15 @@ export default class ZnPageBuilder extends ZincElement {
     const typeLabel = type?.label ?? section.type;
     return html`
       <aside part="inspector" class="inspector">
+        <div
+          part="inspector-resize"
+          class="inspector-resize"
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize section settings"
+          tabindex="0"
+          @pointerdown="${this._onResizeStart}"
+          @keydown="${this._onResizeKey}"></div>
         <div part="inspector-header" class="inspector-head">
           <span
             class="inspector-head__icon"
@@ -1401,7 +1454,8 @@ export default class ZnPageBuilder extends ZincElement {
     return html`
       <div
         part="base"
-        class="builder ${this._selectedId ? 'builder--inspecting' : ''} ${this.paletteCollapsed ? 'builder--palette-collapsed' : ''} ${this.inspectorCollapsed ? 'builder--inspector-collapsed' : ''}"
+        class="builder ${this._selectedId ? 'builder--inspecting' : ''} ${this.paletteCollapsed ? 'builder--palette-collapsed' : ''} ${this.inspectorCollapsed ? 'builder--inspector-collapsed' : ''} ${this._inspectorWide ? 'builder--inspector-wide' : ''}"
+        style="${this._inspectorWidth === null || this.inspectorCollapsed ? nothing : `--inspector-col: ${this._inspectorWidth}px`}"
         @dragend="${() => {
           this._dragOverIndex = null;
           this._slotDragOver = null;

@@ -17,7 +17,9 @@ import styles from './form-actions.scss';
  *
  * @event zn-cancel - Emitted when the cancel button is clicked.
  *
- * @slot - Extra actions, placed before the buttons.
+ * @slot - Extra actions, placed before the buttons. `align="start"` on a child moves it to the start of the row; any
+ * number can sit on either side. Write them in the order they should be read — the sides are set by CSS ordering, so
+ * markup order is what a keyboard follows.
  *
  * @csspart cancel-button - The cancel button.
  * @csspart reset-button - The reset button.
@@ -81,6 +83,7 @@ export default class ZnFormActions extends ZincElement {
   render() {
     return html`
       <slot></slot>
+      <span class="form-actions__spacer"></span>
       ${this.withCancel ? html`
         <zn-button part="cancel-button" panel-bg modal-closer icon="${this.cancelIcon}" @click="${this.handleCancel}">
           ${this.cancelText}

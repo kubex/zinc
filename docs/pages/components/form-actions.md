@@ -61,6 +61,21 @@ Extra buttons placed in the default slot appear before the standard buttons.
 </form>
 ```
 
+### Start-Aligned Actions
+
+`align="start"` on a slotted child moves it to the start of the row; any number can sit on either side. Write the
+buttons in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard
+follows.
+
+```html:preview
+<form>
+  <zn-form-actions with-cancel>
+    <zn-button align="start" color="transparent" icon="languages@lu">Translate Missing</zn-button>
+    <zn-button align="start" color="transparent" icon="refresh-cw@lu">Regenerate Slug</zn-button>
+  </zn-form-actions>
+</form>
+```
+
 ### Targeting a Form by Id
 
 When the component can't live inside the form, point it at one with the `form` attribute.

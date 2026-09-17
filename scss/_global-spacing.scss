@@ -82,6 +82,13 @@ zn-form-group ~ zn-form-group {
   border-top: 1px solid rgb(var(--zn-border-color));
 }
 
+// zn-sp's divide draws its own line between the groups.
+zn-sp[divide] > zn-form-group ~ zn-form-group {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
 
 .form-spacing > * {
   grid-column: span 6 / span 6;

@@ -7,3 +7,20 @@
   align-items: center;
   gap: var(--zn-spacing-small);
 }
+
+// The spacer, not an auto margin, is what splits the two sides: an auto margin on every left-hand action would open
+// a gap between each of them, where one flexing element in the middle holds any number on either side together.
+.form-actions__spacer {
+  order: 1;
+  flex: 1 1 auto;
+}
+
+// Slotted extras and the built-in buttons share an order, so the two keep their markup order between them.
+::slotted(*),
+zn-button {
+  order: 2;
+}
+
+::slotted([align='start']) {
+  order: 0;
+}

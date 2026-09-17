@@ -22,6 +22,26 @@ describe('<zn-form-actions>', () => {
     expect(await listener).to.exist;
   });
 
+  it('holds align="start" children left and the rest right, one gap apart on each side', async () => {
+    const el = await fixture<HTMLElement>(html`
+      <zn-form-actions with-cancel style="width: 600px">
+        <zn-button align="start" id="translate">Translate</zn-button>
+        <zn-button align="start" id="slug">Slug</zn-button>
+      </zn-form-actions>
+    `);
+    const row = el.getBoundingClientRect();
+    const translate = el.querySelector<HTMLElement>('#translate')!.getBoundingClientRect();
+    const slug = el.querySelector<HTMLElement>('#slug')!.getBoundingClientRect();
+    const cancel = el.shadowRoot!.querySelector<HTMLElement>('[part="cancel-button"]')!.getBoundingClientRect();
+    const submit = el.shadowRoot!.querySelector<HTMLElement>('[part="submit-button"]')!.getBoundingClientRect();
+
+    expect(translate.left).to.be.closeTo(row.left, 1);
+    expect(submit.right).to.be.closeTo(row.right, 1);
+    // Each side stays one gap apart rather than spreading across the free space.
+    expect(slug.left).to.be.closeTo(translate.right + 16, 1);
+    expect(submit.left).to.be.closeTo(cancel.right + 16, 1);
+  });
+
   it('should close a containing dialog when the cancel button is clicked', async () => {
     const dialog = await fixture<HTMLElement & { open: boolean }>(html`
       <zn-dialog open label="Test">

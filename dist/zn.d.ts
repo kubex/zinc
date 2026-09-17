@@ -2637,6 +2637,12 @@ declare module "components/opt-group/opt-group.component" {
         handleDisabledChange(): void;
         /** @internal - Updates visibility of the group based on whether any child options are visible. */
         updateVisibility(): void;
+        /**
+         * @internal - Marks the group as the first visible one so it doesn't draw a separator against the top of the
+         * listbox. Structural `:first-child` can't see that earlier siblings were hidden by a search filter.
+         */
+        updateSeparator(): void;
+        private static isRendered;
         render(): import("lit-html").TemplateResult<1>;
         private handleSlotChange;
         private propagateDisabled;
@@ -2936,6 +2942,7 @@ declare module "components/select/select.component" {
         private filterOptions;
         /** Clears the search query and shows all options */
         private clearSearch;
+        private updateOptGroupSeparators;
         /**
          * Commits the current typed text as a selected value when `free-text` is enabled. A selected `<zn-option>`
          * (value = label = trimmed text) is created in the light DOM so the value flows through the existing
@@ -2981,6 +2988,7 @@ declare module "components/select/select.component" {
          */
         private _renderSelectedRemoteItems;
         private handleInvalid;
+        protected updated(_changedProperties: PropertyValues): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         handleDisabledChange(): void;
         handleSrcChange(): void;

@@ -357,8 +357,10 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
 
   private handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Enter') {
-      // An inline edit commits on Enter itself, and a textarea needs it for the newline.
-      if (event.target instanceof ZnInlineEdit || event.target instanceof ZnTextarea) {
+      // An inline edit commits on Enter itself, a textarea needs it for the
+      // newline, and a remarkd editor for a new paragraph.
+      if (event.target instanceof ZnInlineEdit || event.target instanceof ZnTextarea
+        || event.target instanceof ZnRemarkdEditor) {
         return;
       }
 

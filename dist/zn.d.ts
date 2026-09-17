@@ -894,11 +894,24 @@ declare module "components/confirm/confirm.component" {
         dialog: ZnDialog;
         /** Internal loading state used when showLoading is enabled */
         private loading;
+        private failed;
+        private failure;
+        private submitted;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         connectedCallback(): void;
         updateTriggers(): void;
         show: (event?: Event | undefined) => void;
         hide(): void;
+        disconnectedCallback(): void;
+        private reset;
+        private stopWatching;
+        /**
+         * The console dispatches the pagelet lifecycle on the form it submitted. Without it the loading
+         * state only ends when a response happens to reload the page, so every failure hangs the dialog.
+         */
+        private settle;
+        private responseFailed;
+        private alertTitle;
         render(): import("lit-html").TemplateResult<1>;
         submitDialog(): void;
     }

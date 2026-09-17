@@ -2867,63 +2867,6 @@
           }
         },
         {
-          "name": "zn-data-table-filter",
-          "description": "An inline filter bar for data tables. Each active filter is a pill whose dropdown sets its value.\n---\n\n\n### **Events:**\n - **zn-filter-change** - Emitted when the active filters change. Read the encoded query off `value`.\n\n### **Methods:**\n - **clear()** - Removes every active filter.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "filters",
-              "value": { "type": "QueryBuilderData", "default": "[]" }
-            },
-            {
-              "name": "name",
-              "value": { "type": "string", "default": "\"data-table-filter\"" }
-            },
-            { "name": "value", "value": { "type": "string", "default": "''" } },
-            {
-              "name": "default-filters",
-              "description": "Filter keys to show a pill for before the user adds any.",
-              "value": { "type": "string", "default": "''" }
-            }
-          ],
-          "events": [
-            {
-              "name": "zn-filter-change",
-              "description": "Emitted when the active filters change. Read the encoded query off `value`."
-            }
-          ],
-          "js": {
-            "properties": [
-              { "name": "filters", "type": "QueryBuilderData" },
-              { "name": "name", "type": "string" },
-              { "name": "value", "type": "string" },
-              {
-                "name": "defaultFilters",
-                "description": "Filter keys to show a pill for before the user adds any.",
-                "type": "string"
-              },
-              {
-                "name": "suggestions",
-                "description": "Typeahead values per filter key. `zn-data-table` fills this from the rows it has loaded.",
-                "type": "Record<string, string[]>"
-              },
-              { "name": "validationMessage", "type": "string" },
-              { "name": "validity", "type": "ValidityState" },
-              {
-                "name": "activeCount",
-                "description": "Number of filters with a value set.",
-                "type": "number"
-              }
-            ],
-            "events": [
-              {
-                "name": "zn-filter-change",
-                "description": "Emitted when the active filters change. Read the encoded query off `value`."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-data-table-search",
           "description": "A search component for data tables.\n---\n\n\n### **Events:**\n - **zn-search-change** - Emitted when the search value changes (debounced).\n\n### **Methods:**\n - **getFormData(): _Record<string, any>_** - Collects form data from slotted input elements\n\n### **Slots:**\n - _default_ - The default slot for additional form inputs.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -3012,6 +2955,63 @@
               {
                 "name": "zn-search-change",
                 "description": "Emitted when the search value changes (debounced)."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-data-table-filter",
+          "description": "An inline filter bar for data tables. Each active filter is a pill whose dropdown sets its value.\n---\n\n\n### **Events:**\n - **zn-filter-change** - Emitted when the active filters change. Read the encoded query off `value`.\n\n### **Methods:**\n - **clear()** - Removes every active filter.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "filters",
+              "value": { "type": "QueryBuilderData", "default": "[]" }
+            },
+            {
+              "name": "name",
+              "value": { "type": "string", "default": "\"data-table-filter\"" }
+            },
+            { "name": "value", "value": { "type": "string", "default": "''" } },
+            {
+              "name": "default-filters",
+              "description": "Filter keys to show a pill for before the user adds any.",
+              "value": { "type": "string", "default": "''" }
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-filter-change",
+              "description": "Emitted when the active filters change. Read the encoded query off `value`."
+            }
+          ],
+          "js": {
+            "properties": [
+              { "name": "filters", "type": "QueryBuilderData" },
+              { "name": "name", "type": "string" },
+              { "name": "value", "type": "string" },
+              {
+                "name": "defaultFilters",
+                "description": "Filter keys to show a pill for before the user adds any.",
+                "type": "string"
+              },
+              {
+                "name": "suggestions",
+                "description": "Typeahead values per filter key. `zn-data-table` fills this from the rows it has loaded.",
+                "type": "Record<string, string[]>"
+              },
+              { "name": "validationMessage", "type": "string" },
+              { "name": "validity", "type": "ValidityState" },
+              {
+                "name": "activeCount",
+                "description": "Number of filters with a value set.",
+                "type": "number"
+              }
+            ],
+            "events": [
+              {
+                "name": "zn-filter-change",
+                "description": "Emitted when the active filters change. Read the encoded query off `value`."
               }
             ]
           }
@@ -10295,6 +10295,45 @@
           }
         },
         {
+          "name": "zn-split-button",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "caption", "value": { "type": "string" } },
+            { "name": "href", "value": { "type": "string" } },
+            { "name": "name", "value": { "type": "string" } },
+            { "name": "value", "value": { "type": "string" } },
+            { "name": "type", "value": { "type": "string" } }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "caption", "type": "string" },
+              { "name": "href", "type": "string" },
+              { "name": "name", "type": "string" },
+              { "name": "value", "type": "string" },
+              { "name": "defaultValue", "type": "string" },
+              { "name": "type", "type": "string" },
+              { "name": "dropdown", "type": "ZnDropdown" },
+              { "name": "button", "type": "ZnButton" },
+              { "name": "validity" },
+              { "name": "validationMessage" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-split-pane",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-split-pane-focus-change**\n- **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -10405,45 +10444,6 @@
             ],
             "events": [
               { "name": "zn-split-pane-focus-change", "type": "CustomEvent" },
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-split-button",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "caption", "value": { "type": "string" } },
-            { "name": "href", "value": { "type": "string" } },
-            { "name": "name", "value": { "type": "string" } },
-            { "name": "value", "value": { "type": "string" } },
-            { "name": "type", "value": { "type": "string" } }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "caption", "type": "string" },
-              { "name": "href", "type": "string" },
-              { "name": "name", "type": "string" },
-              { "name": "value", "type": "string" },
-              { "name": "defaultValue", "type": "string" },
-              { "name": "type", "type": "string" },
-              { "name": "dropdown", "type": "ZnDropdown" },
-              { "name": "button", "type": "ZnButton" },
-              { "name": "validity" },
-              { "name": "validationMessage" }
-            ],
-            "events": [
               {
                 "name": "zn-event-name",
                 "description": "Emitted as an example."

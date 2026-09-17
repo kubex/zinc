@@ -105,6 +105,7 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
   checkValidity(): boolean { return this.validity.valid; }
   getForm(): HTMLFormElement | null { return this.formControlController.getForm(); }
   reportValidity(): boolean { return this.checkValidity(); }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   setCustomValidity(_message: string) { this.formControlController.updateValidity(); }
 
   private static readonly freeInputLibraries = new Set(['gravatar', 'libravatar', 'avatar']);

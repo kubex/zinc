@@ -201,7 +201,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
                    size="medium"
                    placeholder="Select Filter"
                    @zn-change="${this._addRule}">
-          ${this.filters && this.filters.filter(item => !this._usedFilterIds.has(item.id)).map(item => html`
+          ${this.filters?.filter(item => !this._usedFilterIds.has(item.id)).map(item => html`
             <zn-option value="${item.id}">
               ${item.name.charAt(0).toUpperCase() + item.name.slice(1)}
             </zn-option>`)}
@@ -460,7 +460,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
   }
 
   private _updateDateValue(id: string, event: Event | {
-    target: ZnDatepicker | HTMLDivElement
+    target: ZnDatepicker | HTMLDivElement;
   }, submitFormat: QueryBuilderDateSubmitFormat = 'legacy') {
     const filter = this._selectedRules.get(id);
     if (!filter) return;

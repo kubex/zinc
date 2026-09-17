@@ -488,8 +488,8 @@ declare module "components/popup/index" {
 }
 declare module "components/menu-item/submenu-controller" {
     import { type HasSlotController } from "internal/slot";
-    import type { ReactiveController, ReactiveControllerHost } from 'lit';
     import { type LocalizeController } from "utilities/localize";
+    import type { ReactiveController, ReactiveControllerHost } from 'lit';
     import type ZnMenuItem from "components/menu-item/index";
     /** A reactive controller to manage the registration of event listeners for submenus. */
     export class SubmenuController implements ReactiveController {
@@ -2432,7 +2432,7 @@ declare module "components/input/input.component" {
         handleDisabledChange(): void;
         handleStepChange(): void;
         handleValueChange(): Promise<void>;
-        handleColorFormatChange(): Promise<void>;
+        handleColorFormatChange(): void;
         /** Sets focus on the input. */
         focus(options?: FocusOptions): void;
         /** Removes focus from the input. */
@@ -5996,7 +5996,7 @@ declare module "components/sidebar/sidebar.component" {
         scrollBottom(): void;
         render(): import("lit-html").TemplateResult<1>;
         _expander(): import("lit-html").TemplateResult<1>;
-        handleClick(e: any): void;
+        handleClick(e: Event): void;
     }
 }
 declare module "components/sidebar/index" {
@@ -13404,9 +13404,6 @@ declare module "components/editor/modules/events/zn-editor-update" {
             'zn-editor-update': ZnEditorUpdateEvent;
         }
     }
-}
-declare module "components/hover-container/hover-container" {
-    import '../../../dist/zn.min.js';
 }
 declare module "components/remarkd-editor/feature-keys" {
     /**

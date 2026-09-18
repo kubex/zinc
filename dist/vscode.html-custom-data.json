@@ -14,17 +14,6 @@
       ]
     },
     {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
-        }
-      ]
-    },
-    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -61,6 +50,17 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
+        }
+      ]
+    },
+    {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -139,21 +139,6 @@
       ]
     },
     {
-      "name": "zn-bulk-actions",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "name", "values": [] },
-        { "name": "value", "values": [{ "name": "PropertyKey" }] },
-        { "name": "actions", "values": [{ "name": "BulkActionData" }] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/bulk-actions"
-        }
-      ]
-    },
-    {
       "name": "zn-background",
       "description": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n---\n\n\n### **Slots:**\n - _default_ - Content displayed above the background layers.\n\n### **CSS Properties:**\n - **--zn-background-color** - Fallback colour when the `color` attribute is not set. _(default: undefined)_\n- **--zn-background-image-position** - Position of the background image. Defaults to `center`. _(default: undefined)_\n- **--zn-background-overlay-angle** - Direction of the overlay gradient. Defaults to `110deg`. _(default: undefined)_\n- **--zn-background-floating-icon-color** - Colour of the floating icons. Defaults to `currentColor`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's full-size background canvas.\n- **image** - The decorative background image.\n- **overlay** - The contrast overlay between the image and content.\n- **floating-icons** - The non-interactive layer containing the floating icons.\n- **floating-icon** - Each floating `zn-icon`.\n- **content** - The wrapper around the default slot.",
       "attributes": [
@@ -202,6 +187,21 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/background"
+        }
+      ]
+    },
+    {
+      "name": "zn-bulk-actions",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "name", "values": [] },
+        { "name": "value", "values": [{ "name": "PropertyKey" }] },
+        { "name": "actions", "values": [{ "name": "BulkActionData" }] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/bulk-actions"
         }
       ]
     },
@@ -3665,7 +3665,7 @@
     },
     {
       "name": "zn-remarkd-editor",
-      "description": "A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted on each keystroke while editing a block.\n- **zn-change** - Emitted when a block edit is committed and the value changes.\n\n### **Methods:**\n - **focus()** - Starts editing the first block, or a new block if the document is empty.\n- **blur()** - Commits any in-progress block or raw edit.\n\n### **CSS Properties:**\n - **--remarkd-editor-max-height** - The tallest the editor grows before its body scrolls. Defaults to `100dvh`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The always-visible block-insert and inline-formatting toolbar.\n- **raw-toggle** - The button that switches between the block view and the raw source view.\n- **block** - A rendered block wrapper.\n- **rendered** - The rendered remarkd output of a block.\n- **conditional** - A labelled wrapper for an ifdef/ifndef/ifeval/iftrue/iffalse/ifempty/ifnempty range.\n- **variable** - A chip rendered for a document attribute, title, or bracket line.\n- **input** - The textarea shown while editing a block.\n- **raw** - The full-document textarea shown in raw source mode.\n- **slash-menu** - The `zn-slash-menu` opened by typing \"/\" in an empty block.\n- **image-controls** - The caption / alignment / size panel shown when an image block is clicked.\n- **include** - The chip rendered in place of an `include::` directive.\n- **include-picker** - The inline Include picker opened from the toolbar or \"/include\".",
+      "description": "A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted on each keystroke while editing a block.\n- **zn-change** - Emitted when a block edit is committed and the value changes.\n\n### **Methods:**\n - **focus()** - Starts editing the first block, or a new block if the document is empty.\n- **blur()** - Commits any in-progress block or raw edit.\n\n### **CSS Properties:**\n - **--remarkd-editor-max-height** - The tallest the editor grows before its body scrolls. Defaults to `100dvh`. _(default: undefined)_\n- **--remarkd-editor-min-height** - The shortest the body renders while empty. Defaults to `10rem`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The always-visible block-insert and inline-formatting toolbar.\n- **raw-toggle** - The button that switches between the block view and the raw source view.\n- **block** - A rendered block wrapper.\n- **rendered** - The rendered remarkd output of a block.\n- **conditional** - A labelled wrapper for an ifdef/ifndef/ifeval/iftrue/iffalse/ifempty/ifnempty range.\n- **variable** - A chip rendered for a document attribute, title, or bracket line.\n- **input** - The textarea shown while editing a block.\n- **raw** - The full-document textarea shown in raw source mode.\n- **slash-menu** - The `zn-slash-menu` opened by typing \"/\" in an empty block.\n- **image-controls** - The caption / alignment / size panel shown when an image block is clicked.\n- **include** - The chip rendered in place of an `include::` directive.\n- **include-picker** - The inline Include picker opened from the toolbar or \"/include\".",
       "attributes": [
         {
           "name": "slash-recent-key",

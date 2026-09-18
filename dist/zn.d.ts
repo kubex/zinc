@@ -877,6 +877,7 @@ declare module "components/confirm/confirm.component" {
         content: string;
         confirmText: string;
         cancelText: string;
+        closeText: string;
         hideIcon: boolean;
         /**
          * Show a loading state when the dialog is submitted.

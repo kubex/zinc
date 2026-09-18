@@ -70,6 +70,8 @@ export default class ZnConfirm extends ZincElement {
 
   @property() cancelText: string = "Cancel";
 
+  @property() closeText: string = "Close";
+
   @property({type: Boolean, attribute: 'hide-icon'}) hideIcon: boolean = false;
 
   /**
@@ -228,12 +230,16 @@ export default class ZnConfirm extends ZincElement {
             <slot></slot>`}
         </div>
 
-        <zn-button outline color="${this.type}" slot="footer" dialog-closer disabled=${this.loading || nothing}>
-          ${this.cancelText}
-        </zn-button>
-        <zn-button color="${this.type}" slot="footer" @click="${this.submitDialog}" disabled=${this.loading || nothing}>
-          ${this.confirmText}
-        </zn-button>
+        ${this.failed ? html`
+          <zn-button color="${this.type}" slot="footer" dialog-closer>
+            ${this.closeText}
+          </zn-button>` : html`
+          <zn-button outline color="${this.type}" slot="footer" dialog-closer disabled=${this.loading || nothing}>
+            ${this.cancelText}
+          </zn-button>
+          <zn-button color="${this.type}" slot="footer" @click="${this.submitDialog}" disabled=${this.loading || nothing}>
+            ${this.confirmText}
+          </zn-button>`}
 
         <slot name="footer-text" slot="footer-text">${this.footerText}</slot>
       </zn-dialog>`;

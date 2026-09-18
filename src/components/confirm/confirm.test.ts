@@ -28,7 +28,7 @@ async function submittedConfirm() {
   click(buttons[1]);
   await (confirm as never as {updateComplete: Promise<void>}).updateComplete;
 
-  return {confirm, form, dialog, cancel: buttons[0] as HTMLElement & {disabled: boolean}};
+  return {confirm, form, dialog};
 }
 
 const closer = (dialog: Element) => dialog.shadowRoot!.querySelector('.dialog__close')!;
@@ -62,7 +62,7 @@ describe('<zn-confirm-modal>', () => {
   });
 
   it('reports failure when the response carries a danger alert', async () => {
-    const {confirm, form, dialog, cancel} = await submittedConfirm();
+    const {confirm, form, dialog} = await submittedConfirm();
 
     settle(form, 'complete', {
       response: {status: 200, actions: [{action: 'alert', style: 'error', title: 'Deployment stopped'}]}
@@ -72,8 +72,19 @@ describe('<zn-confirm-modal>', () => {
     expect(confirm.shadowRoot!.textContent).to.contain('Failed');
     expect(confirm.shadowRoot!.textContent).to.contain('Deployment stopped');
     expect(confirm.shadowRoot!.textContent).to.not.contain('Loading');
-    expect(cancel.disabled).to.be.false;
     expect(closer(dialog).disabled).to.be.false;
+  });
+
+  it('offers only a close button once the request has failed', async () => {
+    const {confirm, form} = await submittedConfirm();
+
+    settle(form, 'error', {});
+    await (confirm as never as {updateComplete: Promise<void>}).updateComplete;
+
+    const buttons = confirm.shadowRoot!.querySelectorAll('zn-button[slot="footer"]');
+    expect(buttons.length).to.equal(1);
+    expect(buttons[0].textContent!.trim()).to.equal('Close');
+    expect(buttons[0].hasAttribute('dialog-closer')).to.be.true;
   });
 
   it('reports failure when the request errors', async () => {

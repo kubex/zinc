@@ -342,6 +342,7 @@ function renderInlineConditional(block: string): TemplateResult | null {
  * @csspart include-picker - The inline Include picker opened from the toolbar or "/include".
  *
  * @cssproperty --remarkd-editor-max-height - The tallest the editor grows before its body scrolls. Defaults to `100dvh`.
+ * @cssproperty --remarkd-editor-min-height - The shortest the body renders while empty. Defaults to `10rem`.
  */
 export default class ZnRemarkdEditor extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);

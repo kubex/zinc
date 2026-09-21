@@ -24,8 +24,10 @@ import ZincElement from '../../internal/zinc-element';
 import ZnCollapsible from '../collapsible';
 import ZnIcon from '../icon';
 import ZnInput from '../input';
+import ZnOption from '../option';
 import ZnPagePaletteItem from './modules/page-palette-item';
 import ZnPageSectionCard from './modules/page-section-card';
+import ZnSelect from '../select';
 
 import styles from './page-builder.scss';
 
@@ -96,8 +98,10 @@ export default class ZnPageBuilder extends ZincElement {
     'zn-collapsible': ZnCollapsible,
     'zn-icon': ZnIcon,
     'zn-input': ZnInput,
+    'zn-option': ZnOption,
     'zn-page-palette-item': ZnPagePaletteItem,
     'zn-page-section-card': ZnPageSectionCard,
+    'zn-select': ZnSelect,
   };
 
   private readonly formControlController = new FormControlController(this);
@@ -115,10 +119,12 @@ export default class ZnPageBuilder extends ZincElement {
   @property({ reflect: true }) subheading = '';
 
   /**
-   * Section type key that must lead the page. The builder hoists an existing section of
-   * that type to the top, or inserts an empty one, and pins it there: it can't be
-   * removed, reordered or dragged into a slot, and nothing can be dropped above it.
-   * Its content stays fully editable in the inspector.
+   * Section type keys that may lead the page, comma separated. The builder hoists an
+   * existing section of any of them to the top, or inserts an empty one of the first,
+   * and pins it there: it can't be removed, reordered or dragged into a slot, and
+   * nothing can be dropped above it. Its content stays fully editable in the
+   * inspector, which offers a swap between the allowed types when there is more
+   * than one.
    */
   @property({ attribute: 'required-first', reflect: true }) requiredFirst = '';
 
@@ -520,11 +526,27 @@ export default class ZnPageBuilder extends ZincElement {
    */
   private get _pinnedId(): string | null {
     const first = this._state.sections[0];
-    return this.requiredFirst && first?.type === this.requiredFirst ? first.id : null;
+    const types = this._requiredFirstTypes;
+    return first && types.includes(first.type) ? first.id : null;
+  }
+
+  /** The types `required-first` allows to lead the page, in the order given. */
+  private get _requiredFirstTypes(): string[] {
+    return this.requiredFirst.split(',').map(t => t.trim()).filter(Boolean);
   }
 
   private _isPinned(id: string): boolean {
     return this._pinnedId === id;
+  }
+
+  /**
+   * Whether the pinned section may be removed: only while another section can take
+   * the lead in its place, so the page is never left without one. It stays undraggable
+   * either way — the replacement arrives by removing this one, not by reordering.
+   */
+  private get _canUnpin(): boolean {
+    const types = this._requiredFirstTypes;
+    return this._state.sections.slice(1).some(s => types.includes(s.type));
   }
 
   /** Lowest top-level index a section may be added or moved to. */
@@ -533,14 +555,16 @@ export default class ZnPageBuilder extends ZincElement {
   }
 
   /**
-   * Sections reordered so `required-first` leads the page: an existing section of that
-   * type is hoisted to the front, otherwise an empty one is prepended. Returns the
+   * Sections reordered so `required-first` leads the page: an existing section of an
+   * allowed type is hoisted to the front, otherwise an empty one of the first type is
+   * prepended. Returns the
    * argument unchanged when there is nothing to do, so callers can compare by identity.
    */
   private _requireFirst(sections: PageSection[]): PageSection[] {
-    if (!this.requiredFirst || sections[0]?.type === this.requiredFirst) return sections;
-    const at = sections.findIndex(s => s.type === this.requiredFirst);
-    if (at === -1) return [{ id: generateSectionId(), type: this.requiredFirst, data: {} }, ...sections];
+    const types = this._requiredFirstTypes;
+    if (!types.length || types.includes(sections[0]?.type)) return sections;
+    const at = sections.findIndex(s => types.includes(s.type));
+    if (at === -1) return [{ id: generateSectionId(), type: types[0], data: {} }, ...sections];
     const hoisted = [...sections];
     hoisted.unshift(...hoisted.splice(at, 1));
     return hoisted;
@@ -693,7 +717,7 @@ export default class ZnPageBuilder extends ZincElement {
   }
 
   private _removeSection(id: string) {
-    if (this._isPinned(id)) return;
+    if (this._isPinned(id) && !this._canUnpin) return;
     const [removed, sections] = this._extract(id);
     if (!removed) return;
     this._pushHistory();
@@ -704,7 +728,8 @@ export default class ZnPageBuilder extends ZincElement {
     if (this._selectedId === id || removed.children?.some(c => c?.id === this._selectedId)) {
       this._select(null);
     }
-    this._commit({ sections });
+    // Removing the leading section hands the lead to the next one that may hold it.
+    this._commit({ sections: this._requireFirst(sections) });
   }
 
   private _duplicateSection(id: string) {
@@ -1139,6 +1164,7 @@ export default class ZnPageBuilder extends ZincElement {
   ) {
     const type = this.registry.get(section.type);
     const pinned = this._isPinned(section.id);
+    const locked = pinned && !this._canUnpin;
     return html`
       <zn-page-section-card
         class="${extraClass} ${this._draggingId === section.id ? 'dragging' : ''}"
@@ -1152,7 +1178,7 @@ export default class ZnPageBuilder extends ZincElement {
         color="${ifDefined(type?.color)}"
         ?selected="${this._selectedId === section.id}"
         ?unknown="${!type}"
-        ?locked="${pinned}"
+        ?locked="${locked}"
         @click="${(e: Event) => {
           e.stopPropagation();
           this._select(section.id);
@@ -1340,6 +1366,21 @@ export default class ZnPageBuilder extends ZincElement {
     this._commit({ sections: this._patchSection(id, s => ({ ...s, data: { ...s.data, ...patch } })) });
   }
 
+  /**
+   * Retypes the pinned section, keeping its id, name and data so the copy shared by
+   * the allowed types survives; keys the new type has no field for stay unread. The
+   * inspector form is stamped from the type's template, so it is rebuilt by hand —
+   * selection has not changed.
+   */
+  private _swapPinnedType(type: string) {
+    const id = this._pinnedId;
+    const section = this._findSection(id);
+    if (!id || !section || section.type === type || !this._requiredFirstTypes.includes(type)) return;
+    this._pushHistory();
+    this._commit({ sections: this._patchSection(id, s => ({ ...s, type })) });
+    this._buildInspectorForm();
+  }
+
   private _renameSection(id: string, label: string) {
     this._pushHistory();
     this._commit({ sections: this._patchSection(id, s => ({ ...s, label: label || undefined })) });
@@ -1379,6 +1420,22 @@ export default class ZnPageBuilder extends ZincElement {
     e.preventDefault();
     this._inspectorWidth = this._clampInspector((this._inspectorWidth ?? this._inspectorRect()) + step);
   };
+
+  /** Offered on the pinned section alone, and only where there is another type to take. */
+  private _renderSwapControl(section: PageSection) {
+    const types = this._requiredFirstTypes;
+    if (types.length < 2 || !this._isPinned(section.id)) return '';
+    return html`
+      <zn-select
+        class="inspector__swap"
+        label="Section type"
+        help-text="Swaps the section leading the page, keeping the settings both types share."
+        .value="${section.type}"
+        @zn-change="${(e: Event) => this._swapPinnedType(String((e.target as ZnSelect).value ?? ''))}">
+        ${types.map(t => html`
+          <zn-option value="${t}">${this.registry.get(t)?.label ?? t}</zn-option>`)}
+      </zn-select>`;
+  }
 
   private _renderInspector() {
     const section = this._selectedSection();
@@ -1430,6 +1487,7 @@ export default class ZnPageBuilder extends ZincElement {
             label="Section name"
             .value="${section.label ?? type?.label ?? ''}"
             @zn-change="${(e: Event) => this._renameSection(section.id, String((e.target as ZnInput).value ?? ''))}"></zn-input>
+          ${this._renderSwapControl(section)}
           ${type?.slotsMax === undefined ? '' : html`
             <zn-input
               class="inspector__slots"

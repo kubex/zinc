@@ -988,6 +988,112 @@ describe('<zn-page-builder>', () => {
     expect(el.state.sections[1].children?.[0] ?? null, 'slot left empty').to.be.null;
   });
 
+  it('should accept any of several required-first types', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder required-first="hero,hero-split"
+                       config='{"sections":[{"id":"t","type":"rich-text","data":{}},{"id":"h","type":"hero-split","data":{"title":"Help"}}]}'>
+        <template type="hero" slot="config" label="Hero"></template>
+        <template type="hero-split" slot="config" label="Split Hero"></template>
+        <template type="rich-text" slot="config" label="Rich Text"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    expect(el.state.sections.map(s => s.id), 'the alternate type is hoisted too').to.deep.equal(['h', 't']);
+    expect(el.shadowRoot!.querySelector('zn-page-section-card')!.hasAttribute('locked')).to.be.true;
+
+    const empty = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder required-first="hero,hero-split">
+        <template type="hero" slot="config" label="Hero"></template>
+        <template type="hero-split" slot="config" label="Split Hero"></template>
+      </zn-page-builder>`);
+    await empty.updateComplete;
+    expect(empty.state.sections.map(s => s.type), 'an empty page gets the first type').to.deep.equal(['hero']);
+  });
+
+  it('should swap the pinned section for another allowed type, keeping its content', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder required-first="hero,hero-split"
+                       config='{"sections":[{"id":"h","type":"hero","label":"Top","data":{"title":"Help","search":true}},{"id":"t","type":"rich-text","data":{}}]}'>
+        <template type="hero" slot="config" label="Hero"></template>
+        <template type="hero-split" slot="config" label="Split Hero">
+          <zn-input name="title"></zn-input>
+        </template>
+        <template type="rich-text" slot="config" label="Rich Text"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    el.shadowRoot!.querySelector('zn-page-section-card')!.dispatchEvent(new Event('click'));
+    await el.updateComplete;
+
+    const swap = el.shadowRoot!.querySelector<HTMLElement & { value: string }>('.inspector__swap')!;
+    expect(swap, 'swap control on the pinned section').to.exist;
+    expect([...swap.querySelectorAll('zn-option')].map(o => o.getAttribute('value')))
+      .to.deep.equal(['hero', 'hero-split']);
+
+    swap.value = 'hero-split';
+    swap.dispatchEvent(new CustomEvent('zn-change', {bubbles: true}));
+    await el.updateComplete;
+
+    const [pinned, rest] = el.state.sections;
+    expect(pinned.type, 'type swapped').to.equal('hero-split');
+    expect(pinned.id, 'same section').to.equal('h');
+    expect(pinned.label, 'keeps its name').to.equal('Top');
+    expect(pinned.data, 'keeps its content').to.deep.equal({title: 'Help', search: true});
+    expect(rest.id, 'the rest of the page is untouched').to.equal('t');
+    expect(el.shadowRoot!.querySelector('zn-page-section-card')!.hasAttribute('locked'), 'still pinned').to.be.true;
+
+    // The inspector now stamps the new type's fields, filled from the kept data.
+    const title = el.shadowRoot!.querySelector<HTMLInputElement>('.inspector__form [name="title"]');
+    expect(title?.value, 'inspector rebuilt for the new type').to.equal('Help');
+
+    el.undo();
+    await el.updateComplete;
+    expect(el.state.sections[0].type, 'undo puts the original type back').to.equal('hero');
+  });
+
+  it('should let the pinned section go once another may lead in its place', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder required-first="hero,hero-split"
+                       config='{"sections":[{"id":"h","type":"hero","data":{}},{"id":"t","type":"rich-text","data":{}},{"id":"s","type":"hero-split","data":{}}]}'>
+        <template type="hero" slot="config" label="Hero"></template>
+        <template type="hero-split" slot="config" label="Split Hero"></template>
+        <template type="rich-text" slot="config" label="Rich Text"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    const pinnedCard = el.shadowRoot!.querySelector('zn-page-section-card')!;
+    expect(pinnedCard.hasAttribute('locked'), 'a replaceable hero shows no lock').to.be.false;
+    expect(pinnedCard.getAttribute('draggable'), 'but still cannot be dragged').to.equal('false');
+    expect(pinnedCard.shadowRoot!.querySelector('zn-button[title="Remove section"]'), 'remove offered').to.exist;
+
+    pinnedCard.dispatchEvent(new CustomEvent('page-card-remove', {bubbles: true, composed: true}));
+    await el.updateComplete;
+
+    expect(el.state.sections.map(s => s.id), 'the other hero takes the lead').to.deep.equal(['s', 't']);
+    const nowPinned = el.shadowRoot!.querySelector('zn-page-section-card')!;
+    expect(nowPinned.hasAttribute('locked'), 'the last hero locks again').to.be.true;
+
+    nowPinned.dispatchEvent(new CustomEvent('page-card-remove', {bubbles: true, composed: true}));
+    await el.updateComplete;
+    expect(el.state.sections.map(s => s.id), 'the last hero cannot go').to.deep.equal(['s', 't']);
+
+    el.undo();
+    await el.updateComplete;
+    expect(el.state.sections.map(s => s.id), 'undo brings the removed hero back').to.deep.equal(['h', 't', 's']);
+  });
+
+  it('should offer no swap control when only one type may lead', async () => {
+    const el = await fixture<ZnPageBuilder>(html`
+      <zn-page-builder required-first="hero" config='{"sections":[{"id":"h","type":"hero","data":{}}]}'>
+        <template type="hero" slot="config" label="Hero"></template>
+      </zn-page-builder>`);
+    await el.updateComplete;
+
+    el.shadowRoot!.querySelector('zn-page-section-card')!.dispatchEvent(new Event('click'));
+    await el.updateComplete;
+    expect(el.shadowRoot!.querySelector('.inspector__swap')).to.not.exist;
+  });
+
   it('should leave the page alone without required-first', async () => {
     const el = await fixture<ZnPageBuilder>(html`
       <zn-page-builder config='{"sections":[{"id":"t","type":"rich-text","data":{}}]}'>

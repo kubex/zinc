@@ -2,7 +2,6 @@
 
 :host {
   display: inline-block;
-  cursor: pointer;
 }
 
 
@@ -11,6 +10,16 @@
   grid-template-areas: "stack";
   align-items: center;
   overflow: hidden;
+}
+
+// Only a click that toggles earns the pointer: a static or hover-only reveal does nothing on click.
+.reveal--clickable {
+  cursor: pointer;
+}
+
+// cursor inherits, so a static reveal has to opt out of a clickable container's pointer
+.reveal--static {
+  cursor: auto;
 }
 
 .reveal__text {

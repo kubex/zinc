@@ -4192,6 +4192,12 @@ declare module "components/data-table/data-table.component" {
          *is mirrored to the URL query string and restored from it on load, so the view is shareable.
          */
         sharable: boolean;
+        /**
+         * When set, extra request params (search-component field values) are nested under a
+         * `searchFields` object - with `q` mirroring the search text - instead of being merged at the
+         * root of the request body.
+         */
+        wrapSearchFields: boolean;
         groupBy: string;
         groups: string;
         itemsPerPage: number;

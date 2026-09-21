@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.150">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.151">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -79,7 +79,7 @@
         <a href="/">
           <img src="/assets/images/watermark.svg" alt="zinc" />
         </a>
-        <div class="sidebar-version">1.1.150</div>
+        <div class="sidebar-version">1.1.151</div>
       </header>
 
       <div class="sidebar-buttons">
@@ -621,6 +621,7 @@
             <li data-level="3"><a href="#programmatic-control">Programmatic Control</a></li>
             <li data-level="2"><a href="#data-format">Data Format</a></li>
             <li data-level="2"><a href="#request-format">Request Format</a></li>
+            <li data-level="3"><a href="#wrapped-search-fields">Wrapped search fields</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
             <li data-level="2"><a href="#properties">Properties</a></li>
@@ -3198,25 +3199,48 @@
   <span class="token property">"sortDirection"</span><span class="token operator">:</span> <span class="token string">"asc"</span><span class="token punctuation">,</span>
   <span class="token property">"filter"</span><span class="token operator">:</span> <span class="token string">""</span><span class="token punctuation">,</span>
   <span class="token property">"search"</span><span class="token operator">:</span> <span class="token string">"search term"</span><span class="token punctuation">,</span>
+  <span class="token property">"status"</span><span class="token operator">:</span> <span class="token string">"open"</span>
+<span class="token punctuation">}</span>
+</code><zn-copy-button class="copy-code-button" from="code-block-483"></zn-copy-button></pre>
+          <p>
+            Field values from inputs slotted into a <code>zn-data-table-search</code>, and anything set on the table’s
+            <code>requestParams</code>, are merged at the <strong>root</strong> of the body under their own
+            <code>name</code>. The search text itself is sent as <code>search</code>.
+          </p>
+          <p>
+            Parameters from the <code>inputs</code> slot are context/system values (a CSRF token, a package name, and
+            the like) sent with every request. They are merged at the root too.
+          </p>
+          <h3 id="wrapped-search-fields" class="anchor-heading">
+            Wrapped search fields<a
+              href="#wrapped-search-fields"
+              aria-label='Direct link to "Wrapped search fields"'
+            ></a>
+          </h3>
+          <p>
+            Add <code>wrap-search-fields</code> to nest the search field values under a <code>searchFields</code> object
+            instead, so a backend can bind them to a single map rather than arbitrary top-level keys:
+          </p>
+          <pre><code class="language-html" id="code-block-484"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table</span> <span class="token attr-name">wrap-search-fields</span> <span class="token attr-name">data-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/data<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-484"></zn-copy-button></pre>
+          <pre><code class="language-json" id="code-block-485"><span class="token punctuation">{</span>
+  <span class="token property">"page"</span><span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+  <span class="token property">"perPage"</span><span class="token operator">:</span> <span class="token number">10</span><span class="token punctuation">,</span>
+  <span class="token property">"sortColumn"</span><span class="token operator">:</span> <span class="token string">"name"</span><span class="token punctuation">,</span>
+  <span class="token property">"sortDirection"</span><span class="token operator">:</span> <span class="token string">"asc"</span><span class="token punctuation">,</span>
+  <span class="token property">"filter"</span><span class="token operator">:</span> <span class="token string">""</span><span class="token punctuation">,</span>
+  <span class="token property">"search"</span><span class="token operator">:</span> <span class="token string">"search term"</span><span class="token punctuation">,</span>
   <span class="token property">"searchFields"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token property">"q"</span><span class="token operator">:</span> <span class="token string">"search term"</span><span class="token punctuation">,</span>
     <span class="token property">"status"</span><span class="token operator">:</span> <span class="token string">"open"</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
-</code><zn-copy-button class="copy-code-button" from="code-block-483"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-485"></zn-copy-button></pre>
           <p>
-            Field values from a slotted <code>zn-data-table-search</code>’s
-            <a href="/components/data-table-search#filter-fields"><code>fields</code> slot</a> are wrapped under
-            <code>searchFields</code>, keeping them out of the request root so the backend can bind them to a single map
-            rather than arbitrary top-level keys. <code>q</code> mirrors the <code>search</code> text, and the root
-            <code>search</code> key is retained for back-compatibility. Empty values are dropped, and
-            <code>searchFields</code> is <code>null</code> when nothing meaningful remains — no search text and no field
-            values — so the backend can treat that as “no search”.
-          </p>
-          <p>
-            Parameters from the <code>inputs</code> slot are context/system values (a CSRF token, a package name, and
-            the like) sent with every request. They are merged at the <strong>root</strong> of the body, not inside
-            <code>searchFields</code>.
+            <code>q</code> mirrors the <code>search</code> text, which is still sent at the root. Empty values are
+            dropped, and <code>searchFields</code> is <code>null</code> when nothing meaningful remains — no search text
+            and no field values — so the backend can treat that as “no search”. Parameters from the
+            <code>inputs</code> slot stay at the root either way.
           </p>
 
           <h2 id="importing" class="anchor-heading">
@@ -3240,7 +3264,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-484"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.150/dist/components/data-table/data-table.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-484"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-486"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.151/dist/components/data-table/data-table.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-486"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -3255,12 +3279,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-485"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.150/dist/components/data-table/data-table.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-485"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-487"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.151/dist/components/data-table/data-table.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-487"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-486"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/data-table/data-table.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-486"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-488"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/data-table/data-table.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-488"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -3381,6 +3405,31 @@
                   <td>
                     When set, the table’s non-default state (search, filter, sort, page, per-page and field values) is
                     mirrored to the URL query string and restored from it on load, so the view is shareable.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">wrapSearchFields</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> wrap-search-fields </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    When set, extra request params (search-component field values) are nested under a
+                    <code>searchFields</code> object - with <code>q</code> mirroring the search text - instead of being
+                    merged at the root of the request body.
                   </td>
                   <td style="text-align: center"></td>
                   <td>

@@ -978,3 +978,62 @@ describe('<zn-select> requires', () => {
     expect(c.disabled, 'both filled').to.be.false;
   });
 });
+
+describe('<zn-select> empty state', () => {
+  const emptyState = (el: ZnSelect) =>
+    el.shadowRoot!.querySelector<HTMLElement>('[part="empty-state"]')!;
+
+  it('should tell the user there is nothing to pick when opened with no options', async () => {
+    const el = await fixture<ZnSelect>(html`
+      <zn-select placeholder="Select a reason"></zn-select>`);
+    await el.show();
+    await el.updateComplete;
+
+    expect(emptyState(el).hidden).to.be.false;
+    expect(emptyState(el).textContent!.trim()).to.equal('No options available');
+  });
+
+  it('should stay hidden when the select has options', async () => {
+    const el = await fixture<ZnSelect>(html`
+      <zn-select>
+        <zn-option value="apple">Apple</zn-option>
+      </zn-select>`);
+    await el.show();
+    await el.updateComplete;
+
+    expect(emptyState(el).hidden).to.be.true;
+  });
+
+  it('should distinguish a filtered-out list from an empty one', async () => {
+    const el = await fixture<ZnSelect>(html`
+      <zn-select search>
+        <zn-option value="apple">Apple</zn-option>
+      </zn-select>`);
+    await el.show();
+    await el.updateComplete;
+
+    const displayInput = el.shadowRoot!.querySelector<HTMLInputElement>('.select__display-input')!;
+    displayInput.value = 'zzz';
+    displayInput.dispatchEvent(new Event('input'));
+    await el.updateComplete;
+
+    expect(emptyState(el).hidden).to.be.false;
+    expect(emptyState(el).textContent!.trim()).to.equal('No matching options');
+  });
+
+  it('should drop the empty state once options arrive while open', async () => {
+    const el = await fixture<ZnSelect>(html`
+      <zn-select></zn-select>`);
+    await el.show();
+    await el.updateComplete;
+    expect(emptyState(el).hidden, 'empty before options').to.be.false;
+
+    const option = document.createElement('zn-option');
+    option.value = 'apple';
+    option.textContent = 'Apple';
+    el.appendChild(option);
+    await waitUntil(() => emptyState(el).hidden);
+
+    expect(emptyState(el).hidden).to.be.true;
+  });
+});

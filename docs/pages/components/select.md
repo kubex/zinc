@@ -117,6 +117,22 @@ Use the `placeholder` attribute to add a placeholder.
 </zn-select>
 ```
 
+### Empty State
+
+A select with nothing to choose from says so when opened, rather than showing an empty dropdown. The wording distinguishes a list that is empty from one a search has filtered down to nothing: type `zzz` into the second select below to see it.
+
+```html:preview
+<zn-select label="No options" placeholder="Select a reason"></zn-select>
+<br />
+<zn-select label="Searched to nothing" search placeholder="Type to search...">
+  <zn-option value="au">Australia</zn-option>
+  <zn-option value="br">Brazil</zn-option>
+  <zn-option value="ca">Canada</zn-option>
+</zn-select>
+```
+
+Options that arrive later — from `data-uri`, a remote search, or appended `zn-option` elements — clear the message as soon as they land, so an empty list at first render is safe.
+
 ### Clearable
 
 Use the `clearable` attribute to make the control clearable. The clear button only appears when an option is selected.

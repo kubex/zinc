@@ -846,7 +846,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         group.hidden = false;
       });
       this.updateOptGroupSeparators();
-      this._noResultsVisible = false;
+      this.updateEmptyState();
       return;
     }
 
@@ -885,6 +885,19 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         this.setCurrentOption(firstVisible);
       }
     }
+  }
+
+  /**
+   * Nothing for the user to pick: either the option list is empty or every option is filtered out.
+   * The search paths track this themselves, so this covers opening a dropdown with no query.
+   */
+  private updateEmptyState() {
+    const options = this.getAllOptions();
+    this._noResultsVisible = options.length === 0 || options.every(option => option.hidden);
+  }
+
+  private get emptyStateText(): string {
+    return this._searchQuery ? 'No matching options' : 'No options available';
   }
 
   /** Clears the search query and shows all options */
@@ -1131,6 +1144,10 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       this.valueHasChanged = true;
       this.emit('zn-input');
       this.emit('zn-change');
+    }
+
+    if (this.open) {
+      this.updateEmptyState();
     }
   }
 
@@ -1653,6 +1670,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         this.displayInput.readOnly = false;
       }
 
+      this.updateEmptyState();
+
       // Show
       this.emit('zn-show');
       this.addOpenListeners();
@@ -2041,7 +2060,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                   : html`
                     <div part="empty-state" class="select__empty-state"
                          ?hidden=${!this._noResultsVisible || this._freeTextAddValue !== null}>
-                      No matching options
+                      ${this.emptyStateText}
                     </div>`
               }
             </div>

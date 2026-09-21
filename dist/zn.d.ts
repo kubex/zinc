@@ -11696,8 +11696,10 @@ declare module "components/page-builder/page-builder.component" {
     import ZnCollapsible from "components/collapsible/index";
     import ZnIcon from "components/icon/index";
     import ZnInput from "components/input/index";
+    import ZnOption from "components/option/index";
     import ZnPagePaletteItem from "components/page-builder/modules/page-palette-item/index";
     import ZnPageSectionCard from "components/page-builder/modules/page-section-card/index";
+    import ZnSelect from "components/select/index";
     /**
      * @summary A config-driven page composer: a palette of predefined section types, a linear
      *   canvas of section cards, and an inspector for editing each section's content.
@@ -11737,8 +11739,10 @@ declare module "components/page-builder/page-builder.component" {
             'zn-collapsible': typeof ZnCollapsible;
             'zn-icon': typeof ZnIcon;
             'zn-input': typeof ZnInput;
+            'zn-option': typeof ZnOption;
             'zn-page-palette-item': typeof ZnPagePaletteItem;
             'zn-page-section-card': typeof ZnPageSectionCard;
+            'zn-select': typeof ZnSelect;
         };
         private readonly formControlController;
         /** The name of the control, submitted as a name/value pair with form data. */
@@ -11750,10 +11754,12 @@ declare module "components/page-builder/page-builder.component" {
         heading: string;
         subheading: string;
         /**
-         * Section type key that must lead the page. The builder hoists an existing section of
-         * that type to the top, or inserts an empty one, and pins it there: it can't be
-         * removed, reordered or dragged into a slot, and nothing can be dropped above it.
-         * Its content stays fully editable in the inspector.
+         * Section type keys that may lead the page, comma separated. The builder hoists an
+         * existing section of any of them to the top, or inserts an empty one of the first,
+         * and pins it there: it can't be removed, reordered or dragged into a slot, and
+         * nothing can be dropped above it. Its content stays fully editable in the
+         * inspector, which offers a swap between the allowed types when there is more
+         * than one.
          */
         requiredFirst: string;
         /** Section types to make available, registered into the internal registry. */
@@ -11870,12 +11876,21 @@ declare module "components/page-builder/page-builder.component" {
          * lock leaks into the persisted config.
          */
         private get _pinnedId();
+        /** The types `required-first` allows to lead the page, in the order given. */
+        private get _requiredFirstTypes();
         private _isPinned;
+        /**
+         * Whether the pinned section may be removed: only while another section can take
+         * the lead in its place, so the page is never left without one. It stays undraggable
+         * either way — the replacement arrives by removing this one, not by reordering.
+         */
+        private get _canUnpin();
         /** Lowest top-level index a section may be added or moved to. */
         private get _firstFreeIndex();
         /**
-         * Sections reordered so `required-first` leads the page: an existing section of that
-         * type is hoisted to the front, otherwise an empty one is prepended. Returns the
+         * Sections reordered so `required-first` leads the page: an existing section of an
+         * allowed type is hoisted to the front, otherwise an empty one of the first type is
+         * prepended. Returns the
          * argument unchanged when there is nothing to do, so callers can compare by identity.
          */
         private _requireFirst;
@@ -11971,12 +11986,21 @@ declare module "components/page-builder/page-builder.component" {
         /** Handles change/input events bubbling from stamped form controls. */
         private _onInspectorInput;
         private _updateSectionData;
+        /**
+         * Retypes the pinned section, keeping its id, name and data so the copy shared by
+         * the allowed types survives; keys the new type has no field for stay unread. The
+         * inspector form is stamped from the type's template, so it is rebuilt by hand —
+         * selection has not changed.
+         */
+        private _swapPinnedType;
         private _renameSection;
         /** Width the inspector may be dragged to, against the builder's own width. */
         private _clampInspector;
         private _inspectorRect;
         private _onResizeStart;
         private _onResizeKey;
+        /** Offered on the pinned section alone, and only where there is another type to take. */
+        private _renderSwapControl;
         private _renderInspector;
         render(): import("lit-html").TemplateResult<1>;
     }

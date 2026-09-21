@@ -844,6 +844,269 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/background/background.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnBackground",
+          "cssProperties": [
+            {
+              "description": "Fallback colour when the `color` attribute is not set.",
+              "name": "--zn-background-color"
+            },
+            {
+              "description": "Position of the background image. Defaults to `center`.",
+              "name": "--zn-background-image-position"
+            },
+            {
+              "description": "Direction of the overlay gradient. Defaults to `110deg`.",
+              "name": "--zn-background-overlay-angle"
+            },
+            {
+              "description": "Colour of the floating icons. Defaults to `currentColor`.",
+              "name": "--zn-background-floating-icon-color"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's full-size background canvas.",
+              "name": "base"
+            },
+            {
+              "description": "The decorative background image.",
+              "name": "image"
+            },
+            {
+              "description": "The contrast overlay between the image and content.",
+              "name": "overlay"
+            },
+            {
+              "description": "The non-interactive layer containing the floating icons.",
+              "name": "floating-icons"
+            },
+            {
+              "description": "Each floating `zn-icon`.",
+              "name": "floating-icon"
+            },
+            {
+              "description": "The wrapper around the default slot.",
+              "name": "content"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Content displayed above the background layers.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{'zn-icon': ZnIcon}"
+            },
+            {
+              "kind": "field",
+              "name": "resizeObserver",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ResizeController<number>(this, { callback: entries => { const width = entries[0]?.contentRect.width ?? this.offsetWidth; return Math.max(1, Math.min(width * 0.05, 150)); }, })"
+            },
+            {
+              "kind": "field",
+              "name": "image",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "URL of the decorative background image.",
+              "attribute": "image"
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "CSS colour painted beneath the image.",
+              "attribute": "color"
+            },
+            {
+              "kind": "field",
+              "name": "imageStrength",
+              "type": {
+                "text": "BackgroundImageStrength"
+              },
+              "default": "'full'",
+              "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
+              "attribute": "image-strength",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "motion",
+              "type": {
+                "text": "BackgroundMotion"
+              },
+              "default": "'none'",
+              "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
+              "attribute": "motion",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "overlay",
+              "type": {
+                "text": "BackgroundOverlay"
+              },
+              "default": "'soft'",
+              "description": "Strength of the contrast gradient above the image.",
+              "attribute": "overlay",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "overlayTone",
+              "type": {
+                "text": "BackgroundOverlayTone"
+              },
+              "default": "'light'",
+              "description": "Whether the overlay uses a light or dark contrast treatment.",
+              "attribute": "overlay-tone",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "floatingIcons",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
+              "attribute": "floating-icons"
+            },
+            {
+              "kind": "field",
+              "name": "paused",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Pauses background motion without changing the selected motion treatment.",
+              "attribute": "paused",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "image",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "URL of the decorative background image.",
+              "fieldName": "image"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "CSS colour painted beneath the image.",
+              "fieldName": "color"
+            },
+            {
+              "name": "image-strength",
+              "type": {
+                "text": "BackgroundImageStrength"
+              },
+              "default": "'full'",
+              "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
+              "fieldName": "imageStrength"
+            },
+            {
+              "name": "motion",
+              "type": {
+                "text": "BackgroundMotion"
+              },
+              "default": "'none'",
+              "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
+              "fieldName": "motion"
+            },
+            {
+              "name": "overlay",
+              "type": {
+                "text": "BackgroundOverlay"
+              },
+              "default": "'soft'",
+              "description": "Strength of the contrast gradient above the image.",
+              "fieldName": "overlay"
+            },
+            {
+              "name": "overlay-tone",
+              "type": {
+                "text": "BackgroundOverlayTone"
+              },
+              "default": "'light'",
+              "description": "Whether the overlay uses a light or dark contrast treatment.",
+              "fieldName": "overlayTone"
+            },
+            {
+              "name": "floating-icons",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
+              "fieldName": "floatingIcons"
+            },
+            {
+              "name": "paused",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Pauses background motion without changing the selected motion treatment.",
+              "fieldName": "paused"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.",
+          "tagNameWithoutPrefix": "background",
+          "tagName": "zn-background",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n *\n * @documentation https://zinc.style/components/background\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - Content displayed above the background layers.\n *\n * @csspart base - The component's full-size background canvas.\n * @csspart image - The decorative background image.\n * @csspart overlay - The contrast overlay between the image and content.\n * @csspart floating-icons - The non-interactive layer containing the floating icons.\n * @csspart floating-icon - Each floating `zn-icon`.\n * @csspart content - The wrapper around the default slot.\n *\n * @cssproperty --zn-background-color - Fallback colour when the `color` attribute is not set.\n * @cssproperty --zn-background-image-position - Position of the background image. Defaults to `center`.\n * @cssproperty --zn-background-overlay-angle - Direction of the overlay gradient. Defaults to `110deg`.\n * @cssproperty --zn-background-floating-icon-color - Colour of the floating icons. Defaults to `currentColor`.\n */",
+          "documentation": "https://zinc.style/components/background",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-icon"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnBackground",
+            "module": "components/background/background.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/bulk-actions/bulk-actions.js",
       "declarations": [
         {
@@ -1195,269 +1458,6 @@
           "declaration": {
             "name": "ZnBulkActions",
             "module": "components/bulk-actions/bulk-actions.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/background/background.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnBackground",
-          "cssProperties": [
-            {
-              "description": "Fallback colour when the `color` attribute is not set.",
-              "name": "--zn-background-color"
-            },
-            {
-              "description": "Position of the background image. Defaults to `center`.",
-              "name": "--zn-background-image-position"
-            },
-            {
-              "description": "Direction of the overlay gradient. Defaults to `110deg`.",
-              "name": "--zn-background-overlay-angle"
-            },
-            {
-              "description": "Colour of the floating icons. Defaults to `currentColor`.",
-              "name": "--zn-background-floating-icon-color"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's full-size background canvas.",
-              "name": "base"
-            },
-            {
-              "description": "The decorative background image.",
-              "name": "image"
-            },
-            {
-              "description": "The contrast overlay between the image and content.",
-              "name": "overlay"
-            },
-            {
-              "description": "The non-interactive layer containing the floating icons.",
-              "name": "floating-icons"
-            },
-            {
-              "description": "Each floating `zn-icon`.",
-              "name": "floating-icon"
-            },
-            {
-              "description": "The wrapper around the default slot.",
-              "name": "content"
-            }
-          ],
-          "slots": [
-            {
-              "description": "Content displayed above the background layers.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{'zn-icon': ZnIcon}"
-            },
-            {
-              "kind": "field",
-              "name": "resizeObserver",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new ResizeController<number>(this, { callback: entries => { const width = entries[0]?.contentRect.width ?? this.offsetWidth; return Math.max(1, Math.min(width * 0.05, 150)); }, })"
-            },
-            {
-              "kind": "field",
-              "name": "image",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "URL of the decorative background image.",
-              "attribute": "image"
-            },
-            {
-              "kind": "field",
-              "name": "color",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "CSS colour painted beneath the image.",
-              "attribute": "color"
-            },
-            {
-              "kind": "field",
-              "name": "imageStrength",
-              "type": {
-                "text": "BackgroundImageStrength"
-              },
-              "default": "'full'",
-              "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
-              "attribute": "image-strength",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "motion",
-              "type": {
-                "text": "BackgroundMotion"
-              },
-              "default": "'none'",
-              "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
-              "attribute": "motion",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "overlay",
-              "type": {
-                "text": "BackgroundOverlay"
-              },
-              "default": "'soft'",
-              "description": "Strength of the contrast gradient above the image.",
-              "attribute": "overlay",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "overlayTone",
-              "type": {
-                "text": "BackgroundOverlayTone"
-              },
-              "default": "'light'",
-              "description": "Whether the overlay uses a light or dark contrast treatment.",
-              "attribute": "overlay-tone",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "floatingIcons",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
-              "attribute": "floating-icons"
-            },
-            {
-              "kind": "field",
-              "name": "paused",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Pauses background motion without changing the selected motion treatment.",
-              "attribute": "paused",
-              "reflects": true
-            }
-          ],
-          "attributes": [
-            {
-              "name": "image",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "URL of the decorative background image.",
-              "fieldName": "image"
-            },
-            {
-              "name": "color",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "CSS colour painted beneath the image.",
-              "fieldName": "color"
-            },
-            {
-              "name": "image-strength",
-              "type": {
-                "text": "BackgroundImageStrength"
-              },
-              "default": "'full'",
-              "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
-              "fieldName": "imageStrength"
-            },
-            {
-              "name": "motion",
-              "type": {
-                "text": "BackgroundMotion"
-              },
-              "default": "'none'",
-              "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
-              "fieldName": "motion"
-            },
-            {
-              "name": "overlay",
-              "type": {
-                "text": "BackgroundOverlay"
-              },
-              "default": "'soft'",
-              "description": "Strength of the contrast gradient above the image.",
-              "fieldName": "overlay"
-            },
-            {
-              "name": "overlay-tone",
-              "type": {
-                "text": "BackgroundOverlayTone"
-              },
-              "default": "'light'",
-              "description": "Whether the overlay uses a light or dark contrast treatment.",
-              "fieldName": "overlayTone"
-            },
-            {
-              "name": "floating-icons",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
-              "fieldName": "floatingIcons"
-            },
-            {
-              "name": "paused",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Pauses background motion without changing the selected motion treatment.",
-              "fieldName": "paused"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.",
-          "tagNameWithoutPrefix": "background",
-          "tagName": "zn-background",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n *\n * @documentation https://zinc.style/components/background\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - Content displayed above the background layers.\n *\n * @csspart base - The component's full-size background canvas.\n * @csspart image - The decorative background image.\n * @csspart overlay - The contrast overlay between the image and content.\n * @csspart floating-icons - The non-interactive layer containing the floating icons.\n * @csspart floating-icon - Each floating `zn-icon`.\n * @csspart content - The wrapper around the default slot.\n *\n * @cssproperty --zn-background-color - Fallback colour when the `color` attribute is not set.\n * @cssproperty --zn-background-image-position - Position of the background image. Defaults to `center`.\n * @cssproperty --zn-background-overlay-angle - Direction of the overlay gradient. Defaults to `110deg`.\n * @cssproperty --zn-background-floating-icon-color - Colour of the floating icons. Defaults to `currentColor`.\n */",
-          "documentation": "https://zinc.style/components/background",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-icon"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnBackground",
-            "module": "components/background/background.js"
           }
         }
       ]
@@ -12801,355 +12801,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/dialog/dialog.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnDialog",
-          "cssProperties": [
-            {
-              "description": "The preferred width of the dialog. Note the dialog will shrink to accommodate smaller screens.",
-              "name": "--width"
-            },
-            {
-              "description": "The amount of padding to use for the header.",
-              "name": "--header-spacing"
-            },
-            {
-              "description": "The amount of padding to use for the body.",
-              "name": "--body-spacing"
-            },
-            {
-              "description": "The amount of padding to use for the footer.",
-              "name": "--footer-spacing"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            },
-            {
-              "description": "The dialog's header. This element wraps the title and header actions.",
-              "name": "header"
-            },
-            {
-              "description": "Optional actions to add to the header. Works best with `<zn-button>` elements.",
-              "name": "header-actions"
-            },
-            {
-              "description": "The dialog's title.",
-              "name": "title"
-            },
-            {
-              "description": "The dialog's close button.",
-              "name": "close-button"
-            },
-            {
-              "description": "The close buttons exported `base` part.",
-              "name": "close-button__base"
-            },
-            {
-              "description": "The dialog's body.",
-              "name": "body"
-            },
-            {
-              "description": "The dialog's footer.",
-              "name": "footer"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "The dialog's label. Alternatively you can use the `label` attribute.",
-              "name": "label"
-            },
-            {
-              "description": "Optional icon to add to the left of the dialog's label (title). A color will be applied to the icon depending on the dialog variant.",
-              "name": "header-icon"
-            },
-            {
-              "description": "Optional Intro text to display below the icon, when using the variant `announcement`.",
-              "name": "announcement-intro"
-            },
-            {
-              "description": "Optional actions to add to the header. Works best with `<zn-button>` elements.",
-              "name": "header-actions"
-            },
-            {
-              "description": "The dialog's footer. This is typically used for buttons representing various options.",
-              "name": "footer"
-            },
-            {
-              "description": "Optional text to include below the footer buttons, when using the variant `announcement`.",
-              "name": "footer-text"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ 'zn-button': ZnButton }"
-            },
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, '[default]', 'footer')"
-            },
-            {
-              "kind": "field",
-              "name": "closeWatcher",
-              "type": {
-                "text": "CloseWatcher | null"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "dialog",
-              "type": {
-                "text": "HTMLDialogElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "closer",
-              "type": {
-                "text": "HTMLButtonElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'default' | 'warning' | 'announcement'"
-              },
-              "default": "'default'",
-              "description": "The dialog's theme variant.",
-              "attribute": "variant",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large' | 'custom'"
-              },
-              "default": "'medium'",
-              "description": "The dialog's size.",
-              "attribute": "size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Indicated whether of not the dialog is open. You can toggle this attribute to show and hide the dialog, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the dialog's state.",
-              "attribute": "open",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "The dialog's label as displayed in the header. You should always include a relevant label even when using\n`no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.",
-              "attribute": "label",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "cosmic",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "cosmic",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "noHeader",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Disables the header. This will also remove the default close button, so please ensure you provide an easy,\naccessible way to close the dialog.",
-              "attribute": "no-header",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "trigger",
-              "type": {
-                "text": "string"
-              },
-              "description": "The dialog's trigger element. This is used to open the dialog when clicked. If you do not provide a trigger, you\nwill need to manually open the dialog using the `show()` method.",
-              "attribute": "trigger",
-              "reflects": true
-            },
-            {
-              "kind": "method",
-              "name": "requestClose",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "source",
-                  "type": {
-                    "text": "'close-button' | 'keyboard' | 'overlay'"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "addOpenListeners",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "removeOpenListeners",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "show",
-              "description": "Shows the dialog."
-            },
-            {
-              "kind": "method",
-              "name": "hide",
-              "description": "Hides the dialog."
-            },
-            {
-              "kind": "field",
-              "name": "closeClickHandler",
-              "privacy": "private"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted when the dialog is opens.",
-              "name": "zn-show"
-            },
-            {
-              "description": "Emitted when the dialog is closed.",
-              "name": "zn-close"
-            },
-            {
-              "type": {
-                "text": "{ source: 'close-button' | 'keyboard' | 'overlay' }"
-              },
-              "description": "Emitted when the user attempts to close the dialog by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the dialog open. Avoid using this unless closing the dialog will result in destructive behavior such as data loss.",
-              "name": "zn-request-close"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "variant",
-              "type": {
-                "text": "'default' | 'warning' | 'announcement'"
-              },
-              "default": "'default'",
-              "description": "The dialog's theme variant.",
-              "fieldName": "variant"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large' | 'custom'"
-              },
-              "default": "'medium'",
-              "description": "The dialog's size.",
-              "fieldName": "size"
-            },
-            {
-              "name": "open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Indicated whether of not the dialog is open. You can toggle this attribute to show and hide the dialog, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the dialog's state.",
-              "fieldName": "open"
-            },
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "The dialog's label as displayed in the header. You should always include a relevant label even when using\n`no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.",
-              "fieldName": "label"
-            },
-            {
-              "name": "cosmic",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "cosmic"
-            },
-            {
-              "name": "no-header",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Disables the header. This will also remove the default close button, so please ensure you provide an easy,\naccessible way to close the dialog.",
-              "fieldName": "noHeader"
-            },
-            {
-              "name": "trigger",
-              "type": {
-                "text": "string"
-              },
-              "description": "The dialog's trigger element. This is used to open the dialog when clicked. If you do not provide a trigger, you\nwill need to manually open the dialog using the `show()` method.",
-              "fieldName": "trigger"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "dialog",
-          "tagName": "zn-dialog",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/dialog\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n *\n * @event zn-show - Emitted when the dialog is opens.\n * @event zn-close - Emitted when the dialog is closed.\n * @event {{ source: 'close-button' | 'keyboard' | 'overlay' }} zn-request-close - Emitted when the user attempts to\n * close the dialog by clicking the close button, clicking the overlay, or pressing escape. Calling\n * `event.preventDefault()` will keep the dialog open. Avoid using this unless closing the dialog will result in\n * destructive behavior such as data loss.\n *\n * @slot - The default slot.\n * @slot label - The dialog's label. Alternatively you can use the `label` attribute.\n * @slot header-icon - Optional icon to add to the left of the dialog's label (title). A color will be applied\n * to the icon depending on the dialog variant.\n * @slot announcement-intro - Optional Intro text to display below the icon, when using the variant `announcement`.\n * @slot header-actions - Optional actions to add to the header. Works best with `<zn-button>` elements.\n * @slot footer - The dialog's footer. This is typically used for buttons representing various options.\n * @slot footer-text - Optional text to include below the footer buttons, when using the variant `announcement`.\n *\n * @csspart base - The component's base wrapper.\n * @csspart header - The dialog's header. This element wraps the title and header actions.\n * @csspart header-actions - Optional actions to add to the header. Works best with `<zn-button>` elements.\n * @csspart title - The dialog's title.\n * @csspart close-button - The dialog's close button.\n * @csspart close-button__base - The close buttons exported `base` part.\n * @csspart body - The dialog's body.\n * @csspart footer - The dialog's footer.\n *\n * @cssproperty --width - The preferred width of the dialog. Note the dialog will shrink to accommodate smaller screens.\n * @cssproperty --header-spacing - The amount of padding to use for the header.\n * @cssproperty --body-spacing - The amount of padding to use for the body.\n * @cssproperty --footer-spacing - The amount of padding to use for the footer.\n */",
-          "documentation": "https://zinc.style/components/dialog",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-button"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnDialog",
-            "module": "components/dialog/dialog.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/dropdown/dropdown.js",
       "declarations": [
         {
@@ -13570,6 +13221,355 @@
           "declaration": {
             "name": "ZnDropdown",
             "module": "components/dropdown/dropdown.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/dialog/dialog.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnDialog",
+          "cssProperties": [
+            {
+              "description": "The preferred width of the dialog. Note the dialog will shrink to accommodate smaller screens.",
+              "name": "--width"
+            },
+            {
+              "description": "The amount of padding to use for the header.",
+              "name": "--header-spacing"
+            },
+            {
+              "description": "The amount of padding to use for the body.",
+              "name": "--body-spacing"
+            },
+            {
+              "description": "The amount of padding to use for the footer.",
+              "name": "--footer-spacing"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The dialog's header. This element wraps the title and header actions.",
+              "name": "header"
+            },
+            {
+              "description": "Optional actions to add to the header. Works best with `<zn-button>` elements.",
+              "name": "header-actions"
+            },
+            {
+              "description": "The dialog's title.",
+              "name": "title"
+            },
+            {
+              "description": "The dialog's close button.",
+              "name": "close-button"
+            },
+            {
+              "description": "The close buttons exported `base` part.",
+              "name": "close-button__base"
+            },
+            {
+              "description": "The dialog's body.",
+              "name": "body"
+            },
+            {
+              "description": "The dialog's footer.",
+              "name": "footer"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "The dialog's label. Alternatively you can use the `label` attribute.",
+              "name": "label"
+            },
+            {
+              "description": "Optional icon to add to the left of the dialog's label (title). A color will be applied to the icon depending on the dialog variant.",
+              "name": "header-icon"
+            },
+            {
+              "description": "Optional Intro text to display below the icon, when using the variant `announcement`.",
+              "name": "announcement-intro"
+            },
+            {
+              "description": "Optional actions to add to the header. Works best with `<zn-button>` elements.",
+              "name": "header-actions"
+            },
+            {
+              "description": "The dialog's footer. This is typically used for buttons representing various options.",
+              "name": "footer"
+            },
+            {
+              "description": "Optional text to include below the footer buttons, when using the variant `announcement`.",
+              "name": "footer-text"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-button': ZnButton }"
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, '[default]', 'footer')"
+            },
+            {
+              "kind": "field",
+              "name": "closeWatcher",
+              "type": {
+                "text": "CloseWatcher | null"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "dialog",
+              "type": {
+                "text": "HTMLDialogElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "closer",
+              "type": {
+                "text": "HTMLButtonElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'default' | 'warning' | 'announcement'"
+              },
+              "default": "'default'",
+              "description": "The dialog's theme variant.",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large' | 'custom'"
+              },
+              "default": "'medium'",
+              "description": "The dialog's size.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Indicated whether of not the dialog is open. You can toggle this attribute to show and hide the dialog, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the dialog's state.",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "The dialog's label as displayed in the header. You should always include a relevant label even when using\n`no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "cosmic",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "cosmic",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "noHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the header. This will also remove the default close button, so please ensure you provide an easy,\naccessible way to close the dialog.",
+              "attribute": "no-header",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "trigger",
+              "type": {
+                "text": "string"
+              },
+              "description": "The dialog's trigger element. This is used to open the dialog when clicked. If you do not provide a trigger, you\nwill need to manually open the dialog using the `show()` method.",
+              "attribute": "trigger",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "requestClose",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "source",
+                  "type": {
+                    "text": "'close-button' | 'keyboard' | 'overlay'"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "addOpenListeners",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "removeOpenListeners",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "description": "Shows the dialog."
+            },
+            {
+              "kind": "method",
+              "name": "hide",
+              "description": "Hides the dialog."
+            },
+            {
+              "kind": "field",
+              "name": "closeClickHandler",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the dialog is opens.",
+              "name": "zn-show"
+            },
+            {
+              "description": "Emitted when the dialog is closed.",
+              "name": "zn-close"
+            },
+            {
+              "type": {
+                "text": "{ source: 'close-button' | 'keyboard' | 'overlay' }"
+              },
+              "description": "Emitted when the user attempts to close the dialog by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the dialog open. Avoid using this unless closing the dialog will result in destructive behavior such as data loss.",
+              "name": "zn-request-close"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "'default' | 'warning' | 'announcement'"
+              },
+              "default": "'default'",
+              "description": "The dialog's theme variant.",
+              "fieldName": "variant"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large' | 'custom'"
+              },
+              "default": "'medium'",
+              "description": "The dialog's size.",
+              "fieldName": "size"
+            },
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Indicated whether of not the dialog is open. You can toggle this attribute to show and hide the dialog, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the dialog's state.",
+              "fieldName": "open"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "The dialog's label as displayed in the header. You should always include a relevant label even when using\n`no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.",
+              "fieldName": "label"
+            },
+            {
+              "name": "cosmic",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "cosmic"
+            },
+            {
+              "name": "no-header",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the header. This will also remove the default close button, so please ensure you provide an easy,\naccessible way to close the dialog.",
+              "fieldName": "noHeader"
+            },
+            {
+              "name": "trigger",
+              "type": {
+                "text": "string"
+              },
+              "description": "The dialog's trigger element. This is used to open the dialog when clicked. If you do not provide a trigger, you\nwill need to manually open the dialog using the `show()` method.",
+              "fieldName": "trigger"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "dialog",
+          "tagName": "zn-dialog",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/dialog\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n *\n * @event zn-show - Emitted when the dialog is opens.\n * @event zn-close - Emitted when the dialog is closed.\n * @event {{ source: 'close-button' | 'keyboard' | 'overlay' }} zn-request-close - Emitted when the user attempts to\n * close the dialog by clicking the close button, clicking the overlay, or pressing escape. Calling\n * `event.preventDefault()` will keep the dialog open. Avoid using this unless closing the dialog will result in\n * destructive behavior such as data loss.\n *\n * @slot - The default slot.\n * @slot label - The dialog's label. Alternatively you can use the `label` attribute.\n * @slot header-icon - Optional icon to add to the left of the dialog's label (title). A color will be applied\n * to the icon depending on the dialog variant.\n * @slot announcement-intro - Optional Intro text to display below the icon, when using the variant `announcement`.\n * @slot header-actions - Optional actions to add to the header. Works best with `<zn-button>` elements.\n * @slot footer - The dialog's footer. This is typically used for buttons representing various options.\n * @slot footer-text - Optional text to include below the footer buttons, when using the variant `announcement`.\n *\n * @csspart base - The component's base wrapper.\n * @csspart header - The dialog's header. This element wraps the title and header actions.\n * @csspart header-actions - Optional actions to add to the header. Works best with `<zn-button>` elements.\n * @csspart title - The dialog's title.\n * @csspart close-button - The dialog's close button.\n * @csspart close-button__base - The close buttons exported `base` part.\n * @csspart body - The dialog's body.\n * @csspart footer - The dialog's footer.\n *\n * @cssproperty --width - The preferred width of the dialog. Note the dialog will shrink to accommodate smaller screens.\n * @cssproperty --header-spacing - The amount of padding to use for the header.\n * @cssproperty --body-spacing - The amount of padding to use for the body.\n * @cssproperty --footer-spacing - The amount of padding to use for the footer.\n */",
+          "documentation": "https://zinc.style/components/dialog",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-button"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnDialog",
+            "module": "components/dialog/dialog.js"
           }
         }
       ]
@@ -28460,7 +28460,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ 'zn-collapsible': ZnCollapsible, 'zn-icon': ZnIcon, 'zn-input': ZnInput, 'zn-page-palette-item': ZnPagePaletteItem, 'zn-page-section-card': ZnPageSectionCard, }"
+              "default": "{ 'zn-collapsible': ZnCollapsible, 'zn-icon': ZnIcon, 'zn-input': ZnInput, 'zn-option': ZnOption, 'zn-page-palette-item': ZnPagePaletteItem, 'zn-page-section-card': ZnPageSectionCard, 'zn-select': ZnSelect, }"
             },
             {
               "kind": "field",
@@ -28527,7 +28527,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Section type key that must lead the page. The builder hoists an existing section of\nthat type to the top, or inserts an empty one, and pins it there: it can't be\nremoved, reordered or dragged into a slot, and nothing can be dropped above it.\nIts content stays fully editable in the inspector.",
+              "description": "Section type keys that may lead the page, comma separated. The builder hoists an\nexisting section of any of them to the top, or inserts an empty one of the first,\nand pins it there: it can't be removed, reordered or dragged into a slot, and\nnothing can be dropped above it. Its content stays fully editable in the\ninspector, which offers a swap between the allowed types when there is more\nthan one.",
               "attribute": "required-first",
               "reflects": true
             },
@@ -29044,6 +29044,16 @@
               "readonly": true
             },
             {
+              "kind": "field",
+              "name": "_requiredFirstTypes",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "private",
+              "description": "The types `required-first` allows to lead the page, in the order given.",
+              "readonly": true
+            },
+            {
               "kind": "method",
               "name": "_isPinned",
               "privacy": "private",
@@ -29060,6 +29070,16 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "field",
+              "name": "_canUnpin",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "description": "Whether the pinned section may be removed: only while another section can take\nthe lead in its place, so the page is never left without one. It stays undraggable\neither way — the replacement arrives by removing this one, not by reordering.",
+              "readonly": true
             },
             {
               "kind": "field",
@@ -29088,7 +29108,7 @@
                   }
                 }
               ],
-              "description": "Sections reordered so `required-first` leads the page: an existing section of that\ntype is hoisted to the front, otherwise an empty one is prepended. Returns the\nargument unchanged when there is nothing to do, so callers can compare by identity."
+              "description": "Sections reordered so `required-first` leads the page: an existing section of an\nallowed type is hoisted to the front, otherwise an empty one of the first type is\nprepended. Returns the\nargument unchanged when there is nothing to do, so callers can compare by identity."
             },
             {
               "kind": "method",
@@ -29845,6 +29865,20 @@
             },
             {
               "kind": "method",
+              "name": "_swapPinnedType",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Retypes the pinned section, keeping its id, name and data so the copy shared by\nthe allowed types survives; keys the new type has no field for stay unread. The\ninspector form is stamped from the type's template, so it is rebuilt by hand —\nselection has not changed."
+            },
+            {
+              "kind": "method",
               "name": "_renameSection",
               "privacy": "private",
               "parameters": [
@@ -29900,6 +29934,20 @@
               "kind": "field",
               "name": "_onResizeKey",
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_renderSwapControl",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "section",
+                  "type": {
+                    "text": "PageSection"
+                  }
+                }
+              ],
+              "description": "Offered on the pinned section alone, and only where there is another type to take."
             },
             {
               "kind": "method",
@@ -29967,7 +30015,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Section type key that must lead the page. The builder hoists an existing section of\nthat type to the top, or inserts an empty one, and pins it there: it can't be\nremoved, reordered or dragged into a slot, and nothing can be dropped above it.\nIts content stays fully editable in the inspector.",
+              "description": "Section type keys that may lead the page, comma separated. The builder hoists an\nexisting section of any of them to the top, or inserts an empty one of the first,\nand pins it there: it can't be removed, reordered or dragged into a slot, and\nnothing can be dropped above it. Its content stays fully editable in the\ninspector, which offers a swap between the allowed types when there is more\nthan one.",
               "fieldName": "requiredFirst"
             },
             {
@@ -53512,7 +53560,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.154",
+    "version": "1.1.155",
     "author": "",
     "license": "MIT"
   }

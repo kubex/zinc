@@ -8,7 +8,7 @@ layout: component
 Panels are a fundamental component in the Zinc framework, providing a structured container for displaying content with consistent styling, borders, and spacing. They support various layouts including headers with actions and footers.
 
 ```html:preview
-<zn-panel caption="Example Panel" description="Full example with all features" flush tabbed>
+<zn-panel caption="Example Panel" flush tabbed>
   <!-- Panel actions -->
   <zn-chip slot="actions" icon="home">Awesome</zn-chip>
   <zn-chip slot="actions" icon="phone" type="info">example</zn-chip>
@@ -42,10 +42,10 @@ Panels are a fundamental component in the Zinc framework, providing a structured
 
 ### Basic Panel
 
-Basic panels provide a simple container with consistent borders, rounded corners, and background styling. The panel can display a caption and description in its header.
+Basic panels provide a simple container with consistent borders, rounded corners, and background styling. The panel can display a caption in its header.
 
 ```html:preview
-<zn-panel caption="Example Panel" description="Simple panels are the best">
+<zn-panel caption="Example Panel">
   <div>Panel Content</div>
 </zn-panel>
 ```
@@ -55,7 +55,7 @@ Basic panels provide a simple container with consistent borders, rounded corners
 Use the `icon` attribute to add an icon to the panel header.
 
 ```html:preview
-<zn-panel caption="Settings Panel" description="Configure your preferences" icon="settings">
+<zn-panel caption="Settings Panel" icon="settings">
   <div style="padding: 20px;">
     <p>Panel content goes here</p>
   </div>
@@ -67,7 +67,7 @@ Use the `icon` attribute to add an icon to the panel header.
 Use the `actions` slot to add action buttons or chips to the panel header.
 
 ```html:preview
-<zn-panel caption="Project Details" description="Manage your project">
+<zn-panel caption="Project Details">
   <zn-chip slot="actions" icon="edit" type="info">Edit</zn-chip>
   <zn-chip slot="actions" icon="delete" type="error">Delete</zn-chip>
 
@@ -99,7 +99,7 @@ Use the `footer` slot to add footer content to the panel.
 Panel headers include a border by default. Use the `header-borderless` attribute to remove the border beneath the header.
 
 ```html:preview
-<zn-panel caption="Borderless Header" description="Without a visible separator" header-borderless>
+<zn-panel caption="Borderless Header" header-borderless>
   <div style="padding: 20px;">
     <p>Panel content with a borderless header</p>
   </div>
@@ -192,7 +192,7 @@ Use the `tabbed` attribute for panels containing tabs. This automatically remove
 Use the `transparent` attribute to remove the panel background and border, creating a borderless container.
 
 ```html:preview
-<zn-panel caption="Transparent Panel" description="No background or border" transparent>
+<zn-panel caption="Transparent Panel" transparent>
   <div style="padding: 20px; background: rgba(var(--zn-color-info), 0.1);">
     Content in transparent panel
   </div>
@@ -204,7 +204,7 @@ Use the `transparent` attribute to remove the panel background and border, creat
 Use the `shadow` attribute to add a prominent drop shadow to the panel.
 
 ```html:preview
-<zn-panel caption="Shadow Panel" description="With drop shadow effect" shadow>
+<zn-panel caption="Shadow Panel" shadow>
   <div style="padding: 20px;">
     Content with enhanced shadow
   </div>
@@ -284,7 +284,6 @@ All panel features can be combined to create rich, complex layouts.
 ```html:preview
 <zn-panel
   caption="Advanced Panel"
-  description="Combining multiple features"
   icon="dashboard"
   shadow>
 

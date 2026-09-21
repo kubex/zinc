@@ -1514,6 +1514,58 @@
       ]
     },
     {
+      "name": "zn-dialog",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the dialog is opens.\n- **zn-close** - Emitted when the dialog is closed.\n- **zn-request-close** - Emitted when the user attempts to close the dialog by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the dialog open. Avoid using this unless closing the dialog will result in destructive behavior such as data loss.\n\n### **Methods:**\n - **show()** - Shows the dialog.\n- **hide()** - Hides the dialog.\n\n### **Slots:**\n - _default_ - The default slot.\n- **label** - The dialog's label. Alternatively you can use the `label` attribute.\n- **header-icon** - Optional icon to add to the left of the dialog's label (title). A color will be applied to the icon depending on the dialog variant.\n- **announcement-intro** - Optional Intro text to display below the icon, when using the variant `announcement`.\n- **header-actions** - Optional actions to add to the header. Works best with `<zn-button>` elements.\n- **footer** - The dialog's footer. This is typically used for buttons representing various options.\n- **footer-text** - Optional text to include below the footer buttons, when using the variant `announcement`.\n\n### **CSS Properties:**\n - **--width** - The preferred width of the dialog. Note the dialog will shrink to accommodate smaller screens. _(default: undefined)_\n- **--header-spacing** - The amount of padding to use for the header. _(default: undefined)_\n- **--body-spacing** - The amount of padding to use for the body. _(default: undefined)_\n- **--footer-spacing** - The amount of padding to use for the footer. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The dialog's header. This element wraps the title and header actions.\n- **header-actions** - Optional actions to add to the header. Works best with `<zn-button>` elements.\n- **title** - The dialog's title.\n- **close-button** - The dialog's close button.\n- **close-button__base** - The close buttons exported `base` part.\n- **body** - The dialog's body.\n- **footer** - The dialog's footer.",
+      "attributes": [
+        {
+          "name": "variant",
+          "description": "The dialog's theme variant.",
+          "values": [
+            { "name": "default" },
+            { "name": "warning" },
+            { "name": "announcement" }
+          ]
+        },
+        {
+          "name": "size",
+          "description": "The dialog's size.",
+          "values": [
+            { "name": "small" },
+            { "name": "medium" },
+            { "name": "large" },
+            { "name": "custom" }
+          ]
+        },
+        {
+          "name": "open",
+          "description": "Indicated whether of not the dialog is open. You can toggle this attribute to show and hide the dialog, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the dialog's state.",
+          "values": []
+        },
+        {
+          "name": "label",
+          "description": "The dialog's label as displayed in the header. You should always include a relevant label even when using\n`no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.",
+          "values": []
+        },
+        { "name": "cosmic", "values": [] },
+        {
+          "name": "no-header",
+          "description": "Disables the header. This will also remove the default close button, so please ensure you provide an easy,\naccessible way to close the dialog.",
+          "values": []
+        },
+        {
+          "name": "trigger",
+          "description": "The dialog's trigger element. This is used to open the dialog when clicked. If you do not provide a trigger, you\nwill need to manually open the dialog using the `show()` method.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/dialog"
+        }
+      ]
+    },
+    {
       "name": "zn-dropdown",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **show()** - Opens the dropdown\n- **hide()** - Closes the dropdown\n- **reposition()** - Instructs the dropdown to reposition itself\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -1581,58 +1633,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/dropdown"
-        }
-      ]
-    },
-    {
-      "name": "zn-dialog",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the dialog is opens.\n- **zn-close** - Emitted when the dialog is closed.\n- **zn-request-close** - Emitted when the user attempts to close the dialog by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the dialog open. Avoid using this unless closing the dialog will result in destructive behavior such as data loss.\n\n### **Methods:**\n - **show()** - Shows the dialog.\n- **hide()** - Hides the dialog.\n\n### **Slots:**\n - _default_ - The default slot.\n- **label** - The dialog's label. Alternatively you can use the `label` attribute.\n- **header-icon** - Optional icon to add to the left of the dialog's label (title). A color will be applied to the icon depending on the dialog variant.\n- **announcement-intro** - Optional Intro text to display below the icon, when using the variant `announcement`.\n- **header-actions** - Optional actions to add to the header. Works best with `<zn-button>` elements.\n- **footer** - The dialog's footer. This is typically used for buttons representing various options.\n- **footer-text** - Optional text to include below the footer buttons, when using the variant `announcement`.\n\n### **CSS Properties:**\n - **--width** - The preferred width of the dialog. Note the dialog will shrink to accommodate smaller screens. _(default: undefined)_\n- **--header-spacing** - The amount of padding to use for the header. _(default: undefined)_\n- **--body-spacing** - The amount of padding to use for the body. _(default: undefined)_\n- **--footer-spacing** - The amount of padding to use for the footer. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The dialog's header. This element wraps the title and header actions.\n- **header-actions** - Optional actions to add to the header. Works best with `<zn-button>` elements.\n- **title** - The dialog's title.\n- **close-button** - The dialog's close button.\n- **close-button__base** - The close buttons exported `base` part.\n- **body** - The dialog's body.\n- **footer** - The dialog's footer.",
-      "attributes": [
-        {
-          "name": "variant",
-          "description": "The dialog's theme variant.",
-          "values": [
-            { "name": "default" },
-            { "name": "warning" },
-            { "name": "announcement" }
-          ]
-        },
-        {
-          "name": "size",
-          "description": "The dialog's size.",
-          "values": [
-            { "name": "small" },
-            { "name": "medium" },
-            { "name": "large" },
-            { "name": "custom" }
-          ]
-        },
-        {
-          "name": "open",
-          "description": "Indicated whether of not the dialog is open. You can toggle this attribute to show and hide the dialog, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the dialog's state.",
-          "values": []
-        },
-        {
-          "name": "label",
-          "description": "The dialog's label as displayed in the header. You should always include a relevant label even when using\n`no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.",
-          "values": []
-        },
-        { "name": "cosmic", "values": [] },
-        {
-          "name": "no-header",
-          "description": "Disables the header. This will also remove the default close button, so please ensure you provide an easy,\naccessible way to close the dialog.",
-          "values": []
-        },
-        {
-          "name": "trigger",
-          "description": "The dialog's trigger element. This is used to open the dialog when clicked. If you do not provide a trigger, you\nwill need to manually open the dialog using the `show()` method.",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/dialog"
         }
       ]
     },

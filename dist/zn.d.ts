@@ -2954,6 +2954,12 @@ declare module "components/select/select.component" {
         private handleSearchInput;
         /** Filters visible options based on the current search query */
         private filterOptions;
+        /**
+         * Nothing for the user to pick: either the option list is empty or every option is filtered out.
+         * The search paths track this themselves, so this covers opening a dropdown with no query.
+         */
+        private updateEmptyState;
+        private get emptyStateText();
         /** Clears the search query and shows all options */
         private clearSearch;
         private updateOptGroupSeparators;
@@ -9156,6 +9162,8 @@ declare module "components/reveal/reveal.component" {
         hideDelay: number;
         /** Disables click-to-toggle so the value is only revealed on hover. Clicks still bubble to the parent. */
         noToggle: boolean;
+        /** Nothing is hidden when the revealed value is what's already on show, so there is nothing to reveal. */
+        private get _isMasked();
         private _isRevealed;
         private _isToggled;
         private _hideTimer?;

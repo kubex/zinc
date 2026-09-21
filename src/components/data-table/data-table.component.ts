@@ -151,8 +151,6 @@ interface DataRequest {
   sortDirection: string;
   filter: string;
   search: string;
-  // Search-related fields (from the search component's `fields` slot) plus `q` (the search text),
-  // wrapped so the backend can bind them to a single map instead of arbitrary root-level keys.
   searchFields?: Record<string, any> | null;
 }
 
@@ -278,6 +276,13 @@ export default class ZnDataTable extends ZincElement {
    */
   @property({attribute: 'sharable', type: Boolean}) sharable: boolean = false;
 
+  /**
+   * When set, extra request params (search-component field values) are nested under a
+   * `searchFields` object - with `q` mirroring the search text - instead of being merged at the
+   * root of the request body.
+   */
+  @property({attribute: 'wrap-search-fields', type: Boolean}) wrapSearchFields: boolean = false;
+
   @property({attribute: 'group-by'}) groupBy = '';
 
   @property() groups = '';
@@ -357,7 +362,7 @@ export default class ZnDataTable extends ZincElement {
       };
 
       // Inputs-slot values are context/system params (e.g. csrf token, package name) sent with
-      // every request - they stay at the root of the payload.
+      // every request.
       const inputs = this.hasSlotController.getSlots(ActionSlots.inputs.valueOf());
       const params: Record<string, any> = {};
       if (inputs) {
@@ -374,24 +379,28 @@ export default class ZnDataTable extends ZincElement {
         Object.assign(requestData, params);
       }
 
-      // Search-related fields (from <zn-data-table-search>'s `fields` slot, delivered via
-      // requestParams) are wrapped under `searchFields` so the backend can bind them to a single
-      // map rather than arbitrary root-level keys. `q` mirrors the search text; the root `search`
-      // key is still sent for back-compatibility. Empty values are dropped, and `searchFields` is
-      // null when nothing meaningful remains so the backend can treat it as "no search".
-      const searchFields: Record<string, any> = {};
-      if (requestParams && typeof requestParams === 'object') {
-        for (const [key, value] of Object.entries(requestParams as Record<string, unknown>)) {
+      // Add any extra request params
+      const extraParams = requestParams && typeof requestParams === 'object'
+        ? requestParams as Record<string, unknown>
+        : {};
+
+      if (this.wrapSearchFields) {
+        // Opt-in shape: field values nested under `searchFields`, with `q` mirroring the search
+        // text, so a backend can bind them to one map. Empty values are dropped, and the key is
+        // null when nothing is set. The root `search` key is sent either way.
+        const searchFields: Record<string, any> = {};
+        for (const [key, value] of Object.entries(extraParams)) {
           if (value !== undefined && value !== null && value !== '') {
             searchFields[key] = value;
           }
         }
+        if (this.search || Object.keys(searchFields).length > 0) {
+          searchFields.q = this.search;
+        }
+        requestData.searchFields = Object.keys(searchFields).length > 0 ? searchFields : null;
+      } else {
+        Object.assign(requestData, extraParams);
       }
-      if (this.search || Object.keys(searchFields).length > 0) {
-        searchFields.q = this.search;
-      }
-
-      requestData.searchFields = Object.keys(searchFields).length > 0 ? searchFields : null;
 
       // This is also used for Rubix, so it may not work for your application.
       const response = await fetch(dataUri, {
@@ -623,7 +632,7 @@ export default class ZnDataTable extends ZincElement {
       params.set(key, str);
     };
 
-    // Extra field values (searchFields) - their default is empty, so setParam writes them only when set.
+    // Extra field values - their default is empty, so setParam writes them only when set.
     const known = new Set(ZnDataTable._sharableKnownKeys);
     Object.entries(this.requestParams).forEach(([key, value]) => {
       if (known.has(key) || key === 'searchUri') return;

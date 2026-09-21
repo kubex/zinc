@@ -323,9 +323,9 @@ describe('<zn-data-table>', () => {
     expect(link?.hasAttribute('title')).to.be.false;
   });
 
-  // Search-component field values are nested under `searchFields` in the POST body, with `q`
-  // mirroring the search text, while the root `search` key is retained for back-compatibility.
-  describe('searchFields request wrapping', () => {
+  // Search-component field values and any other extra request params are merged at the root of
+  // the POST body, alongside the dedicated `search` key.
+  describe('extra request params', () => {
     const rowResponse = () => new Response(JSON.stringify({
       rows: [{id: '1', cells: [{text: 'Row', column: 'name'}]}],
       page: 1,
@@ -333,7 +333,7 @@ describe('<zn-data-table>', () => {
       total: 1,
     }), {status: 200, headers: {'Content-Type': 'application/json'}});
 
-    it('wraps search-component field values under searchFields with q mirroring the search text', async () => {
+    it('sends search-component field values at the root alongside search', async () => {
       const originalFetch = window.fetch;
       const bodies: Record<string, unknown>[] = [];
       window.fetch = (_url: RequestInfo | URL, options?: RequestInit) => {
@@ -355,6 +355,89 @@ describe('<zn-data-table>', () => {
 
         const body = bodies[bodies.length - 1];
         expect(body.search).to.equal('foo');
+        expect(body.status).to.equal('open');
+        expect(body.searchFields).to.be.undefined;
+      } finally {
+        window.fetch = originalFetch;
+      }
+    });
+
+    it('sends no extra keys when no search or field values are set', async () => {
+      const originalFetch = window.fetch;
+      const bodies: Record<string, unknown>[] = [];
+      window.fetch = (_url: RequestInfo | URL, options?: RequestInit) => {
+        if (options?.body) bodies.push(JSON.parse(options.body as string) as Record<string, unknown>);
+        return Promise.resolve(rowResponse());
+      };
+
+      try {
+        await fixture<ZnDataTable>(html`
+          <zn-data-table data-uri="/test-data" headers='{"name": {"key": "name", "label": "Name"}}'></zn-data-table>`);
+        await waitUntil(() => bodies.length > 0);
+
+        const known = ['filter', 'page', 'perPage', 'search', 'sortColumn', 'sortDirection'];
+        expect(Object.keys(bodies[bodies.length - 1]).filter(k => !known.includes(k))).to.deep.equal([]);
+      } finally {
+        window.fetch = originalFetch;
+      }
+    });
+
+    it('sends inputs-slot params at the request root', async () => {
+      const originalFetch = window.fetch;
+      const bodies: Record<string, unknown>[] = [];
+      window.fetch = (_url: RequestInfo | URL, options?: RequestInit) => {
+        if (options?.body) bodies.push(JSON.parse(options.body as string) as Record<string, unknown>);
+        return Promise.resolve(rowResponse());
+      };
+
+      try {
+        const el = await fixture<ZnDataTable>(html`
+          <zn-data-table data-uri="/test-data" headers='{"name": {"key": "name", "label": "Name"}}'>
+            <input slot="inputs" name="csrf" value="tok">
+          </zn-data-table>`);
+        await waitUntil(() => bodies.length > 0);
+        el.refresh();
+        await waitUntil(() => bodies.length > 1);
+
+        expect(bodies[bodies.length - 1].csrf).to.equal('tok');
+      } finally {
+        window.fetch = originalFetch;
+      }
+    });
+  });
+
+  // With `wrap-search-fields`, the same values are nested under `searchFields` instead, with `q`
+  // mirroring the search text.
+  describe('wrap-search-fields', () => {
+    const rowResponse = () => new Response(JSON.stringify({
+      rows: [{id: '1', cells: [{text: 'Row', column: 'name'}]}],
+      page: 1,
+      perPage: 10,
+      total: 1,
+    }), {status: 200, headers: {'Content-Type': 'application/json'}});
+
+    it('nests field values under searchFields with q mirroring the search text', async () => {
+      const originalFetch = window.fetch;
+      const bodies: Record<string, unknown>[] = [];
+      window.fetch = (_url: RequestInfo | URL, options?: RequestInit) => {
+        if (options?.body) bodies.push(JSON.parse(options.body as string) as Record<string, unknown>);
+        return Promise.resolve(rowResponse());
+      };
+
+      try {
+        const el = await fixture<ZnDataTable>(html`
+          <zn-data-table wrap-search-fields data-uri="/test-data"
+                         headers='{"name": {"key": "name", "label": "Name"}}'></zn-data-table>`);
+        await waitUntil(() => bodies.length > 0);
+
+        el.search = 'foo';
+        el.requestParams = {status: 'open', empty: ''};
+        el.refresh();
+        await waitUntil(() => bodies.some(b => b.search === 'foo'));
+
+        const body = bodies[bodies.length - 1];
+        expect(body.search).to.equal('foo');
+        expect(body.status).to.be.undefined;
         expect(body.searchFields).to.deep.equal({status: 'open', q: 'foo'});
       } finally {
         window.fetch = originalFetch;
@@ -371,7 +454,8 @@ describe('<zn-data-table>', () => {
 
       try {
         await fixture<ZnDataTable>(html`
-          <zn-data-table data-uri="/test-data" headers='{"name": {"key": "name", "label": "Name"}}'></zn-data-table>`);
+          <zn-data-table wrap-search-fields data-uri="/test-data"
+                         headers='{"name": {"key": "name", "label": "Name"}}'></zn-data-table>`);
         await waitUntil(() => bodies.length > 0);
 
         expect(bodies[bodies.length - 1].searchFields).to.be.null;
@@ -380,7 +464,7 @@ describe('<zn-data-table>', () => {
       }
     });
 
-    it('keeps inputs-slot params at the request root, not inside searchFields', async () => {
+    it('keeps inputs-slot params at the request root', async () => {
       const originalFetch = window.fetch;
       const bodies: Record<string, unknown>[] = [];
       window.fetch = (_url: RequestInfo | URL, options?: RequestInit) => {
@@ -390,7 +474,8 @@ describe('<zn-data-table>', () => {
 
       try {
         const el = await fixture<ZnDataTable>(html`
-          <zn-data-table data-uri="/test-data" headers='{"name": {"key": "name", "label": "Name"}}'>
+          <zn-data-table wrap-search-fields data-uri="/test-data"
+                         headers='{"name": {"key": "name", "label": "Name"}}'>
             <input slot="inputs" name="csrf" value="tok">
           </zn-data-table>`);
         await waitUntil(() => bodies.length > 0);

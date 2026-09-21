@@ -934,6 +934,30 @@ For POST requests, the table sends a JSON body:
   "sortDirection": "asc",
   "filter": "",
   "search": "search term",
+  "status": "open"
+}
+```
+
+Field values from inputs slotted into a `zn-data-table-search`, and anything set on the table's `requestParams`, are merged at the **root** of the body under their own `name`. The search text itself is sent as `search`.
+
+Parameters from the `inputs` slot are context/system values (a CSRF token, a package name, and the like) sent with every request. They are merged at the root too.
+
+### Wrapped search fields
+
+Add `wrap-search-fields` to nest the search field values under a `searchFields` object instead, so a backend can bind them to a single map rather than arbitrary top-level keys:
+
+```html
+<zn-data-table wrap-search-fields data-uri="/data"></zn-data-table>
+```
+
+```json
+{
+  "page": 1,
+  "perPage": 10,
+  "sortColumn": "name",
+  "sortDirection": "asc",
+  "filter": "",
+  "search": "search term",
   "searchFields": {
     "q": "search term",
     "status": "open"
@@ -941,6 +965,4 @@ For POST requests, the table sends a JSON body:
 }
 ```
 
-Field values from a slotted `zn-data-table-search`'s [`fields` slot](/components/data-table-search#filter-fields) are wrapped under `searchFields`, keeping them out of the request root so the backend can bind them to a single map rather than arbitrary top-level keys. `q` mirrors the `search` text, and the root `search` key is retained for back-compatibility. Empty values are dropped, and `searchFields` is `null` when nothing meaningful remains — no search text and no field values — so the backend can treat that as "no search".
-
-Parameters from the `inputs` slot are context/system values (a CSRF token, a package name, and the like) sent with every request. They are merged at the **root** of the body, not inside `searchFields`.
+`q` mirrors the `search` text, which is still sent at the root. Empty values are dropped, and `searchFields` is `null` when nothing meaningful remains — no search text and no field values — so the backend can treat that as "no search". Parameters from the `inputs` slot stay at the root either way.

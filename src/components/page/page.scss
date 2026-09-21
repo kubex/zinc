@@ -184,7 +184,7 @@
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
-    gap: var(--zn-spacing-x-small);
+    gap: var(--zn-spacing-2x-small);
     min-height: 36px;
     flex-shrink: 1;
     min-width: 0;
@@ -213,6 +213,11 @@
     align-items: center;
     text-wrap: auto;
     min-height: 36px; // Keep in step with the actions row: both bands share a centre line.
+  }
+
+  // Stacked above a description the band buys no alignment, it only pads the gap.
+  &--has-description &__caption {
+    min-height: 0;
   }
 
   &__description {

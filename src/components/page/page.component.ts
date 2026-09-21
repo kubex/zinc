@@ -44,7 +44,7 @@ export default class ZnPage extends ZnTabs {
     'zn-tab': ZnTab
   };
 
-  private readonly pageSlotController = new HasSlotController(this, 'breadcrumb', 'actions', 'caption');
+  private readonly pageSlotController = new HasSlotController(this, 'breadcrumb', 'actions', 'caption', 'description');
 
   @property() caption: string;
   @property({attribute: 'entity-id'}) entityId: string;
@@ -442,6 +442,7 @@ export default class ZnPage extends ZnTabs {
     const hasEntityId = this.entityId;
     const hasFullLocation = this.fullLocation;
     const hasPreviousPath = this.previousPath;
+    const hasDescription = !!this.summary || this.pageSlotController.test('description');
 
     return html`
       <div class="page" part="base" @scroll="${this.handlePageScroll}">
@@ -455,7 +456,8 @@ export default class ZnPage extends ZnTabs {
             'header--has-entity-id': hasEntityId,
             'header--has-full-location': hasFullLocation,
             'header--has-navigation': hasNavigation,
-            'header--has-previous': hasPreviousPath
+            'header--has-previous': hasPreviousPath,
+            'header--has-description': hasDescription
           })}">
             ${hasFullLocation || hasEntityId ? html`
               <div class="${classMap({

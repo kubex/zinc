@@ -368,8 +368,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     const hasHelpTextSlot = this.hasSlotController.test('help-text');
     const hasHelpText = this.helpText ? true : hasHelpTextSlot;
 
-    // Default input type to select if options are provided
-    if (Object.keys(this.options).length > 0) {
+    // An options list that renders empty is still a select — never silently fall back to free text
+    if (Object.keys(this.options).length > 0 || this.hasAttribute('options')) {
       this.inputType = 'select';
     }
 

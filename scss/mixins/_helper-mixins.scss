@@ -1,9 +1,13 @@
 @use "./spacing-mixins";
 
+$scrollbar-size: 5px;
+$scrollbar-thumb: rgba(var(--inverse-base), 0.2);
+$scrollbar-thumb-hover: rgba(var(--inverse-base), 0.6);
+
 @mixin scrollbars {
   ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: $scrollbar-size;
+    height: $scrollbar-size;
   }
 
   /* Track */
@@ -13,12 +17,37 @@
 
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: rgba(var(--inverse-base), 0.2);
-    border-radius: 5px;
+    background: $scrollbar-thumb;
+    border-radius: $scrollbar-size;
   }
 
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(var(--inverse-base), 0.6);
+    background: $scrollbar-thumb-hover;
+  }
+}
+
+// `scrollbars` only reaches descendant scroll areas; this styles an element that
+// is itself the scroller
+@mixin scrollbars-self {
+  scrollbar-width: thin;
+  scrollbar-color: $scrollbar-thumb transparent;
+
+  &::-webkit-scrollbar {
+    width: $scrollbar-size;
+    height: $scrollbar-size;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $scrollbar-thumb;
+    border-radius: $scrollbar-size;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: $scrollbar-thumb-hover;
   }
 }

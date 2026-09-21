@@ -565,4 +565,28 @@ describe('<zn-inline-edit>', () => {
       expect(submits, 'Enter belongs to the open menu, not the form').to.equal(0);
     });
   });
+
+  // The theme stylesheet isn't loaded in tests, so the sizing tokens the reveal and the input both
+  // key off have to be supplied for the comparison to mean anything.
+  it('should keep the same height whether it shows a reveal or the input it replaces', async () => {
+    const tokens = 'display: contents; --zn-input-height-medium: 36px; --zn-line-height-looser: 3;';
+    const plain = await fixture<HTMLDivElement>(html`
+      <div style="${tokens}">
+        <zn-inline-edit name="email" value="alan.jones@example.com"></zn-inline-edit>
+      </div>
+    `);
+    const masked = await fixture<HTMLDivElement>(html`
+      <div style="${tokens}">
+        <zn-inline-edit name="email" value="alan.jones@example.com"
+                        display-value="\u2022\u2022\u2022\u2022\u2022@example.com"></zn-inline-edit>
+      </div>
+    `);
+    const [plainEdit, maskedEdit] = [plain, masked].map(el => el.querySelector<ZnInlineEdit>('zn-inline-edit')!);
+    await Promise.all([plainEdit.updateComplete, maskedEdit.updateComplete]);
+
+    const height = (el: ZnInlineEdit) =>
+      el.shadowRoot!.querySelector<HTMLElement>('.ai')!.getBoundingClientRect().height;
+
+    expect(height(maskedEdit)).to.equal(height(plainEdit));
+  });
 });

@@ -59,6 +59,9 @@
 
   &__input::part(form-control-input) {
     margin: 0;
+    // Block wrapper round an inline-flex base adds baseline strut, leaving the input
+    // ~1.4px taller than the reveal that replaces it
+    display: flex;
   }
 
   &__input {
@@ -133,7 +136,8 @@
   }
 
   &__reveal {
-    line-height: var(--zn-line-height-looser);
+    // Matches the height of the input it stands in for, so entering edit mode doesn't resize the row
+    line-height: var(--zn-input-height-medium);
     color: rgb(var(--zn-text));
 
     // Fill the row so hovering anywhere over the field reveals the value
@@ -199,4 +203,10 @@ zn-textarea::part(textarea) {
   resize: none;
 }
 
+:host([size="small"]) .ai__reveal {
+  line-height: var(--zn-input-height-small);
+}
 
+:host([size="large"]) .ai__reveal {
+  line-height: var(--zn-input-height-large);
+}

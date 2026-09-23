@@ -26,62 +26,41 @@ export default class ZnFilterContainer extends ZincElement {
 
   @property() attr = 'filter';
 
+  private _filterFrame = 0;
+
   public handleSearchChange(event: Event) {
-    // get all element that have data-'this.attr' attribute
-    const filterableElements = this.querySelectorAll(`[data-${this.attr}]`);
-    const input = event.target as HTMLInputElement;
-    const searchTerm = input.value.toLowerCase();
+    const searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
+    cancelAnimationFrame(this._filterFrame);
+    this._filterFrame = requestAnimationFrame(() => this.applyFilter(searchTerm));
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    cancelAnimationFrame(this._filterFrame);
+  }
+
+  private applyFilter(searchTerm: string) {
+    const attr = `data-${this.attr}`;
+    const filterableElements = this.querySelectorAll<HTMLElement>(`[${attr}]`);
+    const panels = new Map<HTMLElement, boolean>();
+    const accordions = new Map<HTMLElement, boolean>();
+    let anyVisibleElements = false;
 
     filterableElements.forEach((el) => {
-      const filterValue = el.getAttribute(`data-${this.attr}`)?.toLowerCase() || '';
-      if (filterValue.includes(searchTerm)) {
-        (el as HTMLElement).style.display = '';
-      } else {
-        (el as HTMLElement).style.display = 'none';
-      }
+      const visible = searchTerm === '' || (el.getAttribute(attr)?.toLowerCase() || '').includes(searchTerm);
+      setDisplay(el, visible);
+      if (visible) anyVisibleElements = true;
 
-      const panel = el.closest('zn-panel');
-      if (panel) {
-        const panelItems = panel.querySelectorAll(`[data-${this.attr}]`);
-        let anyVisible = false;
-        panelItems.forEach((item) => {
-          if ((item as HTMLElement).style.display !== 'none') {
-            anyVisible = true;
-          }
+      const panel = el.closest<HTMLElement>('zn-panel');
+      if (panel) panels.set(panel, (panels.get(panel) ?? false) || visible);
 
-        });
-        if (anyVisible) {
-          (panel as HTMLElement).style.display = '';
-        } else {
-          (panel as HTMLElement).style.display = 'none';
-        }
-      }
-
-      const accordionItem = el.closest('zn-accordion');
-      if (accordionItem) {
-        const itemElements = accordionItem.querySelectorAll(`[data-${this.attr}]`);
-        let anyVisible = false;
-        itemElements.forEach((item) => {
-          if ((item as HTMLElement).style.display !== 'none') {
-            anyVisible = true;
-          }
-        });
-
-        if (anyVisible) {
-          (accordionItem as HTMLElement).style.display = '';
-        }
-      }
+      const accordion = el.closest<HTMLElement>('zn-accordion');
+      if (accordion) accordions.set(accordion, (accordions.get(accordion) ?? false) || visible);
     });
 
-    if (searchTerm === '') {
-      filterableElements.forEach((el) => {
-        (el as HTMLElement).style.display = '';
-      });
-    }
-
-    // if nothing is visible, show a "no results found" message
-    const anyVisibleElements = Array.from(filterableElements).some((el) => {
-      return (el as HTMLElement).style.display !== 'none';
+    panels.forEach((visible, panel) => setDisplay(panel, visible));
+    accordions.forEach((visible, accordion) => {
+      if (visible) setDisplay(accordion, true);
     });
 
     let noResultsMessage = this.querySelector<HTMLElement>('.no-results-message');
@@ -106,4 +85,9 @@ export default class ZnFilterContainer extends ZincElement {
       </zn-input>
       <slot></slot> `;
   }
+}
+
+function setDisplay(el: HTMLElement, visible: boolean) {
+  const display = visible ? '' : 'none';
+  if (el.style.display !== display) el.style.display = display;
 }

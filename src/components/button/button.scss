@@ -200,15 +200,23 @@
 }
 
 .button--with-icon.button--with-content:not(.button--icon-button) {
+  // Icon glyphs are drawn inset ~2 units inside their 24-unit box, so the icon
+  // is narrower than the space it takes. Pull that slack out on both sides so
+  // the gaps read as equal to the text edge opposite.
+  --icon-optical-inset: calc(var(--button-icon-size, 20px) / 12);
+  --icon-gap: calc(var(--zn-base-px) - var(--icon-optical-inset));
+
   &.button--icon-left {
     zn-icon {
-      margin-right: var(--zn-base-px);
+      margin-left: calc(var(--icon-optical-inset) * -1);
+      margin-right: var(--icon-gap);
     }
   }
 
   &.button--icon-right {
     zn-icon {
-      margin-left: var(--zn-base-px);
+      margin-left: var(--icon-gap);
+      margin-right: calc(var(--icon-optical-inset) * -1);
     }
   }
 }

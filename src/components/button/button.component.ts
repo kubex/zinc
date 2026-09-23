@@ -374,8 +374,9 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   protected render(): unknown {
     const isLink = this._isLink();
     const showCancel = this.loading && this.autoClick;
+    const resolvedIconSize = this.iconSize ? this.iconSize : 20;
     const icon = this.icon && !this.loading ? html`
-        <zn-icon part="icon" src="${this.icon}" id="xy2" size="${this.iconSize ? this.iconSize : 20}"
+        <zn-icon part="icon" src="${this.icon}" id="xy2" size="${resolvedIconSize}"
                  color="${ifDefined(this.iconColor)}" fill="${ifDefined(this.iconFill)}"
                  library="${ifDefined(this.iconLibrary)}"></zn-icon>`
       : '';
@@ -384,10 +385,13 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     // accessible name. Buttons with content keep their text as the name.
     const hasContent = this.hasSlotController.test('[default]') || !!this.content;
     const ariaLabel = this.label || (hasContent ? undefined : this.tooltip);
-    const iconButtonStyles = this.iconButton ? {
-      '--icon-button-color': this.getIconButtonColor(this.color),
-      '--icon-button-hover-color': this.getIconButtonColor(this.hoverColor || 'primary')
-    } : {};
+    const buttonStyles = {
+      ...(this.iconButton ? {
+        '--icon-button-color': this.getIconButtonColor(this.color),
+        '--icon-button-hover-color': this.getIconButtonColor(this.hoverColor || 'primary')
+      } : {}),
+      ...(this.icon ? {'--button-icon-size': `${resolvedIconSize}px`} : {}),
+    };
 
     // A removed `notification` attribute lands here as null, not undefined
     const notification = this.notification ?? undefined;
@@ -434,7 +438,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         aria-label="${ifDefined(ariaLabel)}"
         data-notification="${ifDefined(notification)}"
         disabled="${this.disabled || nothing}"
-        style=${styleMap(iconButtonStyles)}
+        style=${styleMap(buttonStyles)}
         @click="${this.handleClick}">
         ${this.iconPosition === 'left' ? icon : ''}
         <slot part="label"

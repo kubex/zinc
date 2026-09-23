@@ -9112,7 +9112,10 @@ declare module "components/filter-container/filter-container.component" {
     export default class ZnFilterContainer extends ZincElement {
         static styles: CSSResultGroup;
         attr: string;
+        private _filterFrame;
         handleSearchChange(event: Event): void;
+        disconnectedCallback(): void;
+        private applyFilter;
         render(): import("lit-html").TemplateResult<1>;
     }
 }

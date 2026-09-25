@@ -5102,8 +5102,127 @@ declare module "components/header/index" {
         }
     }
 }
+declare module "components/tabs/tabs-navigation" {
+    export const TAB_STORE_PREFIX = "zntab:";
+    /** Scopes a store key to the current location, so each page keeps its own tab. */
+    export function locationScopedKey(key: string): string;
+    /**
+     * Ends the visits to every location other than the one on screen, discarding
+     * the tabs they were left showing. Called whenever the location may have
+     * changed, so the only tabs ever remembered are the current page's.
+     */
+    export function endVisitsToOtherLocations(): void;
+    /**
+     * Whether the current location was reached in a way that should replay the tab
+     * it was last left on: a reload, or a history traversal. A fresh navigation -
+     * including a client side one to a location visited earlier - returns false.
+     */
+    export function isRestorableLocation(): boolean;
+    /** The tab the current history entry was left showing, if it recorded one for the visit under way. */
+    export function getHistoryTab(key: string): string | null;
+    /** Adds a history entry for a tab change, making it its own Back step. */
+    export function pushHistoryTab(key: string, tab: string): void;
+    /** Records the tab on the current entry without adding a Back step. */
+    export function replaceHistoryTab(key: string, tab: string): void;
+}
 declare module "utilities/md5" {
     export function md5(string: string): string;
+}
+declare module "components/tabs/tabs.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import { Store } from "internal/storage";
+    import ZincElement from "internal/zinc-element";
+    export const tabContainerSelector = "zn-tabs, zn-page, zn-page-nav";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/tabs
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnTabs extends ZincElement {
+        static styles: CSSResultGroup;
+        masterId: string;
+        defaultUri: string;
+        _current: string;
+        _split: number;
+        _splitMin: number;
+        _splitMinSecondary: number;
+        _splitMax: number;
+        primaryCaption: string;
+        secondaryCaption: string;
+        noPrefetch: boolean;
+        noCache: boolean;
+        localStorage: boolean;
+        storeKey: string;
+        storeTtl: number;
+        padded: boolean;
+        fetchStyle: string;
+        fullWidth: boolean;
+        paddedRight: boolean;
+        monitor: string;
+        caption: string;
+        description: string;
+        protected preload: boolean;
+        protected _store: Store;
+        protected _activeClicks: number;
+        private _panel;
+        private _panels;
+        private _activeTab;
+        private _tabs;
+        private _actions;
+        private _knownUri;
+        private _defaultTab;
+        private readonly hasSlotController;
+        private readonly _domObserver;
+        private readonly _monitorObserver;
+        constructor();
+        connectedCallback(): Promise<void>;
+        disconnectedCallback(): void;
+        monitorDom(): void;
+        /** The key the active tab is persisted under. Null disables persistence. */
+        protected getTabStoreKey(): string | null;
+        protected getStoredTab(): string | null;
+        protected storeActiveTab(tabName: string): void;
+        protected restoreStoredTab(stored: string): void;
+        /** Activates the tab the container starts on, ignoring any stored selection. */
+        protected activateDefaultTab(): void;
+        private readonly handlePopState;
+        private pushTabHistory;
+        private getUriForTabId;
+        _addPanel(panel: HTMLElement): void;
+        _addTab(tab: HTMLElement): void;
+        reRegisterTabs: () => void;
+        firstUpdated(_changedProperties: PropertyValues): void;
+        switchTab(inc: number): void;
+        nextTab(): void;
+        previousTab(): void;
+        _prepareTab(tabId: string): void;
+        _uriToId(tabUri: string): string;
+        _createUriPanel(tabEle: Element, tabUri: string, tabId: string): HTMLDivElement;
+        _handleClick(event: PointerEvent): void;
+        fetchUriTab(target: HTMLElement): void;
+        clickTab(target: HTMLElement, refresh: boolean, pushHistory?: boolean): void;
+        getRefTab(target: HTMLElement): string | null;
+        setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab?: string | null, pushHistory?: boolean): void;
+        _setTabEleActive(ele: Element, active: boolean): void;
+        selectTab(tabName: string, refresh: boolean): boolean;
+        getActiveTab(): Element[];
+        observerDom(): void;
+        removeTabAndPanel(tabId: string): void;
+        _registerTabs: () => void;
+        render(): import("lit-html").TemplateResult<1>;
+    }
 }
 declare module "components/expanding-action/expanding-action.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
@@ -5211,124 +5330,6 @@ declare module "components/tab/index" {
         }
     }
 }
-declare module "components/tabs/tabs-navigation" {
-    export const TAB_STORE_PREFIX = "zntab:";
-    /** Scopes a store key to the current location, so each page keeps its own tab. */
-    export function locationScopedKey(key: string): string;
-    /**
-     * Ends the visits to every location other than the one on screen, discarding
-     * the tabs they were left showing. Called whenever the location may have
-     * changed, so the only tabs ever remembered are the current page's.
-     */
-    export function endVisitsToOtherLocations(): void;
-    /**
-     * Whether the current location was reached in a way that should replay the tab
-     * it was last left on: a reload, or a history traversal. A fresh navigation -
-     * including a client side one to a location visited earlier - returns false.
-     */
-    export function isRestorableLocation(): boolean;
-    /** The tab the current history entry was left showing, if it recorded one for the visit under way. */
-    export function getHistoryTab(key: string): string | null;
-    /** Adds a history entry for a tab change, making it its own Back step. */
-    export function pushHistoryTab(key: string, tab: string): void;
-    /** Records the tab on the current entry without adding a Back step. */
-    export function replaceHistoryTab(key: string, tab: string): void;
-}
-declare module "components/tabs/tabs.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import { Store } from "internal/storage";
-    import ZincElement from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/tabs
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnTabs extends ZincElement {
-        static styles: CSSResultGroup;
-        masterId: string;
-        defaultUri: string;
-        _current: string;
-        _split: number;
-        _splitMin: number;
-        _splitMinSecondary: number;
-        _splitMax: number;
-        primaryCaption: string;
-        secondaryCaption: string;
-        noPrefetch: boolean;
-        noCache: boolean;
-        localStorage: boolean;
-        storeKey: string;
-        storeTtl: number;
-        padded: boolean;
-        fetchStyle: string;
-        fullWidth: boolean;
-        paddedRight: boolean;
-        monitor: string;
-        caption: string;
-        description: string;
-        protected preload: boolean;
-        protected _store: Store;
-        protected _activeClicks: number;
-        private _panel;
-        private _panels;
-        private _activeTab;
-        private _tabs;
-        private _actions;
-        private _knownUri;
-        private _defaultTab;
-        private readonly hasSlotController;
-        private readonly _domObserver;
-        private readonly _monitorObserver;
-        constructor();
-        connectedCallback(): Promise<void>;
-        disconnectedCallback(): void;
-        monitorDom(): void;
-        /** The key the active tab is persisted under. Null disables persistence. */
-        protected getTabStoreKey(): string | null;
-        protected getStoredTab(): string | null;
-        protected storeActiveTab(tabName: string): void;
-        protected restoreStoredTab(stored: string): void;
-        /** Activates the tab the container starts on, ignoring any stored selection. */
-        protected activateDefaultTab(): void;
-        private readonly handlePopState;
-        private pushTabHistory;
-        private getUriForTabId;
-        _addPanel(panel: HTMLElement): void;
-        _addTab(tab: HTMLElement): void;
-        reRegisterTabs: () => void;
-        firstUpdated(_changedProperties: PropertyValues): void;
-        switchTab(inc: number): void;
-        nextTab(): void;
-        previousTab(): void;
-        _prepareTab(tabId: string): void;
-        _uriToId(tabUri: string): string;
-        _createUriPanel(tabEle: Element, tabUri: string, tabId: string): HTMLDivElement;
-        _handleClick(event: PointerEvent): void;
-        fetchUriTab(target: HTMLElement): void;
-        clickTab(target: HTMLElement, refresh: boolean, pushHistory?: boolean): void;
-        getRefTab(target: HTMLElement): string | null;
-        setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab?: string | null, pushHistory?: boolean): void;
-        _setTabEleActive(ele: Element, active: boolean): void;
-        selectTab(tabName: string, refresh: boolean): boolean;
-        getActiveTab(): Element[];
-        observerDom(): void;
-        removeTabAndPanel(tabId: string): void;
-        _registerTabs: () => void;
-        render(): import("lit-html").TemplateResult<1>;
-    }
-}
 declare module "components/tabs/index" {
     import ZnTabs from "components/tabs/tabs.component";
     export * from "components/tabs/tabs.component";
@@ -5355,6 +5356,7 @@ declare module "components/page/page.component" {
      * @since 1.0
      *
      * @slot - Page content. Use zn-tab for named tabs and header-action/header-actions for header actions.
+     *   Clicking an element in the content with `tab="<tab id>"` opens that tab.
      * @slot description - Rich subtitle/description content. Falls back to the `summary` attribute when empty.
      * @slot bottom - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.
      */
@@ -5403,6 +5405,7 @@ declare module "components/page/page.component" {
         private uniqueId;
         private handlePageScroll;
         updated(changedProperties: PropertyValues): void;
+        private handleContentTabClick;
         private handleNavigationSelect;
         private getNavigationItemPage;
         private activateTab;

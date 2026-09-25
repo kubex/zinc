@@ -26697,7 +26697,7 @@
           "name": "ZnPage",
           "slots": [
             {
-              "description": "Page content. Use zn-tab for named tabs and header-action/header-actions for header actions.",
+              "description": "Page content. Use zn-tab for named tabs and header-action/header-actions for header actions. Clicking an element in the content with `tab=\"<tab id>\"` opens that tab.",
               "name": "",
               "inheritedFrom": {
                 "name": "ZnTabs",
@@ -27028,6 +27028,11 @@
               ]
             },
             {
+              "kind": "field",
+              "name": "handleContentTabClick",
+              "privacy": "private"
+            },
+            {
               "kind": "method",
               "name": "handleNavigationSelect",
               "privacy": "private",
@@ -27134,6 +27139,10 @@
                 },
                 {
                   "name": "store",
+                  "default": "false"
+                },
+                {
+                  "name": "pushHistory",
                   "default": "false"
                 }
               ]
@@ -28375,7 +28384,7 @@
           "tagNameWithoutPrefix": "page",
           "tagName": "zn-page",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Combines a page header with tab navigation and tab panels.\n * @documentation https://zinc.style/components/page\n * @status experimental\n * @since 1.0\n *\n * @slot - Page content. Use zn-tab for named tabs and header-action/header-actions for header actions.\n * @slot description - Rich subtitle/description content. Falls back to the `summary` attribute when empty.\n * @slot bottom - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.\n */",
+          "jsDoc": "/**\n * @summary Combines a page header with tab navigation and tab panels.\n * @documentation https://zinc.style/components/page\n * @status experimental\n * @since 1.0\n *\n * @slot - Page content. Use zn-tab for named tabs and header-action/header-actions for header actions.\n *   Clicking an element in the content with `tab=\"<tab id>\"` opens that tab.\n * @slot description - Rich subtitle/description content. Falls back to the `summary` attribute when empty.\n * @slot bottom - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.\n */",
           "documentation": "https://zinc.style/components/page",
           "status": "experimental",
           "since": "1.0",
@@ -46106,6 +46115,14 @@
       "path": "components/tabs/tabs.js",
       "declarations": [
         {
+          "kind": "variable",
+          "name": "tabContainerSelector",
+          "type": {
+            "text": "string"
+          },
+          "default": "'zn-tabs, zn-page, zn-page-nav'"
+        },
+        {
           "kind": "class",
           "description": "",
           "name": "ZnTabs",
@@ -46987,6 +47004,14 @@
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "tabContainerSelector",
+          "declaration": {
+            "name": "tabContainerSelector",
+            "module": "components/tabs/tabs.js"
+          }
+        },
         {
           "kind": "js",
           "name": "default",
@@ -53607,7 +53632,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.159",
+    "version": "1.1.160",
     "author": "",
     "license": "MIT"
   }

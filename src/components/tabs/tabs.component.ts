@@ -25,7 +25,7 @@ import styles from './tabs.scss';
 // Every element that manages its own tabs (ZnTabs and its subclasses). Tab
 // registration must stop at these so an outer container never claims a nested
 // container's tabs.
-const tabContainerSelector = 'zn-tabs, zn-page, zn-page-nav';
+export const tabContainerSelector = 'zn-tabs, zn-page, zn-page-nav';
 
 /**
  * @summary Short summary of the component's intended use.

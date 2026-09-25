@@ -350,6 +350,58 @@ describe('<zn-page>', () => {
     expect(innerDynamicPanel.hasAttribute('selected')).to.equal(true);
   });
 
+  it('opens a tab when an element in the content with a tab attribute is clicked', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Content Tab Link">
+        <zn-tab caption="Overview" id="overview">
+          <zn-button tab="details">Open details</zn-button>
+          <zn-button tab="details" disabled>Disabled link</zn-button>
+        </zn-tab>
+        <zn-tab caption="Details" id="details">Details Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(40);
+
+    // zn-button.click() skips event dispatch, so click the rendered button as a user would.
+    const [link, disabledLink] = Array.from(el.querySelectorAll('zn-button'))
+      .map(button => button.shadowRoot!.querySelector<HTMLElement>('button')!);
+
+    disabledLink.click();
+    await aTimeout(40);
+    expect(el.getAttribute('active')).to.equal('overview');
+
+    link.click();
+    await aTimeout(40);
+    expect(el.getAttribute('active')).to.equal('details');
+    expect(el.shadowRoot!.querySelector('#details')!.hasAttribute('selected')).to.equal(true);
+    const activeItem = el.shadowRoot!.querySelector<HTMLElement>('zn-navbar li.active');
+    expect(activeItem?.getAttribute('tab')).to.equal('details');
+  });
+
+  it('leaves content tab links inside a nested page to that page', async () => {
+    const outerPage = await fixture<ZnPage>(html`
+      <zn-page caption="Nested Content Tab Link">
+        <zn-tab caption="Outer One" id="outer-one">
+          <zn-page caption="Nested Content Tab Link Inner" nested>
+            <zn-tab caption="Inner One" id="inner-one">
+              <zn-button tab="inner-two">Inner link</zn-button>
+            </zn-tab>
+            <zn-tab caption="Inner Two" id="inner-two">Inner Two Content</zn-tab>
+          </zn-page>
+        </zn-tab>
+        <zn-tab caption="Outer Two" id="inner-two">Outer Two Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(80);
+
+    const innerPage = outerPage.querySelector<ZnPage>('zn-page')!;
+    innerPage.querySelector('zn-button')!.shadowRoot!.querySelector<HTMLElement>('button')!.click();
+    await aTimeout(40);
+
+    expect(innerPage.getAttribute('active')).to.equal('inner-two');
+    expect(outerPage.getAttribute('active')).to.equal('outer-one');
+  });
+
   it('keeps nested page tab selections scoped to the nested page', async () => {
     const outerPage = await fixture<ZnPage>(html`
       <zn-page caption="Outer Page">

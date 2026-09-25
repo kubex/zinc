@@ -2,6 +2,7 @@ import {classMap} from 'lit/directives/class-map.js';
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {HasSlotController} from '../../internal/slot';
 import {property, state} from 'lit/decorators.js';
+import {tabContainerSelector} from '../tabs/tabs.component';
 import ZnButton from '../button';
 import ZnCopyButton from '../copy-button';
 import ZnExpandingAction from '../expanding-action';
@@ -30,6 +31,7 @@ interface TabDefinition {
  * @since 1.0
  *
  * @slot - Page content. Use zn-tab for named tabs and header-action/header-actions for header actions.
+ *   Clicking an element in the content with `tab="<tab id>"` opens that tab.
  * @slot description - Rich subtitle/description content. Falls back to the `summary` attribute when empty.
  * @slot bottom - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.
  */
@@ -68,6 +70,7 @@ export default class ZnPage extends ZnTabs {
     const connected = super.connectedCallback();
     window.addEventListener('alt-press', this.handleAltPress);
     window.addEventListener('alt-up', this.handleAltUp);
+    this.addEventListener('click', this.handleContentTabClick);
     this.prepareTabs();
     this.refreshExpandingActionsState();
     this.tabObserver = new MutationObserver((mutations) => {
@@ -90,6 +93,7 @@ export default class ZnPage extends ZnTabs {
     super.disconnectedCallback();
     window.removeEventListener('alt-press', this.handleAltPress);
     window.removeEventListener('alt-up', this.handleAltUp);
+    this.removeEventListener('click', this.handleContentTabClick);
     this.tabObserver?.disconnect();
     this.tabObserver = null;
     this.actionObserver?.disconnect();
@@ -280,6 +284,23 @@ export default class ZnPage extends ZnTabs {
     }
   }
 
+  // Only elements whose nearest tab container is this page count, so links inside a nested
+  // zn-tabs or zn-page drive that container instead.
+  private handleContentTabClick = (event: MouseEvent) => {
+    const link = event.composedPath().find((node): node is HTMLElement =>
+      node instanceof HTMLElement && node.hasAttribute('tab') && node.closest(tabContainerSelector) === this
+    );
+    if (!link || link.hasAttribute('disabled')) {
+      return;
+    }
+
+    const definition = this.tabDefinitions.find(tab => tab.id === link.getAttribute('tab'));
+    if (definition) {
+      event.preventDefault();
+      this.activateTabDefinition(definition, true, true);
+    }
+  };
+
   private handleNavigationSelect(event: ZnSelectEvent) {
     const item = event.detail.item as HTMLElement;
     if (this.getNavigationItemPage(item) !== this) {
@@ -383,16 +404,16 @@ export default class ZnPage extends ZnTabs {
     return this.pageHistoryKey;
   }
 
-  private activateTabDefinition(tab: TabDefinition, store = false) {
+  private activateTabDefinition(tab: TabDefinition, store = false, pushHistory = false) {
     if (tab.uri) {
       const navItem = this.findNavItemForUri(tab.uri);
       if (navItem) {
-        this.clickTab(navItem, false);
+        this.clickTab(navItem, false, pushHistory);
         this.syncNavigationActive(navItem);
         return;
       }
     }
-    this.activateTab(tab.id, store);
+    this.activateTab(tab.id, store, pushHistory);
   }
 
   private findNavItemForUri(uri: string): HTMLElement | null {

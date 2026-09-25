@@ -133,6 +133,21 @@ Use `priority` to control tab order. Lower numbers appear first after the empty-
 </zn-page>
 ```
 
+### Linking to a Tab
+
+Give any element in the page content a `tab` attribute holding a tab's `id` to open that tab when it is clicked. Links inside a nested `zn-page` or `zn-tabs` open tabs in that nested container.
+
+```html:preview
+<zn-page caption="Scorecard">
+  <zn-tab caption="Details" id="details">
+    <zn-button tab="section-general" icon="edit">Edit General section</zn-button>
+  </zn-tab>
+  <zn-tab caption="General" id="section-general">
+    General section settings
+  </zn-tab>
+</zn-page>
+```
+
 ### Dynamic Tabs
 
 Set `uri` on `zn-tab` to create a dynamic tab. The generated navigation item receives `tab-uri`.

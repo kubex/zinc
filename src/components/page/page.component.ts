@@ -538,7 +538,7 @@ export default class ZnPage extends ZnTabs {
         </div>
 
         <div class="page__tabs">
-          <div id="content" class="page__content" part="content">
+          <div id="content" class="page__content" part="content" @scroll="${this.handlePageScroll}">
             ${this.tabDefinitions
               .filter(tab => tab.slotName !== null)
               .map(tab => html`

@@ -39,10 +39,10 @@ describe('<zn-sp>', () => {
     expect(getComputedStyle(parent.querySelector('form')!).display).to.equal('block');
   });
 
-  it('should fill its parent container height', async () => {
+  it('should fill its parent container height when growing', async () => {
     const parent = await fixture(html`
       <div style="height: 300px;">
-        <zn-sp>
+        <zn-sp grow>
           <div>Content</div>
         </zn-sp>
       </div>

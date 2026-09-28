@@ -154,7 +154,7 @@ describe('<zn-navbar>', () => {
     expect(nav.classList.contains('has-hidden')).to.equal(true);
   });
 
-  it('rounds the last visible nav item when items are hidden behind more', async () => {
+  it('rounds the more button instead of the last visible nav item when items are hidden', async () => {
     const el = await fixture<ZnNavbar>(html`
       <zn-navbar>
         <li>One</li>
@@ -187,7 +187,8 @@ describe('<zn-navbar>', () => {
     expect(nav.classList.contains('has-hidden')).to.equal(true);
     expect(items[0].classList.contains('last-visible')).to.equal(true);
     expect(items[1].classList.contains('hidden')).to.equal(true);
-    expect(getComputedStyle(items[0]).borderTopRightRadius).to.equal('6px');
+    expect(getComputedStyle(items[0]).borderTopRightRadius).to.equal('0px');
+    expect(getComputedStyle(more).borderTopRightRadius).to.equal('6px');
   });
 
   it('keeps the left border when only the more button is visible', async () => {

@@ -5,6 +5,9 @@ import { expect, fixture, html, oneEvent } from '@open-wc/testing';
 const clickButton = (button: HTMLElement) =>
   button.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true, cancelable: true }));
 
+// The test harness loads no theme stylesheet, so a layout test stamps on the spacing token a themed page provides.
+const spacingTokens = '--zn-spacing-small: 16px;';
+
 describe('<zn-form-actions>', () => {
   it('should render a component', async () => {
     const el = await fixture(html` <zn-form-actions></zn-form-actions> `);
@@ -24,7 +27,7 @@ describe('<zn-form-actions>', () => {
 
   it('holds align="start" children left and the rest right, one gap apart on each side', async () => {
     const el = await fixture<HTMLElement>(html`
-      <zn-form-actions with-cancel style="width: 600px">
+      <zn-form-actions with-cancel style="width: 600px; ${spacingTokens}">
         <zn-button align="start" id="translate">Translate</zn-button>
         <zn-button align="start" id="slug">Slug</zn-button>
       </zn-form-actions>

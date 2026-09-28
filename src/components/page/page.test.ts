@@ -17,9 +17,9 @@ describe('<zn-page>', () => {
     await aTimeout(20);
 
     const header = el.shadowRoot!.querySelector('[part="header"]')!;
-    const caption = el.shadowRoot!.querySelector('[part="header-caption"]')!;
-    const description = el.shadowRoot!.querySelector('[part="header-description"]')!;
-    const headerRight = el.shadowRoot!.querySelector('[part="header-right"]')!;
+    const caption = el.shadowRoot!.querySelector('.header__caption')!;
+    const description = el.shadowRoot!.querySelector('.header__description')!;
+    const headerRight = el.shadowRoot!.querySelector('.header__right')!;
     const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
     const navItems = navbar.shadowRoot!.querySelectorAll('li:not(.more)');
     const actionsSlot = el.shadowRoot!.querySelector<HTMLSlotElement>('slot[name="actions"]')!;
@@ -588,25 +588,25 @@ describe('<zn-page>', () => {
     `);
     await aTimeout(20);
 
-    const page = el.shadowRoot!.querySelector<HTMLElement>('.page')!;
+    const content = el.shadowRoot!.querySelector<HTMLElement>('#content')!;
     const header = el.shadowRoot!.querySelector<HTMLElement>('.page__header')!;
 
     expect(header.classList.contains('page__header--scrolled-no-navigation')).to.equal(false);
 
-    page.scrollTop = 10;
-    page.dispatchEvent(new Event('scroll'));
+    content.scrollTop = 10;
+    content.dispatchEvent(new Event('scroll'));
     await el.updateComplete;
 
     expect(header.classList.contains('page__header--scrolled-no-navigation')).to.equal(false);
 
-    page.scrollTop = 25;
-    page.dispatchEvent(new Event('scroll'));
+    content.scrollTop = 25;
+    content.dispatchEvent(new Event('scroll'));
     await el.updateComplete;
 
     expect(header.classList.contains('page__header--scrolled-no-navigation')).to.equal(true);
 
-    page.scrollTop = 0;
-    page.dispatchEvent(new Event('scroll'));
+    content.scrollTop = 0;
+    content.dispatchEvent(new Event('scroll'));
     await el.updateComplete;
 
     expect(header.classList.contains('page__header--scrolled-no-navigation')).to.equal(false);
@@ -656,18 +656,18 @@ describe('<zn-page>', () => {
     await aTimeout(20);
 
     const page = el.querySelector<ZnPage>('zn-page')!;
-    const scroller = page.shadowRoot!.querySelector<HTMLElement>('.page')!;
+    const content = page.shadowRoot!.querySelector<HTMLElement>('.page__tabs')!;
     const header = page.shadowRoot!.querySelector<HTMLElement>('.page__header')!;
 
-    expect(getComputedStyle(scroller).backgroundColor).to.equal('rgb(12, 34, 56)');
+    expect(getComputedStyle(content).backgroundColor).to.equal('rgb(12, 34, 56)');
     expect(getComputedStyle(header).backgroundColor).to.equal('rgba(12, 34, 56, 0.95)');
   });
 
-  it('uses the panel background when placed inside a panel', async () => {
+  it('uses the panel background for a page flagged as sitting in a panel', async () => {
     const el = await fixture<HTMLElement>(html`
       <div style="--zn-body: 12, 34, 56; --zn-panel: 1, 2, 3;">
         <zn-panel flush>
-          <zn-page caption="Page Title" modal>
+          <zn-page caption="Page Title" modal panel panel-head>
             <zn-tab caption="Overview">Overview Content</zn-tab>
           </zn-page>
         </zn-panel>
@@ -676,10 +676,10 @@ describe('<zn-page>', () => {
     await aTimeout(20);
 
     const page = el.querySelector<ZnPage>('zn-page')!;
-    const scroller = page.shadowRoot!.querySelector<HTMLElement>('.page')!;
+    const content = page.shadowRoot!.querySelector<HTMLElement>('.page__tabs')!;
     const header = page.shadowRoot!.querySelector<HTMLElement>('.page__header')!;
 
-    expect(getComputedStyle(scroller).backgroundColor).to.equal('rgb(1, 2, 3)');
+    expect(getComputedStyle(content).backgroundColor).to.equal('rgb(1, 2, 3)');
     expect(getComputedStyle(header).backgroundColor).to.equal('rgba(1, 2, 3, 0.95)');
   });
 

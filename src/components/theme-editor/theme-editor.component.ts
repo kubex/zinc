@@ -830,8 +830,8 @@ export default class ZnThemeEditor extends ZincElement {
                          icon-size="20"
                          icon="${this.mode === 'dark' ? 'sun@lu' : 'moon@lu'}"
                          data-mode-toggle
+                         label="${this.mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}"
                          tooltip="${this.mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}"
-                         aria-label="${this.mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}"
                          @click="${this._toggleMode}"></zn-button>
             </div>
             <div class="editor__controls-body">
@@ -881,7 +881,8 @@ export default class ZnThemeEditor extends ZincElement {
                              icon-size="20"
                              icon="${d.icon}@lu"
                              data-device="${d.id}"
-                             aria-label="${d.label}"
+                             label="${d.label}"
+                             tooltip="${d.label}"
                              aria-pressed="${this.device === d.id ? 'true' : 'false'}"
                              @click="${() => this._setDevice(d.id)}"></zn-button>`)}
               </zn-button-group>

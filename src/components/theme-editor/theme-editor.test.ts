@@ -19,6 +19,11 @@ function spyOnFrame(el: Element): ThemeCall[] {
   return calls;
 }
 
+// zn-button overrides click() without dispatching a DOM event, so fire a real one.
+function press(el: Element) {
+  el.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+}
+
 describe('<zn-theme-editor>', () => {
   const FIXTURE = html`
     <zn-theme-editor src="about:blank" frame-origin="https://site.example" debounce="10">
@@ -174,7 +179,7 @@ describe('<zn-theme-editor>', () => {
     const el = await fixture(FIXTURE);
     const calls = spyOnFrame(el);
 
-    el.shadowRoot!.querySelector<HTMLButtonElement>('[data-device="mobile"]')!.click();
+    press(el.shadowRoot!.querySelector('[data-device="mobile"]')!);
     await (el as HTMLElement & {updateComplete: Promise<unknown>}).updateComplete;
 
     expect((el as HTMLElement & {device: string}).device).to.equal('mobile');
@@ -192,7 +197,7 @@ describe('<zn-theme-editor>', () => {
       detail = (e as CustomEvent<{device: string}>).detail;
     });
 
-    el.shadowRoot!.querySelector<HTMLButtonElement>('[data-device="tablet"]')!.click();
+    press(el.shadowRoot!.querySelector('[data-device="tablet"]')!);
 
     await waitUntil(() => detail !== null);
     expect(detail!.device).to.equal('tablet');
@@ -205,7 +210,7 @@ describe('<zn-theme-editor>', () => {
     expect(desktop.getAttribute('aria-pressed')).to.equal('true');
     expect(mobile.getAttribute('aria-pressed')).to.equal('false');
 
-    mobile.click();
+    press(mobile);
     await (el as HTMLElement & {updateComplete: Promise<unknown>}).updateComplete;
 
     expect(desktop.getAttribute('aria-pressed')).to.equal('false');
@@ -216,7 +221,7 @@ describe('<zn-theme-editor>', () => {
     const el = await fixture(FIXTURE);
     const calls = spyOnFrame(el);
 
-    el.shadowRoot!.querySelector<HTMLButtonElement>('[data-mode-toggle]')!.click();
+    press(el.shadowRoot!.querySelector('[data-mode-toggle]')!);
 
     await waitUntil(() => calls.length === 1);
     expect((el as HTMLElement & {mode: string}).mode).to.equal('dark');
@@ -232,7 +237,7 @@ describe('<zn-theme-editor>', () => {
       </zn-theme-editor>`);
     const calls = spyOnFrame(el);
 
-    el.shadowRoot!.querySelector<HTMLButtonElement>('[data-mode-toggle]')!.click();
+    press(el.shadowRoot!.querySelector('[data-mode-toggle]')!);
     await waitUntil(() => calls.length === 1);
 
     expect(calls[0]['values']).to.deep.equal({background: '#000000'});
@@ -256,7 +261,7 @@ describe('<zn-theme-editor>', () => {
     const el = await fixture(FIXTURE);
     const calls = spyOnFrame(el);
 
-    el.shadowRoot!.querySelector<HTMLButtonElement>('[data-mode-toggle]')!.click();
+    press(el.shadowRoot!.querySelector('[data-mode-toggle]')!);
     await waitUntil(() => calls.length === 1);
 
     expect(calls[0]['values']).to.deep.equal({radius: '8'});
@@ -269,7 +274,7 @@ describe('<zn-theme-editor>', () => {
     const calls = spyOnFrame(el);
     const input = el.querySelector('zn-input')! as HTMLElement & {value: string};
 
-    el.shadowRoot!.querySelector<HTMLButtonElement>('[data-mode-toggle]')!.click(); // -> dark, radius '8'
+    press(el.shadowRoot!.querySelector('[data-mode-toggle]')!); // -> dark, radius '8'
     await waitUntil(() => calls.length === 1);
 
     input.value = '99';
@@ -277,7 +282,7 @@ describe('<zn-theme-editor>', () => {
     await waitUntil(() => calls.length === 2);
     expect(calls[1]['values']).to.deep.equal({radius: '99'});
 
-    el.shadowRoot!.querySelector<HTMLButtonElement>('[data-mode-toggle]')!.click(); // -> light, untouched
+    press(el.shadowRoot!.querySelector('[data-mode-toggle]')!); // -> light, untouched
     await waitUntil(() => calls.length === 3);
     expect(calls[2]['values']).to.deep.equal({radius: '8'});
     expect(input.value).to.equal('8');
@@ -290,7 +295,7 @@ describe('<zn-theme-editor>', () => {
       </zn-theme-editor>`);
     const calls = spyOnFrame(el);
 
-    el.shadowRoot!.querySelector<HTMLButtonElement>('[data-mode-toggle]')!.click();
+    press(el.shadowRoot!.querySelector('[data-mode-toggle]')!);
     await waitUntil(() => calls.length === 1);
 
     expect(calls[0]['values']).to.deep.equal({rounded: true});
@@ -305,7 +310,7 @@ describe('<zn-theme-editor>', () => {
       </zn-theme-editor>`);
     const calls = spyOnFrame(el);
 
-    el.shadowRoot!.querySelector<HTMLButtonElement>('[data-mode-toggle]')!.click();
+    press(el.shadowRoot!.querySelector('[data-mode-toggle]')!);
     await waitUntil(() => calls.length === 1);
 
     expect(calls[0]['values']).to.deep.equal({rounded: true});
@@ -334,7 +339,7 @@ describe('<zn-theme-editor>', () => {
     input.value = '99';
     input.dispatchEvent(new CustomEvent('zn-input', {bubbles: true, composed: true}));
     // toggle before the 50ms push debounce fires - no await in between
-    el.shadowRoot!.querySelector<HTMLButtonElement>('[data-mode-toggle]')!.click();
+    press(el.shadowRoot!.querySelector('[data-mode-toggle]')!);
 
     await waitUntil(() => calls.length >= 1);
     // give the (now-cancelled) original debounce timer a chance to prove it's gone
@@ -572,7 +577,7 @@ describe('<zn-theme-editor>', () => {
       expect((el as HTMLElement & {values: {light: Record<string, unknown>; dark: Record<string, unknown>}}).values)
         .to.deep.equal({light: {accent: '#ffffff'}, dark: {accent: '#000000'}});
 
-      el.shadowRoot!.querySelector<HTMLButtonElement>('[data-mode-toggle]')!.click();
+      press(el.shadowRoot!.querySelector('[data-mode-toggle]')!);
       await waitUntil(() => calls.length === 1);
 
       expect(calls[0]['values']).to.deep.equal({accent: '#000000'});
@@ -1378,7 +1383,7 @@ describe('<zn-theme-editor>', () => {
         </zn-theme-editor>`);
       spyOnFrame(el);
 
-      el.shadowRoot!.querySelector<HTMLButtonElement>('[data-mode-toggle]')!.click();
+      press(el.shadowRoot!.querySelector('[data-mode-toggle]')!);
 
       await new Promise(resolve => setTimeout(resolve, 100));
       expect(fetchCalls.length).to.equal(0);
@@ -1400,7 +1405,7 @@ describe('<zn-theme-editor>', () => {
         </zn-theme-editor>`);
       spyOnFrame(el);
 
-      el.shadowRoot!.querySelector<HTMLButtonElement>('[data-mode-toggle]')!.click();
+      press(el.shadowRoot!.querySelector('[data-mode-toggle]')!);
 
       await new Promise(resolve => setTimeout(resolve, 100));
       expect(fetchCalls.length).to.equal(0);
@@ -1423,7 +1428,7 @@ describe('<zn-theme-editor>', () => {
         </zn-theme-editor>`);
       const calls = spyOnFrame(el);
 
-      el.shadowRoot!.querySelector<HTMLButtonElement>('[data-mode-toggle]')!.click();
+      press(el.shadowRoot!.querySelector('[data-mode-toggle]')!);
 
       await waitUntil(() => calls.length === 1);
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -1443,8 +1448,8 @@ describe('<zn-theme-editor>', () => {
         </zn-theme-editor>`);
       spyOnFrame(el);
 
-      el.shadowRoot!.querySelector<HTMLButtonElement>('[data-mode-toggle]')!.click();
-      el.shadowRoot!.querySelector<HTMLButtonElement>('[data-device="mobile"]')!.click();
+      press(el.shadowRoot!.querySelector('[data-mode-toggle]')!);
+      press(el.shadowRoot!.querySelector('[data-device="mobile"]')!);
 
       await new Promise(resolve => setTimeout(resolve, 100));
       expect(fetchCalls.length).to.equal(0);
@@ -1522,11 +1527,8 @@ describe('<zn-theme-editor>', () => {
     let fetchCalls: {uri: string; init?: RequestInit}[];
     const realFetch = window.fetch;
 
-    // zn-button overrides click() to call its handler directly without dispatching -
-    // a real click event is needed for the theme-editor's own @click listener to fire.
     function clickButton(el: Element) {
-      const button = el.shadowRoot!.querySelector('zn-button')!;
-      button.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+      press(el.shadowRoot!.querySelector('zn-button.editor__submit')!);
     }
 
     beforeEach(() => {
@@ -1543,7 +1545,7 @@ describe('<zn-theme-editor>', () => {
 
     it('renders no button without submit-label', async () => {
       const el = await fixture(FIXTURE);
-      expect(el.shadowRoot!.querySelector('zn-button')).to.not.exist;
+      expect(el.shadowRoot!.querySelector('zn-button.editor__submit')).to.not.exist;
     });
 
     it('renders the button in the toolbar, not the footer, and leaves the footer slot working', async () => {
@@ -1553,11 +1555,11 @@ describe('<zn-theme-editor>', () => {
           <span slot="footer">extra</span>
         </zn-theme-editor>`);
 
-      const button = el.shadowRoot!.querySelector('zn-button')!;
+      const button = el.shadowRoot!.querySelector('zn-button.editor__submit')!;
       expect(button).to.exist;
       expect(button.textContent?.trim()).to.equal('Save theme');
-      expect(el.shadowRoot!.querySelector('[part="toolbar"] zn-button')).to.equal(button);
-      expect(el.shadowRoot!.querySelector('[part="footer"] zn-button')).to.not.exist;
+      expect(el.shadowRoot!.querySelector('[part="toolbar"] zn-button.editor__submit')).to.equal(button);
+      expect(el.shadowRoot!.querySelector('[part="footer"] zn-button.editor__submit')).to.not.exist;
       expect(el.shadowRoot!.querySelector('[part="footer"] slot[name="footer"]')).to.exist;
     });
 
@@ -1567,7 +1569,7 @@ describe('<zn-theme-editor>', () => {
           <zn-input name="radius" label="Radius" value="8"></zn-input>
         </zn-theme-editor>`);
 
-      expect(el.shadowRoot!.querySelector('zn-button')).to.exist;
+      expect(el.shadowRoot!.querySelector('zn-button.editor__submit')).to.exist;
       expect(el.shadowRoot!.querySelector('[part="footer"]')).to.not.exist;
     });
 
@@ -1681,7 +1683,7 @@ describe('<zn-theme-editor>', () => {
       await waitUntil(() => fetchCalls.length === 1);
       await (el as HTMLElement & {updateComplete: Promise<unknown>}).updateComplete;
 
-      const button = el.shadowRoot!.querySelector('zn-button')! as HTMLElement & {loading: boolean};
+      const button = el.shadowRoot!.querySelector('zn-button.editor__submit')! as HTMLElement & {loading: boolean};
       expect(button.loading).to.be.true;
 
       clickButton(el); // second click while in flight - must not stack
@@ -1729,7 +1731,7 @@ describe('<zn-theme-editor>', () => {
 
       clickButton(el); // flushes '99' and bypasses the save debounce, but a save is already in flight
       await (el as HTMLElement & {updateComplete: Promise<unknown>}).updateComplete;
-      const button = el.shadowRoot!.querySelector('zn-button')! as HTMLElement & {loading: boolean};
+      const button = el.shadowRoot!.querySelector('zn-button.editor__submit')! as HTMLElement & {loading: boolean};
       expect(button.loading).to.be.true;
 
       await new Promise(resolve => setTimeout(resolve, 20));

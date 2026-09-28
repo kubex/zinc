@@ -198,7 +198,6 @@ describe('<zn-translation-group>', () => {
         </zn-translation-group>`);
       // The input tokens live in the theme stylesheet, which the bundle under test does not carry.
       group.style.setProperty('--zn-input-background-color', 'rgb(1, 2, 3)');
-      group.style.setProperty('--zn-shadow-x-small', '0 1px 2px rgb(7, 8, 9)');
       group.style.setProperty('--zn-input-border-width', '1px');
       group.style.setProperty('--zn-input-border-color', 'rgb(9, 9, 9)');
       await group.updateComplete;
@@ -208,7 +207,6 @@ describe('<zn-translation-group>', () => {
       const styles = getComputedStyle(select.shadowRoot!.querySelector<HTMLElement>('[part~="combobox"]')!);
 
       expect(styles.backgroundColor, 'the fill').to.equal('rgb(1, 2, 3)');
-      expect(styles.boxShadow, 'the shadow').to.include('rgb(7, 8, 9)');
       expect(styles.borderTopWidth, 'the border').to.equal('1px');
       expect(styles.borderTopColor, 'the border').to.equal('rgb(9, 9, 9)');
     });

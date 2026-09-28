@@ -128,6 +128,9 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   /** Accessible name for the button. Icon-only buttons fall back to `tooltip`. */
   @property() label: string;
 
+  /** Toggle state, forwarded to the inner button's `aria-pressed`. */
+  @property({attribute: 'aria-pressed'}) pressed: 'true' | 'false' | 'mixed';
+
   // Auto Click Specific
   @property({type: Boolean, attribute: 'auto-click'}) autoClick = false;
   @property({type: Number, attribute: 'auto-click-delay'}) autoClickDelay = 2000;
@@ -436,6 +439,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         rel="${ifDefined(isLink ? this.rel : undefined)}"
         gaid="${ifDefined(this.gaid)}"
         aria-label="${ifDefined(ariaLabel)}"
+        aria-pressed="${ifDefined(isLink ? undefined : this.pressed)}"
         data-notification="${ifDefined(notification)}"
         disabled="${this.disabled || nothing}"
         style=${styleMap(buttonStyles)}

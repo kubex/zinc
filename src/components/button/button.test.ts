@@ -29,4 +29,14 @@ describe('<zn-button>', () => {
     expect(el.color).to.equal('default');
   });
 
+  it('forwards aria-pressed to the inner button', async () => {
+    const el = await fixture<ZnButton>(html`<zn-button icon="sun" label="Toggle" aria-pressed="true"></zn-button>`);
+    const base = el.shadowRoot!.querySelector('[part~="base"]')!;
+    expect(base.getAttribute('aria-pressed')).to.equal('true');
+
+    el.setAttribute('aria-pressed', 'false');
+    await el.updateComplete;
+    expect(base.getAttribute('aria-pressed')).to.equal('false');
+  });
+
 });

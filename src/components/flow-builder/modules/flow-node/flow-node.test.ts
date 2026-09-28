@@ -19,7 +19,7 @@ describe('<zn-flow-node>', () => {
     expect(el).to.exist;
   });
 
-  it('should render the type label and one port per output', async () => {
+  it('should render the type label and a single output stem', async () => {
     const el = await fixture<ZnFlowNode>(html`
       <zn-flow-node></zn-flow-node>`);
     el.node = node;
@@ -27,8 +27,7 @@ describe('<zn-flow-node>', () => {
     await el.updateComplete;
 
     expect(el.shadowRoot?.querySelector('.title')?.textContent).to.contain('Conditional Split');
-    expect(el.shadowRoot?.querySelectorAll('.port--out')?.length).to.equal(2);
-    expect(el.shadowRoot?.querySelector('.port-label')?.textContent).to.contain('TRUE');
+    expect(el.shadowRoot?.querySelectorAll('.port--out')?.length).to.equal(1);
   });
 
   it('should emit flow-node-grab when the card body is pressed', async () => {

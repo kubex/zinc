@@ -17809,6 +17809,15 @@
             },
             {
               "kind": "field",
+              "name": "observedAncestors",
+              "type": {
+                "text": "Set<HTMLElement>"
+              },
+              "privacy": "private",
+              "default": "new Set()"
+            },
+            {
+              "kind": "field",
               "name": "labelColumn",
               "type": {
                 "text": "HTMLElement | null"
@@ -17829,7 +17838,7 @@
                   }
                 }
               ],
-              "description": "Coalesces scroll and resize work into one frame, and out of the ResizeObserver callback."
+              "description": "Coalesces scroll and resize work into one frame."
             },
             {
               "kind": "method",
@@ -17861,6 +17870,26 @@
               "name": "detach",
               "privacy": "private",
               "description": "Drops everything this component has put on the label or on the scroller."
+            },
+            {
+              "kind": "method",
+              "name": "observeAncestors",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "from",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "scroller",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                }
+              ],
+              "description": "The label's travel is measured against the scroller, so content growing elsewhere in it — a sibling group revealing\nmore fields — leaves the label at a stale position until something re-measures. Any such growth resizes a box\nbetween this group and the scroller."
             },
             {
               "kind": "method",
@@ -53649,7 +53678,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.160",
+    "version": "1.1.161",
     "author": "",
     "license": "MIT"
   }

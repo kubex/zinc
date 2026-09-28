@@ -7552,11 +7552,12 @@ declare module "components/form-group/form-group.component" {
         private rebind;
         private offset;
         private resizeObserver;
+        private observedAncestors;
         connectedCallback(): void;
         disconnectedCallback(): void;
         protected firstUpdated(changedProperties: PropertyValues): void;
         private get labelColumn();
-        /** Coalesces scroll and resize work into one frame, and out of the ResizeObserver callback. */
+        /** Coalesces scroll and resize work into one frame. */
         private schedule;
         /**
          * Native sticky only follows the nearest scroll container. Where that container isn't the one
@@ -7572,6 +7573,12 @@ declare module "components/form-group/form-group.component" {
         private scrollLinkedTravel;
         /** Drops everything this component has put on the label or on the scroller. */
         private detach;
+        /**
+         * The label's travel is measured against the scroller, so content growing elsewhere in it — a sibling group revealing
+         * more fields — leaves the label at a stale position until something re-measures. Any such growth resizes a box
+         * between this group and the scroller.
+         */
+        private observeAncestors;
         /** The document scrolls through the window, every other scroller reports its own events. */
         private scrollTarget;
         /** Where the scroller's own top edge sits, which for the document is the top of the viewport. */

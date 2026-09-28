@@ -17,9 +17,27 @@
   // Same surface as the shell-header menus below, so every dropdown in the
   // product reads as one material rather than splitting into --zn-panel menus
   // and --zn-color-navigation ones depending on where it was mounted.
-  // (No backdrop-filter here: at 0.95 the blur is not worth the GPU cost on
-  // every dropdown, and .menu--shell keeps it for the chrome look.)
-  background-color: rgba(var(--zn-color-navigation, 255, 255, 255), 0.95);
+  background-color: rgb(var(--zn-color-navigation, 255, 255, 255));
+}
+
+// A submenu's border sits on its parent menu's edge border, so the two share one line.
+:host([slot="submenu"]) .menu {
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+}
+
+// Set by the submenu controller while this submenu extends past its parent's bottom edge.
+:host([slot="submenu"][data-extends-below]) .menu {
+  border-end-start-radius: var(--zn-border-radius);
+}
+
+// Set by the submenu controller on the parent menu while a submenu covers that corner.
+:host([data-submenu-top]) .menu {
+  border-start-end-radius: 0;
+}
+
+:host([data-submenu-bottom]) .menu {
+  border-end-end-radius: 0;
 }
 
 // A capped menu has to look scrollable, so the bar is always drawn rather than

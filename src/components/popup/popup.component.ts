@@ -31,7 +31,7 @@ function isVirtualElement(e: unknown): e is VirtualElement {
  *
  * @dependency zn-example
  *
- * @event zn-event-name - Emitted as an example.
+ * @event zn-reposition - Emitted each time the popup is positioned.
  *
  * @slot - The default slot.
  * @slot example - An example slot.
@@ -417,6 +417,8 @@ export default class ZnPopup extends ZincElement {
       if (!this.popup.matches(':popover-open')) {
         this.popup.showPopover();
       }
+
+      this.emit('zn-reposition');
 
       if (this.arrow) {
         const arrowX = middlewareData.arrow!.x;

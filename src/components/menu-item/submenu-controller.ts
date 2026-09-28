@@ -210,6 +210,16 @@ export class SubmenuController implements ReactiveController {
 
     const {left, top, width, height} = menu.getBoundingClientRect();
 
+    const parentMenu = this.host.parentElement;
+    const parentPanel = parentMenu?.shadowRoot?.querySelector('.menu') ?? parentMenu;
+    if (parentMenu && parentPanel) {
+      const parent = parentPanel.getBoundingClientRect();
+      menu.toggleAttribute('data-extends-below', top + height > parent.bottom + 1);
+      // Flags the parent's corners the submenu covers, so the parent squares them off.
+      parentMenu.toggleAttribute('data-submenu-top', top <= parent.top + 1);
+      parentMenu.toggleAttribute('data-submenu-bottom', top + height >= parent.bottom - 1);
+    }
+
     this.host.style.setProperty('--safe-triangle-submenu-start-x', `${isRtl ? left + width : left}px`);
     this.host.style.setProperty('--safe-triangle-submenu-start-y', `${top}px`);
     this.host.style.setProperty('--safe-triangle-submenu-end-x', `${isRtl ? left + width : left}px`);
@@ -222,6 +232,10 @@ export class SubmenuController implements ReactiveController {
         this.popupRef.value.active = state;
         this.host.requestUpdate();
       }
+    }
+    if (!state) {
+      this.host.parentElement?.removeAttribute('data-submenu-top');
+      this.host.parentElement?.removeAttribute('data-submenu-bottom');
     }
   }
 

@@ -21,3 +21,4 @@ export type {ZnThemeChangeEvent} from './zn-theme-change';
 export type {ZnThemeSubmitEvent} from './zn-theme-submit';
 export type {ZnSlashSelectEvent} from './zn-slash-select';
 export type {ZnSlashInsertEvent} from './zn-slash-insert';
+export type {ZnRepositionEvent} from './zn-reposition';

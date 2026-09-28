@@ -1,6 +1,6 @@
 import '../../../dist/zn.min.js';
 import {aTimeout, expect, fixture, html, waitUntil} from '@open-wc/testing';
-import {EDITOR_ACTIONS} from './actions';
+import {EDITOR_ACTIONS, isApple} from './actions';
 import {FEATURE_KEYS} from './feature-keys';
 import {parse as remarkdParse} from 'remarkd-js';
 import type ZnButton from '../button';
@@ -482,7 +482,7 @@ Second"></zn-remarkd-editor>`);
     const input = el.shadowRoot!.querySelector<HTMLTextAreaElement>('.remarkd-editor__input')!;
     input.setSelectionRange(0, 5);
     const strong = [...el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar zn-button')]
-      .find(b => b.getAttribute('tooltip') === 'Strong')!;
+      .find(b => b.getAttribute('label') === 'Strong')!;
     strong.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
     await el.updateComplete;
 
@@ -490,6 +490,73 @@ Second"></zn-remarkd-editor>`);
     expect(result.value).to.equal('**hello** world');
     // The wrapped text stays selected, so a second click (or typing) acts on it, not the marks.
     expect([result.selectionStart, result.selectionEnd]).to.eql([2, 7]);
+  });
+
+  describe('keyboard shortcuts', () => {
+    const apple = isApple();
+    const press = (input: HTMLTextAreaElement, key: string, init: KeyboardEventInit = {}) => {
+      const event = new KeyboardEvent('keydown', {key, bubbles: true, composed: true, cancelable: true, ...init});
+      input.dispatchEvent(event);
+      return event;
+    };
+    const mod = (init: KeyboardEventInit = {}): KeyboardEventInit =>
+      apple ? {metaKey: true, ...init} : {ctrlKey: true, ...init};
+
+    async function editing(value: string, start: number, end: number) {
+      const el = await fixture<ZnRemarkdEditor>(html`
+        <zn-remarkd-editor value=${value}></zn-remarkd-editor>`);
+      el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
+      await el.updateComplete;
+      const input = el.shadowRoot!.querySelector<HTMLTextAreaElement>('.remarkd-editor__input')!;
+      input.setSelectionRange(start, end);
+      return {el, input};
+    }
+
+    it('should bold the selection with the platform modifier + B', async () => {
+      const {el, input} = await editing('hello world', 0, 5);
+      const event = press(input, 'b', mod());
+      await el.updateComplete;
+      expect(event.defaultPrevented).to.be.true;
+      expect(input.value).to.equal('**hello** world');
+    });
+
+    it('should toggle the mark back off on a second press', async () => {
+      const {el, input} = await editing('hello world', 0, 5);
+      press(input, 'b', mod());
+      await el.updateComplete;
+      press(input, 'b', mod());
+      await el.updateComplete;
+      expect(input.value).to.equal('hello world');
+    });
+
+    it('should map shift shortcuts, e.g. strikethrough', async () => {
+      const {el, input} = await editing('hello world', 0, 5);
+      press(input, 'X', mod({shiftKey: true}));
+      await el.updateComplete;
+      expect(input.value).to.equal('~~hello~~ world');
+    });
+
+    it('should ignore the other platform\'s modifier', async () => {
+      const {el, input} = await editing('hello world', 0, 5);
+      const event = press(input, 'b', apple ? {ctrlKey: true} : {metaKey: true});
+      await el.updateComplete;
+      expect(event.defaultPrevented).to.be.false;
+      expect(input.value).to.equal('hello world');
+    });
+
+    it('should ignore AltGr (Ctrl+Alt) combinations', async () => {
+      const {el, input} = await editing('hello world', 0, 5);
+      press(input, 'b', mod({altKey: true}));
+      await el.updateComplete;
+      expect(input.value).to.equal('hello world');
+    });
+
+    it('should show the shortcut in the toolbar tooltip', async () => {
+      const el = await fixture<ZnRemarkdEditor>(html`<zn-remarkd-editor></zn-remarkd-editor>`);
+      const strong = [...el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar zn-button')]
+        .find(b => b.getAttribute('label') === 'Strong')!;
+      expect(strong.getAttribute('tooltip')).to.equal(apple ? 'Strong (⌘B)' : 'Strong (Ctrl+B)');
+    });
   });
 
   it('should insert a placeholder when nothing is selected', async () => {
@@ -501,7 +568,7 @@ Second"></zn-remarkd-editor>`);
     input.setSelectionRange(5, 5);
 
     [...el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar zn-button')]
-      .find(b => b.getAttribute('tooltip') === 'Strong')!
+      .find(b => b.getAttribute('label') === 'Strong')!
       .dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
     await el.updateComplete;
 
@@ -519,7 +586,7 @@ Second"></zn-remarkd-editor>`);
     const input = el.shadowRoot!.querySelector<HTMLTextAreaElement>('.remarkd-editor__input')!;
     input.setSelectionRange(2, 7); // hello, inside the marks
     [...el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar zn-button')]
-      .find(b => b.getAttribute('tooltip') === 'Strong')!
+      .find(b => b.getAttribute('label') === 'Strong')!
       .dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
     await el.updateComplete;
 
@@ -536,7 +603,7 @@ Second"></zn-remarkd-editor>`);
     input.setSelectionRange(2, 7); // hello, inside the strike marks
 
     [...el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar zn-button')]
-      .find(b => b.getAttribute('tooltip') === 'Subscript')!
+      .find(b => b.getAttribute('label') === 'Subscript')!
       .dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
     await el.updateComplete;
 
@@ -549,11 +616,11 @@ Second"></zn-remarkd-editor>`);
     const el = await fixture<ZnRemarkdEditor>(html`
       <zn-remarkd-editor value="hello" link-url="/links"></zn-remarkd-editor>`);
     const strong = [...el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar zn-button')]
-      .find(b => b.getAttribute('tooltip') === 'Strong')!;
+      .find(b => b.getAttribute('label') === 'Strong')!;
     expect(strong.hasAttribute('disabled')).to.be.true;
 
     const link = [...el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar zn-button')]
-      .find(b => b.getAttribute('tooltip') === 'Link to article')!;
+      .find(b => b.getAttribute('label') === 'Link to article')!;
     expect(link.hasAttribute('disabled')).to.be.true;
   });
 
@@ -566,7 +633,7 @@ Second"></zn-remarkd-editor>`);
     input.setSelectionRange(2, 7); // Label, inside the link markup
 
     [...el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar zn-button')]
-      .find(b => b.getAttribute('tooltip') === 'Link')!
+      .find(b => b.getAttribute('label') === 'Link')!
       .dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
     await el.updateComplete;
 
@@ -587,7 +654,7 @@ Second"></zn-remarkd-editor>`);
     input.setSelectionRange(1, 6); // Label, inside the real link markup
 
     [...el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar zn-button')]
-      .find(b => b.getAttribute('tooltip') === 'Link')!
+      .find(b => b.getAttribute('label') === 'Link')!
       .dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
     await el.updateComplete;
 
@@ -601,7 +668,7 @@ Second"></zn-remarkd-editor>`);
     // Two actions share the "Code" tooltip (inline-code in the inline group, code-fence in
     // the blocks group) — disambiguate by the group the button actually lives in.
     const codeButton = [...el.shadowRoot!.querySelectorAll<HTMLElement>('.remarkd-editor__toolbar zn-button')]
-      .find(b => b.getAttribute('tooltip') === 'Code'
+      .find(b => b.getAttribute('label') === 'Code'
         && b.closest('.toolbar__group')?.getAttribute('data-group') === 'blocks')!;
     codeButton.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
     await el.updateComplete;
@@ -619,7 +686,7 @@ Second"></zn-remarkd-editor>`);
     await el.updateComplete;
 
     const strong = [...el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar zn-button')]
-      .find(b => b.getAttribute('tooltip') === 'Strong')!;
+      .find(b => b.getAttribute('label') === 'Strong')!;
     const mousedown = new MouseEvent('mousedown', {bubbles: true, composed: true, cancelable: true});
     strong.dispatchEvent(mousedown);
 
@@ -900,7 +967,7 @@ Second"></zn-remarkd-editor>`);
   it('should show an inline zn-file picker from the toolbar image button', async () => {
     const el = await fixture<ZnRemarkdEditor>(html`
       <zn-remarkd-editor attachment-url="/upload"></zn-remarkd-editor>`);
-    const imageButton = el.shadowRoot!.querySelector('.remarkd-editor__toolbar zn-button[tooltip="Image"]')!;
+    const imageButton = el.shadowRoot!.querySelector('.remarkd-editor__toolbar zn-button[label="Image"]')!;
     imageButton.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
     await el.updateComplete;
 
@@ -1139,7 +1206,7 @@ include::inc-1[Payment Terms]"></zn-remarkd-editor>`);
       <zn-remarkd-editor include-url="/options" value="# Title"></zn-remarkd-editor>`);
 
     const includeButton = el.shadowRoot!
-      .querySelector<HTMLElement>('.remarkd-editor__toolbar zn-button[tooltip="Include"]')!;
+      .querySelector<HTMLElement>('.remarkd-editor__toolbar zn-button[label="Include"]')!;
     includeButton.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
 
     await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__include-option'),
@@ -1176,7 +1243,7 @@ include::inc-1[Payment Terms]"></zn-remarkd-editor>`);
     const el = await fixture<ZnRemarkdEditor>(html`
       <zn-remarkd-editor include-url="/options" value="# Title"></zn-remarkd-editor>`);
     const includeButton = el.shadowRoot!
-      .querySelector<HTMLElement>('.remarkd-editor__toolbar zn-button[tooltip="Include"]')!;
+      .querySelector<HTMLElement>('.remarkd-editor__toolbar zn-button[label="Include"]')!;
     includeButton.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
     await waitUntil(() => el.shadowRoot!.querySelectorAll('.remarkd-editor__include-option').length === 2,
       'the include picker never listed both');
@@ -1195,7 +1262,7 @@ include::inc-1[Payment Terms]"></zn-remarkd-editor>`);
     const el = await fixture<ZnRemarkdEditor>(html`
       <zn-remarkd-editor value="# Title"></zn-remarkd-editor>`);
     const tooltips = Array.from(el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar zn-button'))
-      .map(button => button.getAttribute('tooltip'));
+      .map(button => button.getAttribute('label'));
     expect(tooltips).to.not.contain('Image');
   });
 
@@ -1203,7 +1270,7 @@ include::inc-1[Payment Terms]"></zn-remarkd-editor>`);
     const el = await fixture<ZnRemarkdEditor>(html`
       <zn-remarkd-editor value="# Title" attachment-url="/attachments"></zn-remarkd-editor>`);
     const tooltips = Array.from(el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar zn-button'))
-      .map(button => button.getAttribute('tooltip'));
+      .map(button => button.getAttribute('label'));
     expect(tooltips).to.contain('Image');
   });
 
@@ -1211,7 +1278,7 @@ include::inc-1[Payment Terms]"></zn-remarkd-editor>`);
     const el = await fixture<ZnRemarkdEditor>(html`
       <zn-remarkd-editor value="# Title"></zn-remarkd-editor>`);
     const tooltips = Array.from(el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar zn-button'))
-      .map(button => button.getAttribute('tooltip'));
+      .map(button => button.getAttribute('label'));
     expect(tooltips).to.not.contain('Include');
   });
   // A list that never arrived is not evidence an embed is broken: flagging every
@@ -1242,7 +1309,7 @@ include::inc-1[Payment Terms]"></zn-remarkd-editor>`);
       const el = await fixture<ZnRemarkdEditor>(html`
         <zn-remarkd-editor include-url="/options" value="# Title"></zn-remarkd-editor>`);
       const includeButton = el.shadowRoot!
-        .querySelector<HTMLElement>('.remarkd-editor__toolbar zn-button[tooltip="Include"]')!;
+        .querySelector<HTMLElement>('.remarkd-editor__toolbar zn-button[label="Include"]')!;
       includeButton.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
 
       await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__include-picker-empty')?.textContent
@@ -1584,7 +1651,7 @@ const x = {product};
     await el.updateComplete;
     const input = typeInBlock(el, text);
     input.setSelectionRange(from, to);
-    el.shadowRoot!.querySelector<ZnButton>('zn-button[tooltip="Link to article"]')!
+    el.shadowRoot!.querySelector<ZnButton>('zn-button[label="Link to article"]')!
       .dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
     await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__link-picker'),
       'the link picker never opened');

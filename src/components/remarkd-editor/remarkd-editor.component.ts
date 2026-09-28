@@ -1,4 +1,4 @@
-import {ACTION_GROUPS, EDITOR_ACTIONS, slashItems} from './actions';
+import {ACTION_GROUPS, EDITOR_ACTIONS, matchesShortcut, shortcutLabel, slashItems} from './actions';
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, type TemplateResult, unsafeCSS} from 'lit';
 import {defaultValue} from "../../internal/default-value";
@@ -954,7 +954,12 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     // The slash menu claims navigation, Enter and Escape in the capture phase.
     if (this.slashController.open) return;
 
-    if (e.key === 'Enter' && e.shiftKey) {
+    const shortcutAction = EDITOR_ACTIONS.find(action =>
+      action.shortcut && matchesShortcut(e, action.shortcut) && this.actionAvailable(action));
+    if (shortcutAction) {
+      e.preventDefault();
+      this.activateAction(shortcutAction);
+    } else if (e.key === 'Enter' && e.shiftKey) {
       e.preventDefault();
       this.suppressBlurCommit = true;
       const next = this.commitEdit();
@@ -1824,7 +1829,8 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                  plain
                  icon=${action.icon}
                  icon-size="18"
-                 tooltip=${action.label}
+                 label=${action.label}
+                 tooltip=${action.shortcut ? `${action.label} (${shortcutLabel(action.shortcut)})` : action.label}
                  ?disabled=${this.isActionDisabled(action)}
                  @mousedown=${(e: MouseEvent) => e.preventDefault()}
                  @click=${() => this.activateAction(action)}></zn-button>`;
@@ -1838,6 +1844,8 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
         @click=${() => this.activateAction(action)}>
         <zn-icon slot="prefix" src=${action.icon} size="18"></zn-icon>
         ${action.label}
+        ${action.shortcut ? html`
+          <span slot="suffix" class="remarkd-editor__shortcut">${shortcutLabel(action.shortcut)}</span>` : ''}
       </zn-menu-item>`;
   }
 

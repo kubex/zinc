@@ -10,6 +10,12 @@ export interface InlineMark {
   placeholder?: string;
 }
 
+/** A shortcut on the platform modifier: Cmd on Apple devices, Ctrl elsewhere. */
+export interface Shortcut {
+  key: string;
+  shift?: boolean;
+}
+
 export interface EditorAction {
   /** Stable id, used for toolbar keys and tests. */
   key: string;
@@ -26,6 +32,7 @@ export interface EditorAction {
   caretOffset?: number;
   /** Actions that open their own picker instead of inserting text. */
   opens?: 'image' | 'include' | 'link';
+  shortcut?: Shortcut;
 }
 
 /** Toolbar order, most-used first — the last groups are the first to collapse. */
@@ -116,22 +123,42 @@ export const EDITOR_ACTIONS: EditorAction[] = [
   {key: 'ifeval', label: 'If expression', icon: 'equal@lu', group: 'logic', prefix: 'ifeval::[1 > 0]\n\nendif::[]', caretOffset: 9},
 
   // Inline — applied to the selection in the open block
-  {key: 'inline-formatting', label: 'Strong', icon: 'bold@lu', group: 'inline', keywords: ['bold'], inline: {before: '**', placeholder: 'text'}},
-  {key: 'emphasis', label: 'Emphasis', icon: 'italic@lu', group: 'inline', keywords: ['italic'], inline: {before: '__', placeholder: 'text'}},
-  {key: 'inline-code', label: 'Code', icon: 'square-code@lu', group: 'inline', inline: {before: '`', placeholder: 'code'}},
-  {key: 'underline', label: 'Underline', icon: 'underline@lu', group: 'inline', inline: {before: '___', placeholder: 'text'}},
-  {key: 'strike', label: 'Strikethrough', icon: 'strikethrough@lu', group: 'inline', keywords: ['delete'], inline: {before: '~~', placeholder: 'text'}},
-  {key: 'subscript', label: 'Subscript', icon: 'subscript@lu', group: 'inline', inline: {before: '~', placeholder: '2'}},
-  {key: 'superscript', label: 'Superscript', icon: 'superscript@lu', group: 'inline', inline: {before: '^', placeholder: '2'}},
+  {key: 'inline-formatting', label: 'Strong', icon: 'bold@lu', group: 'inline', keywords: ['bold'], inline: {before: '**', placeholder: 'text'}, shortcut: {key: 'b'}},
+  {key: 'emphasis', label: 'Emphasis', icon: 'italic@lu', group: 'inline', keywords: ['italic'], inline: {before: '__', placeholder: 'text'}, shortcut: {key: 'i'}},
+  {key: 'inline-code', label: 'Code', icon: 'square-code@lu', group: 'inline', inline: {before: '`', placeholder: 'code'}, shortcut: {key: 'e'}},
+  {key: 'underline', label: 'Underline', icon: 'underline@lu', group: 'inline', inline: {before: '___', placeholder: 'text'}, shortcut: {key: 'u'}},
+  {key: 'strike', label: 'Strikethrough', icon: 'strikethrough@lu', group: 'inline', keywords: ['delete'], inline: {before: '~~', placeholder: 'text'}, shortcut: {key: 'x', shift: true}},
+  {key: 'subscript', label: 'Subscript', icon: 'subscript@lu', group: 'inline', inline: {before: '~', placeholder: '2'}, shortcut: {key: ','}},
+  {key: 'superscript', label: 'Superscript', icon: 'superscript@lu', group: 'inline', inline: {before: '^', placeholder: '2'}, shortcut: {key: '.'}},
   {key: 'keyboard', label: 'Keyboard', icon: 'keyboard@lu', group: 'inline', keywords: ['kbd', 'shortcut'], inline: {before: 'kbd:[', after: ']', placeholder: 'Ctrl+C'}},
   {key: 'footnote', label: 'Footnote', icon: 'asterisk@lu', group: 'inline', inline: {before: 'footnote:[', after: ']', placeholder: 'Note'}},
   {key: 'tooltip', label: 'Tooltip', icon: 'message-circle-question-mark@lu', group: 'inline', keywords: ['term'], inline: {before: '{', after: '}(Explanation)', placeholder: 'Term'}},
   {key: 'cross-reference', label: 'Cross reference', icon: 'link-2@lu', group: 'inline', keywords: ['xref'], inline: {before: '<<', after: '>>', placeholder: 'section,Label'}},
-  {key: 'links-and-images', label: 'Link', icon: 'link@lu', group: 'inline', inline: {before: '[', after: '](https://)', placeholder: 'Label'}},
-  {key: 'document-link', label: 'Link to article', icon: 'file-symlink@lu', group: 'inline', keywords: ['article', 'document', 'kb'], opens: 'link'},
+  {key: 'links-and-images', label: 'Link', icon: 'link@lu', group: 'inline', inline: {before: '[', after: '](https://)', placeholder: 'Label'}, shortcut: {key: 'k'}},
+  {key: 'document-link', label: 'Link to article', icon: 'file-symlink@lu', group: 'inline', keywords: ['article', 'document', 'kb'], opens: 'link', shortcut: {key: 'k', shift: true}},
   {key: 'passthrough', label: 'Passthrough', icon: 'shield@lu', group: 'inline', keywords: ['raw', 'literal'], inline: {before: 'pass:[', after: ']', placeholder: 'raw'}},
   {key: 'curly-bang-passthrough', label: 'Literal braces', icon: 'braces@lu', group: 'inline', inline: {before: '{!', after: '!}', placeholder: 'raw'}},
 ];
+
+export function isApple(): boolean {
+  // Safari and Firefox have no userAgentData yet.
+  const platform = (navigator as Navigator & { userAgentData?: { platform: string } }).userAgentData?.platform
+    ?? navigator.userAgent;
+  return /mac|iphone|ipad|ipod/i.test(platform);
+}
+
+export function matchesShortcut(e: KeyboardEvent, shortcut: Shortcut): boolean {
+  // Ctrl+Alt is AltGr on Windows keyboards, so Alt must be up for the combo to count.
+  const mod = isApple() ? e.metaKey && !e.ctrlKey : e.ctrlKey && !e.metaKey;
+  return mod && !e.altKey && e.shiftKey === !!shortcut.shift && e.key.toLowerCase() === shortcut.key;
+}
+
+/** The shortcut as shown to people, e.g. `⌘⇧X` or `Ctrl+Shift+X`. */
+export function shortcutLabel(shortcut: Shortcut): string {
+  const key = shortcut.key.toUpperCase();
+  if (isApple()) return `⌘${shortcut.shift ? '⇧' : ''}${key}`;
+  return `Ctrl+${shortcut.shift ? 'Shift+' : ''}${key}`;
+}
 
 /** The registry as slash menu entries. Picker actions insert nothing; the menu emits their action id. */
 export function slashItems(actions: EditorAction[]): SlashMenuItem[] {

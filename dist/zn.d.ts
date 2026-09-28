@@ -1254,6 +1254,8 @@ declare module "components/button/button.component" {
         tooltip: string;
         /** Accessible name for the button. Icon-only buttons fall back to `tooltip`. */
         label: string;
+        /** Toggle state, forwarded to the inner button's `aria-pressed`. */
+        pressed: 'true' | 'false' | 'mixed';
         autoClick: boolean;
         autoClickDelay: number;
         loadingText: string;

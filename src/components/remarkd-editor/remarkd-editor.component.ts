@@ -1,5 +1,6 @@
 import {ACTION_GROUPS, EDITOR_ACTIONS, matchesShortcut, shortcutLabel, slashItems} from './actions';
 import {classMap} from "lit/directives/class-map.js";
+import {continueList} from './list-continuation';
 import {type CSSResultGroup, html, type PropertyValues, type TemplateResult, unsafeCSS} from 'lit';
 import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
@@ -959,6 +960,11 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     if (shortcutAction) {
       e.preventDefault();
       this.activateAction(shortcutAction);
+    } else if (this.isPlainEnter(e)) {
+      const edit = continueList(input.value, input.selectionStart, input.selectionEnd);
+      if (!edit) return;
+      e.preventDefault();
+      this.applyDraftEdit(input, edit.value, edit.caret, edit.caret);
     } else if (e.key === 'Enter' && e.shiftKey) {
       e.preventDefault();
       this.suppressBlurCommit = true;
@@ -971,6 +977,21 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       e.preventDefault();
       input.blur();
     }
+  };
+
+  private isPlainEnter(e: KeyboardEvent): boolean {
+    return e.key === 'Enter' && !e.isComposing && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey;
+  }
+
+  private handleRawKeydown = (e: KeyboardEvent) => {
+    if (!this.isPlainEnter(e)) return;
+    const input = e.target as HTMLTextAreaElement;
+    const edit = continueList(input.value, input.selectionStart, input.selectionEnd);
+    if (!edit) return;
+    e.preventDefault();
+    input.value = edit.value;
+    input.setSelectionRange(edit.caret, edit.caret);
+    this.handleRawInput(e);
   };
 
   /** Whether the block being edited is nothing but the slash command. */
@@ -1409,7 +1430,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   /**
    * Applies an inline mark to the open block's textarea: wraps the selection, toggles the
    * mark off when it is already wrapped, or inserts a selected placeholder when there is
-   * no selection. Goes through `editingDraft` so `zn-input` still fires.
+   * no selection.
    */
   private applyInline(mark: InlineMark) {
     const input = this.shadowRoot?.querySelector<HTMLTextAreaElement>('.remarkd-editor__input');
@@ -1456,10 +1477,15 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       caret = [start + mark.before.length, start + mark.before.length + body.length];
     }
 
-    this.editingDraft = next;
-    input.value = next;
-    input.setSelectionRange(caret[0], caret[1]);
-    this.editShell = this.computeEditShell(next);
+    this.applyDraftEdit(input, next, caret[0], caret[1]);
+  }
+
+  /** Writes a programmatic edit to the open block's textarea. Goes through `editingDraft` so `zn-input` still fires. */
+  private applyDraftEdit(input: HTMLTextAreaElement, value: string, selectionStart: number, selectionEnd: number) {
+    this.editingDraft = value;
+    input.value = value;
+    input.setSelectionRange(selectionStart, selectionEnd);
+    this.editShell = this.computeEditShell(value);
     this.autosize(input);
     input.focus({preventScroll: true});
     this.emit('zn-input');
@@ -1952,6 +1978,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                 spellcheck="false"
                 .value=${this.value}
                 @input=${this.handleRawInput}
+                @keydown=${this.handleRawKeydown}
                 @blur=${this.commitRaw}></textarea>`;
   }
 

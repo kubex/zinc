@@ -561,6 +561,55 @@ Second"></zn-remarkd-editor>`);
     });
   });
 
+  describe('list continuation', () => {
+    const enter = (input: HTMLTextAreaElement) => {
+      const event = new KeyboardEvent('keydown', {key: 'Enter', bubbles: true, composed: true, cancelable: true});
+      input.dispatchEvent(event);
+      return event;
+    };
+
+    it('should continue a numbered list on Enter in the open block', async () => {
+      const el = await fixture<ZnRemarkdEditor>(html`
+        <zn-remarkd-editor value="1. hello"></zn-remarkd-editor>`);
+      el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
+      await el.updateComplete;
+      const input = el.shadowRoot!.querySelector<HTMLTextAreaElement>('.remarkd-editor__input')!;
+      input.setSelectionRange(8, 8);
+      let inputs = 0;
+      el.addEventListener('zn-input', () => inputs++);
+
+      expect(enter(input).defaultPrevented).to.be.true;
+      await el.updateComplete;
+      expect(input.value).to.equal('1. hello\n2. ');
+      expect(input.selectionStart).to.equal(12);
+      expect(inputs).to.equal(1);
+    });
+
+    it('should leave Enter as a plain newline outside a list', async () => {
+      const el = await fixture<ZnRemarkdEditor>(html`
+        <zn-remarkd-editor value="hello"></zn-remarkd-editor>`);
+      el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
+      await el.updateComplete;
+      const input = el.shadowRoot!.querySelector<HTMLTextAreaElement>('.remarkd-editor__input')!;
+      input.setSelectionRange(5, 5);
+      expect(enter(input).defaultPrevented).to.be.false;
+    });
+
+    it('should continue a list on Enter in the raw source view', async () => {
+      const el = await fixture<ZnRemarkdEditor>(html`
+        <zn-remarkd-editor allow-raw value="- [ ] first"></zn-remarkd-editor>`);
+      el.shadowRoot!.querySelector('.remarkd-editor__raw-toggle')!
+        .dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+      await el.updateComplete;
+      const raw = el.shadowRoot!.querySelector<HTMLTextAreaElement>('.remarkd-editor__raw')!;
+      raw.setSelectionRange(11, 11);
+
+      expect(enter(raw).defaultPrevented).to.be.true;
+      await el.updateComplete;
+      expect(el.value).to.equal('- [ ] first\n- [ ] ');
+    });
+  });
+
   it('should insert a placeholder when nothing is selected', async () => {
     const el = await fixture<ZnRemarkdEditor>(html`
       <zn-remarkd-editor value="hello"></zn-remarkd-editor>`);

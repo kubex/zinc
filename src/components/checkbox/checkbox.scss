@@ -28,13 +28,13 @@
   --checkbox-color: var(--zn-color-primary-600);
   --checkbox-color-hover: var(--zn-color-primary-500);
   --checkbox-icon-color: var(--zn-color-neutral-0);
-  --checkbox-border-color: var(--zn-input-border-color);
+  --checkbox-border-color: var(--zn-checkbox-border-color, var(--zn-input-border-color));
   --checkbox-bg-color: var(--zn-input-background-color);
 
   &.checkbox--default {
     --checkbox-color: var(--zn-color-primary-600);
     --checkbox-color-hover: var(--zn-color-primary-500);
-    --checkbox-border-color: var(--zn-input-border-color);
+    --checkbox-border-color: var(--zn-checkbox-border-color, var(--zn-input-border-color));
   }
 
   &.checkbox--primary {
@@ -131,12 +131,8 @@
 }
 
 .checkbox__indeterminate-icon {
-  --icon-size: var(--toggle-size);
-  --icon-color: var(--checkbox-icon-color);
-
-  display: inline-flex;
-  width: var(--toggle-size);
-  height: var(--toggle-size);
+  height: max(16px, 70%);
+  color: var(--checkbox-icon-color);
 }
 
 .svg-icon {

@@ -2,7 +2,7 @@ import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, nothing, type PropertyValues, type TemplateResult, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
-import {property, query, state} from 'lit/decorators.js';
+import {property, state} from 'lit/decorators.js';
 import {ref} from "lit/directives/ref.js";
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import {Task} from "@lit/task";
@@ -91,6 +91,7 @@ interface Response {
 export enum ActionSlots {
   delete = 'delete-action',
   modify = 'modify-action',
+  actions = 'actions',
   create = 'create-action',
   filter = 'filter',
   filter_top = 'filter-top',
@@ -188,8 +189,9 @@ type AllowedInputElement =
  * @slot sort - Slot for sort component, in the header's right-hand group.
  * @slot filter - Slot for filter component, in the header's right-hand group.
  * @slot filter-top - Slot for a top-level filter component, rendered above the table's panel.
- * @slot delete-action - Slot for delete action button, shown beside the caption once rows are selected.
- * @slot modify-action - Slot for modify action button, shown beside the caption once rows are selected.
+ * @slot delete-action - Slot for delete action button, shown in the header once rows are selected.
+ * @slot modify-action - Slot for modify action button, shown in the header once rows are selected.
+ * @slot actions - `zn-button` or `zn-confirm` elements listed in a header menu, enabled once rows are selected.
  * @slot create-action - Slot for create action button, at the end of the header's right-hand group.
  * @slot inputs - Slot for additional input controls.
  * @slot empty-state - Slot for custom empty state.
@@ -261,9 +263,6 @@ export default class ZnDataTable extends ZincElement {
 
   @property({attribute: "empty-state-icon"}) emptyStateIcon: string = "data_alert";
 
-  // Hide the checkbox column
-  @property({attribute: 'hide-checkboxes', type: Boolean}) hideCheckboxes: boolean;
-
   @property() filters: [] = [];
 
   @property() method: 'GET' | 'POST' = 'POST';
@@ -288,7 +287,6 @@ export default class ZnDataTable extends ZincElement {
   @property() groups = '';
 
   @property({attribute: 'per-page-size', type: Number}) itemsPerPage: number = DEFAULT_PER_PAGE;
-  @query('#select-all-rows') selectAllButton: ZnButton;
 
   // Data Table Properties
   private _initialLoad = true;
@@ -329,6 +327,7 @@ export default class ZnDataTable extends ZincElement {
     ActionSlots.search.valueOf(),
     ActionSlots.delete.valueOf(),
     ActionSlots.modify.valueOf(),
+    ActionSlots.actions.valueOf(),
     ActionSlots.create.valueOf(),
     ActionSlots.filter.valueOf(),
     ActionSlots.sort.valueOf(),
@@ -673,8 +672,7 @@ export default class ZnDataTable extends ZincElement {
             return html`
               <div>${this.loadingTable()}</div>`;
           }
-          return html`
-            <div class="reduced-opacity">${this._lastTableContent}</div>`;
+          return this.tableContent(this._lastTableContent, true);
         },
         complete: (data) => {
           this._initialLoad = false;
@@ -683,7 +681,7 @@ export default class ZnDataTable extends ZincElement {
           emptyBody = !this._lastLoadHadRows;
           this._lastTableContent = html`
             <div>${this.renderTable(data as Response)}</div>`;
-          return this._lastTableContent;
+          return this.tableContent(this._lastTableContent, false);
         },
         error: (error) => {
           if (error instanceof Error) {
@@ -719,6 +717,7 @@ export default class ZnDataTable extends ZincElement {
 
     const hasActions = this.hasSlotController.test(ActionSlots.delete.valueOf())
       || this.hasSlotController.test(ActionSlots.modify.valueOf())
+      || this.hasSlotController.test(ActionSlots.actions.valueOf())
       || this.hasSlotController.test(ActionSlots.create.valueOf())
       || this.hasSlotController.test(ActionSlots.sort.valueOf())
       || this.hasSlotController.test(ActionSlots.search.valueOf());
@@ -902,11 +901,14 @@ export default class ZnDataTable extends ZincElement {
     const error = data?.error?.text ? data.error : undefined;
 
     if (!data?.rows || data.rows.length === 0) {
+      this._rows = [];
+      this.pruneSelectedRows();
       return html`${error ? html`
         <div class="table__error">${this.renderErrorAlert(error)}</div>` : nothing}${this.emptyState()}`;
     }
 
     this._rows = this.getRows(data);
+    this.pruneSelectedRows();
 
     if (this.groupBy) {
       // we need to group the rows by the group column
@@ -1029,16 +1031,18 @@ export default class ZnDataTable extends ZincElement {
     });
 
     const anyHidden = this.hasHiddenColumns();
-    const colCount = filteredHeaders.length + (this.rowHasActions ? 1 : 0) + (anyHidden ? 1 : 0);
+    const showCheckboxes = this.isSelectable();
+    const colCount = filteredHeaders.length + (this.rowHasActions ? 1 : 0) + (anyHidden ? 1 : 0) + (showCheckboxes ? 1 : 0);
 
     return html`
       <div class="table__scroll">
         <table class="${classMap({
           'table': true,
-          'with-hover': !this.unsortable && !this.hideCheckboxes,
+          'with-hover': !this.unsortable && this.isSelectable(),
         })}">
           <thead>
           <tr>
+            ${showCheckboxes ? this.renderSelectAllCheckbox() : nothing}
             ${anyHidden ? html`
               <th class="table__head table__head--expander"></th>` : nothing}
             ${filteredHeaders.map((header: HeaderConfig) => this.renderCellHeader(header))}
@@ -1057,10 +1061,8 @@ export default class ZnDataTable extends ZincElement {
                 <th colspan="${colCount}" scope="colgroup">${group.label}</th>
               </tr>` : nothing}
             ${group.rows.map((row: Row) => html`
-              <tr class="${classMap({
-                'table__row--selected': this.isRowSelected(row),
-                'table__row--data': true,
-              })}" data-row-id="${row.id}">
+              <tr class="table__row--data" data-row-id="${row.id}">
+                ${showCheckboxes ? this.renderRowCheckbox(row) : nothing}
                 ${anyHidden ? this.renderExpanderCell(row) : nothing}
                 ${(visibleRowCells.get(row.id) || row.cells).map((value: Cell, index: number) => this.renderCellBody(index, value, row))}
                 ${this.rowHasActions ? this.renderActions(row) : nothing}
@@ -1074,15 +1076,21 @@ export default class ZnDataTable extends ZincElement {
     `;
   }
 
+  // Pending and loaded states share this template so Lit keeps the table's DOM (and focus) across loads
+  private tableContent(content: TemplateResult, pending: boolean) {
+    return html`
+      <div class="${classMap({'reduced-opacity': pending})}">${content}</div>`;
+  }
+
   getTableHeader() {
     return html`
       <div class="table__header">
         <div class="table__header__actions">
           ${this.caption ? html`
             <h3 class="table__header__caption">${this.caption}</h3>` : nothing}
-          ${this.getActions()}
         </div>
         <div class="table__header__right">
+          ${this.getActions()}
           ${this.getHeaderControls()}
         </div>
       </div>
@@ -1302,37 +1310,7 @@ export default class ZnDataTable extends ZincElement {
   getActions() {
     const actions = [];
 
-    // Select-all only earns its place alongside the bulk actions it feeds
-    const hasBulkActions = this.hasSlotController.test(ActionSlots.delete.valueOf())
-      || this.hasSlotController.test(ActionSlots.modify.valueOf());
-
-    if (!hasBulkActions) {
-      return [];
-    }
-
-    if (!this.hideCheckboxes && this._rows.length > 0) {
-      actions.push(html`
-        <zn-button @click="${this.selectAll}"
-                   id="select-all-rows"
-                   color="transparent"
-                   icon="indeterminate_check_box"
-                   icon-size="22"
-                   icon-color="primary"
-                   tooltip="Select All"
-                   slot="trigger">
-        </zn-button>`);
-    }
-
     if (this.selectedRows.length > 0) {
-      actions.push(html`
-        <zn-button @click="${this.clearSelectedRows}"
-                   color="transparent"
-                   icon="disabled_by_default"
-                   icon-size="22"
-                   tooltip="Clear Selection"
-                   slot="trigger">
-        </zn-button>`);
-
       if (this.hasSlotController.test(ActionSlots.delete.valueOf())) {
         actions.push(html`
           <slot name="${ActionSlots.delete.valueOf()}"></slot>`);
@@ -1344,7 +1322,70 @@ export default class ZnDataTable extends ZincElement {
       }
     }
 
+    if (this.hasSlotController.test(ActionSlots.actions.valueOf())) {
+      actions.push(this.getActionsMenu());
+    }
+
     return actions;
+  }
+
+  private getActionsMenu() {
+    const items = [...this.hasSlotController.getSlots(ActionSlots.actions.valueOf())];
+    const disabled = this.selectedRows.length === 0;
+
+    return html`
+      <zn-dropdown placement="bottom-end" ?disabled="${disabled}">
+        <zn-button slot="trigger"
+                   icon-button="small"
+                   icon="ellipsis@lu"
+                   icon-size="18"
+                   tooltip="Actions"
+                   aria-label="Selection actions"
+                   ?disabled="${disabled}">
+        </zn-button>
+        <zn-menu variant="shell">
+          ${items.map((item: HTMLElement) => {
+            const trigger = this.actionTrigger(item);
+            const icon = trigger?.getAttribute('icon') || item.getAttribute('icon');
+            return html`
+              <zn-menu-item color="${ifDefined(trigger?.getAttribute('color') || undefined)}"
+                            ?disabled="${trigger?.hasAttribute('disabled') ?? false}"
+                            @click="${() => this.runAction(item)}">
+                ${icon ? html`
+                  <zn-icon src="${icon}" size="20" slot="prefix"></zn-icon>` : nothing}
+                ${this.actionLabel(item, trigger)}
+              </zn-menu-item>`;
+          })}
+        </zn-menu>
+      </zn-dropdown>
+      <div class="table__actions-source">
+        <slot name="${ActionSlots.actions.valueOf()}"></slot>
+      </div>`;
+  }
+
+  private actionTrigger(item: HTMLElement): HTMLElement | null {
+    if (item instanceof ZnConfirm) {
+      return item.querySelector<HTMLElement>(':scope > [slot="trigger"]');
+    }
+    return item;
+  }
+
+  private actionLabel(item: HTMLElement, trigger: HTMLElement | null): string {
+    return trigger?.textContent?.trim()
+      || trigger?.getAttribute('content')
+      || trigger?.getAttribute('tooltip')
+      || item.getAttribute('caption')
+      || '';
+  }
+
+  private runAction(item: HTMLElement) {
+    if (item instanceof ZnConfirm) {
+      item.show();
+      return;
+    }
+    // ZnButton.click() skips the native click, so listeners and href would never fire
+    const target = item instanceof ZnButton ? item.button : item;
+    target?.click();
   }
 
   goToPage(page: number) {
@@ -1380,12 +1421,12 @@ export default class ZnDataTable extends ZincElement {
     this._dataTask.run().then(r => r);
   }
 
-  selectAll(event: Event) {
-    const button = event.target as ZnButton;
-    if (button.disabled) return;
+  /** Selects every row on the page, or clears the selection when every row is already selected. */
+  selectAll() {
+    if (!this.isSelectable()) return;
 
     if (this.numberOfRowsSelected === this._rows.length) {
-      this.clearSelectedRows(event);
+      this.clearSelectedRows();
       return;
     }
 
@@ -1396,7 +1437,7 @@ export default class ZnDataTable extends ZincElement {
   }
 
   selectRow(e: Event) {
-    if (this.hideCheckboxes) {
+    if (!this.isSelectable()) {
       return;
     }
 
@@ -1420,13 +1461,14 @@ export default class ZnDataTable extends ZincElement {
       return;
     }
 
-    const rows = Array.from(this.renderRoot.querySelectorAll('tbody tr.table__row--data'));
-    const index = rows.indexOf(parent as HTMLTableRowElement);
-    if (index === -1) return;
-
-    const row = this._rows[index] as Row;
+    const rowId = (parent as HTMLElement).dataset.rowId;
+    const row = this._rows.find((r: Row) => r.id === rowId);
     if (!row) return;
 
+    this.toggleRowSelection(row);
+  }
+
+  private toggleRowSelection(row: Row) {
     const alreadySelected = this.selectedRows.some((r: Row) => r.id === row.id);
     if (alreadySelected) {
       this.selectedRows = this.selectedRows.filter((r: Row) => r.id !== row.id);
@@ -1439,10 +1481,7 @@ export default class ZnDataTable extends ZincElement {
     this.requestUpdate();
   }
 
-  clearSelectedRows(event: Event) {
-    const button = event.target as ZnButton;
-    if (button.disabled) return;
-
+  clearSelectedRows() {
     this.selectedRows = [];
     this.numberOfRowsSelected = 0;
     this.updateKeys();
@@ -1642,13 +1681,27 @@ export default class ZnDataTable extends ZincElement {
           'table__head--last': header.key === lastVisibleHeaderKey,
           'table__head--hidden': Object.values(this.hiddenHeaders).includes(header.key),
         })}"
-        @click="${sortable ? this.updateSort(header.key) : undefined}">
+        tabindex="${ifDefined(sortable ? '0' : undefined)}"
+        aria-sort="${ifDefined(sortable ? this.sortState(header.key) : undefined)}"
+        @click="${sortable ? this.updateSort(header.key) : undefined}"
+        @keydown="${sortable ? (e: KeyboardEvent) => this.handleSortKeyDown(e, header.key) : undefined}">
         <div>
           ${header.label}
           ${sortable ? this.getTableSortIcon(header.key) : nothing}
         </div>
       </th>
     `;
+  }
+
+  private sortState(key: string): 'ascending' | 'descending' | 'none' {
+    if (this.sortColumn !== key) return 'none';
+    return this.sortDirection === 'asc' ? 'ascending' : 'descending';
+  }
+
+  private handleSortKeyDown(e: KeyboardEvent, key: string) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    e.preventDefault();
+    this.updateSort(key)();
   }
 
   private renderCellBody(index: number, value: Cell, row: Row) {
@@ -1658,7 +1711,7 @@ export default class ZnDataTable extends ZincElement {
 
     return html`
       <td
-        @click="${this.hideCheckboxes ? undefined : this.selectRow}"
+        @click="${this.isSelectable() ? this.selectRow : undefined}"
         class="${classMap({
           'table__cell': true,
           'table__cell--wide': headerKey === this.wideColumn,
@@ -1731,6 +1784,60 @@ export default class ZnDataTable extends ZincElement {
     return this.selectedRows.some((r: Row) => r.id === row.id);
   }
 
+  // Drop selections for rows no longer in the result set (filtered out, archived, paged away)
+  // and swap survivors for the fresh row objects so selected keys reflect current cell data.
+  private pruneSelectedRows() {
+    if (this.selectedRows.length === 0) return;
+
+    const current = new Map(this._rows.map((row: Row) => [row.id, row]));
+    const kept = this.selectedRows
+      .map((row: Row) => current.get(row.id))
+      .filter((row): row is Row => row !== undefined);
+
+    const changed = kept.length !== this.selectedRows.length;
+    this.selectedRows = kept;
+    this.numberOfRowsSelected = kept.length;
+    if (changed) this.updateKeys();
+  }
+
+  private isSelectable(): boolean {
+    return [ActionSlots.delete, ActionSlots.modify, ActionSlots.actions, ActionSlots.create]
+      .some(slot => this.hasSlotController.test(slot.valueOf()));
+  }
+
+  private renderSelectAllCheckbox() {
+    const allSelected = this.numberOfRowsSelected === this._rows.length;
+    const someSelected = this.numberOfRowsSelected > 0 && !allSelected;
+    return html`
+      <th class="table__head table__head--checkbox">
+        <div>
+          <zn-checkbox aria-label="Select all rows"
+                       .checked="${allSelected}"
+                       .indeterminate="${someSelected}"
+                       @zn-change="${() => this.selectAll()}">
+          </zn-checkbox>
+        </div>
+      </th>`;
+  }
+
+  private renderRowCheckbox(row: Row) {
+    return html`
+      <td class="table__cell table__cell--checkbox" @click="${(e: Event) => this.handleCheckboxCellClick(e, row)}">
+        <div>
+          <zn-checkbox aria-label="Select row"
+                       .checked="${this.isRowSelected(row)}"
+                       @zn-change="${() => this.toggleRowSelection(row)}">
+          </zn-checkbox>
+        </div>
+      </td>`;
+  }
+
+  // A click on the checkbox itself arrives twice (label, then input), so leave it to zn-change
+  private handleCheckboxCellClick(e: Event, row: Row) {
+    if ((e.target as Element).closest('zn-checkbox')) return;
+    this.toggleRowSelection(row);
+  }
+
   private getRows(data: Response): Row[] {
     // Copy rows to avoid mutating original data
     const sourceRows = Array.isArray(data.rows) ? data.rows.slice() : [];
@@ -1761,21 +1868,9 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private updateKeys() {
-    this.updateSelectAll();
     this.updateModifyKeys();
     this.updateDeleteKeys();
-  }
-
-  private updateSelectAll() {
-    if (!this.selectAllButton) {
-      return;
-    }
-
-    if (this.numberOfRowsSelected === this._rows.length) {
-      this.selectAllButton.icon = 'check_box';
-    } else {
-      this.selectAllButton.icon = 'indeterminate_check_box';
-    }
+    this.updateActionKeys(ActionSlots.actions.valueOf());
   }
 
   private updateModifyKeys() {

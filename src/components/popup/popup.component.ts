@@ -386,6 +386,12 @@ export default class ZnPopup extends ZincElement {
         ? (element: Element) => platform.getOffsetParent(element, offsetParent)
         : platform.getOffsetParent;
 
+    // A closed popover has no size to measure, so it would first land on top of its anchor
+    if (this.popup.isConnected && !this.popup.matches(':popover-open')) {
+      this.popup.style.visibility = 'hidden';
+      this.popup.showPopover();
+    }
+
     computePosition(this.anchorEl, this.popup, {
       placement: this.placement,
       middleware,
@@ -402,7 +408,8 @@ export default class ZnPopup extends ZincElement {
 
       Object.assign(this.popup.style, {
         left: `${x}px`,
-        top: `${y}px`
+        top: `${y}px`,
+        visibility: ''
       });
 
       if (!this.popup?.isConnected) return;

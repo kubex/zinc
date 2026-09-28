@@ -182,7 +182,7 @@ export default class ZnDropdown extends ZincElement {
   }
 
   private async handleTriggerKeyDown(event: KeyboardEvent) {
-    if ([' ', 'Enter', 'Tab'].includes(event.key)) {
+    if ([' ', 'Enter'].includes(event.key)) {
       event.preventDefault();
       await this.handleTriggerClick();
       return;
@@ -252,9 +252,12 @@ export default class ZnDropdown extends ZincElement {
 
     if (event.key === 'Tab') {
       if (this.open) {
-        event.preventDefault();
         this.hide().then(r => r);
-        this.focusOnTrigger();
+        // Tabbing out of the menu resumes from the trigger; from the trigger, Tab moves on as usual
+        if (this.panel?.assignedElements({flatten: true}).some(el => el.matches(':focus-within'))) {
+          event.preventDefault();
+          this.focusOnTrigger();
+        }
         return;
       }
 

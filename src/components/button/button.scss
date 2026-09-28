@@ -487,6 +487,11 @@
   }
 }
 
+// Lift the focused button so later siblings don't paint over its focus ring
+:host([data-zn-button-group__button]:focus-within) {
+  z-index: 1;
+}
+
 :host([data-zn-button-group__button--first]:not([data-zn-button-group__button--last])) .button {
   border-radius: 5px 0 0 5px !important;
   border-right: 0 !important;

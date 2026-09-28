@@ -156,7 +156,7 @@ Use `hide-pagination` to hide pagination controls even when multiple pages are a
 
 ### Row Selection
 
-By default, rows can be selected by clicking. Selected rows are tracked and can be used with bulk actions.
+Rows get a checkbox column and can be selected by clicking once the table has an action to use them: something in the `delete-action`, `modify-action`, `create-action` or `actions` slot. Without one, the table has no checkboxes.
 
 ```html:preview
 <zn-data-table
@@ -176,28 +176,11 @@ By default, rows can be selected by clicking. Selected rows are tracked and can 
 </zn-data-table>
 ```
 
-### Hide Checkboxes
-
-Use `hide-checkboxes` to disable row selection functionality.
-
-```html:preview
-<zn-data-table
-  data-uri="/data/data-table.json"
-  method="GET"
-  hide-checkboxes
-  headers='[
-    {"key":"id","label":"ID"},
-    {"key":"name","label":"Name"},
-    {"key":"email","label":"Email"}
-  ]'>
-</zn-data-table>
-```
-
 ### Bulk Actions
 
 Add action buttons to the table header for performing operations on selected rows. Use the `delete-action`, `modify-action`, and `create-action` slots.
 
-`delete-action` and `modify-action` sit beside the caption alongside a select-all toggle, and only appear once rows are selected. `create-action` is a primary action rather than a selection one, so it renders at the end of the header's right-hand group, after the search field.
+`delete-action` and `modify-action` appear at the start of the header's right-hand group once rows are selected. `create-action` is a primary action rather than a selection one, so it renders at the end of that group, after the search field.
 
 ```html:preview
 <zn-data-table
@@ -221,6 +204,32 @@ Add action buttons to the table header for performing operations on selected row
   <zn-button slot="create-action" color="success" icon="add">
     Create New
   </zn-button>
+
+</zn-data-table>
+```
+
+### Actions Menu
+
+Elements in the `actions` slot are listed in an ellipsis menu at the start of the header's right-hand group. The menu is disabled until at least one row is checked. Each `zn-button` becomes a menu item using its label, `icon` and `color`, and choosing it clicks the button. A `zn-confirm` takes its label and icon from its `trigger` slot button, and choosing it opens the confirm dialog. An `input[name="keys"]` inside a slotted element is kept filled with the selected row keys, the same as for `delete-action`.
+
+```html:preview
+<zn-data-table
+  data-uri="/data/data-table.json"
+  method="GET"
+  caption="Customers"
+  headers='[
+    {"key":"id","label":"ID"},
+    {"key":"name","label":"Name"},
+    {"key":"email","label":"Email"},
+    {"key":"status","label":"Status"}
+  ]'>
+
+  <zn-button slot="actions" icon="archive@lu">Archive</zn-button>
+
+  <zn-confirm slot="actions" type="error" caption="Delete customers" content="Delete the selected customers?">
+    <zn-button slot="trigger" icon="trash-2@lu" color="error">Delete</zn-button>
+    <form><input type="hidden" name="keys"></form>
+  </zn-confirm>
 
 </zn-data-table>
 ```
@@ -862,6 +871,7 @@ Access table methods programmatically to control behavior.
     {"key":"email","label":"Email"},
     {"key":"status","label":"Status"}
   ]'>
+  <zn-button slot="delete-action" color="error" icon="delete">Delete Selected</zn-button>
 </zn-data-table>
 
 <br />
@@ -877,7 +887,7 @@ Access table methods programmatically to control behavior.
   });
 
   document.querySelector('#select-all-btn').addEventListener('click', () => {
-    table.selectAll(new Event('click'));
+    table.selectAll();
   });
 </script>
 ```

@@ -9,6 +9,11 @@
   --arrow-size: 6px;
 }
 
+.tooltip::part(popup),
+.tooltip::part(hover-bridge) {
+  cursor: default;
+}
+
 .tooltip[placement^='top']::part(popup) {
   transform-origin: bottom;
 }

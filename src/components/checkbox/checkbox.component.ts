@@ -43,7 +43,7 @@ type ColorOption = 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'suc
  * @csspart control--indeterminate - Matches the control part when the checkbox is indeterminate.
  * @csspart checked-icon - The checked icon, an `<zn-icon>` element.
  * @csspart unchecked-icon - The unchecked icon, an `<zn-icon>` element.
- * @csspart indeterminate-icon - The indeterminate icon, an `<zn-icon>` element.
+ * @csspart indeterminate-icon - The indeterminate icon, an `<svg>` element.
  * @csspart image-container - The wrapper around the built-in image or image slot.
  * @csspart image - The built-in image.
  * @csspart card-title - The title inside a selection card.
@@ -404,11 +404,15 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
 
             ${!this.checked && this.indeterminate
               ? html`
-                <zn-icon
-                  part="indeterminate-icon"
-                  class="checkbox__indeterminate-icon"
-                  size="16"
-                  src="check_indeterminate_small"></zn-icon>`
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="4"
+                     stroke-linecap="round"
+                     part="indeterminate-icon"
+                     class="checkbox__indeterminate-icon">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>`
               : ''}
           </span>
 

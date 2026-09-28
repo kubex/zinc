@@ -44,7 +44,7 @@ table {
     border-bottom: 1px solid rgb(var(--zn-border-color)) !important;
   }
 
-  &.with-hover tbody tr.table__row--data:not(.table__row--selected):hover td {
+  &.with-hover tbody tr.table__row--data:hover td {
     background-color: rgba(var(--zn-primary), 0.05) !important;
     cursor: pointer;
   }
@@ -414,68 +414,24 @@ zn-menu::part(base) {
   background-color: rgb(var(--zn-panel, 255, 255, 255));
 }
 
-/* Table Select Styles */
-table tbody tr.table__row--selected {
-  background-color: var(--zn-color-purple-100);
-
-  &:hover {
-    background-color: var(--zn-color-purple-200) !important;
-  }
-
-  td {
-    border-top: 1px solid var(--zn-color-purple-600) !important;
-    border-bottom: 1px solid var(--zn-color-purple-600) !important;
-  }
-
-  td:first-of-type {
-    border-left: 1px solid var(--zn-color-purple-600);
-  }
-
-  td:last-of-type {
-    border-right: 1px solid var(--zn-color-purple-600);
-  }
-
-  &:last-of-type td:first-of-type {
-    border-bottom-left-radius: var(--zn-border-radius);
-  }
-
-  &:last-of-type td:last-of-type {
-    border-bottom-right-radius: var(--zn-border-radius);
-  }
-
-  & + tr.table__row--selected td {
-    border-top: 0 !important;
-
-    &:first-of-type {
-      border-top-left-radius: 0;
-    }
-
-    &:last-of-type {
-      border-top-right-radius: 0;
-    }
-  }
-
-  &:has(+ tr.table__row--selected) td {
-    border-bottom: 0 !important;
-  }
-
-  &:first-of-type td {
-    border-top: 0 !important;
-  }
-
-  &:has(+ tr.table__row--selected) {
-    td:first-of-type {
-      border-bottom-left-radius: 0;
-    }
-
-    td:last-of-type {
-      border-bottom-right-radius: 0;
-    }
-  }
+.table tr .table__head[tabindex]:focus-visible {
+  outline: var(--zn-focus-ring);
+  outline-offset: calc(-1 * var(--zn-focus-ring-width));
 }
 
-table:has(tbody tr:first-of-type.table__row--selected) thead tr th {
-  border-bottom-color: var(--zn-color-purple-600) !important;
+.table tr .table__head--checkbox,
+.table tr .table__cell--checkbox {
+  width: 1px;
+  min-width: 0;
+  padding-right: 0;
+}
+
+// Visually hidden rather than display: none, which would stop a slotted zn-confirm's dialog rendering
+.table__actions-source {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }
 
 tbody tr.table__row--group th {

@@ -1,8 +1,9 @@
 @use "../../wc";
 
 :host {
+  // Overlaps the parent menu's padding so the submenu's border lands on the parent's.
+  --submenu-offset: 1px;
   // Baseline — standalone items (e.g. app/sidebar navigation): primary hover
-  --submenu-offset: -2px;
   --color: var(--zn-text-menu-link-color);
   --hover-color: rgb(var(--zn-primary));
   --hover-bg: rgba(var(--zn-color-navigation-highlight), var(--zn-panel-highlight-opacity));
@@ -239,6 +240,8 @@
 
 .menu-item--has-submenu .menu-item__chevron {
   display: flex;
+  height: auto;
+  margin-inline-start: var(--zn-spacing-x-small);
 }
 
 :host(:not([role="menuitemcheckbox"])) .menu-item .menu-item__check {
@@ -251,9 +254,7 @@
   display: flex;
 }
 
-/* Add elevation and z-index to submenus */
 zn-popup::part(popup) {
-  box-shadow: var(--zn-shadow-large);
   z-index: 100;
   margin-left: var(--submenu-offset);
 }

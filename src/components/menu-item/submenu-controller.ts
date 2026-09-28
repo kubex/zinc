@@ -244,21 +244,12 @@ export class SubmenuController implements ReactiveController {
 
   // Calculate the space the top of a menu takes-up, for aligning the popup menu-item with the activating element.
   private updateSkidding(): void {
-    // .computedStyleMap() not always available.
-    if (!this.host.parentElement?.computedStyleMap) {
-      return;
-    }
-    const styleMap: StylePropertyMapReadOnly = this.host.parentElement.computedStyleMap();
-    const attrs: string[] = ['padding-top', 'border-top-width', 'margin-top'];
-
-    const skidding = attrs.reduce((accumulator, attr) => {
-      const styleValue: CSSStyleValue = styleMap.get(attr) ?? new CSSUnitValue(0, 'px');
-      const unitValue = styleValue instanceof CSSUnitValue ? styleValue : new CSSUnitValue(0, 'px');
-      const pxValue = unitValue.to('px');
-      return accumulator - pxValue.value;
-    }, 0);
-
-    this.skidding = skidding;
+    // zn-menu's padding and border sit on its inner `.menu`, not the host.
+    const menu = this.host.parentElement;
+    const panel = menu?.shadowRoot?.querySelector('.menu') ?? menu;
+    if (!panel) return;
+    const style = getComputedStyle(panel);
+    this.skidding = -(parseFloat(style.paddingTop) + parseFloat(style.borderTopWidth) + parseFloat(style.marginTop));
   }
 
   isExpanded(): boolean {

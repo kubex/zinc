@@ -1900,7 +1900,14 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                                tooltip="More"
                                @mousedown=${(e: MouseEvent) => e.preventDefault()}></zn-button>
                     <zn-menu>
-                      ${overflowed.flatMap(entry => entry.actions).map(action => this.renderMenuAction(action))}
+                      ${overflowed.map(entry => html`
+                        <zn-menu-item>
+                          <zn-icon slot="prefix" src=${entry.actions[0].icon} size="18"></zn-icon>
+                          ${entry.group.label}
+                          <zn-menu slot="submenu">
+                            ${entry.actions.map(action => this.renderMenuAction(action))}
+                          </zn-menu>
+                        </zn-menu-item>`)}
                     </zn-menu>
                   </zn-dropdown>` : ''}`;
             })()}

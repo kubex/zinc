@@ -352,8 +352,10 @@ Second"></zn-remarkd-editor>`);
       .filter(group => getComputedStyle(group).display === 'none');
     expect(collapsed.length, 'nothing collapsed at 240px').to.be.greaterThan(0);
 
-    // No action is lost: the collapsed groups' actions are all in the menu.
-    const menuItems = el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar-more zn-menu-item');
+    // One top-level entry per collapsed group, each holding that group's actions.
+    const groupItems = el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar-more > zn-menu > zn-menu-item');
+    expect(groupItems.length).to.equal(collapsed.length);
+    const menuItems = el.shadowRoot!.querySelectorAll('.remarkd-editor__toolbar-more zn-menu[slot="submenu"] zn-menu-item');
     expect(menuItems.length).to.be.greaterThan(0);
 
     // The trigger itself must stay on-screen — a group that doesn't fit must not force its
@@ -372,7 +374,7 @@ Second"></zn-remarkd-editor>`);
       .to.equal(expectedCount);
   });
 
-  it('should scroll the overflow menu instead of running off the viewport', async () => {
+  it('should cap each overflow submenu so it scrolls instead of running off the viewport', async () => {
     const el = await fixture<ZnRemarkdEditor>(html`
       <zn-remarkd-editor style="width: 240px"></zn-remarkd-editor>`);
     await waitUntil(() => el.shadowRoot!.querySelector('.remarkd-editor__toolbar-more'),
@@ -384,14 +386,14 @@ Second"></zn-remarkd-editor>`);
     // wait used for the same reason in expanding-action's drop-panel overflow tests.
     await new Promise(resolve => requestAnimationFrame(resolve));
 
-    // At 240px, every action lands in the menu — enough zn-menu-items to overflow the
-    // max-height. The scroll container is zn-menu's own inner `.menu` div (set via the
-    // --zn-menu-max-height custom property), not the zn-menu host itself: a constraint on
-    // the host leaves the host with room to spare, so a wheel over an item finds `.menu`
-    // has nothing to scroll and never chains out to the host.
-    const menu = dropdown.querySelector('zn-menu')!;
+    // Inline is the longest group, so its submenu is the one that can outgrow the viewport.
+    // The cap lands on zn-menu's inner `.menu` div (via --zn-menu-max-height), not the host:
+    // a constraint on the host leaves `.menu` with nothing to scroll.
+    const inlineItem = [...dropdown.querySelectorAll(':scope > zn-menu > zn-menu-item')]
+      .find(item => item.textContent?.includes('Strong'))!;
+    const menu = inlineItem.querySelector('zn-menu[slot="submenu"]')!;
     const inner = menu.shadowRoot!.querySelector<HTMLElement>('.menu')!;
-    expect(inner.scrollHeight, 'the menu needs room to scroll').to.be.greaterThan(inner.clientHeight);
+    expect(getComputedStyle(inner).maxHeight).to.not.equal('none');
     expect(getComputedStyle(inner).overflow).to.equal('auto');
   });
 
@@ -416,7 +418,7 @@ Second"></zn-remarkd-editor>`);
     // trigger wouldn't actually move focus in a test DOM, so the blur is reproduced directly.
     input.dispatchEvent(new Event('blur'));
 
-    const strong = [...dropdown.querySelectorAll('zn-menu-item')]
+    const strong = [...dropdown.querySelectorAll('zn-menu[slot="submenu"] zn-menu-item')]
       .find(item => item.textContent?.includes('Strong'));
     expect(strong, 'Strong should be reachable through the overflow menu').to.exist;
     strong!.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
@@ -1528,7 +1530,7 @@ const x = {product};
     await dropdown.show();
     await new Promise(resolve => requestAnimationFrame(resolve));
 
-    const linkItem = [...dropdown.querySelectorAll('zn-menu-item')]
+    const linkItem = [...dropdown.querySelectorAll('zn-menu[slot="submenu"] zn-menu-item')]
       .find(item => item.textContent?.includes('Link to article'));
     expect(linkItem, 'the article-link action should be reachable through the overflow menu').to.exist;
     // ZnButton overrides click() without dispatching a DOM event, so the menu item's

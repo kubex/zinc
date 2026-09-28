@@ -279,7 +279,8 @@ function renderConditionalParts(parts: ConditionalPart[]): TemplateResult {
       ${parts.map(part => {
         if (part.kind === 'nested') return renderConditionalWrapper(part.label, part.parts);
         const text = part.lines.join('\n').trim();
-        return text ? html`<div class="remarkd-editor__rendered--parsed">${unsafeHTML(safeParse(text))}</div>` : '';
+        return text ? html`
+          <div class="remarkd-editor__rendered--parsed">${unsafeHTML(safeParse(text))}</div>` : '';
       })}
     </div>`;
 }
@@ -1232,7 +1233,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       fetch(url, {headers: {Accept: 'application/json'}})
         .then(res => {
           if (!res.ok) throw new Error(`link search failed: ${res.status}`);
-          return res.json() as Promise<{items?: LinkOption[]}>;
+          return res.json() as Promise<{ items?: LinkOption[] }>;
         })
         .then(data => {
           if (token !== this.linkSearchToken) return;
@@ -1329,7 +1330,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       this.includeRequest = fetch(this.includeUrl, {headers: {Accept: 'application/json'}})
         .then(res => {
           if (!res.ok) throw new Error(`include list request failed: ${res.status}`);
-          return res.json() as Promise<{items?: IncludeOption[]}>;
+          return res.json() as Promise<{ items?: IncludeOption[] }>;
         })
         .then(data => {
           const items = data.items ?? [];
@@ -1367,7 +1368,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     fetch(url, {headers: {Accept: 'application/json'}})
       .then(res => {
         if (!res.ok) throw new Error(`link resolve failed: ${res.status}`);
-        return res.json() as Promise<{items?: LinkOption[]}>;
+        return res.json() as Promise<{ items?: LinkOption[] }>;
       })
       .then(data => {
         const known = new Map((data.items ?? []).map(item => [item.ref, item]));
@@ -1529,7 +1530,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   private renderImageControls() {
     const data = this.imageEdit;
     if (!data) return '';
-    const aligns: {value: ImageBlockData['align']; icon: string; label: string}[] = [
+    const aligns: { value: ImageBlockData['align']; icon: string; label: string }[] = [
       {value: '', icon: 'align-left@lu', label: 'Align left'},
       {value: 'center', icon: 'align-center@lu', label: 'Align center'},
       {value: 'right', icon: 'align-right@lu', label: 'Align right'},
@@ -1558,7 +1559,8 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
             <span>Alignment</span>
             <zn-button-group>
               ${aligns.map(align => html`
-                <zn-button type="button" icon-button="small" icon=${align.icon}
+                <zn-button icon-button="small"
+                           icon=${align.icon}
                            ?plain=${data.align !== align.value}
                            tooltip=${align.label}
                            @click=${() => this.updateImageEdit({align: align.value})}></zn-button>`)}
@@ -1581,12 +1583,15 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
           </label>
         </div>
         <div class="remarkd-editor__image-buttons">
-          <zn-button type="button" color="primary" size="small" @click=${this.saveImageEdit}>Save</zn-button>
-          <zn-button type="button" color="secondary" size="small" @click=${this.closeImageEdit}>Cancel</zn-button>
+          <zn-button color="primary" size="small" @click=${this.saveImageEdit}>Save</zn-button>
+          <zn-button color="secondary" size="small" @click=${this.closeImageEdit}>Cancel</zn-button>
           <span class="remarkd-editor__image-buttons-spacer"></span>
-          <zn-button type="button" icon-button="small" plain icon="code@lu"
-                     tooltip="Edit source" @click=${this.editImageSource}></zn-button>
-          <zn-button type="button" icon-button="small" plain icon="trash-2@lu" color="error"
+          <zn-button icon-button="small"
+                     plain
+                     icon="code@lu"
+                     tooltip="Edit source"
+                     @click=${this.editImageSource}></zn-button>
+          <zn-button icon-button="small" plain icon="trash-2@lu" color="error"
                      tooltip="Delete image" @click=${this.deleteImageBlock}></zn-button>
         </div>
       </div>`;
@@ -1744,12 +1749,19 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                   @pointerdown=${this.handleHandlePointerDown}>
               <zn-icon src="grip-vertical@lu" size="16"></zn-icon>
             </span>
-            <zn-button type="button" icon-button="small" plain icon="plus@lu" icon-size="16"
+            <zn-button icon-button="small"
+                       plain
+                       icon="plus@lu"
+                       icon-size="16"
                        tooltip="Add block below"
                        @click=${() => this.insertDraftBlock(index + 1)}></zn-button>
           </div>
           <zn-button class="remarkd-editor__delete"
-                     type="button" icon-button="small" plain icon="x@lu" icon-size="16" color="error"
+                     icon-button="small"
+                     plain
+                     icon="x@lu"
+                     icon-size="16"
+                     color="error"
                      tooltip="Delete block"
                      @click=${() => this.deleteBlock(index)}></zn-button>`}
         <div part="rendered"
@@ -1808,7 +1820,10 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   /** A single toolbar action button, shared by the toolbar bar and the overflow menu. */
   private renderAction(action: EditorAction) {
     return html`
-      <zn-button type="button" icon-button plain icon=${action.icon} icon-size="18"
+      <zn-button icon-button="small"
+                 plain
+                 icon=${action.icon}
+                 icon-size="18"
                  tooltip=${action.label}
                  ?disabled=${this.isActionDisabled(action)}
                  @mousedown=${(e: MouseEvent) => e.preventDefault()}
@@ -1869,8 +1884,12 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                                  // the textarea out from under it.
                                  if (!this.linkPickerOpen) this.suppressBlurCommit = false;
                                }}>
-                    <zn-button slot="trigger" type="button" icon-button plain icon="ellipsis@lu"
-                               icon-size="18" tooltip="More"
+                    <zn-button slot="trigger"
+                               icon-button="small"
+                               plain
+                               icon="ellipsis@lu"
+                               icon-size="18"
+                               tooltip="More"
                                @mousedown=${(e: MouseEvent) => e.preventDefault()}></zn-button>
                     <zn-menu>
                       ${overflowed.flatMap(entry => entry.actions).map(action => this.renderMenuAction(action))}
@@ -1878,8 +1897,11 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                   </zn-dropdown>` : ''}`;
             })()}
             ${this.allowRaw ? html`
-              <zn-button part="raw-toggle" class="remarkd-editor__raw-toggle"
-                         type="button" icon-button icon="code-xml@lu" icon-size="18"
+              <zn-button part="raw-toggle"
+                         class="remarkd-editor__raw-toggle"
+                         icon-button="small"
+                         icon="code-xml@lu"
+                         icon-size="18"
                          ?plain=${!this.rawMode}
                          tooltip=${this.rawMode ? 'Show blocks' : 'Show raw source'}
                          @click=${this.toggleRawMode}></zn-button>` : ''}
@@ -1944,12 +1966,17 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                  @input=${(e: Event) => {
                    this.includeQuery = (e.target as HTMLInputElement).value;
                  }}>
-          <zn-button type="button" icon-button="small" plain icon="x@lu"
-                     tooltip="Cancel" @click=${this.closeIncludePicker}></zn-button>
+          <zn-button icon-button="small"
+                     plain
+                     icon="x@lu"
+                     tooltip="Cancel"
+                     @click=${this.closeIncludePicker}></zn-button>
         </div>
         ${this.includeOptions === null
-          ? html`<div class="remarkd-editor__include-picker-empty">${
-            this.includeLoadFailed ? 'Could not load Includes' : 'Loading…'}</div>`
+          ? html`
+            <div class="remarkd-editor__include-picker-empty">${
+              this.includeLoadFailed ? 'Could not load Includes' : 'Loading…'}
+            </div>`
           : items.length
             ? items.map(item => html`
               <button type="button" class="remarkd-editor__include-option"
@@ -1959,7 +1986,8 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                 <span class="remarkd-editor__include-option-meta">${item.scope ?? ''}${
                   item.languages ? ` · ${item.languages}` : ' · No content'}</span>
               </button>`)
-            : html`<div class="remarkd-editor__include-picker-empty">No Includes found</div>`}
+            : html`
+              <div class="remarkd-editor__include-picker-empty">No Includes found</div>`}
       </div>`;
   }
 
@@ -1975,12 +2003,17 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                    this.linkQuery = (e.target as HTMLInputElement).value;
                    this.searchLinks(this.linkQuery);
                  }}>
-          <zn-button type="button" icon-button="small" plain icon="x@lu"
-                     tooltip="Cancel" @click=${this.closeLinkPicker}></zn-button>
+          <zn-button icon-button="small"
+                     plain
+                     icon="x@lu"
+                     tooltip="Cancel"
+                     @click=${this.closeLinkPicker}></zn-button>
         </div>
         ${this.linkResults === null
-          ? html`<div class="remarkd-editor__link-picker-empty">${
-            this.linkSearchFailed ? 'Could not search for articles' : 'Searching…'}</div>`
+          ? html`
+            <div class="remarkd-editor__link-picker-empty">${
+              this.linkSearchFailed ? 'Could not search for articles' : 'Searching…'}
+            </div>`
           : this.linkResults.length
             ? this.linkResults.map(item => html`
               <button type="button" class="remarkd-editor__link-option"
@@ -1990,7 +2023,8 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                   [kinds[item.kind] ?? item.kind, item.context, item.status === 'published' ? '' : item.status]
                     .filter(Boolean).join(' · ')}</span>
               </button>`)
-            : html`<div class="remarkd-editor__link-picker-empty">No articles found</div>`}
+            : html`
+              <div class="remarkd-editor__link-picker-empty">No articles found</div>`}
       </div>`;
   }
 
@@ -2024,7 +2058,9 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                  accept="image/*"
                  droparea
                  @zn-change=${this.handleImagePicked}></zn-file>
-        <zn-button type="button" icon-button="small" plain icon="x@lu"
+        <zn-button icon-button="small"
+                   plain
+                   icon="x@lu"
                    tooltip="Cancel"
                    @click=${this.closeImagePicker}></zn-button>
       </div>`;

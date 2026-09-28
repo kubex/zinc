@@ -54,12 +54,18 @@ export default class ZnFormGroup extends ZincElement {
   private rebind: boolean = false;
   private offset: number = 0;
   private resizeObserver: ResizeObserver | null = null;
+  private observedAncestors: Set<HTMLElement> = new Set();
 
   connectedCallback() {
     super.connectedCallback();
 
-    // Whether an ancestor scrolls depends on how tall this form has grown.
-    this.resizeObserver ??= new ResizeObserver(() => this.schedule(true));
+    // Whether an ancestor scrolls depends on how tall this form has grown. Re-measured before paint rather than on the
+    // next frame, or the label is drawn for a frame against the old layout and flickers.
+    this.resizeObserver ??= new ResizeObserver(() => {
+      this.rebind = false;
+      this.bind();
+      this.positionLabel();
+    });
     this.resizeObserver.observe(this);
     window.addEventListener('resize', this.onViewportResize);
   }
@@ -67,6 +73,7 @@ export default class ZnFormGroup extends ZincElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.resizeObserver?.disconnect();
+    this.observedAncestors.clear();
     window.removeEventListener('resize', this.onViewportResize);
     this.detach();
     cancelAnimationFrame(this.frame);
@@ -82,7 +89,7 @@ export default class ZnFormGroup extends ZincElement {
     return this.shadowRoot?.querySelector('.form-control__text') ?? null;
   }
 
-  /** Coalesces scroll and resize work into one frame, and out of the ResizeObserver callback. */
+  /** Coalesces scroll and resize work into one frame. */
   private schedule(rebind: boolean = false) {
     this.rebind ||= rebind;
     if (this.frame) return;
@@ -120,6 +127,7 @@ export default class ZnFormGroup extends ZincElement {
     // A `top` inset against a box that never scrolls has nothing to hold the label back from:
     // it only pushes the label down the page, so drop it and stand in for sticky below.
     column.style.top = '0px';
+    this.observeAncestors(column, scroller);
     if (!scroller) return;
 
     this.tracked = scroller;
@@ -154,24 +162,26 @@ export default class ZnFormGroup extends ZincElement {
     // The stylesheet drops sticky while the columns are stacked, and there is nothing to follow.
     if (getComputedStyle(column).position !== 'sticky') return null;
 
+    if (!('rangeStart' in Animation.prototype)) return null;
+
     const travel = Math.max(0, fieldset.clientHeight - column.offsetHeight);
-    const range = scroller.scrollHeight - scroller.clientHeight;
-    if (travel < 1 || range < 1) return null;
+    if (travel < 1) return null;
 
     const start = scroller.scrollTop + column.getBoundingClientRect().top
       - this.visibleTop(scroller) - this.stickyTop;
-    const held = (scroll: number) => Math.min(Math.max(scroll - start, 0), travel);
 
-    const knees = [start, start + travel].filter(scroll => scroll > 0 && scroll < range);
-    const keyframes = [0, ...knees, range].map(scroll => ({
-      offset: Math.min(Math.max(scroll / range, 0), 1),
-      transform: `translateY(${held(scroll)}px)`
-    }));
-
-    return new Animation(
-      new KeyframeEffect(column, keyframes, { fill: 'both' }),
+    const animation = new Animation(
+      new KeyframeEffect(column, [
+        { transform: 'translateY(0px)' },
+        { transform: `translateY(${travel}px)` }
+      ], { fill: 'both' }),
       new ScrollTimeline({ source: scroller, axis: 'block' })
-    );
+    ) as Animation & { rangeStart: string; rangeEnd: string };
+
+    // In scroll pixels rather than progress, so the scroller growing or shrinking can't shift the label.
+    animation.rangeStart = `${start}px`;
+    animation.rangeEnd = `${start + travel}px`;
+    return animation;
   }
 
   /** Drops everything this component has put on the label or on the scroller. */
@@ -188,6 +198,26 @@ export default class ZnFormGroup extends ZincElement {
     if (!column) return;
     this.offset = 0;
     column.style.transform = '';
+  }
+
+  /**
+   * The label's travel is measured against the scroller, so content growing elsewhere in it — a sibling group revealing
+   * more fields — leaves the label at a stale position until something re-measures. Any such growth resizes a box
+   * between this group and the scroller.
+   */
+  private observeAncestors(from: HTMLElement, scroller: HTMLElement | null) {
+    const ancestors = this.ancestors(from);
+    const end = scroller ? ancestors.indexOf(scroller) : -1;
+    const wanted = new Set(ancestors.slice(0, end < 0 ? undefined : end).filter(element => element !== this));
+
+    // Observing fires once straight away, so re-observing on every bind would rebind every frame.
+    for (const element of this.observedAncestors) {
+      if (!wanted.has(element)) this.resizeObserver?.unobserve(element);
+    }
+    for (const element of wanted) {
+      if (!this.observedAncestors.has(element)) this.resizeObserver?.observe(element);
+    }
+    this.observedAncestors = wanted;
   }
 
   /** The document scrolls through the window, every other scroller reports its own events. */

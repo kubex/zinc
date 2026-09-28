@@ -977,6 +977,7 @@ declare module "components/tooltip/tooltip.component" {
         handleDisabledChange(): void;
         show(): Promise<void>;
         hide(): void;
+        private handlePopupClick;
         render(): import("lit-html").TemplateResult<1>;
     }
 }
@@ -4080,6 +4081,7 @@ declare module "components/data-table/data-table.component" {
     export enum ActionSlots {
         delete = "delete-action",
         modify = "modify-action",
+        actions = "actions",
         create = "create-action",
         filter = "filter",
         filter_top = "filter-top",
@@ -4140,8 +4142,9 @@ declare module "components/data-table/data-table.component" {
      * @slot sort - Slot for sort component, in the header's right-hand group.
      * @slot filter - Slot for filter component, in the header's right-hand group.
      * @slot filter-top - Slot for a top-level filter component, rendered above the table's panel.
-     * @slot delete-action - Slot for delete action button, shown beside the caption once rows are selected.
-     * @slot modify-action - Slot for modify action button, shown beside the caption once rows are selected.
+     * @slot delete-action - Slot for delete action button, shown in the header once rows are selected.
+     * @slot modify-action - Slot for modify action button, shown in the header once rows are selected.
+     * @slot actions - `zn-button` or `zn-confirm` elements listed in a header menu, enabled once rows are selected.
      * @slot create-action - Slot for create action button, at the end of the header's right-hand group.
      * @slot inputs - Slot for additional input controls.
      * @slot empty-state - Slot for custom empty state.
@@ -4191,7 +4194,6 @@ declare module "components/data-table/data-table.component" {
         caption: string;
         emptyStateCaption: string;
         emptyStateIcon: string;
-        hideCheckboxes: boolean;
         filters: [];
         method: 'GET' | 'POST';
         noInitialLoad: boolean;
@@ -4209,7 +4211,6 @@ declare module "components/data-table/data-table.component" {
         groupBy: string;
         groups: string;
         itemsPerPage: number;
-        selectAllButton: ZnButton;
         private _initialLoad;
         private _hasLoadedData;
         private _lastLoadHadRows;
@@ -4286,6 +4287,7 @@ declare module "components/data-table/data-table.component" {
         private renderErrorAlert;
         humanize(str: string): string;
         renderTableData(groups: RowGroup[], error?: ResponseError): TemplateResult<1>;
+        private tableContent;
         getTableHeader(): TemplateResult<1>;
         private getHeaderControls;
         private hasRows;
@@ -4303,30 +4305,42 @@ declare module "components/data-table/data-table.component" {
         private getPageRange;
         getPagination(): TemplateResult<1> | null;
         getActions(): TemplateResult<1>[];
+        private getActionsMenu;
+        private actionTrigger;
+        private actionLabel;
+        private runAction;
         goToPage(page: number): void;
         goToFirstPage(): void;
         goToPreviousPage(): void;
         goToNextPage(): void;
         goToLastPage(): void;
         updateRowsPerPage(event: Event): void;
-        selectAll(event: Event): void;
+        /** Selects every row on the page, or clears the selection when every row is already selected. */
+        selectAll(): void;
         selectRow(e: Event): void;
-        clearSelectedRows(event: Event): void;
+        private toggleRowSelection;
+        clearSelectedRows(): void;
         updateSort(key: string): () => void;
         renderCell(data: Cell, row?: Row, header?: HeaderConfig): TemplateResult | ZincElement;
         private updateActionKeys;
         private getTableSortIcon;
         private renderCellHeader;
+        private sortState;
+        private handleSortKeyDown;
         private renderCellBody;
         private hasHiddenColumns;
         private renderExpanderCell;
         private renderDetailsRow;
         private toggleRowExpansion;
         private isRowSelected;
+        private pruneSelectedRows;
+        private isSelectable;
+        private renderSelectAllCheckbox;
+        private renderRowCheckbox;
+        private handleCheckboxCellClick;
         private getRows;
         private getSelectedKeys;
         private updateKeys;
-        private updateSelectAll;
         private updateModifyKeys;
         private updateDeleteKeys;
         private extractComparable;
@@ -7309,7 +7323,7 @@ declare module "components/checkbox/checkbox.component" {
      * @csspart control--indeterminate - Matches the control part when the checkbox is indeterminate.
      * @csspart checked-icon - The checked icon, an `<zn-icon>` element.
      * @csspart unchecked-icon - The unchecked icon, an `<zn-icon>` element.
-     * @csspart indeterminate-icon - The indeterminate icon, an `<zn-icon>` element.
+     * @csspart indeterminate-icon - The indeterminate icon, an `<svg>` element.
      * @csspart image-container - The wrapper around the built-in image or image slot.
      * @csspart image - The built-in image.
      * @csspart card-title - The title inside a selection card.

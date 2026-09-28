@@ -58,79 +58,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -319,6 +246,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -4558,7 +4558,7 @@
               "name": "unchecked-icon"
             },
             {
-              "description": "The indeterminate icon, an `<zn-icon>` element.",
+              "description": "The indeterminate icon, an `<svg>` element.",
               "name": "indeterminate-icon"
             },
             {
@@ -5343,7 +5343,7 @@
           "tagNameWithoutPrefix": "checkbox",
           "tagName": "zn-checkbox",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/checkbox\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - The checkbox's label.\n * @slot image - Replaces the built-in image used by contained checkboxes.\n * @slot description - A description of the checkbox's label. Serves as help text for a checkbox item. Alternatively, you can use the `description` attribute.\n * @slot selected-content - Use to nest rich content (like an input) inside a selected checkbox item. Use only with the contained style.\n *\n * @event zn-blur - Emitted when the checkbox loses focus.\n * @event zn-change - Emitted when the checked state changes.\n * @event zn-focus - Emitted when the checkbox gains focus.\n * @event zn-input - Emitted when the checkbox receives input.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n *\n * @csspart base - The component's base wrapper.\n * @csspart control - The square container that wraps the checkbox's checked state.\n * @csspart control--checked - Matches the control part when the checkbox is checked.\n * @csspart control--indeterminate - Matches the control part when the checkbox is indeterminate.\n * @csspart checked-icon - The checked icon, an `<zn-icon>` element.\n * @csspart unchecked-icon - The unchecked icon, an `<zn-icon>` element.\n * @csspart indeterminate-icon - The indeterminate icon, an `<zn-icon>` element.\n * @csspart image-container - The wrapper around the built-in image or image slot.\n * @csspart image - The built-in image.\n * @csspart card-title - The title inside a selection card.\n * @csspart label - The container that wraps the checkbox's label.\n * @csspart description - The container that wraps the checkbox's description.\n * @csspart selected-content - The container that wraps optional content that appears when a checkbox is checked.\n *\n * @cssproperty --zn-selection-card-image-width - Width of the built-in card image.\n * @cssproperty --zn-selection-card-image-height - Height of the built-in card image.\n * @cssproperty --zn-selection-card-min-height - Minimum height of a contained checkbox with an image.\n * @cssproperty --zn-selection-card-content-min-width - Width the card text keeps before it wraps below the image.\n * @cssproperty --zn-selection-card-title-font-size - Font size of a selection card title.\n * @cssproperty --zn-selection-card-padding - Equal inset around the contents of a selection card.\n * @cssproperty --zn-selection-card-gap - Space between the image, title, and indicator gutter.\n * @cssproperty --zn-selection-card-control-offset - Distance between a positioned control and the card edge.\n * @cssproperty --zn-selection-card-border-radius - Corner radius of a contained container.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/checkbox\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - The checkbox's label.\n * @slot image - Replaces the built-in image used by contained checkboxes.\n * @slot description - A description of the checkbox's label. Serves as help text for a checkbox item. Alternatively, you can use the `description` attribute.\n * @slot selected-content - Use to nest rich content (like an input) inside a selected checkbox item. Use only with the contained style.\n *\n * @event zn-blur - Emitted when the checkbox loses focus.\n * @event zn-change - Emitted when the checked state changes.\n * @event zn-focus - Emitted when the checkbox gains focus.\n * @event zn-input - Emitted when the checkbox receives input.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n *\n * @csspart base - The component's base wrapper.\n * @csspart control - The square container that wraps the checkbox's checked state.\n * @csspart control--checked - Matches the control part when the checkbox is checked.\n * @csspart control--indeterminate - Matches the control part when the checkbox is indeterminate.\n * @csspart checked-icon - The checked icon, an `<zn-icon>` element.\n * @csspart unchecked-icon - The unchecked icon, an `<zn-icon>` element.\n * @csspart indeterminate-icon - The indeterminate icon, an `<svg>` element.\n * @csspart image-container - The wrapper around the built-in image or image slot.\n * @csspart image - The built-in image.\n * @csspart card-title - The title inside a selection card.\n * @csspart label - The container that wraps the checkbox's label.\n * @csspart description - The container that wraps the checkbox's description.\n * @csspart selected-content - The container that wraps optional content that appears when a checkbox is checked.\n *\n * @cssproperty --zn-selection-card-image-width - Width of the built-in card image.\n * @cssproperty --zn-selection-card-image-height - Height of the built-in card image.\n * @cssproperty --zn-selection-card-min-height - Minimum height of a contained checkbox with an image.\n * @cssproperty --zn-selection-card-content-min-width - Width the card text keeps before it wraps below the image.\n * @cssproperty --zn-selection-card-title-font-size - Font size of a selection card title.\n * @cssproperty --zn-selection-card-padding - Equal inset around the contents of a selection card.\n * @cssproperty --zn-selection-card-gap - Space between the image, title, and indicator gutter.\n * @cssproperty --zn-selection-card-control-offset - Distance between a positioned control and the card edge.\n * @cssproperty --zn-selection-card-border-radius - Corner radius of a contained container.\n */",
           "documentation": "https://zinc.style/components/checkbox",
           "status": "experimental",
           "since": "1.0",
@@ -8730,12 +8730,16 @@
               "name": "filter-top"
             },
             {
-              "description": "Slot for delete action button, shown beside the caption once rows are selected.",
+              "description": "Slot for delete action button, shown in the header once rows are selected.",
               "name": "delete-action"
             },
             {
-              "description": "Slot for modify action button, shown beside the caption once rows are selected.",
+              "description": "Slot for modify action button, shown in the header once rows are selected.",
               "name": "modify-action"
+            },
+            {
+              "description": "`zn-button` or `zn-confirm` elements listed in a header menu, enabled once rows are selected.",
+              "name": "actions"
             },
             {
               "description": "Slot for create action button, at the end of the header's right-hand group.",
@@ -8957,14 +8961,6 @@
             },
             {
               "kind": "field",
-              "name": "hideCheckboxes",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "hide-checkboxes"
-            },
-            {
-              "kind": "field",
               "name": "filters",
               "type": {
                 "text": "[]"
@@ -9036,13 +9032,6 @@
               },
               "default": "10",
               "attribute": "per-page-size"
-            },
-            {
-              "kind": "field",
-              "name": "selectAllButton",
-              "type": {
-                "text": "ZnButton"
-              }
             },
             {
               "kind": "field",
@@ -9186,7 +9175,7 @@
               "kind": "field",
               "name": "hasSlotController",
               "privacy": "private",
-              "default": "new HasSlotController( this, '[default]', ActionSlots.search.valueOf(), ActionSlots.delete.valueOf(), ActionSlots.modify.valueOf(), ActionSlots.create.valueOf(), ActionSlots.filter.valueOf(), ActionSlots.sort.valueOf(), ActionSlots.inputs.valueOf(), 'empty-state', 'no-results' )"
+              "default": "new HasSlotController( this, '[default]', ActionSlots.search.valueOf(), ActionSlots.delete.valueOf(), ActionSlots.modify.valueOf(), ActionSlots.actions.valueOf(), ActionSlots.create.valueOf(), ActionSlots.filter.valueOf(), ActionSlots.sort.valueOf(), ActionSlots.inputs.valueOf(), 'empty-state', 'no-results' )"
             },
             {
               "kind": "field",
@@ -9513,6 +9502,25 @@
             },
             {
               "kind": "method",
+              "name": "tableContent",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "content",
+                  "type": {
+                    "text": "TemplateResult"
+                  }
+                },
+                {
+                  "name": "pending",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "getTableHeader"
             },
             {
@@ -9626,6 +9634,66 @@
             },
             {
               "kind": "method",
+              "name": "getActionsMenu",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "actionTrigger",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "actionLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "trigger",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "runAction",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "goToPage",
               "parameters": [
                 {
@@ -9667,14 +9735,7 @@
             {
               "kind": "method",
               "name": "selectAll",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "Event"
-                  }
-                }
-              ]
+              "description": "Selects every row on the page, or clears the selection when every row is already selected."
             },
             {
               "kind": "method",
@@ -9690,15 +9751,20 @@
             },
             {
               "kind": "method",
-              "name": "clearSelectedRows",
+              "name": "toggleRowSelection",
+              "privacy": "private",
               "parameters": [
                 {
-                  "name": "event",
+                  "name": "row",
                   "type": {
-                    "text": "Event"
+                    "text": "Row"
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "clearSelectedRows"
             },
             {
               "kind": "method",
@@ -9778,6 +9844,43 @@
                   "name": "header",
                   "type": {
                     "text": "HeaderConfig"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "sortState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "'ascending' | 'descending' | 'none'"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleSortKeyDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                },
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "string"
                   }
                 }
               ]
@@ -9888,6 +9991,58 @@
             },
             {
               "kind": "method",
+              "name": "pruneSelectedRows",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "isSelectable",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderSelectAllCheckbox",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "renderRowCheckbox",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "Row"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleCheckboxCellClick",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                },
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "Row"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "getRows",
               "privacy": "private",
               "return": {
@@ -9917,11 +10072,6 @@
             {
               "kind": "method",
               "name": "updateKeys",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "updateSelectAll",
               "privacy": "private"
             },
             {
@@ -10172,13 +10322,6 @@
               "fieldName": "emptyStateIcon"
             },
             {
-              "name": "hide-checkboxes",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "hideCheckboxes"
-            },
-            {
               "name": "filters",
               "type": {
                 "text": "[]"
@@ -10253,7 +10396,7 @@
           "tagNameWithoutPrefix": "data-table",
           "tagName": "zn-data-table",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/data-table\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-alert\n * @dependency zn-button\n * @dependency zn-empty-state\n * @dependency zn-chip\n * @dependency zn-hover-container\n * @dependency zn-dropdown\n * @dependency zn-menu\n * @dependency zn-menu-item\n * @dependency zn-panel\n * @dependency zn-button-group\n * @dependency zn-confirm\n * @dependency zn-skeleton\n * @dependency zn-data-table-search\n *\n * @slot - The default slot.\n * @slot search - Slot for search component, in the header's right-hand group.\n * @slot sort - Slot for sort component, in the header's right-hand group.\n * @slot filter - Slot for filter component, in the header's right-hand group.\n * @slot filter-top - Slot for a top-level filter component, rendered above the table's panel.\n * @slot delete-action - Slot for delete action button, shown beside the caption once rows are selected.\n * @slot modify-action - Slot for modify action button, shown beside the caption once rows are selected.\n * @slot create-action - Slot for create action button, at the end of the header's right-hand group.\n * @slot inputs - Slot for additional input controls.\n * @slot empty-state - Slot for custom empty state.\n * @slot no-results - Slot for a custom no-results state, shown when a search on a no-initial-load table returns no rows.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/data-table\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-alert\n * @dependency zn-button\n * @dependency zn-empty-state\n * @dependency zn-chip\n * @dependency zn-hover-container\n * @dependency zn-dropdown\n * @dependency zn-menu\n * @dependency zn-menu-item\n * @dependency zn-panel\n * @dependency zn-button-group\n * @dependency zn-confirm\n * @dependency zn-skeleton\n * @dependency zn-data-table-search\n *\n * @slot - The default slot.\n * @slot search - Slot for search component, in the header's right-hand group.\n * @slot sort - Slot for sort component, in the header's right-hand group.\n * @slot filter - Slot for filter component, in the header's right-hand group.\n * @slot filter-top - Slot for a top-level filter component, rendered above the table's panel.\n * @slot delete-action - Slot for delete action button, shown in the header once rows are selected.\n * @slot modify-action - Slot for modify action button, shown in the header once rows are selected.\n * @slot actions - `zn-button` or `zn-confirm` elements listed in a header menu, enabled once rows are selected.\n * @slot create-action - Slot for create action button, at the end of the header's right-hand group.\n * @slot inputs - Slot for additional input controls.\n * @slot empty-state - Slot for custom empty state.\n * @slot no-results - Slot for a custom no-results state, shown when a search on a no-initial-load table returns no rows.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
           "documentation": "https://zinc.style/components/data-table",
           "status": "experimental",
           "since": "1.0",
@@ -51747,6 +51890,11 @@
             {
               "kind": "method",
               "name": "hide"
+            },
+            {
+              "kind": "field",
+              "name": "handlePopupClick",
+              "privacy": "private"
             }
           ],
           "events": [
@@ -53678,7 +53826,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.161",
+    "version": "1.1.162",
     "author": "",
     "license": "MIT"
   }

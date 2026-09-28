@@ -351,7 +351,7 @@ declare module "components/popup/popup.component" {
      *
      * @dependency zn-example
      *
-     * @event zn-event-name - Emitted as an example.
+     * @event zn-reposition - Emitted each time the popup is positioned.
      *
      * @slot - The default slot.
      * @slot example - An example slot.
@@ -9272,6 +9272,11 @@ declare module "components/remarkd-editor/actions" {
         after?: string;
         placeholder?: string;
     }
+    /** A shortcut on the platform modifier: Cmd on Apple devices, Ctrl elsewhere. */
+    export interface Shortcut {
+        key: string;
+        shift?: boolean;
+    }
     export interface EditorAction {
         /** Stable id, used for toolbar keys and tests. */
         key: string;
@@ -9288,6 +9293,7 @@ declare module "components/remarkd-editor/actions" {
         caretOffset?: number;
         /** Actions that open their own picker instead of inserting text. */
         opens?: 'image' | 'include' | 'link';
+        shortcut?: Shortcut;
     }
     /** Toolbar order, most-used first — the last groups are the first to collapse. */
     export const ACTION_GROUPS: {
@@ -9295,8 +9301,25 @@ declare module "components/remarkd-editor/actions" {
         label: string;
     }[];
     export const EDITOR_ACTIONS: EditorAction[];
+    export function isApple(): boolean;
+    export function matchesShortcut(e: KeyboardEvent, shortcut: Shortcut): boolean;
+    /** The shortcut as shown to people, e.g. `⌘⇧X` or `Ctrl+Shift+X`. */
+    export function shortcutLabel(shortcut: Shortcut): string;
     /** The registry as slash menu entries. Picker actions insert nothing; the menu emits their action id. */
     export function slashItems(actions: EditorAction[]): SlashMenuItem[];
+}
+declare module "components/remarkd-editor/list-continuation" {
+    /** A textarea edit: the new value and where the caret lands in it. */
+    export interface TextEdit {
+        value: string;
+        caret: number;
+    }
+    /**
+     * What Enter does on a list line: continues the list with the next marker, or ends it by
+     * clearing the marker of an item that has no text. Null when Enter should just insert a
+     * newline — no list line, a selection, or the caret before the marker.
+     */
+    export function continueList(value: string, start: number, end: number): TextEdit | null;
 }
 declare module "internal/toolbar-overflow" {
     import type { ReactiveController, ReactiveControllerHost } from 'lit';
@@ -9527,6 +9550,8 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private commitEdit;
         private handleDraftInput;
         private handleEditKeydown;
+        private isPlainEnter;
+        private handleRawKeydown;
         /** Whether the block being edited is nothing but the slash command. */
         private isSlashBlock;
         private mountSlashMenu;
@@ -9592,9 +9617,11 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         /**
          * Applies an inline mark to the open block's textarea: wraps the selection, toggles the
          * mark off when it is already wrapped, or inserts a selected placeholder when there is
-         * no selection. Goes through `editingDraft` so `zn-input` still fires.
+         * no selection.
          */
         private applyInline;
+        /** Writes a programmatic edit to the open block's textarea. Goes through `editingDraft` so `zn-input` still fires. */
+        private applyDraftEdit;
         private toggleRawMode;
         private focusRaw;
         /**
@@ -13336,6 +13363,14 @@ declare module "events/zn-slash-insert" {
         }
     }
 }
+declare module "events/zn-reposition" {
+    export type ZnRepositionEvent = CustomEvent<Record<PropertyKey, never>>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-reposition': ZnRepositionEvent;
+        }
+    }
+}
 declare module "events/events" {
     export type { ZnAfterHideEvent } from "events/zn-after-hide";
     export type { ZnAfterShowEvent } from "events/zn-after-show";
@@ -13360,6 +13395,7 @@ declare module "events/events" {
     export type { ZnThemeSubmitEvent } from "events/zn-theme-submit";
     export type { ZnSlashSelectEvent } from "events/zn-slash-select";
     export type { ZnSlashInsertEvent } from "events/zn-slash-insert";
+    export type { ZnRepositionEvent } from "events/zn-reposition";
 }
 declare module "zinc" {
     export { default as Button } from "components/button/index";

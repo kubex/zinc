@@ -32416,8 +32416,8 @@
           ],
           "events": [
             {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
+              "description": "Emitted each time the popup is positioned.",
+              "name": "zn-reposition"
             }
           ],
           "attributes": [
@@ -32622,7 +32622,7 @@
           "tagNameWithoutPrefix": "popup",
           "tagName": "zn-popup",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/popup\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/popup\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-reposition - Emitted each time the popup is positioned.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
           "documentation": "https://zinc.style/components/popup",
           "status": "experimental",
           "since": "1.0",
@@ -37631,6 +37631,29 @@
             },
             {
               "kind": "method",
+              "name": "isPlainEnter",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "handleRawKeydown",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
               "name": "isSlashBlock",
               "privacy": "private",
               "return": {
@@ -37997,7 +38020,39 @@
                   }
                 }
               ],
-              "description": "Applies an inline mark to the open block's textarea: wraps the selection, toggles the\nmark off when it is already wrapped, or inserts a selected placeholder when there is\nno selection. Goes through `editingDraft` so `zn-input` still fires."
+              "description": "Applies an inline mark to the open block's textarea: wraps the selection, toggles the\nmark off when it is already wrapped, or inserts a selected placeholder when there is\nno selection."
+            },
+            {
+              "kind": "method",
+              "name": "applyDraftEdit",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "input",
+                  "type": {
+                    "text": "HTMLTextAreaElement"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "selectionStart",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "selectionEnd",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Writes a programmatic edit to the open block's textarea. Goes through `editingDraft` so `zn-input` still fires."
             },
             {
               "kind": "field",
@@ -53826,7 +53881,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.163",
+    "version": "1.1.164",
     "author": "",
     "license": "MIT"
   }

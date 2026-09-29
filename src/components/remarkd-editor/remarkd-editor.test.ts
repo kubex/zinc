@@ -688,6 +688,53 @@ Second"></zn-remarkd-editor>`);
     });
   });
 
+  describe('paste', () => {
+    const paste = (input: HTMLTextAreaElement, data: Record<string, string>) => {
+      const clipboardData = new DataTransfer();
+      for (const [type, value] of Object.entries(data)) clipboardData.setData(type, value);
+      const event = new ClipboardEvent('paste', {clipboardData, bubbles: true, composed: true, cancelable: true});
+      input.dispatchEvent(event);
+      return event;
+    };
+
+    it('should paste rich content as remarkd source at the caret', async () => {
+      const el = await fixture<ZnRemarkdEditor>(html`
+        <zn-remarkd-editor value="Intro"></zn-remarkd-editor>`);
+      el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
+      await el.updateComplete;
+      const input = typeInBlock(el, 'Intro\n');
+      input.focus();
+
+      const event = paste(input, {'text/html': '<ol><li>a<ol><li>b</li></ol></li></ol>', 'text/plain': 'a\nb'});
+      expect(event.defaultPrevented).to.be.true;
+      await el.updateComplete;
+      expect(input.value).to.equal('Intro\n1. a\n1.1. b');
+    });
+
+    it('should leave a plain-text paste to the browser', async () => {
+      const el = await fixture<ZnRemarkdEditor>(html`
+        <zn-remarkd-editor value="Intro"></zn-remarkd-editor>`);
+      el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
+      await el.updateComplete;
+      const input = el.shadowRoot!.querySelector<HTMLTextAreaElement>('.remarkd-editor__input')!;
+      expect(paste(input, {'text/plain': 'just text'}).defaultPrevented).to.be.false;
+    });
+
+    it('should paste rich content in the raw source view', async () => {
+      const el = await fixture<ZnRemarkdEditor>(html`
+        <zn-remarkd-editor allow-raw value=""></zn-remarkd-editor>`);
+      el.shadowRoot!.querySelector('.remarkd-editor__raw-toggle')!
+        .dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+      await el.updateComplete;
+      const raw = el.shadowRoot!.querySelector<HTMLTextAreaElement>('.remarkd-editor__raw')!;
+      raw.focus();
+
+      expect(paste(raw, {'text/html': '<ul><li>a</li></ul>'}).defaultPrevented).to.be.true;
+      await el.updateComplete;
+      expect(el.value).to.equal('- a');
+    });
+  });
+
   it('should insert a placeholder when nothing is selected', async () => {
     const el = await fixture<ZnRemarkdEditor>(html`
       <zn-remarkd-editor value="hello"></zn-remarkd-editor>`);

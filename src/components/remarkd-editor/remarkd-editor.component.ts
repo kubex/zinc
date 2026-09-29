@@ -4,6 +4,7 @@ import {continueList, indentList, isEmptyListItem} from './list-continuation';
 import {type CSSResultGroup, html, type PropertyValues, type TemplateResult, unsafeCSS} from 'lit';
 import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
+import {pastedRemarkd} from './paste';
 import {property, query, state} from 'lit/decorators.js';
 import {parse as remarkdParse} from "remarkd-js";
 import {ToolbarOverflowController} from '../../internal/toolbar-overflow';
@@ -1076,10 +1077,26 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
 
   private handleEditPaste = (e: ClipboardEvent) => {
     const file = Array.from(e.clipboardData?.files ?? []).find(f => f.type.startsWith('image/'));
-    if (!file) return;
+    if (!file) {
+      this.pasteFormatted(e);
+      return;
+    }
     e.preventDefault();
     const index = this.editingIndex ?? this.blocks.length;
     void this.insertImage(file, index + 1);
+  };
+
+  /** Pastes rich clipboard content as remarkd source, keeping its lists and formatting. */
+  private pasteFormatted = (e: ClipboardEvent) => {
+    const source = pastedRemarkd(e.clipboardData);
+    if (source === null) return;
+    e.preventDefault();
+    const input = e.target as HTMLTextAreaElement;
+    // insertText keeps the paste on the native undo stack; it fires `input` like a typed paste.
+    if (!document.execCommand('insertText', false, source)) {
+      input.setRangeText(source, input.selectionStart, input.selectionEnd, 'end');
+      input.dispatchEvent(new Event('input', {bubbles: true, composed: true}));
+    }
   };
 
   private handleDragOver = (e: DragEvent) => {
@@ -2021,6 +2038,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                 .value=${this.value}
                 @input=${this.handleRawInput}
                 @keydown=${this.handleRawKeydown}
+                @paste=${this.pasteFormatted}
                 @blur=${this.commitRaw}></textarea>`;
   }
 

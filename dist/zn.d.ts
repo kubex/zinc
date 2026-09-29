@@ -9336,6 +9336,17 @@ declare module "components/remarkd-editor/list-continuation" {
      */
     export function indentList(value: string, start: number, end: number, outdent: boolean): RangeEdit | null;
 }
+declare module "components/remarkd-editor/paste" {
+    /**
+     * The clipboard as remarkd source, keeping the lists, headings, tables and inline formatting of
+     * rich content. Null when a plain-text paste already says the same thing.
+     */
+    export function pastedRemarkd(data: DataTransfer | null): string | null;
+    /** Remarkd source for pasted HTML, or null when it has no formatting to keep. */
+    export function htmlToRemarkd(html: string): string | null;
+    /** Turns bullet glyphs (as copied from PDFs and slides) into list markers, or null when there are none. */
+    export function plainTextToRemarkd(text: string): string | null;
+}
 declare module "internal/toolbar-overflow" {
     import type { ReactiveController, ReactiveControllerHost } from 'lit';
     interface ToolbarOverflowOptions {
@@ -9581,6 +9592,8 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         /** Returns false for items the controller should not insert text for. */
         private handleSlashSelect;
         private handleEditPaste;
+        /** Pastes rich clipboard content as remarkd source, keeping its lists and formatting. */
+        private pasteFormatted;
         private handleDragOver;
         private handleDrop;
         /** The insertion index a drop at `y` maps to, from the rendered block positions. */

@@ -9322,6 +9322,19 @@ declare module "components/remarkd-editor/list-continuation" {
      * newline — no list line, a selection, or the caret before the marker.
      */
     export function continueList(value: string, start: number, end: number): TextEdit | null;
+    /** A textarea edit that keeps a selection: the new value and the selected range in it. */
+    export interface RangeEdit {
+        value: string;
+        start: number;
+        end: number;
+    }
+    /**
+     * What Tab (or Shift+Tab when `outdent`) does on the list items the selection touches: nests
+     * each one level deeper or shallower, renumbering the ordered items that follow. Null when no
+     * list item is touched, so Tab keeps its default. Items already at the limit are left as they
+     * are, but the key is still claimed.
+     */
+    export function indentList(value: string, start: number, end: number, outdent: boolean): RangeEdit | null;
 }
 declare module "internal/toolbar-overflow" {
     import type { ReactiveController, ReactiveControllerHost } from 'lit';
@@ -9560,6 +9573,7 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
          */
         private finishedDraft;
         private isPlainEnter;
+        private isListTab;
         private handleRawKeydown;
         /** Whether the block being edited is nothing but the slash command. */
         private isSlashBlock;

@@ -14,6 +14,17 @@
       ]
     },
     {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
+        }
+      ]
+    },
+    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -50,17 +61,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
-        }
-      ]
-    },
-    {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -135,6 +135,58 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/audio-select"
+        }
+      ]
+    },
+    {
+      "name": "zn-background",
+      "description": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n---\n\n\n### **Slots:**\n - _default_ - Content displayed above the background layers.\n\n### **CSS Properties:**\n - **--zn-background-color** - Fallback colour when the `color` attribute is not set. _(default: undefined)_\n- **--zn-background-image-position** - Position of the background image. Defaults to `center`. _(default: undefined)_\n- **--zn-background-overlay-angle** - Direction of the overlay gradient. Defaults to `110deg`. _(default: undefined)_\n- **--zn-background-floating-icon-color** - Colour of the floating icons. Defaults to `currentColor`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's full-size background canvas.\n- **image** - The decorative background image.\n- **overlay** - The contrast overlay between the image and content.\n- **floating-icons** - The non-interactive layer containing the floating icons.\n- **floating-icon** - Each floating `zn-icon`.\n- **content** - The wrapper around the default slot.",
+      "attributes": [
+        {
+          "name": "image",
+          "description": "URL of the decorative background image.",
+          "values": []
+        },
+        {
+          "name": "color",
+          "description": "CSS colour painted beneath the image.",
+          "values": []
+        },
+        {
+          "name": "image-strength",
+          "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
+          "values": [{ "name": "BackgroundImageStrength" }]
+        },
+        {
+          "name": "motion",
+          "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
+          "values": [{ "name": "BackgroundMotion" }]
+        },
+        {
+          "name": "overlay",
+          "description": "Strength of the contrast gradient above the image.",
+          "values": [{ "name": "BackgroundOverlay" }]
+        },
+        {
+          "name": "overlay-tone",
+          "description": "Whether the overlay uses a light or dark contrast treatment.",
+          "values": [{ "name": "BackgroundOverlayTone" }]
+        },
+        {
+          "name": "floating-icons",
+          "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
+          "values": []
+        },
+        {
+          "name": "paused",
+          "description": "Pauses background motion without changing the selected motion treatment.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/background"
         }
       ]
     },
@@ -322,58 +374,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/button-group"
-        }
-      ]
-    },
-    {
-      "name": "zn-background",
-      "description": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n---\n\n\n### **Slots:**\n - _default_ - Content displayed above the background layers.\n\n### **CSS Properties:**\n - **--zn-background-color** - Fallback colour when the `color` attribute is not set. _(default: undefined)_\n- **--zn-background-image-position** - Position of the background image. Defaults to `center`. _(default: undefined)_\n- **--zn-background-overlay-angle** - Direction of the overlay gradient. Defaults to `110deg`. _(default: undefined)_\n- **--zn-background-floating-icon-color** - Colour of the floating icons. Defaults to `currentColor`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's full-size background canvas.\n- **image** - The decorative background image.\n- **overlay** - The contrast overlay between the image and content.\n- **floating-icons** - The non-interactive layer containing the floating icons.\n- **floating-icon** - Each floating `zn-icon`.\n- **content** - The wrapper around the default slot.",
-      "attributes": [
-        {
-          "name": "image",
-          "description": "URL of the decorative background image.",
-          "values": []
-        },
-        {
-          "name": "color",
-          "description": "CSS colour painted beneath the image.",
-          "values": []
-        },
-        {
-          "name": "image-strength",
-          "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
-          "values": [{ "name": "BackgroundImageStrength" }]
-        },
-        {
-          "name": "motion",
-          "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
-          "values": [{ "name": "BackgroundMotion" }]
-        },
-        {
-          "name": "overlay",
-          "description": "Strength of the contrast gradient above the image.",
-          "values": [{ "name": "BackgroundOverlay" }]
-        },
-        {
-          "name": "overlay-tone",
-          "description": "Whether the overlay uses a light or dark contrast treatment.",
-          "values": [{ "name": "BackgroundOverlayTone" }]
-        },
-        {
-          "name": "floating-icons",
-          "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
-          "values": []
-        },
-        {
-          "name": "paused",
-          "description": "Pauses background motion without changing the selected motion treatment.",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/background"
         }
       ]
     },
@@ -1042,27 +1042,6 @@
       ]
     },
     {
-      "name": "zn-copy-button",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "value", "values": [] },
-        { "name": "copy-label", "values": [] },
-        { "name": "src", "values": [] },
-        { "name": "size", "values": [] },
-        {
-          "name": "from",
-          "description": "An id that references an element in the same document from which data will be copied. If both this and `value` are\npresent, this value will take precedence. By default, the target element's `textContent` will be copied. To copy an\nattribute, append the attribute name wrapped in square brackets, e.g. `from=\"el[value]\"`. To copy a property,\nappend a dot and the property name, e.g. `from=\"el.value\"`.",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/copy-button"
-        }
-      ]
-    },
-    {
       "name": "zn-content-block",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - **attachments** - Attachments displayed at the bottom of the content when the block is expanded. Use `zn-chat-message-attachment`, which auto-assigns itself to this slot.\n\n### **CSS Parts:**\n - **attachments** - The attachments row at the bottom of the content.\n- **header-attachments** - The attachment count indicator in the header.",
       "attributes": [
@@ -1091,6 +1070,27 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/content-block"
+        }
+      ]
+    },
+    {
+      "name": "zn-copy-button",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "value", "values": [] },
+        { "name": "copy-label", "values": [] },
+        { "name": "src", "values": [] },
+        { "name": "size", "values": [] },
+        {
+          "name": "from",
+          "description": "An id that references an element in the same document from which data will be copied. If both this and `value` are\npresent, this value will take precedence. By default, the target element's `textContent` will be copied. To copy an\nattribute, append the attribute name wrapped in square brackets, e.g. `from=\"el[value]\"`. To copy a property,\nappend a dot and the property name, e.g. `from=\"el.value\"`.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/copy-button"
         }
       ]
     },
@@ -1317,6 +1317,17 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/data-table-search"
+        }
+      ]
+    },
+    {
+      "name": "zn-data-table-sort",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/data-table-sort"
         }
       ]
     },
@@ -1559,17 +1570,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/dialog"
-        }
-      ]
-    },
-    {
-      "name": "zn-data-table-sort",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/data-table-sort"
         }
       ]
     },
@@ -3637,6 +3637,47 @@
       ]
     },
     {
+      "name": "zn-rating",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity()** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n- **help-text** - Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n- **--preview-color** - The color of the preview value. _(default: undefined)_\n- **--preview-size** - The font size of the preview value. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the symbols and help text.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **preview** - The value shown next to the symbols when `preview` is enabled.",
+      "attributes": [
+        { "name": "label", "values": [] },
+        {
+          "name": "help-text",
+          "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
+          "values": []
+        },
+        { "name": "name", "values": [] },
+        { "name": "value", "values": [] },
+        { "name": "max", "values": [] },
+        { "name": "precision", "values": [] },
+        { "name": "readonly", "values": [] },
+        { "name": "disabled", "values": [] },
+        {
+          "name": "preview",
+          "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
+          "values": []
+        },
+        {
+          "name": "size",
+          "values": [
+            { "name": "small" },
+            { "name": "medium" },
+            { "name": "large" }
+          ]
+        },
+        {
+          "name": "getSymbol",
+          "values": [{ "name": "(value: number) => string" }]
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/rating"
+        }
+      ]
+    },
+    {
       "name": "zn-remarkd-editor",
       "description": "A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted on each keystroke while editing a block.\n- **zn-change** - Emitted when a block edit is committed and the value changes.\n\n### **Methods:**\n - **focus()** - Starts editing the first block, or a new block if the document is empty.\n- **blur()** - Commits any in-progress block or raw edit.\n\n### **CSS Properties:**\n - **--remarkd-editor-max-height** - The tallest the editor grows before its body scrolls. Defaults to `100dvh`. _(default: undefined)_\n- **--remarkd-editor-min-height** - The shortest the body renders while empty. Defaults to `10rem`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The always-visible block-insert and inline-formatting toolbar.\n- **raw-toggle** - The button that switches between the block view and the raw source view.\n- **block** - A rendered block wrapper.\n- **rendered** - The rendered remarkd output of a block.\n- **conditional** - A labelled wrapper for an ifdef/ifndef/ifeval/iftrue/iffalse/ifempty/ifnempty range.\n- **variable** - A chip rendered for a document attribute, title, or bracket line.\n- **input** - The textarea shown while editing a block.\n- **raw** - The full-document textarea shown in raw source mode.\n- **slash-menu** - The `zn-slash-menu` opened by typing \"/\" in an empty block.\n- **image-controls** - The caption / alignment / size panel shown when an image block is clicked.\n- **include** - The chip rendered in place of an `include::` directive.\n- **include-picker** - The inline Include picker opened from the toolbar or \"/include\".",
       "attributes": [
@@ -3700,47 +3741,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/remarkd-editor"
-        }
-      ]
-    },
-    {
-      "name": "zn-rating",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity()** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n- **help-text** - Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n- **--preview-color** - The color of the preview value. _(default: undefined)_\n- **--preview-size** - The font size of the preview value. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the symbols and help text.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **preview** - The value shown next to the symbols when `preview` is enabled.",
-      "attributes": [
-        { "name": "label", "values": [] },
-        {
-          "name": "help-text",
-          "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
-          "values": []
-        },
-        { "name": "name", "values": [] },
-        { "name": "value", "values": [] },
-        { "name": "max", "values": [] },
-        { "name": "precision", "values": [] },
-        { "name": "readonly", "values": [] },
-        { "name": "disabled", "values": [] },
-        {
-          "name": "preview",
-          "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
-          "values": []
-        },
-        {
-          "name": "size",
-          "values": [
-            { "name": "small" },
-            { "name": "medium" },
-            { "name": "large" }
-          ]
-        },
-        {
-          "name": "getSymbol",
-          "values": [{ "name": "(value: number) => string" }]
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/rating"
         }
       ]
     },
@@ -4828,78 +4828,6 @@
       ]
     },
     {
-      "name": "zn-thumbnail-group",
-      "description": "Lays a set of `zn-thumbnail` elements out as a single scrollable row, with a\n\"Show All\" toggle that expands them into a wrapping grid.\n---\n\n\n### **Events:**\n - **zn-expand** - Emitted when the group expands into the full grid.\n- **zn-collapse** - Emitted when the group collapses back to a single row.\n- **zn-change** - Emitted when the selected thumbnail changes (`selectable` groups only).\n\n### **Methods:**\n - **show()** - Expands the group into the full grid.\n- **hide()** - Collapses the group back to a single row.\n\n### **Slots:**\n - _default_ - One or more `zn-thumbnail` elements.\n- **caption** - Replaces the heading text.\n- **actions** - Extra content in the header, before the toggle.\n\n### **CSS Properties:**\n - **--zn-thumbnail-width** - Track width of a thumbnail. Defaults to 180px. Also settable with the `thumbnail-width` attribute. _(default: undefined)_\n- **--zn-thumbnail-gap** - Gap between thumbnails. Also settable with the `gap` attribute. _(default: undefined)_\n- **--zn-thumbnail-aspect-ratio** - Aspect ratio of every thumbnail in the group. Also settable with the `aspect-ratio` attribute. Any `zn-thumbnail` custom property set here is inherited by the slotted thumbnails. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The header row holding the caption and toggle.\n- **caption** - The heading text.\n- **toggle** - The show all / show less button.\n- **items** - The scrolling row / expanded grid that holds the thumbnails.",
-      "attributes": [
-        {
-          "name": "caption",
-          "description": "The heading shown at the top left of the group.",
-          "values": []
-        },
-        {
-          "name": "expanded",
-          "description": "Expands the group into the full wrapping grid.",
-          "values": []
-        },
-        {
-          "name": "total",
-          "description": "Total number of thumbnails in the underlying set, shown in the \"Show All (n)\" label. Set this when\nthe row only holds the first page of a larger set; otherwise the slotted thumbnails are counted.",
-          "values": []
-        },
-        {
-          "name": "show-all-label",
-          "description": "Label of the expand toggle. The count is appended in brackets.",
-          "values": []
-        },
-        {
-          "name": "show-less-label",
-          "description": "Label of the collapse toggle.",
-          "values": []
-        },
-        {
-          "name": "hide-toggle",
-          "description": "Never render the toggle, even when the row overflows.",
-          "values": []
-        },
-        {
-          "name": "always-toggle",
-          "description": "Always render the toggle, even when every thumbnail already fits on the row.",
-          "values": []
-        },
-        {
-          "name": "selectable",
-          "description": "Manages single selection across the slotted thumbnails.",
-          "values": []
-        },
-        {
-          "name": "aspect-ratio",
-          "description": "Aspect ratio for every thumbnail in the group, as any CSS `aspect-ratio` value (e.g. `1 / 1`).\nShorthand for setting `--zn-thumbnail-aspect-ratio` on the group. A thumbnail's own\n`aspect-ratio` attribute still wins.",
-          "values": []
-        },
-        {
-          "name": "thumbnail-width",
-          "description": "Track width of each thumbnail (e.g. `140px`). Shorthand for `--zn-thumbnail-width`.",
-          "values": []
-        },
-        {
-          "name": "gap",
-          "description": "Gap between thumbnails (e.g. `8px`). Shorthand for `--zn-thumbnail-gap`.",
-          "values": []
-        },
-        {
-          "name": "value",
-          "description": "The `value` of the selected thumbnail (`selectable` groups only).",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/thumbnail-group"
-        }
-      ]
-    },
-    {
       "name": "zn-theme-editor",
       "description": "A theme editor: slotted form controls drive a live preview frame,\nwith a toolbar for the preview's light/dark mode and device width.\n---\n\n\n### **Events:**\n - **zn-theme-change** - Emitted when the values, mode or device change.\n- **zn-theme-submit** - Emitted on submit (button click), carrying the current values. With `action` set, only fires after a successful save.\n- **zn-error** - Emitted when a save fails. Also seen for preview render failures: the frame's zn-error is composed and not stopped, so it bubbles out through the editor too.\n\n### **Slots:**\n - _default_ - Ungrouped theme controls, rendered above any sections. Controls assigned `slot=\"<name>\"` matching a `sections` entry (or, when nested, a `groups` entry) render inside that section/group instead. Harvesting and change detection walk every slot's full assigned subtree, not just direct children. With `sections` left unset, the structure is instead derived from the controls' own attributes: `group=\"<label>\"` becomes a tab and `category=\"<label>\"` a collapsible within it, and the control is slotted into that collapsible automatically. Either attribute works alone - a control with only `group` sits directly in its tab, and one with only `category` becomes its own top-level section. Setting `sections` explicitly disables the derivation entirely.\n- **toolbar** - Actions in the toolbar, right-aligned beside the device controls. Where a save button belongs.\n- **footer** - Actions pinned beneath the controls. The built-in submit button lives in the toolbar, not here.\n\n### **CSS Properties:**\n - **--zn-theme-editor-controls-width** - Width of the controls column. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **controls** - The left-hand controls column, full height.\n- **controls-header** - The controls column's header row: `controls-caption` on the left, the light/dark mode toggle on the right.\n- **toolbar** - The preview column's header row: `preview-caption` on the left, the device switcher (and sources/submit) on the right. Spans the preview column only.\n- **section** - A rendered section's or group's collapsible (`section-layout=\"collapsible\"`, or any nested group).\n- **footer** - The footer wrapper beneath the controls.\n- **preview** - The preview column.\n- **error** - The inline error strip.\n- **preview__base** - The frame's base wrapper (forwarded from zn-preview-frame).\n- **preview__stage** - The frame's device-width wrapper (forwarded from zn-preview-frame).\n- **preview__iframe** - The frame's iframe (forwarded from zn-preview-frame).\n- **preview__error** - The frame's own error overlay (forwarded from zn-preview-frame).",
       "attributes": [
@@ -5090,6 +5018,78 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/thumbnail"
+        }
+      ]
+    },
+    {
+      "name": "zn-thumbnail-group",
+      "description": "Lays a set of `zn-thumbnail` elements out as a single scrollable row, with a\n\"Show All\" toggle that expands them into a wrapping grid.\n---\n\n\n### **Events:**\n - **zn-expand** - Emitted when the group expands into the full grid.\n- **zn-collapse** - Emitted when the group collapses back to a single row.\n- **zn-change** - Emitted when the selected thumbnail changes (`selectable` groups only).\n\n### **Methods:**\n - **show()** - Expands the group into the full grid.\n- **hide()** - Collapses the group back to a single row.\n\n### **Slots:**\n - _default_ - One or more `zn-thumbnail` elements.\n- **caption** - Replaces the heading text.\n- **actions** - Extra content in the header, before the toggle.\n\n### **CSS Properties:**\n - **--zn-thumbnail-width** - Track width of a thumbnail. Defaults to 180px. Also settable with the `thumbnail-width` attribute. _(default: undefined)_\n- **--zn-thumbnail-gap** - Gap between thumbnails. Also settable with the `gap` attribute. _(default: undefined)_\n- **--zn-thumbnail-aspect-ratio** - Aspect ratio of every thumbnail in the group. Also settable with the `aspect-ratio` attribute. Any `zn-thumbnail` custom property set here is inherited by the slotted thumbnails. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The header row holding the caption and toggle.\n- **caption** - The heading text.\n- **toggle** - The show all / show less button.\n- **items** - The scrolling row / expanded grid that holds the thumbnails.",
+      "attributes": [
+        {
+          "name": "caption",
+          "description": "The heading shown at the top left of the group.",
+          "values": []
+        },
+        {
+          "name": "expanded",
+          "description": "Expands the group into the full wrapping grid.",
+          "values": []
+        },
+        {
+          "name": "total",
+          "description": "Total number of thumbnails in the underlying set, shown in the \"Show All (n)\" label. Set this when\nthe row only holds the first page of a larger set; otherwise the slotted thumbnails are counted.",
+          "values": []
+        },
+        {
+          "name": "show-all-label",
+          "description": "Label of the expand toggle. The count is appended in brackets.",
+          "values": []
+        },
+        {
+          "name": "show-less-label",
+          "description": "Label of the collapse toggle.",
+          "values": []
+        },
+        {
+          "name": "hide-toggle",
+          "description": "Never render the toggle, even when the row overflows.",
+          "values": []
+        },
+        {
+          "name": "always-toggle",
+          "description": "Always render the toggle, even when every thumbnail already fits on the row.",
+          "values": []
+        },
+        {
+          "name": "selectable",
+          "description": "Manages single selection across the slotted thumbnails.",
+          "values": []
+        },
+        {
+          "name": "aspect-ratio",
+          "description": "Aspect ratio for every thumbnail in the group, as any CSS `aspect-ratio` value (e.g. `1 / 1`).\nShorthand for setting `--zn-thumbnail-aspect-ratio` on the group. A thumbnail's own\n`aspect-ratio` attribute still wins.",
+          "values": []
+        },
+        {
+          "name": "thumbnail-width",
+          "description": "Track width of each thumbnail (e.g. `140px`). Shorthand for `--zn-thumbnail-width`.",
+          "values": []
+        },
+        {
+          "name": "gap",
+          "description": "Gap between thumbnails (e.g. `8px`). Shorthand for `--zn-thumbnail-gap`.",
+          "values": []
+        },
+        {
+          "name": "value",
+          "description": "The `value` of the selected thumbnail (`selectable` groups only).",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/thumbnail-group"
         }
       ]
     },

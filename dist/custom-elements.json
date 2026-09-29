@@ -844,269 +844,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/background/background.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnBackground",
-          "cssProperties": [
-            {
-              "description": "Fallback colour when the `color` attribute is not set.",
-              "name": "--zn-background-color"
-            },
-            {
-              "description": "Position of the background image. Defaults to `center`.",
-              "name": "--zn-background-image-position"
-            },
-            {
-              "description": "Direction of the overlay gradient. Defaults to `110deg`.",
-              "name": "--zn-background-overlay-angle"
-            },
-            {
-              "description": "Colour of the floating icons. Defaults to `currentColor`.",
-              "name": "--zn-background-floating-icon-color"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's full-size background canvas.",
-              "name": "base"
-            },
-            {
-              "description": "The decorative background image.",
-              "name": "image"
-            },
-            {
-              "description": "The contrast overlay between the image and content.",
-              "name": "overlay"
-            },
-            {
-              "description": "The non-interactive layer containing the floating icons.",
-              "name": "floating-icons"
-            },
-            {
-              "description": "Each floating `zn-icon`.",
-              "name": "floating-icon"
-            },
-            {
-              "description": "The wrapper around the default slot.",
-              "name": "content"
-            }
-          ],
-          "slots": [
-            {
-              "description": "Content displayed above the background layers.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{'zn-icon': ZnIcon}"
-            },
-            {
-              "kind": "field",
-              "name": "resizeObserver",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new ResizeController<number>(this, { callback: entries => { const width = entries[0]?.contentRect.width ?? this.offsetWidth; return Math.max(1, Math.min(width * 0.05, 150)); }, })"
-            },
-            {
-              "kind": "field",
-              "name": "image",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "URL of the decorative background image.",
-              "attribute": "image"
-            },
-            {
-              "kind": "field",
-              "name": "color",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "CSS colour painted beneath the image.",
-              "attribute": "color"
-            },
-            {
-              "kind": "field",
-              "name": "imageStrength",
-              "type": {
-                "text": "BackgroundImageStrength"
-              },
-              "default": "'full'",
-              "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
-              "attribute": "image-strength",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "motion",
-              "type": {
-                "text": "BackgroundMotion"
-              },
-              "default": "'none'",
-              "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
-              "attribute": "motion",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "overlay",
-              "type": {
-                "text": "BackgroundOverlay"
-              },
-              "default": "'soft'",
-              "description": "Strength of the contrast gradient above the image.",
-              "attribute": "overlay",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "overlayTone",
-              "type": {
-                "text": "BackgroundOverlayTone"
-              },
-              "default": "'light'",
-              "description": "Whether the overlay uses a light or dark contrast treatment.",
-              "attribute": "overlay-tone",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "floatingIcons",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
-              "attribute": "floating-icons"
-            },
-            {
-              "kind": "field",
-              "name": "paused",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Pauses background motion without changing the selected motion treatment.",
-              "attribute": "paused",
-              "reflects": true
-            }
-          ],
-          "attributes": [
-            {
-              "name": "image",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "URL of the decorative background image.",
-              "fieldName": "image"
-            },
-            {
-              "name": "color",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "CSS colour painted beneath the image.",
-              "fieldName": "color"
-            },
-            {
-              "name": "image-strength",
-              "type": {
-                "text": "BackgroundImageStrength"
-              },
-              "default": "'full'",
-              "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
-              "fieldName": "imageStrength"
-            },
-            {
-              "name": "motion",
-              "type": {
-                "text": "BackgroundMotion"
-              },
-              "default": "'none'",
-              "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
-              "fieldName": "motion"
-            },
-            {
-              "name": "overlay",
-              "type": {
-                "text": "BackgroundOverlay"
-              },
-              "default": "'soft'",
-              "description": "Strength of the contrast gradient above the image.",
-              "fieldName": "overlay"
-            },
-            {
-              "name": "overlay-tone",
-              "type": {
-                "text": "BackgroundOverlayTone"
-              },
-              "default": "'light'",
-              "description": "Whether the overlay uses a light or dark contrast treatment.",
-              "fieldName": "overlayTone"
-            },
-            {
-              "name": "floating-icons",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
-              "fieldName": "floatingIcons"
-            },
-            {
-              "name": "paused",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Pauses background motion without changing the selected motion treatment.",
-              "fieldName": "paused"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.",
-          "tagNameWithoutPrefix": "background",
-          "tagName": "zn-background",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n *\n * @documentation https://zinc.style/components/background\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - Content displayed above the background layers.\n *\n * @csspart base - The component's full-size background canvas.\n * @csspart image - The decorative background image.\n * @csspart overlay - The contrast overlay between the image and content.\n * @csspart floating-icons - The non-interactive layer containing the floating icons.\n * @csspart floating-icon - Each floating `zn-icon`.\n * @csspart content - The wrapper around the default slot.\n *\n * @cssproperty --zn-background-color - Fallback colour when the `color` attribute is not set.\n * @cssproperty --zn-background-image-position - Position of the background image. Defaults to `center`.\n * @cssproperty --zn-background-overlay-angle - Direction of the overlay gradient. Defaults to `110deg`.\n * @cssproperty --zn-background-floating-icon-color - Colour of the floating icons. Defaults to `currentColor`.\n */",
-          "documentation": "https://zinc.style/components/background",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-icon"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnBackground",
-            "module": "components/background/background.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/bulk-actions/bulk-actions.js",
       "declarations": [
         {
@@ -2615,6 +2352,269 @@
           "declaration": {
             "name": "ZnButtonGroup",
             "module": "components/button-group/button-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/background/background.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnBackground",
+          "cssProperties": [
+            {
+              "description": "Fallback colour when the `color` attribute is not set.",
+              "name": "--zn-background-color"
+            },
+            {
+              "description": "Position of the background image. Defaults to `center`.",
+              "name": "--zn-background-image-position"
+            },
+            {
+              "description": "Direction of the overlay gradient. Defaults to `110deg`.",
+              "name": "--zn-background-overlay-angle"
+            },
+            {
+              "description": "Colour of the floating icons. Defaults to `currentColor`.",
+              "name": "--zn-background-floating-icon-color"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's full-size background canvas.",
+              "name": "base"
+            },
+            {
+              "description": "The decorative background image.",
+              "name": "image"
+            },
+            {
+              "description": "The contrast overlay between the image and content.",
+              "name": "overlay"
+            },
+            {
+              "description": "The non-interactive layer containing the floating icons.",
+              "name": "floating-icons"
+            },
+            {
+              "description": "Each floating `zn-icon`.",
+              "name": "floating-icon"
+            },
+            {
+              "description": "The wrapper around the default slot.",
+              "name": "content"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Content displayed above the background layers.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{'zn-icon': ZnIcon}"
+            },
+            {
+              "kind": "field",
+              "name": "resizeObserver",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ResizeController<number>(this, { callback: entries => { const width = entries[0]?.contentRect.width ?? this.offsetWidth; return Math.max(1, Math.min(width * 0.05, 150)); }, })"
+            },
+            {
+              "kind": "field",
+              "name": "image",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "URL of the decorative background image.",
+              "attribute": "image"
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "CSS colour painted beneath the image.",
+              "attribute": "color"
+            },
+            {
+              "kind": "field",
+              "name": "imageStrength",
+              "type": {
+                "text": "BackgroundImageStrength"
+              },
+              "default": "'full'",
+              "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
+              "attribute": "image-strength",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "motion",
+              "type": {
+                "text": "BackgroundMotion"
+              },
+              "default": "'none'",
+              "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
+              "attribute": "motion",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "overlay",
+              "type": {
+                "text": "BackgroundOverlay"
+              },
+              "default": "'soft'",
+              "description": "Strength of the contrast gradient above the image.",
+              "attribute": "overlay",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "overlayTone",
+              "type": {
+                "text": "BackgroundOverlayTone"
+              },
+              "default": "'light'",
+              "description": "Whether the overlay uses a light or dark contrast treatment.",
+              "attribute": "overlay-tone",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "floatingIcons",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
+              "attribute": "floating-icons"
+            },
+            {
+              "kind": "field",
+              "name": "paused",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Pauses background motion without changing the selected motion treatment.",
+              "attribute": "paused",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "image",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "URL of the decorative background image.",
+              "fieldName": "image"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "CSS colour painted beneath the image.",
+              "fieldName": "color"
+            },
+            {
+              "name": "image-strength",
+              "type": {
+                "text": "BackgroundImageStrength"
+              },
+              "default": "'full'",
+              "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
+              "fieldName": "imageStrength"
+            },
+            {
+              "name": "motion",
+              "type": {
+                "text": "BackgroundMotion"
+              },
+              "default": "'none'",
+              "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
+              "fieldName": "motion"
+            },
+            {
+              "name": "overlay",
+              "type": {
+                "text": "BackgroundOverlay"
+              },
+              "default": "'soft'",
+              "description": "Strength of the contrast gradient above the image.",
+              "fieldName": "overlay"
+            },
+            {
+              "name": "overlay-tone",
+              "type": {
+                "text": "BackgroundOverlayTone"
+              },
+              "default": "'light'",
+              "description": "Whether the overlay uses a light or dark contrast treatment.",
+              "fieldName": "overlayTone"
+            },
+            {
+              "name": "floating-icons",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
+              "fieldName": "floatingIcons"
+            },
+            {
+              "name": "paused",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Pauses background motion without changing the selected motion treatment.",
+              "fieldName": "paused"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.",
+          "tagNameWithoutPrefix": "background",
+          "tagName": "zn-background",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n *\n * @documentation https://zinc.style/components/background\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - Content displayed above the background layers.\n *\n * @csspart base - The component's full-size background canvas.\n * @csspart image - The decorative background image.\n * @csspart overlay - The contrast overlay between the image and content.\n * @csspart floating-icons - The non-interactive layer containing the floating icons.\n * @csspart floating-icon - Each floating `zn-icon`.\n * @csspart content - The wrapper around the default slot.\n *\n * @cssproperty --zn-background-color - Fallback colour when the `color` attribute is not set.\n * @cssproperty --zn-background-image-position - Position of the background image. Defaults to `center`.\n * @cssproperty --zn-background-overlay-angle - Direction of the overlay gradient. Defaults to `110deg`.\n * @cssproperty --zn-background-floating-icon-color - Colour of the floating icons. Defaults to `currentColor`.\n */",
+          "documentation": "https://zinc.style/components/background",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-icon"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnBackground",
+            "module": "components/background/background.js"
           }
         }
       ]
@@ -7436,6 +7436,224 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/copy-button/copy-button.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnCopyButton",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "copyIcon",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "successIcon",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errorIcon",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "tooltip",
+              "type": {
+                "text": "ZnTooltip"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "isCopying",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "status",
+              "type": {
+                "text": "'rest' | 'success' | 'error'"
+              },
+              "default": "'rest'"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "copyLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "copy-label"
+            },
+            {
+              "kind": "field",
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "src"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "default": "24",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "from",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "An id that references an element in the same document from which data will be copied. If both this and `value` are\npresent, this value will take precedence. By default, the target element's `textContent` will be copied. To copy an\nattribute, append the attribute name wrapped in square brackets, e.g. `from=\"el[value]\"`. To copy a property,\nappend a dot and the property name, e.g. `from=\"el.value\"`.",
+              "attribute": "from"
+            },
+            {
+              "kind": "method",
+              "name": "showStatus",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "status",
+                  "type": {
+                    "text": "'success' | 'error'"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleCopy",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value"
+            },
+            {
+              "name": "copy-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "copyLabel"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "src"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "default": "24",
+              "fieldName": "size"
+            },
+            {
+              "name": "from",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "An id that references an element in the same document from which data will be copied. If both this and `value` are\npresent, this value will take precedence. By default, the target element's `textContent` will be copied. To copy an\nattribute, append the attribute name wrapped in square brackets, e.g. `from=\"el[value]\"`. To copy a property,\nappend a dot and the property name, e.g. `from=\"el.value\"`.",
+              "fieldName": "from"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "copy-button",
+          "tagName": "zn-copy-button",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/copy-button\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/copy-button",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnCopyButton",
+            "module": "components/copy-button/copy-button.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/content-block/content-block.js",
       "declarations": [
         {
@@ -7795,224 +8013,6 @@
           "declaration": {
             "name": "ContentBlock",
             "module": "components/content-block/content-block.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/copy-button/copy-button.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnCopyButton",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "copyIcon",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "successIcon",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "errorIcon",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "tooltip",
-              "type": {
-                "text": "ZnTooltip"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "isCopying",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "status",
-              "type": {
-                "text": "'rest' | 'success' | 'error'"
-              },
-              "default": "'rest'"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "copyLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "copy-label"
-            },
-            {
-              "kind": "field",
-              "name": "src",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "src"
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "number"
-              },
-              "default": "24",
-              "attribute": "size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "from",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "An id that references an element in the same document from which data will be copied. If both this and `value` are\npresent, this value will take precedence. By default, the target element's `textContent` will be copied. To copy an\nattribute, append the attribute name wrapped in square brackets, e.g. `from=\"el[value]\"`. To copy a property,\nappend a dot and the property name, e.g. `from=\"el.value\"`.",
-              "attribute": "from"
-            },
-            {
-              "kind": "method",
-              "name": "showStatus",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "status",
-                  "type": {
-                    "text": "'success' | 'error'"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "handleCopy",
-              "privacy": "private"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "value"
-            },
-            {
-              "name": "copy-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "copyLabel"
-            },
-            {
-              "name": "src",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "src"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "number"
-              },
-              "default": "24",
-              "fieldName": "size"
-            },
-            {
-              "name": "from",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "An id that references an element in the same document from which data will be copied. If both this and `value` are\npresent, this value will take precedence. By default, the target element's `textContent` will be copied. To copy an\nattribute, append the attribute name wrapped in square brackets, e.g. `from=\"el[value]\"`. To copy a property,\nappend a dot and the property name, e.g. `from=\"el.value\"`.",
-              "fieldName": "from"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "copy-button",
-          "tagName": "zn-copy-button",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/copy-button\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/copy-button",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnCopyButton",
-            "module": "components/copy-button/copy-button.js"
           }
         }
       ]
@@ -11509,71 +11509,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/data-table-sort/data-table-sort.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnDataTableSort",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "data-table-sort",
-          "tagName": "zn-data-table-sort",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/data-table-sort\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/data-table-sort",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnDataTableSort",
-            "module": "components/data-table-sort/data-table-sort.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/datepicker/datepicker.js",
       "declarations": [
         {
@@ -13304,6 +13239,71 @@
           "declaration": {
             "name": "ZnDialog",
             "module": "components/dialog/dialog.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/data-table-sort/data-table-sort.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnDataTableSort",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "data-table-sort",
+          "tagName": "zn-data-table-sort",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/data-table-sort\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/data-table-sort",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnDataTableSort",
+            "module": "components/data-table-sort/data-table-sort.js"
           }
         }
       ]
@@ -36032,572 +36032,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/rating/rating.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnRating",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            },
-            {
-              "description": "The color of the preview value.",
-              "name": "--preview-color"
-            },
-            {
-              "description": "The font size of the preview value.",
-              "name": "--preview-size"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The form control that wraps the symbols and help text.",
-              "name": "form-control"
-            },
-            {
-              "description": "The help text's wrapper.",
-              "name": "form-control-help-text"
-            },
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            },
-            {
-              "description": "The value shown next to the symbols when `preview` is enabled.",
-              "name": "preview"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            },
-            {
-              "description": "Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.",
-              "name": "help-text"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "formControlController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new FormControlController(this, { assumeInteractionOn: ['zn-blur', 'zn-input'] })"
-            },
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, 'help-text')"
-            },
-            {
-              "kind": "field",
-              "name": "rating",
-              "type": {
-                "text": "HTMLElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "symbols",
-              "type": {
-                "text": "HTMLElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "hoverValue",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0"
-            },
-            {
-              "kind": "field",
-              "name": "isHovering",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "label"
-            },
-            {
-              "kind": "field",
-              "name": "helpText",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
-              "attribute": "help-text"
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "name"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "defaultValue",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "The default value of the form control. Primarily used for resetting the form control."
-            },
-            {
-              "kind": "field",
-              "name": "max",
-              "type": {
-                "text": "number"
-              },
-              "default": "5",
-              "attribute": "max"
-            },
-            {
-              "kind": "field",
-              "name": "precision",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "attribute": "precision"
-            },
-            {
-              "kind": "field",
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "readonly"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled"
-            },
-            {
-              "kind": "field",
-              "name": "preview",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
-              "attribute": "preview"
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "default": "'medium'",
-              "attribute": "size"
-            },
-            {
-              "kind": "field",
-              "name": "getSymbol",
-              "type": {
-                "text": "(value: number) => string"
-              },
-              "attribute": "getSymbol"
-            },
-            {
-              "kind": "field",
-              "name": "validity",
-              "description": "Gets the validity state object",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "validationMessage",
-              "description": "Gets the validation message",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "checkValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "description": "Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid."
-            },
-            {
-              "kind": "method",
-              "name": "getForm",
-              "return": {
-                "type": {
-                  "text": "HTMLFormElement | null"
-                }
-              },
-              "description": "Gets the associated form, if one exists."
-            },
-            {
-              "kind": "method",
-              "name": "reportValidity",
-              "description": "Checks for validity and shows the browser's validation message if the control is invalid."
-            },
-            {
-              "kind": "method",
-              "name": "setCustomValidity",
-              "description": "Sets a custom validation message. Pass an empty string to restore validity."
-            },
-            {
-              "kind": "method",
-              "name": "_roundToPrecision",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "number"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "value",
-                  "type": {
-                    "text": "number"
-                  }
-                },
-                {
-                  "name": "precision",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_getValueFromXCoordinate",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "number"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "coordinate",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_formatValue",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "value",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_getValueFromMousePosition",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "number"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_getValueFromTouchPosition",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "number"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "TouchEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_setValue",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "value",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_handleClick",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_handleMouseEnter",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_handleMouseMove",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_handleMouseLeave",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_handleTouchStart",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "TouchEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_handleTouchMove",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "TouchEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_handleTouchEnd",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "TouchEvent"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "label"
-            },
-            {
-              "name": "help-text",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
-              "fieldName": "helpText"
-            },
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "name"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "fieldName": "value"
-            },
-            {
-              "name": "max",
-              "type": {
-                "text": "number"
-              },
-              "default": "5",
-              "fieldName": "max"
-            },
-            {
-              "name": "precision",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "fieldName": "precision"
-            },
-            {
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "readonly"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "preview",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
-              "fieldName": "preview"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "default": "'medium'",
-              "fieldName": "size"
-            },
-            {
-              "name": "getSymbol",
-              "type": {
-                "text": "(value: number) => string"
-              },
-              "fieldName": "getSymbol"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "rating",
-          "tagName": "zn-rating",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/rating\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n * @slot help-text - Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.\n *\n * @csspart form-control - The form control that wraps the symbols and help text.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart base - The component's base wrapper.\n * @csspart preview - The value shown next to the symbols when `preview` is enabled.\n *\n * @cssproperty --example - An example CSS custom property.\n * @cssproperty --preview-color - The color of the preview value.\n * @cssproperty --preview-size - The font size of the preview value.\n */",
-          "documentation": "https://zinc.style/components/rating",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnRating",
-            "module": "components/rating/rating.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/remarkd-editor/remarkd-editor.js",
       "declarations": [
         {
@@ -37236,6 +36670,25 @@
             },
             {
               "kind": "method",
+              "name": "scanBlocks",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "{ blocks: string[]; open: boolean }"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "source",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "`splitBlocks`, plus whether the source ends inside an unclosed container, where a blank line does not split."
+            },
+            {
+              "kind": "method",
               "name": "fenceMarker",
               "privacy": "private",
               "return": {
@@ -37628,6 +37081,37 @@
               "kind": "field",
               "name": "handleEditKeydown",
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "finishedDraft",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "start",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "end",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "The draft to commit when Enter should finish the block — pressed on a trailing blank line or\nempty list item, outside any container — with that line dropped. Null otherwise."
             },
             {
               "kind": "method",
@@ -38467,6 +37951,572 @@
           "declaration": {
             "name": "ZnRemarkdEditor",
             "module": "components/remarkd-editor/remarkd-editor.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/rating/rating.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnRating",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            },
+            {
+              "description": "The color of the preview value.",
+              "name": "--preview-color"
+            },
+            {
+              "description": "The font size of the preview value.",
+              "name": "--preview-size"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The form control that wraps the symbols and help text.",
+              "name": "form-control"
+            },
+            {
+              "description": "The help text's wrapper.",
+              "name": "form-control-help-text"
+            },
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The value shown next to the symbols when `preview` is enabled.",
+              "name": "preview"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            },
+            {
+              "description": "Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.",
+              "name": "help-text"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "formControlController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new FormControlController(this, { assumeInteractionOn: ['zn-blur', 'zn-input'] })"
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'help-text')"
+            },
+            {
+              "kind": "field",
+              "name": "rating",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "symbols",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "hoverValue",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "isHovering",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
+              "attribute": "help-text"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "The default value of the form control. Primarily used for resetting the form control."
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "5",
+              "attribute": "max"
+            },
+            {
+              "kind": "field",
+              "name": "precision",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "attribute": "precision"
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "preview",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
+              "attribute": "preview"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "attribute": "size"
+            },
+            {
+              "kind": "field",
+              "name": "getSymbol",
+              "type": {
+                "text": "(value: number) => string"
+              },
+              "attribute": "getSymbol"
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "description": "Gets the validity state object",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "description": "Gets the validation message",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid."
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              },
+              "description": "Gets the associated form, if one exists."
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "description": "Checks for validity and shows the browser's validation message if the control is invalid."
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "description": "Sets a custom validation message. Pass an empty string to restore validity."
+            },
+            {
+              "kind": "method",
+              "name": "_roundToPrecision",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "precision",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_getValueFromXCoordinate",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "coordinate",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_formatValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_getValueFromMousePosition",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_getValueFromTouchPosition",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "TouchEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_setValue",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleClick",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleMouseEnter",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleMouseMove",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleMouseLeave",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_handleTouchStart",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "TouchEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleTouchMove",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "TouchEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleTouchEnd",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "TouchEvent"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "label"
+            },
+            {
+              "name": "help-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
+              "fieldName": "helpText"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "value"
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "5",
+              "fieldName": "max"
+            },
+            {
+              "name": "precision",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "fieldName": "precision"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "preview",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
+              "fieldName": "preview"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "fieldName": "size"
+            },
+            {
+              "name": "getSymbol",
+              "type": {
+                "text": "(value: number) => string"
+              },
+              "fieldName": "getSymbol"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "rating",
+          "tagName": "zn-rating",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/rating\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n * @slot help-text - Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.\n *\n * @csspart form-control - The form control that wraps the symbols and help text.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart base - The component's base wrapper.\n * @csspart preview - The value shown next to the symbols when `preview` is enabled.\n *\n * @cssproperty --example - An example CSS custom property.\n * @cssproperty --preview-color - The color of the preview value.\n * @cssproperty --preview-size - The font size of the preview value.\n */",
+          "documentation": "https://zinc.style/components/rating",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnRating",
+            "module": "components/rating/rating.js"
           }
         }
       ]
@@ -48347,6 +48397,441 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/thumbnail-group/thumbnail-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnThumbnailGroup",
+          "cssProperties": [
+            {
+              "description": "Track width of a thumbnail. Defaults to 180px. Also settable with the `thumbnail-width` attribute.",
+              "name": "--zn-thumbnail-width"
+            },
+            {
+              "description": "Gap between thumbnails. Also settable with the `gap` attribute.",
+              "name": "--zn-thumbnail-gap"
+            },
+            {
+              "description": "Aspect ratio of every thumbnail in the group. Also settable with the `aspect-ratio` attribute. Any `zn-thumbnail` custom property set here is inherited by the slotted thumbnails.",
+              "name": "--zn-thumbnail-aspect-ratio"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The header row holding the caption and toggle.",
+              "name": "header"
+            },
+            {
+              "description": "The heading text.",
+              "name": "caption"
+            },
+            {
+              "description": "The show all / show less button.",
+              "name": "toggle"
+            },
+            {
+              "description": "The scrolling row / expanded grid that holds the thumbnails.",
+              "name": "items"
+            }
+          ],
+          "slots": [
+            {
+              "description": "One or more `zn-thumbnail` elements.",
+              "name": ""
+            },
+            {
+              "description": "Replaces the heading text.",
+              "name": "caption"
+            },
+            {
+              "description": "Extra content in the header, before the toggle.",
+              "name": "actions"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The heading shown at the top left of the group.",
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "expanded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Expands the group into the full wrapping grid.",
+              "attribute": "expanded",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "total",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Total number of thumbnails in the underlying set, shown in the \"Show All (n)\" label. Set this when\nthe row only holds the first page of a larger set; otherwise the slotted thumbnails are counted.",
+              "attribute": "total"
+            },
+            {
+              "kind": "field",
+              "name": "showAllLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Show All'",
+              "description": "Label of the expand toggle. The count is appended in brackets.",
+              "attribute": "show-all-label"
+            },
+            {
+              "kind": "field",
+              "name": "showLessLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Show Less'",
+              "description": "Label of the collapse toggle.",
+              "attribute": "show-less-label"
+            },
+            {
+              "kind": "field",
+              "name": "hideToggle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Never render the toggle, even when the row overflows.",
+              "attribute": "hide-toggle"
+            },
+            {
+              "kind": "field",
+              "name": "alwaysToggle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Always render the toggle, even when every thumbnail already fits on the row.",
+              "attribute": "always-toggle"
+            },
+            {
+              "kind": "field",
+              "name": "selectable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Manages single selection across the slotted thumbnails.",
+              "attribute": "selectable",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "aspectRatio",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Aspect ratio for every thumbnail in the group, as any CSS `aspect-ratio` value (e.g. `1 / 1`).\nShorthand for setting `--zn-thumbnail-aspect-ratio` on the group. A thumbnail's own\n`aspect-ratio` attribute still wins.",
+              "attribute": "aspect-ratio",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "thumbnailWidth",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Track width of each thumbnail (e.g. `140px`). Shorthand for `--zn-thumbnail-width`.",
+              "attribute": "thumbnail-width",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "gap",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Gap between thumbnails (e.g. `8px`). Shorthand for `--zn-thumbnail-gap`.",
+              "attribute": "gap",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The `value` of the selected thumbnail (`selectable` groups only).",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "_overflowing",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_count",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_items",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_resizeObserver",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "_observe",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_syncCustomProperties",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "changed",
+                  "type": {
+                    "text": "PropertyValues"
+                  }
+                }
+              ],
+              "description": "Mirrors the shorthand attributes onto host custom properties. They go on the host rather than\nanywhere in the shadow root because the thumbnails are light-DOM children — inheriting from the\nhost is the only way the values reach them."
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "description": "Expands the group into the full grid."
+            },
+            {
+              "kind": "method",
+              "name": "hide",
+              "description": "Collapses the group back to a single row."
+            },
+            {
+              "kind": "field",
+              "name": "_thumbnails",
+              "type": {
+                "text": "ZnThumbnail[]"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_sync",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_measure",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handleSelect",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handleToggle",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the group expands into the full grid.",
+              "name": "zn-expand"
+            },
+            {
+              "description": "Emitted when the group collapses back to a single row.",
+              "name": "zn-collapse"
+            },
+            {
+              "description": "Emitted when the selected thumbnail changes (`selectable` groups only).",
+              "name": "zn-change"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The heading shown at the top left of the group.",
+              "fieldName": "caption"
+            },
+            {
+              "name": "expanded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Expands the group into the full wrapping grid.",
+              "fieldName": "expanded"
+            },
+            {
+              "name": "total",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Total number of thumbnails in the underlying set, shown in the \"Show All (n)\" label. Set this when\nthe row only holds the first page of a larger set; otherwise the slotted thumbnails are counted.",
+              "fieldName": "total"
+            },
+            {
+              "name": "show-all-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Show All'",
+              "description": "Label of the expand toggle. The count is appended in brackets.",
+              "fieldName": "showAllLabel"
+            },
+            {
+              "name": "show-less-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Show Less'",
+              "description": "Label of the collapse toggle.",
+              "fieldName": "showLessLabel"
+            },
+            {
+              "name": "hide-toggle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Never render the toggle, even when the row overflows.",
+              "fieldName": "hideToggle"
+            },
+            {
+              "name": "always-toggle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Always render the toggle, even when every thumbnail already fits on the row.",
+              "fieldName": "alwaysToggle"
+            },
+            {
+              "name": "selectable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Manages single selection across the slotted thumbnails.",
+              "fieldName": "selectable"
+            },
+            {
+              "name": "aspect-ratio",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Aspect ratio for every thumbnail in the group, as any CSS `aspect-ratio` value (e.g. `1 / 1`).\nShorthand for setting `--zn-thumbnail-aspect-ratio` on the group. A thumbnail's own\n`aspect-ratio` attribute still wins.",
+              "fieldName": "aspectRatio"
+            },
+            {
+              "name": "thumbnail-width",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Track width of each thumbnail (e.g. `140px`). Shorthand for `--zn-thumbnail-width`.",
+              "fieldName": "thumbnailWidth"
+            },
+            {
+              "name": "gap",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Gap between thumbnails (e.g. `8px`). Shorthand for `--zn-thumbnail-gap`.",
+              "fieldName": "gap"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The `value` of the selected thumbnail (`selectable` groups only).",
+              "fieldName": "value"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Lays a set of `zn-thumbnail` elements out as a single scrollable row, with a\n\"Show All\" toggle that expands them into a wrapping grid.",
+          "tagNameWithoutPrefix": "thumbnail-group",
+          "tagName": "zn-thumbnail-group",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Lays a set of `zn-thumbnail` elements out as a single scrollable row, with a\n * \"Show All\" toggle that expands them into a wrapping grid.\n * @documentation https://zinc.style/components/thumbnail-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-thumbnail\n *\n * @event zn-expand - Emitted when the group expands into the full grid.\n * @event zn-collapse - Emitted when the group collapses back to a single row.\n * @event zn-change - Emitted when the selected thumbnail changes (`selectable` groups only).\n *\n * @slot - One or more `zn-thumbnail` elements.\n * @slot caption - Replaces the heading text.\n * @slot actions - Extra content in the header, before the toggle.\n *\n * @csspart base - The component's base wrapper.\n * @csspart header - The header row holding the caption and toggle.\n * @csspart caption - The heading text.\n * @csspart toggle - The show all / show less button.\n * @csspart items - The scrolling row / expanded grid that holds the thumbnails.\n *\n * @cssproperty --zn-thumbnail-width - Track width of a thumbnail. Defaults to 180px. Also settable\n *  with the `thumbnail-width` attribute.\n * @cssproperty --zn-thumbnail-gap - Gap between thumbnails. Also settable with the `gap` attribute.\n * @cssproperty --zn-thumbnail-aspect-ratio - Aspect ratio of every thumbnail in the group. Also\n *  settable with the `aspect-ratio` attribute. Any `zn-thumbnail` custom property set here is\n *  inherited by the slotted thumbnails.\n */",
+          "documentation": "https://zinc.style/components/thumbnail-group",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-thumbnail"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnThumbnailGroup",
+            "module": "components/thumbnail-group/thumbnail-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/theme-editor/theme-editor.js",
       "declarations": [
         {
@@ -50181,441 +50666,6 @@
           "declaration": {
             "name": "ZnThumbnail",
             "module": "components/thumbnail/thumbnail.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/thumbnail-group/thumbnail-group.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnThumbnailGroup",
-          "cssProperties": [
-            {
-              "description": "Track width of a thumbnail. Defaults to 180px. Also settable with the `thumbnail-width` attribute.",
-              "name": "--zn-thumbnail-width"
-            },
-            {
-              "description": "Gap between thumbnails. Also settable with the `gap` attribute.",
-              "name": "--zn-thumbnail-gap"
-            },
-            {
-              "description": "Aspect ratio of every thumbnail in the group. Also settable with the `aspect-ratio` attribute. Any `zn-thumbnail` custom property set here is inherited by the slotted thumbnails.",
-              "name": "--zn-thumbnail-aspect-ratio"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            },
-            {
-              "description": "The header row holding the caption and toggle.",
-              "name": "header"
-            },
-            {
-              "description": "The heading text.",
-              "name": "caption"
-            },
-            {
-              "description": "The show all / show less button.",
-              "name": "toggle"
-            },
-            {
-              "description": "The scrolling row / expanded grid that holds the thumbnails.",
-              "name": "items"
-            }
-          ],
-          "slots": [
-            {
-              "description": "One or more `zn-thumbnail` elements.",
-              "name": ""
-            },
-            {
-              "description": "Replaces the heading text.",
-              "name": "caption"
-            },
-            {
-              "description": "Extra content in the header, before the toggle.",
-              "name": "actions"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The heading shown at the top left of the group.",
-              "attribute": "caption"
-            },
-            {
-              "kind": "field",
-              "name": "expanded",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Expands the group into the full wrapping grid.",
-              "attribute": "expanded",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "total",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "Total number of thumbnails in the underlying set, shown in the \"Show All (n)\" label. Set this when\nthe row only holds the first page of a larger set; otherwise the slotted thumbnails are counted.",
-              "attribute": "total"
-            },
-            {
-              "kind": "field",
-              "name": "showAllLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Show All'",
-              "description": "Label of the expand toggle. The count is appended in brackets.",
-              "attribute": "show-all-label"
-            },
-            {
-              "kind": "field",
-              "name": "showLessLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Show Less'",
-              "description": "Label of the collapse toggle.",
-              "attribute": "show-less-label"
-            },
-            {
-              "kind": "field",
-              "name": "hideToggle",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Never render the toggle, even when the row overflows.",
-              "attribute": "hide-toggle"
-            },
-            {
-              "kind": "field",
-              "name": "alwaysToggle",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Always render the toggle, even when every thumbnail already fits on the row.",
-              "attribute": "always-toggle"
-            },
-            {
-              "kind": "field",
-              "name": "selectable",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Manages single selection across the slotted thumbnails.",
-              "attribute": "selectable",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "aspectRatio",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Aspect ratio for every thumbnail in the group, as any CSS `aspect-ratio` value (e.g. `1 / 1`).\nShorthand for setting `--zn-thumbnail-aspect-ratio` on the group. A thumbnail's own\n`aspect-ratio` attribute still wins.",
-              "attribute": "aspect-ratio",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "thumbnailWidth",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Track width of each thumbnail (e.g. `140px`). Shorthand for `--zn-thumbnail-width`.",
-              "attribute": "thumbnail-width",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "gap",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Gap between thumbnails (e.g. `8px`). Shorthand for `--zn-thumbnail-gap`.",
-              "attribute": "gap",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The `value` of the selected thumbnail (`selectable` groups only).",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "_overflowing",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_count",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0"
-            },
-            {
-              "kind": "field",
-              "name": "_items",
-              "type": {
-                "text": "HTMLElement"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_resizeObserver",
-              "type": {
-                "text": "ResizeObserver | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "_observe",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_syncCustomProperties",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "changed",
-                  "type": {
-                    "text": "PropertyValues"
-                  }
-                }
-              ],
-              "description": "Mirrors the shorthand attributes onto host custom properties. They go on the host rather than\nanywhere in the shadow root because the thumbnails are light-DOM children — inheriting from the\nhost is the only way the values reach them."
-            },
-            {
-              "kind": "method",
-              "name": "show",
-              "description": "Expands the group into the full grid."
-            },
-            {
-              "kind": "method",
-              "name": "hide",
-              "description": "Collapses the group back to a single row."
-            },
-            {
-              "kind": "field",
-              "name": "_thumbnails",
-              "type": {
-                "text": "ZnThumbnail[]"
-              },
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "_handleSlotChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_sync",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_measure",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_handleSelect",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_handleToggle",
-              "privacy": "private"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted when the group expands into the full grid.",
-              "name": "zn-expand"
-            },
-            {
-              "description": "Emitted when the group collapses back to a single row.",
-              "name": "zn-collapse"
-            },
-            {
-              "description": "Emitted when the selected thumbnail changes (`selectable` groups only).",
-              "name": "zn-change"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The heading shown at the top left of the group.",
-              "fieldName": "caption"
-            },
-            {
-              "name": "expanded",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Expands the group into the full wrapping grid.",
-              "fieldName": "expanded"
-            },
-            {
-              "name": "total",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "Total number of thumbnails in the underlying set, shown in the \"Show All (n)\" label. Set this when\nthe row only holds the first page of a larger set; otherwise the slotted thumbnails are counted.",
-              "fieldName": "total"
-            },
-            {
-              "name": "show-all-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Show All'",
-              "description": "Label of the expand toggle. The count is appended in brackets.",
-              "fieldName": "showAllLabel"
-            },
-            {
-              "name": "show-less-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Show Less'",
-              "description": "Label of the collapse toggle.",
-              "fieldName": "showLessLabel"
-            },
-            {
-              "name": "hide-toggle",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Never render the toggle, even when the row overflows.",
-              "fieldName": "hideToggle"
-            },
-            {
-              "name": "always-toggle",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Always render the toggle, even when every thumbnail already fits on the row.",
-              "fieldName": "alwaysToggle"
-            },
-            {
-              "name": "selectable",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Manages single selection across the slotted thumbnails.",
-              "fieldName": "selectable"
-            },
-            {
-              "name": "aspect-ratio",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Aspect ratio for every thumbnail in the group, as any CSS `aspect-ratio` value (e.g. `1 / 1`).\nShorthand for setting `--zn-thumbnail-aspect-ratio` on the group. A thumbnail's own\n`aspect-ratio` attribute still wins.",
-              "fieldName": "aspectRatio"
-            },
-            {
-              "name": "thumbnail-width",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Track width of each thumbnail (e.g. `140px`). Shorthand for `--zn-thumbnail-width`.",
-              "fieldName": "thumbnailWidth"
-            },
-            {
-              "name": "gap",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Gap between thumbnails (e.g. `8px`). Shorthand for `--zn-thumbnail-gap`.",
-              "fieldName": "gap"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The `value` of the selected thumbnail (`selectable` groups only).",
-              "fieldName": "value"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Lays a set of `zn-thumbnail` elements out as a single scrollable row, with a\n\"Show All\" toggle that expands them into a wrapping grid.",
-          "tagNameWithoutPrefix": "thumbnail-group",
-          "tagName": "zn-thumbnail-group",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Lays a set of `zn-thumbnail` elements out as a single scrollable row, with a\n * \"Show All\" toggle that expands them into a wrapping grid.\n * @documentation https://zinc.style/components/thumbnail-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-thumbnail\n *\n * @event zn-expand - Emitted when the group expands into the full grid.\n * @event zn-collapse - Emitted when the group collapses back to a single row.\n * @event zn-change - Emitted when the selected thumbnail changes (`selectable` groups only).\n *\n * @slot - One or more `zn-thumbnail` elements.\n * @slot caption - Replaces the heading text.\n * @slot actions - Extra content in the header, before the toggle.\n *\n * @csspart base - The component's base wrapper.\n * @csspart header - The header row holding the caption and toggle.\n * @csspart caption - The heading text.\n * @csspart toggle - The show all / show less button.\n * @csspart items - The scrolling row / expanded grid that holds the thumbnails.\n *\n * @cssproperty --zn-thumbnail-width - Track width of a thumbnail. Defaults to 180px. Also settable\n *  with the `thumbnail-width` attribute.\n * @cssproperty --zn-thumbnail-gap - Gap between thumbnails. Also settable with the `gap` attribute.\n * @cssproperty --zn-thumbnail-aspect-ratio - Aspect ratio of every thumbnail in the group. Also\n *  settable with the `aspect-ratio` attribute. Any `zn-thumbnail` custom property set here is\n *  inherited by the slotted thumbnails.\n */",
-          "documentation": "https://zinc.style/components/thumbnail-group",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-thumbnail"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnThumbnailGroup",
-            "module": "components/thumbnail-group/thumbnail-group.js"
           }
         }
       ]
@@ -53881,7 +53931,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.164",
+    "version": "1.1.165",
     "author": "",
     "license": "MIT"
   }

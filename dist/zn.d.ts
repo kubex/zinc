@@ -9314,6 +9314,8 @@ declare module "components/remarkd-editor/list-continuation" {
         value: string;
         caret: number;
     }
+    /** Whether `line` is a list marker with nothing after it — `- `, `2. `, `- [ ] `, or a bare `::`. */
+    export function isEmptyListItem(line: string): boolean;
     /**
      * What Enter does on a list line: continues the list with the next marker, or ends it by
      * clearing the marker of an item that has no text. Null when Enter should just insert a
@@ -9499,6 +9501,8 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
          * delimited containers (``` ==== !!!! .... ---- ____ **** ////) as single blocks.
          */
         private splitBlocks;
+        /** `splitBlocks`, plus whether the source ends inside an unclosed container, where a blank line does not split. */
+        private scanBlocks;
         private fenceMarker;
         private closesFence;
         private updateBlocks;
@@ -9550,6 +9554,11 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private commitEdit;
         private handleDraftInput;
         private handleEditKeydown;
+        /**
+         * The draft to commit when Enter should finish the block — pressed on a trailing blank line or
+         * empty list item, outside any container — with that line dropped. Null otherwise.
+         */
+        private finishedDraft;
         private isPlainEnter;
         private handleRawKeydown;
         /** Whether the block being edited is nothing but the slash command. */

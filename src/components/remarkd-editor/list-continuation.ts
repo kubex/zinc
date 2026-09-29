@@ -22,6 +22,13 @@ function nextCheckbox(box: string): string {
   return box === '[_] ' || box === '[*] ' ? '[_] ' : '[ ] ';
 }
 
+/** Whether `line` is a list marker with nothing after it — `- `, `2. `, `- [ ] `, or a bare `::`. */
+export function isEmptyListItem(line: string): boolean {
+  if (line.trim() === '::') return true;
+  const item = LIST_ITEM.exec(line);
+  return !!item && line.slice(item[0].length).trim() === '';
+}
+
 /**
  * What Enter does on a list line: continues the list with the next marker, or ends it by
  * clearing the marker of an item that has no text. Null when Enter should just insert a
@@ -36,15 +43,14 @@ export function continueList(value: string, start: number, end: number): TextEdi
   const line = value.slice(lineStart, lineEnd);
 
   if (insideVerbatim(value.slice(0, lineStart))) return null;
-  const clearLine = {value: value.slice(0, lineStart) + value.slice(lineEnd), caret: lineStart};
-  // The bare `:: ` a definition continuation leaves behind.
-  if (line.trim() === '::') return clearLine;
+  if (isEmptyListItem(line)) {
+    return {value: value.slice(0, lineStart) + value.slice(lineEnd), caret: lineStart};
+  }
 
   const item = LIST_ITEM.exec(line);
   const definition = item ? null : DEFINITION.exec(line);
   const marker = item?.[0] ?? definition?.[0];
   if (!marker || start - lineStart < marker.length) return null;
-  if (item && line.slice(marker.length).trim() === '') return clearLine;
 
   if (definition) {
     // The caret goes before `::` — the term is typed first.

@@ -595,6 +595,47 @@ Second"></zn-remarkd-editor>`);
       expect(enter(input).defaultPrevented).to.be.false;
     });
 
+    /** Opens the first block and replaces its draft with `draft`, caret at the end. */
+    async function editDraft(draft: string) {
+      const el = await fixture<ZnRemarkdEditor>(html`
+        <zn-remarkd-editor value="placeholder"></zn-remarkd-editor>`);
+      el.shadowRoot!.querySelector<HTMLElement>('.remarkd-editor__rendered')!.click();
+      await el.updateComplete;
+      return {el, input: typeInBlock(el, draft)};
+    }
+
+    it('should finish the block on Enter at an empty trailing list item', async () => {
+      const {el, input} = await editDraft('- a\n- ');
+      expect(enter(input).defaultPrevented).to.be.true;
+      await el.updateComplete;
+
+      expect(el.value).to.equal('- a');
+      const draft = el.shadowRoot!.querySelector<HTMLTextAreaElement>('.remarkd-editor__input')!;
+      expect(draft.value, 'a fresh block is opened below').to.equal('');
+    });
+
+    it('should finish the block on a double Enter after a paragraph', async () => {
+      const {el, input} = await editDraft('hello\n');
+      expect(enter(input).defaultPrevented).to.be.true;
+      await el.updateComplete;
+
+      expect(el.value).to.equal('hello');
+      expect(el.shadowRoot!.querySelector<HTMLTextAreaElement>('.remarkd-editor__input')!.value).to.equal('');
+    });
+
+    it('should keep a blank line inside an open container', async () => {
+      const {input} = await editDraft('```\ncode\n');
+      expect(enter(input).defaultPrevented).to.be.false;
+    });
+
+    it('should clear a mid-list empty item without finishing the block', async () => {
+      const {el, input} = await editDraft('- a\n- \n- b');
+      input.setSelectionRange(6, 6);
+      expect(enter(input).defaultPrevented).to.be.true;
+      await el.updateComplete;
+      expect(input.value).to.equal('- a\n\n- b');
+    });
+
     it('should continue a list on Enter in the raw source view', async () => {
       const el = await fixture<ZnRemarkdEditor>(html`
         <zn-remarkd-editor allow-raw value="- [ ] first"></zn-remarkd-editor>`);

@@ -1,6 +1,6 @@
 import {ACTION_GROUPS, EDITOR_ACTIONS, matchesShortcut, shortcutLabel, slashItems} from './actions';
 import {classMap} from "lit/directives/class-map.js";
-import {continueList} from './list-continuation';
+import {continueList, isEmptyListItem} from './list-continuation';
 import {type CSSResultGroup, html, type PropertyValues, type TemplateResult, unsafeCSS} from 'lit';
 import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
@@ -562,6 +562,11 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
    * delimited containers (``` ==== !!!! .... ---- ____ **** ////) as single blocks.
    */
   private splitBlocks(source: string): string[] {
+    return this.scanBlocks(source).blocks;
+  }
+
+  /** `splitBlocks`, plus whether the source ends inside an unclosed container, where a blank line does not split. */
+  private scanBlocks(source: string): { blocks: string[]; open: boolean } {
     const lines = source.replace(/\r\n/g, '\n').split('\n');
     const blocks: string[] = [];
     let current: string[] = [];
@@ -612,7 +617,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       current.push(line);
     }
     push();
-    return blocks;
+    return {blocks, open: fence !== null || depth > 0};
   }
 
   private fenceMarker(line: string): string | null {
@@ -961,6 +966,14 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       e.preventDefault();
       this.activateAction(shortcutAction);
     } else if (this.isPlainEnter(e)) {
+      const finished = this.finishedDraft(input.value, input.selectionStart, input.selectionEnd);
+      if (finished !== null) {
+        e.preventDefault();
+        this.editingDraft = finished;
+        this.suppressBlurCommit = true;
+        this.insertDraftBlock(this.commitEdit());
+        return;
+      }
       const edit = continueList(input.value, input.selectionStart, input.selectionEnd);
       if (!edit) return;
       e.preventDefault();
@@ -978,6 +991,20 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       input.blur();
     }
   };
+
+  /**
+   * The draft to commit when Enter should finish the block — pressed on a trailing blank line or
+   * empty list item, outside any container — with that line dropped. Null otherwise.
+   */
+  private finishedDraft(value: string, start: number, end: number): string | null {
+    if (start !== end || value.slice(start).trim() !== '') return null;
+    const lineStart = value.lastIndexOf('\n', start - 1) + 1;
+    const line = value.slice(lineStart);
+    if (line.trim() !== '' && !isEmptyListItem(line)) return null;
+    const before = value.slice(0, lineStart);
+    if (before.trim() === '' || this.scanBlocks(before).open) return null;
+    return before.trimEnd();
+  }
 
   private isPlainEnter(e: KeyboardEvent): boolean {
     return e.key === 'Enter' && !e.isComposing && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey;

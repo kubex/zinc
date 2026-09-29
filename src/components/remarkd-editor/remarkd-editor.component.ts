@@ -1,6 +1,6 @@
 import {ACTION_GROUPS, EDITOR_ACTIONS, matchesShortcut, shortcutLabel, slashItems} from './actions';
 import {classMap} from "lit/directives/class-map.js";
-import {continueList, isEmptyListItem} from './list-continuation';
+import {continueList, indentList, isEmptyListItem} from './list-continuation';
 import {type CSSResultGroup, html, type PropertyValues, type TemplateResult, unsafeCSS} from 'lit';
 import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
@@ -15,6 +15,7 @@ import ZnMenu from "../menu";
 import ZnMenuItem from "../menu-item";
 import ZnSlashMenu, {SlashMenuController, type SlashMenuItem} from "../slash-menu";
 import type {EditorAction, InlineMark} from './actions';
+import type {RangeEdit} from './list-continuation';
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type ZnFile from "../file";
 
@@ -978,6 +979,11 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       if (!edit) return;
       e.preventDefault();
       this.applyDraftEdit(input, edit.value, edit.caret, edit.caret);
+    } else if (this.isListTab(e)) {
+      const edit = indentList(input.value, input.selectionStart, input.selectionEnd, e.shiftKey);
+      if (!edit) return;
+      e.preventDefault();
+      this.applyDraftEdit(input, edit.value, edit.start, edit.end);
     } else if (e.key === 'Enter' && e.shiftKey) {
       e.preventDefault();
       this.suppressBlurCommit = true;
@@ -1010,14 +1016,23 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     return e.key === 'Enter' && !e.isComposing && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey;
   }
 
+  private isListTab(e: KeyboardEvent): boolean {
+    return e.key === 'Tab' && !e.isComposing && !e.metaKey && !e.ctrlKey && !e.altKey;
+  }
+
   private handleRawKeydown = (e: KeyboardEvent) => {
-    if (!this.isPlainEnter(e)) return;
     const input = e.target as HTMLTextAreaElement;
-    const edit = continueList(input.value, input.selectionStart, input.selectionEnd);
+    let edit: RangeEdit | null = null;
+    if (this.isPlainEnter(e)) {
+      const next = continueList(input.value, input.selectionStart, input.selectionEnd);
+      edit = next && {value: next.value, start: next.caret, end: next.caret};
+    } else if (this.isListTab(e)) {
+      edit = indentList(input.value, input.selectionStart, input.selectionEnd, e.shiftKey);
+    }
     if (!edit) return;
     e.preventDefault();
     input.value = edit.value;
-    input.setSelectionRange(edit.caret, edit.caret);
+    input.setSelectionRange(edit.start, edit.end);
     this.handleRawInput(e);
   };
 

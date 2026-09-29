@@ -649,6 +649,43 @@ Second"></zn-remarkd-editor>`);
       await el.updateComplete;
       expect(el.value).to.equal('- [ ] first\n- [ ] ');
     });
+
+    const tab = (input: HTMLTextAreaElement, shiftKey = false) => {
+      const event = new KeyboardEvent('keydown', {key: 'Tab', shiftKey, bubbles: true, composed: true, cancelable: true});
+      input.dispatchEvent(event);
+      return event;
+    };
+
+    it('should nest and un-nest a list item on Tab and Shift+Tab in the open block', async () => {
+      const {el, input} = await editDraft('- a\n- b');
+      expect(tab(input).defaultPrevented).to.be.true;
+      await el.updateComplete;
+      expect(input.value).to.equal('- a\n-- b');
+      expect(input.selectionStart).to.equal(8);
+
+      expect(tab(input, true).defaultPrevented).to.be.true;
+      await el.updateComplete;
+      expect(input.value).to.equal('- a\n- b');
+    });
+
+    it('should leave Tab alone outside a list', async () => {
+      const {input} = await editDraft('hello');
+      expect(tab(input).defaultPrevented).to.be.false;
+    });
+
+    it('should nest a list item on Tab in the raw source view', async () => {
+      const el = await fixture<ZnRemarkdEditor>(html`
+        <zn-remarkd-editor allow-raw value="- first"></zn-remarkd-editor>`);
+      el.shadowRoot!.querySelector('.remarkd-editor__raw-toggle')!
+        .dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+      await el.updateComplete;
+      const raw = el.shadowRoot!.querySelector<HTMLTextAreaElement>('.remarkd-editor__raw')!;
+      raw.setSelectionRange(7, 7);
+
+      expect(tab(raw).defaultPrevented).to.be.true;
+      await el.updateComplete;
+      expect(el.value).to.equal('-- first');
+    });
   });
 
   it('should insert a placeholder when nothing is selected', async () => {

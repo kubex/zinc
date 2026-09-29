@@ -42,7 +42,7 @@ export const ACTION_GROUPS: { id: ActionGroup; label: string }[] = [
   // they are among the last groups to collapse, not the first.
   {id: 'inline', label: 'Inline'},
   {id: 'lists', label: 'Lists'},
-  {id: 'admonitions', label: 'Admonitions'},
+  {id: 'admonitions', label: 'Alerts'},
   {id: 'blocks', label: 'Blocks'},
   {id: 'structured', label: 'Structured'},
   {id: 'media', label: 'Media'},
@@ -67,7 +67,7 @@ export const EDITOR_ACTIONS: EditorAction[] = [
   {key: 'checkboxes', label: 'Checklist', icon: 'list-todo@lu', group: 'lists', prefix: '- [ ] ', keywords: ['task', 'todo']},
   {key: 'definition-list', label: 'Definition list', icon: 'book-a@lu', group: 'lists', prefix: 'Term:: Definition'},
 
-  // Admonitions
+  // Alerts
   {key: 'admonition', label: 'Note', icon: 'info@lu', group: 'admonitions', prefix: 'NOTE: '},
   {key: 'tip', label: 'Tip', icon: 'lightbulb@lu', group: 'admonitions', prefix: 'TIP: '},
   {key: 'warning', label: 'Warning', icon: 'triangle-alert@lu', group: 'admonitions', prefix: 'WARNING: '},

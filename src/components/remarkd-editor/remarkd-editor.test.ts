@@ -952,7 +952,7 @@ Second"></zn-remarkd-editor>`);
 
     const menu = el.shadowRoot!.querySelector<ZnSlashMenu>('zn-slash-menu')!;
     expect(menu.items.length).to.equal(EDITOR_ACTIONS.length);
-    expect(menu.items.some(item => item.group === 'Admonitions')).to.be.true;
+    expect(menu.items.some(item => item.group === 'Alerts')).to.be.true;
   });
 
   it('should omit the Include action from the slash menu without an include-url', async () => {

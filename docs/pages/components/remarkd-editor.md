@@ -160,7 +160,7 @@ outgrows the 20rem cap set here."
 ### Actions
 
 The toolbar and the `/` slash menu are driven by one shared registry of actions, grouped
-under ten headings: **Text**, **Inline**, **Lists**, **Admonitions**, **Blocks**,
+under ten headings: **Text**, **Inline**, **Lists**, **Alerts**, **Blocks**,
 **Structured**, **Media**, **Objects**, **Breaks**, and **Logic**. The toolbar shows as
 many groups as fit its width and folds the rest into an overflow menu; the slash menu
 carries every action regardless of width, and typing narrows it by label or keyword — so

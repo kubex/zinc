@@ -368,7 +368,12 @@
         { "name": "grow", "values": [] },
         { "name": "wrap", "values": [] },
         { "name": "start", "values": [] },
-        { "name": "gap", "values": [] }
+        { "name": "gap", "values": [] },
+        {
+          "name": "panel-bg",
+          "description": "Gives every button in the group the icon-button look: panel background,\nborder, text-colored ink and a tab-tint hover.",
+          "values": []
+        }
       ],
       "references": [
         {
@@ -3627,6 +3632,47 @@
       ]
     },
     {
+      "name": "zn-rating",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity()** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n- **help-text** - Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n- **--preview-color** - The color of the preview value. _(default: undefined)_\n- **--preview-size** - The font size of the preview value. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the symbols and help text.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **preview** - The value shown next to the symbols when `preview` is enabled.",
+      "attributes": [
+        { "name": "label", "values": [] },
+        {
+          "name": "help-text",
+          "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
+          "values": []
+        },
+        { "name": "name", "values": [] },
+        { "name": "value", "values": [] },
+        { "name": "max", "values": [] },
+        { "name": "precision", "values": [] },
+        { "name": "readonly", "values": [] },
+        { "name": "disabled", "values": [] },
+        {
+          "name": "preview",
+          "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
+          "values": []
+        },
+        {
+          "name": "size",
+          "values": [
+            { "name": "small" },
+            { "name": "medium" },
+            { "name": "large" }
+          ]
+        },
+        {
+          "name": "getSymbol",
+          "values": [{ "name": "(value: number) => string" }]
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/rating"
+        }
+      ]
+    },
+    {
       "name": "zn-remarkd-editor",
       "description": "A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted on each keystroke while editing a block.\n- **zn-change** - Emitted when a block edit is committed and the value changes.\n\n### **Methods:**\n - **focus()** - Starts editing the first block, or a new block if the document is empty.\n- **blur()** - Commits any in-progress block or raw edit.\n\n### **CSS Properties:**\n - **--remarkd-editor-max-height** - The tallest the editor grows before its body scrolls. Defaults to `100dvh`. _(default: undefined)_\n- **--remarkd-editor-min-height** - The shortest the body renders while empty. Defaults to `10rem`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The always-visible block-insert and inline-formatting toolbar.\n- **raw-toggle** - The button that switches between the block view and the raw source view.\n- **block** - A rendered block wrapper.\n- **rendered** - The rendered remarkd output of a block.\n- **conditional** - A labelled wrapper for an ifdef/ifndef/ifeval/iftrue/iffalse/ifempty/ifnempty range.\n- **variable** - A chip rendered for a document attribute, title, or bracket line.\n- **input** - The textarea shown while editing a block.\n- **raw** - The full-document textarea shown in raw source mode.\n- **slash-menu** - The `zn-slash-menu` opened by typing \"/\" in an empty block.\n- **image-controls** - The caption / alignment / size panel shown when an image block is clicked.\n- **include** - The chip rendered in place of an `include::` directive.\n- **include-picker** - The inline Include picker opened from the toolbar or \"/include\".",
       "attributes": [
@@ -3690,47 +3736,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/remarkd-editor"
-        }
-      ]
-    },
-    {
-      "name": "zn-rating",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity()** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n- **help-text** - Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n- **--preview-color** - The color of the preview value. _(default: undefined)_\n- **--preview-size** - The font size of the preview value. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the symbols and help text.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **preview** - The value shown next to the symbols when `preview` is enabled.",
-      "attributes": [
-        { "name": "label", "values": [] },
-        {
-          "name": "help-text",
-          "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
-          "values": []
-        },
-        { "name": "name", "values": [] },
-        { "name": "value", "values": [] },
-        { "name": "max", "values": [] },
-        { "name": "precision", "values": [] },
-        { "name": "readonly", "values": [] },
-        { "name": "disabled", "values": [] },
-        {
-          "name": "preview",
-          "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
-          "values": []
-        },
-        {
-          "name": "size",
-          "values": [
-            { "name": "small" },
-            { "name": "medium" },
-            { "name": "large" }
-          ]
-        },
-        {
-          "name": "getSymbol",
-          "values": [{ "name": "(value: number) => string" }]
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/rating"
         }
       ]
     },

@@ -1523,7 +1523,7 @@ declare module "components/alert/index" {
     }
 }
 declare module "components/button-group/button-group.component" {
-    import { type CSSResultGroup } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
@@ -1549,7 +1549,11 @@ declare module "components/button-group/button-group.component" {
         wrap: boolean;
         start: boolean;
         gap: boolean;
+        /** Gives every button in the group the icon-button look: panel background,
+         * border, text-colored ink and a tab-tint hover. */
+        panelBackground: boolean;
         defaultSlot: HTMLSlotElement;
+        protected updated(changed: PropertyValues<this>): void;
         private handleSlotChange;
         render(): import("lit-html").TemplateResult<1>;
     }

@@ -265,7 +265,7 @@ export default class ContentBlock extends ZincElement {
           </div>
         </div>
 
-        <zn-sp no-gap flush-x>
+        <zn-sp no-gap flush-x flush-t>
           <iframe class="${classMap({'hidden': !initialShowHtml})}" title="Content block HTML preview"></iframe>
           <slot class="html-content" name="html" style="display: none;"></slot>
           <slot name="text" style="display: none;"></slot>

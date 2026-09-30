@@ -139,6 +139,55 @@ Button groups work with all button variants including colors and styles.
 </zn-button-group>
 ```
 
+### Panel Background
+
+Use the `panel-bg` attribute to give every button in the group the icon button look: a panel background with a border, text-coloured labels and a tinted hover. Color variants tint the label and icon instead of filling the button.
+
+```html:preview
+<zn-button-group panel-bg>
+  <zn-button icon="format_bold"></zn-button>
+  <zn-button icon="format_italic"></zn-button>
+  <zn-button icon="format_underlined"></zn-button>
+</zn-button-group>
+
+<br />
+<br />
+
+<zn-button-group panel-bg>
+  <zn-button icon="view_list">List</zn-button>
+  <zn-button icon="grid_view">Grid</zn-button>
+  <zn-button icon="delete" color="error">Delete</zn-button>
+</zn-button-group>
+
+<br />
+<br />
+
+<zn-button-group panel-bg gap>
+  <zn-button>Cancel</zn-button>
+  <zn-button>Save</zn-button>
+</zn-button-group>
+```
+
+Set `aria-pressed="true"` on the selected button to show it in its active colour, for segmented toggles.
+
+```html:preview
+<zn-button-group panel-bg class="panel-bg-toggle">
+  <zn-button aria-pressed="false">Mine</zn-button>
+  <zn-button aria-pressed="true">Everyone</zn-button>
+</zn-button-group>
+
+<script type="module">
+  const group = document.querySelector('.panel-bg-toggle');
+  group.addEventListener('click', event => {
+    const clicked = event.target.closest('zn-button');
+    if (!clicked) return;
+    group.querySelectorAll('zn-button').forEach(button => {
+      button.setAttribute('aria-pressed', String(button === clicked));
+    });
+  });
+</script>
+```
+
 ### With Icons
 
 Button groups work seamlessly with icon buttons.

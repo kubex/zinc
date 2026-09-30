@@ -493,12 +493,12 @@
 }
 
 :host([data-zn-button-group__button--first]:not([data-zn-button-group__button--last])) .button {
-  border-radius: 5px 0 0 5px !important;
+  border-radius: var(--zn-button-border-radius, var(--zn-border-radius)) 0 0 var(--zn-button-border-radius, var(--zn-border-radius)) !important;
   border-right: 0 !important;
 }
 
 :host([data-zn-button-group__button--last]:not([data-zn-button-group__button--first])) .button {
-  border-radius: 0 5px 5px 0 !important;
+  border-radius: 0 var(--zn-button-border-radius, var(--zn-border-radius)) var(--zn-button-border-radius, var(--zn-border-radius)) 0 !important;
   border-left: 0 !important;
 }
 
@@ -513,12 +513,32 @@
   white-space: nowrap;
 }
 
-.button--panel-bg {
+// The icon-button look on a regular button: color variants tint the ink only
+@mixin panel-bg {
   background: rgb(var(--zn-panel));
   border-color: var(--zn-button-border-color, rgb(var(--zn-border-color)));
   color: rgb(var(--zn-text));
 
+  &.button--error, &.button--info, &.button--success, &.button--warning {
+    color: rgb(var(--btn-color));
+  }
+
   &:hover:not([disabled]), &:active:not([disabled]) {
     background: rgba(var(--zn-color-tab), 0.5);
   }
+
+  &[aria-pressed="true"] {
+    &, &:hover:not([disabled]), &:active:not([disabled]) {
+      background: rgba(var(--btn-color), 0.1);
+      color: rgb(var(--btn-color));
+    }
+  }
+}
+
+.button--panel-bg {
+  @include panel-bg;
+}
+
+:host([data-zn-button-group__button--panel-bg]) .button:not(.button--icon-button) {
+  @include panel-bg;
 }

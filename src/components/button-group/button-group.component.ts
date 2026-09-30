@@ -1,5 +1,5 @@
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {property, query} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
@@ -30,18 +30,27 @@ export default class ZnButtonGroup extends ZincElement {
   @property({type: Boolean}) wrap = false;
   @property({type: Boolean}) start = false;
   @property({type: Boolean}) gap = false;
+  /** Gives every button in the group the icon-button look: panel background,
+   * border, text-colored ink and a tab-tint hover. */
+  @property({type: Boolean, attribute: 'panel-bg'}) panelBackground = false;
 
   @query('slot') defaultSlot: HTMLSlotElement;
 
+  protected updated(changed: PropertyValues<this>) {
+    if (changed.has('panelBackground')) {
+      this.handleSlotChange();
+    }
+  }
+
   private handleSlotChange() {
-    if (this.direction === 'vertical') {
+    if (!this.defaultSlot) {
       return;
     }
 
     const allSlotted = [...this.defaultSlot.assignedElements({flatten: true})] as HTMLElement[];
 
     // Collect buttons from direct zn-button elements and from zn-dropdown wrappers
-    const groupItems: {button: HTMLElement; wrapper?: HTMLElement}[] = [];
+    const groupItems: { button: HTMLElement; wrapper?: HTMLElement }[] = [];
     for (const el of allSlotted) {
       if (el.tagName === 'ZN-BUTTON') {
         groupItems.push({button: el});
@@ -51,6 +60,14 @@ export default class ZnButtonGroup extends ZincElement {
           groupItems.push({button: innerButton, wrapper: el});
         }
       }
+    }
+
+    groupItems.forEach(({button}) => {
+      button.toggleAttribute('data-zn-button-group__button--panel-bg', this.panelBackground);
+    });
+
+    if (this.direction === 'vertical') {
+      return;
     }
 
     groupItems.forEach(({button, wrapper}, index) => {

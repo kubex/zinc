@@ -7488,26 +7488,6 @@
             },
             {
               "kind": "field",
-              "name": "subject",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The message subject, shown in the header after the sender.",
-              "attribute": "subject"
-            },
-            {
-              "kind": "field",
-              "name": "subjectPlaceholder",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Placeholder shown dimmed in place of the subject when `subject` is empty\n(e.g. \"This message has no subject.\"). Omit both for content without a\nsubject line (e.g. notes).",
-              "attribute": "subject-placeholder"
-            },
-            {
-              "kind": "field",
               "name": "outbound",
               "type": {
                 "text": "boolean"
@@ -7722,24 +7702,6 @@
               },
               "default": "''",
               "fieldName": "avatar"
-            },
-            {
-              "name": "subject",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The message subject, shown in the header after the sender.",
-              "fieldName": "subject"
-            },
-            {
-              "name": "subject-placeholder",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Placeholder shown dimmed in place of the subject when `subject` is empty\n(e.g. \"This message has no subject.\"). Omit both for content without a\nsubject line (e.g. notes).",
-              "fieldName": "subjectPlaceholder"
             },
             {
               "name": "outbound",
@@ -36032,572 +35994,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/rating/rating.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnRating",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            },
-            {
-              "description": "The color of the preview value.",
-              "name": "--preview-color"
-            },
-            {
-              "description": "The font size of the preview value.",
-              "name": "--preview-size"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The form control that wraps the symbols and help text.",
-              "name": "form-control"
-            },
-            {
-              "description": "The help text's wrapper.",
-              "name": "form-control-help-text"
-            },
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            },
-            {
-              "description": "The value shown next to the symbols when `preview` is enabled.",
-              "name": "preview"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            },
-            {
-              "description": "Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.",
-              "name": "help-text"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "formControlController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new FormControlController(this, { assumeInteractionOn: ['zn-blur', 'zn-input'] })"
-            },
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, 'help-text')"
-            },
-            {
-              "kind": "field",
-              "name": "rating",
-              "type": {
-                "text": "HTMLElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "symbols",
-              "type": {
-                "text": "HTMLElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "hoverValue",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0"
-            },
-            {
-              "kind": "field",
-              "name": "isHovering",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "label"
-            },
-            {
-              "kind": "field",
-              "name": "helpText",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
-              "attribute": "help-text"
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "name"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "defaultValue",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "The default value of the form control. Primarily used for resetting the form control."
-            },
-            {
-              "kind": "field",
-              "name": "max",
-              "type": {
-                "text": "number"
-              },
-              "default": "5",
-              "attribute": "max"
-            },
-            {
-              "kind": "field",
-              "name": "precision",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "attribute": "precision"
-            },
-            {
-              "kind": "field",
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "readonly"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled"
-            },
-            {
-              "kind": "field",
-              "name": "preview",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
-              "attribute": "preview"
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "default": "'medium'",
-              "attribute": "size"
-            },
-            {
-              "kind": "field",
-              "name": "getSymbol",
-              "type": {
-                "text": "(value: number) => string"
-              },
-              "attribute": "getSymbol"
-            },
-            {
-              "kind": "field",
-              "name": "validity",
-              "description": "Gets the validity state object",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "validationMessage",
-              "description": "Gets the validation message",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "checkValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "description": "Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid."
-            },
-            {
-              "kind": "method",
-              "name": "getForm",
-              "return": {
-                "type": {
-                  "text": "HTMLFormElement | null"
-                }
-              },
-              "description": "Gets the associated form, if one exists."
-            },
-            {
-              "kind": "method",
-              "name": "reportValidity",
-              "description": "Checks for validity and shows the browser's validation message if the control is invalid."
-            },
-            {
-              "kind": "method",
-              "name": "setCustomValidity",
-              "description": "Sets a custom validation message. Pass an empty string to restore validity."
-            },
-            {
-              "kind": "method",
-              "name": "_roundToPrecision",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "number"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "value",
-                  "type": {
-                    "text": "number"
-                  }
-                },
-                {
-                  "name": "precision",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_getValueFromXCoordinate",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "number"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "coordinate",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_formatValue",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "value",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_getValueFromMousePosition",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "number"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_getValueFromTouchPosition",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "number"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "TouchEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_setValue",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "value",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_handleClick",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_handleMouseEnter",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_handleMouseMove",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_handleMouseLeave",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_handleTouchStart",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "TouchEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_handleTouchMove",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "TouchEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_handleTouchEnd",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "TouchEvent"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "label"
-            },
-            {
-              "name": "help-text",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
-              "fieldName": "helpText"
-            },
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "name"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "fieldName": "value"
-            },
-            {
-              "name": "max",
-              "type": {
-                "text": "number"
-              },
-              "default": "5",
-              "fieldName": "max"
-            },
-            {
-              "name": "precision",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "fieldName": "precision"
-            },
-            {
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "readonly"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "preview",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
-              "fieldName": "preview"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "default": "'medium'",
-              "fieldName": "size"
-            },
-            {
-              "name": "getSymbol",
-              "type": {
-                "text": "(value: number) => string"
-              },
-              "fieldName": "getSymbol"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "rating",
-          "tagName": "zn-rating",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/rating\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n * @slot help-text - Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.\n *\n * @csspart form-control - The form control that wraps the symbols and help text.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart base - The component's base wrapper.\n * @csspart preview - The value shown next to the symbols when `preview` is enabled.\n *\n * @cssproperty --example - An example CSS custom property.\n * @cssproperty --preview-color - The color of the preview value.\n * @cssproperty --preview-size - The font size of the preview value.\n */",
-          "documentation": "https://zinc.style/components/rating",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnRating",
-            "module": "components/rating/rating.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/remarkd-editor/remarkd-editor.js",
       "declarations": [
         {
@@ -38541,6 +37937,572 @@
           "declaration": {
             "name": "ZnRemarkdEditor",
             "module": "components/remarkd-editor/remarkd-editor.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/rating/rating.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnRating",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            },
+            {
+              "description": "The color of the preview value.",
+              "name": "--preview-color"
+            },
+            {
+              "description": "The font size of the preview value.",
+              "name": "--preview-size"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The form control that wraps the symbols and help text.",
+              "name": "form-control"
+            },
+            {
+              "description": "The help text's wrapper.",
+              "name": "form-control-help-text"
+            },
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The value shown next to the symbols when `preview` is enabled.",
+              "name": "preview"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            },
+            {
+              "description": "Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.",
+              "name": "help-text"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "formControlController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new FormControlController(this, { assumeInteractionOn: ['zn-blur', 'zn-input'] })"
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'help-text')"
+            },
+            {
+              "kind": "field",
+              "name": "rating",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "symbols",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "hoverValue",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "isHovering",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
+              "attribute": "help-text"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "The default value of the form control. Primarily used for resetting the form control."
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "5",
+              "attribute": "max"
+            },
+            {
+              "kind": "field",
+              "name": "precision",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "attribute": "precision"
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "preview",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
+              "attribute": "preview"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "attribute": "size"
+            },
+            {
+              "kind": "field",
+              "name": "getSymbol",
+              "type": {
+                "text": "(value: number) => string"
+              },
+              "attribute": "getSymbol"
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "description": "Gets the validity state object",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "description": "Gets the validation message",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid."
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              },
+              "description": "Gets the associated form, if one exists."
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "description": "Checks for validity and shows the browser's validation message if the control is invalid."
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "description": "Sets a custom validation message. Pass an empty string to restore validity."
+            },
+            {
+              "kind": "method",
+              "name": "_roundToPrecision",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "precision",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_getValueFromXCoordinate",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "coordinate",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_formatValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_getValueFromMousePosition",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_getValueFromTouchPosition",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "TouchEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_setValue",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleClick",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleMouseEnter",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleMouseMove",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleMouseLeave",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_handleTouchStart",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "TouchEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleTouchMove",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "TouchEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleTouchEnd",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "TouchEvent"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "label"
+            },
+            {
+              "name": "help-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
+              "fieldName": "helpText"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "value"
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "5",
+              "fieldName": "max"
+            },
+            {
+              "name": "precision",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "fieldName": "precision"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "preview",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
+              "fieldName": "preview"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "fieldName": "size"
+            },
+            {
+              "name": "getSymbol",
+              "type": {
+                "text": "(value: number) => string"
+              },
+              "fieldName": "getSymbol"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "rating",
+          "tagName": "zn-rating",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/rating\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n * @slot help-text - Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.\n *\n * @csspart form-control - The form control that wraps the symbols and help text.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart base - The component's base wrapper.\n * @csspart preview - The value shown next to the symbols when `preview` is enabled.\n *\n * @cssproperty --example - An example CSS custom property.\n * @cssproperty --preview-color - The color of the preview value.\n * @cssproperty --preview-size - The font size of the preview value.\n */",
+          "documentation": "https://zinc.style/components/rating",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnRating",
+            "module": "components/rating/rating.js"
           }
         }
       ]
@@ -53955,7 +53917,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.169",
+    "version": "1.1.170",
     "author": "",
     "license": "MIT"
   }

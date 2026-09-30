@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.1.169",
+  "version": "1.1.170",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -2309,16 +2309,6 @@
               "value": { "type": "string", "default": "''" }
             },
             {
-              "name": "subject",
-              "description": "The message subject, shown in the header after the sender.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "subject-placeholder",
-              "description": "Placeholder shown dimmed in place of the subject when `subject` is empty\n(e.g. \"This message has no subject.\"). Omit both for content without a\nsubject line (e.g. notes).",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
               "name": "outbound",
               "value": { "type": "boolean", "default": "false" }
             },
@@ -2347,16 +2337,6 @@
               { "name": "time", "type": "string" },
               { "name": "sender", "type": "string" },
               { "name": "avatar", "type": "string" },
-              {
-                "name": "subject",
-                "description": "The message subject, shown in the header after the sender.",
-                "type": "string"
-              },
-              {
-                "name": "subjectPlaceholder",
-                "description": "Placeholder shown dimmed in place of the subject when `subject` is empty\n(e.g. \"This message has no subject.\"). Omit both for content without a\nsubject line (e.g. notes).",
-                "type": "string"
-              },
               { "name": "outbound", "type": "boolean" },
               { "name": "noCollapse", "type": "boolean" },
               { "name": "short", "type": "boolean" },
@@ -8501,105 +8481,6 @@
           }
         },
         {
-          "name": "zn-rating",
-          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity()** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n- **help-text** - Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n- **--preview-color** - The color of the preview value. _(default: undefined)_\n- **--preview-size** - The font size of the preview value. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the symbols and help text.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **preview** - The value shown next to the symbols when `preview` is enabled.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "label", "value": { "type": "string" } },
-            {
-              "name": "help-text",
-              "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
-              "value": { "type": "string", "default": "''" }
-            },
-            { "name": "name", "value": { "type": "string" } },
-            { "name": "value", "value": { "type": "number", "default": "0" } },
-            { "name": "max", "value": { "type": "number", "default": "5" } },
-            {
-              "name": "precision",
-              "value": { "type": "number", "default": "1" }
-            },
-            {
-              "name": "readonly",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "disabled",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "preview",
-              "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "size",
-              "value": {
-                "type": "'small' | 'medium' | 'large'",
-                "default": "'medium'"
-              }
-            },
-            {
-              "name": "getSymbol",
-              "value": { "type": "(value: number) => string" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." },
-            {
-              "name": "help-text",
-              "description": "Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute."
-            }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "rating", "type": "HTMLElement" },
-              { "name": "symbols", "type": "HTMLElement" },
-              { "name": "label", "type": "string" },
-              {
-                "name": "helpText",
-                "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
-                "type": "string"
-              },
-              { "name": "name", "type": "string" },
-              { "name": "value", "type": "number" },
-              {
-                "name": "defaultValue",
-                "description": "The default value of the form control. Primarily used for resetting the form control.",
-                "type": "number"
-              },
-              { "name": "max", "type": "number" },
-              { "name": "precision", "type": "number" },
-              { "name": "readonly", "type": "boolean" },
-              { "name": "disabled", "type": "boolean" },
-              {
-                "name": "preview",
-                "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
-                "type": "boolean"
-              },
-              { "name": "size", "type": "'small' | 'medium' | 'large'" },
-              { "name": "getSymbol", "type": "(value: number) => string" },
-              {
-                "name": "validity",
-                "description": "Gets the validity state object"
-              },
-              {
-                "name": "validationMessage",
-                "description": "Gets the validation message"
-              }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-remarkd-editor",
           "description": "A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n\n---\n\n\n### **Events:**\n - **zn-input** - Emitted on each keystroke while editing a block.\n- **zn-change** - Emitted when a block edit is committed and the value changes.\n\n### **Methods:**\n - **focus()** - Starts editing the first block, or a new block if the document is empty.\n- **blur()** - Commits any in-progress block or raw edit.\n\n### **CSS Properties:**\n - **--remarkd-editor-max-height** - The tallest the editor grows before its body scrolls. Defaults to `100dvh`. _(default: undefined)_\n- **--remarkd-editor-min-height** - The shortest the body renders while empty. Defaults to `10rem`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The always-visible block-insert and inline-formatting toolbar.\n- **raw-toggle** - The button that switches between the block view and the raw source view.\n- **block** - A rendered block wrapper.\n- **rendered** - The rendered remarkd output of a block.\n- **conditional** - A labelled wrapper for an ifdef/ifndef/ifeval/iftrue/iffalse/ifempty/ifnempty range.\n- **variable** - A chip rendered for a document attribute, title, or bracket line.\n- **input** - The textarea shown while editing a block.\n- **raw** - The full-document textarea shown in raw source mode.\n- **slash-menu** - The `zn-slash-menu` opened by typing \"/\" in an empty block.\n- **image-controls** - The caption / alignment / size panel shown when an image block is clicked.\n- **include** - The chip rendered in place of an `include::` directive.\n- **include-picker** - The inline Include picker opened from the toolbar or \"/include\".",
           "doc-url": "",
@@ -8743,6 +8624,105 @@
               {
                 "name": "zn-change",
                 "description": "Emitted when a block edit is committed and the value changes."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-rating",
+          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity()** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n- **help-text** - Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n- **--preview-color** - The color of the preview value. _(default: undefined)_\n- **--preview-size** - The font size of the preview value. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the symbols and help text.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **preview** - The value shown next to the symbols when `preview` is enabled.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "label", "value": { "type": "string" } },
+            {
+              "name": "help-text",
+              "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
+              "value": { "type": "string", "default": "''" }
+            },
+            { "name": "name", "value": { "type": "string" } },
+            { "name": "value", "value": { "type": "number", "default": "0" } },
+            { "name": "max", "value": { "type": "number", "default": "5" } },
+            {
+              "name": "precision",
+              "value": { "type": "number", "default": "1" }
+            },
+            {
+              "name": "readonly",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "disabled",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "preview",
+              "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "size",
+              "value": {
+                "type": "'small' | 'medium' | 'large'",
+                "default": "'medium'"
+              }
+            },
+            {
+              "name": "getSymbol",
+              "value": { "type": "(value: number) => string" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." },
+            {
+              "name": "help-text",
+              "description": "Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute."
+            }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "rating", "type": "HTMLElement" },
+              { "name": "symbols", "type": "HTMLElement" },
+              { "name": "label", "type": "string" },
+              {
+                "name": "helpText",
+                "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
+                "type": "string"
+              },
+              { "name": "name", "type": "string" },
+              { "name": "value", "type": "number" },
+              {
+                "name": "defaultValue",
+                "description": "The default value of the form control. Primarily used for resetting the form control.",
+                "type": "number"
+              },
+              { "name": "max", "type": "number" },
+              { "name": "precision", "type": "number" },
+              { "name": "readonly", "type": "boolean" },
+              { "name": "disabled", "type": "boolean" },
+              {
+                "name": "preview",
+                "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
+                "type": "boolean"
+              },
+              { "name": "size", "type": "'small' | 'medium' | 'large'" },
+              { "name": "getSymbol", "type": "(value: number) => string" },
+              {
+                "name": "validity",
+                "description": "Gets the validity state object"
+              },
+              {
+                "name": "validationMessage",
+                "description": "Gets the validation message"
+              }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
               }
             ]
           }

@@ -57,6 +57,11 @@ describe('<zn-linked-select>', () => {
     expect(childOptions(child)).to.deep.equal([]);
   });
 
+  it('should say no options are available in the placeholder when the group is empty', async () => {
+    const { child } = await group();
+    expect(child.input.placeholder).to.equal('No options available');
+  });
+
   it('should keep an array value when multiple', async () => {
     const { parent, child } = await group(true);
     parent.value = 'cat-1';
@@ -81,7 +86,7 @@ describe('<zn-linked-select>', () => {
     child.value = ['cat-1-a'];
     await child.updateComplete;
 
-    parent.value = 'cat-2';
+    parent.value = 'cat-1';
     const changed = oneEvent(child, 'zn-change');
     parent.emit('zn-change');
     await changed;
@@ -94,10 +99,40 @@ describe('<zn-linked-select>', () => {
     let changes = 0;
     child.addEventListener('zn-change', () => changes++);
 
-    parent.value = 'cat-2';
+    parent.value = 'cat-1';
     parent.emit('zn-change');
     await child.updateComplete;
 
     expect(changes).to.equal(0);
+  });
+
+  it('should preselect the only option of the linked group', async () => {
+    const { parent, child } = await group();
+    parent.value = 'cat-2';
+    const changed = oneEvent(child, 'zn-change');
+    parent.emit('zn-change');
+    await changed;
+
+    expect(child.value).to.equal('cat-2-a');
+  });
+
+  it('should preselect the first option of the linked group', async () => {
+    const { parent, child } = await group();
+    parent.value = 'cat-1';
+    const changed = oneEvent(child, 'zn-change');
+    parent.emit('zn-change');
+    await changed;
+
+    expect(child.value).to.equal('cat-1-a');
+  });
+
+  it('should preselect the only option of the linked group when multiple', async () => {
+    const { parent, child } = await group(true);
+    parent.value = 'cat-2';
+    const changed = oneEvent(child, 'zn-change');
+    parent.emit('zn-change');
+    await changed;
+
+    expect(child.value).to.deep.equal(['cat-2-a']);
   });
 });

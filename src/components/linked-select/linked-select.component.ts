@@ -152,7 +152,12 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
     // The inner select only auto-selects on slotchange, which lit skips when it
     // can reuse the option elements of the outgoing group, so the first option of
     // the new group is resolved here rather than left to the select.
-    this.value = this.multiple ? [] : this.selectFirst ? Object.keys(this.currentOptions())[0] ?? "" : "";
+    const keys = Object.keys(this.currentOptions());
+    if (this.multiple) {
+      this.value = keys.length === 1 ? keys : [];
+    } else {
+      this.value = keys[0] ?? "";
+    }
     this.requestUpdate();
     this.formControlController.updateValidity();
     // A host reading the value off change events would otherwise keep the
@@ -191,6 +196,7 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
 
   render() {
     const options = this.currentOptions();
+    const placeholder = Object.keys(options).length ? this.placeholder : 'No options available';
     return html`
       <zn-select part="select"
                  class="linked-select"
@@ -201,7 +207,7 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
                  ?multiple="${this.multiple}"
                  ?clearable="${this.clearable}"
                  ?search="${this.search}"
-                 placeholder="${this.placeholder}"
+                 placeholder="${placeholder}"
                  help-text="${this.helpText}"
                  .value="${this.value}"
                  @zn-change=${this.handleSelectChange}

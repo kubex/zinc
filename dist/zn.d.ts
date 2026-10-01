@@ -4262,8 +4262,8 @@ declare module "components/data-table/data-table.component" {
         private _readSharableState;
         /**
          * Push the shared state back into the actual DOM fields so the UI reflects it. The search value
-         * lives on the slotted <zn-data-table-search>, the filter on <zn-data-table-filter>, and extra
-         * field params on the search/inputs fields (all light-DOM descendants).
+         * lives on the slotted <zn-data-table-search> and extra field params on the search/inputs fields
+         * (all light-DOM descendants).
          */
         private _populateSharableFields;
         private _hasFieldNamed;

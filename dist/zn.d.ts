@@ -8936,12 +8936,23 @@ declare module "components/split-button/index" {
         }
     }
 }
+declare module "components/content-block/sanitize-html" {
+    /** Whether a plain-text body is really HTML source. `<br>` alone doesn't count. */
+    export function looksLikeHtml(text: string): boolean;
+    /**
+     * Rebuilds untrusted HTML from an allowlist of formatting tags. Attributes are never copied,
+     * except a link's href when it is http(s) or mailto.
+     */
+    export function sanitizeHtml(source: string): string;
+}
 declare module "components/content-block/content-block.component" {
     import ZincElement from "internal/zinc-element";
     import type { PropertyValues } from 'lit';
     interface TextRow {
         lines: string[];
         type: 'reply' | 'text';
+        /** `lines` holds a single sanitized HTML string. */
+        html?: boolean;
     }
     /**
      * @summary Short summary of the component's intended use.

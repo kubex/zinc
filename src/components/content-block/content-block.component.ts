@@ -2,8 +2,10 @@ import {classMap} from "lit/directives/class-map.js";
 import {deepQuerySelectorAll} from "../../utilities/query";
 import {HasSlotController} from "../../internal/slot";
 import {html, unsafeCSS} from 'lit';
+import {looksLikeHtml, sanitizeHtml} from './sanitize-html';
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property, queryAssignedNodes, queryAsync, state} from 'lit/decorators.js';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import ZincElement from "../../internal/zinc-element";
 import type {PropertyValues} from 'lit';
 import type ZnTile from "../tile";
@@ -13,6 +15,8 @@ import styles from './content-block.scss';
 interface TextRow {
   lines: string[];
   type: 'reply' | 'text';
+  /** `lines` holds a single sanitized HTML string. */
+  html?: boolean;
 }
 
 /**
@@ -264,7 +268,9 @@ export default class ContentBlock extends ZincElement {
                 'text-section--text': section.type === 'text',
                 'hidden': section.type === 'reply'
               })}>
-                ${section.lines.map((line) => html`${line}<br>`)}
+                ${section.html
+                  ? unsafeHTML(section.lines[0])
+                  : section.lines.map((line) => html`${line}<br>`)}
               </div>
             `)}
           </div>
@@ -357,6 +363,11 @@ export default class ContentBlock extends ZincElement {
   protected getTextSections(): TextRow[] {
     const textContent = this.querySelector('[slot="text"]') as HTMLDivElement | null;
     const textRows: TextRow[] = [];
+
+    if (textContent && looksLikeHtml(textContent.innerText)) {
+      this._textRows = [{lines: [sanitizeHtml(textContent.innerText)], type: 'text', html: true}];
+      return this._textRows;
+    }
 
     if (textContent) {
       const text = textContent.innerText.replace(/<br\s*\/?>/gi, '\n');

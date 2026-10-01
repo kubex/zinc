@@ -58,6 +58,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -246,79 +319,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -13291,6 +13291,432 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/dropdown/dropdown.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnDropdown",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "popup",
+              "type": {
+                "text": "ZnPopup"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "trigger",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "panel",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "closeWatcher",
+              "type": {
+                "text": "CloseWatcher | null"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Indicates whether the dropdown is open",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "placement",
+              "type": {
+                "text": "'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' |\n    'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'"
+              },
+              "default": "'bottom-start'",
+              "description": "The placement of the dropdown. Note the actual placement may vary based on the available space",
+              "attribute": "placement",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disable the dropdown",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "stayOpenOnSelect",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "By default, the dropdown will close when an item is selected. Set this to true to keep the dropdown open",
+              "attribute": "stay-open-on-select",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "containingElement",
+              "type": {
+                "text": "HTMLElement | undefined"
+              },
+              "description": "The dropdown will close when the user interacts outside the element*"
+            },
+            {
+              "kind": "field",
+              "name": "distance",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "The distance in pixels from which to offset the panel away from the trigger",
+              "attribute": "distance"
+            },
+            {
+              "kind": "field",
+              "name": "skidding",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "The distance in pixels from which to offset the panel away from the trigger",
+              "attribute": "skidding"
+            },
+            {
+              "kind": "field",
+              "name": "hoist",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Enable this option if the parent is overflow hidden and the dropdown is not visible",
+              "attribute": "hoist"
+            },
+            {
+              "kind": "field",
+              "name": "sync",
+              "type": {
+                "text": "'width' | 'height' | 'both' | undefined"
+              },
+              "default": "undefined",
+              "description": "Syncs the popup width or height with the trigger element",
+              "attribute": "sync",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "uri",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "uri"
+            },
+            {
+              "kind": "field",
+              "name": "fetchedContent",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "fetchedContent"
+            },
+            {
+              "kind": "method",
+              "name": "focusOnTrigger",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "getMenu",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "addOpenListeners",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "removeOpenListeners",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handlePanelSelect",
+              "description": "Events"
+            },
+            {
+              "kind": "method",
+              "name": "preloadContent",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handlePreload",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleTriggerClick"
+            },
+            {
+              "kind": "method",
+              "name": "handleKeyDown",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleTriggerKeyDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleTriggerKeyUp",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleTriggerSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleDocumentMouseDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleDocumentKeyDown",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "description": "Opens the dropdown"
+            },
+            {
+              "kind": "method",
+              "name": "hide",
+              "description": "Closes the dropdown"
+            },
+            {
+              "kind": "method",
+              "name": "reposition",
+              "description": "Instructs the dropdown to reposition itself"
+            },
+            {
+              "kind": "method",
+              "name": "updateAccessibleTrigger",
+              "privacy": "private",
+              "description": "Aria related method"
+            },
+            {
+              "kind": "method",
+              "name": "handleOpenChange"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Indicates whether the dropdown is open",
+              "fieldName": "open"
+            },
+            {
+              "name": "placement",
+              "type": {
+                "text": "'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' |\n    'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'"
+              },
+              "default": "'bottom-start'",
+              "description": "The placement of the dropdown. Note the actual placement may vary based on the available space",
+              "fieldName": "placement"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disable the dropdown",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "stay-open-on-select",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "By default, the dropdown will close when an item is selected. Set this to true to keep the dropdown open",
+              "fieldName": "stayOpenOnSelect"
+            },
+            {
+              "name": "distance",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "The distance in pixels from which to offset the panel away from the trigger",
+              "fieldName": "distance"
+            },
+            {
+              "name": "skidding",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "The distance in pixels from which to offset the panel away from the trigger",
+              "fieldName": "skidding"
+            },
+            {
+              "name": "hoist",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Enable this option if the parent is overflow hidden and the dropdown is not visible",
+              "fieldName": "hoist"
+            },
+            {
+              "name": "sync",
+              "type": {
+                "text": "'width' | 'height' | 'both' | undefined"
+              },
+              "default": "undefined",
+              "description": "Syncs the popup width or height with the trigger element",
+              "fieldName": "sync"
+            },
+            {
+              "name": "uri",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "uri"
+            },
+            {
+              "name": "fetchedContent",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "fetchedContent"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "dropdown",
+          "tagName": "zn-dropdown",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/dropdown\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/dropdown",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnDropdown",
+            "module": "components/dropdown/dropdown.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/editor/editor.js",
       "declarations": [
         {
@@ -13895,432 +14321,6 @@
           "declaration": {
             "name": "ZnEditor",
             "module": "components/editor/editor.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/dropdown/dropdown.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnDropdown",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "popup",
-              "type": {
-                "text": "ZnPopup"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "trigger",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "panel",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "closeWatcher",
-              "type": {
-                "text": "CloseWatcher | null"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Indicates whether the dropdown is open",
-              "attribute": "open",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "placement",
-              "type": {
-                "text": "'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' |\n    'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'"
-              },
-              "default": "'bottom-start'",
-              "description": "The placement of the dropdown. Note the actual placement may vary based on the available space",
-              "attribute": "placement",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Disable the dropdown",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "stayOpenOnSelect",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "By default, the dropdown will close when an item is selected. Set this to true to keep the dropdown open",
-              "attribute": "stay-open-on-select",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "containingElement",
-              "type": {
-                "text": "HTMLElement | undefined"
-              },
-              "description": "The dropdown will close when the user interacts outside the element*"
-            },
-            {
-              "kind": "field",
-              "name": "distance",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "The distance in pixels from which to offset the panel away from the trigger",
-              "attribute": "distance"
-            },
-            {
-              "kind": "field",
-              "name": "skidding",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "The distance in pixels from which to offset the panel away from the trigger",
-              "attribute": "skidding"
-            },
-            {
-              "kind": "field",
-              "name": "hoist",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "description": "Enable this option if the parent is overflow hidden and the dropdown is not visible",
-              "attribute": "hoist"
-            },
-            {
-              "kind": "field",
-              "name": "sync",
-              "type": {
-                "text": "'width' | 'height' | 'both' | undefined"
-              },
-              "default": "undefined",
-              "description": "Syncs the popup width or height with the trigger element",
-              "attribute": "sync",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "uri",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "uri"
-            },
-            {
-              "kind": "field",
-              "name": "fetchedContent",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "fetchedContent"
-            },
-            {
-              "kind": "method",
-              "name": "focusOnTrigger",
-              "privacy": "public"
-            },
-            {
-              "kind": "method",
-              "name": "getMenu",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "addOpenListeners",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "removeOpenListeners",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handlePanelSelect",
-              "description": "Events"
-            },
-            {
-              "kind": "method",
-              "name": "preloadContent",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handlePreload",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleTriggerClick"
-            },
-            {
-              "kind": "method",
-              "name": "handleKeyDown",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "KeyboardEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "handleTriggerKeyDown",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "KeyboardEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "handleTriggerKeyUp",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "KeyboardEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "handleTriggerSlotChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleDocumentMouseDown",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "handleDocumentKeyDown",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "KeyboardEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "show",
-              "description": "Opens the dropdown"
-            },
-            {
-              "kind": "method",
-              "name": "hide",
-              "description": "Closes the dropdown"
-            },
-            {
-              "kind": "method",
-              "name": "reposition",
-              "description": "Instructs the dropdown to reposition itself"
-            },
-            {
-              "kind": "method",
-              "name": "updateAccessibleTrigger",
-              "privacy": "private",
-              "description": "Aria related method"
-            },
-            {
-              "kind": "method",
-              "name": "handleOpenChange"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Indicates whether the dropdown is open",
-              "fieldName": "open"
-            },
-            {
-              "name": "placement",
-              "type": {
-                "text": "'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' |\n    'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'"
-              },
-              "default": "'bottom-start'",
-              "description": "The placement of the dropdown. Note the actual placement may vary based on the available space",
-              "fieldName": "placement"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Disable the dropdown",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "stay-open-on-select",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "By default, the dropdown will close when an item is selected. Set this to true to keep the dropdown open",
-              "fieldName": "stayOpenOnSelect"
-            },
-            {
-              "name": "distance",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "The distance in pixels from which to offset the panel away from the trigger",
-              "fieldName": "distance"
-            },
-            {
-              "name": "skidding",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "The distance in pixels from which to offset the panel away from the trigger",
-              "fieldName": "skidding"
-            },
-            {
-              "name": "hoist",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "description": "Enable this option if the parent is overflow hidden and the dropdown is not visible",
-              "fieldName": "hoist"
-            },
-            {
-              "name": "sync",
-              "type": {
-                "text": "'width' | 'height' | 'both' | undefined"
-              },
-              "default": "undefined",
-              "description": "Syncs the popup width or height with the trigger element",
-              "fieldName": "sync"
-            },
-            {
-              "name": "uri",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "uri"
-            },
-            {
-              "name": "fetchedContent",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "fetchedContent"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "dropdown",
-          "tagName": "zn-dropdown",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/dropdown\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/dropdown",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnDropdown",
-            "module": "components/dropdown/dropdown.js"
           }
         }
       ]
@@ -53936,7 +53936,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.172",
+    "version": "1.1.173",
     "author": "",
     "license": "MIT"
   }

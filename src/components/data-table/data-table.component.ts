@@ -562,18 +562,13 @@ export default class ZnDataTable extends ZincElement {
 
   /**
    * Push the shared state back into the actual DOM fields so the UI reflects it. The search value
-   * lives on the slotted <zn-data-table-search>, the filter on <zn-data-table-filter>, and extra
-   * field params on the search/inputs fields (all light-DOM descendants).
+   * lives on the slotted <zn-data-table-search> and extra field params on the search/inputs fields
+   * (all light-DOM descendants).
    */
   private _populateSharableFields() {
     if (this.search) {
       const searchEl = this.querySelector('zn-data-table-search') as (Element & { value?: unknown }) | null;
       if (searchEl) searchEl.value = this.search;
-    }
-
-    if (this.filter) {
-      const filterEl = this.querySelector('zn-data-table-filter') as (Element & { value?: unknown }) | null;
-      if (filterEl) filterEl.value = this.filter;
     }
 
     const known = new Set(ZnDataTable._sharableKnownKeys);
@@ -775,7 +770,12 @@ export default class ZnDataTable extends ZincElement {
   }
 
   protected firstUpdated() {
-    // Push the shared state back into the slotted fields once they exist in the DOM.
+    // The filter may come from the URL or straight from a server-rendered attribute
+    if (this.filter) {
+      const filterEl = this.querySelector('zn-data-table-filter') as (Element & { value?: unknown }) | null;
+      if (filterEl) filterEl.value = this.filter;
+    }
+
     if (this.sharable) {
       this._populateSharableFields();
     }

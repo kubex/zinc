@@ -612,4 +612,34 @@ describe('<zn-data-table>', () => {
       }
     });
   });
+
+  it('shows a server-rendered filter as pills in the slotted filter bar', async () => {
+    const originalFetch = window.fetch;
+    window.fetch = () => Promise.resolve(new Response(JSON.stringify({
+      rows: [{id: '1', cells: [{text: 'Row', column: 'name'}]}], page: 1, perPage: 10, total: 1,
+    }), {status: 200, headers: {'Content-Type': 'application/json'}}));
+
+    const filter = btoa(JSON.stringify([
+      {key: 'status', comparator: 'in', value: [0, 10]},
+      {key: 'departmentFid', comparator: 'eq', value: ''},
+    ]));
+    const filters = JSON.stringify([
+      {id: 'status', name: 'status', operators: ['in'], options: {0: 'Pending Reply', 10: 'Open', 20: 'Closed'}},
+      {id: 'departmentFid', name: 'department', operators: ['eq']},
+    ]);
+
+    try {
+      const el = await fixture<ZnDataTable>(html`
+        <zn-data-table filter="${filter}" data-uri="/test-data" headers='{"name": {"key": "name", "label": "Name"}}'>
+          <zn-data-table-filter slot="filter" filters="${filters}"></zn-data-table-filter>
+        </zn-data-table>`);
+      const bar = el.querySelector('zn-data-table-filter') as HTMLElement & { updateComplete: Promise<unknown> };
+      await bar.updateComplete;
+
+      const pills = [...bar.shadowRoot!.querySelectorAll('.filter-bar__pill')].map(p => p.textContent!.trim());
+      expect(pills).to.deep.equal(['Status (2)', 'Department']);
+    } finally {
+      window.fetch = originalFetch;
+    }
+  });
 });

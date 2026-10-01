@@ -130,9 +130,9 @@
   &__right {
     flex-grow: 1;
     flex-shrink: 1;
-    overflow-x: clip;
+    // Chrome ignores overflow-clip-margin unless both axes clip
+    overflow: clip;
     overflow-clip-margin: var(--zn-focus-ring-outset);
-    overflow-y: visible;
     min-width: 20px;
   }
 

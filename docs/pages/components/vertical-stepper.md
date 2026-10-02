@@ -35,7 +35,7 @@ Use the `active` attribute to highlight the current step in the process. The act
 
 ### With Custom Icons
 
-Use the `icon` slot to add custom icons or indicators for each step.
+Use the `icon` slot to add custom icons or indicators for each step. The icon is centred in the step's 32px circle, so keep it at the default 24px size or smaller.
 
 ```html:preview
 <zn-vertical-stepper caption="Personal Details" description="Enter your name and contact information" first active>

@@ -63,4 +63,18 @@ describe('<zn-content-block>', () => {
     expect(content.textContent).to.not.contain('<br');
     expect(content.querySelectorAll('br').length).to.be.greaterThan(1);
   });
+
+  it('should decode entities and strip markup in the header preview', async () => {
+    const preview = async (body: string) => {
+      const el = await fixture<LitElement>(
+        `<zn-content-block><div slot="text">${body}</div></zn-content-block>`
+      );
+      await el.updateComplete;
+      return el.shadowRoot!.querySelector('.content-block-header__description')!.textContent;
+    };
+
+    expect(await preview('test&amp;nbsp;send')).to.equal('test send');
+    expect(await preview('&lt;p&gt;Hello&lt;/p&gt;&lt;p&gt;there&lt;/p&gt;')).to.equal('Hello there');
+    expect(await preview('From: Bob &lt;bob@example.com&gt;')).to.equal('From: Bob <bob@example.com>');
+  });
 });

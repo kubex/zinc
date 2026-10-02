@@ -2,7 +2,7 @@ import {classMap} from "lit/directives/class-map.js";
 import {deepQuerySelectorAll} from "../../utilities/query";
 import {HasSlotController} from "../../internal/slot";
 import {html, unsafeCSS} from 'lit';
-import {looksLikeHtml, sanitizeHtml} from './sanitize-html';
+import {htmlToText, looksLikeHtml, sanitizeHtml} from './sanitize-html';
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property, queryAssignedNodes, queryAsync, state} from 'lit/decorators.js';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
@@ -292,7 +292,7 @@ export default class ContentBlock extends ZincElement {
   protected truncateText() {
     const textContent = this.querySelector('[slot="text"]') as HTMLDivElement | null;
     if (!textContent) return '';
-    const trimmed = textContent.innerText.replace(/<[^>]*>/g, '').trim();
+    const trimmed = htmlToText(textContent.innerText);
     return trimmed.length > 32 ? trimmed.substring(0, 32) + '...' : trimmed;
   }
 

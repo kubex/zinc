@@ -83,3 +83,14 @@ export function sanitizeHtml(source: string): string {
   copyChildren(parsed.body, root, out);
   return root.innerHTML;
 }
+
+/** Plain text of a body that may be HTML source or text holding encoded entities like `&nbsp;`. */
+export function htmlToText(source: string): string {
+  // Plain text is escaped so an address like `<bob@example.com>` isn't parsed as a tag
+  const markup = looksLikeHtml(source)
+    ? sanitizeHtml(source)
+    : source.replace(/<br\s*\/?>/gi, ' ').replace(/</g, '&lt;');
+  const parsed = new DOMParser().parseFromString(markup, 'text/html');
+  parsed.body.querySelectorAll('br, p, li').forEach((el) => el.after(' '));
+  return (parsed.body.textContent ?? '').replace(/\s+/g, ' ').trim();
+}

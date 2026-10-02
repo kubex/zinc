@@ -8944,6 +8944,8 @@ declare module "components/content-block/sanitize-html" {
      * except a link's href when it is http(s) or mailto.
      */
     export function sanitizeHtml(source: string): string;
+    /** Plain text of a body that may be HTML source or text holding encoded entities like `&nbsp;`. */
+    export function htmlToText(source: string): string;
 }
 declare module "components/content-block/content-block.component" {
     import ZincElement from "internal/zinc-element";

@@ -21,7 +21,7 @@ import styles from './chip.scss';
  *
  * @csspart base - The component's base wrapper.
  *
- * @cssproperty --example - An example CSS custom property.
+ * @cssproperty --chip-color-override - The text, icon and tinted background colour of a `custom` chip.
  */
 export default class ZnChip extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -43,7 +43,7 @@ export default class ZnChip extends ZincElement {
   render() {
     const hasContent = this.hasSlotController.test('[default]')
     return html`
-      <div class="${classMap({
+      <div part="base" class="${classMap({
         'chip': true,
         'chip--with-content': hasContent,
         'chip--no-content': !hasContent,

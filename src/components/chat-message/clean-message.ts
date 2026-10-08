@@ -1,46 +1,14 @@
-function stringToHTML(str: string): HTMLElement {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(str, 'text/html');
-  return doc.body;
-}
+import {sanitizeHtml} from '../../utilities/sanitize-html';
 
-function removeScripts(node: HTMLElement) {
-  node.querySelectorAll('script').forEach((script) => {
-    script.remove();
-  });
-}
+const BARE_URL = /\b((https?:\/\/|www\.)[^'">\s]+\.[^'">\s]+)(?=\s|$)(?!["<>])/g;
 
-function isPossiblyDangerousAttribute(name: string, value: string): boolean {
-  if (['src', 'href', 'xlink:href'].includes(name)) {
-    // eslint-disable-next-line no-script-url -- defensively matching the scheme we want to strip
-    if (value.includes('javascript:') || value.includes('data:text/html')) return true;
-  }
-
-  return name.startsWith('on');
-}
-
-function removeAttributes(elem: Element) {
-  const attributes = elem.attributes;
-  for (let i = attributes.length - 1; i >= 0; i--) {
-    if (isPossiblyDangerousAttribute(attributes[i].name, attributes[i].value)) {
-      elem.removeAttributeNode(attributes[i]);
-    }
-  }
-}
-
-function clean(html: Element) {
-  const nodes = html.children;
-  for (let i = nodes.length - 1; i >= 0; i--) {
-    const node = nodes[i];
-    removeAttributes(node);
-    clean(node);
-  }
-}
-
-/** Strip scripts and event/handler attributes from an untrusted HTML string. */
+/**
+ * Sanitizes an untrusted chat message, turning newlines into breaks and bare URLs into links first so the
+ * links are vetted too.
+ */
 export function cleanHTML(message: string): string {
-  const html = stringToHTML(message);
-  removeScripts(html);
-  clean(html);
-  return html.innerHTML;
+  const linked = message
+    .replace(BARE_URL, url => `<a href="${url.startsWith('www.') ? 'https://' + url : url}">${url}</a>`)
+    .replace(/\r\n|\r|\n/g, '<br>');
+  return sanitizeHtml(linked, ['pre', 'code', 'blockquote']);
 }

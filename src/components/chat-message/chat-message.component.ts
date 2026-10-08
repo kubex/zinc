@@ -59,8 +59,8 @@ export default class ZnChatMessage extends ZincElement {
   @property() sender: string = '';
 
   /**
-   * The message body as an HTML string. When set, it is sanitized (scripts and event
-   * handlers stripped), newlines become line breaks and bare URLs become links. When
+   * The message body as an HTML string. When set, it is sanitized down to formatting tags and
+   * http(s) or mailto links, newlines become line breaks and bare URLs become links. When
    * omitted the default slot is rendered instead.
    */
   @property() message: string = '';
@@ -217,11 +217,7 @@ export default class ZnChatMessage extends ZincElement {
         <slot></slot>`;
     }
 
-    let content = cleanHTML(this.message);
-    content = content.replace(/\r\n|\r|\n/g, '<br>');
-    content = content.replace(/\b(((https?|ftp|dict):\/\/|www\.)[^'">\s]+\.[^'">\s]+)(?=\s|$)(?!["<>])/g,
-      '<a href="$1" target="_blank">$1</a>');
-    return unsafeHTML(content);
+    return unsafeHTML(cleanHTML(this.message));
   }
 
   /** HH:MM only — used on the system card. */

@@ -1568,8 +1568,18 @@ declare module "components/button-group/index" {
         }
     }
 }
+declare module "utilities/sanitize-html" {
+    /**
+     * Sanitizes untrusted HTML down to formatting tags, keeping only a link's href when it is http(s) or mailto.
+     * Tags in `keep` are allowed as they are, so a block such as `pre` isn't turned into a paragraph.
+     */
+    export function sanitizeHtml(source: string, keep?: string[]): string;
+}
 declare module "components/chat-message/clean-message" {
-    /** Strip scripts and event/handler attributes from an untrusted HTML string. */
+    /**
+     * Sanitizes an untrusted chat message, turning newlines into breaks and bare URLs into links first so the
+     * links are vetted too.
+     */
     export function cleanHTML(message: string): string;
 }
 declare module "components/chat-message/chat-message.component" {
@@ -1615,8 +1625,8 @@ declare module "components/chat-message/chat-message.component" {
         /** The sender's name, also used for the avatar. */
         sender: string;
         /**
-         * The message body as an HTML string. When set, it is sanitized (scripts and event
-         * handlers stripped), newlines become line breaks and bare URLs become links. When
+         * The message body as an HTML string. When set, it is sanitized down to formatting tags and
+         * http(s) or mailto links, newlines become line breaks and bare URLs become links. When
          * omitted the default slot is rendered instead.
          */
         message: string;
@@ -8936,14 +8946,9 @@ declare module "components/split-button/index" {
         }
     }
 }
-declare module "components/content-block/sanitize-html" {
+declare module "components/content-block/html-text" {
     /** Whether a plain-text body is really HTML source. `<br>` alone doesn't count. */
     export function looksLikeHtml(text: string): boolean;
-    /**
-     * Rebuilds untrusted HTML from an allowlist of formatting tags. Attributes are never copied,
-     * except a link's href when it is http(s) or mailto.
-     */
-    export function sanitizeHtml(source: string): string;
     /** Plain text of a body that may be HTML source or text holding encoded entities like `&nbsp;`. */
     export function htmlToText(source: string): string;
 }

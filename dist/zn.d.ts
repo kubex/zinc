@@ -1743,7 +1743,7 @@ declare module "components/chip/chip.component" {
      *
      * @csspart base - The component's base wrapper.
      *
-     * @cssproperty --example - An example CSS custom property.
+     * @cssproperty --chip-color-override - The text, icon and tinted background colour of a `custom` chip.
      */
     export default class ZnChip extends ZincElement {
         static styles: CSSResultGroup;

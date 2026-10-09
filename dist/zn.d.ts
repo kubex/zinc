@@ -4802,6 +4802,15 @@ declare module "components/chart/builders" {
         name: string;
         data: any[];
         color?: string;
+        /** Series sharing a stack ID are stacked, overriding the chart-wide `stacked` setting. */
+        stack?: string;
+        /** Fill below a line, for example `{ opacity: 0.15 }`; `{ opacity: 0 }` keeps a stacked base invisible. */
+        areaStyle?: Record<string, unknown>;
+        lineStyle?: Record<string, unknown>;
+        symbol?: string;
+        /** Excludes the series from mouse interaction and tooltips. */
+        silent?: boolean;
+        z?: number;
     }
     export interface SankeyEdge {
         source: string;

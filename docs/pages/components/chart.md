@@ -187,6 +187,19 @@ Use the `xaxis` attribute to specify the x-axis type. Common values include `dat
 When using `xaxis="datetime"`, provide data in the format `[{x: timestamp, y: value}]` where `x` is a Unix timestamp in milliseconds. The chart will automatically format the dates on the x-axis.
 :::
 
+### Expected Range Bands
+
+Each series accepts optional `stack`, `areaStyle`, `lineStyle`, `symbol`, `silent` and `z` settings, which apply to that series only. Draw a shaded band with two series sharing a `stack`: an invisible base holding the lower bound, then a filled series holding the band's height. Giving both the same `name` lets the legend toggle the band as one. `silent` series ignore the mouse and stay out of tooltips.
+
+```html:preview
+<zn-chart
+  type="line"
+  xaxis="datetime"
+  data="[{&quot;name&quot;:&quot;Expected range&quot;,&quot;data&quot;:[[1609459200000,20],[1609462800000,25],[1609466400000,28],[1609470000000,30],[1609473600000,26],[1609477200000,22]],&quot;stack&quot;:&quot;band&quot;,&quot;areaStyle&quot;:{&quot;opacity&quot;:0},&quot;lineStyle&quot;:{&quot;opacity&quot;:0},&quot;symbol&quot;:&quot;none&quot;,&quot;silent&quot;:true,&quot;color&quot;:&quot;#93c5fd&quot;},{&quot;name&quot;:&quot;Expected range&quot;,&quot;data&quot;:[[1609459200000,20],[1609462800000,20],[1609466400000,22],[1609470000000,24],[1609473600000,22],[1609477200000,20]],&quot;stack&quot;:&quot;band&quot;,&quot;areaStyle&quot;:{&quot;opacity&quot;:0.25},&quot;lineStyle&quot;:{&quot;opacity&quot;:0},&quot;symbol&quot;:&quot;none&quot;,&quot;silent&quot;:true,&quot;color&quot;:&quot;#93c5fd&quot;},{&quot;name&quot;:&quot;Traffic&quot;,&quot;data&quot;:[[1609459200000,30],[1609462800000,38],[1609466400000,70],[1609470000000,44],[1609473600000,40],[1609477200000,33]],&quot;color&quot;:&quot;#2563eb&quot;}]"
+  height="300">
+</zn-chart>
+```
+
 ### Enable Animations
 
 By default, animations are disabled for better performance. Add the `enable-animations` attribute to animate on first render — bars grow from the baseline and lines draw in. Pass a number (milliseconds) to control the duration; bare `enable-animations` defaults to `1500`.

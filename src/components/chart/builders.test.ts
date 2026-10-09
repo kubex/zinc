@@ -123,6 +123,38 @@ describe('buildLineOption', () => {
   });
 });
 
+describe('per-series options', () => {
+  const band = (overrides: Partial<BuilderProps> = {}) => buildLineOption({
+    ...baseProps,
+    xAxisType: 'datetime',
+    data: [
+      { name: 'Expected range', data: [[1, 10], [2, 12]], stack: 'band', areaStyle: { opacity: 0 }, lineStyle: { opacity: 0 }, symbol: 'none', silent: true },
+      { name: 'Expected range', data: [[1, 5], [2, 6]], stack: 'band', areaStyle: { opacity: 0.15 }, lineStyle: { opacity: 0 }, symbol: 'none', silent: true },
+      { name: 'Events', data: [[1, 12], [2, 30]] },
+    ],
+    ...overrides,
+  });
+
+  it('draws a band from stacked series without styling other series', () => {
+    const series = band().series as any[];
+    expect(series[0].stack).to.equal('band');
+    expect(series[1].stack).to.equal('band');
+    expect(series[1].areaStyle).to.deep.equal({ opacity: 0.15 });
+    expect(series[0].symbol).to.equal('none');
+    expect(series[0].silent).to.equal(true);
+    expect(series[0].tooltip).to.deep.equal({ show: false });
+    expect(series[2].stack).to.be.undefined;
+    expect(series[2].areaStyle).to.be.undefined;
+    expect(series[2].silent).to.be.undefined;
+  });
+
+  it('keeps a per-series stack when the chart is stacked', () => {
+    const series = band({ stacked: true }).series as any[];
+    expect(series[0].stack).to.equal('band');
+    expect(series[2].stack).to.equal('total');
+  });
+});
+
 describe('buildAreaOption', () => {
   const baseAreaProps: BuilderProps = {
     type: 'area',

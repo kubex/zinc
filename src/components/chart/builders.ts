@@ -20,6 +20,15 @@ export interface SeriesItem {
   name: string;
   data: any[];
   color?: string;
+  /** Series sharing a stack ID are stacked, overriding the chart-wide `stacked` setting. */
+  stack?: string;
+  /** Fill below a line, for example `{ opacity: 0.15 }`; `{ opacity: 0 }` keeps a stacked base invisible. */
+  areaStyle?: Record<string, unknown>;
+  lineStyle?: Record<string, unknown>;
+  symbol?: string;
+  /** Excludes the series from mouse interaction and tooltips. */
+  silent?: boolean;
+  z?: number;
 }
 
 export interface SankeyEdge {
@@ -168,12 +177,26 @@ function seriesFromProps(
     name: s.name,
     data: normalizeData(s.data),
     ...(s.color ? { itemStyle: { color: s.color } } : {}),
-    ...(props.stacked ? { stack: 'total' } : {}),
+    ...(s.stack ? { stack: s.stack } : props.stacked ? { stack: 'total' } : {}),
     ...(props.enableAnimations !== false && props.enableAnimations !== 0 && seriesType === 'bar'
       ? { animationDelay: (idx: number) => idx * 50 }
       : {}),
     ...extra(s),
+    ...seriesStyle(s),
   }));
+}
+
+// seriesStyle applies a series' own display options, which take precedence
+// over chart-wide defaults. Bands are drawn as an invisible stacked base
+// followed by a filled series holding the band's height.
+function seriesStyle(s: SeriesItem): Record<string, unknown> {
+  return {
+    ...(s.areaStyle ? { areaStyle: s.areaStyle } : {}),
+    ...(s.lineStyle ? { lineStyle: s.lineStyle } : {}),
+    ...(s.symbol ? { symbol: s.symbol } : {}),
+    ...(s.silent ? { silent: true, tooltip: { show: false } } : {}),
+    ...(s.z !== undefined ? { z: s.z } : {}),
+  };
 }
 
 export function buildBarOption(props: BuilderProps): EChartsOption {

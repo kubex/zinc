@@ -11,6 +11,28 @@ describe('<zn-input>', () => {
     expect(el).to.exist;
   });
 
+  describe('form data', () => {
+    it('trims surrounding whitespace, except for passwords', async () => {
+      const form = await fixture<HTMLFormElement>(html`
+        <form>
+          <zn-input name="search" value="  foo bar  "></zn-input>
+          <zn-input name="pass" type="password" value=" secret "></zn-input>
+        </form>
+      `);
+      const [search, pass] = form.querySelectorAll<ZnInput>('zn-input');
+      await search.updateComplete;
+
+      const data = new FormData(form);
+      expect(data.get('search')).to.equal('foo bar');
+      expect(data.get('pass')).to.equal(' secret ');
+
+      await search.updateComplete;
+      expect(search.value).to.equal('foo bar');
+      expect(search.input.value).to.equal('foo bar');
+      expect(pass.value).to.equal(' secret ');
+    });
+  });
+
   describe('Escape key', () => {
     it('blurs the inner input and stops propagation when focused', async () => {
       const wrapper = await fixture<HTMLDivElement>(html`

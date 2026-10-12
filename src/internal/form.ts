@@ -429,8 +429,10 @@ export class FormControlController implements ReactiveController {
       name.length > 0 &&
       typeof value !== 'undefined'
     ) {
+      const isPassword = (this.host as HTMLElement & { type?: string }).type === 'password';
       const appendPrimitive = (val: string | number | boolean) => {
-        event.formData.append(name, val.toString());
+        const str = val.toString();
+        event.formData.append(name, isPassword ? str : str.trim());
       };
       const appendFile = (file: Blob, filename?: string) => {
         // If a filename is provided or it's a File (has name), FormData will use it properly
@@ -473,6 +475,11 @@ export class FormControlController implements ReactiveController {
         });
       } else {
         appendPrimitive(value as string | number | boolean);
+
+        const host = this.host as HTMLElement & { value?: unknown };
+        if (!isPassword && typeof value === 'string' && host.value === value && value.trim() !== value) {
+          host.value = value.trim();
+        }
       }
 
       this.host.dispatchEvent(new CustomEvent('zn-formdata', {bubbles: true, composed: true}));

@@ -155,6 +155,12 @@ declare module "internal/form" {
     import type { ZincFormControl } from "internal/zinc-element";
     import type Button from "components/button/index";
     export const formCollections: WeakMap<HTMLFormElement, Set<ZincFormControl>>;
+    /** Trims a control's string value in place, so what's shown matches what's submitted. */
+    export function trimControlValue(control: Element & {
+        value?: unknown;
+        type?: string;
+        input?: unknown;
+    }): void;
     export function clearFormStoreValues(formOrStoreKey: HTMLFormElement | string): void;
     export interface FormControlControllerOptions {
         /** A function that returns the form containing the form control. */
@@ -2446,6 +2452,7 @@ declare module "components/input/input.component" {
         private handleFocus;
         private handleInput;
         private handleInvalid;
+        private syncEmailDisplay;
         private handleKeyDown;
         private handlePasswordToggle;
         private handleColorSwatchClick;

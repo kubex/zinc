@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.1.178",
+  "version": "1.1.179",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -2358,6 +2358,57 @@
           }
         },
         {
+          "name": "zn-copy-button",
+          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "value", "value": { "type": "string", "default": "''" } },
+            {
+              "name": "copy-label",
+              "value": { "type": "string", "default": "''" }
+            },
+            { "name": "src", "value": { "type": "string", "default": "''" } },
+            { "name": "size", "value": { "type": "number", "default": "24" } },
+            {
+              "name": "from",
+              "description": "An id that references an element in the same document from which data will be copied. If both this and `value` are\npresent, this value will take precedence. By default, the target element's `textContent` will be copied. To copy an\nattribute, append the attribute name wrapped in square brackets, e.g. `from=\"el[value]\"`. To copy a property,\nappend a dot and the property name, e.g. `from=\"el.value\"`.",
+              "value": { "type": "string", "default": "''" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "copyIcon", "type": "HTMLSlotElement" },
+              { "name": "successIcon", "type": "HTMLSlotElement" },
+              { "name": "errorIcon", "type": "HTMLSlotElement" },
+              { "name": "tooltip", "type": "ZnTooltip" },
+              { "name": "isCopying", "type": "boolean" },
+              { "name": "status", "type": "'rest' | 'success' | 'error'" },
+              { "name": "value", "type": "string" },
+              { "name": "copyLabel", "type": "string" },
+              { "name": "src", "type": "string" },
+              { "name": "size", "type": "number" },
+              {
+                "name": "from",
+                "description": "An id that references an element in the same document from which data will be copied. If both this and `value` are\npresent, this value will take precedence. By default, the target element's `textContent` will be copied. To copy an\nattribute, append the attribute name wrapped in square brackets, e.g. `from=\"el[value]\"`. To copy a property,\nappend a dot and the property name, e.g. `from=\"el.value\"`.",
+                "type": "string"
+              }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-data-select",
           "description": "A select component with built-in data providers for common options like colors, currencies, and countries.\n\n---\n\n\n### **Events:**\n - **zn-input** - Emitted when the select's value changes.\n- **zn-clear** - Emitted when the clear button is activated.\n- **blur** - Emitted when the select loses focus.\n\n### **Slots:**\n - **label** - The select's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.\n- **help-text** - Text that describes how to use the select. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Parts:**\n - **combobox** - The container that wraps the prefix, combobox, clear icon, and expand button (forwarded from zn-select).\n- **expand-icon** - The container that wraps the expand icon (forwarded from zn-select).\n- **form-control-help-text** - The help text's wrapper (forwarded from zn-select).\n- **form-control-input** - The select's wrapper (forwarded from zn-select).\n- **display-input** - The element that displays the selected option's label (forwarded from zn-select).",
           "doc-url": "",
@@ -2630,63 +2681,6 @@
           }
         },
         {
-          "name": "zn-data-table-filter",
-          "description": "An inline filter bar for data tables. Each active filter is a pill whose dropdown sets its value.\n\n---\n\n\n### **Events:**\n - **zn-filter-change** - Emitted when the active filters change. Read the encoded query off `value`.\n\n### **Methods:**\n - **clear()** - Removes every active filter.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "filters",
-              "value": { "type": "QueryBuilderData", "default": "[]" }
-            },
-            {
-              "name": "name",
-              "value": { "type": "string", "default": "\"data-table-filter\"" }
-            },
-            { "name": "value", "value": { "type": "string", "default": "''" } },
-            {
-              "name": "default-filters",
-              "description": "Filter keys to show a pill for before the user adds any.",
-              "value": { "type": "string", "default": "''" }
-            }
-          ],
-          "events": [
-            {
-              "name": "zn-filter-change",
-              "description": "Emitted when the active filters change. Read the encoded query off `value`."
-            }
-          ],
-          "js": {
-            "properties": [
-              { "name": "filters", "type": "QueryBuilderData" },
-              { "name": "name", "type": "string" },
-              { "name": "value", "type": "string" },
-              {
-                "name": "defaultFilters",
-                "description": "Filter keys to show a pill for before the user adds any.",
-                "type": "string"
-              },
-              {
-                "name": "suggestions",
-                "description": "Typeahead values per filter key. `zn-data-table` fills this from the rows it has loaded.",
-                "type": "Record<string, string[]>"
-              },
-              { "name": "validationMessage", "type": "string" },
-              { "name": "validity", "type": "ValidityState" },
-              {
-                "name": "activeCount",
-                "description": "Number of filters with a value set.",
-                "type": "number"
-              }
-            ],
-            "events": [
-              {
-                "name": "zn-filter-change",
-                "description": "Emitted when the active filters change. Read the encoded query off `value`."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-data-table",
           "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Methods:**\n - **selectAll()** - Selects every row on the page, or clears the selection when every row is already selected.\n\n### **Slots:**\n - _default_ - The default slot.\n- **search** - Slot for search component, in the header's right-hand group.\n- **sort** - Slot for sort component, in the header's right-hand group.\n- **filter** - Slot for filter component, in the header's right-hand group.\n- **filter-top** - Slot for a top-level filter component, rendered above the table's panel.\n- **delete-action** - Slot for delete action button, shown in the header once rows are selected.\n- **modify-action** - Slot for modify action button, shown in the header once rows are selected.\n- **actions** - `zn-button` or `zn-confirm` elements listed in a header menu, enabled once rows are selected.\n- **create-action** - Slot for create action button, at the end of the header's right-hand group.\n- **inputs** - Slot for additional input controls.\n- **empty-state** - Slot for custom empty state.\n- **no-results** - Slot for a custom no-results state, shown when a search on a no-initial-load table returns no rows.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -2889,52 +2883,58 @@
           }
         },
         {
-          "name": "zn-copy-button",
-          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "name": "zn-data-table-filter",
+          "description": "An inline filter bar for data tables. Each active filter is a pill whose dropdown sets its value.\n\n---\n\n\n### **Events:**\n - **zn-filter-change** - Emitted when the active filters change. Read the encoded query off `value`.\n\n### **Methods:**\n - **clear()** - Removes every active filter.",
           "doc-url": "",
           "attributes": [
+            {
+              "name": "filters",
+              "value": { "type": "QueryBuilderData", "default": "[]" }
+            },
+            {
+              "name": "name",
+              "value": { "type": "string", "default": "\"data-table-filter\"" }
+            },
             { "name": "value", "value": { "type": "string", "default": "''" } },
             {
-              "name": "copy-label",
-              "value": { "type": "string", "default": "''" }
-            },
-            { "name": "src", "value": { "type": "string", "default": "''" } },
-            { "name": "size", "value": { "type": "number", "default": "24" } },
-            {
-              "name": "from",
-              "description": "An id that references an element in the same document from which data will be copied. If both this and `value` are\npresent, this value will take precedence. By default, the target element's `textContent` will be copied. To copy an\nattribute, append the attribute name wrapped in square brackets, e.g. `from=\"el[value]\"`. To copy a property,\nappend a dot and the property name, e.g. `from=\"el.value\"`.",
+              "name": "default-filters",
+              "description": "Filter keys to show a pill for before the user adds any.",
               "value": { "type": "string", "default": "''" }
             }
           ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
           "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
+            {
+              "name": "zn-filter-change",
+              "description": "Emitted when the active filters change. Read the encoded query off `value`."
+            }
           ],
           "js": {
             "properties": [
-              { "name": "copyIcon", "type": "HTMLSlotElement" },
-              { "name": "successIcon", "type": "HTMLSlotElement" },
-              { "name": "errorIcon", "type": "HTMLSlotElement" },
-              { "name": "tooltip", "type": "ZnTooltip" },
-              { "name": "isCopying", "type": "boolean" },
-              { "name": "status", "type": "'rest' | 'success' | 'error'" },
+              { "name": "filters", "type": "QueryBuilderData" },
+              { "name": "name", "type": "string" },
               { "name": "value", "type": "string" },
-              { "name": "copyLabel", "type": "string" },
-              { "name": "src", "type": "string" },
-              { "name": "size", "type": "number" },
               {
-                "name": "from",
-                "description": "An id that references an element in the same document from which data will be copied. If both this and `value` are\npresent, this value will take precedence. By default, the target element's `textContent` will be copied. To copy an\nattribute, append the attribute name wrapped in square brackets, e.g. `from=\"el[value]\"`. To copy a property,\nappend a dot and the property name, e.g. `from=\"el.value\"`.",
+                "name": "defaultFilters",
+                "description": "Filter keys to show a pill for before the user adds any.",
                 "type": "string"
+              },
+              {
+                "name": "suggestions",
+                "description": "Typeahead values per filter key. `zn-data-table` fills this from the rows it has loaded.",
+                "type": "Record<string, string[]>"
+              },
+              { "name": "validationMessage", "type": "string" },
+              { "name": "validity", "type": "ValidityState" },
+              {
+                "name": "activeCount",
+                "description": "Number of filters with a value set.",
+                "type": "number"
               }
             ],
             "events": [
               {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
+                "name": "zn-filter-change",
+                "description": "Emitted when the active filters change. Read the encoded query off `value`."
               }
             ]
           }
@@ -7991,47 +7991,6 @@
           }
         },
         {
-          "name": "zn-query-builder",
-          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "filters",
-              "value": { "type": "QueryBuilderData", "default": "[]" }
-            },
-            {
-              "name": "dropdown",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "name", "value": { "type": "string" } },
-            { "name": "value", "value": { "type": "PropertyKey" } },
-            {
-              "name": "show-values",
-              "value": { "type": "string[]", "default": "[]" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              { "name": "container", "type": "HTMLDivElement" },
-              { "name": "addRule", "type": "ZnSelect" },
-              { "name": "input", "type": "HTMLInputElement" },
-              { "name": "filters", "type": "QueryBuilderData" },
-              { "name": "dropdown", "type": "boolean" },
-              { "name": "name", "type": "string" },
-              { "name": "value", "type": "PropertyKey" },
-              { "name": "showValues", "type": "string[]" },
-              { "name": "validationMessage", "type": "string" },
-              { "name": "validity", "type": "ValidityState" }
-            ],
-            "events": []
-          }
-        },
-        {
           "name": "zn-progress-tile",
           "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -8074,6 +8033,47 @@
                 "description": "Emitted as an example."
               }
             ]
+          }
+        },
+        {
+          "name": "zn-query-builder",
+          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "filters",
+              "value": { "type": "QueryBuilderData", "default": "[]" }
+            },
+            {
+              "name": "dropdown",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "name", "value": { "type": "string" } },
+            { "name": "value", "value": { "type": "PropertyKey" } },
+            {
+              "name": "show-values",
+              "value": { "type": "string[]", "default": "[]" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "container", "type": "HTMLDivElement" },
+              { "name": "addRule", "type": "ZnSelect" },
+              { "name": "input", "type": "HTMLInputElement" },
+              { "name": "filters", "type": "QueryBuilderData" },
+              { "name": "dropdown", "type": "boolean" },
+              { "name": "name", "type": "string" },
+              { "name": "value", "type": "PropertyKey" },
+              { "name": "showValues", "type": "string[]" },
+              { "name": "validationMessage", "type": "string" },
+              { "name": "validity", "type": "ValidityState" }
+            ],
+            "events": []
           }
         },
         {
@@ -8590,6 +8590,154 @@
           }
         },
         {
+          "name": "zn-remarkd-editor",
+          "description": "A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n\n---\n\n\n### **Events:**\n - **zn-input** - Emitted on each keystroke while editing a block.\n- **zn-change** - Emitted when a block edit is committed and the value changes.\n\n### **Methods:**\n - **focus()** - Starts editing the first block, or a new block if the document is empty.\n- **blur()** - Commits any in-progress block or raw edit.\n\n### **CSS Properties:**\n - **--remarkd-editor-max-height** - The tallest the editor grows before its body scrolls. Defaults to `100dvh`. _(default: undefined)_\n- **--remarkd-editor-min-height** - The shortest the body renders while empty. Defaults to `10rem`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The always-visible block-insert and inline-formatting toolbar.\n- **raw-toggle** - The button that switches between the block view and the raw source view.\n- **block** - A rendered block wrapper.\n- **rendered** - The rendered remarkd output of a block.\n- **conditional** - A labelled wrapper for an ifdef/ifndef/ifeval/iftrue/iffalse/ifempty/ifnempty range.\n- **variable** - A chip rendered for a document attribute, title, or bracket line.\n- **input** - The textarea shown while editing a block.\n- **raw** - The full-document textarea shown in raw source mode.\n- **slash-menu** - The `zn-slash-menu` opened by typing \"/\" in an empty block.\n- **image-controls** - The caption / alignment / size panel shown when an image block is clicked.\n- **include** - The chip rendered in place of an `include::` directive.\n- **include-picker** - The inline Include picker opened from the toolbar or \"/include\".",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "slash-recent-key",
+              "description": "Lists the blocks most recently inserted here above the rest of the slash menu, remembered in\n`localStorage` under this key. Leave unset to offer no recently used section.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "name",
+              "description": "The name of the control, submitted as part of form data.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "value",
+              "description": "The current remarkd source.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "placeholder",
+              "description": "Placeholder shown when the document is empty.",
+              "value": { "type": "string", "default": "'Type something…'" }
+            },
+            {
+              "name": "attachment-url",
+              "description": "Endpoint for image uploads — required for image support. Posting the file\nmetadata here must return `{uploadPath, uploadUrl}`; the file is then PUT\nto `uploadUrl` and the returned `uploadPath` is embedded as the image URL.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "include-url",
+              "description": "Endpoint listing the Includes this document may embed, as\n`{\"items\":[{id,title,description,scope,keywords,languages,url}]}`. Labels the\nchips rendered for `include::` directives and feeds the include picker.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "link-url",
+              "description": "Endpoint the article link picker searches, as\n`{\"items\":[{ref,kind,title,context,status}]}`. Queried with `?q=<term>` as\nthe author types and with `?refs=a,b` to resolve the references a body\nalready carries.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "allow-raw",
+              "description": "Adds a toolbar toggle that swaps the block view for the full remarkd source.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "required",
+              "description": "Makes the editor required for form submission.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "readonly",
+              "description": "Makes the editor read-only.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "disabled",
+              "description": "Disables the editor.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-input",
+              "description": "Emitted on each keystroke while editing a block."
+            },
+            {
+              "name": "zn-change",
+              "description": "Emitted when a block edit is committed and the value changes."
+            }
+          ],
+          "js": {
+            "properties": [
+              {
+                "name": "slashRecentKey",
+                "description": "Lists the blocks most recently inserted here above the rest of the slash menu, remembered in\n`localStorage` under this key. Leave unset to offer no recently used section.",
+                "type": "string"
+              },
+              {
+                "name": "name",
+                "description": "The name of the control, submitted as part of form data.",
+                "type": "string"
+              },
+              {
+                "name": "value",
+                "description": "The current remarkd source.",
+                "type": "string"
+              },
+              {
+                "name": "defaultValue",
+                "description": "The default value — used when resetting the form.",
+                "type": "string"
+              },
+              {
+                "name": "placeholder",
+                "description": "Placeholder shown when the document is empty.",
+                "type": "string"
+              },
+              {
+                "name": "attachmentUrl",
+                "description": "Endpoint for image uploads — required for image support. Posting the file\nmetadata here must return `{uploadPath, uploadUrl}`; the file is then PUT\nto `uploadUrl` and the returned `uploadPath` is embedded as the image URL.",
+                "type": "string"
+              },
+              {
+                "name": "includeUrl",
+                "description": "Endpoint listing the Includes this document may embed, as\n`{\"items\":[{id,title,description,scope,keywords,languages,url}]}`. Labels the\nchips rendered for `include::` directives and feeds the include picker.",
+                "type": "string"
+              },
+              {
+                "name": "linkUrl",
+                "description": "Endpoint the article link picker searches, as\n`{\"items\":[{ref,kind,title,context,status}]}`. Queried with `?q=<term>` as\nthe author types and with `?refs=a,b` to resolve the references a body\nalready carries.",
+                "type": "string"
+              },
+              {
+                "name": "allowRaw",
+                "description": "Adds a toolbar toggle that swaps the block view for the full remarkd source.",
+                "type": "boolean"
+              },
+              {
+                "name": "required",
+                "description": "Makes the editor required for form submission.",
+                "type": "boolean"
+              },
+              {
+                "name": "readonly",
+                "description": "Makes the editor read-only.",
+                "type": "boolean"
+              },
+              {
+                "name": "disabled",
+                "description": "Disables the editor.",
+                "type": "boolean"
+              },
+              { "name": "validity", "type": "ValidityState" },
+              { "name": "validationMessage", "type": "string" }
+            ],
+            "events": [
+              {
+                "name": "zn-input",
+                "description": "Emitted on each keystroke while editing a block."
+              },
+              {
+                "name": "zn-change",
+                "description": "Emitted when a block edit is committed and the value changes."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-reveal",
           "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -8932,154 +9080,6 @@
               {
                 "name": "zn-change",
                 "description": "Emitted when the schedule changes."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-remarkd-editor",
-          "description": "A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.\n\n---\n\n\n### **Events:**\n - **zn-input** - Emitted on each keystroke while editing a block.\n- **zn-change** - Emitted when a block edit is committed and the value changes.\n\n### **Methods:**\n - **focus()** - Starts editing the first block, or a new block if the document is empty.\n- **blur()** - Commits any in-progress block or raw edit.\n\n### **CSS Properties:**\n - **--remarkd-editor-max-height** - The tallest the editor grows before its body scrolls. Defaults to `100dvh`. _(default: undefined)_\n- **--remarkd-editor-min-height** - The shortest the body renders while empty. Defaults to `10rem`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The always-visible block-insert and inline-formatting toolbar.\n- **raw-toggle** - The button that switches between the block view and the raw source view.\n- **block** - A rendered block wrapper.\n- **rendered** - The rendered remarkd output of a block.\n- **conditional** - A labelled wrapper for an ifdef/ifndef/ifeval/iftrue/iffalse/ifempty/ifnempty range.\n- **variable** - A chip rendered for a document attribute, title, or bracket line.\n- **input** - The textarea shown while editing a block.\n- **raw** - The full-document textarea shown in raw source mode.\n- **slash-menu** - The `zn-slash-menu` opened by typing \"/\" in an empty block.\n- **image-controls** - The caption / alignment / size panel shown when an image block is clicked.\n- **include** - The chip rendered in place of an `include::` directive.\n- **include-picker** - The inline Include picker opened from the toolbar or \"/include\".",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "slash-recent-key",
-              "description": "Lists the blocks most recently inserted here above the rest of the slash menu, remembered in\n`localStorage` under this key. Leave unset to offer no recently used section.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "name",
-              "description": "The name of the control, submitted as part of form data.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "value",
-              "description": "The current remarkd source.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "placeholder",
-              "description": "Placeholder shown when the document is empty.",
-              "value": { "type": "string", "default": "'Type something…'" }
-            },
-            {
-              "name": "attachment-url",
-              "description": "Endpoint for image uploads — required for image support. Posting the file\nmetadata here must return `{uploadPath, uploadUrl}`; the file is then PUT\nto `uploadUrl` and the returned `uploadPath` is embedded as the image URL.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "include-url",
-              "description": "Endpoint listing the Includes this document may embed, as\n`{\"items\":[{id,title,description,scope,keywords,languages,url}]}`. Labels the\nchips rendered for `include::` directives and feeds the include picker.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "link-url",
-              "description": "Endpoint the article link picker searches, as\n`{\"items\":[{ref,kind,title,context,status}]}`. Queried with `?q=<term>` as\nthe author types and with `?refs=a,b` to resolve the references a body\nalready carries.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "allow-raw",
-              "description": "Adds a toolbar toggle that swaps the block view for the full remarkd source.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "required",
-              "description": "Makes the editor required for form submission.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "readonly",
-              "description": "Makes the editor read-only.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "disabled",
-              "description": "Disables the editor.",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "events": [
-            {
-              "name": "zn-input",
-              "description": "Emitted on each keystroke while editing a block."
-            },
-            {
-              "name": "zn-change",
-              "description": "Emitted when a block edit is committed and the value changes."
-            }
-          ],
-          "js": {
-            "properties": [
-              {
-                "name": "slashRecentKey",
-                "description": "Lists the blocks most recently inserted here above the rest of the slash menu, remembered in\n`localStorage` under this key. Leave unset to offer no recently used section.",
-                "type": "string"
-              },
-              {
-                "name": "name",
-                "description": "The name of the control, submitted as part of form data.",
-                "type": "string"
-              },
-              {
-                "name": "value",
-                "description": "The current remarkd source.",
-                "type": "string"
-              },
-              {
-                "name": "defaultValue",
-                "description": "The default value — used when resetting the form.",
-                "type": "string"
-              },
-              {
-                "name": "placeholder",
-                "description": "Placeholder shown when the document is empty.",
-                "type": "string"
-              },
-              {
-                "name": "attachmentUrl",
-                "description": "Endpoint for image uploads — required for image support. Posting the file\nmetadata here must return `{uploadPath, uploadUrl}`; the file is then PUT\nto `uploadUrl` and the returned `uploadPath` is embedded as the image URL.",
-                "type": "string"
-              },
-              {
-                "name": "includeUrl",
-                "description": "Endpoint listing the Includes this document may embed, as\n`{\"items\":[{id,title,description,scope,keywords,languages,url}]}`. Labels the\nchips rendered for `include::` directives and feeds the include picker.",
-                "type": "string"
-              },
-              {
-                "name": "linkUrl",
-                "description": "Endpoint the article link picker searches, as\n`{\"items\":[{ref,kind,title,context,status}]}`. Queried with `?q=<term>` as\nthe author types and with `?refs=a,b` to resolve the references a body\nalready carries.",
-                "type": "string"
-              },
-              {
-                "name": "allowRaw",
-                "description": "Adds a toolbar toggle that swaps the block view for the full remarkd source.",
-                "type": "boolean"
-              },
-              {
-                "name": "required",
-                "description": "Makes the editor required for form submission.",
-                "type": "boolean"
-              },
-              {
-                "name": "readonly",
-                "description": "Makes the editor read-only.",
-                "type": "boolean"
-              },
-              {
-                "name": "disabled",
-                "description": "Disables the editor.",
-                "type": "boolean"
-              },
-              { "name": "validity", "type": "ValidityState" },
-              { "name": "validationMessage", "type": "string" }
-            ],
-            "events": [
-              {
-                "name": "zn-input",
-                "description": "Emitted on each keystroke while editing a block."
-              },
-              {
-                "name": "zn-change",
-                "description": "Emitted when a block edit is committed and the value changes."
               }
             ]
           }
@@ -10925,645 +10925,6 @@
           }
         },
         {
-          "name": "zn-theme-editor",
-          "description": "A theme editor: slotted form controls drive a live preview frame,\nwith a toolbar for the preview's light/dark mode and device width.\n\n---\n\n\n### **Events:**\n - **zn-theme-change** - Emitted when the values, mode or device change.\n- **zn-theme-submit** - Emitted on submit (button click), carrying the current values. With `action` set, only fires after a successful save.\n- **zn-error** - Emitted when a save fails. Also seen for preview render failures: the frame's zn-error is composed and not stopped, so it bubbles out through the editor too.\n\n### **Slots:**\n - _default_ - Ungrouped theme controls, rendered above any sections. Controls assigned `slot=\"<name>\"` matching a `sections` entry (or, when nested, a `groups` entry) render inside that section/group instead. Harvesting and change detection walk every slot's full assigned subtree, not just direct children. With `sections` left unset, the structure is instead derived from the controls' own attributes: `group=\"<label>\"` becomes a tab and `category=\"<label>\"` a collapsible within it, and the control is slotted into that collapsible automatically. Either attribute works alone - a control with only `group` sits directly in its tab, and one with only `category` becomes its own top-level section. Setting `sections` explicitly disables the derivation entirely.\n- **toolbar** - Actions in the toolbar, right-aligned beside the device controls. Where a save button belongs.\n- **footer** - Actions pinned beneath the controls. The built-in submit button lives in the toolbar, not here.\n\n### **CSS Properties:**\n - **--zn-theme-editor-controls-width** - Width of the controls column. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **controls** - The left-hand controls column, full height.\n- **controls-header** - The controls column's header row: `controls-caption` on the left, the light/dark mode toggle on the right.\n- **toolbar** - The preview column's header row: `preview-caption` on the left, the device switcher (and sources/submit) on the right. Spans the preview column only.\n- **section** - A rendered section's or group's collapsible (`section-layout=\"collapsible\"`, or any nested group).\n- **footer** - The footer wrapper beneath the controls.\n- **preview** - The preview column.\n- **error** - The inline error strip.\n- **preview__base** - The frame's base wrapper (forwarded from zn-preview-frame).\n- **preview__stage** - The frame's device-width wrapper (forwarded from zn-preview-frame).\n- **preview__iframe** - The frame's iframe (forwarded from zn-preview-frame).\n- **preview__error** - The frame's own error overlay (forwarded from zn-preview-frame).",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "src",
-              "description": "URL of the preview shell page; forwarded to the frame.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "frame-origin",
-              "description": "Expected origin of the iframe; forwarded to the frame.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "data-uri",
-              "description": "Optional endpoint returning the base hp-preview:config payload.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "mode",
-              "description": "Which mode the preview renders in. Travels in the theme payload.",
-              "value": { "type": "ThemeEditorMode", "default": "'light'" }
-            },
-            {
-              "name": "device",
-              "description": "Preview viewport width. Resizes the frame only; not part of the payload.",
-              "value": { "type": "ThemeEditorDevice", "default": "'desktop'" }
-            },
-            {
-              "name": "min-height",
-              "description": "Minimum height of the preview row, in pixels; forwarded to the frame as its own floor.",
-              "value": { "type": "number", "default": "480" }
-            },
-            {
-              "name": "debounce",
-              "description": "Debounce in ms between a control change and the push to the preview.",
-              "value": { "type": "number", "default": "150" }
-            },
-            {
-              "name": "action",
-              "description": "Optional endpoint the values are POSTed to. Empty = no persistence.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "save-debounce",
-              "description": "Debounce in ms between a control change and the save POST.",
-              "value": { "type": "number", "default": "1000" }
-            },
-            {
-              "name": "sections",
-              "description": "Groups controls into named sections. Empty/unset falls back to deriving the\nstructure from the controls' own `group`/`category` attributes, and renders\none ungrouped column when they carry neither. A section with a non-empty\n`groups` nests a collapsible per group inside a `zn-tabs` tab for that\nsection - see `groups` on `ThemeEditorSection`.",
-              "value": { "type": "ThemeEditorSection[]", "default": "[]" }
-            },
-            {
-              "name": "section-layout",
-              "description": "Presentation for flat, group-less `sections`: stacked `zn-collapsible`s\n(default) or a `zn-tabs` strip. Ignored once any section has `groups` -\nnested sections always render as tabs.",
-              "value": {
-                "type": "'collapsible' | 'tabs'",
-                "default": "'collapsible'"
-              }
-            },
-            {
-              "name": "sources",
-              "description": "Dropdown of preview sources, `{label, src}`, rendered in the toolbar. Empty/unset renders no dropdown; the first entry wins over an explicit `src` when non-empty.",
-              "value": { "type": "ThemeEditorSource[]", "default": "[]" }
-            },
-            {
-              "name": "controls-collapsed",
-              "description": "Collapses the controls column.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "standalone",
-              "description": "Presents the editor as its own bordered, rounded panel with a plain preview backdrop, rather than embedded in a dotted canvas.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "controls-caption",
-              "description": "Caption in the controls column's header row. Empty (default) renders no text; the row itself always renders.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "preview-caption",
-              "description": "Caption at the left of the toolbar, opposite the device and mode controls. Empty (default) renders no text.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "submit-label",
-              "description": "Label for the built-in submit button. Empty (default) renders no button.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "manual",
-              "description": "Disables the debounced auto-save; saving then happens only via submit. Preview pushes are unaffected.",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "slots": [
-            {
-              "name": "",
-              "description": "Ungrouped theme controls, rendered above any sections. Controls assigned `slot=\"<name>\"` matching a `sections` entry (or, when nested, a `groups` entry) render inside that section/group instead. Harvesting and change detection walk every slot's full assigned subtree, not just direct children. With `sections` left unset, the structure is instead derived from the controls' own attributes: `group=\"<label>\"` becomes a tab and `category=\"<label>\"` a collapsible within it, and the control is slotted into that collapsible automatically. Either attribute works alone - a control with only `group` sits directly in its tab, and one with only `category` becomes its own top-level section. Setting `sections` explicitly disables the derivation entirely."
-            },
-            {
-              "name": "toolbar",
-              "description": "Actions in the toolbar, right-aligned beside the device controls. Where a save button belongs."
-            },
-            {
-              "name": "footer",
-              "description": "Actions pinned beneath the controls. The built-in submit button lives in the toolbar, not here."
-            }
-          ],
-          "events": [
-            {
-              "name": "zn-theme-change",
-              "description": "Emitted when the values, mode or device change."
-            },
-            {
-              "name": "zn-theme-submit",
-              "description": "Emitted on submit (button click), carrying the current values. With `action` set, only fires after a successful save."
-            },
-            {
-              "name": "zn-error",
-              "description": "Emitted when a save fails. Also seen for preview render failures: the frame's zn-error is composed and not stopped, so it bubbles out through the editor too."
-            }
-          ],
-          "js": {
-            "properties": [
-              {
-                "name": "src",
-                "description": "URL of the preview shell page; forwarded to the frame.",
-                "type": "string"
-              },
-              {
-                "name": "frameOrigin",
-                "description": "Expected origin of the iframe; forwarded to the frame.",
-                "type": "string"
-              },
-              {
-                "name": "dataUri",
-                "description": "Optional endpoint returning the base hp-preview:config payload.",
-                "type": "string"
-              },
-              {
-                "name": "mode",
-                "description": "Which mode the preview renders in. Travels in the theme payload.",
-                "type": "ThemeEditorMode"
-              },
-              {
-                "name": "device",
-                "description": "Preview viewport width. Resizes the frame only; not part of the payload.",
-                "type": "ThemeEditorDevice"
-              },
-              {
-                "name": "minHeight",
-                "description": "Minimum height of the preview row, in pixels; forwarded to the frame as its own floor.",
-                "type": "number"
-              },
-              {
-                "name": "debounce",
-                "description": "Debounce in ms between a control change and the push to the preview.",
-                "type": "number"
-              },
-              {
-                "name": "action",
-                "description": "Optional endpoint the values are POSTed to. Empty = no persistence.",
-                "type": "string"
-              },
-              {
-                "name": "saveDebounce",
-                "description": "Debounce in ms between a control change and the save POST.",
-                "type": "number"
-              },
-              {
-                "name": "sections",
-                "description": "Groups controls into named sections. Empty/unset falls back to deriving the\nstructure from the controls' own `group`/`category` attributes, and renders\none ungrouped column when they carry neither. A section with a non-empty\n`groups` nests a collapsible per group inside a `zn-tabs` tab for that\nsection - see `groups` on `ThemeEditorSection`.",
-                "type": "ThemeEditorSection[]"
-              },
-              {
-                "name": "sectionLayout",
-                "description": "Presentation for flat, group-less `sections`: stacked `zn-collapsible`s\n(default) or a `zn-tabs` strip. Ignored once any section has `groups` -\nnested sections always render as tabs.",
-                "type": "'collapsible' | 'tabs'"
-              },
-              {
-                "name": "sources",
-                "description": "Dropdown of preview sources, `{label, src}`, rendered in the toolbar. Empty/unset renders no dropdown; the first entry wins over an explicit `src` when non-empty.",
-                "type": "ThemeEditorSource[]"
-              },
-              {
-                "name": "controlsCollapsed",
-                "description": "Collapses the controls column.",
-                "type": "boolean"
-              },
-              {
-                "name": "standalone",
-                "description": "Presents the editor as its own bordered, rounded panel with a plain preview backdrop, rather than embedded in a dotted canvas.",
-                "type": "boolean"
-              },
-              {
-                "name": "controlsCaption",
-                "description": "Caption in the controls column's header row. Empty (default) renders no text; the row itself always renders.",
-                "type": "string"
-              },
-              {
-                "name": "previewCaption",
-                "description": "Caption at the left of the toolbar, opposite the device and mode controls. Empty (default) renders no text.",
-                "type": "string"
-              },
-              {
-                "name": "submitLabel",
-                "description": "Label for the built-in submit button. Empty (default) renders no button.",
-                "type": "string"
-              },
-              {
-                "name": "manual",
-                "description": "Disables the debounced auto-save; saving then happens only via submit. Preview pushes are unaffected.",
-                "type": "boolean"
-              },
-              { "name": "frame", "type": "ZnPreviewFrame" },
-              {
-                "name": "values",
-                "description": "The current per-mode value sets. Returns copies.",
-                "type": "{ light: Record<string, unknown>; dark: Record<string, unknown> }"
-              },
-              {
-                "name": "activeValues",
-                "description": "The active mode's values - what gets pushed to the preview frame.",
-                "type": "Record<string, unknown>"
-              }
-            ],
-            "events": [
-              {
-                "name": "zn-theme-change",
-                "description": "Emitted when the values, mode or device change."
-              },
-              {
-                "name": "zn-theme-submit",
-                "description": "Emitted on submit (button click), carrying the current values. With `action` set, only fires after a successful save."
-              },
-              {
-                "name": "zn-error",
-                "description": "Emitted when a save fails. Also seen for preview render failures: the frame's zn-error is composed and not stopped, so it bubbles out through the editor too."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-thumbnail-group",
-          "description": "Lays a set of `zn-thumbnail` elements out as a single scrollable row, with a\n\"Show All\" toggle that expands them into a wrapping grid.\n\n---\n\n\n### **Events:**\n - **zn-expand** - Emitted when the group expands into the full grid.\n- **zn-collapse** - Emitted when the group collapses back to a single row.\n- **zn-change** - Emitted when the selected thumbnail changes (`selectable` groups only).\n\n### **Methods:**\n - **show()** - Expands the group into the full grid.\n- **hide()** - Collapses the group back to a single row.\n\n### **Slots:**\n - _default_ - One or more `zn-thumbnail` elements.\n- **caption** - Replaces the heading text.\n- **actions** - Extra content in the header, before the toggle.\n\n### **CSS Properties:**\n - **--zn-thumbnail-width** - Track width of a thumbnail. Defaults to 180px. Also settable with the `thumbnail-width` attribute. _(default: undefined)_\n- **--zn-thumbnail-gap** - Gap between thumbnails. Also settable with the `gap` attribute. _(default: undefined)_\n- **--zn-thumbnail-aspect-ratio** - Aspect ratio of every thumbnail in the group. Also settable with the `aspect-ratio` attribute. Any `zn-thumbnail` custom property set here is inherited by the slotted thumbnails. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The header row holding the caption and toggle.\n- **caption** - The heading text.\n- **toggle** - The show all / show less button.\n- **items** - The scrolling row / expanded grid that holds the thumbnails.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "caption",
-              "description": "The heading shown at the top left of the group.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "expanded",
-              "description": "Expands the group into the full wrapping grid.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "total",
-              "description": "Total number of thumbnails in the underlying set, shown in the \"Show All (n)\" label. Set this when\nthe row only holds the first page of a larger set; otherwise the slotted thumbnails are counted.",
-              "value": { "type": "number", "default": "0" }
-            },
-            {
-              "name": "show-all-label",
-              "description": "Label of the expand toggle. The count is appended in brackets.",
-              "value": { "type": "string", "default": "'Show All'" }
-            },
-            {
-              "name": "show-less-label",
-              "description": "Label of the collapse toggle.",
-              "value": { "type": "string", "default": "'Show Less'" }
-            },
-            {
-              "name": "hide-toggle",
-              "description": "Never render the toggle, even when the row overflows.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "always-toggle",
-              "description": "Always render the toggle, even when every thumbnail already fits on the row.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "selectable",
-              "description": "Manages single selection across the slotted thumbnails.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "aspect-ratio",
-              "description": "Aspect ratio for every thumbnail in the group, as any CSS `aspect-ratio` value (e.g. `1 / 1`).\nShorthand for setting `--zn-thumbnail-aspect-ratio` on the group. A thumbnail's own\n`aspect-ratio` attribute still wins.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "thumbnail-width",
-              "description": "Track width of each thumbnail (e.g. `140px`). Shorthand for `--zn-thumbnail-width`.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "gap",
-              "description": "Gap between thumbnails (e.g. `8px`). Shorthand for `--zn-thumbnail-gap`.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "value",
-              "description": "The `value` of the selected thumbnail (`selectable` groups only).",
-              "value": { "type": "string", "default": "''" }
-            }
-          ],
-          "slots": [
-            {
-              "name": "",
-              "description": "One or more `zn-thumbnail` elements."
-            },
-            { "name": "caption", "description": "Replaces the heading text." },
-            {
-              "name": "actions",
-              "description": "Extra content in the header, before the toggle."
-            }
-          ],
-          "events": [
-            {
-              "name": "zn-expand",
-              "description": "Emitted when the group expands into the full grid."
-            },
-            {
-              "name": "zn-collapse",
-              "description": "Emitted when the group collapses back to a single row."
-            },
-            {
-              "name": "zn-change",
-              "description": "Emitted when the selected thumbnail changes (`selectable` groups only)."
-            }
-          ],
-          "js": {
-            "properties": [
-              {
-                "name": "caption",
-                "description": "The heading shown at the top left of the group.",
-                "type": "string"
-              },
-              {
-                "name": "expanded",
-                "description": "Expands the group into the full wrapping grid.",
-                "type": "boolean"
-              },
-              {
-                "name": "total",
-                "description": "Total number of thumbnails in the underlying set, shown in the \"Show All (n)\" label. Set this when\nthe row only holds the first page of a larger set; otherwise the slotted thumbnails are counted.",
-                "type": "number"
-              },
-              {
-                "name": "showAllLabel",
-                "description": "Label of the expand toggle. The count is appended in brackets.",
-                "type": "string"
-              },
-              {
-                "name": "showLessLabel",
-                "description": "Label of the collapse toggle.",
-                "type": "string"
-              },
-              {
-                "name": "hideToggle",
-                "description": "Never render the toggle, even when the row overflows.",
-                "type": "boolean"
-              },
-              {
-                "name": "alwaysToggle",
-                "description": "Always render the toggle, even when every thumbnail already fits on the row.",
-                "type": "boolean"
-              },
-              {
-                "name": "selectable",
-                "description": "Manages single selection across the slotted thumbnails.",
-                "type": "boolean"
-              },
-              {
-                "name": "aspectRatio",
-                "description": "Aspect ratio for every thumbnail in the group, as any CSS `aspect-ratio` value (e.g. `1 / 1`).\nShorthand for setting `--zn-thumbnail-aspect-ratio` on the group. A thumbnail's own\n`aspect-ratio` attribute still wins.",
-                "type": "string"
-              },
-              {
-                "name": "thumbnailWidth",
-                "description": "Track width of each thumbnail (e.g. `140px`). Shorthand for `--zn-thumbnail-width`.",
-                "type": "string"
-              },
-              {
-                "name": "gap",
-                "description": "Gap between thumbnails (e.g. `8px`). Shorthand for `--zn-thumbnail-gap`.",
-                "type": "string"
-              },
-              {
-                "name": "value",
-                "description": "The `value` of the selected thumbnail (`selectable` groups only).",
-                "type": "string"
-              }
-            ],
-            "events": [
-              {
-                "name": "zn-expand",
-                "description": "Emitted when the group expands into the full grid."
-              },
-              {
-                "name": "zn-collapse",
-                "description": "Emitted when the group collapses back to a single row."
-              },
-              {
-                "name": "zn-change",
-                "description": "Emitted when the selected thumbnail changes (`selectable` groups only)."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-thumbnail",
-          "description": "A captioned image tile — a fixed aspect-ratio preview with a title beneath it, optional\ncorner badges and actions, and an optional full-screen preview that grows out of the thumbnail.\n\n---\n\n\n### **Events:**\n - **zn-select** - Emitted when an enabled thumbnail is activated by click or keyboard. Cancelable — call `preventDefault()` to stop the preview from opening and to stop a parent `zn-thumbnail-group` from changing its selection.\n- **zn-show** - Emitted when the preview overlay starts opening.\n- **zn-close** - Emitted once the preview overlay has finished closing.\n\n### **Methods:**\n - **showPreview()** - Opens the preview overlay.\n- **hidePreview()** - Closes the preview overlay.\n\n### **Slots:**\n - _default_ - Fallback content rendered in place of the media when no `src` is set.\n- **image** - Replaces the built-in `<img>` (e.g. a video, canvas or `zn-icon`).\n- **caption** - Replaces the caption text.\n- **badge** - Content pinned to the bottom-left of the media (e.g. a play indicator). Badges take no pointer events and are held back on opacity, so they read as information about the asset rather than as something to click.\n- **actions** - Controls pinned to the bottom-right of the media (e.g. a download button). Each slotted element becomes its own chip, so several actions read as separate icons on the thumbnail rather than one grouped pill. This sits outside the thumbnail's link, so buttons and links here behave normally and never select the thumbnail or follow its `href`.\n- **preview** - Replaces the preview media (e.g. a `<video>` for the full-size asset).\n\n### **CSS Properties:**\n - **--zn-thumbnail-aspect-ratio** - Aspect ratio of the media frame. Defaults to 16 / 9. The `aspect-ratio` attribute sets this on the thumbnail itself; set the property on any ancestor (including a `zn-thumbnail-group`) to apply it to every thumbnail beneath it. _(default: undefined)_\n- **--zn-thumbnail-radius** - Corner radius of the media frame. _(default: undefined)_\n- **--zn-thumbnail-preview-aspect-ratio** - Overrides the measured aspect ratio of the preview panel. By default the panel takes the asset's own ratio so it wraps the image exactly. _(default: undefined)_\n- **--zn-thumbnail-preview-max-width** - Largest width the preview may take. Defaults to 70vw. _(default: undefined)_\n- **--zn-thumbnail-preview-max-height** - Largest height the preview may take. Defaults to 70vh. _(default: undefined)_\n- **--zn-thumbnail-preview-radius** - Corner radius of the preview panel. _(default: undefined)_\n- **--zn-thumbnail-chip-radius** - Corner radius of a badge, action or preview chip. _(default: undefined)_\n- **--zn-thumbnail-chip-background** - Background of a badge, action or preview chip. _(default: undefined)_\n- **--zn-thumbnail-chip-background-hover** - Hover background of an action or preview chip. _(default: undefined)_\n- **--zn-thumbnail-chip-color** - Foreground colour of a badge, action or preview chip. _(default: undefined)_\n- **--zn-thumbnail-chip-gap** - Gap between adjacent chips. _(default: undefined)_\n- **--zn-thumbnail-badge-opacity** - Opacity of a badge, holding it back from the action chips beside it. Defaults to 0.65. _(default: undefined)_\n- **--zn-thumbnail-selected-color** - Ring colour for the selected state. _(default: undefined)_\n- **--zn-thumbnail-active-color** - Ring colour for the active state. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **link** - The anchor (or div) covering the media and caption.\n- **media** - The fixed aspect-ratio media frame.\n- **image** - The built-in image element.\n- **overlay** - The layer holding the badge, actions and preview button.\n- **badge** - The bottom-left badge container.\n- **actions** - The bottom-right actions container.\n- **preview-button** - The built-in preview trigger, when `preview-trigger=\"button\"`.\n- **caption** - The caption beneath the media.\n- **preview** - The preview `<dialog>`.\n- **preview-backdrop** - The full-screen backdrop behind the preview.\n- **preview-frame** - The rounded panel the preview media sits in.\n- **preview-image** - The full-size image inside the preview.\n- **preview-close** - The preview's close button.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "src",
-              "description": "Image URL for the built-in `<img>`.",
-              "value": { "type": "string" }
-            },
-            {
-              "name": "alt",
-              "description": "Alternative text for the built-in image. Falls back to the caption.",
-              "value": { "type": "string" }
-            },
-            {
-              "name": "caption",
-              "description": "The title shown beneath the media.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "aspect-ratio",
-              "description": "Aspect ratio of the media frame, as any CSS `aspect-ratio` value (e.g. `1 / 1`, `4 / 3`).\nTakes precedence over an inherited `--zn-thumbnail-aspect-ratio`. Defaults to `16 / 9`.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "href",
-              "description": "Renders the thumbnail as a link to this URL.",
-              "value": { "type": "string" }
-            },
-            {
-              "name": "target",
-              "description": "Where to open `href` (e.g. `_blank`).",
-              "value": { "type": "string" }
-            },
-            {
-              "name": "full-uri",
-              "description": "URL of the full-size asset. Setting this enables the preview overlay, which grows out of the\nthumbnail's position over a full-screen backdrop.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "preview-trigger",
-              "description": "How the preview opens. `click` (the default) opens it when the thumbnail is activated; `button`\nadds a dedicated expand control to the media instead, leaving clicks for selection or the link.",
-              "value": { "type": "'click' | 'button'", "default": "'click'" }
-            },
-            {
-              "name": "preview-label",
-              "description": "Accessible label for the built-in preview trigger and the preview overlay.",
-              "value": { "type": "string", "default": "'Preview'" }
-            },
-            {
-              "name": "value",
-              "description": "Identifier reported in the `zn-select` event detail and used for group selection.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "selected",
-              "description": "Draws the selected ring. Managed automatically inside a `selectable` `zn-thumbnail-group`.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "active",
-              "description": "Draws the active ring — for the thumbnail currently in use (playing, open, being edited), as\ndistinct from the user's selection. Takes the ring colour when a thumbnail is both active and\nselected. Recolour it with `--zn-thumbnail-active-color`.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "selectable",
-              "description": "Set by `zn-thumbnail-group` when it manages selection, so the thumbnail reads as clickable.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "disabled",
-              "description": "Dims the thumbnail and blocks selection, navigation and preview.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "icon",
-              "description": "Icon rendered in the bottom-left badge when the `badge` slot is empty.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "hide-caption",
-              "description": "Hides the caption row, leaving just the media frame.",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "slots": [
-            {
-              "name": "",
-              "description": "Fallback content rendered in place of the media when no `src` is set."
-            },
-            {
-              "name": "image",
-              "description": "Replaces the built-in `<img>` (e.g. a video, canvas or `zn-icon`)."
-            },
-            { "name": "caption", "description": "Replaces the caption text." },
-            {
-              "name": "badge",
-              "description": "Content pinned to the bottom-left of the media (e.g. a play indicator). Badges take no pointer events and are held back on opacity, so they read as information about the asset rather than as something to click."
-            },
-            {
-              "name": "actions",
-              "description": "Controls pinned to the bottom-right of the media (e.g. a download button). Each slotted element becomes its own chip, so several actions read as separate icons on the thumbnail rather than one grouped pill. This sits outside the thumbnail's link, so buttons and links here behave normally and never select the thumbnail or follow its `href`."
-            },
-            {
-              "name": "preview",
-              "description": "Replaces the preview media (e.g. a `<video>` for the full-size asset)."
-            }
-          ],
-          "events": [
-            {
-              "name": "zn-select",
-              "description": "Emitted when an enabled thumbnail is activated by click or keyboard. Cancelable — call `preventDefault()` to stop the preview from opening and to stop a parent `zn-thumbnail-group` from changing its selection."
-            },
-            {
-              "name": "zn-show",
-              "description": "Emitted when the preview overlay starts opening."
-            },
-            {
-              "name": "zn-close",
-              "description": "Emitted once the preview overlay has finished closing."
-            }
-          ],
-          "js": {
-            "properties": [
-              {
-                "name": "src",
-                "description": "Image URL for the built-in `<img>`.",
-                "type": "string"
-              },
-              {
-                "name": "alt",
-                "description": "Alternative text for the built-in image. Falls back to the caption.",
-                "type": "string"
-              },
-              {
-                "name": "caption",
-                "description": "The title shown beneath the media.",
-                "type": "string"
-              },
-              {
-                "name": "aspectRatio",
-                "description": "Aspect ratio of the media frame, as any CSS `aspect-ratio` value (e.g. `1 / 1`, `4 / 3`).\nTakes precedence over an inherited `--zn-thumbnail-aspect-ratio`. Defaults to `16 / 9`.",
-                "type": "string"
-              },
-              {
-                "name": "href",
-                "description": "Renders the thumbnail as a link to this URL.",
-                "type": "string"
-              },
-              {
-                "name": "target",
-                "description": "Where to open `href` (e.g. `_blank`).",
-                "type": "string"
-              },
-              {
-                "name": "fullUri",
-                "description": "URL of the full-size asset. Setting this enables the preview overlay, which grows out of the\nthumbnail's position over a full-screen backdrop.",
-                "type": "string"
-              },
-              {
-                "name": "previewTrigger",
-                "description": "How the preview opens. `click` (the default) opens it when the thumbnail is activated; `button`\nadds a dedicated expand control to the media instead, leaving clicks for selection or the link.",
-                "type": "'click' | 'button'"
-              },
-              {
-                "name": "previewLabel",
-                "description": "Accessible label for the built-in preview trigger and the preview overlay.",
-                "type": "string"
-              },
-              {
-                "name": "value",
-                "description": "Identifier reported in the `zn-select` event detail and used for group selection.",
-                "type": "string"
-              },
-              {
-                "name": "selected",
-                "description": "Draws the selected ring. Managed automatically inside a `selectable` `zn-thumbnail-group`.",
-                "type": "boolean"
-              },
-              {
-                "name": "active",
-                "description": "Draws the active ring — for the thumbnail currently in use (playing, open, being edited), as\ndistinct from the user's selection. Takes the ring colour when a thumbnail is both active and\nselected. Recolour it with `--zn-thumbnail-active-color`.",
-                "type": "boolean"
-              },
-              {
-                "name": "selectable",
-                "description": "Set by `zn-thumbnail-group` when it manages selection, so the thumbnail reads as clickable.",
-                "type": "boolean"
-              },
-              {
-                "name": "disabled",
-                "description": "Dims the thumbnail and blocks selection, navigation and preview.",
-                "type": "boolean"
-              },
-              {
-                "name": "icon",
-                "description": "Icon rendered in the bottom-left badge when the `badge` slot is empty.",
-                "type": "string"
-              },
-              {
-                "name": "hideCaption",
-                "description": "Hides the caption row, leaving just the media frame.",
-                "type": "boolean"
-              }
-            ],
-            "events": [
-              {
-                "name": "zn-select",
-                "description": "Emitted when an enabled thumbnail is activated by click or keyboard. Cancelable — call `preventDefault()` to stop the preview from opening and to stop a parent `zn-thumbnail-group` from changing its selection."
-              },
-              {
-                "name": "zn-show",
-                "description": "Emitted when the preview overlay starts opening."
-              },
-              {
-                "name": "zn-close",
-                "description": "Emitted once the preview overlay has finished closing."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-textarea",
           "description": "Textareas collect data from the user and allow multiple lines of text.\n\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the control loses focus.\n- **zn-change** - Emitted when an alteration to the control's value is committed by the user.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-input** - Emitted when the control receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n- **zn-slash-select** - Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to suppress the insertion and handle the item yourself.\n- **zn-slash-insert** - Emitted after a slash menu item's value has been inserted.\n\n### **Methods:**\n - **resolveSlashItems(search): _Promise<SlashMenuItem[]>_** - The insertions the slash menu offers, gathered from every source, in the order they were declared.\n- **showSlashMenu()** - Opens the slash menu at the caret, inserting the trigger if it isn't already there.\n- **hideSlashMenu()** - Closes the slash menu.\n- **focus(options: _FocusOptions_)** - Sets focus on the textarea.\n- **blur()** - Removes focus from the textarea.\n- **select()** - Selects all the text in the textarea.\n- **scrollPosition(position: _{ top?: number; left?: number }_): _{ top: number; left: number } | undefined_** - Gets or sets the textarea scroll position.\n- **setSelectionRange(selectionStart: _number_, selectionEnd: _number_, selectionDirection: _'forward' | 'backward' | 'none'_)** - Sets the start and end positions of the text selection (0-based).\n- **setRangeText(replacement: _string_, start: _number_, end: _number_, selectMode: _'select' | 'start' | 'end' | 'preserve'_)** - Replaces a range of text with a new string.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - **label** - The textareas label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the textarea, on the right. Alternatively, you can use the `context-note` attribute.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n- **slash-items** - `<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are picked up wherever they sit inside the textarea, so this slot name is optional.\n- **slash-menu** - A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can be set in markup. Any `<zn-slash-item>` children of it become the menu's items.\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **textarea** - The internal `<textarea>` control.\n- **slash-menu** - The slash menu shown at the caret.",
           "doc-url": "",
@@ -11992,6 +11353,645 @@
               {
                 "name": "zn-slash-insert",
                 "description": "Emitted after a slash menu item's value has been inserted."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-theme-editor",
+          "description": "A theme editor: slotted form controls drive a live preview frame,\nwith a toolbar for the preview's light/dark mode and device width.\n\n---\n\n\n### **Events:**\n - **zn-theme-change** - Emitted when the values, mode or device change.\n- **zn-theme-submit** - Emitted on submit (button click), carrying the current values. With `action` set, only fires after a successful save.\n- **zn-error** - Emitted when a save fails. Also seen for preview render failures: the frame's zn-error is composed and not stopped, so it bubbles out through the editor too.\n\n### **Slots:**\n - _default_ - Ungrouped theme controls, rendered above any sections. Controls assigned `slot=\"<name>\"` matching a `sections` entry (or, when nested, a `groups` entry) render inside that section/group instead. Harvesting and change detection walk every slot's full assigned subtree, not just direct children. With `sections` left unset, the structure is instead derived from the controls' own attributes: `group=\"<label>\"` becomes a tab and `category=\"<label>\"` a collapsible within it, and the control is slotted into that collapsible automatically. Either attribute works alone - a control with only `group` sits directly in its tab, and one with only `category` becomes its own top-level section. Setting `sections` explicitly disables the derivation entirely.\n- **toolbar** - Actions in the toolbar, right-aligned beside the device controls. Where a save button belongs.\n- **footer** - Actions pinned beneath the controls. The built-in submit button lives in the toolbar, not here.\n\n### **CSS Properties:**\n - **--zn-theme-editor-controls-width** - Width of the controls column. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **controls** - The left-hand controls column, full height.\n- **controls-header** - The controls column's header row: `controls-caption` on the left, the light/dark mode toggle on the right.\n- **toolbar** - The preview column's header row: `preview-caption` on the left, the device switcher (and sources/submit) on the right. Spans the preview column only.\n- **section** - A rendered section's or group's collapsible (`section-layout=\"collapsible\"`, or any nested group).\n- **footer** - The footer wrapper beneath the controls.\n- **preview** - The preview column.\n- **error** - The inline error strip.\n- **preview__base** - The frame's base wrapper (forwarded from zn-preview-frame).\n- **preview__stage** - The frame's device-width wrapper (forwarded from zn-preview-frame).\n- **preview__iframe** - The frame's iframe (forwarded from zn-preview-frame).\n- **preview__error** - The frame's own error overlay (forwarded from zn-preview-frame).",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "src",
+              "description": "URL of the preview shell page; forwarded to the frame.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "frame-origin",
+              "description": "Expected origin of the iframe; forwarded to the frame.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "data-uri",
+              "description": "Optional endpoint returning the base hp-preview:config payload.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "mode",
+              "description": "Which mode the preview renders in. Travels in the theme payload.",
+              "value": { "type": "ThemeEditorMode", "default": "'light'" }
+            },
+            {
+              "name": "device",
+              "description": "Preview viewport width. Resizes the frame only; not part of the payload.",
+              "value": { "type": "ThemeEditorDevice", "default": "'desktop'" }
+            },
+            {
+              "name": "min-height",
+              "description": "Minimum height of the preview row, in pixels; forwarded to the frame as its own floor.",
+              "value": { "type": "number", "default": "480" }
+            },
+            {
+              "name": "debounce",
+              "description": "Debounce in ms between a control change and the push to the preview.",
+              "value": { "type": "number", "default": "150" }
+            },
+            {
+              "name": "action",
+              "description": "Optional endpoint the values are POSTed to. Empty = no persistence.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "save-debounce",
+              "description": "Debounce in ms between a control change and the save POST.",
+              "value": { "type": "number", "default": "1000" }
+            },
+            {
+              "name": "sections",
+              "description": "Groups controls into named sections. Empty/unset falls back to deriving the\nstructure from the controls' own `group`/`category` attributes, and renders\none ungrouped column when they carry neither. A section with a non-empty\n`groups` nests a collapsible per group inside a `zn-tabs` tab for that\nsection - see `groups` on `ThemeEditorSection`.",
+              "value": { "type": "ThemeEditorSection[]", "default": "[]" }
+            },
+            {
+              "name": "section-layout",
+              "description": "Presentation for flat, group-less `sections`: stacked `zn-collapsible`s\n(default) or a `zn-tabs` strip. Ignored once any section has `groups` -\nnested sections always render as tabs.",
+              "value": {
+                "type": "'collapsible' | 'tabs'",
+                "default": "'collapsible'"
+              }
+            },
+            {
+              "name": "sources",
+              "description": "Dropdown of preview sources, `{label, src}`, rendered in the toolbar. Empty/unset renders no dropdown; the first entry wins over an explicit `src` when non-empty.",
+              "value": { "type": "ThemeEditorSource[]", "default": "[]" }
+            },
+            {
+              "name": "controls-collapsed",
+              "description": "Collapses the controls column.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "standalone",
+              "description": "Presents the editor as its own bordered, rounded panel with a plain preview backdrop, rather than embedded in a dotted canvas.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "controls-caption",
+              "description": "Caption in the controls column's header row. Empty (default) renders no text; the row itself always renders.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "preview-caption",
+              "description": "Caption at the left of the toolbar, opposite the device and mode controls. Empty (default) renders no text.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "submit-label",
+              "description": "Label for the built-in submit button. Empty (default) renders no button.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "manual",
+              "description": "Disables the debounced auto-save; saving then happens only via submit. Preview pushes are unaffected.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Ungrouped theme controls, rendered above any sections. Controls assigned `slot=\"<name>\"` matching a `sections` entry (or, when nested, a `groups` entry) render inside that section/group instead. Harvesting and change detection walk every slot's full assigned subtree, not just direct children. With `sections` left unset, the structure is instead derived from the controls' own attributes: `group=\"<label>\"` becomes a tab and `category=\"<label>\"` a collapsible within it, and the control is slotted into that collapsible automatically. Either attribute works alone - a control with only `group` sits directly in its tab, and one with only `category` becomes its own top-level section. Setting `sections` explicitly disables the derivation entirely."
+            },
+            {
+              "name": "toolbar",
+              "description": "Actions in the toolbar, right-aligned beside the device controls. Where a save button belongs."
+            },
+            {
+              "name": "footer",
+              "description": "Actions pinned beneath the controls. The built-in submit button lives in the toolbar, not here."
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-theme-change",
+              "description": "Emitted when the values, mode or device change."
+            },
+            {
+              "name": "zn-theme-submit",
+              "description": "Emitted on submit (button click), carrying the current values. With `action` set, only fires after a successful save."
+            },
+            {
+              "name": "zn-error",
+              "description": "Emitted when a save fails. Also seen for preview render failures: the frame's zn-error is composed and not stopped, so it bubbles out through the editor too."
+            }
+          ],
+          "js": {
+            "properties": [
+              {
+                "name": "src",
+                "description": "URL of the preview shell page; forwarded to the frame.",
+                "type": "string"
+              },
+              {
+                "name": "frameOrigin",
+                "description": "Expected origin of the iframe; forwarded to the frame.",
+                "type": "string"
+              },
+              {
+                "name": "dataUri",
+                "description": "Optional endpoint returning the base hp-preview:config payload.",
+                "type": "string"
+              },
+              {
+                "name": "mode",
+                "description": "Which mode the preview renders in. Travels in the theme payload.",
+                "type": "ThemeEditorMode"
+              },
+              {
+                "name": "device",
+                "description": "Preview viewport width. Resizes the frame only; not part of the payload.",
+                "type": "ThemeEditorDevice"
+              },
+              {
+                "name": "minHeight",
+                "description": "Minimum height of the preview row, in pixels; forwarded to the frame as its own floor.",
+                "type": "number"
+              },
+              {
+                "name": "debounce",
+                "description": "Debounce in ms between a control change and the push to the preview.",
+                "type": "number"
+              },
+              {
+                "name": "action",
+                "description": "Optional endpoint the values are POSTed to. Empty = no persistence.",
+                "type": "string"
+              },
+              {
+                "name": "saveDebounce",
+                "description": "Debounce in ms between a control change and the save POST.",
+                "type": "number"
+              },
+              {
+                "name": "sections",
+                "description": "Groups controls into named sections. Empty/unset falls back to deriving the\nstructure from the controls' own `group`/`category` attributes, and renders\none ungrouped column when they carry neither. A section with a non-empty\n`groups` nests a collapsible per group inside a `zn-tabs` tab for that\nsection - see `groups` on `ThemeEditorSection`.",
+                "type": "ThemeEditorSection[]"
+              },
+              {
+                "name": "sectionLayout",
+                "description": "Presentation for flat, group-less `sections`: stacked `zn-collapsible`s\n(default) or a `zn-tabs` strip. Ignored once any section has `groups` -\nnested sections always render as tabs.",
+                "type": "'collapsible' | 'tabs'"
+              },
+              {
+                "name": "sources",
+                "description": "Dropdown of preview sources, `{label, src}`, rendered in the toolbar. Empty/unset renders no dropdown; the first entry wins over an explicit `src` when non-empty.",
+                "type": "ThemeEditorSource[]"
+              },
+              {
+                "name": "controlsCollapsed",
+                "description": "Collapses the controls column.",
+                "type": "boolean"
+              },
+              {
+                "name": "standalone",
+                "description": "Presents the editor as its own bordered, rounded panel with a plain preview backdrop, rather than embedded in a dotted canvas.",
+                "type": "boolean"
+              },
+              {
+                "name": "controlsCaption",
+                "description": "Caption in the controls column's header row. Empty (default) renders no text; the row itself always renders.",
+                "type": "string"
+              },
+              {
+                "name": "previewCaption",
+                "description": "Caption at the left of the toolbar, opposite the device and mode controls. Empty (default) renders no text.",
+                "type": "string"
+              },
+              {
+                "name": "submitLabel",
+                "description": "Label for the built-in submit button. Empty (default) renders no button.",
+                "type": "string"
+              },
+              {
+                "name": "manual",
+                "description": "Disables the debounced auto-save; saving then happens only via submit. Preview pushes are unaffected.",
+                "type": "boolean"
+              },
+              { "name": "frame", "type": "ZnPreviewFrame" },
+              {
+                "name": "values",
+                "description": "The current per-mode value sets. Returns copies.",
+                "type": "{ light: Record<string, unknown>; dark: Record<string, unknown> }"
+              },
+              {
+                "name": "activeValues",
+                "description": "The active mode's values - what gets pushed to the preview frame.",
+                "type": "Record<string, unknown>"
+              }
+            ],
+            "events": [
+              {
+                "name": "zn-theme-change",
+                "description": "Emitted when the values, mode or device change."
+              },
+              {
+                "name": "zn-theme-submit",
+                "description": "Emitted on submit (button click), carrying the current values. With `action` set, only fires after a successful save."
+              },
+              {
+                "name": "zn-error",
+                "description": "Emitted when a save fails. Also seen for preview render failures: the frame's zn-error is composed and not stopped, so it bubbles out through the editor too."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-thumbnail",
+          "description": "A captioned image tile — a fixed aspect-ratio preview with a title beneath it, optional\ncorner badges and actions, and an optional full-screen preview that grows out of the thumbnail.\n\n---\n\n\n### **Events:**\n - **zn-select** - Emitted when an enabled thumbnail is activated by click or keyboard. Cancelable — call `preventDefault()` to stop the preview from opening and to stop a parent `zn-thumbnail-group` from changing its selection.\n- **zn-show** - Emitted when the preview overlay starts opening.\n- **zn-close** - Emitted once the preview overlay has finished closing.\n\n### **Methods:**\n - **showPreview()** - Opens the preview overlay.\n- **hidePreview()** - Closes the preview overlay.\n\n### **Slots:**\n - _default_ - Fallback content rendered in place of the media when no `src` is set.\n- **image** - Replaces the built-in `<img>` (e.g. a video, canvas or `zn-icon`).\n- **caption** - Replaces the caption text.\n- **badge** - Content pinned to the bottom-left of the media (e.g. a play indicator). Badges take no pointer events and are held back on opacity, so they read as information about the asset rather than as something to click.\n- **actions** - Controls pinned to the bottom-right of the media (e.g. a download button). Each slotted element becomes its own chip, so several actions read as separate icons on the thumbnail rather than one grouped pill. This sits outside the thumbnail's link, so buttons and links here behave normally and never select the thumbnail or follow its `href`.\n- **preview** - Replaces the preview media (e.g. a `<video>` for the full-size asset).\n\n### **CSS Properties:**\n - **--zn-thumbnail-aspect-ratio** - Aspect ratio of the media frame. Defaults to 16 / 9. The `aspect-ratio` attribute sets this on the thumbnail itself; set the property on any ancestor (including a `zn-thumbnail-group`) to apply it to every thumbnail beneath it. _(default: undefined)_\n- **--zn-thumbnail-radius** - Corner radius of the media frame. _(default: undefined)_\n- **--zn-thumbnail-preview-aspect-ratio** - Overrides the measured aspect ratio of the preview panel. By default the panel takes the asset's own ratio so it wraps the image exactly. _(default: undefined)_\n- **--zn-thumbnail-preview-max-width** - Largest width the preview may take. Defaults to 70vw. _(default: undefined)_\n- **--zn-thumbnail-preview-max-height** - Largest height the preview may take. Defaults to 70vh. _(default: undefined)_\n- **--zn-thumbnail-preview-radius** - Corner radius of the preview panel. _(default: undefined)_\n- **--zn-thumbnail-chip-radius** - Corner radius of a badge, action or preview chip. _(default: undefined)_\n- **--zn-thumbnail-chip-background** - Background of a badge, action or preview chip. _(default: undefined)_\n- **--zn-thumbnail-chip-background-hover** - Hover background of an action or preview chip. _(default: undefined)_\n- **--zn-thumbnail-chip-color** - Foreground colour of a badge, action or preview chip. _(default: undefined)_\n- **--zn-thumbnail-chip-gap** - Gap between adjacent chips. _(default: undefined)_\n- **--zn-thumbnail-badge-opacity** - Opacity of a badge, holding it back from the action chips beside it. Defaults to 0.65. _(default: undefined)_\n- **--zn-thumbnail-selected-color** - Ring colour for the selected state. _(default: undefined)_\n- **--zn-thumbnail-active-color** - Ring colour for the active state. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **link** - The anchor (or div) covering the media and caption.\n- **media** - The fixed aspect-ratio media frame.\n- **image** - The built-in image element.\n- **overlay** - The layer holding the badge, actions and preview button.\n- **badge** - The bottom-left badge container.\n- **actions** - The bottom-right actions container.\n- **preview-button** - The built-in preview trigger, when `preview-trigger=\"button\"`.\n- **caption** - The caption beneath the media.\n- **preview** - The preview `<dialog>`.\n- **preview-backdrop** - The full-screen backdrop behind the preview.\n- **preview-frame** - The rounded panel the preview media sits in.\n- **preview-image** - The full-size image inside the preview.\n- **preview-close** - The preview's close button.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "src",
+              "description": "Image URL for the built-in `<img>`.",
+              "value": { "type": "string" }
+            },
+            {
+              "name": "alt",
+              "description": "Alternative text for the built-in image. Falls back to the caption.",
+              "value": { "type": "string" }
+            },
+            {
+              "name": "caption",
+              "description": "The title shown beneath the media.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "aspect-ratio",
+              "description": "Aspect ratio of the media frame, as any CSS `aspect-ratio` value (e.g. `1 / 1`, `4 / 3`).\nTakes precedence over an inherited `--zn-thumbnail-aspect-ratio`. Defaults to `16 / 9`.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "href",
+              "description": "Renders the thumbnail as a link to this URL.",
+              "value": { "type": "string" }
+            },
+            {
+              "name": "target",
+              "description": "Where to open `href` (e.g. `_blank`).",
+              "value": { "type": "string" }
+            },
+            {
+              "name": "full-uri",
+              "description": "URL of the full-size asset. Setting this enables the preview overlay, which grows out of the\nthumbnail's position over a full-screen backdrop.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "preview-trigger",
+              "description": "How the preview opens. `click` (the default) opens it when the thumbnail is activated; `button`\nadds a dedicated expand control to the media instead, leaving clicks for selection or the link.",
+              "value": { "type": "'click' | 'button'", "default": "'click'" }
+            },
+            {
+              "name": "preview-label",
+              "description": "Accessible label for the built-in preview trigger and the preview overlay.",
+              "value": { "type": "string", "default": "'Preview'" }
+            },
+            {
+              "name": "value",
+              "description": "Identifier reported in the `zn-select` event detail and used for group selection.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "selected",
+              "description": "Draws the selected ring. Managed automatically inside a `selectable` `zn-thumbnail-group`.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "active",
+              "description": "Draws the active ring — for the thumbnail currently in use (playing, open, being edited), as\ndistinct from the user's selection. Takes the ring colour when a thumbnail is both active and\nselected. Recolour it with `--zn-thumbnail-active-color`.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "selectable",
+              "description": "Set by `zn-thumbnail-group` when it manages selection, so the thumbnail reads as clickable.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "disabled",
+              "description": "Dims the thumbnail and blocks selection, navigation and preview.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "icon",
+              "description": "Icon rendered in the bottom-left badge when the `badge` slot is empty.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "hide-caption",
+              "description": "Hides the caption row, leaving just the media frame.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Fallback content rendered in place of the media when no `src` is set."
+            },
+            {
+              "name": "image",
+              "description": "Replaces the built-in `<img>` (e.g. a video, canvas or `zn-icon`)."
+            },
+            { "name": "caption", "description": "Replaces the caption text." },
+            {
+              "name": "badge",
+              "description": "Content pinned to the bottom-left of the media (e.g. a play indicator). Badges take no pointer events and are held back on opacity, so they read as information about the asset rather than as something to click."
+            },
+            {
+              "name": "actions",
+              "description": "Controls pinned to the bottom-right of the media (e.g. a download button). Each slotted element becomes its own chip, so several actions read as separate icons on the thumbnail rather than one grouped pill. This sits outside the thumbnail's link, so buttons and links here behave normally and never select the thumbnail or follow its `href`."
+            },
+            {
+              "name": "preview",
+              "description": "Replaces the preview media (e.g. a `<video>` for the full-size asset)."
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-select",
+              "description": "Emitted when an enabled thumbnail is activated by click or keyboard. Cancelable — call `preventDefault()` to stop the preview from opening and to stop a parent `zn-thumbnail-group` from changing its selection."
+            },
+            {
+              "name": "zn-show",
+              "description": "Emitted when the preview overlay starts opening."
+            },
+            {
+              "name": "zn-close",
+              "description": "Emitted once the preview overlay has finished closing."
+            }
+          ],
+          "js": {
+            "properties": [
+              {
+                "name": "src",
+                "description": "Image URL for the built-in `<img>`.",
+                "type": "string"
+              },
+              {
+                "name": "alt",
+                "description": "Alternative text for the built-in image. Falls back to the caption.",
+                "type": "string"
+              },
+              {
+                "name": "caption",
+                "description": "The title shown beneath the media.",
+                "type": "string"
+              },
+              {
+                "name": "aspectRatio",
+                "description": "Aspect ratio of the media frame, as any CSS `aspect-ratio` value (e.g. `1 / 1`, `4 / 3`).\nTakes precedence over an inherited `--zn-thumbnail-aspect-ratio`. Defaults to `16 / 9`.",
+                "type": "string"
+              },
+              {
+                "name": "href",
+                "description": "Renders the thumbnail as a link to this URL.",
+                "type": "string"
+              },
+              {
+                "name": "target",
+                "description": "Where to open `href` (e.g. `_blank`).",
+                "type": "string"
+              },
+              {
+                "name": "fullUri",
+                "description": "URL of the full-size asset. Setting this enables the preview overlay, which grows out of the\nthumbnail's position over a full-screen backdrop.",
+                "type": "string"
+              },
+              {
+                "name": "previewTrigger",
+                "description": "How the preview opens. `click` (the default) opens it when the thumbnail is activated; `button`\nadds a dedicated expand control to the media instead, leaving clicks for selection or the link.",
+                "type": "'click' | 'button'"
+              },
+              {
+                "name": "previewLabel",
+                "description": "Accessible label for the built-in preview trigger and the preview overlay.",
+                "type": "string"
+              },
+              {
+                "name": "value",
+                "description": "Identifier reported in the `zn-select` event detail and used for group selection.",
+                "type": "string"
+              },
+              {
+                "name": "selected",
+                "description": "Draws the selected ring. Managed automatically inside a `selectable` `zn-thumbnail-group`.",
+                "type": "boolean"
+              },
+              {
+                "name": "active",
+                "description": "Draws the active ring — for the thumbnail currently in use (playing, open, being edited), as\ndistinct from the user's selection. Takes the ring colour when a thumbnail is both active and\nselected. Recolour it with `--zn-thumbnail-active-color`.",
+                "type": "boolean"
+              },
+              {
+                "name": "selectable",
+                "description": "Set by `zn-thumbnail-group` when it manages selection, so the thumbnail reads as clickable.",
+                "type": "boolean"
+              },
+              {
+                "name": "disabled",
+                "description": "Dims the thumbnail and blocks selection, navigation and preview.",
+                "type": "boolean"
+              },
+              {
+                "name": "icon",
+                "description": "Icon rendered in the bottom-left badge when the `badge` slot is empty.",
+                "type": "string"
+              },
+              {
+                "name": "hideCaption",
+                "description": "Hides the caption row, leaving just the media frame.",
+                "type": "boolean"
+              }
+            ],
+            "events": [
+              {
+                "name": "zn-select",
+                "description": "Emitted when an enabled thumbnail is activated by click or keyboard. Cancelable — call `preventDefault()` to stop the preview from opening and to stop a parent `zn-thumbnail-group` from changing its selection."
+              },
+              {
+                "name": "zn-show",
+                "description": "Emitted when the preview overlay starts opening."
+              },
+              {
+                "name": "zn-close",
+                "description": "Emitted once the preview overlay has finished closing."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-thumbnail-group",
+          "description": "Lays a set of `zn-thumbnail` elements out as a single scrollable row, with a\n\"Show All\" toggle that expands them into a wrapping grid.\n\n---\n\n\n### **Events:**\n - **zn-expand** - Emitted when the group expands into the full grid.\n- **zn-collapse** - Emitted when the group collapses back to a single row.\n- **zn-change** - Emitted when the selected thumbnail changes (`selectable` groups only).\n\n### **Methods:**\n - **show()** - Expands the group into the full grid.\n- **hide()** - Collapses the group back to a single row.\n\n### **Slots:**\n - _default_ - One or more `zn-thumbnail` elements.\n- **caption** - Replaces the heading text.\n- **actions** - Extra content in the header, before the toggle.\n\n### **CSS Properties:**\n - **--zn-thumbnail-width** - Track width of a thumbnail. Defaults to 180px. Also settable with the `thumbnail-width` attribute. _(default: undefined)_\n- **--zn-thumbnail-gap** - Gap between thumbnails. Also settable with the `gap` attribute. _(default: undefined)_\n- **--zn-thumbnail-aspect-ratio** - Aspect ratio of every thumbnail in the group. Also settable with the `aspect-ratio` attribute. Any `zn-thumbnail` custom property set here is inherited by the slotted thumbnails. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The header row holding the caption and toggle.\n- **caption** - The heading text.\n- **toggle** - The show all / show less button.\n- **items** - The scrolling row / expanded grid that holds the thumbnails.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "caption",
+              "description": "The heading shown at the top left of the group.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "expanded",
+              "description": "Expands the group into the full wrapping grid.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "total",
+              "description": "Total number of thumbnails in the underlying set, shown in the \"Show All (n)\" label. Set this when\nthe row only holds the first page of a larger set; otherwise the slotted thumbnails are counted.",
+              "value": { "type": "number", "default": "0" }
+            },
+            {
+              "name": "show-all-label",
+              "description": "Label of the expand toggle. The count is appended in brackets.",
+              "value": { "type": "string", "default": "'Show All'" }
+            },
+            {
+              "name": "show-less-label",
+              "description": "Label of the collapse toggle.",
+              "value": { "type": "string", "default": "'Show Less'" }
+            },
+            {
+              "name": "hide-toggle",
+              "description": "Never render the toggle, even when the row overflows.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "always-toggle",
+              "description": "Always render the toggle, even when every thumbnail already fits on the row.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "selectable",
+              "description": "Manages single selection across the slotted thumbnails.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "aspect-ratio",
+              "description": "Aspect ratio for every thumbnail in the group, as any CSS `aspect-ratio` value (e.g. `1 / 1`).\nShorthand for setting `--zn-thumbnail-aspect-ratio` on the group. A thumbnail's own\n`aspect-ratio` attribute still wins.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "thumbnail-width",
+              "description": "Track width of each thumbnail (e.g. `140px`). Shorthand for `--zn-thumbnail-width`.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "gap",
+              "description": "Gap between thumbnails (e.g. `8px`). Shorthand for `--zn-thumbnail-gap`.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "value",
+              "description": "The `value` of the selected thumbnail (`selectable` groups only).",
+              "value": { "type": "string", "default": "''" }
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "One or more `zn-thumbnail` elements."
+            },
+            { "name": "caption", "description": "Replaces the heading text." },
+            {
+              "name": "actions",
+              "description": "Extra content in the header, before the toggle."
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-expand",
+              "description": "Emitted when the group expands into the full grid."
+            },
+            {
+              "name": "zn-collapse",
+              "description": "Emitted when the group collapses back to a single row."
+            },
+            {
+              "name": "zn-change",
+              "description": "Emitted when the selected thumbnail changes (`selectable` groups only)."
+            }
+          ],
+          "js": {
+            "properties": [
+              {
+                "name": "caption",
+                "description": "The heading shown at the top left of the group.",
+                "type": "string"
+              },
+              {
+                "name": "expanded",
+                "description": "Expands the group into the full wrapping grid.",
+                "type": "boolean"
+              },
+              {
+                "name": "total",
+                "description": "Total number of thumbnails in the underlying set, shown in the \"Show All (n)\" label. Set this when\nthe row only holds the first page of a larger set; otherwise the slotted thumbnails are counted.",
+                "type": "number"
+              },
+              {
+                "name": "showAllLabel",
+                "description": "Label of the expand toggle. The count is appended in brackets.",
+                "type": "string"
+              },
+              {
+                "name": "showLessLabel",
+                "description": "Label of the collapse toggle.",
+                "type": "string"
+              },
+              {
+                "name": "hideToggle",
+                "description": "Never render the toggle, even when the row overflows.",
+                "type": "boolean"
+              },
+              {
+                "name": "alwaysToggle",
+                "description": "Always render the toggle, even when every thumbnail already fits on the row.",
+                "type": "boolean"
+              },
+              {
+                "name": "selectable",
+                "description": "Manages single selection across the slotted thumbnails.",
+                "type": "boolean"
+              },
+              {
+                "name": "aspectRatio",
+                "description": "Aspect ratio for every thumbnail in the group, as any CSS `aspect-ratio` value (e.g. `1 / 1`).\nShorthand for setting `--zn-thumbnail-aspect-ratio` on the group. A thumbnail's own\n`aspect-ratio` attribute still wins.",
+                "type": "string"
+              },
+              {
+                "name": "thumbnailWidth",
+                "description": "Track width of each thumbnail (e.g. `140px`). Shorthand for `--zn-thumbnail-width`.",
+                "type": "string"
+              },
+              {
+                "name": "gap",
+                "description": "Gap between thumbnails (e.g. `8px`). Shorthand for `--zn-thumbnail-gap`.",
+                "type": "string"
+              },
+              {
+                "name": "value",
+                "description": "The `value` of the selected thumbnail (`selectable` groups only).",
+                "type": "string"
+              }
+            ],
+            "events": [
+              {
+                "name": "zn-expand",
+                "description": "Emitted when the group expands into the full grid."
+              },
+              {
+                "name": "zn-collapse",
+                "description": "Emitted when the group collapses back to a single row."
+              },
+              {
+                "name": "zn-change",
+                "description": "Emitted when the selected thumbnail changes (`selectable` groups only)."
               }
             ]
           }

@@ -278,8 +278,8 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
 
   private emitChange() {
     const data = this._active
-      .filter(item => item.value.length > 0)
-      .map(item => ({key: item.key, comparator: item.comparator, value: item.value}));
+      .filter(item => item.value.trim().length > 0)
+      .map(item => ({key: item.key, comparator: item.comparator, value: item.value.trim()}));
 
     this.value = data.length > 0 ? btoa(JSON.stringify(data)) : '';
     this._formController.updateValidity();

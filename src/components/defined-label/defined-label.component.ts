@@ -112,7 +112,7 @@ export default class ZnDefinedLabel extends ZincElement implements ZincFormContr
   }
 
   private getFilteredLabels(): PredefinedLabel[] {
-    const filter = this.value.toLowerCase();
+    const filter = this.value.trim().toLowerCase();
     return this.predefinedLabels
       .map(label => typeof label === 'string' ? {name: label} : label)
       .filter((label): label is PredefinedLabel => Boolean(label?.name))

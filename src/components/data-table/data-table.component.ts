@@ -368,7 +368,8 @@ export default class ZnDataTable extends ZincElement {
         inputs.forEach((input) => {
           const allowedInputs = ['zn-input', 'zn-select', 'zn-query-builder', 'zn-multiselect', 'zn-params-select', 'zn-datepicker', 'input', 'select', 'textarea'];
           if (allowedInputs.includes(input.tagName.toLowerCase())) {
-            const value = (input as AllowedInputElement).value as string || input.getAttribute('value');
+            const raw = (input as AllowedInputElement).value as string || input.getAttribute('value');
+            const value = typeof raw === 'string' ? raw.trim() : raw;
             const name = (input as AllowedInputElement).name || input.getAttribute('name');
             if (name) {
               params[name] = value;
@@ -836,7 +837,7 @@ export default class ZnDataTable extends ZincElement {
   searchChangeListener = (e: ZnSearchChangeEvent) => {
     const target = e.target as ZnDataTableSearch | null;
     if (target && target.tagName === 'ZN-DATA-TABLE-SEARCH') {
-      this.search = target.value as string;
+      this.search = (target.value as string).trim();
 
       // Get form data and search URI from event detail if available
       if (e.detail) {

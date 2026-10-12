@@ -788,7 +788,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     this._addOptionActive = false;
 
     this._searchDisplayValue = this.displayInput.value;
-    this._searchQuery = this._searchDisplayValue.toLowerCase();
+    this._searchQuery = this._searchDisplayValue.trim().toLowerCase();
 
     // Open the dropdown when the user starts typing
     if (!this.open) {

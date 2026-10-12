@@ -114,7 +114,7 @@ export default class ZnDataTableSearch extends ZincElement implements ZincFormCo
     const collect = (element: Element): void => {
       if (!allowedInputs.includes(element.tagName.toLowerCase())) return;
       const input = element as AllowedInputElement;
-      const value = input.value as string;
+      const value: unknown = typeof input.value === 'string' ? input.value.trim() : input.value;
       const name = input.name || element.getAttribute('name');
       if (name) {
         params[name] = value;
@@ -174,7 +174,7 @@ export default class ZnDataTableSearch extends ZincElement implements ZincFormCo
     const formData = this.getFormData();
     this.emit('zn-search-change', {
       detail: {
-        value: this.value,
+        value: this.value.trim(),
         formData: formData,
         searchUri: this.searchUri
       }

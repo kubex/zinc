@@ -193,6 +193,22 @@ function removeStoredValuesByPrefix(storage: Storage, keyPrefix: string) {
   keys.forEach(key => storage.removeItem(key));
 }
 
+/** Trims a control's string value in place, so what's shown matches what's submitted. */
+export function trimControlValue(control: Element & { value?: unknown; type?: string; input?: unknown }) {
+  if (typeof control.value !== 'string' || control.type === 'password') return;
+
+  const trimmed = control.value.trim();
+  if (trimmed !== control.value) {
+    control.value = trimmed;
+  }
+
+  // Email inputs already strip whitespace from .value but keep it on screen
+  const field = control instanceof HTMLInputElement ? control : control.input;
+  if (control.type === 'email' && field instanceof HTMLInputElement) {
+    field.value = trimmed;
+  }
+}
+
 export function clearFormStoreValues(formOrStoreKey: HTMLFormElement | string) {
   const keyPrefix = typeof formOrStoreKey === 'string' ? formOrStoreKey : getFormStoreKey(formOrStoreKey);
 
@@ -476,9 +492,8 @@ export class FormControlController implements ReactiveController {
       } else {
         appendPrimitive(value as string | number | boolean);
 
-        const host = this.host as HTMLElement & { value?: unknown };
-        if (!isPassword && typeof value === 'string' && host.value === value && value.trim() !== value) {
-          host.value = value.trim();
+        if ((this.host as HTMLElement & { value?: unknown }).value === value) {
+          trimControlValue(this.host);
         }
       }
 

@@ -29,7 +29,7 @@ export default class ZnFilterContainer extends ZincElement {
   private _filterFrame = 0;
 
   public handleSearchChange(event: Event) {
-    const searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
+    const searchTerm = (event.target as HTMLInputElement).value.trim().toLowerCase();
     cancelAnimationFrame(this._filterFrame);
     this._filterFrame = requestAnimationFrame(() => this.applyFilter(searchTerm));
   }

@@ -264,7 +264,7 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
 
   private handleSearchInput(e: Event) {
     const input = e.target as HTMLInputElement;
-    this._searchQuery = input.value.toLowerCase();
+    this._searchQuery = input.value.trim().toLowerCase();
     this.filterIcons();
   }
 

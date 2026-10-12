@@ -1314,7 +1314,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     clearTimeout(this.linkSearchTimer);
     const token = ++this.linkSearchToken;
     this.linkSearchTimer = setTimeout(() => {
-      const url = `${this.linkUrl}${this.linkUrl.includes('?') ? '&' : '?'}q=${encodeURIComponent(term)}`;
+      const url = `${this.linkUrl}${this.linkUrl.includes('?') ? '&' : '?'}q=${encodeURIComponent(term.trim())}`;
       fetch(url, {headers: {Accept: 'application/json'}})
         .then(res => {
           if (!res.ok) throw new Error(`link search failed: ${res.status}`);

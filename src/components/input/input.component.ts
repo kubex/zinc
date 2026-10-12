@@ -607,6 +607,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
       // If invalid, keep the previous value
     } else {
       this.value = this.input.value;
+      this.syncEmailDisplay();
     }
 
     this.emit('zn-change');
@@ -644,6 +645,13 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     this.formControlController.emitInvalidEvent(event);
   }
 
+  // Email inputs already strip whitespace from .value but keep it on screen
+  private syncEmailDisplay() {
+    if (this.type === 'email') {
+      this.input.value = this.value;
+    }
+  }
+
   private handleKeyDown(event: KeyboardEvent) {
     // The slash menu claims its own keys; while it is open Escape closes it and Enter picks an item,
     // rather than blurring the field or submitting the form
@@ -660,6 +668,8 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     // Pressing enter when focused on the input should submit the form like a native input, be we wait a tick before
     // submitting to allow users to cancel the keydown event if they need to
     if (event.key === 'Enter' && !hasModifier) {
+      this.syncEmailDisplay();
+
       // When using a Input Method Editor (IME), pressing enter will cause the form to submit unexpectedly. One way
       // to check for this is to look at event.isComposing, which will be true when the IME is open.
       if (!event.defaultPrevented && !event.isComposing) {

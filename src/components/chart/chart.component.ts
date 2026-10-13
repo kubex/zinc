@@ -18,7 +18,8 @@ import {
 } from './builders';
 import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
 import { type EChartsModule, loadECharts } from './echarts-loader';
-import { property } from 'lit/decorators.js';
+import { LiveTransport, LiveWindow } from './live';
+import { property, state } from 'lit/decorators.js';
 import { ResizeController } from '@lit-labs/observers/resize-controller.js';
 import styles from './chart.scss';
 import ZincElement from '../../internal/zinc-element';
@@ -47,6 +48,9 @@ export default class ZnChart extends ZincElement {
 
   @property({ type: Boolean }) live = false;
   @property({ attribute: 'data-url' }) dataUrl = '';
+  @property({ attribute: 'stream-url' }) streamUrl = '';
+  @property({ attribute: 'live-renew-url' }) liveRenewUrl = '';
+  @property({ attribute: 'hide-zero', type: Boolean }) hideZero = false;
   @property({ attribute: 'live-interval', type: Number }) liveInterval = 1000;
   @property({ type: Number, reflect: true }) height = 300;
 
@@ -86,6 +90,80 @@ export default class ZnChart extends ZincElement {
   private echarts?: EChartsModule;
   private initPromise?: Promise<void>;
   private liveTimer?: number;
+  private pollAbort?: AbortController;
+  @state() private liveStatus = 'connecting';
+  private liveWindow = new LiveWindow();
+  private replaceLiveSeries = true;
+  private transport = new LiveTransport((frame, snapshot) => {
+    const applied = this.liveWindow.apply(frame, snapshot);
+    this.replaceLiveSeries ||= snapshot || applied.prediction !== undefined;
+    this.data = this.liveSeries();
+    this.requestUpdate();
+  }, status => {
+    this.liveStatus = status;
+    this.dispatchEvent(new CustomEvent('zn-live-status', { detail: { status }, bubbles: true, composed: true }));
+  }, serverTime => {
+    this.liveWindow.advance(serverTime);
+    this.data = this.liveSeries();
+  });
+
+  private liveTransitionDuration() {
+    if (this.enableAnimations === false || this.enableAnimations === 0 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return 0;
+    return Math.max(0, Math.min(1000, typeof this.enableAnimations === 'number' ? this.enableAnimations : 350));
+  }
+
+  private liveSeries(): SeriesItem[] {
+    const duration = this.liveTransitionDuration();
+    return this.liveWindow.series(this.hideZero).map(series => ({ ...series,
+      animation: duration > 0, animationDuration: 0, animationDurationUpdate: duration,
+      animationEasingUpdate: 'linear', animationThreshold: 10000,
+    }));
+  }
+
+  private updateChart() {
+    const option = this.buildOption();
+    if (this.liveWindow.frame && this.live && (this.streamUrl || this.liveRenewUrl)) {
+      const axis = Array.isArray(option.xAxis) ? option.xAxis[0] : option.xAxis;
+      option.xAxis = { ...axis, id: 'live-time', min: this.liveWindow.frame.from, max: this.liveWindow.frame.until };
+      const series = this.liveSeries();
+      option.legend = { ...option.legend, data: series.filter(s => !s.name.startsWith('_')).map(s => s.name) };
+      option.animation = this.liveTransitionDuration() > 0;
+      option.animationDuration = 0;
+      option.animationDurationUpdate = this.liveTransitionDuration();
+      option.animationThreshold = 10000;
+      option.animationEasingUpdate = 'linear';
+    }
+    if (this.liveWindow.frame && this.live && !this.replaceLiveSeries) {
+      // Keep the prediction's models and data in ECharts between snapshots.
+      // Only measurements and the moving viewport change on deltas/heartbeats.
+      const series = Array.isArray(option.series) ? option.series : option.series ? [option.series] : [];
+      option.series = series.filter(s => s?.id === 'live-values');
+      this.chart?.setOption({
+        series: option.series,
+        xAxis: { id: 'live-time', min: this.liveWindow.frame.from, max: this.liveWindow.frame.until },
+        animation: this.liveTransitionDuration() > 0,
+        animationDuration: 0,
+        animationDurationUpdate: this.liveTransitionDuration(),
+        animationEasingUpdate: 'linear',
+        animationThreshold: 10000,
+      });
+    } else {
+      this.chart?.setOption(option, { replaceMerge: ['series', 'legend', 'xAxis'] });
+    }
+    this.replaceLiveSeries = false;
+  }
+
+  protected updated(changed: PropertyValues) {
+    super.updated(changed);
+    if (!this.chart) return;
+    if (['live', 'dataUrl', 'streamUrl', 'liveRenewUrl', 'liveInterval'].some(key => changed.has(key))) this.startLive();
+    if (changed.size !== 1 || !changed.has('liveStatus')) this.updateChart();
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.hasUpdated && !this.chart) this.initPromise = this.initChart().catch(() => undefined);
+  }
 
   private readonly resizeObserver = new ResizeController(this, {
     target: null,
@@ -129,7 +207,7 @@ export default class ZnChart extends ZincElement {
   private buildOption() {
     const props: BuilderProps = {
       type: this.type,
-      data: this.data ?? [],
+      data: this.liveWindow.frame && this.live ? this.liveSeries() : this.data ?? [],
       categories: Array.isArray(this.categories) ? this.categories : [],
       xAxisType: this.xAxis,
       yAxisAppend: this.yAxisAppend,
@@ -187,23 +265,40 @@ export default class ZnChart extends ZincElement {
 
     this.resizeObserver.observe(host);
 
-    if (this.live && this.dataUrl) this.startLive();
+    this.startLive();
+  }
+
+  private stopLive() {
+    this.transport.stop();
+    if (this.liveTimer) clearTimeout(this.liveTimer);
+    this.liveTimer = undefined;
+    this.pollAbort?.abort();
   }
 
   private startLive() {
-    this.liveTimer = window.setInterval(async () => {
+    this.stopLive(); this.liveWindow = new LiveWindow(); this.replaceLiveSeries = true;
+    if (!this.live || !this.isConnected) return;
+    if (this.streamUrl || this.liveRenewUrl) {
+      try { this.transport.start(this.streamUrl, this.liveRenewUrl); } catch { this.stopLive(); }
+      return;
+    }
+    if (!this.dataUrl) return;
+    const controller = new AbortController(); this.pollAbort = controller;
+    const poll = async () => {
       try {
-        const res = await fetch(this.dataUrl);
-        const newData = await res.json() as SeriesItem[];
-        this.data = newData;
-        this.chart?.setOption({ ...this.buildOption() });
-      } catch {
-        /* swallow transient fetch errors */
-      }
-    }, this.liveInterval);
+        const res = await fetch(this.dataUrl, { signal: controller.signal });
+        if (res.ok) {
+          const data = await res.json() as SeriesItem[];
+          if (!controller.signal.aborted) { this.data = data; }
+        }
+      } catch { /* transient polling failure */ }
+      if (!controller.signal.aborted) this.liveTimer = window.setTimeout(() => void poll(), Math.max(250, this.liveInterval));
+    };
+    this.liveTimer = window.setTimeout(() => void poll(), Math.max(250, this.liveInterval));
   }
 
   private reinit() {
+    this.stopLive();
     this.chart?.dispose();
     this.chart = undefined;
     this.initPromise = this.initChart().catch(() => undefined);
@@ -235,12 +330,14 @@ export default class ZnChart extends ZincElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this.liveTimer) clearInterval(this.liveTimer);
+    this.stopLive();
     this.chart?.dispose();
     this.chart = undefined;
   }
 
   protected render(): unknown {
-    return html`<div class="chart"><div id="chart"></div></div>`;
+    return html`<div class="chart"><div id="chart"></div>
+      ${this.live && (this.streamUrl || this.liveRenewUrl) ? html`<div role="status" aria-live="polite">Live: ${this.liveStatus}${this.liveWindow.frame ? ` · ${this.liveWindow.frame.resolution_seconds}s intervals · Expected range: ${this.liveWindow.predictionStatus}` : ''}</div>` : ''}
+    </div>`;
   }
 }

@@ -17,11 +17,19 @@ export type ChartType =
   | 'treemap';
 
 export interface SeriesItem {
+  /** Stable identity for incremental live updates. */
+  id?: string;
+  animation?: boolean;
+  animationDuration?: number;
+  animationDurationUpdate?: number;
+  animationEasingUpdate?: 'linear';
+  animationThreshold?: number;
   name: string;
   data: any[];
   color?: string;
   /** Series sharing a stack ID are stacked, overriding the chart-wide `stacked` setting. */
   stack?: string;
+  stackStrategy?: 'all' | 'samesign' | 'positive' | 'negative';
   /** Fill below a line, for example `{ opacity: 0.15 }`; `{ opacity: 0 }` keeps a stacked base invisible. */
   areaStyle?: Record<string, unknown>;
   lineStyle?: Record<string, unknown>;
@@ -191,6 +199,13 @@ function seriesFromProps(
 // followed by a filled series holding the band's height.
 function seriesStyle(s: SeriesItem): Record<string, unknown> {
   return {
+    ...(s.id ? { id: s.id } : {}),
+    ...(s.animation !== undefined ? { animation: s.animation } : {}),
+    ...(s.animationDuration !== undefined ? { animationDuration: s.animationDuration } : {}),
+    ...(s.animationDurationUpdate !== undefined ? { animationDurationUpdate: s.animationDurationUpdate } : {}),
+    ...(s.animationEasingUpdate ? { animationEasingUpdate: s.animationEasingUpdate } : {}),
+    ...(s.animationThreshold !== undefined ? { animationThreshold: s.animationThreshold } : {}),
+    ...(s.stackStrategy ? { stackStrategy: s.stackStrategy } : {}),
     ...(s.areaStyle ? { areaStyle: s.areaStyle } : {}),
     ...(s.lineStyle ? { lineStyle: s.lineStyle } : {}),
     ...(s.symbol ? { symbol: s.symbol } : {}),

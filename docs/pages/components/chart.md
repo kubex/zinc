@@ -682,3 +682,52 @@ chart.enableAnimations = true;
 - Round values appropriately for readability
 - Use `y-axis-append` to add units or symbols to values
 - Format dates consistently when using time series data
+
+
+## Signed SSE charts
+
+Use SSE for a moving time window with authoritative bucket updates:
+
+```html
+<zn-chart type="line" xaxis="datetime" live
+  live-renew-url="/sensors/live-grant?sensor=cpu&window=3600&interval=1&metric=hits"
+  enable-animations="200"></zn-chart>
+```
+
+Rubix rewrites `live-renew-url` through the app's authenticated route. The GET
+endpoint must return JSON `{stream_url, expires_at, server_time}` with UTC
+millisecond times, `Cache-Control: no-store`, and recheck login and permissions.
+Renewal accepts only same-origin URLs, sends the login cookie only to that route,
+and rejects redirects. Return 401/403 to stop streaming after logout or loss of
+access. Grants must also expire on the streaming server; the client is not an
+authorization boundary.
+
+For a grant obtained elsewhere, supply `stream-url` directly. Without a renewal
+route it stops at the first frame's expiry. Stream requests use EventSource with
+no cross-origin credentials. Existing `live data-url` polling remains supported;
+SSE takes precedence when `stream-url` or `live-renew-url` is present.
+
+The stream uses `snapshot`, `delta`, and `heartbeat` events. Snapshots and deltas
+contain `{from, until, server_time, expires_at, resolution_seconds, metric, points}`.
+Times are UTC milliseconds; each point is `{at, value}`. Snapshots replace the
+window, deltas replace buckets by timestamp, and heartbeats contain
+`{server_time, expires_at}`. Reconnect must start with a snapshot. Buffers are
+limited to 10,000 points. A resolution or metric change requires a snapshot.
+
+Optional `prediction` contains `status`, `average_rates`, and `points` with
+`{at, lower, upper, expected, available}`. Available ranges are drawn behind
+actual values and labelled as average rates when necessary. Ordinary deltas
+preserve the range; snapshots replace it. `hide-zero` hides actual zeros only.
+
+The chart emits `zn-live-status` with `detail.status` (`connecting`, `connected`,
+`reconnecting`, `expired`, `denied`, `invalid`, or `unavailable`) and shows status
+below the plot. It closes its transport on removal or when live mode is disabled.
+
+
+Live charts honour `enable-animations`: a numeric value sets the update
+transition in milliseconds (capped at 1,000ms). Use `350` for gentle live
+transitions. Initial reveal animations remain disabled; existing points and the
+moving window interpolate without resetting the chart. The expected range moves
+with the same transition. Animation remains enabled up to the 10,000-point live
+buffer limit. Reduced-motion preferences and disabled animations produce instant
+updates. Recorded values and peaks are unchanged.

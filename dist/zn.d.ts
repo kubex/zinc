@@ -4806,11 +4806,19 @@ declare module "components/chart/builders" {
     import type { EChartsOption } from 'echarts';
     export type ChartType = 'area' | 'bar' | 'donut' | 'funnel' | 'gauge' | 'heatmap' | 'line' | 'pie' | 'radar' | 'sankey' | 'scatter' | 'sunburst' | 'treemap';
     export interface SeriesItem {
+        /** Stable identity for incremental live updates. */
+        id?: string;
+        animation?: boolean;
+        animationDuration?: number;
+        animationDurationUpdate?: number;
+        animationEasingUpdate?: 'linear';
+        animationThreshold?: number;
         name: string;
         data: any[];
         color?: string;
         /** Series sharing a stack ID are stacked, overriding the chart-wide `stacked` setting. */
         stack?: string;
+        stackStrategy?: 'all' | 'samesign' | 'positive' | 'negative';
         /** Fill below a line, for example `{ opacity: 0.15 }`; `{ opacity: 0 }` keeps a stacked base invisible. */
         areaStyle?: Record<string, unknown>;
         lineStyle?: Record<string, unknown>;
@@ -4877,6 +4885,70 @@ declare module "components/chart/echarts-loader" {
     export type EChartsModule = typeof echartsCore;
     export function loadECharts(): Promise<EChartsModule>;
 }
+declare module "components/chart/live" {
+    import type { SeriesItem } from "components/chart/builders";
+    export interface LivePoint {
+        at: number;
+        value: number | null;
+    }
+    export interface LivePrediction {
+        status: string;
+        average_rates?: boolean;
+        points: {
+            at: number;
+            expected: number;
+            lower: number;
+            upper: number;
+            available: boolean;
+        }[];
+    }
+    export interface LiveFrame {
+        from: number;
+        until: number;
+        server_time: number;
+        expires_at: number;
+        resolution_seconds: number;
+        metric: string;
+        points: LivePoint[];
+        prediction?: LivePrediction;
+    }
+    export interface LiveGrant {
+        stream_url: string;
+        expires_at: number;
+        server_time: number;
+    }
+    /** Authoritative bucket replacement, never increment counts on delivery/reconnect. */
+    export class LiveWindow {
+        frame?: LiveFrame;
+        private points;
+        private prediction?;
+        apply(value: unknown, snapshot: boolean): LiveFrame;
+        advance(serverTime: number): void;
+        get predictionStatus(): string;
+        series(hideZero?: boolean): SeriesItem[];
+    }
+    /** One transport per chart. Grants renew only through a same-origin login gate. */
+    export class LiveTransport {
+        private source?;
+        private timer?;
+        private expiryTimer?;
+        private abort?;
+        private stopped;
+        private generation;
+        private retry;
+        private renewing;
+        private readonly frame;
+        private readonly status;
+        private readonly heartbeat?;
+        constructor(frame: (data: unknown, snapshot: boolean) => void, status: (status: string) => void, heartbeat?: (serverTime: number) => void);
+        start(streamURL: string, renewURL: string): void;
+        stop(): void;
+        private active;
+        private deadline;
+        private connect;
+        private renew;
+    }
+}
 declare module "components/chart/chart.component" {
     import { type ChartType, type RadarIndicator, type SeriesItem } from "components/chart/builders";
     import { type CSSResultGroup, type PropertyValues } from 'lit';
@@ -4901,6 +4973,9 @@ declare module "components/chart/chart.component" {
         stacked: boolean;
         live: boolean;
         dataUrl: string;
+        streamUrl: string;
+        liveRenewUrl: string;
+        hideZero: boolean;
         liveInterval: number;
         height: number;
         enableAnimations: boolean | number;
@@ -4918,6 +4993,16 @@ declare module "components/chart/chart.component" {
         private echarts?;
         private initPromise?;
         private liveTimer?;
+        private pollAbort?;
+        private liveStatus;
+        private liveWindow;
+        private replaceLiveSeries;
+        private transport;
+        private liveTransitionDuration;
+        private liveSeries;
+        private updateChart;
+        protected updated(changed: PropertyValues): void;
+        connectedCallback(): void;
         private readonly resizeObserver;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         protected getUpdateComplete(): Promise<boolean>;
@@ -4926,6 +5011,7 @@ declare module "components/chart/chart.component" {
         private getBorderColor;
         private buildOption;
         private initChart;
+        private stopLive;
         private startLive;
         private reinit;
         attributeChangedCallback(name: string, _old: string | null, value: string | null): void;

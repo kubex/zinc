@@ -632,6 +632,7 @@
             <li data-level="3"><a href="#performance-considerations">Performance Considerations</a></li>
             <li data-level="3"><a href="#accessibility">Accessibility</a></li>
             <li data-level="3"><a href="#data-formatting">Data Formatting</a></li>
+            <li data-level="2"><a href="#signed-sse-charts">Signed SSE charts</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#parts">Parts</a></li>
           </ul>
@@ -2856,6 +2857,56 @@ chart<span class="token punctuation">.</span>enableAnimations <span class="token
             <li>Use <code>y-axis-append</code> to add units or symbols to values</li>
             <li>Format dates consistently when using time series data</li>
           </ul>
+          <h2 id="signed-sse-charts" class="anchor-heading">
+            Signed SSE charts<a href="#signed-sse-charts" aria-label='Direct link to "Signed SSE charts"'></a>
+          </h2>
+          <p>Use SSE for a moving time window with authoritative bucket updates:</p>
+          <pre><code class="language-html" id="code-block-216"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>line<span class="token punctuation">"</span></span> <span class="token attr-name">xaxis</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>datetime<span class="token punctuation">"</span></span> <span class="token attr-name">live</span>
+  <span class="token attr-name">live-renew-url</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/sensors/live-grant?sensor=cpu&amp;window=3600&amp;interval=1&amp;metric=hits<span class="token punctuation">"</span></span>
+  <span class="token attr-name">enable-animations</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>200<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-216"></zn-copy-button></pre>
+          <p>
+            Rubix rewrites <code>live-renew-url</code> through the app’s authenticated route. The GET endpoint must
+            return JSON <code>{stream_url, expires_at, server_time}</code> with UTC millisecond times,
+            <code>Cache-Control: no-store</code>, and recheck login and permissions. Renewal accepts only same-origin
+            URLs, sends the login cookie only to that route, and rejects redirects. Return 401/403 to stop streaming
+            after logout or loss of access. Grants must also expire on the streaming server; the client is not an
+            authorization boundary.
+          </p>
+          <p>
+            For a grant obtained elsewhere, supply <code>stream-url</code> directly. Without a renewal route it stops at
+            the first frame’s expiry. Stream requests use EventSource with no cross-origin credentials. Existing
+            <code>live data-url</code> polling remains supported; SSE takes precedence when <code>stream-url</code> or
+            <code>live-renew-url</code> is present.
+          </p>
+          <p>
+            The stream uses <code>snapshot</code>, <code>delta</code>, and <code>heartbeat</code> events. Snapshots and
+            deltas contain <code>{from, until, server_time, expires_at, resolution_seconds, metric, points}</code>.
+            Times are UTC milliseconds; each point is <code>{at, value}</code>. Snapshots replace the window, deltas
+            replace buckets by timestamp, and heartbeats contain <code>{server_time, expires_at}</code>. Reconnect must
+            start with a snapshot. Buffers are limited to 10,000 points. A resolution or metric change requires a
+            snapshot.
+          </p>
+          <p>
+            Optional <code>prediction</code> contains <code>status</code>, <code>average_rates</code>, and
+            <code>points</code> with <code>{at, lower, upper, expected, available}</code>. Available ranges are drawn
+            behind actual values and labelled as average rates when necessary. Ordinary deltas preserve the range;
+            snapshots replace it. <code>hide-zero</code> hides actual zeros only.
+          </p>
+          <p>
+            The chart emits <code>zn-live-status</code> with <code>detail.status</code> (<code>connecting</code>,
+            <code>connected</code>, <code>reconnecting</code>, <code>expired</code>, <code>denied</code>,
+            <code>invalid</code>, or <code>unavailable</code>) and shows status below the plot. It closes its transport
+            on removal or when live mode is disabled.
+          </p>
+          <p>
+            Live charts honour <code>enable-animations</code>: a numeric value sets the update transition in
+            milliseconds (capped at 1,000ms). Use <code>350</code> for gentle live transitions. Initial reveal
+            animations remain disabled; existing points and the moving window interpolate without resetting the chart.
+            The expected range moves with the same transition. Animation remains enabled up to the 10,000-point live
+            buffer limit. Reduced-motion preferences and disabled animations produce instant updates. Recorded values
+            and peaks are unchanged.
+          </p>
 
           <h2 id="importing" class="anchor-heading">
             Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
@@ -2878,7 +2929,7 @@ chart<span class="token punctuation">.</span>enableAnimations <span class="token
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-216"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.180/dist/components/chart/chart.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-216"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-217"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.180/dist/components/chart/chart.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-217"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -2893,12 +2944,12 @@ chart<span class="token punctuation">.</span>enableAnimations <span class="token
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-217"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.180/dist/components/chart/chart.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-217"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-218"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.180/dist/components/chart/chart.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-218"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-218"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/chart/chart.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-218"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-219"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/chart/chart.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-219"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>

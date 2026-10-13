@@ -58,6 +58,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -246,79 +319,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -3585,6 +3585,33 @@
             },
             {
               "kind": "field",
+              "name": "streamUrl",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "stream-url"
+            },
+            {
+              "kind": "field",
+              "name": "liveRenewUrl",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "live-renew-url"
+            },
+            {
+              "kind": "field",
+              "name": "hideZero",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hide-zero"
+            },
+            {
+              "kind": "field",
               "name": "liveInterval",
               "type": {
                 "text": "number"
@@ -3727,6 +3754,64 @@
             },
             {
               "kind": "field",
+              "name": "pollAbort",
+              "type": {
+                "text": "AbortController | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "liveStatus",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "'connecting'"
+            },
+            {
+              "kind": "field",
+              "name": "liveWindow",
+              "privacy": "private",
+              "default": "new LiveWindow()"
+            },
+            {
+              "kind": "field",
+              "name": "replaceLiveSeries",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "transport",
+              "privacy": "private",
+              "default": "new LiveTransport((frame, snapshot) => { const applied = this.liveWindow.apply(frame, snapshot); this.replaceLiveSeries ||= snapshot || applied.prediction !== undefined; this.data = this.liveSeries(); this.requestUpdate(); }, status => { this.liveStatus = status; this.dispatchEvent(new CustomEvent('zn-live-status', { detail: { status }, bubbles: true, composed: true })); }, serverTime => { this.liveWindow.advance(serverTime); this.data = this.liveSeries(); })"
+            },
+            {
+              "kind": "method",
+              "name": "liveTransitionDuration",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "liveSeries",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "SeriesItem[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updateChart",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
               "name": "resizeObserver",
               "privacy": "private",
               "readonly": true,
@@ -3780,6 +3865,11 @@
             {
               "kind": "method",
               "name": "initChart",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "stopLive",
               "privacy": "private"
             },
             {
@@ -3872,6 +3962,30 @@
               },
               "default": "''",
               "fieldName": "dataUrl"
+            },
+            {
+              "name": "stream-url",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "streamUrl"
+            },
+            {
+              "name": "live-renew-url",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "liveRenewUrl"
+            },
+            {
+              "name": "hide-zero",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hideZero"
             },
             {
               "name": "live-interval",

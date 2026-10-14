@@ -16,6 +16,18 @@ import styles from './content-block.scss';
 // What the editor (Quill) can produce beyond the sanitizer's defaults
 const EDITOR_TAGS = ['s', 'code', 'pre', 'blockquote', 'hr', 'span'];
 
+// The iframe can't see the shadow styles, so editor formatting is restyled to match the text view
+const IFRAME_STYLES = 'html,body{background-color:#fff;margin:0}img{max-width:100%;max-height:500px}'
+  + 'p{margin:0}ul,ol{margin:0;padding-left:1.5em}'
+  + 'blockquote{border-left:4px solid #ddd;margin:5px 0;padding-left:16px}'
+  + 'code{background-color:#f0f0f0;border-radius:3px;font-size:85%;padding:2px 4px}'
+  + 'pre{background-color:#23241f;border-radius:3px;margin:5px 0;padding:5px 10px;color:#f8f8f2;overflow:auto}'
+  + 'pre code{background:none;padding:0}'
+  + 'hr{border:none;border-top:1px solid #ddd;margin:8px 0}'
+  + 'li[data-list=checked],li[data-list=unchecked]{list-style:none}'
+  + 'li[data-list=checked]::before{content:"☑";color:#777;margin:0 .3em 0 -1.5em}'
+  + 'li[data-list=unchecked]::before{content:"☐";color:#777;margin:0 .3em 0 -1.5em}';
+
 interface TextRow {
   lines: string[];
   type: 'reply' | 'text';
@@ -73,14 +85,13 @@ export default class ContentBlock extends ZincElement {
       if (iframe.contentDocument) {
         const div = this.htmlNodes[0] as HTMLDivElement;
         if (div) {
-          let convertedHtml = div?.innerHTML ?? '';
-          convertedHtml = convertedHtml.replace(/&nbsp;/g, ' ');
-          convertedHtml = convertedHtml.replace(/&lt;/g, '<');
-          convertedHtml = convertedHtml.replace(/&gt;/g, '>');
+          // Escaped source has no element children; textContent decodes it once, including &amp;nbsp;
+          let convertedHtml = div.children.length ? div.innerHTML : div.textContent ?? '';
           convertedHtml = convertedHtml.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
 
-          const baseStyles = "<style>body,html{background-color: #ffffff}img{max-width:100%; max-height: 500px;}</style>";
-          iframe.srcdoc = baseStyles + convertedHtml;
+          const {fontFamily, fontSize, lineHeight, color} = getComputedStyle(this.shadowRoot?.querySelector('.text-section') ?? this);
+          iframe.srcdoc = `<style>body{font-family:${fontFamily};font-size:${fontSize};line-height:${lineHeight};color:${color}}${IFRAME_STYLES}</style>`
+            + convertedHtml;
         }
       }
 

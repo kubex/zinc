@@ -17,6 +17,16 @@ describe('<zn-content-block>', () => {
     expect(el).to.exist;
   });
 
+  it('should decode escaped source in the html body once', async () => {
+    const el = await fixture<LitElement>(
+      '<zn-content-block><div slot="html">&lt;p&gt;Test&amp;nbsp;Format&lt;/p&gt;</div></zn-content-block>'
+    );
+    await el.updateComplete;
+    const iframe = el.shadowRoot!.querySelector('iframe')!;
+
+    expect(iframe.srcdoc).to.contain('<p>Test&nbsp;Format</p>');
+  });
+
   it('should render plain text in the text body as text', async () => {
     const content = await textSection('1 &lt; 2 &amp;&amp; 3 &gt; 2');
 

@@ -1,9 +1,10 @@
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
-import {property} from "lit/decorators.js";
+import {property, state} from "lit/decorators.js";
 import {trimControlValue} from '../../internal/form';
 import ZincElement from '../../internal/zinc-element';
 
 import type ZnDataSelect from "../data-select";
+import type ZnButton from "../button";
 import type ZnDataTable from "../data-table";
 import type ZnInput from "../input";
 import type ZnQueryBuilder from "../query-builder";
@@ -42,12 +43,20 @@ export default class ZnFilterWrapper extends ZincElement {
 
   @property() button: string = 'Filter';
 
-  private hasSubmitButton: boolean = false;
+  /** Submits the filters when Enter is pressed in a text field. */
+  @property({attribute: 'submit-on-enter', type: Boolean}) submitOnEnter = false;
+
+  /** Shown on the submit button while results load. */
+  @property({attribute: 'loading-text'}) loadingText = 'Searching...';
+
+  @state() private loading = false;
+
+  private submitButton: ZnButton | null = null;
 
   handleSubmit = (event: Event) => {
     event.preventDefault();
     const dataTable: ZnDataTable | null = this.closest('zn-data-table');
-    if (dataTable) {
+    if (dataTable && !this.loading) {
       const allowedInputs = ['zn-input', 'zn-select', 'zn-query-builder', 'zn-data-select', 'zn-datepicker', 'input', 'select', 'textarea'];
       const inputs = Array.from(this.querySelectorAll(allowedInputs.join(','))) as AllowedInputElement[];
       const params: Record<string, any> = {};
@@ -60,17 +69,41 @@ export default class ZnFilterWrapper extends ZincElement {
       });
 
       dataTable.requestParams = params;
-      dataTable.refresh();
+      this.setLoading(true);
+      Promise.resolve(dataTable.refresh()).finally(() => this.setLoading(false));
+    }
+  }
+
+  private setLoading(loading: boolean) {
+    this.loading = loading;
+    if (this.submitButton) {
+      this.submitButton.processingText = this.loadingText;
+      this.submitButton.processing = loading;
+    }
+  }
+
+  handleKeyDown = (event: KeyboardEvent) => {
+    if (!this.submitOnEnter || event.key !== 'Enter' || event.defaultPrevented || event.isComposing
+      || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
+      return;
+    }
+
+    // Only plain text fields: selects, buttons and textareas use Enter themselves
+    if (event.composedPath()[0] instanceof HTMLInputElement) {
+      this.handleSubmit(event);
     }
   }
 
   connectedCallback() {
     super.connectedCallback();
-    const button: HTMLElement | null = this.querySelector('zn-button[submit]');
-    if (button) {
-      this.hasSubmitButton = true;
-      button.addEventListener('click', this.handleSubmit);
-    }
+    this.addEventListener('keydown', this.handleKeyDown);
+    this.submitButton = this.querySelector('zn-button[submit]');
+    this.submitButton?.addEventListener('click', this.handleSubmit);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener('keydown', this.handleKeyDown);
   }
 
   private renderDefaultButton() {
@@ -78,6 +111,8 @@ export default class ZnFilterWrapper extends ZincElement {
       <zn-button part="search-button"
                  class="filter-wrapper__submit"
                  type="submit"
+                 ?processing="${this.loading}"
+                 processing-text="${this.loadingText}"
                  @click="${this.handleSubmit}">
         ${this.button}
       </zn-button>
@@ -87,7 +122,7 @@ export default class ZnFilterWrapper extends ZincElement {
   render() {
     return html`
       <slot></slot>
-      ${this.hasSubmitButton ? '' : this.renderDefaultButton()}
+      ${this.submitButton ? '' : this.renderDefaultButton()}
     `;
   }
 }

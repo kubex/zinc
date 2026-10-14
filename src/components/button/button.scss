@@ -424,6 +424,31 @@
   }
 }
 
+.button--processing {
+  cursor: progress;
+}
+
+.button__spinner {
+  width: 1em;
+  height: 1em;
+  margin-inline-end: 8px;
+  flex-shrink: 0;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: button-spin .7s linear infinite;
+}
+
+.button__label--replaced {
+  display: none;
+}
+
+@keyframes button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .button--relative-wrapper {
   position: relative;
   display: inline-flex;

@@ -141,6 +141,12 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   }) loadingTextPosition: 'left' | 'right' | 'center' | string = 'center';
   @property({type: Boolean}) loading = false;
 
+  /** Shows a spinner and ignores clicks, e.g. while a request is in flight. */
+  @property({type: Boolean, reflect: true}) processing = false;
+
+  /** Replaces the label while processing. */
+  @property({attribute: 'processing-text'}) processingText = '';
+
   get validity() {
     if (this._isButton() && this.button) {
       return (this.button as HTMLButtonElement).validity;
@@ -242,7 +248,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   }
 
   handleClick = () => {
-    if (this.disabled) {
+    if (this.disabled || this.processing) {
       return;
     }
 
@@ -378,7 +384,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     const isLink = this._isLink();
     const showCancel = this.loading && this.autoClick;
     const resolvedIconSize = this.iconSize ? this.iconSize : 20;
-    const icon = this.icon && !this.loading ? html`
+    const icon = this.icon && !this.loading && !this.processing ? html`
         <zn-icon part="icon" src="${this.icon}" id="xy2" size="${resolvedIconSize}"
                  color="${ifDefined(this.iconColor)}" fill="${ifDefined(this.iconFill)}"
                  library="${ifDefined(this.iconLibrary)}"></zn-icon>`
@@ -431,6 +437,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--has-notification': notification !== undefined && notification !== 0,
           'button--muted-notification': this.mutedNotifications || notification === -2,
           'button--notification-dot': notification !== undefined && notification < 0,
+          'button--processing': this.processing,
         })}"
         type="${ifDefined(this.type)}"
         href="${ifDefined(this.href)}"
@@ -440,15 +447,19 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         gaid="${ifDefined(this.gaid)}"
         aria-label="${ifDefined(ariaLabel)}"
         aria-pressed="${ifDefined(isLink ? undefined : this.pressed)}"
+        aria-busy="${this.processing ? 'true' : nothing}"
         data-notification="${ifDefined(notification)}"
         disabled="${this.disabled || nothing}"
         style=${styleMap(buttonStyles)}
         @click="${this.handleClick}">
         ${this.iconPosition === 'left' ? icon : ''}
+        ${this.processing ? html`<span part="spinner" class="button__spinner"></span>` : ''}
+        ${this.processing && this.processingText ? html`<span class="button__processing-text">${this.processingText}</span>` : ''}
         <slot part="label"
               class="${classMap({
                 'button__label': true,
-                'button__label--hidden': this.loading
+                'button__label--hidden': this.loading,
+                'button__label--replaced': this.processing && !!this.processingText
               })}"
               style="--loading-duration: ${this.autoClickDelay / 1000}s">
           ${this.content}

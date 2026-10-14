@@ -431,10 +431,10 @@ export default class ZnDataTable extends ZincElement {
 
   requestParams: Record<string, any> = {};
 
-  refresh() {
+  refresh(): Promise<void> {
     // Allow manual refresh to trigger the first data load when no-initial-load is set
     this._initialLoad = false;
-    this._dataTask.run().then(r => r);
+    return this._dataTask.run();
   }
 
   // Headers that make up the visible columns, in header order

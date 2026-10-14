@@ -1268,6 +1268,10 @@ declare module "components/button/button.component" {
         loadingText: string;
         loadingTextPosition: 'left' | 'right' | 'center' | string;
         loading: boolean;
+        /** Shows a spinner and ignores clicks, e.g. while a request is in flight. */
+        processing: boolean;
+        /** Replaces the label while processing. */
+        processingText: string;
         get validity(): ValidityState;
         get validationMessage(): string;
         firstUpdated(): void;
@@ -4260,7 +4264,7 @@ declare module "components/data-table/data-table.component" {
         private _columnDefaultsApplied;
         private _formatTemplates;
         requestParams: Record<string, any>;
-        refresh(): void;
+        refresh(): Promise<void>;
         private visibleHeaders;
         private selectableHeaders;
         private isColumnVisible;
@@ -9161,9 +9165,17 @@ declare module "components/filter-wrapper/filter-wrapper.component" {
     export default class ZnFilterWrapper extends ZincElement {
         static styles: CSSResultGroup;
         button: string;
-        private hasSubmitButton;
+        /** Submits the filters when Enter is pressed in a text field. */
+        submitOnEnter: boolean;
+        /** Shown on the submit button while results load. */
+        loadingText: string;
+        private loading;
+        private submitButton;
         handleSubmit: (event: Event) => void;
+        private setLoading;
+        handleKeyDown: (event: KeyboardEvent) => void;
         connectedCallback(): void;
+        disconnectedCallback(): void;
         private renderDefaultButton;
         render(): import("lit-html").TemplateResult<1>;
     }

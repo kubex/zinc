@@ -9,6 +9,17 @@ describe('<zn-tile>', () => {
     expect(el).to.exist;
   });
 
+  it('should render a slotted caption and image without caption or description attributes', async () => {
+    const el = await fixture<ZnTile>(html`
+      <zn-tile>
+        <zn-icon slot="image" src="user@lu"></zn-icon>
+        <span slot="caption">Leslie Alexander</span>
+      </zn-tile>`);
+
+    expect(el.shadowRoot!.querySelector('slot[name="caption"]')).to.exist;
+    expect(el.shadowRoot!.querySelector('slot[name="image"]')).to.exist;
+  });
+
   it('should render its content as a link when href is set', async () => {
     const el = await fixture<ZnTile>(html`
       <zn-tile href="/users/leslie" caption="Leslie Alexander"></zn-tile>`);

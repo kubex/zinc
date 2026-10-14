@@ -28,7 +28,7 @@ import styles from './tile.scss';
 export default class ZnTile extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  private readonly hasSlotController = new HasSlotController(this, '[default]', 'properties', 'actions', 'image');
+  private readonly hasSlotController = new HasSlotController(this, '[default]', 'caption', 'description', 'properties', 'actions', 'image');
 
   @property({attribute: 'caption'}) caption: string;
 
@@ -84,8 +84,9 @@ export default class ZnTile extends ZincElement {
   render() {
     const isLink = this._isLink();
     const tag = isLink ? literal`a` : literal`div`;
-    const hasCaption = this.caption && this.caption.length > 0;
-    const hasDescription = this.description && this.description.length > 0;
+    const hasCaption = (this.caption && this.caption.length > 0) || this.hasSlotController.test('caption');
+    const hasDescriptionAttr = this.description && this.description.length > 0;
+    const hasDescription = hasDescriptionAttr || this.hasSlotController.test('description');
     const hasProperties = this.hasSlotController.test('properties');
     const hasActions = this.hasSlotController.test('actions');
     const hasImage = this.hasSlotController.test('image');
@@ -122,7 +123,7 @@ export default class ZnTile extends ZincElement {
                 <p part="caption" class="tile__caption">
                   <slot name="caption">${this.caption}</slot>
                 </p>
-                ${hasDescription ? html`
+                ${hasDescriptionAttr ? html`
                   <p part="description" class="tile__description">
                     ${this.description}</p>` : html`<slot name="description" class="tile__description"></slot>`}
               </div>

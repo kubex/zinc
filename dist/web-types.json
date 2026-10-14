@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.1.180",
+  "version": "1.1.181",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -14,28 +14,6 @@
           "slots": [{ "name": "", "description": "The default slot" }],
           "events": [],
           "js": { "properties": [], "events": [] }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
         },
         {
           "name": "zn-alert",
@@ -97,6 +75,28 @@
               { "name": "center", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -10487,7 +10487,7 @@
         },
         {
           "name": "zn-stat",
-          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "Displays a key metric, optionally compared with a previous value.\n\n---\n",
           "doc-url": "",
           "attributes": [
             {
@@ -10524,15 +10524,45 @@
                 "type": "'primary' | 'error' | 'info' | 'warning' | 'success' | 'neutral'",
                 "default": "'primary'"
               }
+            },
+            {
+              "name": "layout",
+              "description": "`value-first` puts the amount under the caption with the description beneath it, and tints the amount rather\nthan the description with `color`.",
+              "value": {
+                "type": "'default' | 'value-first'",
+                "default": "'default'"
+              }
+            },
+            {
+              "name": "delta-format",
+              "description": "How `show-delta` compares with `previous`: the relative change, or the difference in points.",
+              "value": {
+                "type": "'percent' | 'points'",
+                "default": "'percent'"
+              }
+            },
+            {
+              "name": "icon",
+              "description": "An icon shown beside the amount.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "icon-color",
+              "description": "The icon's color; without one it takes the amount's.",
+              "value": { "type": "IconColor" }
+            },
+            {
+              "name": "size",
+              "description": "`large` gives the amount more weight, for a summary row of a few headline figures.",
+              "value": { "type": "'medium' | 'large'", "default": "'medium'" }
+            },
+            {
+              "name": "padded",
+              "description": "Pads the stat, for stats laid edge to edge in a flush container such as `zn-cols no-gap divide`.",
+              "value": { "type": "boolean", "default": "false" }
             }
           ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
+          "events": [],
           "js": {
             "properties": [
               { "name": "caption", "type": "string" },
@@ -10545,14 +10575,39 @@
               {
                 "name": "color",
                 "type": "'primary' | 'error' | 'info' | 'warning' | 'success' | 'neutral'"
+              },
+              {
+                "name": "layout",
+                "description": "`value-first` puts the amount under the caption with the description beneath it, and tints the amount rather\nthan the description with `color`.",
+                "type": "'default' | 'value-first'"
+              },
+              {
+                "name": "deltaFormat",
+                "description": "How `show-delta` compares with `previous`: the relative change, or the difference in points.",
+                "type": "'percent' | 'points'"
+              },
+              {
+                "name": "icon",
+                "description": "An icon shown beside the amount.",
+                "type": "string"
+              },
+              {
+                "name": "iconColor",
+                "description": "The icon's color; without one it takes the amount's.",
+                "type": "IconColor"
+              },
+              {
+                "name": "size",
+                "description": "`large` gives the amount more weight, for a summary row of a few headline figures.",
+                "type": "'medium' | 'large'"
+              },
+              {
+                "name": "padded",
+                "description": "Pads the stat, for stats laid edge to edge in a flush container such as `zn-cols no-gap divide`.",
+                "type": "boolean"
               }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
+            "events": []
           }
         },
         {
@@ -12032,6 +12087,11 @@
               "value": { "type": "boolean" }
             },
             {
+              "name": "stack-actions",
+              "description": "Moves the actions under the caption and description when the tile is narrower than 600px.",
+              "value": { "type": "boolean" }
+            },
+            {
               "name": "grouped",
               "description": "Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row.",
               "value": { "type": "boolean" }
@@ -12059,6 +12119,11 @@
               {
                 "name": "plain",
                 "description": "Renders the caption in the normal table-content weight instead of bold.",
+                "type": "boolean"
+              },
+              {
+                "name": "stackActions",
+                "description": "Moves the actions under the caption and description when the tile is narrower than 600px.",
                 "type": "boolean"
               },
               {

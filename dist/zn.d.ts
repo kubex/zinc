@@ -4607,6 +4607,8 @@ declare module "components/tile/tile.component" {
         inline: boolean;
         /** Renders the caption in the normal table-content weight instead of bold. */
         plain: boolean;
+        /** Moves the actions under the caption and description when the tile is narrower than 600px. */
+        stackActions: boolean;
         /** Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row. */
         grouped: boolean;
         private _isLink;
@@ -6292,22 +6294,14 @@ declare module "components/stepper/index" {
 declare module "components/stat/stat.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import type { IconColor } from "components/icon/index";
     /**
-     * @summary Short summary of the component's intended use.
+     * @summary Displays a key metric, optionally compared with a previous value.
      * @documentation https://zinc.style/components/stats-tile
      * @status experimental
      * @since 1.0
      *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
+     * @dependency zn-icon
      */
     export default class ZnStatsTile extends ZincElement {
         static styles: CSSResultGroup;
@@ -6319,10 +6313,27 @@ declare module "components/stat/stat.component" {
         currency: string;
         showDelta: boolean;
         color: 'primary' | 'error' | 'info' | 'warning' | 'success' | 'neutral';
+        /** `value-first` puts the amount under the caption with the description beneath it, and tints the amount rather
+         * than the description with `color`. */
+        layout: 'default' | 'value-first';
+        /** How `show-delta` compares with `previous`: the relative change, or the difference in points. */
+        deltaFormat: 'percent' | 'points';
+        /** An icon shown beside the amount. */
+        icon: string;
+        /** The icon's color; without one it takes the amount's. */
+        iconColor: IconColor;
+        /** `large` gives the amount more weight, for a summary row of a few headline figures. */
+        size: 'medium' | 'large';
+        /** Pads the stat, for stats laid edge to edge in a flush container such as `zn-cols no-gap divide`. */
+        padded: boolean;
         calcPercentageDifference(): number;
         getCurrentAmount(): string;
         private getDisplayAmount;
         diffText(): import("lit-html").TemplateResult<1> | null;
+        private pointsDelta;
+        private renderAmount;
+        private renderValueFirst;
+        private percentDelta;
         render(): import("lit-html").TemplateResult<1>;
     }
 }

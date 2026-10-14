@@ -58,79 +58,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -319,6 +246,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -45331,28 +45331,6 @@
           "kind": "class",
           "description": "",
           "name": "ZnStatsTile",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
           "members": [
             {
               "kind": "field",
@@ -45427,6 +45405,67 @@
               "attribute": "color"
             },
             {
+              "kind": "field",
+              "name": "layout",
+              "type": {
+                "text": "'default' | 'value-first'"
+              },
+              "default": "'default'",
+              "description": "`value-first` puts the amount under the caption with the description beneath it, and tints the amount rather\nthan the description with `color`.",
+              "attribute": "layout",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "deltaFormat",
+              "type": {
+                "text": "'percent' | 'points'"
+              },
+              "default": "'percent'",
+              "description": "How `show-delta` compares with `previous`: the relative change, or the difference in points.",
+              "attribute": "delta-format"
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "An icon shown beside the amount.",
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "iconColor",
+              "type": {
+                "text": "IconColor"
+              },
+              "description": "The icon's color; without one it takes the amount's.",
+              "attribute": "icon-color"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "description": "`large` gives the amount more weight, for a summary row of a few headline figures.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "padded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Pads the stat, for stats laid edge to edge in a flush container such as `zn-cols no-gap divide`.",
+              "attribute": "padded"
+            },
+            {
               "kind": "method",
               "name": "calcPercentageDifference"
             },
@@ -45442,12 +45481,26 @@
             {
               "kind": "method",
               "name": "diffText"
-            }
-          ],
-          "events": [
+            },
             {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
+              "kind": "method",
+              "name": "pointsDelta",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "renderAmount",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "renderValueFirst",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "percentDelta",
+              "privacy": "private"
             }
           ],
           "attributes": [
@@ -45514,22 +45567,75 @@
               },
               "default": "'primary'",
               "fieldName": "color"
+            },
+            {
+              "name": "layout",
+              "type": {
+                "text": "'default' | 'value-first'"
+              },
+              "default": "'default'",
+              "description": "`value-first` puts the amount under the caption with the description beneath it, and tints the amount rather\nthan the description with `color`.",
+              "fieldName": "layout"
+            },
+            {
+              "name": "delta-format",
+              "type": {
+                "text": "'percent' | 'points'"
+              },
+              "default": "'percent'",
+              "description": "How `show-delta` compares with `previous`: the relative change, or the difference in points.",
+              "fieldName": "deltaFormat"
+            },
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "An icon shown beside the amount.",
+              "fieldName": "icon"
+            },
+            {
+              "name": "icon-color",
+              "type": {
+                "text": "IconColor"
+              },
+              "description": "The icon's color; without one it takes the amount's.",
+              "fieldName": "iconColor"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "description": "`large` gives the amount more weight, for a summary row of a few headline figures.",
+              "fieldName": "size"
+            },
+            {
+              "name": "padded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Pads the stat, for stats laid edge to edge in a flush container such as `zn-cols no-gap divide`.",
+              "fieldName": "padded"
             }
           ],
           "superclass": {
             "name": "ZincElement",
             "module": "/src/internal/zinc-element"
           },
-          "summary": "Short summary of the component's intended use.",
+          "summary": "Displays a key metric, optionally compared with a previous value.",
           "tagNameWithoutPrefix": "stat",
           "tagName": "zn-stat",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/stats-tile\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Displays a key metric, optionally compared with a previous value.\n * @documentation https://zinc.style/components/stats-tile\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n */",
           "documentation": "https://zinc.style/components/stats-tile",
           "status": "experimental",
           "since": "1.0",
           "dependencies": [
-            "zn-example"
+            "zn-icon"
           ]
         }
       ],
@@ -50923,6 +51029,16 @@
             },
             {
               "kind": "field",
+              "name": "stackActions",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Moves the actions under the caption and description when the tile is narrower than 600px.",
+              "attribute": "stack-actions",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "grouped",
               "type": {
                 "text": "boolean"
@@ -51034,6 +51150,14 @@
               },
               "description": "Renders the caption in the normal table-content weight instead of bold.",
               "fieldName": "plain"
+            },
+            {
+              "name": "stack-actions",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Moves the actions under the caption and description when the tile is narrower than 600px.",
+              "fieldName": "stackActions"
             },
             {
               "name": "grouped",
@@ -54055,7 +54179,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.180",
+    "version": "1.1.181",
     "author": "",
     "license": "MIT"
   }

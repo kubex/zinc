@@ -14,17 +14,6 @@
       ]
     },
     {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
-        }
-      ]
-    },
-    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -61,6 +50,17 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
+        }
+      ]
+    },
+    {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -4441,7 +4441,7 @@
     },
     {
       "name": "zn-stat",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Displays a key metric, optionally compared with a previous value.\n---\n",
       "attributes": [
         { "name": "caption", "values": [] },
         { "name": "description", "values": [] },
@@ -4460,6 +4460,36 @@
             { "name": "success" },
             { "name": "neutral" }
           ]
+        },
+        {
+          "name": "layout",
+          "description": "`value-first` puts the amount under the caption with the description beneath it, and tints the amount rather\nthan the description with `color`.",
+          "values": [{ "name": "default" }, { "name": "value-first" }]
+        },
+        {
+          "name": "delta-format",
+          "description": "How `show-delta` compares with `previous`: the relative change, or the difference in points.",
+          "values": [{ "name": "percent" }, { "name": "points" }]
+        },
+        {
+          "name": "icon",
+          "description": "An icon shown beside the amount.",
+          "values": []
+        },
+        {
+          "name": "icon-color",
+          "description": "The icon's color; without one it takes the amount's.",
+          "values": [{ "name": "IconColor" }]
+        },
+        {
+          "name": "size",
+          "description": "`large` gives the amount more weight, for a summary row of a few headline figures.",
+          "values": [{ "name": "medium" }, { "name": "large" }]
+        },
+        {
+          "name": "padded",
+          "description": "Pads the stat, for stats laid edge to edge in a flush container such as `zn-cols no-gap divide`.",
+          "values": []
         }
       ],
       "references": [
@@ -5108,6 +5138,11 @@
         {
           "name": "plain",
           "description": "Renders the caption in the normal table-content weight instead of bold.",
+          "values": []
+        },
+        {
+          "name": "stack-actions",
+          "description": "Moves the actions under the caption and description when the tile is narrower than 600px.",
           "values": []
         },
         {

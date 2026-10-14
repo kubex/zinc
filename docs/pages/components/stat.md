@@ -99,6 +99,80 @@ Use the `show-delta` attribute with `previous` to show the percentage change fro
 </zn-cols>
 ```
 
+### Value First
+
+Use `layout="value-first"` to show the amount under the caption, with the description beneath it in muted text. In this layout `color` tints the amount, so use `color="neutral"` for plain figures and a semantic color to flag one. Each stat has a box of its own, so `zn-cols divide` draws lines between them. The example adds `size="large"` for headline figures.
+
+```html:preview
+<zn-panel caption="Last 30 days">
+  <zn-cols layout="1,1,1,1" divide>
+    <zn-stat layout="value-first" size="large" caption="Quality score" description="Weighted by points" amount="88.9" previous="86.5" type="percent" delta-format="points" show-delta color="neutral"></zn-stat>
+    <zn-stat layout="value-first" size="large" caption="Evaluations" description="Completed assessments" amount="42" color="neutral"></zn-stat>
+    <zn-stat layout="value-first" size="large" caption="Fails" description="1 automatic" amount="3" color="error"></zn-stat>
+    <zn-stat layout="value-first" size="large" caption="Kudos" description="From reviewers" amount="2" icon="award@lu" color="neutral"></zn-stat>
+  </zn-cols>
+</zn-panel>
+```
+
+### Padded
+
+Use `padded` to give each stat its own padding, for stats laid edge to edge in a flush panel. With `zn-cols no-gap divide` the dividers run the full height of the panel body.
+
+```html:preview
+<zn-panel caption="Last 30 days" flush>
+  <zn-cols layout="1,1,1" no-gap divide stack-at="md">
+    <zn-stat layout="value-first" size="large" padded caption="Quality score" description="Weighted by points" amount="88.9" type="percent" color="neutral"></zn-stat>
+    <zn-stat layout="value-first" size="large" padded caption="Evaluations" description="Completed assessments" amount="42" color="neutral"></zn-stat>
+    <zn-stat layout="value-first" size="large" padded caption="Fails" description="1 automatic" amount="3" color="error"></zn-stat>
+  </zn-cols>
+</zn-panel>
+```
+
+### Large
+
+Use `size="large"` to give the amount more weight, for a row of a few headline figures.
+
+```html:preview
+<zn-cols>
+  <zn-panel>
+    <zn-stat size="large" caption="Total Users" description="Active accounts" amount="1247"></zn-stat>
+  </zn-panel>
+  <zn-panel>
+    <zn-stat size="large" caption="Conversion Rate" description="Last 30 days" amount="4.8" type="percent" color="success"></zn-stat>
+  </zn-panel>
+</zn-cols>
+```
+
+### Delta In Points
+
+Use `delta-format="points"` with `show-delta` to show the difference between `amount` and `previous` in points rather than the relative change. This suits values that are already percentages.
+
+```html:preview
+<zn-cols>
+  <zn-panel>
+    <zn-stat caption="Pass rate" description="This month" amount="91.5" previous="88.2" type="percent" delta-format="points" show-delta color="success"></zn-stat>
+  </zn-panel>
+  <zn-panel>
+    <zn-stat caption="Error rate" description="Last 24 hours" amount="2.1" previous="3.4" type="percent" delta-format="points" show-delta color="neutral"></zn-stat>
+  </zn-panel>
+</zn-cols>
+```
+
+### Icon
+
+Use `icon` to show an icon beside the amount. It takes the amount's color unless you set `icon-color`.
+
+```html:preview
+<zn-cols>
+  <zn-panel>
+    <zn-stat caption="Awards" description="This quarter" amount="12" icon="award@lu" color="warning"></zn-stat>
+  </zn-panel>
+  <zn-panel>
+    <zn-stat caption="Kudos" description="From reviewers" amount="2" icon="award@lu" icon-color="warning" color="neutral"></zn-stat>
+  </zn-panel>
+</zn-cols>
+```
+
 ### Color Variants
 
 Use the `color` attribute to set the semantic color of the stat. Available colors: `primary`, `error`, `info`, `warning`, `success`, and `neutral`.

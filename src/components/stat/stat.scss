@@ -5,6 +5,11 @@
   display: contents;
 }
 
+// A box of its own lets zn-cols draw its dividers between value-first stats.
+:host([layout="value-first"]) {
+  display: block;
+}
+
 .stat-tile {
 
   .caption, .description, .amount, .bottom {
@@ -68,6 +73,55 @@
     }
   }
 
+  .icon {
+    margin-left: var(--zn-spacing-x-small);
+  }
+
+  &--value-first {
+    display: flex;
+    flex-direction: column;
+    gap: var(--zn-spacing-2x-small);
+    color: var(--zn-text-chart-major-color);
+
+    .caption {
+      margin-bottom: 0;
+    }
+
+    .amount {
+      flex-grow: 0;
+      gap: var(--zn-spacing-x-small);
+      color: inherit;
+    }
+
+    .diff {
+      font-size: var(--zn-font-size-small);
+      font-weight: 400;
+    }
+
+    .diff .neutral,
+    .description {
+      color: rgba(var(--zn-color-text), 0.6);
+    }
+
+    .description {
+      font-size: var(--zn-font-size-x-small);
+    }
+
+    .icon {
+      margin-left: 0;
+    }
+  }
+
+  &--padded {
+    padding: var(--zn-spacing-large);
+  }
+
+  &--large .amount {
+    font-size: var(--zn-font-size-3x-large);
+    font-weight: var(--zn-font-weight-semibold);
+    line-height: 1.15;
+  }
+
   &--chart {
     .amount {
       padding-top: var(--zn-spacing-small);
@@ -102,6 +156,10 @@
     color: rgb(var(--zn-text));
   }
 
+  &--value-first.stat-tile--neutral {
+    color: var(--zn-text-chart-major-color);
+  }
+
   @container (max-width:550px) {
     ::slotted(.zn-col-1) {
       flex-basis: 170px;
@@ -111,6 +169,12 @@
       font-size: 20px;
       line-height: 20px;
       padding-top: 5px;
+    }
+
+    &--large .amount {
+      font-size: var(--zn-font-size-2x-large);
+      line-height: 1.15;
+      padding-top: 0;
     }
   }
 }

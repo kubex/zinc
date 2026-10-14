@@ -1,26 +1,19 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {ifDefined} from "lit/directives/if-defined.js";
 import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
+import type {IconColor} from '../icon';
 
 import styles from './stat.scss';
 
 /**
- * @summary Short summary of the component's intended use.
+ * @summary Displays a key metric, optionally compared with a previous value.
  * @documentation https://zinc.style/components/stats-tile
  * @status experimental
  * @since 1.0
  *
- * @dependency zn-example
- *
- * @event zn-event-name - Emitted as an example.
- *
- * @slot - The default slot.
- * @slot example - An example slot.
- *
- * @csspart base - The component's base wrapper.
- *
- * @cssproperty --example - An example CSS custom property.
+ * @dependency zn-icon
  */
 export default class ZnStatsTile extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -33,6 +26,25 @@ export default class ZnStatsTile extends ZincElement {
   @property() currency = '';
   @property({type: Boolean, attribute: 'show-delta'}) showDelta = false;
   @property() color: 'primary' | 'error' | 'info' | 'warning' | 'success' | 'neutral' = 'primary';
+
+  /** `value-first` puts the amount under the caption with the description beneath it, and tints the amount rather
+   * than the description with `color`. */
+  @property({reflect: true}) layout: 'default' | 'value-first' = 'default';
+
+  /** How `show-delta` compares with `previous`: the relative change, or the difference in points. */
+  @property({attribute: 'delta-format'}) deltaFormat: 'percent' | 'points' = 'percent';
+
+  /** An icon shown beside the amount. */
+  @property() icon = '';
+
+  /** The icon's color; without one it takes the amount's. */
+  @property({attribute: 'icon-color'}) iconColor: IconColor;
+
+  /** `large` gives the amount more weight, for a summary row of a few headline figures. */
+  @property({reflect: true}) size: 'medium' | 'large' = 'medium';
+
+  /** Pads the stat, for stats laid edge to edge in a flush container such as `zn-cols no-gap divide`. */
+  @property({type: Boolean}) padded = false;
 
   calcPercentageDifference() {
     const previous = parseFloat(this.previous);
@@ -93,16 +105,73 @@ export default class ZnStatsTile extends ZincElement {
         diffIcon = '-';
       }
 
+      if (this.deltaFormat === 'points') {
+        return html`<p class="diff">${this.pointsDelta()} on Previous Period</p>`;
+      }
+
       return html`<p class="diff"><span class="${diffClass}">${diffIcon}${diff}%</span> on Previous Period</p>`;
     }
 
     return null;
   }
 
-  render() {
+  private pointsDelta() {
+    const diff = Math.round((parseFloat(this.amount) - parseFloat(this.previous)) * 10) / 10;
+    if (diff > 0) {
+      return html`<span class="positive">+${diff} pts</span>`;
+    }
+    if (diff < 0) {
+      return html`<span class="negative">-${Math.abs(diff)} pts</span>`;
+    }
+    return html`<span class="neutral">No change</span>`;
+  }
+
+  private renderAmount() {
+    return html`${this.getDisplayAmount()}${this.icon ? html`
+      <zn-icon class="icon" src="${this.icon}" size="20" color="${ifDefined(this.iconColor)}"></zn-icon>` : null}`;
+  }
+
+  private renderValueFirst() {
+    const delta = this.showDelta
+      ? (this.deltaFormat === 'points' ? this.pointsDelta() : this.percentDelta())
+      : null;
+
     return html`
       <div class="${classMap({
         'stat-tile': true,
+        'stat-tile--value-first': true,
+        'stat-tile--large': this.size === 'large',
+        'stat-tile--padded': this.padded,
+        [`stat-tile--${this.color}`]: true
+      })}">
+        <h3 class="caption">${this.caption}</h3>
+        <p class="amount">${this.renderAmount()}${delta ? html`<span class="diff">${delta}</span>` : null}</p>
+        ${this.description ? html`<p class="description">${this.description}</p>` : null}
+      </div>
+    `;
+  }
+
+  private percentDelta() {
+    const diff = this.calcPercentageDifference();
+    if (diff > 0) {
+      return html`<span class="positive">+${diff}%</span>`;
+    }
+    if (diff < 0) {
+      return html`<span class="negative">${diff}%</span>`;
+    }
+    return html`<span class="neutral">No change</span>`;
+  }
+
+  render() {
+    if (this.layout === 'value-first') {
+      return this.renderValueFirst();
+    }
+
+    return html`
+      <div class="${classMap({
+        'stat-tile': true,
+        'stat-tile--large': this.size === 'large',
+        'stat-tile--padded': this.padded,
         [`stat-tile--${this.color}`]: true
       })}">
         <div class="container">
@@ -111,7 +180,7 @@ export default class ZnStatsTile extends ZincElement {
               <h3 class="caption">${this.caption}</h3>
               <p class="description">${this.description}</p>
             </div>
-            <p class="amount">${this.getDisplayAmount()}</p>
+            <p class="amount">${this.renderAmount()}</p>
             <p class="bottom">${this.diffText()}</p>
           </div>
         </div>

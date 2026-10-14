@@ -124,6 +124,11 @@ a {
   text-overflow: ellipsis;
 }
 
+// A slot has no box of its own, so the slotted description would overflow rather than truncate
+slot.tile__description {
+  display: block;
+}
+
 .tile--inline .tile__description {
   margin: 0;
 }
@@ -189,4 +194,29 @@ a {
   justify-self: stretch;
   min-width: 0;
   overflow: hidden;
+}
+
+:host([stack-actions]) {
+  container-type: inline-size;
+}
+
+:host([stack-actions]) .tile {
+  @include wc.container-query(null, ph) {
+    flex-wrap: wrap;
+    row-gap: var(--zn-spacing-x-small);
+
+    .tile__link {
+      flex-basis: 100%;
+    }
+
+    .tile__right {
+      justify-content: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .tile__actions {
+      flex-wrap: wrap;
+      row-gap: var(--zn-spacing-x-small);
+    }
+  }
 }

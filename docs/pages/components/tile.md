@@ -179,6 +179,22 @@ Use the `actions` slot to add buttons or other interactive elements to the right
 </zn-sp>
 ```
 
+### Stacked Actions
+
+Use `stack-actions` when a tile carries several actions, such as a row of chips. Once the tile is narrower than 600px the actions move under the caption and description and wrap, rather than squeezing the text.
+
+```html:preview
+<zn-sp divide no-gap>
+  <zn-tile stack-actions caption="Refund not received" description="Support scorecard · scored 13 Oct 2026 13:22">
+    <zn-icon slot="image" size="24" src="at-sign@lu"></zn-icon>
+    <zn-chip slot="actions" size="small" type="info" icon="messages-square@lu">Coached</zn-chip>
+    <zn-chip slot="actions" size="small" type="error" icon="circle-x@lu">Auto fail</zn-chip>
+    <zn-chip slot="actions" size="small" type="error" icon="shield-alert@lu">Compliance</zn-chip>
+    <zn-chip slot="actions" size="small" type="error">0%</zn-chip>
+  </zn-tile>
+</zn-sp>
+```
+
 ### Properties with Actions
 
 Combine both properties and actions for comprehensive tile layouts.

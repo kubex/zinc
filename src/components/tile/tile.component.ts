@@ -53,6 +53,9 @@ export default class ZnTile extends ZincElement {
   /** Renders the caption in the normal table-content weight instead of bold. */
   @property({type: Boolean}) plain: boolean;
 
+  /** Moves the actions under the caption and description when the tile is narrower than 600px. */
+  @property({attribute: 'stack-actions', type: Boolean, reflect: true}) stackActions: boolean;
+
   /** Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row. */
   @property({type: Boolean, reflect: true}) grouped: boolean;
 

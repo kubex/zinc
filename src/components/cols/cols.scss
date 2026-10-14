@@ -69,6 +69,11 @@
     gap: 0;
   }
 
+  // Without a gap to sit in, the divider goes on the column's own edge.
+  &--no-gap.cols--divide ::slotted(*:not(:last-child)):after {
+    right: 0;
+  }
+
   // The row rule below each child is drawn by a pseudo reaching to -100vw, so border mode has to clip. Clipping
   // every layout would cut the focus ring off any control sitting flush against a column edge.
   &--border {
@@ -145,6 +150,17 @@ $stack-sizes: (sm, smp, ph, md, lg, hd, '3k', '4k');
       // Vertical dividers make no sense once the columns are on top of each other
       .cols--divide ::slotted(*:not(:last-child)):after {
         display: none;
+      }
+
+      // Edge-to-edge columns keep their separation as a rule between the stacked rows
+      .cols--no-gap.cols--divide ::slotted(*:not(:last-child)):after {
+        display: block;
+        top: auto;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: auto;
+        height: 1px;
       }
     }
   }

@@ -73,6 +73,12 @@
     }
   }
 
+  .value {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
   .icon {
     margin-left: var(--zn-spacing-x-small);
   }
@@ -89,13 +95,19 @@
 
     .amount {
       flex-grow: 0;
-      gap: var(--zn-spacing-x-small);
+      flex-wrap: wrap;
+      column-gap: var(--zn-spacing-x-small);
       color: inherit;
+    }
+
+    .value {
+      gap: var(--zn-spacing-x-small);
     }
 
     .diff {
       font-size: var(--zn-font-size-small);
       font-weight: 400;
+      white-space: nowrap;
     }
 
     .diff .neutral,

@@ -127,8 +127,8 @@ export default class ZnStatsTile extends ZincElement {
   }
 
   private renderAmount() {
-    return html`${this.getDisplayAmount()}${this.icon ? html`
-      <zn-icon class="icon" src="${this.icon}" size="20" color="${ifDefined(this.iconColor)}"></zn-icon>` : null}`;
+    return html`<span class="value">${this.getDisplayAmount()}${this.icon ? html`
+      <zn-icon class="icon" src="${this.icon}" size="20" color="${ifDefined(this.iconColor)}"></zn-icon>` : null}</span>`;
   }
 
   private renderValueFirst() {

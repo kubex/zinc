@@ -16,11 +16,12 @@ const DROPPED = [
 /**
  * Sanitizes untrusted HTML down to formatting tags, keeping only a link's href when it is http(s) or mailto.
  * Tags in `keep` are allowed as they are, so a block such as `pre` isn't turned into a paragraph.
+ * With `colors`, a `style` attribute survives holding only its text and background colour.
  */
-export function sanitizeHtml(source: string, keep: string[] = []): string {
+export function sanitizeHtml(source: string, keep: string[] = [], colors = false): string {
   const fragment = DOMPurify.sanitize(source, {
     ALLOWED_TAGS: [...FORMATTING, ...BLOCKS, ...keep],
-    ALLOWED_ATTR: ['href'],
+    ALLOWED_ATTR: colors ? ['href', 'style'] : ['href'],
     ALLOWED_URI_REGEXP: /^(?:https?|mailto):/i,
     FORBID_CONTENTS: DROPPED,
     RETURN_DOM_FRAGMENT: true,
@@ -35,6 +36,14 @@ export function sanitizeHtml(source: string, keep: string[] = []): string {
   // Spacer paragraphs, and ones that only held an image, would leave gaps
   fragment.querySelectorAll('p').forEach(p => {
     if (!p.textContent?.trim()) p.remove();
+  });
+  // Any other declaration could load a remote url(), which in an email is a tracking pixel
+  fragment.querySelectorAll<HTMLElement>('[style]').forEach(el => {
+    const {color, backgroundColor} = el.style;
+    el.removeAttribute('style');
+    el.style.color = color;
+    el.style.backgroundColor = backgroundColor;
+    if (!el.getAttribute('style')) el.removeAttribute('style');
   });
   fragment.querySelectorAll('a[href]').forEach(link => {
     try {

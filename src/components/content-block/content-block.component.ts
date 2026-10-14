@@ -13,6 +13,9 @@ import type ZnTile from "../tile";
 
 import styles from './content-block.scss';
 
+// What the editor (Quill) can produce beyond the sanitizer's defaults
+const EDITOR_TAGS = ['s', 'code', 'pre', 'blockquote', 'hr', 'span'];
+
 interface TextRow {
   lines: string[];
   type: 'reply' | 'text';
@@ -366,7 +369,7 @@ export default class ContentBlock extends ZincElement {
     const textRows: TextRow[] = [];
 
     if (textContent && looksLikeHtml(textContent.innerText)) {
-      this._textRows = [{lines: [sanitizeHtml(textContent.innerText)], type: 'text', html: true}];
+      this._textRows = [{lines: [sanitizeHtml(textContent.innerText, EDITOR_TAGS, true)], type: 'text', html: true}];
       return this._textRows;
     }
 

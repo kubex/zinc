@@ -45,6 +45,21 @@ describe('<zn-content-block>', () => {
     expect(content.textContent).to.not.contain('<p>');
   });
 
+  it('should keep editor formatting and only colours from styles in the text body', async () => {
+    const content = await textSection(
+      '&lt;p&gt;&lt;s&gt;struck&lt;/s&gt; &lt;code&gt;inline&lt;/code&gt;&lt;/p&gt;&lt;blockquote&gt;quote&lt;/blockquote&gt;'
+      + '&lt;pre&gt;block&lt;/pre&gt;&lt;hr&gt;'
+      + '&lt;p&gt;&lt;span style="color: red; background-image: url(https://x.test/p.gif)"&gt;red&lt;/span&gt;&lt;/p&gt;'
+    );
+
+    expect(content.querySelector('s')?.textContent).to.equal('struck');
+    expect(content.querySelector('code')?.textContent).to.equal('inline');
+    expect(content.querySelector('blockquote')?.textContent).to.equal('quote');
+    expect(content.querySelector('pre')?.textContent).to.equal('block');
+    expect(content.querySelector('hr')).to.exist;
+    expect(content.querySelector('span')!.getAttribute('style')).to.equal('color: red;');
+  });
+
   it('should strip unsafe links and dropped elements from markup in the text body', async () => {
     const content = await textSection(
       '&lt;p&gt;&lt;a href="JavaScript:alert(1)"&gt;click&lt;/a&gt;&lt;/p&gt;'

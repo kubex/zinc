@@ -52,6 +52,53 @@ layout: component
 </zn-content-block>
 ```
 
+### Editor Formatting
+
+Text that holds escaped HTML, such as a note saved from `zn-editor`, is sanitized and rendered with the
+editor's formatting. Only the text and background colour survive from a `style` attribute.
+
+```html:preview
+
+<zn-content-block
+  time="16 Jun 2025, 13:00"
+  sender="John Smith"
+  avatar="JS"
+>
+  <div slot="text">
+    &lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;em&gt;Italic&lt;/em&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;u&gt;Underline&lt;/u&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;s&gt;Strikethrough&lt;/s&gt;&lt;/p&gt;
+    &lt;blockquote&gt;Blockquote&lt;/blockquote&gt;
+    &lt;p&gt;&lt;code&gt;Inline code&lt;/code&gt;&lt;/p&gt;
+    &lt;pre data-language=plain&gt;Code block&lt;/pre&gt;
+    &lt;p&gt;&lt;span style=color:red&gt;Coloured text&lt;/span&gt;&lt;/p&gt;
+    &lt;ul&gt;&lt;li&gt;Bullet&lt;/li&gt;&lt;li&gt;Bullet&lt;ul&gt;&lt;li&gt;Nested bullet&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;/ul&gt;
+    &lt;ol&gt;&lt;li&gt;Numbered&lt;ol&gt;&lt;li&gt;Nested numbered&lt;/li&gt;&lt;li&gt;Nested numbered&lt;/li&gt;&lt;/ol&gt;&lt;/li&gt;&lt;/ol&gt;
+    &lt;ul&gt;&lt;li data-list=checked&gt;Checked&lt;/li&gt;&lt;li data-list=unchecked&gt;Unchecked&lt;/li&gt;&lt;/ul&gt;
+    &lt;hr class=ql-hr&gt;
+    &lt;p&gt;Divider above&lt;/p&gt;
+    &lt;p&gt;&lt;a href=https://example.com&gt;Link&lt;/a&gt;&lt;/p&gt;
+  </div>
+  <div slot="html">
+    <p><strong>Bold</strong></p>
+    <p><em>Italic</em></p>
+    <p><u>Underline</u></p>
+    <p><s>Strikethrough</s></p>
+    <blockquote>Blockquote</blockquote>
+    <p><code>Inline code</code></p>
+    <pre data-language="plain">Code block</pre>
+    <p><span style="color:red">Coloured text</span></p>
+    <ul><li>Bullet</li><li>Bullet<ul><li>Nested bullet</li></ul></li></ul>
+    <ol><li>Numbered<ol><li>Nested numbered</li><li>Nested numbered</li></ol></li></ol>
+    <ul><li data-list="checked">Checked</li><li data-list="unchecked">Unchecked</li></ul>
+    <hr class="ql-hr">
+    <p>Divider above</p>
+    <p><a href="https://example.com">Link</a></p>
+  </div>
+</zn-content-block>
+```
+
 ### Attachments
 
 Attachments render in a row at the bottom of the content and are only visible while the block

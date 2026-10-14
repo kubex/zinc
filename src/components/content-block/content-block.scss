@@ -118,6 +118,38 @@
     font-size: var(--zn-font-size-small);
     opacity: 0.8;
   }
+
+  p {
+    margin: 0;
+  }
+
+  blockquote {
+    border-left: 4px solid rgb(var(--zn-border-color));
+    margin: 5px 0;
+    padding-left: 16px;
+  }
+
+  code {
+    background-color: #f0f0f0;
+    border-radius: 3px;
+    font-size: 85%;
+    padding: 2px 4px;
+  }
+
+  pre {
+    background-color: #23241f;
+    border-radius: 3px;
+    margin-block: 5px;
+    padding: 5px 10px;
+    color: #f8f8f2;
+    overflow: auto;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid rgb(var(--zn-border-color));
+    margin: var(--zn-spacing-small) 0;
+  }
 }
 
 .hidden {
@@ -137,6 +169,10 @@ ol {
 ol, ul {
   padding: 0;
   margin: 0;
+}
+
+li > ol, li > ul {
+  padding-left: 1.5em;
 }
 
 li[data-list=checked] > .ql-ui, li[data-list=unchecked] > .ql-ui {

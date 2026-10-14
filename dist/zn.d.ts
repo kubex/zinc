@@ -1578,8 +1578,9 @@ declare module "utilities/sanitize-html" {
     /**
      * Sanitizes untrusted HTML down to formatting tags, keeping only a link's href when it is http(s) or mailto.
      * Tags in `keep` are allowed as they are, so a block such as `pre` isn't turned into a paragraph.
+     * With `colors`, a `style` attribute survives holding only its text and background colour.
      */
-    export function sanitizeHtml(source: string, keep?: string[]): string;
+    export function sanitizeHtml(source: string, keep?: string[], colors?: boolean): string;
 }
 declare module "components/chat-message/clean-message" {
     /**

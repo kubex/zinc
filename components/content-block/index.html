@@ -583,6 +583,7 @@
             <li data-level="2"><a href="#examples">Examples</a></li>
             <li data-level="3"><a href="#basic-text">Basic Text</a></li>
             <li data-level="3"><a href="#toggle-text-and-html">Toggle Text &amp; HTML</a></li>
+            <li data-level="3"><a href="#editor-formatting">Editor Formatting</a></li>
             <li data-level="3"><a href="#attachments">Attachments</a></li>
             <li data-level="3"><a href="#content-footer">Content Footer</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
@@ -774,6 +775,143 @@
               </button>
             </div>
           </div>
+          <h3 id="editor-formatting" class="anchor-heading">
+            Editor Formatting<a href="#editor-formatting" aria-label='Direct link to "Editor Formatting"'></a>
+          </h3>
+          <p>
+            Text that holds escaped HTML, such as a note saved from <code>zn-editor</code>, is sanitized and rendered
+            with the editor’s formatting. Only the text and background colour survive from a
+            <code>style</code> attribute.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-content-block time="16 Jun 2025, 13:00" sender="John Smith" avatar="JS">
+                <div slot="text">
+                  &lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;&lt;em&gt;Italic&lt;/em&gt;&lt;/p&gt;
+                  &lt;p&gt;&lt;u&gt;Underline&lt;/u&gt;&lt;/p&gt; &lt;p&gt;&lt;s&gt;Strikethrough&lt;/s&gt;&lt;/p&gt;
+                  &lt;blockquote&gt;Blockquote&lt;/blockquote&gt; &lt;p&gt;&lt;code&gt;Inline
+                  code&lt;/code&gt;&lt;/p&gt; &lt;pre data-language=plain&gt;Code block&lt;/pre&gt; &lt;p&gt;&lt;span
+                  style=color:red&gt;Coloured text&lt;/span&gt;&lt;/p&gt;
+                  &lt;ul&gt;&lt;li&gt;Bullet&lt;/li&gt;&lt;li&gt;Bullet&lt;ul&gt;&lt;li&gt;Nested
+                  bullet&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;/ul&gt;
+                  &lt;ol&gt;&lt;li&gt;Numbered&lt;ol&gt;&lt;li&gt;Nested numbered&lt;/li&gt;&lt;li&gt;Nested
+                  numbered&lt;/li&gt;&lt;/ol&gt;&lt;/li&gt;&lt;/ol&gt; &lt;ul&gt;&lt;li
+                  data-list=checked&gt;Checked&lt;/li&gt;&lt;li data-list=unchecked&gt;Unchecked&lt;/li&gt;&lt;/ul&gt;
+                  &lt;hr class=ql-hr&gt; &lt;p&gt;Divider above&lt;/p&gt; &lt;p&gt;&lt;a
+                  href=https://example.com&gt;Link&lt;/a&gt;&lt;/p&gt;
+                </div>
+                <div slot="html">
+                  <p><strong>Bold</strong></p>
+                  <p><em>Italic</em></p>
+                  <p><u>Underline</u></p>
+                  <p><s>Strikethrough</s></p>
+                  <blockquote>Blockquote</blockquote>
+                  <p><code>Inline code</code></p>
+                  <pre data-language="plain">Code block</pre>
+                  <p><span style="color: red">Coloured text</span></p>
+                  <ul>
+                    <li>Bullet</li>
+                    <li>
+                      Bullet
+                      <ul>
+                        <li>Nested bullet</li>
+                      </ul>
+                    </li>
+                  </ul>
+                  <ol>
+                    <li>
+                      Numbered
+                      <ol>
+                        <li>Nested numbered</li>
+                        <li>Nested numbered</li>
+                      </ol>
+                    </li>
+                  </ol>
+                  <ul>
+                    <li data-list="checked">Checked</li>
+                    <li data-list="unchecked">Unchecked</li>
+                  </ul>
+                  <hr class="ql-hr" />
+                  <p>Divider above</p>
+                  <p>
+                    <a href="https://example.com" class="external-link" rel="noopener noreferrer" target="_blank"
+                      >Link</a
+                    >
+                  </p>
+                </div>
+              </zn-content-block>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-284">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-367">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-content-block</span>
+  <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>16 Jun 2025, 13:00<span class="token punctuation">"</span></span>
+  <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>John Smith<span class="token punctuation">"</span></span>
+  <span class="token attr-name">avatar</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>JS<span class="token punctuation">"</span></span>
+<span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token entity named-entity" title="<">&amp;lt;</span>p<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>strong<span class="token entity named-entity" title=">">&amp;gt;</span>Bold<span class="token entity named-entity" title="<">&amp;lt;</span>/strong<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>/p<span class="token entity named-entity" title=">">&amp;gt;</span>
+    <span class="token entity named-entity" title="<">&amp;lt;</span>p<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>em<span class="token entity named-entity" title=">">&amp;gt;</span>Italic<span class="token entity named-entity" title="<">&amp;lt;</span>/em<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>/p<span class="token entity named-entity" title=">">&amp;gt;</span>
+    <span class="token entity named-entity" title="<">&amp;lt;</span>p<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>u<span class="token entity named-entity" title=">">&amp;gt;</span>Underline<span class="token entity named-entity" title="<">&amp;lt;</span>/u<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>/p<span class="token entity named-entity" title=">">&amp;gt;</span>
+    <span class="token entity named-entity" title="<">&amp;lt;</span>p<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>s<span class="token entity named-entity" title=">">&amp;gt;</span>Strikethrough<span class="token entity named-entity" title="<">&amp;lt;</span>/s<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>/p<span class="token entity named-entity" title=">">&amp;gt;</span>
+    <span class="token entity named-entity" title="<">&amp;lt;</span>blockquote<span class="token entity named-entity" title=">">&amp;gt;</span>Blockquote<span class="token entity named-entity" title="<">&amp;lt;</span>/blockquote<span class="token entity named-entity" title=">">&amp;gt;</span>
+    <span class="token entity named-entity" title="<">&amp;lt;</span>p<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>code<span class="token entity named-entity" title=">">&amp;gt;</span>Inline code<span class="token entity named-entity" title="<">&amp;lt;</span>/code<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>/p<span class="token entity named-entity" title=">">&amp;gt;</span>
+    <span class="token entity named-entity" title="<">&amp;lt;</span>pre data-language=plain<span class="token entity named-entity" title=">">&amp;gt;</span>Code block<span class="token entity named-entity" title="<">&amp;lt;</span>/pre<span class="token entity named-entity" title=">">&amp;gt;</span>
+    <span class="token entity named-entity" title="<">&amp;lt;</span>p<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>span style=color:red<span class="token entity named-entity" title=">">&amp;gt;</span>Coloured text<span class="token entity named-entity" title="<">&amp;lt;</span>/span<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>/p<span class="token entity named-entity" title=">">&amp;gt;</span>
+    <span class="token entity named-entity" title="<">&amp;lt;</span>ul<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>li<span class="token entity named-entity" title=">">&amp;gt;</span>Bullet<span class="token entity named-entity" title="<">&amp;lt;</span>/li<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>li<span class="token entity named-entity" title=">">&amp;gt;</span>Bullet<span class="token entity named-entity" title="<">&amp;lt;</span>ul<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>li<span class="token entity named-entity" title=">">&amp;gt;</span>Nested bullet<span class="token entity named-entity" title="<">&amp;lt;</span>/li<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>/ul<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>/li<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>/ul<span class="token entity named-entity" title=">">&amp;gt;</span>
+    <span class="token entity named-entity" title="<">&amp;lt;</span>ol<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>li<span class="token entity named-entity" title=">">&amp;gt;</span>Numbered<span class="token entity named-entity" title="<">&amp;lt;</span>ol<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>li<span class="token entity named-entity" title=">">&amp;gt;</span>Nested numbered<span class="token entity named-entity" title="<">&amp;lt;</span>/li<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>li<span class="token entity named-entity" title=">">&amp;gt;</span>Nested numbered<span class="token entity named-entity" title="<">&amp;lt;</span>/li<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>/ol<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>/li<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>/ol<span class="token entity named-entity" title=">">&amp;gt;</span>
+    <span class="token entity named-entity" title="<">&amp;lt;</span>ul<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>li data-list=checked<span class="token entity named-entity" title=">">&amp;gt;</span>Checked<span class="token entity named-entity" title="<">&amp;lt;</span>/li<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>li data-list=unchecked<span class="token entity named-entity" title=">">&amp;gt;</span>Unchecked<span class="token entity named-entity" title="<">&amp;lt;</span>/li<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>/ul<span class="token entity named-entity" title=">">&amp;gt;</span>
+    <span class="token entity named-entity" title="<">&amp;lt;</span>hr class=ql-hr<span class="token entity named-entity" title=">">&amp;gt;</span>
+    <span class="token entity named-entity" title="<">&amp;lt;</span>p<span class="token entity named-entity" title=">">&amp;gt;</span>Divider above<span class="token entity named-entity" title="<">&amp;lt;</span>/p<span class="token entity named-entity" title=">">&amp;gt;</span>
+    <span class="token entity named-entity" title="<">&amp;lt;</span>p<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>a href=https://example.com<span class="token entity named-entity" title=">">&amp;gt;</span>Link<span class="token entity named-entity" title="<">&amp;lt;</span>/a<span class="token entity named-entity" title=">">&amp;gt;</span><span class="token entity named-entity" title="<">&amp;lt;</span>/p<span class="token entity named-entity" title=">">&amp;gt;</span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>html<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Bold<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>em</span><span class="token punctuation">&gt;</span></span>Italic<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>em</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>u</span><span class="token punctuation">&gt;</span></span>Underline<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>u</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>s</span><span class="token punctuation">&gt;</span></span>Strikethrough<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>s</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>blockquote</span><span class="token punctuation">&gt;</span></span>Blockquote<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>blockquote</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>code</span><span class="token punctuation">&gt;</span></span>Inline code<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>code</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>pre</span> <span class="token attr-name">data-language</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>plain<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Code block<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>pre</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">color</span><span class="token punctuation">:</span>red</span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>Coloured text<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ul</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span><span class="token punctuation">&gt;</span></span>Bullet<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span><span class="token punctuation">&gt;</span></span>Bullet<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ul</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span><span class="token punctuation">&gt;</span></span>Nested bullet<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ul</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ul</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ol</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span><span class="token punctuation">&gt;</span></span>Numbered<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ol</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span><span class="token punctuation">&gt;</span></span>Nested numbered<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span><span class="token punctuation">&gt;</span></span>Nested numbered<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ol</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ol</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ul</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span> <span class="token attr-name">data-list</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>checked<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Checked<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span> <span class="token attr-name">data-list</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>unchecked<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Unchecked<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ul</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>hr</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>ql-hr<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Divider above<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://example.com<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Link<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-content-block</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-367"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-284"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
           <h3 id="attachments" class="anchor-heading">
             Attachments<a href="#attachments" aria-label='Direct link to "Attachments"'></a>
           </h3>
@@ -795,9 +933,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-284">
+            <div class="code-preview__source-group" id="code-preview-source-group-285">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-367">
+                <pre><code class="language-html" id="code-block-368">
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-content-block</span>
   <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>16 Jun 2025, 13:00<span class="token punctuation">"</span></span>
   <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>John Smith<span class="token punctuation">"</span></span>
@@ -807,7 +945,7 @@
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message-attachment</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>filename1.txt<span class="token punctuation">"</span></span> <span class="token attr-name">download</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message-attachment</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message-attachment</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>filename2.png<span class="token punctuation">"</span></span> <span class="token attr-name">download</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message-attachment</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-content-block</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-367"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-368"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -816,7 +954,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-284"
+                aria-controls="code-preview-source-group-285"
               >
                 Source
                 <svg
@@ -850,9 +988,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-285">
+            <div class="code-preview__source-group" id="code-preview-source-group-286">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-368">
+                <pre><code class="language-html" id="code-block-369">
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-content-block</span>
   <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>16 Jun 2025, 13:00<span class="token punctuation">"</span></span>
   <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>John Smith<span class="token punctuation">"</span></span>
@@ -865,7 +1003,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>small</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-content-block</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-368"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-369"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -874,7 +1012,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-285"
+                aria-controls="code-preview-source-group-286"
               >
                 Source
                 <svg
@@ -918,9 +1056,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-286">
+            <div class="code-preview__source-group" id="code-preview-source-group-287">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-369">
+                <pre><code class="language-html" id="code-block-370">
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-content-block</span>
   <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>16 Jun 2025, 13:00<span class="token punctuation">"</span></span>
   <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>John Smith<span class="token punctuation">"</span></span>
@@ -948,7 +1086,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-collapsible</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-content-block</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-369"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-370"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -957,7 +1095,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-286"
+                aria-controls="code-preview-source-group-287"
               >
                 Source
                 <svg
@@ -995,7 +1133,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-370"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.181/dist/components/content-block/content-block.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-370"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-371"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.181/dist/components/content-block/content-block.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-371"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1010,12 +1148,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-371"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.181/dist/components/content-block/content-block.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-371"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-372"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.181/dist/components/content-block/content-block.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-372"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-372"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/content-block/content-block.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-372"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-373"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/content-block/content-block.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-373"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>

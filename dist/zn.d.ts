@@ -4383,7 +4383,7 @@ declare module "components/data-table/index" {
     }
 }
 declare module "components/cols/cols.component" {
-    import { type CSSResultGroup } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
@@ -4419,8 +4419,15 @@ declare module "components/cols/cols.component" {
         padX: boolean;
         padY: boolean;
         private readonly childObserver;
+        private readonly resizeObserver;
         connectedCallback(): void;
         disconnectedCallback(): void;
+        protected updated(changed: PropertyValues<this>): void;
+        /**
+         * Flags each child that ends its row as laid out, so `divide` only draws between neighbours on the same row
+         * however the columns have wrapped.
+         */
+        private markRowEnds;
         /**
          * Reads the `stack-order` attribute of an element, returning null when it does not declare one.
          */

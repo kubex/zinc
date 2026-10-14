@@ -1,5 +1,5 @@
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
@@ -65,14 +65,43 @@ export default class ZnCols extends ZincElement {
   // the whole subtree, to avoid reacting to unrelated content updates deeper in a column.
   private readonly childObserver: MutationObserver = new MutationObserver(() => this.requestUpdate());
 
+  private readonly resizeObserver: ResizeObserver = new ResizeObserver(() => this.markRowEnds());
+
   connectedCallback() {
     super.connectedCallback();
     this.childObserver.observe(this, {childList: true});
+    this.resizeObserver.observe(this);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.childObserver.disconnect();
+    this.resizeObserver.disconnect();
+  }
+
+  protected updated(changed: PropertyValues<this>) {
+    super.updated(changed);
+    this.markRowEnds();
+  }
+
+  /**
+   * Flags each child that ends its row as laid out, so `divide` only draws between neighbours on the same row
+   * however the columns have wrapped.
+   */
+  private markRowEnds() {
+    const children = Array.from(this.querySelectorAll(':scope > *:not([slot])'));
+    if (!this.divide) {
+      children.forEach((child) => child.removeAttribute('data-row-end'));
+      return;
+    }
+
+    const rects = children.map((child) => child.getBoundingClientRect());
+    children.forEach((child, i) => {
+      const rect = rects[i];
+      const rowEnd = !rects.some((other) =>
+        other !== rect && other.top < rect.bottom && other.bottom > rect.top && other.left > rect.left);
+      child.toggleAttribute('data-row-end', rowEnd);
+    });
   }
 
   /**

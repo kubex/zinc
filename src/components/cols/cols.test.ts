@@ -135,4 +135,35 @@ describe('<zn-cols>', () => {
       expect(orderOf(el.querySelector('#usage'))).to.equal('-1');
     });
   });
+
+  describe('dividers', () => {
+    const dividerOf = (el: Element | null) => getComputedStyle(el!, '::after').display;
+
+    it('should only divide neighbours on the same row', async () => {
+      const el = await cols(`
+        <zn-cols layout="1,1" divide style="width: 600px">
+          <div id="a" style="height: 20px"></div>
+          <div id="b" style="height: 20px"></div>
+          <div id="c" style="height: 20px"></div>
+          <div id="d" style="height: 20px"></div>
+        </zn-cols>`);
+
+      expect(dividerOf(el.querySelector('#a'))).to.equal('block');
+      expect(dividerOf(el.querySelector('#b'))).to.equal('none');
+      expect(dividerOf(el.querySelector('#c'))).to.equal('block');
+    });
+
+    it('should drop the dividers once the columns wrap', async () => {
+      const el = await cols(`
+        <zn-cols layout="1,1" divide style="width: 600px">
+          <div id="a" style="height: 20px"></div>
+          <div id="b" style="height: 20px"></div>
+        </zn-cols>`);
+
+      el.style.width = '400px';
+      await aTimeout(100);
+
+      expect(dividerOf(el.querySelector('#a'))).to.equal('none');
+    });
+  });
 });

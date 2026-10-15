@@ -67,6 +67,22 @@
     ::slotted([data-row-end]):after {
       display: none;
     }
+
+    ::slotted(:not([data-last-row])) {
+      position: relative;
+    }
+  }
+
+  // Border mode owns :before for its own row rules.
+  &--divide:not(.cols--border) ::slotted(:not([data-last-row])):before {
+    content: "";
+    position: absolute;
+    display: block;
+    height: 1px;
+    left: 0;
+    right: 0;
+    bottom: calc((var(--zn-spacing-small) / 2) * -1);
+    background-color: rgb(var(--zn-border-color));
   }
 
   &--no-gap {
@@ -74,8 +90,14 @@
   }
 
   // Without a gap to sit in, the divider goes on the column's own edge.
-  &--no-gap.cols--divide ::slotted(*:not(:last-child)):after {
-    right: 0;
+  &--no-gap.cols--divide {
+    ::slotted(*:not(:last-child)):after {
+      right: 0;
+    }
+
+    ::slotted(:not([data-last-row])):before {
+      bottom: 0;
+    }
   }
 
   // The row rule below each child is drawn by a pseudo reaching to -100vw, so border mode has to clip. Clipping
@@ -154,17 +176,6 @@ $stack-sizes: (sm, smp, ph, md, lg, hd, '3k', '4k');
       // Vertical dividers make no sense once the columns are on top of each other
       .cols--divide ::slotted(*:not(:last-child)):after {
         display: none;
-      }
-
-      // Edge-to-edge columns keep their separation as a rule between the stacked rows
-      .cols--no-gap.cols--divide ::slotted(*:not(:last-child)):after {
-        display: block;
-        top: auto;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        width: auto;
-        height: 1px;
       }
     }
   }

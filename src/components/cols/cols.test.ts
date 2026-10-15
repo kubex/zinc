@@ -165,5 +165,21 @@ describe('<zn-cols>', () => {
 
       expect(dividerOf(el.querySelector('#a'))).to.equal('none');
     });
+
+    it('should rule between wrapped rows', async () => {
+      const el = await cols(`
+        <zn-cols layout="1,1" divide style="width: 600px">
+          <div id="a" style="height: 20px"></div>
+          <div id="b" style="height: 20px"></div>
+          <div id="c" style="height: 20px"></div>
+          <div id="d" style="height: 20px"></div>
+        </zn-cols>`);
+      const ruleOf = (id: string) => getComputedStyle(el.querySelector(id)!, '::before').content;
+
+      expect(ruleOf('#a')).to.not.equal('none');
+      expect(ruleOf('#b')).to.not.equal('none');
+      expect(ruleOf('#c')).to.equal('none');
+      expect(ruleOf('#d')).to.equal('none');
+    });
   });
 });

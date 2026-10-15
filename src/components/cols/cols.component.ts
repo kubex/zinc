@@ -85,13 +85,16 @@ export default class ZnCols extends ZincElement {
   }
 
   /**
-   * Flags each child that ends its row as laid out, so `divide` only draws between neighbours on the same row
-   * however the columns have wrapped.
+   * Flags each child that ends its row, and each child on the last row, as laid out, so `divide` only draws
+   * between neighbours however the columns have wrapped.
    */
   private markRowEnds() {
     const children = Array.from(this.querySelectorAll(':scope > *:not([slot])'));
     if (!this.divide) {
-      children.forEach((child) => child.removeAttribute('data-row-end'));
+      children.forEach((child) => {
+        child.removeAttribute('data-row-end');
+        child.removeAttribute('data-last-row');
+      });
       return;
     }
 
@@ -101,6 +104,7 @@ export default class ZnCols extends ZincElement {
       const rowEnd = !rects.some((other) =>
         other !== rect && other.top < rect.bottom && other.bottom > rect.top && other.left > rect.left);
       child.toggleAttribute('data-row-end', rowEnd);
+      child.toggleAttribute('data-last-row', !rects.some((other) => other.top >= rect.bottom));
     });
   }
 

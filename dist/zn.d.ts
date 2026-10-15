@@ -4428,8 +4428,8 @@ declare module "components/cols/cols.component" {
         disconnectedCallback(): void;
         protected updated(changed: PropertyValues<this>): void;
         /**
-         * Flags each child that ends its row as laid out, so `divide` only draws between neighbours on the same row
-         * however the columns have wrapped.
+         * Flags each child that ends its row, and each child on the last row, as laid out, so `divide` only draws
+         * between neighbours however the columns have wrapped.
          */
         private markRowEnds;
         /**

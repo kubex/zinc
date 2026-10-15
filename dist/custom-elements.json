@@ -6998,7 +6998,7 @@
               "kind": "method",
               "name": "markRowEnds",
               "privacy": "private",
-              "description": "Flags each child that ends its row as laid out, so `divide` only draws between neighbours on the same row\nhowever the columns have wrapped."
+              "description": "Flags each child that ends its row, and each child on the last row, as laid out, so `divide` only draws\nbetween neighbours however the columns have wrapped."
             },
             {
               "kind": "method",
@@ -7624,224 +7624,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/copy-button/copy-button.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnCopyButton",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "copyIcon",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "successIcon",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "errorIcon",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "tooltip",
-              "type": {
-                "text": "ZnTooltip"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "isCopying",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "status",
-              "type": {
-                "text": "'rest' | 'success' | 'error'"
-              },
-              "default": "'rest'"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "copyLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "copy-label"
-            },
-            {
-              "kind": "field",
-              "name": "src",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "src"
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "number"
-              },
-              "default": "24",
-              "attribute": "size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "from",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "An id that references an element in the same document from which data will be copied. If both this and `value` are\npresent, this value will take precedence. By default, the target element's `textContent` will be copied. To copy an\nattribute, append the attribute name wrapped in square brackets, e.g. `from=\"el[value]\"`. To copy a property,\nappend a dot and the property name, e.g. `from=\"el.value\"`.",
-              "attribute": "from"
-            },
-            {
-              "kind": "method",
-              "name": "showStatus",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "status",
-                  "type": {
-                    "text": "'success' | 'error'"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "handleCopy",
-              "privacy": "private"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "value"
-            },
-            {
-              "name": "copy-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "copyLabel"
-            },
-            {
-              "name": "src",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "src"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "number"
-              },
-              "default": "24",
-              "fieldName": "size"
-            },
-            {
-              "name": "from",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "An id that references an element in the same document from which data will be copied. If both this and `value` are\npresent, this value will take precedence. By default, the target element's `textContent` will be copied. To copy an\nattribute, append the attribute name wrapped in square brackets, e.g. `from=\"el[value]\"`. To copy a property,\nappend a dot and the property name, e.g. `from=\"el.value\"`.",
-              "fieldName": "from"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "copy-button",
-          "tagName": "zn-copy-button",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/copy-button\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/copy-button",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnCopyButton",
-            "module": "components/copy-button/copy-button.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/content-block/content-block.js",
       "declarations": [
         {
@@ -8163,6 +7945,224 @@
           "declaration": {
             "name": "ContentBlock",
             "module": "components/content-block/content-block.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/copy-button/copy-button.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnCopyButton",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "copyIcon",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "successIcon",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errorIcon",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "tooltip",
+              "type": {
+                "text": "ZnTooltip"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "isCopying",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "status",
+              "type": {
+                "text": "'rest' | 'success' | 'error'"
+              },
+              "default": "'rest'"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "copyLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "copy-label"
+            },
+            {
+              "kind": "field",
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "src"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "default": "24",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "from",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "An id that references an element in the same document from which data will be copied. If both this and `value` are\npresent, this value will take precedence. By default, the target element's `textContent` will be copied. To copy an\nattribute, append the attribute name wrapped in square brackets, e.g. `from=\"el[value]\"`. To copy a property,\nappend a dot and the property name, e.g. `from=\"el.value\"`.",
+              "attribute": "from"
+            },
+            {
+              "kind": "method",
+              "name": "showStatus",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "status",
+                  "type": {
+                    "text": "'success' | 'error'"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleCopy",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value"
+            },
+            {
+              "name": "copy-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "copyLabel"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "src"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "default": "24",
+              "fieldName": "size"
+            },
+            {
+              "name": "from",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "An id that references an element in the same document from which data will be copied. If both this and `value` are\npresent, this value will take precedence. By default, the target element's `textContent` will be copied. To copy an\nattribute, append the attribute name wrapped in square brackets, e.g. `from=\"el[value]\"`. To copy a property,\nappend a dot and the property name, e.g. `from=\"el.value\"`.",
+              "fieldName": "from"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "copy-button",
+          "tagName": "zn-copy-button",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/copy-button\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/copy-button",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnCopyButton",
+            "module": "components/copy-button/copy-button.js"
           }
         }
       ]
@@ -47672,6 +47672,1085 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/textarea/textarea.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnTextarea",
+          "cssParts": [
+            {
+              "description": "The form control that wraps the label, input, and help text.",
+              "name": "form-control"
+            },
+            {
+              "description": "The label's wrapper.",
+              "name": "form-control-label"
+            },
+            {
+              "description": "The input's wrapper.",
+              "name": "form-control-input"
+            },
+            {
+              "description": "The help text's wrapper.",
+              "name": "form-control-help-text"
+            },
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The internal `<textarea>` control.",
+              "name": "textarea"
+            },
+            {
+              "description": "The slash menu shown at the caret.",
+              "name": "slash-menu"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The textareas label. Alternatively, you can use the `label` attribute.",
+              "name": "label"
+            },
+            {
+              "description": "Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.",
+              "name": "label-tooltip"
+            },
+            {
+              "description": "Used to add contextual text that is displayed above the textarea, on the right. Alternatively, you can use the `context-note` attribute.",
+              "name": "context-note"
+            },
+            {
+              "description": "Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.",
+              "name": "help-text"
+            },
+            {
+              "description": "`<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are picked up wherever they sit inside the textarea, so this slot name is optional.",
+              "name": "slash-items"
+            },
+            {
+              "description": "A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can be set in markup. Any `<zn-slash-item>` children of it become the menu's items.",
+              "name": "slash-menu"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-slash-item': ZnSlashItem, 'zn-slash-menu': ZnSlashMenu }"
+            },
+            {
+              "kind": "field",
+              "name": "formControlController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new FormControlController(this, { assumeInteractionOn: ['zn-blur', 'zn-input'] })"
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'help-text', 'label')"
+            },
+            {
+              "kind": "field",
+              "name": "resizeObserver",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ResizeController(this, { target: null, callback: () => this.setTextareaHeight(), })"
+            },
+            {
+              "kind": "field",
+              "name": "_didInitFromContent",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Ensures we only attempt to derive the initial value from light DOM content once"
+            },
+            {
+              "kind": "field",
+              "name": "slashController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new SlashMenuController(this, { menu: () => this.mountSlashMenu(), items: search => this.resolveSlashItems(search), trigger: () => this.slashTrigger, onSelect: (item, search) => !this.emit('zn-slash-select', { detail: {item, query: search} }).defaultPrevented, // The field's own input event has already synced `value` by this point onInsert: (item, value) => this.emit('zn-slash-insert', {detail: {item, value}}) })"
+            },
+            {
+              "kind": "field",
+              "name": "formControl",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "input",
+              "type": {
+                "text": "HTMLTextAreaElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "slashMenuElement",
+              "type": {
+                "text": "ZnSlashMenu | null"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "hasFocus",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "hasSlashMenu",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Renders the slash menu only once it has been needed, keeping unused textareas cheap."
+            },
+            {
+              "kind": "field",
+              "name": "title",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "title"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The name of the textarea, submitted as a name/value pair with form data.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The current value of the textarea, submitted as a name/value pair with form data.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "description": "The text area's size.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The textarea label. If you need to display HTML, use the `label` slot instead.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "labelTooltip",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
+              "attribute": "label-tooltip"
+            },
+            {
+              "kind": "field",
+              "name": "contextNote",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Text that appears above the textarea, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead.",
+              "attribute": "context-note"
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The text area's help text. If you need to display HTML, use the `help-text` slot instead.",
+              "attribute": "help-text"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Placeholder text to show as a hint when the input is empty.",
+              "attribute": "placeholder"
+            },
+            {
+              "kind": "field",
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "description": "The number of rows to display by default.",
+              "attribute": "rows"
+            },
+            {
+              "kind": "field",
+              "name": "resize",
+              "type": {
+                "text": "'none' | 'vertical' | 'auto'"
+              },
+              "default": "'vertical'",
+              "description": "Controls how the textarea can be resized.",
+              "attribute": "resize"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the textarea.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the textarea readonly.",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside of a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+              "attribute": "form",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "flush",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the textarea a required field.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "minlength",
+              "type": {
+                "text": "number"
+              },
+              "description": "The minimum length of input that will be considered valid.",
+              "attribute": "minlength"
+            },
+            {
+              "kind": "field",
+              "name": "maxlength",
+              "type": {
+                "text": "number"
+              },
+              "description": "The maximum length of input that will be considered valid.",
+              "attribute": "maxlength"
+            },
+            {
+              "kind": "field",
+              "name": "autocapitalize",
+              "type": {
+                "text": "'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters'"
+              },
+              "description": "Controls whether and how text input is automatically capitalized as it is entered by the user.",
+              "attribute": "autocapitalize"
+            },
+            {
+              "kind": "field",
+              "name": "autocorrect",
+              "type": {
+                "text": "string"
+              },
+              "description": "Indicates whether the browser's autocorrect feature is on or off.",
+              "attribute": "autocorrect"
+            },
+            {
+              "kind": "field",
+              "name": "autocomplete",
+              "type": {
+                "text": "string"
+              },
+              "description": "Specifies what permission the browser has to provide assistance in filling out form field values. Refer to\n[this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.",
+              "attribute": "autocomplete"
+            },
+            {
+              "kind": "field",
+              "name": "autofocus",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Indicates that the input should receive focus on page load.",
+              "attribute": "autofocus"
+            },
+            {
+              "kind": "field",
+              "name": "enterkeyhint",
+              "type": {
+                "text": "'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'"
+              },
+              "description": "Used to customize the label or icon of the Enter key on virtual keyboards.",
+              "attribute": "enterkeyhint"
+            },
+            {
+              "kind": "field",
+              "name": "spellcheck",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Enables spell checking on the textarea.",
+              "attribute": "spellcheck"
+            },
+            {
+              "kind": "field",
+              "name": "inputmode",
+              "type": {
+                "text": "'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'"
+              },
+              "description": "Tells the browser what type of data will be entered by the user, allowing it to display the appropriate virtual\nkeyboard on supportive devices.",
+              "attribute": "inputmode"
+            },
+            {
+              "kind": "field",
+              "name": "slashItems",
+              "type": {
+                "text": "SlashMenuItem[]"
+              },
+              "default": "[]",
+              "description": "Quick insertions offered by the slash menu. Accepts a JSON array of items, or the shorthand\n`Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Can also be set as an array of\n`SlashMenuItem` objects in JavaScript.",
+              "attribute": "slash-items"
+            },
+            {
+              "kind": "field",
+              "name": "slashPreset",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Names of item sets registered with `registerSlashMenuPreset`, comma separated.",
+              "attribute": "slash-preset"
+            },
+            {
+              "kind": "field",
+              "name": "slashTrigger",
+              "type": {
+                "text": "string"
+              },
+              "default": "'/'",
+              "description": "The characters that open the slash menu.",
+              "attribute": "slash-trigger"
+            },
+            {
+              "kind": "field",
+              "name": "slashHeading",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Insert'",
+              "description": "The name the slash menu's list is announced by.",
+              "attribute": "slash-heading"
+            },
+            {
+              "kind": "field",
+              "name": "slashHideKeys",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the insertion keys normally shown against the slash menu's items.",
+              "attribute": "slash-hide-keys"
+            },
+            {
+              "kind": "field",
+              "name": "slashRecentKey",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Lists the items most recently chosen here above the rest, remembered in `localStorage` under this\nkey. Share a key between the fields that should share a history; leave unset to offer no such list.",
+              "attribute": "slash-recent-key"
+            },
+            {
+              "kind": "field",
+              "name": "slashItemsProvider",
+              "type": {
+                "text": "(query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]> | undefined"
+              },
+              "description": "Resolves additional items each time the menu opens, for lists that come from elsewhere (e.g. an\nAPI). Receives the current query and may return a promise. JavaScript only."
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The default value of the form control. Primarily used for resetting the form control."
+            },
+            {
+              "kind": "field",
+              "name": "transparent",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "transparent"
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "description": "Gets the validity state object",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "description": "Gets the validation message",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "resolveSlashItems",
+              "return": {
+                "type": {
+                  "text": "Promise<SlashMenuItem[]>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "search",
+                  "default": "''"
+                }
+              ],
+              "description": "The insertions the slash menu offers, gathered from every source, in the order they were declared."
+            },
+            {
+              "kind": "method",
+              "name": "showSlashMenu",
+              "description": "Opens the slash menu at the caret, inserting the trigger if it isn't already there."
+            },
+            {
+              "kind": "method",
+              "name": "hideSlashMenu",
+              "description": "Closes the slash menu."
+            },
+            {
+              "kind": "method",
+              "name": "slottedSlashItems",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "SlashMenuItem[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "mountSlashMenu",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<ZnSlashMenu | null>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleBlur",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleFocus",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleInput",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleInvalid",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleKeyDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setTextareaHeight",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleDisabledChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleRowsChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleValueChange"
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ],
+              "description": "Sets focus on the textarea."
+            },
+            {
+              "kind": "method",
+              "name": "blur",
+              "description": "Removes focus from the textarea."
+            },
+            {
+              "kind": "method",
+              "name": "select",
+              "description": "Selects all the text in the textarea."
+            },
+            {
+              "kind": "method",
+              "name": "scrollPosition",
+              "return": {
+                "type": {
+                  "text": "{ top: number; left: number } | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "position",
+                  "optional": true,
+                  "type": {
+                    "text": "{ top?: number; left?: number }"
+                  }
+                }
+              ],
+              "description": "Gets or sets the textarea scroll position."
+            },
+            {
+              "kind": "method",
+              "name": "setSelectionRange",
+              "parameters": [
+                {
+                  "name": "selectionStart",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "selectionEnd",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "selectionDirection",
+                  "default": "'none'",
+                  "type": {
+                    "text": "'forward' | 'backward' | 'none'"
+                  }
+                }
+              ],
+              "description": "Sets the start and end positions of the text selection (0-based)."
+            },
+            {
+              "kind": "method",
+              "name": "setRangeText",
+              "parameters": [
+                {
+                  "name": "replacement",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "start",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "end",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "selectMode",
+                  "default": "'preserve'",
+                  "type": {
+                    "text": "'select' | 'start' | 'end' | 'preserve'"
+                  }
+                }
+              ],
+              "description": "Replaces a range of text with a new string."
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "description": "Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid."
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              },
+              "description": "Gets the associated form, if one exists."
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "description": "Checks for validity and shows the browser's validation message if the control is invalid."
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Sets a custom validation message. Pass an empty string to restore validity."
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the control loses focus.",
+              "name": "zn-blur"
+            },
+            {
+              "description": "Emitted when an alteration to the control's value is committed by the user.",
+              "name": "zn-change"
+            },
+            {
+              "description": "Emitted when the control gains focus.",
+              "name": "zn-focus"
+            },
+            {
+              "description": "Emitted when the control receives input.",
+              "name": "zn-input"
+            },
+            {
+              "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied.",
+              "name": "zn-invalid"
+            },
+            {
+              "description": "Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to suppress the insertion and handle the item yourself.",
+              "name": "zn-slash-select"
+            },
+            {
+              "description": "Emitted after a slash menu item's value has been inserted.",
+              "name": "zn-slash-insert"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "title",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "title"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The name of the textarea, submitted as a name/value pair with form data.",
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The current value of the textarea, submitted as a name/value pair with form data.",
+              "fieldName": "value"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "description": "The text area's size.",
+              "fieldName": "size"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The textarea label. If you need to display HTML, use the `label` slot instead.",
+              "fieldName": "label"
+            },
+            {
+              "name": "label-tooltip",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
+              "fieldName": "labelTooltip"
+            },
+            {
+              "name": "context-note",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Text that appears above the textarea, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead.",
+              "fieldName": "contextNote"
+            },
+            {
+              "name": "help-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The text area's help text. If you need to display HTML, use the `help-text` slot instead.",
+              "fieldName": "helpText"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Placeholder text to show as a hint when the input is empty.",
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "description": "The number of rows to display by default.",
+              "fieldName": "rows"
+            },
+            {
+              "name": "resize",
+              "type": {
+                "text": "'none' | 'vertical' | 'auto'"
+              },
+              "default": "'vertical'",
+              "description": "Controls how the textarea can be resized.",
+              "fieldName": "resize"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the textarea.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the textarea readonly.",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside of a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+              "fieldName": "form"
+            },
+            {
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "flush"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the textarea a required field.",
+              "fieldName": "required"
+            },
+            {
+              "name": "minlength",
+              "type": {
+                "text": "number"
+              },
+              "description": "The minimum length of input that will be considered valid.",
+              "fieldName": "minlength"
+            },
+            {
+              "name": "maxlength",
+              "type": {
+                "text": "number"
+              },
+              "description": "The maximum length of input that will be considered valid.",
+              "fieldName": "maxlength"
+            },
+            {
+              "name": "autocapitalize",
+              "type": {
+                "text": "'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters'"
+              },
+              "description": "Controls whether and how text input is automatically capitalized as it is entered by the user.",
+              "fieldName": "autocapitalize"
+            },
+            {
+              "name": "autocorrect",
+              "type": {
+                "text": "string"
+              },
+              "description": "Indicates whether the browser's autocorrect feature is on or off.",
+              "fieldName": "autocorrect"
+            },
+            {
+              "name": "autocomplete",
+              "type": {
+                "text": "string"
+              },
+              "description": "Specifies what permission the browser has to provide assistance in filling out form field values. Refer to\n[this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.",
+              "fieldName": "autocomplete"
+            },
+            {
+              "name": "autofocus",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Indicates that the input should receive focus on page load.",
+              "fieldName": "autofocus"
+            },
+            {
+              "name": "enterkeyhint",
+              "type": {
+                "text": "'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'"
+              },
+              "description": "Used to customize the label or icon of the Enter key on virtual keyboards.",
+              "fieldName": "enterkeyhint"
+            },
+            {
+              "name": "spellcheck",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Enables spell checking on the textarea.",
+              "fieldName": "spellcheck"
+            },
+            {
+              "name": "inputmode",
+              "type": {
+                "text": "'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'"
+              },
+              "description": "Tells the browser what type of data will be entered by the user, allowing it to display the appropriate virtual\nkeyboard on supportive devices.",
+              "fieldName": "inputmode"
+            },
+            {
+              "name": "slash-items",
+              "type": {
+                "text": "SlashMenuItem[]"
+              },
+              "default": "[]",
+              "description": "Quick insertions offered by the slash menu. Accepts a JSON array of items, or the shorthand\n`Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Can also be set as an array of\n`SlashMenuItem` objects in JavaScript.",
+              "fieldName": "slashItems"
+            },
+            {
+              "name": "slash-preset",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Names of item sets registered with `registerSlashMenuPreset`, comma separated.",
+              "fieldName": "slashPreset"
+            },
+            {
+              "name": "slash-trigger",
+              "type": {
+                "text": "string"
+              },
+              "default": "'/'",
+              "description": "The characters that open the slash menu.",
+              "fieldName": "slashTrigger"
+            },
+            {
+              "name": "slash-heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Insert'",
+              "description": "The name the slash menu's list is announced by.",
+              "fieldName": "slashHeading"
+            },
+            {
+              "name": "slash-hide-keys",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the insertion keys normally shown against the slash menu's items.",
+              "fieldName": "slashHideKeys"
+            },
+            {
+              "name": "slash-recent-key",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Lists the items most recently chosen here above the rest, remembered in `localStorage` under this\nkey. Share a key between the fields that should share a history; leave unset to offer no such list.",
+              "fieldName": "slashRecentKey"
+            },
+            {
+              "name": "transparent",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "transparent"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Textareas collect data from the user and allow multiple lines of text.",
+          "tagNameWithoutPrefix": "textarea",
+          "tagName": "zn-textarea",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Textareas collect data from the user and allow multiple lines of text.\n * @documentation https://zinc.style/components/textarea\n * @status stable\n * @since 2.0\n *\n * @slot label - The textareas label. Alternatively, you can use the `label` attribute.\n * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n * @slot context-note - Used to add contextual text that is displayed above the textarea, on the right. Alternatively, you can use the `context-note` attribute.\n * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n * @slot slash-items - `<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are\n *  picked up wherever they sit inside the textarea, so this slot name is optional.\n * @slot slash-menu - A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can\n *  be set in markup. Any `<zn-slash-item>` children of it become the menu's items.\n *\n * @dependency zn-slash-item\n * @dependency zn-slash-menu\n *\n * @event zn-blur - Emitted when the control loses focus.\n * @event zn-change - Emitted when an alteration to the control's value is committed by the user.\n * @event zn-focus - Emitted when the control gains focus.\n * @event zn-input - Emitted when the control receives input.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n * @event zn-slash-select - Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to\n *  suppress the insertion and handle the item yourself.\n * @event zn-slash-insert - Emitted after a slash menu item's value has been inserted.\n *\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart base - The component's base wrapper.\n * @csspart textarea - The internal `<textarea>` control.\n * @csspart slash-menu - The slash menu shown at the caret.\n */",
+          "documentation": "https://zinc.style/components/textarea",
+          "status": "stable",
+          "since": "2.0",
+          "dependencies": [
+            "zn-slash-item",
+            "zn-slash-menu"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnTextarea",
+            "module": "components/textarea/textarea.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/theme-editor/theme-editor.js",
       "declarations": [
         {
@@ -49506,1085 +50585,6 @@
           "declaration": {
             "name": "ZnThumbnail",
             "module": "components/thumbnail/thumbnail.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/textarea/textarea.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnTextarea",
-          "cssParts": [
-            {
-              "description": "The form control that wraps the label, input, and help text.",
-              "name": "form-control"
-            },
-            {
-              "description": "The label's wrapper.",
-              "name": "form-control-label"
-            },
-            {
-              "description": "The input's wrapper.",
-              "name": "form-control-input"
-            },
-            {
-              "description": "The help text's wrapper.",
-              "name": "form-control-help-text"
-            },
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            },
-            {
-              "description": "The internal `<textarea>` control.",
-              "name": "textarea"
-            },
-            {
-              "description": "The slash menu shown at the caret.",
-              "name": "slash-menu"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The textareas label. Alternatively, you can use the `label` attribute.",
-              "name": "label"
-            },
-            {
-              "description": "Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.",
-              "name": "label-tooltip"
-            },
-            {
-              "description": "Used to add contextual text that is displayed above the textarea, on the right. Alternatively, you can use the `context-note` attribute.",
-              "name": "context-note"
-            },
-            {
-              "description": "Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.",
-              "name": "help-text"
-            },
-            {
-              "description": "`<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are picked up wherever they sit inside the textarea, so this slot name is optional.",
-              "name": "slash-items"
-            },
-            {
-              "description": "A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can be set in markup. Any `<zn-slash-item>` children of it become the menu's items.",
-              "name": "slash-menu"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ 'zn-slash-item': ZnSlashItem, 'zn-slash-menu': ZnSlashMenu }"
-            },
-            {
-              "kind": "field",
-              "name": "formControlController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new FormControlController(this, { assumeInteractionOn: ['zn-blur', 'zn-input'] })"
-            },
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, 'help-text', 'label')"
-            },
-            {
-              "kind": "field",
-              "name": "resizeObserver",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new ResizeController(this, { target: null, callback: () => this.setTextareaHeight(), })"
-            },
-            {
-              "kind": "field",
-              "name": "_didInitFromContent",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false",
-              "description": "Ensures we only attempt to derive the initial value from light DOM content once"
-            },
-            {
-              "kind": "field",
-              "name": "slashController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new SlashMenuController(this, { menu: () => this.mountSlashMenu(), items: search => this.resolveSlashItems(search), trigger: () => this.slashTrigger, onSelect: (item, search) => !this.emit('zn-slash-select', { detail: {item, query: search} }).defaultPrevented, // The field's own input event has already synced `value` by this point onInsert: (item, value) => this.emit('zn-slash-insert', {detail: {item, value}}) })"
-            },
-            {
-              "kind": "field",
-              "name": "formControl",
-              "type": {
-                "text": "HTMLElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "input",
-              "type": {
-                "text": "HTMLTextAreaElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "slashMenuElement",
-              "type": {
-                "text": "ZnSlashMenu | null"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "hasFocus",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "hasSlashMenu",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false",
-              "description": "Renders the slash menu only once it has been needed, keeping unused textareas cheap."
-            },
-            {
-              "kind": "field",
-              "name": "title",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "title"
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The name of the textarea, submitted as a name/value pair with form data.",
-              "attribute": "name"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The current value of the textarea, submitted as a name/value pair with form data.",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "default": "'medium'",
-              "description": "The text area's size.",
-              "attribute": "size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The textarea label. If you need to display HTML, use the `label` slot instead.",
-              "attribute": "label"
-            },
-            {
-              "kind": "field",
-              "name": "labelTooltip",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
-              "attribute": "label-tooltip"
-            },
-            {
-              "kind": "field",
-              "name": "contextNote",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Text that appears above the textarea, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead.",
-              "attribute": "context-note"
-            },
-            {
-              "kind": "field",
-              "name": "helpText",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The text area's help text. If you need to display HTML, use the `help-text` slot instead.",
-              "attribute": "help-text"
-            },
-            {
-              "kind": "field",
-              "name": "placeholder",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Placeholder text to show as a hint when the input is empty.",
-              "attribute": "placeholder"
-            },
-            {
-              "kind": "field",
-              "name": "rows",
-              "type": {
-                "text": "number"
-              },
-              "default": "4",
-              "description": "The number of rows to display by default.",
-              "attribute": "rows"
-            },
-            {
-              "kind": "field",
-              "name": "resize",
-              "type": {
-                "text": "'none' | 'vertical' | 'auto'"
-              },
-              "default": "'vertical'",
-              "description": "Controls how the textarea can be resized.",
-              "attribute": "resize"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Disables the textarea.",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Makes the textarea readonly.",
-              "attribute": "readonly",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "form",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside of a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
-              "attribute": "form",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "flush",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Makes the textarea a required field.",
-              "attribute": "required",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "minlength",
-              "type": {
-                "text": "number"
-              },
-              "description": "The minimum length of input that will be considered valid.",
-              "attribute": "minlength"
-            },
-            {
-              "kind": "field",
-              "name": "maxlength",
-              "type": {
-                "text": "number"
-              },
-              "description": "The maximum length of input that will be considered valid.",
-              "attribute": "maxlength"
-            },
-            {
-              "kind": "field",
-              "name": "autocapitalize",
-              "type": {
-                "text": "'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters'"
-              },
-              "description": "Controls whether and how text input is automatically capitalized as it is entered by the user.",
-              "attribute": "autocapitalize"
-            },
-            {
-              "kind": "field",
-              "name": "autocorrect",
-              "type": {
-                "text": "string"
-              },
-              "description": "Indicates whether the browser's autocorrect feature is on or off.",
-              "attribute": "autocorrect"
-            },
-            {
-              "kind": "field",
-              "name": "autocomplete",
-              "type": {
-                "text": "string"
-              },
-              "description": "Specifies what permission the browser has to provide assistance in filling out form field values. Refer to\n[this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.",
-              "attribute": "autocomplete"
-            },
-            {
-              "kind": "field",
-              "name": "autofocus",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Indicates that the input should receive focus on page load.",
-              "attribute": "autofocus"
-            },
-            {
-              "kind": "field",
-              "name": "enterkeyhint",
-              "type": {
-                "text": "'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'"
-              },
-              "description": "Used to customize the label or icon of the Enter key on virtual keyboards.",
-              "attribute": "enterkeyhint"
-            },
-            {
-              "kind": "field",
-              "name": "spellcheck",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "description": "Enables spell checking on the textarea.",
-              "attribute": "spellcheck"
-            },
-            {
-              "kind": "field",
-              "name": "inputmode",
-              "type": {
-                "text": "'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'"
-              },
-              "description": "Tells the browser what type of data will be entered by the user, allowing it to display the appropriate virtual\nkeyboard on supportive devices.",
-              "attribute": "inputmode"
-            },
-            {
-              "kind": "field",
-              "name": "slashItems",
-              "type": {
-                "text": "SlashMenuItem[]"
-              },
-              "default": "[]",
-              "description": "Quick insertions offered by the slash menu. Accepts a JSON array of items, or the shorthand\n`Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Can also be set as an array of\n`SlashMenuItem` objects in JavaScript.",
-              "attribute": "slash-items"
-            },
-            {
-              "kind": "field",
-              "name": "slashPreset",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Names of item sets registered with `registerSlashMenuPreset`, comma separated.",
-              "attribute": "slash-preset"
-            },
-            {
-              "kind": "field",
-              "name": "slashTrigger",
-              "type": {
-                "text": "string"
-              },
-              "default": "'/'",
-              "description": "The characters that open the slash menu.",
-              "attribute": "slash-trigger"
-            },
-            {
-              "kind": "field",
-              "name": "slashHeading",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Insert'",
-              "description": "The name the slash menu's list is announced by.",
-              "attribute": "slash-heading"
-            },
-            {
-              "kind": "field",
-              "name": "slashHideKeys",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Hides the insertion keys normally shown against the slash menu's items.",
-              "attribute": "slash-hide-keys"
-            },
-            {
-              "kind": "field",
-              "name": "slashRecentKey",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Lists the items most recently chosen here above the rest, remembered in `localStorage` under this\nkey. Share a key between the fields that should share a history; leave unset to offer no such list.",
-              "attribute": "slash-recent-key"
-            },
-            {
-              "kind": "field",
-              "name": "slashItemsProvider",
-              "type": {
-                "text": "(query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]> | undefined"
-              },
-              "description": "Resolves additional items each time the menu opens, for lists that come from elsewhere (e.g. an\nAPI). Receives the current query and may return a promise. JavaScript only."
-            },
-            {
-              "kind": "field",
-              "name": "defaultValue",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The default value of the form control. Primarily used for resetting the form control."
-            },
-            {
-              "kind": "field",
-              "name": "transparent",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "transparent"
-            },
-            {
-              "kind": "field",
-              "name": "validity",
-              "description": "Gets the validity state object",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "validationMessage",
-              "description": "Gets the validation message",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "resolveSlashItems",
-              "return": {
-                "type": {
-                  "text": "Promise<SlashMenuItem[]>"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "search",
-                  "default": "''"
-                }
-              ],
-              "description": "The insertions the slash menu offers, gathered from every source, in the order they were declared."
-            },
-            {
-              "kind": "method",
-              "name": "showSlashMenu",
-              "description": "Opens the slash menu at the caret, inserting the trigger if it isn't already there."
-            },
-            {
-              "kind": "method",
-              "name": "hideSlashMenu",
-              "description": "Closes the slash menu."
-            },
-            {
-              "kind": "method",
-              "name": "slottedSlashItems",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "SlashMenuItem[]"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "mountSlashMenu",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "Promise<ZnSlashMenu | null>"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "handleBlur",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleFocus",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleInput",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleInvalid",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "Event"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "handleKeyDown",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "KeyboardEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "setTextareaHeight",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleDisabledChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleRowsChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleValueChange"
-            },
-            {
-              "kind": "method",
-              "name": "focus",
-              "parameters": [
-                {
-                  "name": "options",
-                  "optional": true,
-                  "type": {
-                    "text": "FocusOptions"
-                  }
-                }
-              ],
-              "description": "Sets focus on the textarea."
-            },
-            {
-              "kind": "method",
-              "name": "blur",
-              "description": "Removes focus from the textarea."
-            },
-            {
-              "kind": "method",
-              "name": "select",
-              "description": "Selects all the text in the textarea."
-            },
-            {
-              "kind": "method",
-              "name": "scrollPosition",
-              "return": {
-                "type": {
-                  "text": "{ top: number; left: number } | undefined"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "position",
-                  "optional": true,
-                  "type": {
-                    "text": "{ top?: number; left?: number }"
-                  }
-                }
-              ],
-              "description": "Gets or sets the textarea scroll position."
-            },
-            {
-              "kind": "method",
-              "name": "setSelectionRange",
-              "parameters": [
-                {
-                  "name": "selectionStart",
-                  "type": {
-                    "text": "number"
-                  }
-                },
-                {
-                  "name": "selectionEnd",
-                  "type": {
-                    "text": "number"
-                  }
-                },
-                {
-                  "name": "selectionDirection",
-                  "default": "'none'",
-                  "type": {
-                    "text": "'forward' | 'backward' | 'none'"
-                  }
-                }
-              ],
-              "description": "Sets the start and end positions of the text selection (0-based)."
-            },
-            {
-              "kind": "method",
-              "name": "setRangeText",
-              "parameters": [
-                {
-                  "name": "replacement",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "start",
-                  "optional": true,
-                  "type": {
-                    "text": "number"
-                  }
-                },
-                {
-                  "name": "end",
-                  "optional": true,
-                  "type": {
-                    "text": "number"
-                  }
-                },
-                {
-                  "name": "selectMode",
-                  "default": "'preserve'",
-                  "type": {
-                    "text": "'select' | 'start' | 'end' | 'preserve'"
-                  }
-                }
-              ],
-              "description": "Replaces a range of text with a new string."
-            },
-            {
-              "kind": "method",
-              "name": "checkValidity",
-              "description": "Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid."
-            },
-            {
-              "kind": "method",
-              "name": "getForm",
-              "return": {
-                "type": {
-                  "text": "HTMLFormElement | null"
-                }
-              },
-              "description": "Gets the associated form, if one exists."
-            },
-            {
-              "kind": "method",
-              "name": "reportValidity",
-              "description": "Checks for validity and shows the browser's validation message if the control is invalid."
-            },
-            {
-              "kind": "method",
-              "name": "setCustomValidity",
-              "parameters": [
-                {
-                  "name": "message",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "description": "Sets a custom validation message. Pass an empty string to restore validity."
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted when the control loses focus.",
-              "name": "zn-blur"
-            },
-            {
-              "description": "Emitted when an alteration to the control's value is committed by the user.",
-              "name": "zn-change"
-            },
-            {
-              "description": "Emitted when the control gains focus.",
-              "name": "zn-focus"
-            },
-            {
-              "description": "Emitted when the control receives input.",
-              "name": "zn-input"
-            },
-            {
-              "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied.",
-              "name": "zn-invalid"
-            },
-            {
-              "description": "Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to suppress the insertion and handle the item yourself.",
-              "name": "zn-slash-select"
-            },
-            {
-              "description": "Emitted after a slash menu item's value has been inserted.",
-              "name": "zn-slash-insert"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "title",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "title"
-            },
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The name of the textarea, submitted as a name/value pair with form data.",
-              "fieldName": "name"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The current value of the textarea, submitted as a name/value pair with form data.",
-              "fieldName": "value"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "default": "'medium'",
-              "description": "The text area's size.",
-              "fieldName": "size"
-            },
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The textarea label. If you need to display HTML, use the `label` slot instead.",
-              "fieldName": "label"
-            },
-            {
-              "name": "label-tooltip",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
-              "fieldName": "labelTooltip"
-            },
-            {
-              "name": "context-note",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Text that appears above the textarea, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead.",
-              "fieldName": "contextNote"
-            },
-            {
-              "name": "help-text",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The text area's help text. If you need to display HTML, use the `help-text` slot instead.",
-              "fieldName": "helpText"
-            },
-            {
-              "name": "placeholder",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Placeholder text to show as a hint when the input is empty.",
-              "fieldName": "placeholder"
-            },
-            {
-              "name": "rows",
-              "type": {
-                "text": "number"
-              },
-              "default": "4",
-              "description": "The number of rows to display by default.",
-              "fieldName": "rows"
-            },
-            {
-              "name": "resize",
-              "type": {
-                "text": "'none' | 'vertical' | 'auto'"
-              },
-              "default": "'vertical'",
-              "description": "Controls how the textarea can be resized.",
-              "fieldName": "resize"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Disables the textarea.",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Makes the textarea readonly.",
-              "fieldName": "readonly"
-            },
-            {
-              "name": "form",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside of a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
-              "fieldName": "form"
-            },
-            {
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "flush"
-            },
-            {
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Makes the textarea a required field.",
-              "fieldName": "required"
-            },
-            {
-              "name": "minlength",
-              "type": {
-                "text": "number"
-              },
-              "description": "The minimum length of input that will be considered valid.",
-              "fieldName": "minlength"
-            },
-            {
-              "name": "maxlength",
-              "type": {
-                "text": "number"
-              },
-              "description": "The maximum length of input that will be considered valid.",
-              "fieldName": "maxlength"
-            },
-            {
-              "name": "autocapitalize",
-              "type": {
-                "text": "'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters'"
-              },
-              "description": "Controls whether and how text input is automatically capitalized as it is entered by the user.",
-              "fieldName": "autocapitalize"
-            },
-            {
-              "name": "autocorrect",
-              "type": {
-                "text": "string"
-              },
-              "description": "Indicates whether the browser's autocorrect feature is on or off.",
-              "fieldName": "autocorrect"
-            },
-            {
-              "name": "autocomplete",
-              "type": {
-                "text": "string"
-              },
-              "description": "Specifies what permission the browser has to provide assistance in filling out form field values. Refer to\n[this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.",
-              "fieldName": "autocomplete"
-            },
-            {
-              "name": "autofocus",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Indicates that the input should receive focus on page load.",
-              "fieldName": "autofocus"
-            },
-            {
-              "name": "enterkeyhint",
-              "type": {
-                "text": "'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'"
-              },
-              "description": "Used to customize the label or icon of the Enter key on virtual keyboards.",
-              "fieldName": "enterkeyhint"
-            },
-            {
-              "name": "spellcheck",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "description": "Enables spell checking on the textarea.",
-              "fieldName": "spellcheck"
-            },
-            {
-              "name": "inputmode",
-              "type": {
-                "text": "'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'"
-              },
-              "description": "Tells the browser what type of data will be entered by the user, allowing it to display the appropriate virtual\nkeyboard on supportive devices.",
-              "fieldName": "inputmode"
-            },
-            {
-              "name": "slash-items",
-              "type": {
-                "text": "SlashMenuItem[]"
-              },
-              "default": "[]",
-              "description": "Quick insertions offered by the slash menu. Accepts a JSON array of items, or the shorthand\n`Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Can also be set as an array of\n`SlashMenuItem` objects in JavaScript.",
-              "fieldName": "slashItems"
-            },
-            {
-              "name": "slash-preset",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Names of item sets registered with `registerSlashMenuPreset`, comma separated.",
-              "fieldName": "slashPreset"
-            },
-            {
-              "name": "slash-trigger",
-              "type": {
-                "text": "string"
-              },
-              "default": "'/'",
-              "description": "The characters that open the slash menu.",
-              "fieldName": "slashTrigger"
-            },
-            {
-              "name": "slash-heading",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Insert'",
-              "description": "The name the slash menu's list is announced by.",
-              "fieldName": "slashHeading"
-            },
-            {
-              "name": "slash-hide-keys",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Hides the insertion keys normally shown against the slash menu's items.",
-              "fieldName": "slashHideKeys"
-            },
-            {
-              "name": "slash-recent-key",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Lists the items most recently chosen here above the rest, remembered in `localStorage` under this\nkey. Share a key between the fields that should share a history; leave unset to offer no such list.",
-              "fieldName": "slashRecentKey"
-            },
-            {
-              "name": "transparent",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "transparent"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Textareas collect data from the user and allow multiple lines of text.",
-          "tagNameWithoutPrefix": "textarea",
-          "tagName": "zn-textarea",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Textareas collect data from the user and allow multiple lines of text.\n * @documentation https://zinc.style/components/textarea\n * @status stable\n * @since 2.0\n *\n * @slot label - The textareas label. Alternatively, you can use the `label` attribute.\n * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n * @slot context-note - Used to add contextual text that is displayed above the textarea, on the right. Alternatively, you can use the `context-note` attribute.\n * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n * @slot slash-items - `<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are\n *  picked up wherever they sit inside the textarea, so this slot name is optional.\n * @slot slash-menu - A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can\n *  be set in markup. Any `<zn-slash-item>` children of it become the menu's items.\n *\n * @dependency zn-slash-item\n * @dependency zn-slash-menu\n *\n * @event zn-blur - Emitted when the control loses focus.\n * @event zn-change - Emitted when an alteration to the control's value is committed by the user.\n * @event zn-focus - Emitted when the control gains focus.\n * @event zn-input - Emitted when the control receives input.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n * @event zn-slash-select - Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to\n *  suppress the insertion and handle the item yourself.\n * @event zn-slash-insert - Emitted after a slash menu item's value has been inserted.\n *\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart base - The component's base wrapper.\n * @csspart textarea - The internal `<textarea>` control.\n * @csspart slash-menu - The slash menu shown at the caret.\n */",
-          "documentation": "https://zinc.style/components/textarea",
-          "status": "stable",
-          "since": "2.0",
-          "dependencies": [
-            "zn-slash-item",
-            "zn-slash-menu"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnTextarea",
-            "module": "components/textarea/textarea.js"
           }
         }
       ]
@@ -54303,7 +54303,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.1.184",
+    "version": "1.1.185",
     "author": "",
     "license": "MIT"
   }

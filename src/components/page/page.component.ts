@@ -108,7 +108,20 @@ export default class ZnPage extends ZnTabs {
     this.classList.toggle('alt-pressed', false);
   };
 
-  // Inject a real chevron icon between breadcrumb links (idempotent: only mutates when needed)
+  // A theme picks the separator through --zn-page-breadcrumb-separator-icon.
+  private breadcrumbSeparatorIcon(): string {
+    const value = getComputedStyle(this).getPropertyValue('--zn-page-breadcrumb-separator-icon').trim();
+    return value.replace(/^["']|["']$/g, '') || 'arrow-right@lu';
+  }
+
+  private syncBreadcrumbSeparators() {
+    const src = this.breadcrumbSeparatorIcon();
+    this.querySelectorAll(':scope > [data-breadcrumb-separator]').forEach(icon => {
+      if (icon.getAttribute('src') !== src) icon.setAttribute('src', src);
+    });
+  }
+
+  // Inject a separator icon between breadcrumb links (idempotent: only mutates when needed)
   private handleBreadcrumbSlotChange = (e: Event) => {
     const slot = e.target as HTMLSlotElement;
     const assigned = slot.assignedElements();
@@ -129,7 +142,7 @@ export default class ZnPage extends ZnTabs {
       if (next?.hasAttribute('data-breadcrumb-separator')) return;
 
       const icon = document.createElement('zn-icon');
-      icon.setAttribute('src', 'arrow-right@lu');
+      icon.setAttribute('src', this.breadcrumbSeparatorIcon());
       icon.setAttribute('size', '16');
       icon.setAttribute('slot', 'breadcrumb');
       icon.setAttribute('data-breadcrumb-separator', '');
@@ -274,6 +287,10 @@ export default class ZnPage extends ZnTabs {
 
   updated(changedProperties: PropertyValues) {
     super.updated(changedProperties);
+
+    if (changedProperties.has('t') || changedProperties.has('m')) {
+      this.syncBreadcrumbSeparators();
+    }
 
     if (changedProperties.has('tabDefinitions')) {
       this.registerPagePanels();
@@ -510,9 +527,12 @@ export default class ZnPage extends ZnTabs {
                 <div class="header__left">
                   <span class="header__caption">
                     ${hasBreadcrumb ? html`
-                      <slot name="breadcrumb" class="breadcrumb"
-                            @slotchange="${this.handleBreadcrumbSlotChange}"></slot>
-                      <zn-icon class="breadcrumb__separator" src="arrow-right@lu" size="16"></zn-icon>` : null}
+                      <span class="header__crumbs">
+                        <slot name="breadcrumb" class="breadcrumb"
+                              @slotchange="${this.handleBreadcrumbSlotChange}"></slot>
+                        <zn-icon class="breadcrumb__separator" src="${this.breadcrumbSeparatorIcon()}" size="16"></zn-icon>
+                        ${this.caption ? html`<span class="breadcrumb__current">${this.caption}</span>` : null}
+                      </span>` : null}
                     <slot name="caption">${this.caption}</slot>
                   </span>
                   <span class="header__description"><slot name="description">${this.summary}</slot></span>

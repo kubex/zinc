@@ -67,6 +67,8 @@ $compact: (
   "stack": 8px,
   "page-padding": 16px,
   "input-height-x-small": 20px,
+  "head-gap": 12px,
+  "head-inner": 6px,
 );
 
 $comfortable: (
@@ -80,6 +82,8 @@ $comfortable: (
   "stack": 12px,
   "page-padding": 24px,
   "input-height-x-small": 24px,
+  "head-gap": 16px,
+  "head-inner": 8px,
 );
 
 // Aliases are re-declared alongside the density tokens: a var() alias resolves
@@ -125,6 +129,8 @@ $comfortable: (
   --zn-navbar-inset: #{$pad - 12px};
   --zn-page-padding-inline: #{map.get($d, "page-padding")};
   --zn-page-header-padding-block: #{map.get($d, "page-padding")};
+  --zn-page-breadcrumb-gap: #{map.get($d, "head-gap")};
+  --zn-page-title-gap: #{map.get($d, "head-inner")};
 }
 
 html[t="openbyte"], body[t="openbyte"], html.theme-openbyte, body.theme-openbyte {
@@ -497,6 +503,16 @@ html[t="openbyte"], body[t="openbyte"], html.theme-openbyte, body.theme-openbyte
    *************************************************************/
 
   --zn-page-title-line-height: 30px;
+  --zn-page-caption-wrap: wrap;
+  --zn-page-breadcrumb-display: flex;
+  --zn-page-breadcrumb-current-display: inline;
+  --zn-page-breadcrumb-separator-icon: "chevron-right@lu";
+  --zn-page-breadcrumb-font-family: var(--zn-font-sans);
+  --zn-page-breadcrumb-font-size: 14px;
+  --zn-page-breadcrumb-font-weight: var(--zn-font-weight-normal);
+  --zn-page-breadcrumb-letter-spacing: normal;
+  --zn-page-breadcrumb-line-height: 20px;
+  --zn-page-breadcrumb-color: rgb(var(--zn-color-muted-text));
   --zn-split-pane-handle-hover: rgb(var(--zn-primary));
   --zn-split-pane-secondary-background: rgb(var(--zn-color-panel));
 

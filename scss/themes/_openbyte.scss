@@ -113,6 +113,11 @@ $comfortable: (
   --zn-tile-min-height: #{map.get($d, "row-height") + 8px};
   --zn-tile-padding-inline: #{$pad};
   --zn-tile-padding-block: #{math.round($pad * 0.6)};
+
+  --zn-table-row-height: #{map.get($d, "row-height")};
+  --zn-table-header-height: #{map.get($d, "row-height") - 4px};
+  --zn-table-cell-padding: 0 #{map.get($d, "cell-padding-x")};
+  --zn-table-edge-padding: #{$pad};
 }
 
 html[t="openbyte"], body[t="openbyte"], html.theme-openbyte, body.theme-openbyte {
@@ -352,6 +357,15 @@ html[t="openbyte"], body[t="openbyte"], html.theme-openbyte, body.theme-openbyte
   --zn-stat-numeric: tabular-nums;
   --zn-well-border-radius: 8px;
   --zn-well-background: var(--zn-color-neutral-50);
+
+  --zn-table-header-font-size: 12px;
+  --zn-table-header-color: var(--zn-text-color-muted);
+  --zn-table-header-transform: none;
+  --zn-table-row-divider-color: var(--zn-color-neutral-100);
+  --zn-table-row-hover-background: var(--zn-color-neutral-50);
+  --zn-table-numeric: tabular-nums;
+  --zn-table-page-active-background: var(--zn-color-info-bg);
+  --zn-table-page-active-color: var(--zn-color-info-fg);
 
   /**************************************************************
    * Chips and status

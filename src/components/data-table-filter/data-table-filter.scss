@@ -32,7 +32,7 @@
   }
 
   &__clear::part(base) {
-    color: rgb(var(--zn-primary));
+    color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
   }
 
   // The chip draws the outline so its trigger and remove button read as one control
@@ -161,7 +161,7 @@
   }
 
   &__operator--selected::part(base) {
-    color: rgb(var(--zn-primary));
+    color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
     border-color: rgb(var(--zn-primary));
     background-color: rgba(var(--zn-primary), 0.05);
   }

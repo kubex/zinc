@@ -351,4 +351,20 @@ describe('<zn-input>', () => {
       expect(el.shadowRoot!.activeElement, 'the field should keep focus').to.equal(el.input);
     });
   });
+
+  it('paints the invalid border once the user has submitted', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form @submit=${(e: Event) => e.preventDefault()}>
+        <zn-input required style="--zn-input-border-color-invalid: rgb(1, 2, 3)"></zn-input>
+      </form>`);
+    const el = form.querySelector<ZnInput>('zn-input')!;
+    const base = el.shadowRoot!.querySelector('.input')!;
+    expect(getComputedStyle(base).borderColor).to.not.equal('rgb(1, 2, 3)');
+
+    form.requestSubmit();
+    await el.updateComplete;
+
+    expect(el.hasAttribute('data-user-invalid')).to.be.true;
+    expect(getComputedStyle(base).borderColor).to.equal('rgb(1, 2, 3)');
+  });
 });

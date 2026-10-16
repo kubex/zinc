@@ -19,22 +19,27 @@
 }
 
 .switch__input-wrapper {
+  --track-width: var(--zn-toggle-track-width, 42px);
+  --track-height: var(--zn-toggle-track-height, 24px);
+  --knob-size: var(--zn-toggle-knob-size, 20.32px);
+  --knob-inset: var(--zn-toggle-knob-inset, 0.92px);
+
   box-sizing: border-box;
   text-align: left;
   position: relative;
   display: inline-flex;
-  width: 42px;
-  height: 24px;
+  width: var(--track-width);
+  height: var(--track-height);
   flex-shrink: 0;
   cursor: pointer;
-  border-radius: 12px;
+  border-radius: var(--zn-border-radius-pill);
   align-items: center;
-  background-color: rgb(var(--zn-color-tab));
+  background-color: var(--zn-toggle-track-background, rgb(var(--zn-color-tab)));
   // The unchecked track needs an edge of its own. --zn-color-tab sits close to
   // the surface behind it on dark themes, which left the switch reading as a
   // free-floating knob with no discoverable control boundary. The checked state
   // below repaints the border in the accent colour.
-  border: 0.92px solid rgb(var(--zn-border-color));
+  border: var(--zn-toggle-track-border-width, 0.92px) solid var(--zn-toggle-track-border-color, rgb(var(--zn-border-color)));
   margin: var(--zn-toggle-margin);
   transition: color .2s ease-in-out, background-color .4s ease-in-out, border-color .2s ease-in-out;
 }
@@ -48,7 +53,7 @@
   border-color: rgb(var(--zn-color-primary));
 
   .switch__control {
-    left: calc(100% - 20.32px - 0.92px);
+    left: calc(100% - var(--knob-size) - var(--knob-inset));
     // The knob carries the on/off state, so it takes the on-primary ink: a
     // white knob on a light accent (neon lime, amber) is invisible.
     background: rgb(var(--zn-color-on-primary, 255, 255, 255));
@@ -97,11 +102,12 @@
   pointer-events: none;
   position: absolute;
   top: 50%;
-  left: 0.92px;
-  width: 20.32px;
-  height: 20.32px;
+  left: var(--knob-inset);
+  width: var(--knob-size);
+  height: var(--knob-size);
   border-radius: 50%;
-  background: #fff;
+  background: var(--zn-toggle-knob-color, #fff);
+  box-shadow: var(--zn-toggle-knob-shadow, none);
   transform: translateY(-50%);
   transition: left .3s ease-in-out, background-color .4s ease-in-out;
   outline: none;
@@ -117,19 +123,9 @@
 
 // sizes
 .switch__wrapper--small .switch__input-wrapper {
-  height: 20px;
-  width: 35px;
-}
-
-.switch__wrapper--small .switch__control {
-  width: 14px;
-  height: 14px;
-}
-
-:host([checked]) .switch__wrapper--small .switch__input-wrapper {
-  .switch__control {
-    left: calc(100% - 14px - 0.92px);
-  }
+  --track-width: var(--zn-toggle-track-width-small, 35px);
+  --track-height: var(--zn-toggle-track-height-small, 20px);
+  --knob-size: var(--zn-toggle-knob-size-small, 14px);
 }
 
 // Label position

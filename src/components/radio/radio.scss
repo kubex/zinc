@@ -55,7 +55,7 @@
   justify-content: center;
   width: var(--toggle-size);
   height: var(--toggle-size);
-  border: solid var(--zn-input-border-width) var(--zn-input-border-color);
+  border: solid var(--zn-checkbox-border-width, var(--zn-input-border-width)) var(--zn-input-border-color);
   border-radius: 50%;
   background-color: var(--zn-input-background-color);
   color: var(--zn-color-neutral-0);
@@ -175,12 +175,12 @@
 
 :not(.radio--disabled).radio--contained:hover,
 :not(.radio--disabled).radio--contained.radio--checked:hover {
-  background-color: var(--zn-color-purple-50);
+  background-color: var(--zn-selection-card-hover-background, var(--zn-color-purple-50));
   transition: var(--zn-transition-medium) all;
 }
 
 .radio--contained.radio--checked .radio__label {
-  color: var(--zn-color-purple-600);
+  color: var(--zn-selection-card-checked-color, var(--zn-color-purple-600));
   font-weight: var(--zn-font-weight-semibold);
 }
 
@@ -190,9 +190,9 @@
 }
 
 .radio--contained.radio--checked {
-  background-color: var(--zn-color-purple-100);
-  border: 1px solid var(--zn-color-purple-600);
-  outline: 1px solid var(--zn-color-purple-600);
+  background-color: var(--zn-selection-card-checked-background, var(--zn-color-purple-100));
+  border: 1px solid var(--zn-selection-card-checked-color, var(--zn-color-purple-600));
+  outline: 1px solid var(--zn-selection-card-checked-color, var(--zn-color-purple-600));
   transition: var(--zn-transition-medium) all;
 }
 

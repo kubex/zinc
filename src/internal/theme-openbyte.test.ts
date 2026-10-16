@@ -50,6 +50,14 @@ describe('openbyte theme tokens', () => {
     expect(token(root, '--zn-input-height-medium')).to.equal('28px');
   });
 
+  it('sizes plain table rows to the density row height', async () => {
+    setTheme('openbyte');
+    const table = await fixture(html`<table><tbody><tr><td>One</td></tr></tbody></table>`);
+    const cell = table.querySelector('td')!;
+    expect(cell.getBoundingClientRect().height).to.equal(44);
+    expect(getComputedStyle(cell).paddingTop).to.equal('4px');
+  });
+
   it('leaves the base theme untouched', () => {
     setTheme('light');
     expect(token(root, '--zn-color-primary')).to.equal('105,54,245');

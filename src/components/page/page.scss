@@ -415,7 +415,7 @@ zn-navbar {
 }
 
 :host .header {
-  padding-inline: var(--zn-page-padding-inline, calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0)));
+  padding-inline: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
 }
 
 // The gutter shrinks to 0 on narrow containers, which would run the header actions
@@ -426,7 +426,7 @@ zn-navbar {
 
 :host zn-navbar {
   &::part(navbar) {
-    padding-inline: var(--zn-page-padding-inline, calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0)));
+    padding-inline: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
   }
 }
 

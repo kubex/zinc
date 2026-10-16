@@ -75,6 +75,8 @@ export default class ZnChart extends ZincElement {
   @property({ attribute: 'show-labels', type: Boolean }) showLabels?: boolean;
   @property({ attribute: 'min-value', type: Number }) minValue?: number;
   @property({ attribute: 'max-value', type: Number }) maxValue?: number;
+  /** On line and area charts, marks each series' latest point and hides the rest. */
+  @property({ attribute: 'mark-latest', type: Boolean }) markLatest = false;
   @property({
     converter: {
       fromAttribute: (value: string | null) => {
@@ -193,6 +195,8 @@ export default class ZnChart extends ZincElement {
 
   private getTextColor(): string | undefined {
     const cs = getComputedStyle(this);
+    const themed = cs.getPropertyValue('--zn-chart-text-color').trim();
+    if (themed) return themed;
     const rgb = cs.getPropertyValue('--zn-text').trim();
     if (!rgb) return undefined;
     const opacity = cs.getPropertyValue('--zn-text-opacity').trim() || '1';
@@ -237,6 +241,7 @@ export default class ZnChart extends ZincElement {
       indicators: Array.isArray(this.indicators) ? this.indicators : [],
       minValue: this.minValue,
       maxValue: this.maxValue,
+      markLatest: this.markLatest,
     };
     switch (this.type) {
       case 'bar': return buildBarOption(props);

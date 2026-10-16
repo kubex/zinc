@@ -67,6 +67,11 @@ describe('openbyte theme tokens', () => {
     expect(meta.color).to.equal('rgb(80, 97, 122)');
   });
 
+  it('gives chart labels the subtle text colour', () => {
+    setTheme('openbyte');
+    expect(getComputedStyle(root).getPropertyValue('--zn-chart-text-color').trim().toLowerCase()).to.equal('#66768e');
+  });
+
   it('leaves the base theme untouched', () => {
     setTheme('light');
     expect(token(root, '--zn-color-primary')).to.equal('105,54,245');

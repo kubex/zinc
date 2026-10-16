@@ -68,7 +68,7 @@
     cursor: col-resize;
 
     &:hover:before {
-      background-color: rgb(var(--zn-blue));
+      background-color: var(--zn-split-pane-handle-hover, rgb(var(--zn-blue)));
     }
   }
 }
@@ -350,7 +350,7 @@ $padding: 8px;
     #secondary-pane {
       overflow: hidden;
       border-radius: 10px 0 0 0;
-      background-color: #fbfbfb;
+      background-color: var(--zn-split-pane-secondary-background, #fbfbfb);
       border: 1px solid rgb(var(--zn-border-color)) !important;
       border-bottom-width: 0 !important;
     }
@@ -380,7 +380,7 @@ $padding: 8px;
   }
 
   #resizer:hover::before {
-    background-color: rgb(var(--zn-blue)) !important;
+    background-color: var(--zn-split-pane-handle-hover, rgb(var(--zn-blue))) !important;
   }
 }
 

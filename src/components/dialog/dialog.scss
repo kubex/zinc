@@ -2,9 +2,9 @@
 
 :host {
   --width: 30rem;
-  --header-spacing: var(--zn-spacing-large) var(--zn-spacing-large) var(--zn-spacing-medium);
-  --body-spacing: var(--zn-spacing-x-small) var(--zn-spacing-large);
-  --footer-spacing: var(--zn-spacing-large);
+  --header-spacing: var(--zn-dialog-header-spacing, var(--zn-spacing-large) var(--zn-spacing-large) var(--zn-spacing-medium));
+  --body-spacing: var(--zn-dialog-body-spacing, var(--zn-spacing-x-small) var(--zn-spacing-large));
+  --footer-spacing: var(--zn-dialog-footer-spacing, var(--zn-spacing-large));
   --icon-background-color: var(--zn-color-primary-200);
   --icon-color: var(--zn-color-primary-600);
   --caption-color: var(--zn-color-primary-600);
@@ -17,7 +17,7 @@
   flex: 1 1 auto;
   flex-direction: column;
   min-height: 0;
-  border-radius: var(--zn-border-radius);
+  border-radius: var(--zn-dialog-border-radius, var(--zn-border-radius));
   background-color: var(--zn-panel-background-color);
   margin: 2px;
   overflow: hidden;
@@ -35,13 +35,19 @@
   max-width: calc(100% - var(--zn-spacing-2x-large));
   max-height: calc(100% - 20vh);
   background-color: var(--zn-panel-background-color);
-  border-radius: var(--zn-border-radius);
+  border-radius: var(--zn-dialog-border-radius, var(--zn-border-radius));
   box-shadow: var(--zn-shadow-x-large);
   padding: 0;
   margin: 10vh auto;
 
   &[open] {
     display: flex;
+  }
+
+  // The fallback is the browser's own dialog backdrop.
+  &::backdrop {
+    background: var(--zn-dialog-backdrop, rgba(0, 0, 0, 0.1));
+    backdrop-filter: var(--zn-overlay-backdrop-filter, none);
   }
 
   &__header {
@@ -90,7 +96,7 @@
     padding: var(--body-spacing);
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-    color: var(--zn-color-text-default);
+    color: var(--zn-dialog-body-color, var(--zn-color-text-default));
     font-size: var(--zn-font-size-medium);
     font-weight: var(--zn-font-weight-normal);
     letter-spacing: var(--zn-tracking-normal);
@@ -101,6 +107,8 @@
     flex: 0 0 auto;
     text-align: right;
     padding: var(--footer-spacing);
+    border-top: var(--zn-dialog-footer-divider, none);
+    background: var(--zn-dialog-footer-background, transparent);
 
     ::slotted(zn-button:not(:first-of-type)) {
       margin-inline-start: var(--zn-spacing-x-small);
@@ -111,8 +119,9 @@
   &--default &__title,
   &--warning &__title {
     color: rgb(var(--zn-text-panel-title));
-    font-size: var(--zn-font-size-x-large);
-    font-weight: var(--zn-font-weight-semibold);
+    font-family: var(--zn-dialog-title-font-family, inherit);
+    font-size: var(--zn-dialog-title-font-size, var(--zn-font-size-x-large));
+    font-weight: var(--zn-dialog-title-font-weight, var(--zn-font-weight-semibold));
     letter-spacing: var(--zn-letter-spacing-normal);
     line-height: var(--zn-line-height-dense);
     padding: var(--header-spacing);

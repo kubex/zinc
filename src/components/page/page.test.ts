@@ -737,4 +737,27 @@ describe('<zn-page>', () => {
     expect(header.classList.contains('header--has-breadcrumb')).to.equal(false);
     expect(el.shadowRoot!.querySelector('slot[name="breadcrumb"]')).to.equal(null);
   });
+
+  it('keeps breadcrumbs inline in the title by default', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Performance"><a href="#" slot="breadcrumb">Quality Assurance</a></zn-page>`);
+    const crumbs = el.shadowRoot!.querySelector('.header__crumbs')!;
+
+    expect(getComputedStyle(crumbs).display).to.equal('contents');
+    expect(getComputedStyle(el.shadowRoot!.querySelector('.breadcrumb__current')!).display).to.equal('none');
+  });
+
+  it('lifts breadcrumbs onto their own row when the theme asks', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Performance"
+               style="--zn-page-breadcrumb-display: flex; --zn-page-breadcrumb-current-display: inline; --zn-page-breadcrumb-separator-icon: 'chevron-right@lu'">
+        <a href="#" slot="breadcrumb">Quality Assurance</a>
+      </zn-page>`);
+    await el.updateComplete;
+    const root = el.shadowRoot!;
+
+    expect(getComputedStyle(root.querySelector('.header__crumbs')!).display).to.equal('flex');
+    expect(root.querySelector('.breadcrumb__current')!.textContent).to.equal('Performance');
+    expect(root.querySelector('.breadcrumb__separator')!.getAttribute('src')).to.contain('chevron-right');
+  });
 });

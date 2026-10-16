@@ -184,7 +184,7 @@
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
-    gap: var(--zn-spacing-2x-small);
+    gap: var(--zn-page-title-gap, var(--zn-spacing-2x-small));
     min-height: 36px;
     flex-shrink: 1;
     min-width: 0;
@@ -213,7 +213,30 @@
     gap: var(--zn-spacing-2x-small);
     align-items: center;
     text-wrap: auto;
+    flex-wrap: var(--zn-page-caption-wrap, nowrap);
     min-height: 36px; // Keep in step with the actions row: both bands share a centre line.
+  }
+
+  // Inline in the title by default; a theme can lift it onto its own row above the
+  // title, where it also names the current page.
+  &__crumbs {
+    display: var(--zn-page-breadcrumb-display, contents);
+    flex-basis: 100%;
+    align-items: center;
+    gap: var(--zn-spacing-2x-small);
+    margin-bottom: var(--zn-page-breadcrumb-gap, 0);
+    font-family: var(--zn-page-breadcrumb-font-family, inherit);
+    font-size: var(--zn-page-breadcrumb-font-size, inherit);
+    font-weight: var(--zn-page-breadcrumb-font-weight, inherit);
+    letter-spacing: var(--zn-page-breadcrumb-letter-spacing, inherit);
+    line-height: var(--zn-page-breadcrumb-line-height, inherit);
+    color: var(--zn-page-breadcrumb-color, inherit);
+  }
+
+  .breadcrumb__current {
+    display: var(--zn-page-breadcrumb-current-display, none);
+    font-weight: var(--zn-font-weight-semibold);
+    color: rgba(var(--zn-text-panel-title), 100%);
   }
 
   // Stacked above a description the band buys no alignment, it only pads the gap.

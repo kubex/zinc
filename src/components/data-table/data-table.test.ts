@@ -642,4 +642,26 @@ describe('<zn-data-table>', () => {
       window.fetch = originalFetch;
     }
   });
+
+  it('sizes data rows from --zn-table-row-height', async () => {
+    const originalFetch = window.fetch;
+    window.fetch = () => Promise.resolve(new Response(JSON.stringify({
+      rows: [{id: '1', cells: [{text: 'Row', column: 'name'}]}],
+      page: 1,
+      perPage: 10,
+      total: 1,
+    }), {status: 200, headers: {'Content-Type': 'application/json'}}));
+
+    try {
+      const el = await fixture<ZnDataTable>(html`
+        <zn-data-table data-uri="/test-data" style="--zn-table-row-height: 77px"
+                       headers='{"name": {"key": "name", "label": "Name"}}'></zn-data-table>`);
+      await waitUntil(() => el.shadowRoot!.querySelector('tbody tr.table__row--data'));
+
+      const cell = el.shadowRoot!.querySelector('tbody tr.table__row--data td')!;
+      expect(getComputedStyle(cell).height).to.equal('77px');
+    } finally {
+      window.fetch = originalFetch;
+    }
+  });
 });

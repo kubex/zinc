@@ -25,7 +25,7 @@ table {
   @include wc.text-style(table-content);
 
   tbody tr.table__row--data td {
-    height: 48px;
+    height: var(--zn-table-row-height, 48px);
     padding-block: 0;
     overflow: hidden;
   }
@@ -45,7 +45,7 @@ table {
   }
 
   &.with-hover tbody tr.table__row--data:hover td {
-    background-color: rgba(var(--zn-primary), 0.05) !important;
+    background-color: var(--zn-table-row-hover-background, rgba(var(--zn-primary), 0.05)) !important;
     cursor: pointer;
   }
 
@@ -55,7 +55,8 @@ table {
   }
 
   tbody tr td {
-    border-top: 1px solid rgb(var(--zn-border-color)) !important;
+    border-top: 1px solid var(--zn-table-row-divider-color, rgb(var(--zn-border-color))) !important;
+    font-variant-numeric: var(--zn-table-numeric, normal);
   }
 
   tbody tr:first-of-type td {
@@ -63,7 +64,7 @@ table {
   }
 
   th, td {
-    padding: var(--zn-spacing-small) var(--zn-spacing-medium);
+    padding: var(--zn-table-cell-padding, var(--zn-spacing-small) var(--zn-spacing-medium));
     min-width: 90px;
     white-space: nowrap;
 
@@ -72,8 +73,19 @@ table {
     }
   }
 
+  th:first-child, td:first-child {
+    padding-inline-start: var(--zn-table-edge-padding, var(--zn-spacing-medium));
+  }
+
+  th:last-child, td:last-child {
+    padding-inline-end: var(--zn-table-edge-padding, var(--zn-spacing-medium));
+  }
+
   th {
     @include wc.text-style(button-label);
+    font-size: var(--zn-table-header-font-size, var(--zn-text-button-label-font-size));
+    color: var(--zn-table-header-color, var(--zn-text-button-label-color));
+    height: var(--zn-table-header-height, auto);
     border-bottom: 1px solid rgb(var(--zn-border-color));
   }
 }
@@ -116,7 +128,7 @@ table {
   }
 
   &__head {
-    text-transform: capitalize;
+    text-transform: var(--zn-table-header-transform, capitalize);
 
     &__sort {
       margin: 0;
@@ -315,7 +327,7 @@ table {
 
       // Matches the height of the pagination control it sits beside
       zn-select[name="rowPerPage"]::part(combobox) {
-        min-height: 36px;
+        min-height: var(--zn-button-height, 36px);
         padding-inline: var(--zn-spacing-x-small);
       }
 
@@ -326,9 +338,9 @@ table {
 
     // Sized to match the icon-button arrows it is joined to, but free to grow for large page numbers
     &__pagination-page::part(base) {
-      height: 36px;
-      min-height: 36px;
-      max-height: 36px;
+      height: var(--zn-button-height, 36px);
+      min-height: var(--zn-button-height, 36px);
+      max-height: var(--zn-button-height, 36px);
       min-width: 32px;
       padding: 0 var(--zn-spacing-2x-small);
       justify-content: center;
@@ -339,8 +351,9 @@ table {
     }
 
     &__pagination-page--active::part(base) {
-      background-color: var(--zn-color-neutral-300);
-      border-color: var(--zn-color-neutral-300);
+      background-color: var(--zn-table-page-active-background, var(--zn-color-neutral-300));
+      border-color: var(--zn-table-page-active-background, var(--zn-color-neutral-300));
+      color: var(--zn-table-page-active-color, rgb(var(--zn-text)));
     }
   }
 
@@ -382,7 +395,7 @@ zn-panel {
 
 // Closes the rows off from the footer, which the panel border would otherwise do
 zn-panel::part(footer) {
-  border-top: 1px solid rgb(var(--zn-border-color));
+  border-top: 1px solid var(--zn-panel-header-divider-color, rgb(var(--zn-border-color)));
 }
 
 // Dropdowns sit over dense rows here, so they need a solid surface rather than

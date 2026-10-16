@@ -3,9 +3,9 @@
 .menu {
   display: block;
   position: relative;
-  padding: 1px;
+  padding: var(--zn-menu-padding, 1px);
   border: 1px solid rgb(var(--zn-border-color)) !important;
-  border-radius: var(--zn-border-radius);
+  border-radius: var(--zn-menu-border-radius, var(--zn-border-radius));
   width: fit-content;
   min-width: var(--zn-menu-min-width, var(--zn-size-spanel));
   // Unconstrained by default — a consumer that needs the menu to scroll inside a bounded
@@ -13,7 +13,7 @@
   max-height: var(--zn-menu-max-height, none);
   overflow: auto;
   overscroll-behavior: none;
-  box-shadow: 0 4px 8px -4px rgba(33, 33, 33, 0.1);
+  box-shadow: var(--zn-menu-shadow, 0 4px 8px -4px rgba(33, 33, 33, 0.1));
   // Same surface as the shell-header menus below, so every dropdown in the
   // product reads as one material rather than splitting into --zn-panel menus
   // and --zn-color-navigation ones depending on where it was mounted.
@@ -28,7 +28,7 @@
 
 // Set by the submenu controller while this submenu extends past its parent's bottom edge.
 :host([slot="submenu"][data-extends-below]) .menu {
-  border-end-start-radius: var(--zn-border-radius);
+  border-end-start-radius: var(--zn-menu-border-radius, var(--zn-border-radius));
 }
 
 // Set by the submenu controller on the parent menu while a submenu covers that corner.
@@ -85,5 +85,5 @@
 
 
 ::slotted(zn-menu-item + zn-menu-item) {
-  border-top: 1px solid rgb(var(--zn-border-color));
+  border-top: var(--zn-menu-item-divider, 1px solid rgb(var(--zn-border-color)));
 }

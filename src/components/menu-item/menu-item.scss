@@ -15,7 +15,7 @@
 // its colour), no separators between rows. Set by the parent zn-menu.
 :host([variant="dropdown"]) {
   --hover-color: var(--color);
-  --hover-bg: rgba(0, 0, 0, 0.06);
+  --hover-bg: var(--zn-menu-item-hover-background, rgba(0, 0, 0, 0.06));
 }
 
 // Shell — app-shell header dropdown look: dark text, primary hover. Set by the
@@ -51,8 +51,10 @@
 
 :host([variant="dropdown"]) .menu-item {
   align-items: center;
-  padding: var(--zn-spacing-small) var(--zn-spacing-large);
+  min-height: var(--zn-menu-item-min-height, auto);
+  padding: var(--zn-menu-item-padding, var(--zn-spacing-small) var(--zn-spacing-large));
   border-bottom-width: 0;
+  border-radius: var(--zn-menu-item-border-radius, 0);
 }
 
 :host([variant="shell"]) .menu-item {
@@ -287,9 +289,9 @@ zn-popup::part(popup) {
 }
 
 .menu-item--error {
-  --color: rgb(var(--zn-color-error));
-  --hover-color: rgb(var(--zn-color-on-error, 255, 255, 255));
-  --hover-bg: rgba(var(--zn-color-error), 0.9);
+  --color: var(--zn-color-danger-fg);
+  --hover-color: var(--zn-menu-item-danger-hover-color, rgb(var(--zn-color-on-error, 255, 255, 255)));
+  --hover-bg: var(--zn-menu-item-danger-hover-background, rgba(var(--zn-color-error), 0.9));
 }
 
 .menu-item--info {

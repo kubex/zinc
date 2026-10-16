@@ -46,6 +46,13 @@ export default class ZnStatsTile extends ZincElement {
   /** Pads the stat, for stats laid edge to edge in a flush container such as `zn-cols no-gap divide`. */
   @property({type: Boolean}) padded = false;
 
+  /** Makes the whole stat a link, marked with an arrow in its corner. */
+  @property() href: string;
+
+  @property({attribute: 'data-target'}) dataTarget: string;
+
+  @property() gaid: string;
+
   calcPercentageDifference() {
     const previous = parseFloat(this.previous);
     const amount = parseFloat(this.amount);
@@ -163,10 +170,20 @@ export default class ZnStatsTile extends ZincElement {
   }
 
   render() {
-    if (this.layout === 'value-first') {
-      return this.renderValueFirst();
+    const tile = this.layout === 'value-first' ? this.renderValueFirst() : this.renderDefault();
+    if (!this.href) {
+      return tile;
     }
 
+    return html`
+      <a class="stat-link" part="link" href="${this.href}" data-target="${ifDefined(this.dataTarget)}"
+         gaid="${ifDefined(this.gaid)}">
+        ${tile}
+        <zn-icon class="stat-link__icon" src="arrow-up-right@lu" size="16" aria-hidden="true"></zn-icon>
+      </a>`;
+  }
+
+  private renderDefault() {
     return html`
       <div class="${classMap({
         'stat-tile': true,

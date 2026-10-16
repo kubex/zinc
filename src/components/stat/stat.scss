@@ -10,6 +10,29 @@
   display: block;
 }
 
+.stat-link {
+  position: relative;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    background-color: var(--zn-stat-hover-background, var(--zn-tile-hover-background, var(--zn-color-neutral-100)));
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgb(var(--zn-primary));
+    outline-offset: -2px;
+  }
+}
+
+.stat-link__icon {
+  position: absolute;
+  top: var(--zn-spacing-medium);
+  right: var(--zn-spacing-medium);
+  color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
+}
+
 .stat-tile {
 
   .caption, .description, .amount, .bottom {

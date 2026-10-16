@@ -1,0 +1,490 @@
+@use "sass:map";
+
+// OpenByte — blue brand on blue-tinted neutrals, Plus Jakarta Sans headings and
+// compact density. The light block is mode-agnostic, so every colour it sets must
+// also be set in the dark block below or the light value leaks into dark mode.
+//
+// Selectors stay root-qualified for the reason given at the top of _aura.scss.
+// Derived tokens (--zn-border-color, --zn-panel, --zn-text ...) follow only on
+// <html>: a consumer that sets `t` on <body> alone gets the source tokens but
+// keeps <html>'s derived ones.
+//
+// Zinc's primary ramp is anchored on 600 (the brand step); OpenByte's on 500.
+// The ramps below are shifted one step so brand blue lands on 600.
+
+$text-roles: (
+  "page-title": ("size": 25px, "line": 30px, "weight": bold, "family": heading, "letter-spacing": -0.015em),
+  "h1": ("size": 14px, "line": 17px, "weight": bold, "family": heading),
+  "h2": ("size": 20px, "line": 24px, "weight": bold, "family": heading, "letter-spacing": -0.01em),
+  "h3": ("size": 11px, "line": 13px, "weight": semibold, "transform": uppercase, "letter-spacing": 0.06em),
+  "heading-section": ("size": 14px, "line": 17px, "weight": bold, "family": heading),
+  "paragraph": ("size": 13px, "line": 20px),
+  "table-content": ("size": 13px, "line": 16px),
+  "subheading": ("size": 13px, "line": 18px),
+  "subheading-small": ("size": 12px, "line": 16px),
+  "input-placeholder": ("size": 13px, "line": 20px),
+  "input-content": ("size": 13px, "line": 20px),
+  "input-label": ("size": 12px, "line": 16px, "weight": semibold),
+  "chart-minor": ("size": 12px, "line": 16px, "weight": semibold),
+  "chart-major": ("size": 25px, "line": 28px, "weight": bold, "family": heading, "letter-spacing": -0.02em),
+  "button-label": ("size": 13px, "line": 16px, "weight": semibold, "transform": none),
+  "chip": ("size": 11px, "line": 16px, "weight": semibold, "transform": none),
+  "navbar-link": ("size": 13px, "line": 16px, "weight": semibold),
+  "tab-link": ("size": 13px, "line": 16px, "weight": semibold),
+  "tab-link-active": ("size": 13px, "line": 16px, "weight": semibold),
+  "menu-link": ("size": 13px, "line": 16px, "weight": medium),
+);
+
+@mixin text-roles {
+  @each $role, $style in $text-roles {
+    --zn-text-#{$role}-font-size: #{map.get($style, "size")};
+    --zn-text-#{$role}-line-height: #{map.get($style, "line")};
+    @if map.has-key($style, "weight") {
+      --zn-text-#{$role}-font-weight: var(--zn-font-weight-#{map.get($style, "weight")});
+    }
+    @if map.get($style, "family") == heading {
+      --zn-text-#{$role}-font-family: var(--zn-font-heading);
+    }
+    @if map.has-key($style, "transform") {
+      --zn-text-#{$role}-transform: #{map.get($style, "transform")};
+    }
+    @if map.has-key($style, "letter-spacing") {
+      --zn-text-#{$role}-letter-spacing: #{map.get($style, "letter-spacing")};
+    }
+  }
+  --zn-text-menu-link-color: var(--zn-text-color);
+}
+
+$compact: (
+  "control-height-sm": 24px,
+  "control-height": 28px,
+  "control-height-lg": 32px,
+  "row-height": 32px,
+  "cell-padding-x": 16px,
+  "card-padding": 14px,
+  "gap": 12px,
+  "stack": 8px,
+  "page-padding": 16px,
+  "input-height-x-small": 20px,
+);
+
+$comfortable: (
+  "control-height-sm": 28px,
+  "control-height": 36px,
+  "control-height-lg": 40px,
+  "row-height": 44px,
+  "cell-padding-x": 20px,
+  "card-padding": 20px,
+  "gap": 20px,
+  "stack": 12px,
+  "page-padding": 24px,
+  "input-height-x-small": 24px,
+);
+
+// Aliases are re-declared alongside the density tokens: a var() alias resolves
+// where it is declared, so a nested [data-density] would not move it otherwise.
+@mixin density($d) {
+  --zn-density-control-height-sm: #{map.get($d, "control-height-sm")};
+  --zn-density-control-height: #{map.get($d, "control-height")};
+  --zn-density-control-height-lg: #{map.get($d, "control-height-lg")};
+  --zn-density-row-height: #{map.get($d, "row-height")};
+  --zn-density-cell-padding-x: #{map.get($d, "cell-padding-x")};
+  --zn-density-card-padding: #{map.get($d, "card-padding")};
+  --zn-density-gap: #{map.get($d, "gap")};
+  --zn-density-stack: #{map.get($d, "stack")};
+  --zn-density-page-padding: #{map.get($d, "page-padding")};
+
+  --zn-input-height-x-small: #{map.get($d, "input-height-x-small")};
+  --zn-input-height-small: #{map.get($d, "control-height-sm")};
+  --zn-input-height-medium: #{map.get($d, "control-height")};
+  --zn-input-height-large: #{map.get($d, "control-height-lg")};
+}
+
+html[t="openbyte"], body[t="openbyte"], html.theme-openbyte, body.theme-openbyte {
+  color-scheme: light;
+
+  /**************************************************************
+   * RGB triplets (legacy layer, scss/_root.scss)
+   *************************************************************/
+
+  --zn-backdrop-color: rgba(13, 23, 56, 0.45);
+
+  --zn-color-text: 6, 27, 49;
+  --zn-color-muted-text: 80, 97, 122;
+
+  --zn-color-base: 255, 255, 255;
+  --zn-color-body: 247, 250, 255;
+  --zn-color-navigation: var(--zn-color-base);
+  --zn-color-navigation-hightlight: 247, 250, 255;
+  --zn-color-border: 214, 224, 235;
+  --zn-color-border-active: 186, 200, 217;
+  --zn-color-tab: 240, 245, 251;
+  --zn-color-panel: 255, 255, 255;
+
+  --zn-color-primary: 8, 94, 253;
+  --zn-color-info: 8, 94, 253;
+  --zn-color-success: 18, 160, 106;
+  --zn-color-warning: 240, 160, 32;
+  --zn-color-error: 217, 46, 75;
+  --zn-color-disabled: 141, 156, 178;
+  --zn-color-ai: 117, 87, 245;
+
+  // White on amber is ~2.2:1.
+  --zn-color-on-primary: 255, 255, 255;
+  --zn-color-on-warning: 6, 27, 49;
+
+  --zn-panel-opacity: 1;
+  --zn-shadow: 229, 237, 245;
+  --zn-panel-secondary: 240 245 251;
+  --zn-panel-highlight: 247, 250, 255;
+  --zn-panel-highlight-opacity: 1;
+  --zn-input-bg-accent: 240, 245, 251;
+  --zn-bright-bg: 255, 255, 255;
+  --zn-light-text: 102, 118, 142;
+  --zn-dark-text: 6, 27, 49;
+  --zn-purple-text: 5, 60, 163;
+  --zn-accent: 15, 163, 177;
+
+  --zn-table-header-background-color: 240, 245, 251;
+
+  /**************************************************************
+   * Ramps
+   *************************************************************/
+
+  --zn-color-primary-50: #F5F8FF;
+  --zn-color-primary-100: #EEF4FF;
+  --zn-color-primary-200: #DBE7FF;
+  --zn-color-primary-300: #B8D0FF;
+  --zn-color-primary-400: #86AFFE;
+  --zn-color-primary-500: #4B88FD;
+  --zn-color-primary-600: #085EFD;
+  --zn-color-primary-700: #064DD0;
+  --zn-color-primary-800: #053CA3;
+  --zn-color-primary-900: #0B2E7A;
+
+  // Stopgap until checkbox, radio and data-table stop reading purple directly.
+  --zn-color-purple-50: #EEF4FF;
+  --zn-color-purple-100: #DBE7FF;
+  --zn-color-purple-200: #B8D0FF;
+  --zn-color-purple-600: #085EFD;
+
+  --zn-color-gray-50: #F0F5FB;
+  --zn-color-gray-100: #E5EDF5;
+  --zn-color-gray-200: #D6E0EB;
+  --zn-color-gray-300: #BAC8D9;
+  --zn-color-gray-400: #8D9CB2;
+  --zn-color-gray-500: #66768E;
+  --zn-color-gray-600: #50617A;
+  --zn-color-gray-700: #34445C;
+  --zn-color-gray-800: #1B2B44;
+  --zn-color-gray-900: #061B31;
+
+  --zn-color-neutral-0: #FFFFFF;
+  --zn-color-neutral-50: #F0F5FB;
+  --zn-color-neutral-100: #E5EDF5;
+  --zn-color-neutral-200: #D6E0EB;
+  --zn-color-neutral-300: #BAC8D9;
+  --zn-color-neutral-400: #8D9CB2;
+  --zn-color-neutral-500: #66768E;
+  --zn-color-neutral-600: #50617A;
+  --zn-color-neutral-700: #34445C;
+  --zn-color-neutral-800: #1B2B44;
+  --zn-color-neutral-900: #061B31;
+
+  --zn-color-success-50: #E3F6EC;
+  --zn-color-success-200: #B5E2CB;
+  --zn-color-success-300: #B5E2CB;
+  --zn-color-success-400: #12A06A;
+  --zn-color-success-500: #12A06A;
+  --zn-color-success-600: #12A06A;
+  --zn-color-success-700: #0B7A4F;
+
+  --zn-color-warning-50: #FFF3DA;
+  --zn-color-warning-400: #F0A020;
+  --zn-color-warning-500: #F0A020;
+  --zn-color-warning-600: #F0A020;
+
+  --zn-color-danger-50: #FDECEF;
+  --zn-color-danger-100: #FDECEF;
+  --zn-color-danger-200: #F5C2CB;
+  --zn-color-danger-300: #F5C2CB;
+  --zn-color-danger-500: #D92E4B;
+  --zn-color-danger-600: #D92E4B;
+  --zn-color-danger-700: #B91C3A;
+  --zn-color-danger-800: #B91C3A;
+
+  /**************************************************************
+   * Status roles
+   *************************************************************/
+
+  --zn-color-success-fg: #0B7A4F;
+  --zn-color-success-bg: #E3F6EC;
+  --zn-color-success-line: #B5E2CB;
+  --zn-color-success-solid: #12A06A;
+  --zn-color-warning-fg: #8A5200;
+  --zn-color-warning-bg: #FFF3DA;
+  --zn-color-warning-line: #F4D79B;
+  --zn-color-warning-solid: #F0A020;
+  --zn-color-danger-fg: #B91C3A;
+  --zn-color-danger-bg: #FDECEF;
+  --zn-color-danger-line: #F5C2CB;
+  --zn-color-danger-solid: #D92E4B;
+  --zn-color-info-fg: #053CA3;
+  --zn-color-info-bg: #EEF4FF;
+  --zn-color-info-line: #B8D0FF;
+  --zn-color-info-solid: #085EFD;
+  --zn-color-ai-fg: #5A3DD1;
+  --zn-color-ai-bg: #F0ECFF;
+  --zn-color-ai-line: #D4C9FF;
+  --zn-color-ai-solid: #7557F5;
+
+  /**************************************************************
+   * Shape, elevation, focus
+   *************************************************************/
+
+  --zn-border-radius: 6px;
+  --zn-border-radius-small: 4px;
+  --zn-border-radius-medium: 8px;
+  --zn-border-radius-large: 12px;
+  --zn-panel-border-radius: 12px;
+  --zn-dialog-border-radius: 16px;
+  --zn-chip-border-radius: 6px;
+
+  --zn-shadow-x-small: 0 1px 2px rgba(13, 23, 56, 0.05);
+  --zn-shadow-small: 0 1px 3px rgba(13, 23, 56, 0.08), 0 1px 2px rgba(13, 23, 56, 0.04);
+  --zn-shadow-medium: 0 4px 14px rgba(13, 23, 56, 0.10), 0 1px 3px rgba(13, 23, 56, 0.05);
+  --zn-shadow-large: 0 14px 40px rgba(13, 23, 56, 0.18), 0 2px 8px rgba(13, 23, 56, 0.06);
+  --zn-shadow-x-large: 0 14px 40px rgba(13, 23, 56, 0.18), 0 2px 8px rgba(13, 23, 56, 0.06);
+
+  --zn-focus-ring-color: var(--zn-color-primary-600);
+  --zn-input-focus-ring-color: rgba(8, 94, 253, 0.35);
+
+  --zn-overlay-background-color: rgba(13, 23, 56, 0.45);
+
+  /**************************************************************
+   * Typography
+   *************************************************************/
+
+  --zn-font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --zn-font-family-sans: var(--zn-font-sans);
+  --zn-font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+  --zn-font-family-mono: var(--zn-font-mono);
+  --zn-font-heading: 'Plus Jakarta Sans', var(--zn-font-sans);
+
+  // px, not rem: some hosts run a 14px root.
+  --zn-font-size-2x-small: 11px;
+  --zn-font-size-x-small: 12px;
+  --zn-font-size-small: 13px;
+  --zn-font-size-medium: 14px;
+  --zn-font-size-large: 16px;
+  --zn-font-size-x-large: 20px;
+  --zn-font-size-2x-large: 25px;
+  --zn-font-size-3x-large: 33px;
+  --zn-font-size-4x-large: 44px;
+
+  @include text-roles;
+
+  /**************************************************************
+   * Forms, panels, tooltips
+   *************************************************************/
+
+  --zn-input-background-color: #FFFFFF;
+  --zn-input-background-color-hover: #FFFFFF;
+  --zn-input-background-color-focus: #FFFFFF;
+  --zn-input-background-color-disabled: #F0F5FB;
+  --zn-input-border-color: #BAC8D9;
+  --zn-input-border-color-hover: #8D9CB2;
+  --zn-input-border-color-focus: var(--zn-color-primary-600);
+  --zn-input-border-color-disabled: #D6E0EB;
+  --zn-checkbox-border-color: #8D9CB2;
+  --zn-input-placeholder-color: #66768E;
+  --zn-input-help-text-color: #66768E;
+
+  --zn-panel-border-color: #D6E0EB;
+
+  --zn-tooltip-background-color: #0D1738;
+  --zn-tooltip-color: #FFFFFF;
+  --zn-tooltip-font-size: 12px;
+  --zn-tooltip-font-weight: var(--zn-font-weight-medium);
+  --zn-tooltip-padding: 6px 10px;
+
+  @include density($compact);
+
+  .zn-primary {
+    color: rgb(var(--zn-color-primary));
+  }
+}
+
+html[t="openbyte"][data-density="comfortable"], body[t="openbyte"][data-density="comfortable"],
+html[t="openbyte"] [data-density="comfortable"], body[t="openbyte"] [data-density="comfortable"] {
+  @include density($comfortable);
+}
+
+html[t="openbyte"] [data-density="compact"], body[t="openbyte"] [data-density="compact"] {
+  @include density($compact);
+}
+
+// Derived dark: the guide is light-only. Navy canvas from the brand navy, ramps
+// inverted (50 darkest) the way themes/_dark.scss inverts the base ramps.
+// (0,2,1) outranks :root[m="dark"] (0,2,0); see the specificity note in _root.scss.
+html[t="openbyte"][m="dark"], body[t="openbyte"][m="dark"],
+html.theme-openbyte.theme-dark, body.theme-openbyte.theme-dark {
+  color-scheme: dark;
+
+  --zn-backdrop-color: rgba(3, 6, 14, 0.65);
+
+  --zn-color-text: 229, 237, 245;
+  --zn-color-muted-text: 141, 156, 178;
+
+  --zn-color-base: 24, 35, 61;
+  --zn-color-body: 11, 18, 34;
+  --zn-color-navigation: var(--zn-color-base);
+  --zn-color-navigation-hightlight: 27, 39, 66;
+  --zn-color-border: 38, 52, 79;
+  --zn-color-border-active: 52, 68, 92;
+  --zn-color-tab: 27, 39, 66;
+  --zn-color-panel: 19, 29, 51;
+
+  --zn-color-primary: 75, 136, 253;
+  // themes/_dark.scss pins --zn-primary to the base dark accent. Fills stay on
+  // brand blue: blue-400 under white ink is ~3.5:1.
+  --zn-primary: 8, 94, 253;
+  --zn-color-info: 8, 94, 253;
+  --zn-color-success: 18, 160, 106;
+  --zn-color-warning: 240, 160, 32;
+  --zn-color-error: 217, 46, 75;
+  --zn-color-disabled: 102, 118, 142;
+  --zn-color-ai: 117, 87, 245;
+
+  --zn-color-on-primary: 255, 255, 255;
+  --zn-color-on-warning: 11, 18, 34;
+
+  --zn-panel-opacity: 1;
+  --zn-shadow: 3, 6, 14;
+  --zn-panel-secondary: 24 35 61;
+  --zn-panel-highlight: 31, 43, 71;
+  --zn-panel-highlight-opacity: 1;
+  --zn-input-bg-accent: 24, 35, 61;
+  --zn-bright-bg: 38, 52, 79;
+  --zn-light-text: 141, 156, 178;
+  --zn-dark-text: 229, 237, 245;
+  --zn-purple-text: 134, 175, 254;
+  --zn-accent: 45, 196, 210;
+
+  --zn-table-header-background-color: 24, 35, 61;
+
+  --zn-color-primary-50: #0D2257;
+  --zn-color-primary-100: #0B2E7A;
+  --zn-color-primary-200: #053CA3;
+  --zn-color-primary-300: #064DD0;
+  --zn-color-primary-400: #085EFD;
+  --zn-color-primary-500: #2F74FD;
+  --zn-color-primary-600: #4B88FD;
+  --zn-color-primary-700: #86AFFE;
+  --zn-color-primary-800: #B8D0FF;
+  --zn-color-primary-900: #DBE7FF;
+
+  --zn-color-purple-50: #0D2257;
+  --zn-color-purple-100: #0B2E7A;
+  --zn-color-purple-200: #053CA3;
+  --zn-color-purple-600: #4B88FD;
+
+  --zn-color-gray-50: #18233D;
+  --zn-color-gray-100: #1F2B47;
+  --zn-color-gray-200: #26344F;
+  --zn-color-gray-300: #34445C;
+  --zn-color-gray-400: #4A5A74;
+  --zn-color-gray-500: #66768E;
+  --zn-color-gray-600: #8D9CB2;
+  --zn-color-gray-700: #BAC8D9;
+  --zn-color-gray-800: #D6E0EB;
+  --zn-color-gray-900: #E5EDF5;
+
+  --zn-color-neutral-0: #0B1222;
+  --zn-color-neutral-50: #18233D;
+  --zn-color-neutral-100: #1F2B47;
+  --zn-color-neutral-200: #26344F;
+  --zn-color-neutral-300: #34445C;
+  --zn-color-neutral-400: #4A5A74;
+  --zn-color-neutral-500: #66768E;
+  --zn-color-neutral-600: #8D9CB2;
+  --zn-color-neutral-700: #BAC8D9;
+  --zn-color-neutral-800: #D6E0EB;
+  --zn-color-neutral-900: #E5EDF5;
+
+  --zn-color-success-50: rgba(18, 160, 106, 0.15);
+  --zn-color-success-200: rgba(18, 160, 106, 0.4);
+  --zn-color-success-300: rgba(18, 160, 106, 0.4);
+  --zn-color-success-400: #12A06A;
+  --zn-color-success-500: #12A06A;
+  --zn-color-success-600: #12A06A;
+  --zn-color-success-700: #3DDC97;
+
+  --zn-color-warning-50: rgba(240, 160, 32, 0.15);
+  --zn-color-warning-400: #F0A020;
+  --zn-color-warning-500: #F0A020;
+  --zn-color-warning-600: #F0A020;
+
+  --zn-color-danger-50: rgba(217, 46, 75, 0.15);
+  --zn-color-danger-100: rgba(217, 46, 75, 0.15);
+  --zn-color-danger-200: rgba(217, 46, 75, 0.4);
+  --zn-color-danger-300: rgba(217, 46, 75, 0.4);
+  --zn-color-danger-500: #D92E4B;
+  --zn-color-danger-600: #D92E4B;
+  --zn-color-danger-700: #FF7A90;
+  --zn-color-danger-800: #FF7A90;
+
+  --zn-color-success-fg: #3DDC97;
+  --zn-color-success-bg: rgba(18, 160, 106, 0.15);
+  --zn-color-success-line: rgba(18, 160, 106, 0.4);
+  --zn-color-success-solid: #12A06A;
+  --zn-color-warning-fg: #FFC857;
+  --zn-color-warning-bg: rgba(240, 160, 32, 0.15);
+  --zn-color-warning-line: rgba(240, 160, 32, 0.4);
+  --zn-color-warning-solid: #F0A020;
+  --zn-color-danger-fg: #FF7A90;
+  --zn-color-danger-bg: rgba(217, 46, 75, 0.15);
+  --zn-color-danger-line: rgba(217, 46, 75, 0.4);
+  --zn-color-danger-solid: #D92E4B;
+  --zn-color-info-fg: #86AFFE;
+  --zn-color-info-bg: rgba(8, 94, 253, 0.18);
+  --zn-color-info-line: rgba(75, 136, 253, 0.4);
+  --zn-color-info-solid: #085EFD;
+  --zn-color-ai-fg: #B4A3FF;
+  --zn-color-ai-bg: rgba(117, 87, 245, 0.18);
+  --zn-color-ai-line: rgba(117, 87, 245, 0.4);
+  --zn-color-ai-solid: #7557F5;
+
+  --zn-shadow-x-small: 0 1px 2px rgba(0, 0, 0, 0.30);
+  --zn-shadow-small: 0 1px 3px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.20);
+  --zn-shadow-medium: 0 4px 14px rgba(0, 0, 0, 0.40), 0 1px 3px rgba(0, 0, 0, 0.25);
+  --zn-shadow-large: 0 14px 40px rgba(0, 0, 0, 0.50), 0 2px 8px rgba(0, 0, 0, 0.30);
+  --zn-shadow-x-large: 0 14px 40px rgba(0, 0, 0, 0.50), 0 2px 8px rgba(0, 0, 0, 0.30);
+
+  --zn-focus-ring-color: var(--zn-color-primary-700);
+  --zn-input-focus-ring-color: rgba(75, 136, 253, 0.45);
+
+  --zn-overlay-background-color: rgba(3, 6, 14, 0.65);
+
+  --zn-input-background-color: #131D33;
+  --zn-input-background-color-hover: #131D33;
+  --zn-input-background-color-focus: #18233D;
+  --zn-input-background-color-disabled: #0F182B;
+  --zn-input-border-color: #34445C;
+  --zn-input-border-color-hover: #4A5A74;
+  --zn-input-border-color-focus: var(--zn-color-primary-600);
+  --zn-input-border-color-disabled: #26344F;
+  --zn-checkbox-border-color: #4A5A74;
+  --zn-input-placeholder-color: #66768E;
+  --zn-input-help-text-color: #8D9CB2;
+
+  --zn-panel-border-color: #26344F;
+
+  --zn-tooltip-background-color: #2B3A57;
+  --zn-tooltip-color: #FFFFFF;
+
+  // !important to beat #{modes.$dark}'s `.zn-primary { ... !important }`.
+  .zn-primary {
+    color: rgb(var(--zn-color-primary)) !important;
+  }
+}

@@ -9,7 +9,7 @@
  * as margin-block-end.
  */
 @mixin text-style($role, $spacing: false) {
-  font-family: var(--zn-font-sans);
+  font-family: var(--zn-text-#{$role}-font-family, var(--zn-font-sans));
   font-size: var(--zn-text-#{$role}-font-size);
   font-weight: var(--zn-text-#{$role}-font-weight);
   line-height: var(--zn-text-#{$role}-line-height);

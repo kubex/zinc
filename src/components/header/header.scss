@@ -233,6 +233,12 @@
     flex-wrap: nowrap;
   }
 
+  // Controls in the actions row line up with the buttons beside them, without
+  // the label/help-text spacing a form field otherwise carries.
+  slot[name="actions"]::slotted(*) {
+    --zn-form-control-input-margin: 0;
+  }
+
   slot[name="actions"]::slotted(zn-button-menu) {
     flex-grow: 1;
     flex-shrink: 1;

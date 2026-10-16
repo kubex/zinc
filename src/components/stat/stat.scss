@@ -6,8 +6,115 @@
 }
 
 // A box of its own lets zn-cols draw its dividers between value-first stats.
-:host([layout="value-first"]) {
+:host([layout="value-first"]),
+:host([layout="tile"]) {
   display: block;
+}
+
+.stat-tile--card {
+  --stat-tone: var(--zn-color-neutral-400);
+
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: var(--zn-density-card-padding, var(--zn-spacing-medium));
+  background: rgba(var(--zn-panel), var(--zn-panel-opacity, 1));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: var(--zn-panel-border-radius, var(--zn-border-radius));
+  box-shadow: var(--zn-panel-shadow, none);
+  font: inherit;
+  color: inherit;
+  text-align: left;
+
+  .caption {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--zn-text-chart-minor-font-family, inherit);
+    font-size: var(--zn-text-chart-minor-font-size);
+    line-height: var(--zn-text-chart-minor-line-height);
+    font-weight: var(--zn-text-chart-minor-font-weight);
+    color: var(--zn-text-chart-minor-color);
+  }
+
+  .amount {
+    font-family: var(--zn-text-chart-major-font-family, inherit);
+    font-size: var(--zn-text-chart-major-font-size);
+    font-weight: var(--zn-text-chart-major-font-weight);
+    line-height: 1.1;
+    letter-spacing: var(--zn-text-chart-major-letter-spacing, normal);
+    font-variant-numeric: tabular-nums;
+    color: var(--zn-text-chart-major-color);
+  }
+
+  .foot {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--zn-font-size-x-small);
+    color: var(--zn-text-color-muted);
+  }
+
+  .spark {
+    height: 28px;
+    margin-top: 2px;
+
+    svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+  }
+}
+
+.stat-tile--tone-info { --stat-tone: var(--zn-chart-color-1, rgb(var(--zn-color-info))); }
+.stat-tile--tone-success { --stat-tone: var(--zn-chart-color-2, rgb(var(--zn-color-success))); }
+.stat-tile--tone-warning { --stat-tone: var(--zn-chart-color-4, rgb(var(--zn-color-warning))); }
+.stat-tile--tone-danger { --stat-tone: var(--zn-chart-color-5, rgb(var(--zn-color-error))); }
+
+[class*="stat-tile--tone-"] .caption::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--stat-tone);
+}
+
+.stat-tile--selectable {
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--zn-color-primary-300);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color);
+  }
+
+  &[aria-pressed="true"] {
+    border-color: rgb(var(--zn-primary));
+    background: var(--zn-color-primary-50);
+    box-shadow: 0 0 0 1px rgb(var(--zn-primary));
+  }
+}
+
+.delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-weight: var(--zn-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+
+  &--good { color: var(--zn-color-success-fg); }
+  &--bad { color: var(--zn-color-danger-fg); }
+  &--flat { color: var(--zn-text-color-muted); }
 }
 
 .stat-link {

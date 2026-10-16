@@ -28,8 +28,27 @@ export default class ZnStatsTile extends ZincElement {
   @property() color: 'primary' | 'error' | 'info' | 'warning' | 'success' | 'neutral' = 'primary';
 
   /** `value-first` puts the amount under the caption with the description beneath it, and tints the amount rather
-   * than the description with `color`. */
-  @property({reflect: true}) layout: 'default' | 'value-first' = 'default';
+   * than the description with `color`. `tile` is a self-contained card: caption, amount, a footer with the delta and
+   * `description`, an optional sparkline, and the default slot beneath. */
+  @property({reflect: true}) layout: 'default' | 'value-first' | 'tile' = 'default';
+
+  /** Comma-separated values drawn as a sparkline under a `tile`. */
+  @property() spark = '';
+
+  /** The sparkline's colour: a tone (`primary`, `info`, `success`, `warning`, `danger`, `ai`) or any CSS colour. */
+  @property({attribute: 'spark-color'}) sparkColor = '';
+
+  /** Treats a rise as bad news, so an increase is coloured as a loss (declines, refunds, failures). */
+  @property({type: Boolean, attribute: 'invert-delta'}) invertDelta = false;
+
+  /** A coloured dot before a `tile`'s caption. */
+  @property({reflect: true}) tone: '' | 'info' | 'success' | 'warning' | 'danger' | 'neutral' = '';
+
+  /** Renders a `tile` as a toggle button, for tiles that filter the content below them. */
+  @property({type: Boolean}) selectable = false;
+
+  /** Whether a `selectable` tile is pressed. */
+  @property({type: Boolean, reflect: true}) selected = false;
 
   /** How `show-delta` compares with `previous`: the relative change, or the difference in points. */
   @property({attribute: 'delta-format'}) deltaFormat: 'percent' | 'points' = 'percent';
@@ -53,9 +72,14 @@ export default class ZnStatsTile extends ZincElement {
 
   @property() gaid: string;
 
+  // Amounts are display strings, so drop separators and symbols ("48,201", "$2,941") before comparing.
+  private parseNumber(value: string) {
+    return parseFloat(String(value).replace(/[^0-9.-]/g, ''));
+  }
+
   calcPercentageDifference() {
-    const previous = parseFloat(this.previous);
-    const amount = parseFloat(this.amount);
+    const previous = this.parseNumber(this.previous);
+    const amount = this.parseNumber(this.amount);
 
     let diff = ((amount - previous) / previous) * 100;
     diff = Math.round(diff * 10) / 10;
@@ -123,7 +147,7 @@ export default class ZnStatsTile extends ZincElement {
   }
 
   private pointsDelta() {
-    const diff = Math.round((parseFloat(this.amount) - parseFloat(this.previous)) * 10) / 10;
+    const diff = Math.round((this.parseNumber(this.amount) - this.parseNumber(this.previous)) * 10) / 10;
     if (diff > 0) {
       return html`<span class="positive">+${diff} pts</span>`;
     }
@@ -169,8 +193,98 @@ export default class ZnStatsTile extends ZincElement {
     return html`<span class="neutral">No change</span>`;
   }
 
+  private tileDelta() {
+    if (!this.showDelta) {
+      return null;
+    }
+
+    const points = this.deltaFormat === 'points';
+    const diff = points
+      ? Math.round((this.parseNumber(this.amount) - this.parseNumber(this.previous)) * 10) / 10
+      : this.calcPercentageDifference();
+    const direction = diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat';
+    const outcome = direction === 'flat' ? 'flat' : (direction === 'up') !== this.invertDelta ? 'good' : 'bad';
+    const text = points ? `${Math.abs(diff)} pts` : `${Math.abs(diff)}%`;
+
+    return html`
+      <span class="delta delta--${outcome}">
+        ${direction === 'flat' ? null : html`
+          <zn-icon src="${direction === 'up' ? 'arrow-up-right@lu' : 'arrow-down-right@lu'}" size="14"></zn-icon>`}
+        ${text}
+      </span>`;
+  }
+
+  private sparkStroke() {
+    const tones: Record<string, string> = {
+      primary: 'var(--zn-chart-color-1, rgb(var(--zn-primary)))',
+      info: 'var(--zn-chart-color-1, rgb(var(--zn-color-info)))',
+      success: 'var(--zn-chart-color-2, rgb(var(--zn-color-success)))',
+      ai: 'var(--zn-chart-color-3, rgb(var(--zn-color-ai)))',
+      warning: 'var(--zn-chart-color-4, rgb(var(--zn-color-warning)))',
+      danger: 'var(--zn-chart-color-5, rgb(var(--zn-color-error)))',
+      error: 'var(--zn-chart-color-5, rgb(var(--zn-color-error)))',
+    };
+    return tones[this.sparkColor] ?? (this.sparkColor || tones.primary);
+  }
+
+  private renderSpark() {
+    const data = this.spark.split(',').map(v => parseFloat(v)).filter(v => !Number.isNaN(v));
+    if (data.length < 2) {
+      return null;
+    }
+
+    const width = 100;
+    const height = 28;
+    const max = Math.max(...data);
+    const min = Math.min(...data);
+    const range = max - min || 1;
+    const line = data
+      .map((v, i) => `${i ? 'L' : 'M'}${((i / (data.length - 1)) * width).toFixed(1)} ${(height - 3 - ((v - min) / range) * (height - 6)).toFixed(1)}`)
+      .join(' ');
+    const color = this.sparkStroke();
+
+    return html`
+      <div class="spark" part="spark">
+        <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="spark-fill" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" style="stop-color: ${color}; stop-opacity: .22"></stop>
+              <stop offset="1" style="stop-color: ${color}; stop-opacity: 0"></stop>
+            </linearGradient>
+          </defs>
+          <path d="${line} L${width} ${height} L0 ${height} Z" fill="url(#spark-fill)"></path>
+          <path d="${line}" fill="none" style="stroke: ${color}" stroke-width="1.75"
+                vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"></path>
+        </svg>
+      </div>`;
+  }
+
+  private renderTile() {
+    const delta = this.tileDelta();
+    const classes = classMap({
+      'stat-tile': true,
+      'stat-tile--card': true,
+      'stat-tile--selectable': this.selectable,
+      [`stat-tile--tone-${this.tone}`]: !!this.tone,
+    });
+    const body = html`
+      <span class="caption" part="caption">${this.caption}</span>
+      <span class="amount" part="amount">${this.renderAmount()}</span>
+      ${delta || this.description ? html`
+        <span class="foot" part="foot">${delta}${this.description ? html`<span>${this.description}</span>` : null}</span>` : null}
+      ${this.renderSpark()}
+      <slot></slot>`;
+
+    return this.selectable
+      ? html`<button type="button" part="base" class="${classes}" aria-pressed="${this.selected ? 'true' : 'false'}"
+                     @click="${() => { this.selected = !this.selected; }}">${body}</button>`
+      : html`<div part="base" class="${classes}">${body}</div>`;
+  }
+
   render() {
-    const tile = this.layout === 'value-first' ? this.renderValueFirst() : this.renderDefault();
+    const tile = this.layout === 'tile'
+      ? this.renderTile()
+      : this.layout === 'value-first' ? this.renderValueFirst() : this.renderDefault();
     if (!this.href) {
       return tile;
     }

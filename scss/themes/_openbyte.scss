@@ -98,6 +98,12 @@ $comfortable: (
   --zn-input-height-small: #{map.get($d, "control-height-sm")};
   --zn-input-height-medium: #{map.get($d, "control-height")};
   --zn-input-height-large: #{map.get($d, "control-height-lg")};
+
+  --zn-button-height-small: #{map.get($d, "control-height-sm")};
+  --zn-button-height: #{map.get($d, "control-height")};
+  --zn-button-height-large: #{map.get($d, "control-height-lg")};
+  --zn-button-icon-width: #{map.get($d, "control-height")};
+  --zn-button-pill-height: #{map.get($d, "control-height-sm")};
 }
 
 html[t="openbyte"], body[t="openbyte"], html.theme-openbyte, body.theme-openbyte {
@@ -308,6 +314,36 @@ html[t="openbyte"], body[t="openbyte"], html.theme-openbyte, body.theme-openbyte
   --zn-tooltip-font-weight: var(--zn-font-weight-medium);
   --zn-tooltip-padding: 6px 10px;
 
+  /**************************************************************
+   * Buttons
+   *************************************************************/
+
+  --zn-button-padding: 0 12px;
+  --zn-button-font-size-small: 12px;
+  --zn-button-shadow: var(--zn-shadow-x-small);
+  --zn-button-mix-color: black;
+  --zn-button-hover-mix: 85%;
+  --zn-button-active-mix: 72%;
+
+  --zn-button-secondary-background: rgb(var(--zn-color-panel));
+  --zn-button-secondary-border: rgb(var(--zn-color-border-active));
+  --zn-button-secondary-color: rgb(var(--zn-color-text));
+  --zn-button-secondary-hover-background: var(--zn-color-neutral-50);
+  --zn-button-secondary-active-background: var(--zn-color-neutral-100);
+
+  --zn-button-ghost-color: rgb(var(--zn-color-muted-text));
+  --zn-button-ghost-hover-background: var(--zn-color-neutral-100);
+  --zn-button-ghost-hover-color: rgb(var(--zn-color-text));
+
+  --zn-button-subtle-alpha: 0.08;
+  --zn-button-subtle-hover-alpha: 0.15;
+  --zn-button-subtle-ink-mix: 70%;
+  --zn-button-subtle-ink-mix-color: black;
+
+  --zn-button-outline-border-alpha: 0.35;
+  --zn-button-outline-hover-alpha: 0.08;
+  --zn-button-outline-hover-ink-mix: 0%;
+
   @include density($compact);
 
   .zn-primary {
@@ -482,6 +518,11 @@ html.theme-openbyte.theme-dark, body.theme-openbyte.theme-dark {
 
   --zn-tooltip-background-color: #2B3A57;
   --zn-tooltip-color: #FFFFFF;
+
+  --zn-button-subtle-alpha: 0.16;
+  --zn-button-subtle-hover-alpha: 0.24;
+  --zn-button-subtle-ink-mix: 50%;
+  --zn-button-subtle-ink-mix-color: white;
 
   // !important to beat #{modes.$dark}'s `.zn-primary { ... !important }`.
   .zn-primary {

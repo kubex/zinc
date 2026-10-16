@@ -54,6 +54,20 @@
     --btn-ink: var(--zn-color-on-success, 255, 255, 255);
   }
 
+  &.button--ai {
+    --btn-color: var(--zn-color-ai);
+    --btn-ink: var(--zn-color-on-ai, 255, 255, 255);
+  }
+
+  &.button--small {
+    --zn-button-height: var(--zn-button-height-small, 30px);
+    font-size: var(--zn-button-font-size-small, var(--zn-text-button-label-font-size));
+  }
+
+  &.button--large {
+    --zn-button-height: var(--zn-button-height-large, 40px);
+  }
+
   &__label--hidden {
     visibility: hidden;
   }
@@ -129,30 +143,41 @@
 
 .button--standard {
   &.button--secondary {
-    background-color: var(--zn-color-neutral-50);
-    border-color: var(--zn-button-border-color, var(--zn-color-neutral-50));
-    color: rgb(var(--zn-primary));
+    background-color: var(--zn-button-secondary-background, var(--zn-color-neutral-50));
+    border-color: var(--zn-button-border-color, var(--zn-button-secondary-border, var(--zn-color-neutral-50)));
+    color: var(--zn-button-secondary-color, rgb(var(--zn-primary)));
 
     &:hover:not([disabled]) {
-      background-color: var(--zn-color-neutral-100)
+      background-color: var(--zn-button-secondary-hover-background, var(--zn-color-neutral-100));
     }
 
     &:active:not([disabled]) {
-      background-color: var(--zn-color-neutral-100)
+      background-color: var(--zn-button-secondary-active-background, var(--zn-color-neutral-100));
     }
   }
 
+  &.button--ai {
+    background-color: var(--zn-color-ai-bg);
+    border-color: var(--zn-button-border-color, var(--zn-color-ai-line));
+    color: var(--zn-color-ai-fg);
+    box-shadow: none;
+
+    &:hover:not([disabled]), &:active:not([disabled]) {
+      background-color: color-mix(in srgb, var(--zn-color-ai-bg), var(--zn-color-ai-line));
+    }
+  }
 
   background-color: rgba(var(--btn-color));
   border-color: var(--zn-button-border-color, rgb(var(--btn-color)));
   color: rgba(var(--btn-ink), 0.9);
+  box-shadow: var(--zn-button-shadow, none);
 
   &:hover:not([disabled]) {
-    background-color: rgba(var(--btn-color), 0.8);
+    background-color: color-mix(in srgb, rgb(var(--btn-color)) var(--zn-button-hover-mix, 80%), var(--zn-button-mix-color, transparent));
   }
 
   &:active:not([disabled]) {
-    background-color: rgba(var(--btn-color));
+    background-color: color-mix(in srgb, rgb(var(--btn-color)) var(--zn-button-active-mix, 100%), var(--zn-button-mix-color, transparent));
   }
 }
 
@@ -163,12 +188,14 @@
   border-right-width: var(--zn-button-border-right-width, var(--zn-button-border-width, 1px));
   border-bottom-width: var(--zn-button-border-bottom-width, var(--zn-button-border-width, 1px));
   border-left-width: var(--zn-button-border-left-width, var(--zn-button-border-width, 1px));
-  border-color: var(--zn-button-border-color, rgb(var(--btn-color)));
+  border-color: var(--zn-button-border-color, rgba(var(--btn-color), var(--zn-button-outline-border-alpha, 1)));
   color: rgb(var(--btn-color));
 
+  // A theme can swap the solid hover for a tint by lowering the alpha and
+  // keeping the ink on the button colour (ink mix 0%).
   &:hover:not([disabled]), &:active:not([disabled]) {
-    background-color: rgb(var(--btn-color));
-    color: rgb(var(--btn-ink));
+    background-color: rgba(var(--btn-color), var(--zn-button-outline-hover-alpha, 1));
+    color: color-mix(in srgb, rgb(var(--btn-ink)) var(--zn-button-outline-hover-ink-mix, 100%), rgb(var(--btn-color)));
   }
 
   &.button--secondary {
@@ -192,6 +219,22 @@
 
   &.button--secondary {
     font-weight: normal;
+    color: var(--zn-button-ghost-color, rgb(var(--btn-color)));
+
+    &:hover:not([disabled]), &:active:not([disabled]) {
+      background-color: var(--zn-button-ghost-hover-background, rgba(var(--btn-color), 0.1));
+      color: var(--zn-button-ghost-hover-color, rgb(var(--btn-color)));
+    }
+  }
+}
+
+.button--subtle {
+  background-color: rgba(var(--btn-color), var(--zn-button-subtle-alpha, 0.1));
+  border-color: var(--zn-button-border-color, transparent);
+  color: color-mix(in srgb, rgb(var(--btn-color)) var(--zn-button-subtle-ink-mix, 100%), var(--zn-button-subtle-ink-mix-color, black));
+
+  &:hover:not([disabled]), &:active:not([disabled]) {
+    background-color: rgba(var(--btn-color), var(--zn-button-subtle-hover-alpha, 0.18));
   }
 }
 
@@ -227,6 +270,7 @@
 
 .button--transparent {
   background-color: transparent;
+  box-shadow: none;
   border-color: var(--zn-button-border-color, transparent) !important;
   color: inherit;
 
@@ -281,12 +325,13 @@
   --icon-button-color: rgb(var(--zn-text));
   --icon-button-hover-color: rgb(var(--zn-primary));
 
-  width: 40px;
-  min-width: 40px;
-  height: 36px;
-  min-height: 36px;
-  max-height: 36px;
+  width: var(--zn-button-icon-width, 40px);
+  min-width: var(--zn-button-icon-width, 40px);
+  height: var(--zn-button-height, 36px);
+  min-height: var(--zn-button-height, 36px);
+  max-height: var(--zn-button-height, 36px);
   padding: 6px;
+  box-shadow: none;
   margin: 0;
   background: rgb(var(--zn-panel));
   border-color: var(--zn-button-border-color, rgb(var(--zn-border-color))) !important;
@@ -309,14 +354,14 @@
   }
 
   &.button--icon-button-small {
-    width: 36px;
-    min-width: 36px;
+    width: var(--zn-button-height, 36px);
+    min-width: var(--zn-button-height, 36px);
   }
 
   // Round: 36x36 circle on the tab tint, muted icon by default
   &.button--icon-button-round {
-    width: 36px;
-    min-width: 36px;
+    width: var(--zn-button-height, 36px);
+    min-width: var(--zn-button-height, 36px);
     padding: 8px;
     background: rgb(var(--zn-color-tab));
     border-color: var(--zn-button-border-color, transparent) !important;
@@ -531,8 +576,10 @@
 .button.button--pill {
   border-radius: var(--zn-border-radius-pill);
   padding: 0 var(--zn-spacing-small);
-  height: 32px;
-  min-height: 32px;
+  height: var(--zn-button-pill-height, 32px);
+  min-height: var(--zn-button-pill-height, 32px);
+  max-height: var(--zn-button-pill-height, 32px);
+  box-shadow: none;
   font-weight: var(--zn-font-weight-normal);
   text-transform: none;
   white-space: nowrap;

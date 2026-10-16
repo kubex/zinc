@@ -61,7 +61,30 @@ Use the `color` attribute to set the button's color.
 <zn-button color="info">Info</zn-button>
 <zn-button color="warning">Warning</zn-button>
 <zn-button color="error">Error</zn-button>
+<zn-button color="ai" icon="auto_awesome">AI</zn-button>
 <zn-button color="transparent">Transparent</zn-button>
+```
+
+Reserve `color="ai"` for actions that invoke AI or act on AI-generated content.
+
+### Sizes
+
+Use the `size` attribute to pick a smaller or larger button. Heights follow the theme's density.
+
+```html:preview
+<zn-button size="small">Small</zn-button>
+<zn-button>Medium</zn-button>
+<zn-button size="large">Large</zn-button>
+```
+
+### Subtle
+
+Use the `subtle` attribute for a tinted button, for secondary actions that sit beside a primary one.
+
+```html:preview
+<zn-button subtle>Subtle</zn-button>
+<zn-button subtle color="success">Subtle</zn-button>
+<zn-button subtle color="error">Subtle</zn-button>
 ```
 
 ### Outline

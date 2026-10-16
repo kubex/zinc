@@ -271,4 +271,15 @@ describe('<zn-navbar>', () => {
       await waitUntil(() => getComputedStyle(el).display === 'none', 'navbar should hide after dropping back to one item');
     });
   });
+
+  it('paints tabs from the tab tokens', async () => {
+    const el = await fixture<ZnNavbar>(html`
+      <zn-navbar style="--zn-navbar-tab-background: rgb(1, 2, 3); --zn-navbar-tab-radius: 0px"
+                 navigation='[{"path":"#a","title":"A"},{"path":"#b","title":"B"}]'></zn-navbar>`);
+    await el.updateComplete;
+    const tab = el.shadowRoot!.querySelector<HTMLElement>('ul.navbar > li:not(.active):not(.more)')!;
+
+    expect(getComputedStyle(tab).backgroundColor).to.equal('rgb(1, 2, 3)');
+    expect(getComputedStyle(el.shadowRoot!.querySelector('ul.navbar > li')!).borderTopLeftRadius).to.equal('0px');
+  });
 });

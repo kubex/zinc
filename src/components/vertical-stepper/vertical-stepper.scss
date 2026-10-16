@@ -16,24 +16,24 @@
   }
 
   &__icon {
-    width: var(--zn-spacing-large);
-    height: var(--zn-spacing-large);
+    width: var(--zn-vertical-stepper-marker-size, var(--zn-spacing-large));
+    height: var(--zn-vertical-stepper-marker-size, var(--zn-spacing-large));
     display: flex;
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    background-color: rgb(var(--zn-input-bg));
+    background-color: var(--zn-vertical-stepper-marker-background, rgb(var(--zn-input-bg)));
     border-width: 1px;
     border-radius: 100%;
   }
 
   &__line {
     min-height: 50px;
-    width: 4px;
-    border-width: 1px;
+    width: var(--zn-vertical-stepper-line-width, 4px);
+    border-width: var(--zn-vertical-stepper-line-border-width, 1px);
     border-top: none;
     border-bottom: none;
-    background-color: rgba(var(--zn-input-bg));
+    background-color: var(--zn-vertical-stepper-line-color, rgba(var(--zn-input-bg)));
     flex-grow: 1;
   }
 
@@ -50,7 +50,7 @@
   }
 
   &__caption {
-    font-size: 14px;
+    font-size: var(--zn-vertical-stepper-caption-font-size, 14px);
     color: rgb(var(--zn-text-heading));
     line-height: 20px;
     font-weight: 600;
@@ -59,9 +59,9 @@
 
   &__description {
     font-size: 12px;
-    font-weight: 500;
+    font-weight: var(--zn-vertical-stepper-description-font-weight, 500);
     line-height: 18px;
-    color: rgb(var(--zn-text));
+    color: var(--zn-vertical-stepper-description-color, rgb(var(--zn-text)));
   }
 }
 

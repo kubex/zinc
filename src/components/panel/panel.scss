@@ -19,7 +19,8 @@
   position: relative;
   border: 1px solid rgb(var(--zn-border-color));
   display: flex;
-  border-radius: var(--zn-border-radius);
+  border-radius: var(--zn-panel-border-radius, var(--zn-border-radius));
+  box-shadow: var(--zn-panel-shadow, none);
   flex-direction: column;
   flex-grow: 1;
   flex-basis: var(--zn-spacing-small-panel);
@@ -29,7 +30,7 @@
   &__inner {
     overflow: hidden;
     display: flex;
-    border-radius: var(--zn-border-radius);
+    border-radius: var(--zn-panel-border-radius, var(--zn-border-radius));
     flex-direction: column;
     flex-grow: 1;
   }
@@ -58,7 +59,7 @@
     }
 
     &--underline {
-      border-bottom: 1px solid rgb(var(--zn-border-color));
+      border-bottom: 1px solid var(--zn-panel-header-divider-color, rgb(var(--zn-border-color)));
     }
 
     &::part(content) {
@@ -71,7 +72,7 @@
     flex-direction: column;
     overflow-y: auto;
     flex-grow: 1;
-    padding: var(--zn-base-gap);
+    padding: var(--zn-panel-padding, var(--zn-base-gap));
 
     > :not([hidden]) ~ :not([hidden]) {
       border: 1px solid rgb(var(--zn-border-color));
@@ -82,9 +83,10 @@
     font-size: var(--zn-font-size-small);
     display: block;
     padding: var(--zn-panel-footer-padding, var(--zn-spacing-small) var(--zn-base-gap));
-    background: rgb(var(--zn-body));
-    border-bottom-left-radius: var(--zn-border-radius);
-    border-bottom-right-radius: var(--zn-border-radius);
+    background: var(--zn-panel-footer-background, rgb(var(--zn-body)));
+    border-top: var(--zn-panel-footer-divider, none);
+    border-bottom-left-radius: var(--zn-panel-border-radius, var(--zn-border-radius));
+    border-bottom-right-radius: var(--zn-panel-border-radius, var(--zn-border-radius));
   }
 
   &--tabbed .panel__body {
@@ -94,6 +96,7 @@
   &--transparent {
     background-color: transparent;
     border: none;
+    box-shadow: none;
 
     &:before {
       display: none;
@@ -176,7 +179,7 @@
   }
 
   &--shadow {
-    box-shadow: 0 6px 20px 10px rgba(0, 0, 0, 0.25);
+    box-shadow: var(--zn-panel-shadow-raised, 0 6px 20px 10px rgba(0, 0, 0, 0.25));
   }
 
 }

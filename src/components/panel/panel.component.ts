@@ -24,6 +24,8 @@ import styles from './panel.scss';
  * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.
  * @cssproperty --zn-panel-header-padding - Padding around the header row. Defaults to `--zn-base-gap`.
  * @cssproperty --zn-panel-footer-padding - Padding around the footer row.
+ * @cssproperty --zn-panel-padding - Padding around the body. Defaults to `--zn-base-gap`.
+ * @cssproperty --zn-panel-shadow - Resting shadow. Defaults to none.
  */
 export default class ZnPanel extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);

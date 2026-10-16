@@ -2,7 +2,7 @@
 @use "sass:math";
 
 // OpenByte — blue brand on blue-tinted neutrals, Plus Jakarta Sans headings and
-// compact density. The light block is mode-agnostic, so every colour it sets must
+// comfortable density (compact on request). The light block is mode-agnostic, so every colour it sets must
 // also be set in the dark block below or the light value leaks into dark mode.
 //
 // Selectors stay root-qualified for the reason given at the top of _aura.scss.
@@ -552,152 +552,153 @@ html[t="openbyte"], body[t="openbyte"], html.theme-openbyte, body.theme-openbyte
   --zn-button-outline-hover-alpha: 0.08;
   --zn-button-outline-hover-ink-mix: 0%;
 
-  @include density($compact);
+  @include density($comfortable);
 
   .zn-primary {
     color: rgb(var(--zn-color-primary));
   }
 }
 
-html[t="openbyte"][data-density="comfortable"], body[t="openbyte"][data-density="comfortable"],
-html[t="openbyte"] [data-density="comfortable"], body[t="openbyte"] [data-density="comfortable"] {
-  @include density($comfortable);
-}
-
+html[t="openbyte"][data-density="compact"], body[t="openbyte"][data-density="compact"],
 html[t="openbyte"] [data-density="compact"], body[t="openbyte"] [data-density="compact"] {
   @include density($compact);
 }
 
-// Derived dark: the guide is light-only. Navy canvas from the brand navy, ramps
-// inverted (50 darkest) the way themes/_dark.scss inverts the base ramps.
+html[t="openbyte"] [data-density="comfortable"], body[t="openbyte"] [data-density="comfortable"] {
+  @include density($comfortable);
+}
+
+// Derived dark: the guide is light-only. A near-neutral graphite canvas with the
+// brand and status hues desaturated so they don't glare on it; ramps inverted
+// (50 darkest) the way themes/_dark.scss inverts the base ramps.
 // (0,2,1) outranks :root[m="dark"] (0,2,0); see the specificity note in _root.scss.
 html[t="openbyte"][m="dark"], body[t="openbyte"][m="dark"],
 html.theme-openbyte.theme-dark, body.theme-openbyte.theme-dark {
   color-scheme: dark;
 
-  --zn-backdrop-color: rgba(3, 6, 14, 0.65);
+  --zn-backdrop-color: rgba(5, 6, 8, 0.6);
 
-  --zn-color-text: 229, 237, 245;
-  --zn-color-muted-text: 141, 156, 178;
+  --zn-color-text: 236, 234, 228;
+  --zn-color-muted-text: 156, 158, 168;
 
-  --zn-color-base: 24, 35, 61;
-  --zn-color-body: 11, 18, 34;
+  --zn-color-base: 37, 38, 45;
+  --zn-color-body: 24, 25, 30;
   --zn-color-navigation: var(--zn-color-base);
-  --zn-color-navigation-hightlight: 27, 39, 66;
-  --zn-color-border: 38, 52, 79;
-  --zn-color-border-active: 52, 68, 92;
-  --zn-color-tab: 27, 39, 66;
-  --zn-color-panel: 19, 29, 51;
+  --zn-color-navigation-hightlight: 44, 46, 54;
+  --zn-color-border: 50, 52, 61;
+  --zn-color-border-active: 65, 68, 78;
+  --zn-color-tab: 44, 46, 54;
+  --zn-color-panel: 31, 32, 38;
 
-  --zn-color-primary: 75, 136, 253;
-  // themes/_dark.scss pins --zn-primary to the base dark accent. Fills stay on
-  // brand blue: blue-400 under white ink is ~3.5:1.
-  --zn-primary: 8, 94, 253;
-  --zn-color-info: 8, 94, 253;
-  --zn-color-success: 18, 160, 106;
-  --zn-color-warning: 240, 160, 32;
-  --zn-color-error: 217, 46, 75;
-  --zn-color-disabled: 102, 118, 142;
-  --zn-color-ai: 117, 87, 245;
+  --zn-color-primary: 92, 133, 214;
+  // themes/_dark.scss pins --zn-primary to the base dark accent. Fills use the
+  // deeper blue: the lighter text blue under white ink is ~3.5:1.
+  --zn-primary: 53, 106, 212;
+  --zn-color-info: 53, 106, 212;
+  --zn-color-success: 56, 148, 110;
+  --zn-color-warning: 218, 153, 47;
+  --zn-color-error: 198, 57, 76;
+  --zn-color-disabled: 117, 120, 132;
+  --zn-color-ai: 119, 100, 216;
 
   --zn-color-on-primary: 255, 255, 255;
-  --zn-color-on-warning: 11, 18, 34;
+  --zn-color-on-warning: 24, 25, 30;
 
   --zn-panel-opacity: 1;
-  --zn-shadow: 3, 6, 14;
-  --zn-panel-secondary: 24 35 61;
-  --zn-panel-highlight: 31, 43, 71;
+  --zn-shadow: 5, 6, 8;
+  --zn-panel-secondary: 37 38 45;
+  --zn-panel-highlight: 44, 46, 54;
   --zn-panel-highlight-opacity: 1;
-  --zn-input-bg-accent: 24, 35, 61;
-  --zn-bright-bg: 38, 52, 79;
-  --zn-light-text: 141, 156, 178;
-  --zn-dark-text: 229, 237, 245;
-  --zn-purple-text: 134, 175, 254;
-  --zn-accent: 45, 196, 210;
+  --zn-input-bg-accent: 37, 38, 45;
+  --zn-bright-bg: 50, 52, 61;
+  --zn-light-text: 156, 158, 168;
+  --zn-dark-text: 236, 234, 228;
+  --zn-purple-text: 146, 174, 232;
+  --zn-accent: 78, 170, 180;
 
-  --zn-table-header-background-color: 24, 35, 61;
+  --zn-table-header-background-color: 37, 38, 45;
 
-  --zn-color-primary-50: #0D2257;
-  --zn-color-primary-100: #0B2E7A;
-  --zn-color-primary-200: #053CA3;
-  --zn-color-primary-300: #064DD0;
-  --zn-color-primary-400: #085EFD;
-  --zn-color-primary-500: #2F74FD;
-  --zn-color-primary-600: #4B88FD;
-  --zn-color-primary-700: #86AFFE;
-  --zn-color-primary-800: #B8D0FF;
-  --zn-color-primary-900: #DBE7FF;
+  --zn-color-primary-50: #18264A;
+  --zn-color-primary-100: #1E3566;
+  --zn-color-primary-200: #26478C;
+  --zn-color-primary-300: #2C57B0;
+  --zn-color-primary-400: #356AD4;
+  --zn-color-primary-500: #4877D8;
+  --zn-color-primary-600: #5C85D6;
+  --zn-color-primary-700: #92AEE8;
+  --zn-color-primary-800: #BDCDEF;
+  --zn-color-primary-900: #DCE4F5;
 
-  --zn-color-purple-50: #0D2257;
-  --zn-color-purple-100: #0B2E7A;
-  --zn-color-purple-200: #053CA3;
-  --zn-color-purple-600: #4B88FD;
+  --zn-color-purple-50: #18264A;
+  --zn-color-purple-100: #1E3566;
+  --zn-color-purple-200: #26478C;
+  --zn-color-purple-600: #5C85D6;
 
-  --zn-color-gray-50: #18233D;
-  --zn-color-gray-100: #1F2B47;
-  --zn-color-gray-200: #26344F;
-  --zn-color-gray-300: #34445C;
-  --zn-color-gray-400: #4A5A74;
-  --zn-color-gray-500: #66768E;
-  --zn-color-gray-600: #8D9CB2;
-  --zn-color-gray-700: #BAC8D9;
-  --zn-color-gray-800: #D6E0EB;
-  --zn-color-gray-900: #E5EDF5;
+  --zn-color-gray-50: #25262D;
+  --zn-color-gray-100: #2C2E36;
+  --zn-color-gray-200: #32343D;
+  --zn-color-gray-300: #41444E;
+  --zn-color-gray-400: #565965;
+  --zn-color-gray-500: #757884;
+  --zn-color-gray-600: #9C9EA8;
+  --zn-color-gray-700: #C9C7C1;
+  --zn-color-gray-800: #DAD8D2;
+  --zn-color-gray-900: #ECEAE4;
 
-  --zn-color-neutral-0: #0B1222;
-  --zn-color-neutral-50: #18233D;
-  --zn-color-neutral-100: #1F2B47;
-  --zn-color-neutral-200: #26344F;
-  --zn-color-neutral-300: #34445C;
-  --zn-color-neutral-400: #4A5A74;
-  --zn-color-neutral-500: #66768E;
-  --zn-color-neutral-600: #8D9CB2;
-  --zn-color-neutral-700: #BAC8D9;
-  --zn-color-neutral-800: #D6E0EB;
-  --zn-color-neutral-900: #E5EDF5;
+  --zn-color-neutral-0: #18191E;
+  --zn-color-neutral-50: #25262D;
+  --zn-color-neutral-100: #2C2E36;
+  --zn-color-neutral-200: #32343D;
+  --zn-color-neutral-300: #41444E;
+  --zn-color-neutral-400: #565965;
+  --zn-color-neutral-500: #757884;
+  --zn-color-neutral-600: #9C9EA8;
+  --zn-color-neutral-700: #C9C7C1;
+  --zn-color-neutral-800: #DAD8D2;
+  --zn-color-neutral-900: #ECEAE4;
 
-  --zn-color-success-50: rgba(18, 160, 106, 0.15);
-  --zn-color-success-200: rgba(18, 160, 106, 0.4);
-  --zn-color-success-300: rgba(18, 160, 106, 0.4);
-  --zn-color-success-400: #12A06A;
-  --zn-color-success-500: #12A06A;
-  --zn-color-success-600: #12A06A;
-  --zn-color-success-700: #3DDC97;
+  --zn-color-success-50: rgba(56, 148, 110, 0.15);
+  --zn-color-success-200: rgba(56, 148, 110, 0.4);
+  --zn-color-success-300: rgba(56, 148, 110, 0.4);
+  --zn-color-success-400: #38946E;
+  --zn-color-success-500: #38946E;
+  --zn-color-success-600: #38946E;
+  --zn-color-success-700: #79D2AD;
 
-  --zn-color-warning-50: rgba(240, 160, 32, 0.15);
-  --zn-color-warning-400: #F0A020;
-  --zn-color-warning-500: #F0A020;
-  --zn-color-warning-600: #F0A020;
+  --zn-color-warning-50: rgba(218, 153, 47, 0.15);
+  --zn-color-warning-400: #DA992F;
+  --zn-color-warning-500: #DA992F;
+  --zn-color-warning-600: #DA992F;
 
-  --zn-color-danger-50: rgba(217, 46, 75, 0.15);
-  --zn-color-danger-100: rgba(217, 46, 75, 0.15);
-  --zn-color-danger-200: rgba(217, 46, 75, 0.4);
-  --zn-color-danger-300: rgba(217, 46, 75, 0.4);
-  --zn-color-danger-500: #D92E4B;
-  --zn-color-danger-600: #D92E4B;
-  --zn-color-danger-700: #FF7A90;
-  --zn-color-danger-800: #FF7A90;
+  --zn-color-danger-50: rgba(198, 57, 76, 0.15);
+  --zn-color-danger-100: rgba(198, 57, 76, 0.15);
+  --zn-color-danger-200: rgba(198, 57, 76, 0.4);
+  --zn-color-danger-300: rgba(198, 57, 76, 0.4);
+  --zn-color-danger-500: #C6394C;
+  --zn-color-danger-600: #C6394C;
+  --zn-color-danger-700: #EA8693;
+  --zn-color-danger-800: #EA8693;
 
-  --zn-color-success-fg: #3DDC97;
-  --zn-color-success-bg: rgba(18, 160, 106, 0.15);
-  --zn-color-success-line: rgba(18, 160, 106, 0.4);
-  --zn-color-success-solid: #12A06A;
-  --zn-color-warning-fg: #FFC857;
-  --zn-color-warning-bg: rgba(240, 160, 32, 0.15);
-  --zn-color-warning-line: rgba(240, 160, 32, 0.4);
-  --zn-color-warning-solid: #F0A020;
-  --zn-color-danger-fg: #FF7A90;
-  --zn-color-danger-bg: rgba(217, 46, 75, 0.15);
-  --zn-color-danger-line: rgba(217, 46, 75, 0.4);
-  --zn-color-danger-solid: #D92E4B;
-  --zn-color-info-fg: #86AFFE;
-  --zn-color-info-bg: rgba(8, 94, 253, 0.18);
-  --zn-color-info-line: rgba(75, 136, 253, 0.4);
-  --zn-color-info-solid: #085EFD;
-  --zn-color-ai-fg: #B4A3FF;
-  --zn-color-ai-bg: rgba(117, 87, 245, 0.18);
-  --zn-color-ai-line: rgba(117, 87, 245, 0.4);
-  --zn-color-ai-solid: #7557F5;
+  --zn-color-success-fg: #79D2AD;
+  --zn-color-success-bg: rgba(56, 148, 110, 0.15);
+  --zn-color-success-line: rgba(56, 148, 110, 0.4);
+  --zn-color-success-solid: #38946E;
+  --zn-color-warning-fg: #F1CB7E;
+  --zn-color-warning-bg: rgba(218, 153, 47, 0.15);
+  --zn-color-warning-line: rgba(218, 153, 47, 0.4);
+  --zn-color-warning-solid: #DA992F;
+  --zn-color-danger-fg: #EA8693;
+  --zn-color-danger-bg: rgba(198, 57, 76, 0.15);
+  --zn-color-danger-line: rgba(198, 57, 76, 0.4);
+  --zn-color-danger-solid: #C6394C;
+  --zn-color-info-fg: #92AEE8;
+  --zn-color-info-bg: rgba(53, 106, 212, 0.18);
+  --zn-color-info-line: rgba(92, 133, 214, 0.4);
+  --zn-color-info-solid: #356AD4;
+  --zn-color-ai-fg: #B8ADEB;
+  --zn-color-ai-bg: rgba(119, 100, 216, 0.18);
+  --zn-color-ai-line: rgba(119, 100, 216, 0.4);
+  --zn-color-ai-solid: #7764D8;
 
   --zn-shadow-x-small: 0 1px 2px rgba(0, 0, 0, 0.30);
   --zn-shadow-small: 0 1px 3px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.20);
@@ -706,39 +707,51 @@ html.theme-openbyte.theme-dark, body.theme-openbyte.theme-dark {
   --zn-shadow-x-large: 0 14px 40px rgba(0, 0, 0, 0.50), 0 2px 8px rgba(0, 0, 0, 0.30);
 
   --zn-focus-ring-color: var(--zn-color-primary-700);
-  --zn-input-focus-ring-color: rgba(75, 136, 253, 0.45);
+  --zn-input-focus-ring-color: rgba(92, 133, 214, 0.45);
 
-  --zn-overlay-background-color: rgba(3, 6, 14, 0.65);
+  --zn-overlay-background-color: rgba(5, 6, 8, 0.6);
 
-  --zn-input-background-color: #131D33;
-  --zn-input-background-color-hover: #131D33;
-  --zn-input-background-color-focus: #18233D;
-  --zn-input-background-color-disabled: #0F182B;
-  --zn-input-border-color: #34445C;
-  --zn-input-border-color-hover: #4A5A74;
+  --zn-input-background-color: #1F2026;
+  --zn-input-background-color-hover: #1F2026;
+  --zn-input-background-color-focus: #25262D;
+  --zn-input-background-color-disabled: #1B1C21;
+  --zn-input-border-color: #41444E;
+  --zn-input-border-color-hover: #565965;
   --zn-input-border-color-focus: var(--zn-color-primary-600);
-  --zn-input-border-color-disabled: #26344F;
-  --zn-checkbox-border-color: #4A5A74;
-  --zn-input-placeholder-color: #66768E;
-  --zn-input-help-text-color: #8D9CB2;
+  --zn-input-border-color-disabled: #32343D;
+  --zn-checkbox-border-color: #565965;
+  --zn-input-placeholder-color: #757884;
+  --zn-input-help-text-color: #9C9EA8;
 
-  --zn-panel-border-color: #26344F;
+  --zn-panel-border-color: #32343D;
 
-  --zn-tooltip-background-color: #2B3A57;
+  --zn-tooltip-background-color: #34363F;
   --zn-tooltip-color: #FFFFFF;
 
   --zn-selection-card-checked-color: var(--zn-color-primary-700);
-  --zn-panel-footer-background: #18233D;
+  --zn-panel-footer-background: #25262D;
   --zn-menu-item-hover-background: var(--zn-color-neutral-200);
   --zn-alert-tint-alpha: 0.15;
-  --zn-dialog-footer-background: #18233D;
+  --zn-dialog-footer-background: #25262D;
   --zn-skeleton-shimmer: rgba(255, 255, 255, 0.06);
-  --zn-color-primary-fg: #86AFFE;
+  --zn-color-primary-fg: #92AEE8;
 
   --zn-button-subtle-alpha: 0.16;
   --zn-button-subtle-hover-alpha: 0.24;
   --zn-button-subtle-ink-mix: 50%;
   --zn-button-subtle-ink-mix-color: white;
+
+  --zn-indicator-info: 53, 106, 212;
+  --zn-indicator-warning: 218, 153, 47;
+  --zn-indicator-error: 198, 57, 76;
+  --zn-indicator-success: 56, 148, 110;
+
+  --zn-chart-color-1: #5C85D6;
+  --zn-chart-color-2: #38946E;
+  --zn-chart-color-3: #7764D8;
+  --zn-chart-color-4: #DA992F;
+  --zn-chart-color-5: #C6394C;
+  --zn-chart-color-6: #3A9EA8;
 
   // !important to beat #{modes.$dark}'s `.zn-primary { ... !important }`.
   .zn-primary {
@@ -763,5 +776,10 @@ html[t="openbyte"] .zn-toast-stack zn-alert, body[t="openbyte"] .zn-toast-stack 
 }
 
 html[t="openbyte"][m="dark"] .zn-toast-stack zn-alert, body[t="openbyte"][m="dark"] .zn-toast-stack zn-alert {
-  --zn-alert-background: #26344F;
+  --zn-alert-background: #34363F;
+  --zn-color-success-fg: #79D2AD;
+  --zn-color-danger-fg: #EA8693;
+  --zn-color-warning-fg: #F1CB7E;
+  --zn-color-info-fg: #92AEE8;
+  --zn-color-ai-fg: #B8ADEB;
 }

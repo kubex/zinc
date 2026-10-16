@@ -34,15 +34,20 @@ describe('openbyte theme tokens', () => {
 
   it('pins --zn-primary in dark mode over the base dark accent', () => {
     setTheme('openbyte', 'dark');
-    expect(token(root, '--zn-primary')).to.equal('8,94,253');
-    expect(token(root, '--zn-color-body')).to.equal('11,18,34');
+    expect(token(root, '--zn-primary')).to.equal('53,106,212');
+    expect(token(root, '--zn-color-body')).to.equal('24,25,30');
   });
 
-  it('applies compact density by default and comfortable on a nested container', async () => {
+  it('applies comfortable density by default and compact on a nested container', async () => {
     setTheme('openbyte');
-    const el = await fixture(html`<div data-density="comfortable"><span></span></div>`);
+    const el = await fixture(html`<div data-density="compact"><span></span></div>`);
+    expect(token(root, '--zn-input-height-medium')).to.equal('36px');
+    expect(token(el.firstElementChild!, '--zn-input-height-medium')).to.equal('28px');
+  });
+
+  it('switches the whole page to compact from the root', () => {
+    setTheme('openbyte', 'light', 'compact');
     expect(token(root, '--zn-input-height-medium')).to.equal('28px');
-    expect(token(el.firstElementChild!, '--zn-input-height-medium')).to.equal('36px');
   });
 
   it('leaves the base theme untouched', () => {

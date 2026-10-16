@@ -241,7 +241,7 @@
     }
 
     &::slotted(a:hover) {
-      color: rgb(var(--zn-primary));
+      color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
     }
 
     &::slotted([data-breadcrumb-separator]) {
@@ -313,7 +313,7 @@
   }
 
   zn-icon:hover {
-    color: rgb(var(--zn-primary));
+    color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
     cursor: pointer;
   }
 }

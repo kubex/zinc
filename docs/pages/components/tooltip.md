@@ -581,7 +581,7 @@ Customize the tooltip appearance with CSS custom properties.
   <zn-tooltip
     content="Error tooltip"
     style="
-      --zn-tooltip-background-color: var(--zn-color-error-600);
+      --zn-tooltip-background-color: var(--zn-color-danger-600);
       --zn-tooltip-color: white;
     ">
     <zn-button color="error">Error Style</zn-button>

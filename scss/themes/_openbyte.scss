@@ -120,6 +120,7 @@ $comfortable: (
   --zn-table-edge-padding: #{$pad};
 
   --zn-navbar-height: #{map.get($d, "control-height") + 4px};
+  --zn-menu-item-min-height: #{map.get($d, "control-height")};
   // Tab label text lines up with the card padding.
   --zn-navbar-inset: #{$pad - 12px};
 }
@@ -416,7 +417,23 @@ html[t="openbyte"], body[t="openbyte"], html.theme-openbyte, body.theme-openbyte
   --zn-tooltip-color: #FFFFFF;
   --zn-tooltip-font-size: 12px;
   --zn-tooltip-font-weight: var(--zn-font-weight-medium);
+  --zn-tooltip-line-height: 17px;
   --zn-tooltip-padding: 6px 10px;
+  --zn-tooltip-shadow: var(--zn-shadow-medium);
+
+  /**************************************************************
+   * Menus
+   *************************************************************/
+
+  --zn-menu-padding: 4px;
+  --zn-menu-border-radius: 8px;
+  --zn-menu-shadow: var(--zn-shadow-large);
+  --zn-menu-item-divider: none;
+  --zn-menu-item-padding: 0 10px;
+  --zn-menu-item-border-radius: 6px;
+  --zn-menu-item-hover-background: var(--zn-color-neutral-50);
+  --zn-menu-item-danger-hover-background: var(--zn-color-danger-bg);
+  --zn-menu-item-danger-hover-color: var(--zn-color-danger-fg);
 
   /**************************************************************
    * Buttons
@@ -625,6 +642,7 @@ html.theme-openbyte.theme-dark, body.theme-openbyte.theme-dark {
 
   --zn-selection-card-checked-color: var(--zn-color-primary-700);
   --zn-panel-footer-background: #18233D;
+  --zn-menu-item-hover-background: var(--zn-color-neutral-200);
   --zn-color-primary-fg: #86AFFE;
 
   --zn-button-subtle-alpha: 0.16;

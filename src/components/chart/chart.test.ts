@@ -116,4 +116,19 @@ describe('<zn-chart>', () => {
     await new Promise((r) => setTimeout(r, 50));
     expect(a.chart?.group).to.equal('g1');
   });
+
+  it('uses the theme palette when no colors are given', async () => {
+    const el: any = await fixture(html`
+      <zn-chart style="--zn-chart-color-1: #010203; --zn-chart-color-2: #040506"
+                categories='["a"]' data='[{"name":"s","data":[1]}]'></zn-chart>`);
+
+    expect(el.getPalette()).to.deep.equal(['#010203', '#040506']);
+  });
+
+  it('prefers explicit colors over the theme palette', async () => {
+    const el: any = await fixture(html`<zn-chart style="--zn-chart-color-1: #010203"></zn-chart>`);
+    el.colors = ['#ffffff'];
+
+    expect(el.buildOption().color).to.deep.equal(['#ffffff']);
+  });
 });

@@ -199,6 +199,16 @@ export default class ZnChart extends ZincElement {
     return `rgba(${rgb}, ${opacity})`;
   }
 
+  // A theme supplies a categorical palette as --zn-chart-color-1..6; without
+  // one, ECharts keeps its own default palette.
+  private getPalette(): string[] | undefined {
+    const cs = getComputedStyle(this);
+    const colors = [1, 2, 3, 4, 5, 6]
+      .map(i => cs.getPropertyValue(`--zn-chart-color-${i}`).trim())
+      .filter(Boolean);
+    return colors.length ? colors : undefined;
+  }
+
   private getBorderColor(): string | undefined {
     const rgb = getComputedStyle(this).getPropertyValue('--zn-border-color').trim();
     return rgb ? `rgb(${rgb})` : undefined;
@@ -214,7 +224,7 @@ export default class ZnChart extends ZincElement {
       stacked: this.stacked,
       enableAnimations: this.enableAnimations,
       datapointSize: this.datapointSize,
-      colors: this.colors,
+      colors: this.colors ?? this.getPalette(),
       theme: this.getTheme(),
       smooth: this.smooth,
       scale: this.scale,

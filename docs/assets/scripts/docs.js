@@ -108,7 +108,7 @@
 
   // Density only applies to themes that define it (openbyte).
   let family = localStorage.getItem('theme-family') || 'base';
-  let density = localStorage.getItem('theme-density') || 'compact';
+  let density = localStorage.getItem('theme-density') || 'comfortable';
 
   function isDark()
   {

@@ -120,14 +120,14 @@ $comfortable: (
 
   --zn-table-row-height: #{map.get($d, "row-height")};
   --zn-table-header-height: #{map.get($d, "row-height") - 4px};
-  --zn-table-cell-padding: 0 #{map.get($d, "cell-padding-x")};
+  // Rows get their height from --zn-table-row-height; the block padding only keeps multi-line cells off the dividers.
+  --zn-table-cell-padding: 4px #{map.get($d, "cell-padding-x")};
   --zn-table-edge-padding: #{$pad};
 
   --zn-navbar-height: #{map.get($d, "control-height") + 4px};
   --zn-menu-item-min-height: #{map.get($d, "control-height")};
   // Tab label text lines up with the card padding.
   --zn-navbar-inset: #{$pad - 12px};
-  --zn-page-padding-inline: #{map.get($d, "page-padding")};
   --zn-page-header-padding-block: #{map.get($d, "page-padding")};
   --zn-page-breadcrumb-gap: #{map.get($d, "head-gap")};
   --zn-page-title-gap: #{map.get($d, "head-inner")};

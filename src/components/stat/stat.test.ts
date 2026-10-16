@@ -36,4 +36,42 @@ describe('<zn-stat>', () => {
 
     expect(el.shadowRoot!.querySelector('a')).to.not.exist;
   });
+
+  it('compares amounts written with separators and symbols', async () => {
+    const el = await fixture<HTMLElement>(html`
+      <zn-stat layout="tile" amount="$2,941" previous="$2,875" show-delta></zn-stat>`);
+    await (el as unknown as {updateComplete: Promise<unknown>}).updateComplete;
+    const delta = el.shadowRoot!.querySelector('.delta')!;
+
+    expect(delta.classList.contains('delta--good')).to.be.true;
+    expect(delta.textContent!.trim()).to.equal('2.3%');
+  });
+
+  it('colours a rise as bad news with invert-delta', async () => {
+    const el = await fixture<HTMLElement>(html`
+      <zn-stat layout="tile" amount="148" previous="140" show-delta invert-delta></zn-stat>`);
+    await (el as unknown as {updateComplete: Promise<unknown>}).updateComplete;
+
+    expect(el.shadowRoot!.querySelector('.delta')!.classList.contains('delta--bad')).to.be.true;
+  });
+
+  it('draws a sparkline from the spark values', async () => {
+    const el = await fixture<HTMLElement>(html`<zn-stat layout="tile" amount="1" spark="1,3,2"></zn-stat>`);
+    await (el as unknown as {updateComplete: Promise<unknown>}).updateComplete;
+
+    expect(el.shadowRoot!.querySelectorAll('.spark path')).to.have.length(2);
+  });
+
+  it('toggles a selectable tile', async () => {
+    const el = await fixture<HTMLElement & {selected: boolean; updateComplete: Promise<unknown>}>(html`
+      <zn-stat layout="tile" selectable caption="Declined" amount="148"></zn-stat>`);
+    await el.updateComplete;
+    const button = el.shadowRoot!.querySelector('button')!;
+
+    expect(button.getAttribute('aria-pressed')).to.equal('false');
+    button.click();
+    await el.updateComplete;
+    expect(el.selected).to.be.true;
+    expect(button.getAttribute('aria-pressed')).to.equal('true');
+  });
 });

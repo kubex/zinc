@@ -131,18 +131,18 @@
   }
 
   code {
-    background-color: #f0f0f0;
+    background-color: var(--zn-code-inline-background, #f0f0f0);
     border-radius: 3px;
     font-size: 85%;
     padding: 2px 4px;
   }
 
   pre {
-    background-color: #23241f;
+    background-color: var(--zn-code-background, #23241f);
     border-radius: 3px;
     margin-block: 5px;
     padding: 5px 10px;
-    color: #f8f8f2;
+    color: var(--zn-code-color, #f8f8f2);
     overflow: auto;
   }
 
@@ -177,7 +177,7 @@ li > ol, li > ul {
 }
 
 li[data-list=checked] > .ql-ui, li[data-list=unchecked] > .ql-ui {
-  color: #777;
+  color: var(--zn-content-block-meta-color, #777);
 }
 
 li {
@@ -208,7 +208,7 @@ li[data-list="unchecked"]::before {
 
 li[data-list="checked"]::before,
 li[data-list="unchecked"]::before {
-  color: #777;
+  color: var(--zn-content-block-meta-color, #777);
 }
 
 ol li::before,

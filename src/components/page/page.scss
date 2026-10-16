@@ -139,10 +139,10 @@
   flex-direction: column;
   position: relative;
   margin: 0;
-  padding: calc(var(--zn-base-px) * 3) var(--zn-base-gap) calc(calc(var(--zn-base-px) * 3) - var(--zn-base-gap)) var(--zn-base-gap);
+  padding: var(--zn-page-header-padding-block, calc(var(--zn-base-px) * 3)) var(--zn-base-gap) calc(var(--zn-page-header-padding-block, calc(var(--zn-base-px) * 3)) - var(--zn-base-gap)) var(--zn-base-gap);
 
   &.header--has-navigation {
-    padding: calc(var(--zn-base-px) * 3) var(--zn-base-gap);
+    padding: var(--zn-page-header-padding-block, calc(var(--zn-base-px) * 3)) var(--zn-base-gap);
   }
 
   .content {
@@ -204,7 +204,7 @@
     text-transform: var(--zn-text-page-title-transform, none);
     letter-spacing: var(--zn-text-page-title-letter-spacing, normal);
     color: rgba(var(--zn-text-panel-title), 100%);
-    line-height: var(--zn-spacing-medium);
+    line-height: var(--zn-page-title-line-height, var(--zn-spacing-medium));
     margin: 0;
     overflow: hidden;
     white-space: nowrap;
@@ -372,15 +372,15 @@
 zn-navbar {
 
   &::part(navbar) {
-    height: 40px;
-    min-height: 40px;
-    max-height: 40px;
+    height: var(--zn-navbar-height, 40px);
+    min-height: var(--zn-navbar-height, 40px);
+    max-height: var(--zn-navbar-height, 40px);
     padding-left: var(--zn-base-gap);
     margin: 0;
   }
 
   &::part(navbar-item) {
-    height: 40px;
+    height: var(--zn-navbar-height, 40px);
     box-sizing: border-box;
     font-size: var(--zn-font-size-medium);
     line-height: 16px;
@@ -392,7 +392,7 @@ zn-navbar {
 }
 
 :host .header {
-  padding-inline: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
+  padding-inline: var(--zn-page-padding-inline, calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0)));
 }
 
 // The gutter shrinks to 0 on narrow containers, which would run the header actions
@@ -403,7 +403,7 @@ zn-navbar {
 
 :host zn-navbar {
   &::part(navbar) {
-    padding-inline: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
+    padding-inline: var(--zn-page-padding-inline, calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0)));
   }
 }
 

@@ -378,7 +378,7 @@ html[t="openbyte"], body[t="openbyte"], html.theme-openbyte, body.theme-openbyte
   --zn-table-row-hover-background: var(--zn-color-neutral-50);
   --zn-table-numeric: tabular-nums;
   --zn-table-page-active-background: var(--zn-color-info-bg);
-  --zn-table-page-active-color: var(--zn-color-info-fg);
+  --zn-table-page-active-color: var(--zn-color-primary-fg, var(--zn-color-info-fg));
 
   /**************************************************************
    * Tabs
@@ -395,7 +395,7 @@ html[t="openbyte"], body[t="openbyte"], html.theme-openbyte, body.theme-openbyte
   --zn-navbar-tab-hover-indicator-color: transparent;
   --zn-navbar-tab-indicator-color: rgb(var(--zn-primary));
   --zn-navbar-tab-indicator-height: 2px;
-  --zn-text-tab-link-active-color: var(--zn-color-info-fg);
+  --zn-text-tab-link-active-color: var(--zn-color-primary-fg, var(--zn-color-info-fg));
 
   /**************************************************************
    * Chips and status
@@ -610,9 +610,9 @@ html.theme-openbyte.theme-dark, body.theme-openbyte.theme-dark {
   // themes/_dark.scss pins --zn-primary to the base dark accent. Fills use the
   // deeper blue: the lighter text blue under white ink is ~3.5:1.
   --zn-primary: 53, 106, 212;
-  --zn-color-info: 53, 106, 212;
+  --zn-color-info: 49, 152, 196;
   --zn-color-success: 56, 148, 110;
-  --zn-color-warning: 218, 153, 47;
+  --zn-color-warning: 244, 167, 52;
   --zn-color-error: 198, 57, 76;
   --zn-color-disabled: 117, 120, 132;
   --zn-color-ai: 119, 100, 216;
@@ -681,10 +681,10 @@ html.theme-openbyte.theme-dark, body.theme-openbyte.theme-dark {
   --zn-color-success-600: #38946E;
   --zn-color-success-700: #79D2AD;
 
-  --zn-color-warning-50: rgba(218, 153, 47, 0.15);
-  --zn-color-warning-400: #DA992F;
-  --zn-color-warning-500: #DA992F;
-  --zn-color-warning-600: #DA992F;
+  --zn-color-warning-50: rgba(244, 167, 52, 0.1);
+  --zn-color-warning-400: #F4A734;
+  --zn-color-warning-500: #F4A734;
+  --zn-color-warning-600: #F4A734;
 
   --zn-color-danger-50: rgba(198, 57, 76, 0.15);
   --zn-color-danger-100: rgba(198, 57, 76, 0.15);
@@ -699,18 +699,18 @@ html.theme-openbyte.theme-dark, body.theme-openbyte.theme-dark {
   --zn-color-success-bg: rgba(56, 148, 110, 0.15);
   --zn-color-success-line: rgba(56, 148, 110, 0.4);
   --zn-color-success-solid: #38946E;
-  --zn-color-warning-fg: #F1CB7E;
-  --zn-color-warning-bg: rgba(218, 153, 47, 0.15);
-  --zn-color-warning-line: rgba(218, 153, 47, 0.4);
-  --zn-color-warning-solid: #DA992F;
+  --zn-color-warning-fg: #FBCE74;
+  --zn-color-warning-bg: rgba(244, 167, 52, 0.1);
+  --zn-color-warning-line: rgba(244, 167, 52, 0.4);
+  --zn-color-warning-solid: #F4A734;
   --zn-color-danger-fg: #EA8693;
   --zn-color-danger-bg: rgba(198, 57, 76, 0.15);
   --zn-color-danger-line: rgba(198, 57, 76, 0.4);
   --zn-color-danger-solid: #C6394C;
-  --zn-color-info-fg: #92AEE8;
-  --zn-color-info-bg: rgba(53, 106, 212, 0.18);
-  --zn-color-info-line: rgba(92, 133, 214, 0.4);
-  --zn-color-info-solid: #356AD4;
+  --zn-color-info-fg: #89CFE6;
+  --zn-color-info-bg: rgba(49, 152, 196, 0.15);
+  --zn-color-info-line: rgba(49, 152, 196, 0.4);
+  --zn-color-info-solid: #3198C4;
   --zn-color-ai-fg: #B8ADEB;
   --zn-color-ai-bg: rgba(119, 100, 216, 0.18);
   --zn-color-ai-line: rgba(119, 100, 216, 0.4);
@@ -757,15 +757,22 @@ html.theme-openbyte.theme-dark, body.theme-openbyte.theme-dark {
   --zn-button-subtle-ink-mix: 50%;
   --zn-button-subtle-ink-mix-color: white;
 
-  --zn-indicator-info: 53, 106, 212;
-  --zn-indicator-warning: 218, 153, 47;
+  // Info is sky in dark mode so it doesn't read as primary; the places that
+  // borrow info for primary pin the primary blue instead.
+  --zn-chip-primary-fg: #92AEE8;
+  --zn-chip-primary-bg: rgba(53, 106, 212, 0.18);
+  --zn-chip-primary-line: rgba(92, 133, 214, 0.4);
+  --zn-table-page-active-background: rgba(53, 106, 212, 0.18);
+
+  --zn-indicator-info: 49, 152, 196;
+  --zn-indicator-warning: 244, 167, 52;
   --zn-indicator-error: 198, 57, 76;
   --zn-indicator-success: 56, 148, 110;
 
   --zn-chart-color-1: #5C85D6;
   --zn-chart-color-2: #38946E;
   --zn-chart-color-3: #7764D8;
-  --zn-chart-color-4: #DA992F;
+  --zn-chart-color-4: #F4A734;
   --zn-chart-color-5: #C6394C;
   --zn-chart-color-6: #3A9EA8;
 
@@ -795,7 +802,7 @@ html[t="openbyte"][m="dark"] .zn-toast-stack zn-alert, body[t="openbyte"][m="dar
   --zn-alert-background: #34363F;
   --zn-color-success-fg: #79D2AD;
   --zn-color-danger-fg: #EA8693;
-  --zn-color-warning-fg: #F1CB7E;
-  --zn-color-info-fg: #92AEE8;
+  --zn-color-warning-fg: #FBCE74;
+  --zn-color-info-fg: #89CFE6;
   --zn-color-ai-fg: #B8ADEB;
 }

@@ -13,6 +13,9 @@
 // would reset `--zn-text` back to the theme default and render dark-on-dark.
 // Never write a bare `[m="..."]` (or `[t="..."]`) rule that sets a token.
 //
+// `data-density` is safe as a descendant selector only because ZincElement does
+// not reflect it; reflecting it would bring the same hazard.
+//
 // `[t="light"]` / `[t="dark"]` / `.theme-light` / `.theme-dark` are kept as
 // legacy aliases, so a standalone consumer that sets only `t` still resolves to a
 // full palette. They carry the same hazard, which is why light mode is expressed

@@ -106,6 +106,10 @@
     return localStorage.getItem('theme') || 'light';
   }
 
+  // Density only applies to themes that define it (openbyte).
+  let family = localStorage.getItem('theme-family') || 'base';
+  let density = localStorage.getItem('theme-density') || 'compact';
+
   function isDark()
   {
     if(theme === 'auto')
@@ -123,9 +127,13 @@
     // Update the UI
     updateSelection();
 
-    // Toggle the dark mode class
-    document.documentElement.setAttribute('t', isDark() ? 'dark' : 'light');
-    window.dispatchEvent(new CustomEvent('theme-change', {detail: {theme}}));
+    const root = document.documentElement;
+    const mode = isDark() ? 'dark' : 'light';
+    const t = family === 'base' ? mode : family;
+    root.setAttribute('t', t);
+    root.setAttribute('m', mode);
+    root.setAttribute('data-density', density);
+    window.dispatchEvent(new CustomEvent('theme-change', {detail: {theme: t, mode}}));
   }
 
   function updateSelection()
@@ -135,7 +143,8 @@
     {
       return;
     }
-    [...menu.querySelectorAll('zn-menu-item')].map(item => (item.checked = item.getAttribute('value') === theme));
+    const selected = [theme, `family:${family}`, `density:${density}`];
+    [...menu.querySelectorAll('zn-menu-item')].map(item => (item.checked = selected.includes(item.getAttribute('value'))));
   }
 
   let theme = getTheme();
@@ -159,7 +168,23 @@
     {
       return;
     }
-    setTheme(event.detail.element.value);
+    const value = event.detail.element.value;
+    if(value.startsWith('family:'))
+    {
+      family = value.slice(7);
+      localStorage.setItem('theme-family', family);
+      setTheme(theme);
+    }
+    else if(value.startsWith('density:'))
+    {
+      density = value.slice(8);
+      localStorage.setItem('theme-density', density);
+      setTheme(theme);
+    }
+    else
+    {
+      setTheme(value);
+    }
   });
 
   // Update the theme when the preference changes

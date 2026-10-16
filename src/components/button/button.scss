@@ -23,6 +23,8 @@
   // component-level override.
   --btn-color: var(--zn-primary);
   --btn-ink: var(--zn-color-on-primary, 255, 255, 255);
+  // The button colour as text on a surface (outline and text buttons).
+  --btn-surface-fg: var(--zn-color-primary-fg, rgb(var(--btn-color)));
   --notification-color: rgb(var(--zn-color-error));
 
   border-width: var(--zn-button-border-width, 1px);
@@ -35,26 +37,31 @@
   position: relative;
 
   &.button--info {
+    --btn-surface-fg: var(--zn-color-info-fg);
     --btn-color: var(--zn-color-info);
     --btn-ink: var(--zn-color-on-info, 255, 255, 255);
   }
 
   &.button--error {
+    --btn-surface-fg: var(--zn-color-danger-fg);
     --btn-color: var(--zn-color-error);
     --btn-ink: var(--zn-color-on-error, 255, 255, 255);
   }
 
   &.button--warning {
+    --btn-surface-fg: var(--zn-color-warning-fg);
     --btn-color: var(--zn-color-warning);
     --btn-ink: var(--zn-color-on-warning, 255, 255, 255);
   }
 
   &.button--success {
+    --btn-surface-fg: var(--zn-color-success-fg);
     --btn-color: var(--zn-color-success);
     --btn-ink: var(--zn-color-on-success, 255, 255, 255);
   }
 
   &.button--ai {
+    --btn-surface-fg: var(--zn-color-ai-fg);
     --btn-color: var(--zn-color-ai);
     --btn-ink: var(--zn-color-on-ai, 255, 255, 255);
   }
@@ -189,13 +196,13 @@
   border-bottom-width: var(--zn-button-border-bottom-width, var(--zn-button-border-width, 1px));
   border-left-width: var(--zn-button-border-left-width, var(--zn-button-border-width, 1px));
   border-color: var(--zn-button-border-color, rgba(var(--btn-color), var(--zn-button-outline-border-alpha, 1)));
-  color: rgb(var(--btn-color));
+  color: var(--btn-surface-fg);
 
   // A theme can swap the solid hover for a tint by lowering the alpha and
   // keeping the ink on the button colour (ink mix 0%).
   &:hover:not([disabled]), &:active:not([disabled]) {
     background-color: rgba(var(--btn-color), var(--zn-button-outline-hover-alpha, 1));
-    color: color-mix(in srgb, rgb(var(--btn-ink)) var(--zn-button-outline-hover-ink-mix, 100%), rgb(var(--btn-color)));
+    color: color-mix(in srgb, rgb(var(--btn-ink)) var(--zn-button-outline-hover-ink-mix, 100%), var(--btn-surface-fg));
   }
 
   &.button--secondary {
@@ -211,7 +218,7 @@
 
 .button--text {
   background: none;
-  color: rgb(var(--btn-color));
+  color: var(--btn-surface-fg);
 
   &:hover:not([disabled]), &:active:not([disabled]) {
     background-color: rgba(var(--btn-color), 0.1);
@@ -285,6 +292,7 @@
 
 .button--star {
   --btn-color: var(--zn-orange);
+  --btn-surface-fg: rgb(var(--btn-color));
   --btn-ink: var(--zn-color-on-warning, 255, 255, 255);
   background-color: rgb(var(--btn-color));
   border-color: var(--zn-button-border-color, rgb(var(--btn-color)));

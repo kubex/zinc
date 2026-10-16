@@ -24,4 +24,21 @@ describe('<zn-chip>', () => {
 
     expect(colour(el)).to.equal(colour(neutral));
   });
+
+  it('applies the ai, solid and dot classes', async () => {
+    const el = await fixture<HTMLElement>(html`<zn-chip type="ai" solid dot>Generated</zn-chip>`);
+    const base = el.shadowRoot!.querySelector('[part="base"]')!;
+
+    expect(base.classList.contains('chip--ai')).to.be.true;
+    expect(base.classList.contains('chip--solid')).to.be.true;
+    expect(base.classList.contains('chip--dot')).to.be.true;
+  });
+
+  it('fills a solid chip with its type colour', async () => {
+    const el = await fixture<HTMLElement>(html`
+      <zn-chip type="custom" solid style="--chip-color-override: rgb(15, 118, 110)">Ticket</zn-chip>`);
+    const base = el.shadowRoot!.querySelector('[part="base"]')!;
+
+    expect(getComputedStyle(base).backgroundColor).to.equal('rgb(15, 118, 110)');
+  });
 });

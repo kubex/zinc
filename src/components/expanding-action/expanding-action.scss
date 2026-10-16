@@ -75,7 +75,7 @@
 .expanding-action--drop .expanding-action__frame {
   @include wc.scrollbars;
 
-  --expanding-action-trigger-width: 36px;
+  --expanding-action-trigger-width: var(--zn-button-height, 36px);
 
   position: relative;
   display: flex;
@@ -128,7 +128,7 @@
     position: absolute;
     inset: 0;
     z-index: -1;
-    height: 41px;
+    height: calc(var(--expanding-action-trigger-width) + 5px);
     background: rgb(var(--zn-panel));
     border: solid 1px rgb(var(--zn-border-color));
     border-bottom-color: rgb(var(--zn-panel));

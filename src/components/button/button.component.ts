@@ -60,11 +60,15 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @query('.button') button: HTMLButtonElement;
   @queryAll('.loading-countdown') countdownContainer: HTMLElement[];
 
-  @property({}) color: 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |
+  /** `ai` is reserved for actions that invoke or act on AI-generated content. */
+  @property({}) color: 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'ai' |
     'transparent' | 'star' | (string & Record<never, never>) = 'default';
+  @property() size: 'small' | 'medium' | 'large' = 'medium';
   @property({attribute: 'hover-color'}) hoverColor: string;
   @property({type: Boolean}) text = false;
   @property({type: Boolean}) outline = false;
+  /** A tinted fill in the button's colour, for secondary actions beside a primary one. */
+  @property({type: Boolean}) subtle = false;
   @property({type: Boolean}) disabled = false;
   @property({type: Boolean}) grow = false;
   @property({type: Boolean}) square = false;
@@ -305,6 +309,8 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         return 'rgb(var(--zn-color-success))';
       case 'warning':
         return 'rgb(var(--zn-color-warning))';
+      case 'ai':
+        return 'var(--zn-color-ai-fg)';
       case 'transparent':
         return 'inherit';
       case 'star':
@@ -417,6 +423,10 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--info': this.color === 'info',
           'button--success': this.color === 'success',
           'button--warning': this.color === 'warning',
+          'button--ai': this.color === 'ai',
+          'button--small': this.size === 'small',
+          'button--large': this.size === 'large',
+          'button--subtle': this.subtle && !this.outline && !this.text,
           'button--transparent': this.color === 'transparent',
           'button--star': this.color === 'star',
           'button--outline': this.outline,
@@ -428,7 +438,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--icon-button-small': this.iconButton === 'small',
           'button--icon-button-round': this.iconButton === 'round',
           'button--grow': this.grow,
-          'button--standard': !this.outline && !this.text,
+          'button--standard': !this.outline && !this.text && !this.subtle,
           'button--with-icon': this.icon,
           'button--icon-left': this.iconPosition === 'left',
           'button--icon-right': this.iconPosition === 'right',

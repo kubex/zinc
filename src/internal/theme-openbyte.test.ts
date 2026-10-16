@@ -58,6 +58,15 @@ describe('openbyte theme tokens', () => {
     expect(getComputedStyle(cell).paddingTop).to.equal('4px');
   });
 
+  it('sets a table cell meta line below its main text in muted small type', async () => {
+    setTheme('openbyte');
+    const table = await fixture(html`<table><tbody><tr><td><a href="#">Name</a><span class="zn-table-meta">Meta</span></td></tr></tbody></table>`);
+    const meta = getComputedStyle(table.querySelector('.zn-table-meta')!);
+    expect(meta.display).to.equal('block');
+    expect(meta.fontSize).to.equal('12px');
+    expect(meta.color).to.equal('rgb(80, 97, 122)');
+  });
+
   it('leaves the base theme untouched', () => {
     setTheme('light');
     expect(token(root, '--zn-color-primary')).to.equal('105,54,245');

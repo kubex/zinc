@@ -55,6 +55,14 @@ table:not(.remarkd-table) {
     white-space: normal;
   }
 
+  // A secondary line under the cell's main text.
+  .zn-table-meta {
+    display: block;
+    margin-top: 2px;
+    font-size: var(--zn-table-meta-font-size, var(--zn-font-size-x-small));
+    color: var(--zn-table-meta-color, var(--zn-text-color-muted));
+  }
+
   th {
     @include m.text-style(button-label);
     font-size: var(--zn-table-header-font-size, var(--zn-text-button-label-font-size));
@@ -63,6 +71,11 @@ table:not(.remarkd-table) {
     text-transform: var(--zn-table-header-transform, capitalize);
     border-bottom: 1px solid rgb(var(--zn-border-color));
   }
+}
+
+// Lets a wide table scroll inside its container instead of widening the page.
+.zn-table-scroll {
+  overflow-x: auto;
 }
 
 .zn-table-fixed {

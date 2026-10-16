@@ -5,11 +5,11 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  border-radius: 10px;
+  border-radius: var(--zn-alert-border-radius, 10px);
 }
 
 :host {
-  background-color: rgba(var(--zn-panel), 0.8);
+  background-color: var(--zn-alert-background, rgba(var(--zn-panel), 0.8));
 }
 
 :host([appearance="solid"]) {
@@ -56,6 +56,7 @@ p {
   align-self: start;
   text-align: left;
   padding: 8px;
+  color: var(--zn-alert-body-color, inherit);
 
   > h6 {
     font-size: inherit;
@@ -81,78 +82,41 @@ p {
   background: rgba(var(--zn-panel), .05);
 }
 
-:host([level="primary"]) .wrapper {
-  h6 {
-    color: rgb(var(--zn-primary));
-  }
+// Each level paints from one RGB triplet: the title and border in the colour,
+// the wrapper a light tint of it. A theme can soften the border and deepen the
+// tint through the alpha tokens, or give titles a neutral colour.
+@each $level, $rgb, $role in (
+  (primary, var(--zn-primary), primary),
+  (error, var(--zn-color-error), danger),
+  (info, var(--zn-color-info), info),
+  (warning, var(--zn-color-warning), warning),
+  (success, var(--zn-color-success), success),
+  (ai, var(--zn-color-ai), ai)
+) {
+  :host([level="#{$level}"]) .wrapper {
+    h6 {
+      color: var(--zn-alert-title-color, rgb(#{$rgb}));
+    }
 
-  border-color: rgb(var(--zn-primary)) !important;
-  background: rgba(var(--zn-primary), .05);
+    border-color: rgba(#{$rgb}, var(--zn-alert-border-alpha, 1)) !important;
+    background: rgba(#{$rgb}, var(--zn-alert-tint-alpha, .05));
 
-  zn-icon {
-    --icon-color: rgb(var(--zn-primary));
-  }
-}
-
-:host([level="error"]) .wrapper {
-  h6 {
-    color: rgb(var(--zn-color-error));
-  }
-
-  border-color: rgb(var(--zn-color-error)) !important;
-  background: rgba(var(--zn-color-error), .05);
-
-  zn-icon {
-    --icon-color: rgb(var(--zn-color-error));
-  }
-}
-
-:host([level="info"]) .wrapper {
-  h6 {
-    color: rgb(var(--zn-color-info));
-  }
-
-  border-color: rgb(var(--zn-color-info)) !important;
-  background: rgba(var(--zn-color-info), .05);
-
-  zn-icon {
-    --icon-color: rgb(var(--zn-color-info));
+    zn-icon {
+      @if $role == primary {
+        --icon-color: rgb(#{$rgb});
+      } @else {
+        --icon-color: var(--zn-color-#{$role}-fg);
+      }
+    }
   }
 }
-
-:host([level="warning"]) .wrapper {
-  h6 {
-    color: rgb(var(--zn-color-warning));
-  }
-
-  border-color: rgb(var(--zn-color-warning)) !important;
-  background: rgba(var(--zn-color-warning), .05);
-
-  zn-icon {
-    --icon-color: rgb(var(--zn-color-warning));
-  }
-}
-
-:host([level="success"]) .wrapper {
-  h6 {
-    color: rgb(var(--zn-color-success));
-  }
-
-  border-color: rgb(var(--zn-color-success)) !important;
-  background: rgba(var(--zn-color-success), .05);
-
-  zn-icon {
-    --icon-color: rgb(var(--zn-color-success));
-  }
-}
-
 
 :host([level="note"]) .wrapper {
   h6 {
-    color: var(--zn-color-gray-800);
+    color: var(--zn-alert-title-color, var(--zn-color-gray-800));
   }
 
-  border-color: var(--zn-color-gray-500) !important;
+  border-color: var(--zn-alert-note-border-color, var(--zn-color-gray-500)) !important;
   background: var(--zn-color-gray-100);
 
   zn-icon {

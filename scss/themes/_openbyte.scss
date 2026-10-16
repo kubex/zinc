@@ -436,6 +436,27 @@ html[t="openbyte"], body[t="openbyte"], html.theme-openbyte, body.theme-openbyte
   --zn-menu-item-danger-hover-color: var(--zn-color-danger-fg);
 
   /**************************************************************
+   * Feedback
+   *************************************************************/
+
+  --zn-alert-border-radius: 8px;
+  --zn-alert-background: rgb(var(--zn-color-panel));
+  --zn-alert-border-alpha: 0.35;
+  --zn-alert-tint-alpha: 0.1;
+  --zn-alert-title-color: rgb(var(--zn-color-text));
+  --zn-alert-body-color: rgb(var(--zn-color-muted-text));
+  --zn-alert-note-border-color: var(--zn-color-neutral-200);
+
+  --zn-progress-track-color: var(--zn-color-neutral-100);
+  --zn-skeleton-border-radius: 6px;
+  --zn-skeleton-background: var(--zn-color-neutral-100);
+  --zn-skeleton-shimmer: var(--zn-color-neutral-50);
+
+  --zn-empty-state-caption-font-family: var(--zn-font-heading);
+  --zn-empty-state-caption-font-weight: var(--zn-font-weight-bold);
+  --zn-empty-state-description-color: rgb(var(--zn-color-muted-text));
+
+  /**************************************************************
    * Buttons
    *************************************************************/
 
@@ -643,6 +664,8 @@ html.theme-openbyte.theme-dark, body.theme-openbyte.theme-dark {
   --zn-selection-card-checked-color: var(--zn-color-primary-700);
   --zn-panel-footer-background: #18233D;
   --zn-menu-item-hover-background: var(--zn-color-neutral-200);
+  --zn-alert-tint-alpha: 0.15;
+  --zn-skeleton-shimmer: rgba(255, 255, 255, 0.06);
   --zn-color-primary-fg: #86AFFE;
 
   --zn-button-subtle-alpha: 0.16;
@@ -654,4 +677,24 @@ html.theme-openbyte.theme-dark, body.theme-openbyte.theme-dark {
   .zn-primary {
     color: rgb(var(--zn-color-primary)) !important;
   }
+}
+
+// Toasts are always drawn on the inverse (navy) surface, with the status
+// colours switched to their on-dark tones.
+html[t="openbyte"] .zn-toast-stack zn-alert, body[t="openbyte"] .zn-toast-stack zn-alert {
+  --zn-alert-background: #0D1738;
+  --zn-alert-tint-alpha: 0;
+  --zn-alert-border-alpha: 0;
+  --zn-alert-title-color: #FFFFFF;
+  --zn-alert-body-color: rgba(255, 255, 255, 0.72);
+  --zn-color-success-fg: #3DDC97;
+  --zn-color-danger-fg: #FF7A90;
+  --zn-color-warning-fg: #FFC857;
+  --zn-color-info-fg: #86AFFE;
+  --zn-color-ai-fg: #B4A3FF;
+  color: #FFFFFF;
+}
+
+html[t="openbyte"][m="dark"] .zn-toast-stack zn-alert, body[t="openbyte"][m="dark"] .zn-toast-stack zn-alert {
+  --zn-alert-background: #26344F;
 }

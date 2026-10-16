@@ -15,7 +15,7 @@ import styles from './skeleton.scss';
  * @property {string} speed - Animation speed for the shimmer effect. Default: "3s"
  * @property {string} width - Width of the skeleton element. Default: "100%"
  * @property {string} height - Height of the skeleton element. Default: "20px"
- * @property {string} radius - Border radius of the skeleton element. Default: "4px"
+ * @property {string} radius - Border radius of the skeleton element. Defaults to the theme's `--zn-skeleton-border-radius` (4px).
  */
 export default class ZnSkeleton extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -23,7 +23,7 @@ export default class ZnSkeleton extends ZincElement {
   @property({attribute: 'speed', type: String}) speed = '3s';
   @property({attribute: 'width', type: String}) width = '100%';
   @property({attribute: 'height', type: String}) height = '20px';
-  @property({attribute: 'radius', type: String}) radius = '4px';
+  @property({attribute: 'radius', type: String}) radius = '';
 
   protected render(): unknown {
     return html`
@@ -32,7 +32,7 @@ export default class ZnSkeleton extends ZincElement {
              '--skeleton-speed': `${this.speed}`,
              '--skeleton-width': `${this.width}`,
              '--skeleton-height': `${this.height}`,
-             '--skeleton-border-radius': `${this.radius}`,
+             ...(this.radius ? {'--skeleton-border-radius': this.radius} : {}),
            })}
       ></div>`;
   }

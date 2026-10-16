@@ -21,7 +21,8 @@
   }
 
   .caption {
-    font-weight: var(--zn-font-weight-semibold);
+    font-family: var(--zn-empty-state-caption-font-family, inherit);
+    font-weight: var(--zn-empty-state-caption-font-weight, var(--zn-font-weight-semibold));
     font-size: var(--zn-font-size-large);
     line-height: var(--zn-line-height-dense);
     color: rgb(var(--zn-text-heading));
@@ -31,7 +32,7 @@
   .description {
     font-size: var(--zn-font-size-small);
     line-height: var(--zn-line-height-normal);
-    color: rgb(var(--zn-text));
+    color: var(--zn-empty-state-description-color, rgb(var(--zn-text)));
     text-align: center;
   }
 

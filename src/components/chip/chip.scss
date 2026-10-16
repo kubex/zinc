@@ -6,21 +6,33 @@
 }
 
 .chip {
+  // fg = text/icon, bg = tint, line = hairline (drawn only when a theme sets
+  // --zn-chip-border-width), solid = the `solid` fill and the `dot`.
+  --chip-fg: rgb(var(--zn-text));
+  --chip-bg: rgba(var(--zn-border-color), .10);
+  --chip-line: rgba(var(--zn-border-color), .50);
+  --chip-solid: rgb(var(--zn-color-muted-text));
+  --chip-ink: 255, 255, 255;
+
   display: inline-flex;
   font-size: var(--zn-text-chip-font-size);
   font-family: var(--zn-font-family-sans);
   font-weight: var(--zn-text-chip-font-weight);
-  border-radius: var(--zn-border-radius-x-large);
-  padding-inline: var(--zn-spacing-x-small);
+  border-radius: var(--zn-chip-border-radius, var(--zn-border-radius-x-large));
+  padding-inline: var(--zn-chip-padding-inline, var(--zn-spacing-x-small));
   padding-block: 0;
-  height: var(--zn-spacing-medium);
+  height: var(--zn-chip-height, var(--zn-spacing-medium));
+  color: var(--chip-fg);
+  background: var(--chip-bg);
+  // Inset, so the hairline never changes the chip's size.
+  box-shadow: inset 0 0 0 var(--zn-chip-border-width, 0px) var(--chip-line);
   text-align: center;
-  gap: var(--zn-spacing-x-small);
+  gap: var(--zn-chip-gap, var(--zn-spacing-x-small));
   width: fit-content;
   justify-content: center;
   align-items: center;
   line-height: var(--zn-text-chip-line-height);
-  letter-spacing: var(--zn-letter-spacing-loose);
+  letter-spacing: var(--zn-chip-letter-spacing, var(--zn-letter-spacing-loose));
   white-space: nowrap;
 
   &--flush {
@@ -39,43 +51,66 @@
 }
 
 .chip--primary {
-  color: rgba(var(--zn-primary), 0.9);
-  background: rgba(var(--zn-primary), .10);
+  --chip-fg: var(--zn-chip-primary-fg, rgba(var(--zn-primary), 0.9));
+  --chip-bg: var(--zn-chip-primary-bg, rgba(var(--zn-primary), .10));
+  --chip-line: var(--zn-chip-primary-line, rgba(var(--zn-primary), .30));
+  --chip-solid: rgb(var(--zn-primary));
 }
 
-.chip--error {
-  color: rgb(var(--zn-color-error));
-  background: rgba(var(--zn-color-error), .10);
-}
-
-.chip--info {
-  color: rgb(var(--zn-color-info));
-  background: rgba(var(--zn-color-info), .10);
+@each $type, $role in (error: danger, info: info, warning: warning, success: success, ai: ai) {
+  .chip--#{$type} {
+    --chip-fg: var(--zn-color-#{$role}-fg);
+    --chip-bg: var(--zn-color-#{$role}-bg);
+    --chip-line: var(--zn-color-#{$role}-line);
+    --chip-solid: var(--zn-color-#{$role}-solid);
+  }
 }
 
 .chip--warning {
-  color: rgb(var(--zn-color-warning));
-  background: rgba(var(--zn-color-warning), .10);
+  --chip-ink: var(--zn-color-on-warning, 255, 255, 255);
 }
 
-.chip--success {
-  color: rgb(var(--zn-color-success));
-  background: rgba(var(--zn-color-success), .10);
+.chip--ai {
+  --chip-ink: var(--zn-color-on-ai, 255, 255, 255);
 }
 
 .chip--neutral {
-  color: rgb(var(--zn-text));
-  background: rgba(var(--zn-border-color), .10);
+  --chip-fg: var(--zn-chip-neutral-fg, rgb(var(--zn-text)));
+  --chip-bg: var(--zn-chip-neutral-bg, rgba(var(--zn-border-color), .10));
+  --chip-line: var(--zn-chip-neutral-line, rgba(var(--zn-border-color), .50));
+  --chip-solid: var(--zn-color-neutral-solid);
 }
 
 .chip--transparent {
-  color: rgb(var(--zn-text));
-  background: transparent;
+  --chip-fg: rgb(var(--zn-text));
+  --chip-bg: transparent;
+  --chip-line: transparent;
 }
 
 .chip--custom {
-  color: var(--chip-color-override, rgb(var(--zn-text)));
-  background-color: hsl(from var(--chip-color-override, inherit) h s l / 0.1);
+  --chip-fg: var(--chip-color-override, rgb(var(--zn-text)));
+  --chip-bg: hsl(from var(--chip-color-override, inherit) h s l / 0.1);
+  --chip-line: hsl(from var(--chip-color-override, inherit) h s l / 0.3);
+  --chip-solid: var(--chip-color-override, rgb(var(--zn-text)));
+}
+
+.chip--solid {
+  color: rgb(var(--chip-ink));
+  background: var(--chip-solid);
+  box-shadow: none;
+}
+
+.chip--dot::before {
+  content: "";
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--chip-solid);
+}
+
+.chip--solid.chip--dot::before {
+  background: currentColor;
 }
 
 .chip__value {

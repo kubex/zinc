@@ -29,7 +29,7 @@ A basic chip displays text content with default neutral styling.
 
 ### Types
 
-Use the `type` attribute to change the semantic color and styling of the chip. Available types are: `neutral` (default), `primary`, `info`, `success`, `warning`, `error`, `transparent`, and `custom`.
+Use the `type` attribute to change the semantic color and styling of the chip. Available types are: `neutral` (default), `primary`, `info`, `success`, `warning`, `error`, `ai`, `transparent`, and `custom`. Reserve `ai` for AI-generated content.
 
 ```html:preview
 <zn-chip type="neutral">Neutral</zn-chip>
@@ -38,7 +38,19 @@ Use the `type` attribute to change the semantic color and styling of the chip. A
 <zn-chip type="success">Success</zn-chip>
 <zn-chip type="warning">Warning</zn-chip>
 <zn-chip type="error">Error</zn-chip>
+<zn-chip type="ai">AI</zn-chip>
 <zn-chip type="transparent">Transparent</zn-chip>
+```
+
+### Dot and Solid
+
+Use `dot` to lead the label with a dot in the type colour, and `solid` to fill the chip with it.
+
+```html:preview
+<zn-chip type="success" dot>Paid</zn-chip>
+<zn-chip type="warning" dot>Pending</zn-chip>
+<zn-chip type="warning" solid>Overdue</zn-chip>
+<zn-chip type="error" solid>Failed</zn-chip>
 ```
 
 ### With Icons

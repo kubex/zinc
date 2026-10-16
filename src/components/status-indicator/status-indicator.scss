@@ -1,65 +1,66 @@
 @use "../../wc";
 
 :host {
-  --zn-indicator-info: 100, 117, 242;
-  --zn-indicator-warning: 255, 136, 0;
-  --zn-indicator-error: 237, 84, 109;
-  --zn-indicator-success: 43, 192, 145;
-  --zn-indicator-disabled: 220, 220, 220;
+  // Read through fallbacks so a theme can set --zn-indicator-* on the root.
+  --indicator-info: var(--zn-indicator-info, 100, 117, 242);
+  --indicator-warning: var(--zn-indicator-warning, 255, 136, 0);
+  --indicator-error: var(--zn-indicator-error, 237, 84, 109);
+  --indicator-success: var(--zn-indicator-success, 43, 192, 145);
+  --indicator-disabled: var(--zn-indicator-disabled, 220, 220, 220);
 
-  --indicator-color: var(--zn-indicator-disabled);
-  --indicator-alt-color: var(--zn-indicator-disabled);
+  --indicator-color: var(--indicator-disabled);
+  --indicator-alt-color: var(--indicator-disabled);
   white-space: nowrap;
   display: inline-block;
 }
 
 .indicator {
   display: inline-block;
-  background-color: rgba(var(--indicator-color), 0.7);
+  background-color: rgba(var(--indicator-color), var(--zn-status-indicator-fill-alpha, 0.7));
   border: 1px solid rgb(var(--indicator-color));
-  width: 10px;
-  height: 10px;
+  width: var(--zn-status-indicator-size, 10px);
+  height: var(--zn-status-indicator-size, 10px);
   border-radius: 50%;
 
   &--info {
-    --indicator-color: var(--zn-indicator-info);
+    --indicator-color: var(--indicator-info);
   }
 
   &--error {
-    --indicator-color: var(--zn-indicator-error);
+    --indicator-color: var(--indicator-error);
   }
 
   &--warning {
-    --indicator-color: var(--zn-indicator-warning);
+    --indicator-color: var(--indicator-warning);
   }
 
   &--success {
-    --indicator-color: var(--zn-indicator-success);
+    --indicator-color: var(--indicator-success);
   }
 
   &--disabled {
-    --indicator-color: var(--zn-indicator-disabled);
+    --indicator-color: var(--indicator-disabled);
   }
 
   // Alternate (secondary) colour, used by the alternating animation.
   &--alt-info {
-    --indicator-alt-color: var(--zn-indicator-info);
+    --indicator-alt-color: var(--indicator-info);
   }
 
   &--alt-error {
-    --indicator-alt-color: var(--zn-indicator-error);
+    --indicator-alt-color: var(--indicator-error);
   }
 
   &--alt-warning {
-    --indicator-alt-color: var(--zn-indicator-warning);
+    --indicator-alt-color: var(--indicator-warning);
   }
 
   &--alt-success {
-    --indicator-alt-color: var(--zn-indicator-success);
+    --indicator-alt-color: var(--indicator-success);
   }
 
   &--alt-disabled {
-    --indicator-alt-color: var(--zn-indicator-disabled);
+    --indicator-alt-color: var(--indicator-disabled);
   }
 
   &--glow {

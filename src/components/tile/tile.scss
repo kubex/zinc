@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 48px;
+  min-height: var(--zn-tile-min-height, 48px);
   column-gap: var(--zn-spacing-large);
 
   font-size: var(--zn-text-table-content-font-size);
@@ -22,11 +22,11 @@
   &--has-description,
   &--has-properties,
   &--has-actions {
-    padding-inline: var(--zn-base-gap);
+    padding-inline: var(--zn-tile-padding-inline, var(--zn-base-gap));
   }
 
   &--has-description#{&}--has-caption {
-    padding-block: var(--zn-base-gap);
+    padding-block: var(--zn-tile-padding-block, var(--zn-base-gap));
   }
 
   &--has-image {
@@ -37,7 +37,7 @@
     cursor: pointer;
 
     &:hover {
-      background-color: var(--zn-color-neutral-100);
+      background-color: var(--zn-tile-hover-background, var(--zn-color-neutral-100));
     }
   }
 
@@ -179,7 +179,7 @@ slot.tile__description {
   grid-template-columns: subgrid;
   align-items: center;
   justify-items: end;
-  min-height: 48px;
+  min-height: var(--zn-tile-min-height, 48px);
 }
 
 :host([grouped]) .tile__link,

@@ -1,4 +1,5 @@
 @use "sass:map";
+@use "sass:math";
 
 // OpenByte — blue brand on blue-tinted neutrals, Plus Jakarta Sans headings and
 // compact density. The light block is mode-agnostic, so every colour it sets must
@@ -104,6 +105,14 @@ $comfortable: (
   --zn-button-height-large: #{map.get($d, "control-height-lg")};
   --zn-button-icon-width: #{map.get($d, "control-height")};
   --zn-button-pill-height: #{map.get($d, "control-height-sm")};
+
+  $pad: map.get($d, "card-padding");
+  --zn-panel-padding: #{$pad};
+  --zn-panel-header-padding: #{math.round($pad * 0.6)} #{$pad};
+  --zn-panel-footer-padding: #{math.round($pad * 0.8)} #{$pad};
+  --zn-tile-min-height: #{map.get($d, "row-height") + 8px};
+  --zn-tile-padding-inline: #{$pad};
+  --zn-tile-padding-block: #{math.round($pad * 0.6)};
 }
 
 html[t="openbyte"], body[t="openbyte"], html.theme-openbyte, body.theme-openbyte {
@@ -335,6 +344,14 @@ html[t="openbyte"], body[t="openbyte"], html.theme-openbyte, body.theme-openbyte
   --zn-toggle-knob-shadow: var(--zn-shadow-small);
 
   --zn-panel-border-color: #D6E0EB;
+  --zn-panel-shadow: var(--zn-shadow-x-small);
+  --zn-panel-shadow-raised: var(--zn-shadow-large);
+  --zn-panel-header-divider-color: var(--zn-color-neutral-100);
+  --zn-panel-footer-divider: 1px solid var(--zn-color-neutral-100);
+  --zn-tile-hover-background: var(--zn-color-neutral-50);
+  --zn-stat-numeric: tabular-nums;
+  --zn-well-border-radius: 8px;
+  --zn-well-background: var(--zn-color-neutral-50);
 
   /**************************************************************
    * Chips and status
@@ -572,6 +589,7 @@ html.theme-openbyte.theme-dark, body.theme-openbyte.theme-dark {
   --zn-tooltip-color: #FFFFFF;
 
   --zn-selection-card-checked-color: var(--zn-color-primary-700);
+  --zn-panel-footer-background: #18233D;
   --zn-color-primary-fg: #86AFFE;
 
   --zn-button-subtle-alpha: 0.16;

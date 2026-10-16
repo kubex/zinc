@@ -44,6 +44,8 @@
     font-weight: var(--zn-text-chart-major-font-weight);
     font-size: var(--zn-text-chart-major-font-size);
     line-height: var(--zn-text-chart-major-line-height);
+    letter-spacing: var(--zn-text-chart-major-letter-spacing, normal);
+    font-variant-numeric: var(--zn-stat-numeric, normal);
     display: flex;
     flex-grow: 1;
     align-items: center;
@@ -62,15 +64,15 @@
 
   .diff {
     .positive {
-      color: rgb(var(--zn-color-success));
+      color: var(--zn-color-success-fg);
     }
 
     .negative {
-      color: rgb(var(--zn-color-error));
+      color: var(--zn-color-danger-fg);
     }
 
     .neutral {
-      color: rgb(var(--zn-color-warning));
+      color: var(--zn-color-warning-fg);
     }
   }
 

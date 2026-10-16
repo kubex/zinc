@@ -8,7 +8,7 @@
 
   ul.navbar {
     padding: 0;
-    margin-inline: var(--zn-spacing-small);
+    margin-inline: var(--zn-navbar-inset, var(--zn-spacing-small));
 
     &--color-body {
       background-color: rgb(var(--zn-color-body));
@@ -244,7 +244,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 
 :host(:not([stacked]):not([icon-bar])) {
   ul.navbar {
-    height: 40px;
+    height: var(--zn-navbar-height, 40px);
     align-self: end;
   }
 }
@@ -271,16 +271,16 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 :host(:not([stacked])) {
   ul.navbar {
     > li {
-      border-right-width: 1px;
-      border-top-width: 1px;
+      border-right-width: var(--zn-navbar-tab-border-width, 1px);
+      border-top-width: var(--zn-navbar-tab-border-width, 1px);
 
       &:first-of-type {
-        border-left-width: 1px;
-        border-top-left-radius: 6px;
+        border-left-width: var(--zn-navbar-tab-border-width, 1px);
+        border-top-left-radius: var(--zn-navbar-tab-radius, 6px);
       }
 
       &:last-of-type {
-        border-top-right-radius: 6px;
+        border-top-right-radius: var(--zn-navbar-tab-radius, 6px);
       }
 
       &.active, &.zn-tb-active {
@@ -289,16 +289,16 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
     }
 
     &:not(.has-hidden) > li.last-visible {
-      border-top-right-radius: 6px;
+      border-top-right-radius: var(--zn-navbar-tab-radius, 6px);
     }
 
     &.has-hidden > li.more {
-      border-top-right-radius: 6px;
+      border-top-right-radius: var(--zn-navbar-tab-radius, 6px);
     }
 
     &.more-only > li.more {
-      border-left-width: 1px;
-      border-top-left-radius: 6px;
+      border-left-width: var(--zn-navbar-tab-border-width, 1px);
+      border-top-left-radius: var(--zn-navbar-tab-radius, 6px);
     }
   }
 }
@@ -351,22 +351,26 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 
       user-select: none;
       font-weight: var(--zn-text-tab-link-font-weight);
-      padding: 0 calc(var(--zn-base-px, 8px) * 2);
-      background: rgb(var(--zn-color-tab));
+      padding: 0 var(--zn-navbar-tab-padding-inline, calc(var(--zn-base-px, 8px) * 2));
+      background: var(--zn-navbar-tab-background, rgb(var(--zn-color-tab)));
       transition: background-color 100ms ease-in-out;
       position: relative;
 
       &:hover {
-        background: rgba(var(--zn-color-tab), 0.5);
+        background: var(--zn-navbar-tab-hover-background, rgba(var(--zn-color-tab), 0.5));
 
         &::after {
           content: "";
           position: absolute;
           inset: 0;
           border-radius: inherit;
-          background: rgb(var(--navbar-active-colour));
+          background: var(--zn-navbar-tab-hover-backdrop, rgb(var(--navbar-active-colour)));
           z-index: -1;
         }
+      }
+
+      &:hover:not(.active):not(.zn-tb-active) {
+        color: var(--zn-navbar-tab-hover-color, var(--zn-text-tab-link-color));
       }
 
       display: flex;
@@ -394,15 +398,17 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
         }
       }
 
+      // Joins the tab to the content below it; a theme can turn it into an
+      // underline indicator via the indicator tokens.
       &::before {
         content: '';
         left: 50%;
         right: 50%;
         bottom: -1px;
         position: absolute;
-        background-color: rgb(var(--navbar-active-colour));
+        background-color: var(--zn-navbar-tab-hover-indicator-color, rgb(var(--navbar-active-colour)));
         transition: all 300ms ease-in-out;
-        height: 1px;
+        height: var(--zn-navbar-tab-indicator-height, 1px);
       }
 
       &:hover:before:not(#dropdown-item) {
@@ -412,7 +418,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       }
 
       &.active, &.zn-tb-active {
-        background: rgb(var(--navbar-active-colour));
+        background: var(--zn-navbar-tab-active-background, rgb(var(--navbar-active-colour)));
         font-size: var(--zn-text-tab-link-active-font-size);
         line-height: var(--zn-text-tab-link-active-line-height);
         font-weight: var(--zn-text-tab-link-active-font-weight);
@@ -422,6 +428,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       &.active::before, &.zn-tb-active::before {
         left: 0;
         right: 0;
+        background-color: var(--zn-navbar-tab-indicator-color, rgb(var(--navbar-active-colour)));
       }
     }
 

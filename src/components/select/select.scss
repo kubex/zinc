@@ -177,6 +177,17 @@
 .select--standard .select__combobox {
   background-color: var(--zn-input-background-color);
   border: solid var(--zn-input-border-width) var(--zn-input-border-color);
+  box-shadow: var(--zn-input-shadow, none);
+}
+
+/* Invalid, once the user has interacted */
+:host([data-user-invalid]) .select--standard:not(.select--disabled) .select__combobox {
+  border-color: var(--zn-input-border-color-invalid);
+}
+
+:host([data-user-invalid]) .select--standard:not(.select--disabled).select--focused .select__combobox,
+:host([data-user-invalid]) .select--standard:not(.select--disabled).select--open .select__combobox {
+  box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color-invalid);
 }
 
 .select--standard.select--disabled .select__combobox {
@@ -206,7 +217,7 @@
   font-size: var(--zn-input-font-size-small);
   min-height: var(--zn-input-height-small);
   padding-block: 0;
-  padding-inline: var(--zn-spacing-small);
+  padding-inline: var(--zn-input-padding-inline, var(--zn-spacing-small));
 }
 
 .select--small .select__clear {
@@ -231,7 +242,7 @@
   font-size: var(--zn-input-font-size-medium);
   min-height: var(--zn-input-height-medium);
   padding-block: 0;
-  padding-inline: var(--zn-spacing-small);
+  padding-inline: var(--zn-input-padding-inline, var(--zn-spacing-small));
 }
 
 .select--has-input-prefix.select--medium .select__combobox {
@@ -260,7 +271,7 @@
   font-size: var(--zn-input-font-size-large);
   min-height: var(--zn-input-height-large);
   padding-block: 0;
-  padding-inline: var(--zn-spacing-small);
+  padding-inline: var(--zn-input-padding-inline, var(--zn-spacing-small));
 }
 
 .select--has-input-prefix.select--large .select__combobox {

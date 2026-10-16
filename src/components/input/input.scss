@@ -26,6 +26,7 @@
 .input--standard {
   background-color: var(--zn-input-background-color);
   border: solid var(--zn-input-border-width) var(--zn-input-border-color);
+  box-shadow: var(--zn-input-shadow, none);
 }
 
 .input--standard:hover:not(.input--disabled, .input--filled) {
@@ -53,6 +54,15 @@
 
 .input--standard.input--focused:not(.input--disabled) .input__control {
   color: var(--zn-input-color-focus);
+}
+
+/* Invalid, once the user has interacted */
+:host([data-user-invalid]) .input--standard:not(.input--disabled) {
+  border-color: var(--zn-input-border-color-invalid);
+}
+
+:host([data-user-invalid]) .input--standard.input--focused:not(.input--disabled) {
+  box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color-invalid);
 }
 
 .input--standard.input--disabled {
@@ -170,7 +180,7 @@ input[type='text'].input__control[data-color-input] {
 
 .input--x-small .input__control {
   height: calc(var(--zn-input-height-x-small) - var(--zn-input-border-width) * 2);
-  padding: 0 var(--zn-input-spacing-small) 0 var(--zn-spacing-small);
+  padding: 0 var(--zn-input-spacing-small) 0 var(--zn-input-padding-inline, var(--zn-spacing-small));
 }
 
 .input--x-small .input__clear,
@@ -204,7 +214,7 @@ input[type='text'].input__control[data-color-input] {
 
 .input--small .input__control {
   height: calc(var(--zn-input-height-small) - var(--zn-input-border-width) * 2);
-  padding: 0 var(--zn-input-spacing-small) 0 var(--zn-spacing-small);
+  padding: 0 var(--zn-input-spacing-small) 0 var(--zn-input-padding-inline, var(--zn-spacing-small));
 }
 
 .input--small .input__clear,
@@ -238,7 +248,7 @@ input[type='text'].input__control[data-color-input] {
 
 .input--medium .input__control {
   height: calc(var(--zn-input-height-medium) - var(--zn-input-border-width) * 2);
-  padding: 0 var(--zn-input-spacing-small) 0 var(--zn-spacing-small);
+  padding: 0 var(--zn-input-spacing-small) 0 var(--zn-input-padding-inline, var(--zn-spacing-small));
 }
 
 .input--medium .input__clear,
@@ -286,7 +296,7 @@ input[type='text'].input__control[data-color-input] {
 
 .input--large .input__control {
   height: calc(var(--zn-input-height-large) - var(--zn-input-border-width) * 2);
-  padding: 0 var(--zn-input-spacing-medium) 0 var(--zn-spacing-small);
+  padding: 0 var(--zn-input-spacing-medium) 0 var(--zn-input-padding-inline, var(--zn-spacing-small));
 }
 
 .input--large .input__clear,

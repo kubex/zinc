@@ -49,6 +49,8 @@
   user-select: none;
   -webkit-user-drag: element;
   position: relative;
+  // Its own layer, or Chrome draws the drag image over a white box that shows at the rounded corners
+  transform: translate(0, 0);
 
   &:hover {
     border-color: rgb(var(--zn-primary));

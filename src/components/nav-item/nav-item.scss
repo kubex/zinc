@@ -58,6 +58,11 @@
 }
 
 // Set by a sortable zn-nav-list
+:host([sortable]) {
+  // Its own layer, or Chrome draws the drag image over a white box that shows at the rounded corners
+  transform: translate(0, 0);
+}
+
 :host([sortable]) .nav-item__handle {
   display: inline-flex;
 }

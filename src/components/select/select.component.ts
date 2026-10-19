@@ -1676,7 +1676,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       this.emit('zn-show');
       this.addOpenListeners();
 
-      await stopAnimations(this);
+      await stopAnimations(this.popup.popup);
       this.listbox.hidden = false;
       this.popup.active = true;
 
@@ -1719,7 +1719,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         this.displayInput.value = this.multiple ? '' : this.displayLabel;
       }
 
-      await stopAnimations(this);
+      await stopAnimations(this.popup.popup);
       const {keyframes, options} = getAnimation(this, 'select.hide', {dir: this.localize.dir()});
       await animateTo(this.popup.popup, keyframes, options);
       this.listbox.hidden = true;

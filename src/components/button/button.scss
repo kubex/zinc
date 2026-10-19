@@ -35,6 +35,14 @@
   border-color: var(--zn-button-border-color, transparent);
   display: inline-flex;
   position: relative;
+  transition: background-color var(--zn-transition-fast, 150ms) ease,
+              border-color var(--zn-transition-fast, 150ms) ease,
+              color var(--zn-transition-fast, 150ms) ease,
+              transform 160ms var(--zn-ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+
+  &:active:not([disabled]) {
+    transform: scale(0.97);
+  }
 
   &.button--info {
     --btn-surface-fg: var(--zn-color-info-fg);
@@ -623,4 +631,16 @@
 
 :host([data-zn-button-group__button--panel-bg]) .button:not(.button--icon-button) {
   @include panel-bg;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: background-color var(--zn-transition-fast, 150ms) ease,
+                border-color var(--zn-transition-fast, 150ms) ease,
+                color var(--zn-transition-fast, 150ms) ease;
+
+    &:active:not([disabled]) {
+      transform: none;
+    }
+  }
 }

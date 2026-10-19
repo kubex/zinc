@@ -133,6 +133,31 @@
   }
 }
 
+// A linked tile is a card in its own right, so it lifts rather than tinting the row.
+:host([layout="tile"]) .stat-link {
+  &:hover {
+    background-color: transparent;
+
+    .stat-tile--card {
+      border-color: var(--zn-color-primary-400);
+      box-shadow: var(--zn-shadow-medium);
+    }
+  }
+
+  &:focus-visible {
+    outline: none;
+
+    .stat-tile--card {
+      border-color: rgb(var(--zn-primary));
+      box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color);
+    }
+  }
+
+  .stat-tile--card {
+    transition: border-color var(--zn-transition-fast), box-shadow var(--zn-transition-fast);
+  }
+}
+
 .stat-link__icon {
   position: absolute;
   top: var(--zn-spacing-medium);

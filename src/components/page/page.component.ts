@@ -34,6 +34,10 @@ interface TabDefinition {
  *   Clicking an element in the content with `tab="<tab id>"` opens that tab.
  * @slot description - Rich subtitle/description content. Falls back to the `summary` attribute when empty.
  * @slot bottom - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.
+ * @slot footer - Actions pinned below the content, such as a form's `zn-form-actions`. In a modal page it takes the
+ *   dialog footer's styling.
+ *
+ * @csspart footer - The footer wrapping the footer slot.
  */
 export default class ZnPage extends ZnTabs {
   static styles: CSSResultGroup = [ZnTabs.styles, unsafeCSS(styles)];
@@ -46,7 +50,7 @@ export default class ZnPage extends ZnTabs {
     'zn-tab': ZnTab
   };
 
-  private readonly pageSlotController = new HasSlotController(this, 'breadcrumb', 'actions', 'caption', 'description');
+  private readonly pageSlotController = new HasSlotController(this, 'breadcrumb', 'actions', 'caption', 'description', 'footer');
 
   @property() caption: string;
   @property({attribute: 'entity-id'}) entityId: string;
@@ -481,6 +485,7 @@ export default class ZnPage extends ZnTabs {
     const hasFullLocation = this.fullLocation;
     const hasPreviousPath = this.previousPath;
     const hasDescription = !!this.summary || this.pageSlotController.test('description');
+    const hasFooter = this.pageSlotController.test('footer');
 
     return html`
       <div class="page" part="base" @scroll="${this.handlePageScroll}">
@@ -567,6 +572,10 @@ export default class ZnPage extends ZnTabs {
                 </div>
               `)}
           </div>
+        </div>
+
+        <div class="page__footer" part="footer" ?hidden="${!hasFooter}">
+          <slot name="footer"></slot>
         </div>
       </div>
     `;

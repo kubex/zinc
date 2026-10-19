@@ -24,6 +24,12 @@
   --zn-page-closer-gap: var(--zn-spacing-x-small);
 }
 
+// A theme can give a modal a dialog-sized title; without one it keeps the page title's size.
+:host([modal]) {
+  --zn-page-caption-font-size: var(--zn-page-modal-caption-font-size);
+  --zn-page-caption-line-height: var(--zn-page-modal-caption-line-height);
+}
+
 :host([panel]) {
   --zn-page-content-background: var(--zn-panel);
 }
@@ -200,11 +206,11 @@
   &__caption {
     font-family: var(--zn-text-page-title-font-family, inherit);
     font-weight: var(--zn-text-page-title-font-weight);
-    font-size: var(--zn-text-page-title-font-size);
+    font-size: var(--zn-page-caption-font-size, var(--zn-text-page-title-font-size));
     text-transform: var(--zn-text-page-title-transform, none);
     letter-spacing: var(--zn-text-page-title-letter-spacing, normal);
     color: rgba(var(--zn-text-panel-title), 100%);
-    line-height: var(--zn-page-title-line-height, var(--zn-spacing-medium));
+    line-height: var(--zn-page-caption-line-height, var(--zn-page-title-line-height, var(--zn-spacing-medium)));
     margin: 0;
     overflow: hidden;
     white-space: nowrap;
@@ -389,6 +395,29 @@
 
 .page__tabs #content ::slotted(zn-tab) {
   display: block !important;
+}
+
+// Sticky rather than a sibling of a scrolling content area, as .page is the scroll container.
+.page__footer {
+  flex: 0 0 auto;
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  box-sizing: border-box;
+  padding: var(--zn-base-gap) calc(var(--zn-gutter, 0) + var(--zn-base-gap));
+  border-top: 1px solid rgb(var(--zn-border-color));
+  background-color: rgb(var(--zn-page-content-background, var(--zn-body)));
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+// Keep in sync with zn-dialog's .dialog__footer.
+:host([modal]) .page__footer {
+  padding: var(--zn-dialog-footer-spacing, var(--zn-spacing-large));
+  border-top: var(--zn-dialog-footer-divider, none);
+  background: var(--zn-dialog-footer-background, rgb(var(--zn-page-content-background, var(--zn-body))));
 }
 
 :host([flush]) {

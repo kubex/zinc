@@ -62,6 +62,12 @@ export default class ZnTabs extends ZincElement {
   @property({attribute: 'store-key'}) storeKey: string;
   @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
   @property({attribute: 'padded', type: Boolean, reflect: true}) padded = false;
+  /**
+   * With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just
+   * added, in place of the remembered tab.
+   */
+  @property({attribute: 'select-added', type: Boolean, reflect: true}) selectAdded = false;
+
   /** Spaces a left or right slot from the content, for side navigation laid out as its own card. */
   @property({type: Boolean, reflect: true}) gap = false;
   @property({attribute: 'fetch-style', type: String, reflect: true}) fetchStyle = "";
@@ -244,6 +250,33 @@ export default class ZnTabs extends ZincElement {
     this.setActiveTab(stored, true, false);
   }
 
+  /**
+   * The tabs present now that were not when the page was last shown, oldest first, remembering the current set for
+   * next time. Empty without `select-added`, or on the first showing.
+   */
+  private takeAddedTabs(): string[] {
+    const key = this.getTabStoreKey();
+    if (!this.selectAdded || key === null || !this._store) {
+      return [];
+    }
+
+    const storeKey = locationScopedKey(`${key}:tabs`);
+    const current = this._tabs.map(tab => tab.getAttribute('tab')).filter((id): id is string => id !== null);
+    const known = this._store.get(storeKey);
+    this._store.set(storeKey, JSON.stringify(current));
+    if (known === null) {
+      return [];
+    }
+
+    let knownIds: Set<string>;
+    try {
+      knownIds = new Set(JSON.parse(known) as string[]);
+    } catch {
+      return [];
+    }
+    return current.filter(id => !knownIds.has(id));
+  }
+
   /** Activates the tab the container starts on, ignoring any stored selection. */
   protected activateDefaultTab() {
     if (!this._panels.has(this._defaultTab) && this._tabs.length > 0) {
@@ -323,6 +356,12 @@ export default class ZnTabs extends ZincElement {
     setTimeout(() => {
       this._registerTabs();
       this._defaultTab = this._current || '';
+
+      const added = this.takeAddedTabs();
+      if (added.length > 0) {
+        this.setActiveTab(added[added.length - 1], true, false);
+        return;
+      }
 
       const storedValue = this.getStoredTab();
       if (storedValue !== null) {

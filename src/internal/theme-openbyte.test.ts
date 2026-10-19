@@ -91,6 +91,14 @@ describe('openbyte theme tokens', () => {
     }
   });
 
+  it('sizes a modal page title as a dialog heading', async () => {
+    setTheme('openbyte');
+    const page = await fixture<HTMLElement>(html`<zn-page modal caption="Add section"></zn-page>`);
+    await (page as unknown as {updateComplete: Promise<unknown>}).updateComplete;
+    const caption = page.shadowRoot!.querySelector('.header__caption')!;
+    expect(getComputedStyle(caption).fontSize).to.equal('16px');
+  });
+
   it('leaves the base theme untouched', () => {
     setTheme('light');
     expect(token(root, '--zn-color-primary')).to.equal('105,54,245');

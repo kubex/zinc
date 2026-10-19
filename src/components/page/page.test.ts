@@ -40,6 +40,27 @@ describe('<zn-page>', () => {
     expect(navItems[3].getAttribute('tab-uri')).to.equal('/tab-three');
   });
 
+  it('shows the footer only when the footer slot has content', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title">
+        <zn-tab caption="Overview">Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const footer = el.shadowRoot!.querySelector<HTMLElement>('[part="footer"]')!;
+    expect(footer.hidden).to.equal(true);
+
+    const actions = document.createElement('zn-form-actions');
+    actions.slot = 'footer';
+    el.appendChild(actions);
+    await aTimeout(20);
+
+    const footerSlot = el.shadowRoot!.querySelector<HTMLSlotElement>('slot[name="footer"]')!;
+    expect(footer.hidden).to.equal(false);
+    expect(footerSlot.assignedElements()[0]).to.equal(actions);
+  });
+
   it('pushes nested expanding actions into the generated navbar', async () => {
     const el = await fixture<ZnPage>(html`
       <zn-page caption="Page Title">

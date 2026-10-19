@@ -148,6 +148,24 @@ Give any element in the page content a `tab` attribute holding a tab's `id` to o
 </zn-page>
 ```
 
+### Footer
+
+Put actions in the `footer` slot to pin them below the content while it scrolls. Give `zn-form-actions` a `form`
+attribute so it can submit a form it sits outside of. In a modal page the footer takes the dialog footer's styling.
+
+```html:preview
+<zn-page caption="Add section" modal style="height: 320px;">
+  <zn-tab caption="Details">
+    <form id="page-footer-form">
+      <zn-input label="Name" required></zn-input>
+    </form>
+  </zn-tab>
+
+  <zn-form-actions slot="footer" form="page-footer-form" with-cancel submit-text="Add section"
+                   submit-icon="plus@lu"></zn-form-actions>
+</zn-page>
+```
+
 ### Dynamic Tabs
 
 Set `uri` on `zn-tab` to create a dynamic tab. The generated navigation item receives `tab-uri`.

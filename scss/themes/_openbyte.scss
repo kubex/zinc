@@ -484,6 +484,19 @@ html[t="openbyte"], body[t="openbyte"], html.theme-openbyte, body.theme-openbyte
   --zn-dialog-footer-divider: 1px solid var(--zn-color-neutral-100);
   --zn-dialog-footer-background: rgb(var(--zn-color-body));
   --zn-dialog-body-color: rgb(var(--zn-color-muted-text));
+  --zn-dialog-title-line-height: 20px;
+  --zn-dialog-body-font-size: 13px;
+  --zn-dialog-body-line-height: 1.45;
+  --zn-dialog-width-small: 384px;
+  --zn-dialog-width-medium: 512px;
+  --zn-dialog-width-large: 704px;
+  --zn-dialog-icon-background: transparent;
+  --zn-dialog-icon-padding: 0;
+  --zn-dialog-icon-gap: 12px;
+  --zn-dialog-close-size: var(--zn-density-control-height-sm);
+  --zn-dialog-close-padding: 2px;
+  --zn-dialog-close-color: rgb(var(--zn-color-muted-text));
+  --zn-dialog-close-icon-size: 18px;
   --zn-slideout-header-spacing: 16px 20px;
   --zn-slideout-body-spacing: 20px;
   --zn-slideout-footer-spacing: 12px 20px;
@@ -816,4 +829,10 @@ html[t="openbyte"][m="dark"] .zn-toast-stack zn-alert, body[t="openbyte"][m="dar
   --zn-color-warning-fg: #FBCE74;
   --zn-color-info-fg: #89CFE6;
   --zn-color-ai-fg: #B8ADEB;
+}
+
+// Stacks a dialog's content, as its body is a block that can hold inline content too. A page rule, as the page's
+// reset of paragraph and heading margins out-ranks a shadow root's ::slotted() rules.
+html[t="openbyte"] zn-dialog > :not([slot]) + :not([slot]), body[t="openbyte"] zn-dialog > :not([slot]) + :not([slot]) {
+  margin-block-start: var(--zn-density-stack);
 }

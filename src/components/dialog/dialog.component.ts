@@ -3,7 +3,7 @@ import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
 import {idSelector} from "../../utilities/query";
 import {ifDefined} from "lit/directives/if-defined.js";
-import {property, query} from 'lit/decorators.js';
+import {property, query, state} from 'lit/decorators.js';
 import {unlockBodyScrolling} from "../../internal/scroll";
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from "../button";
@@ -92,6 +92,9 @@ export default class ZnDialog extends ZincElement {
    */
   @property({type: String, reflect: true}) trigger: string;
 
+  /** Read from `--zn-dialog-close-icon-size` on open, as zn-icon takes its size as an attribute. */
+  @state() private closeIconSize = 24;
+
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
     if (this.open) {
@@ -167,6 +170,8 @@ export default class ZnDialog extends ZincElement {
 
   /** Shows the dialog. */
   show() {
+    const closeIconSize = parseFloat(getComputedStyle(this).getPropertyValue('--zn-dialog-close-icon-size'));
+    this.closeIconSize = closeIconSize > 0 ? closeIconSize : 24;
     this.emit('zn-show');
     this.addOpenListeners();
     this.open = true;
@@ -246,7 +251,7 @@ export default class ZnDialog extends ZincElement {
                   exportparts="base:close-button__base"
                   class="dialog__close"
                   icon="x@lu"
-                  icon-size="24"
+                  icon-size="${this.closeIconSize}"
                   icon-button="small"
                   plain
                   @click="${() => this.requestClose('close-button')}"

@@ -1,0 +1,73 @@
+@use "../../wc";
+
+:host {
+  display: block;
+  width: var(--zn-nav-list-width, 272px);
+  max-width: 100%;
+  max-height: var(--zn-nav-list-max-height, 100%);
+}
+
+// zn-tabs stacks its side cards at this width; the cap keeps the detail in view
+@container (max-width: 900px) {
+  :host {
+    width: 100%;
+    max-height: var(--zn-nav-list-max-height, 224px);
+  }
+}
+
+.nav-list {
+  display: flex;
+  flex-direction: column;
+  max-height: inherit;
+  overflow: hidden;
+  background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: var(--zn-panel-border-radius, var(--zn-border-radius));
+  box-shadow: var(--zn-panel-shadow, none);
+}
+
+.nav-list__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--zn-spacing-small);
+  padding: var(--zn-panel-header-padding, var(--zn-spacing-small) var(--zn-spacing-medium));
+  border-bottom: 1px solid var(--zn-panel-header-divider-color, rgb(var(--zn-border-color)));
+}
+
+// Matches a zn-panel caption, so the card reads as a panel.
+.nav-list__caption {
+  font-family: var(--zn-text-h1-font-family, inherit);
+  font-weight: var(--zn-text-h1-font-weight);
+  font-size: var(--zn-text-h1-font-size);
+  letter-spacing: var(--zn-text-h1-letter-spacing, normal);
+  color: rgba(var(--zn-text-panel-title), 100%);
+  line-height: var(--zn-icon-size, 20px);
+}
+
+.nav-list__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-x-small);
+}
+
+.nav-list__search {
+  padding: var(--zn-spacing-small);
+  border-bottom: 1px solid var(--zn-panel-header-divider-color, rgb(var(--zn-border-color)));
+}
+
+.nav-list__list {
+  @include wc.scrollbars;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: var(--zn-spacing-2x-small);
+  overflow-y: auto;
+}
+
+.nav-list__empty {
+  margin: 0;
+  padding: var(--zn-spacing-small) 10px;
+  font-size: var(--zn-font-size-small);
+  color: var(--zn-color-neutral-500);
+}

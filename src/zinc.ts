@@ -122,6 +122,8 @@ export { default as ScheduleBuilder } from './components/schedule-builder';
 export { default as Thumbnail } from './components/thumbnail';
 export { default as ThumbnailGroup } from './components/thumbnail-group';
 export { default as Background } from './components/background';
+export { default as NavList } from './components/nav-list';
+export { default as NavItem } from './components/nav-item';
 /* plop:component */
 
 // Base Component

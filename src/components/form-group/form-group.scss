@@ -122,3 +122,8 @@ zn-cols::part(base) {
   padding-top: var(--zn-base-gap);
   padding-left: var(--zn-base-gap);
 }
+
+// Without a label or help text the group is only its card's field grid, so it fills the card.
+:host(:not([label]):not([help-text])) {
+  max-width: none;
+}

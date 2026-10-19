@@ -142,4 +142,12 @@ describe('<zn-form-group>', () => {
     const narrowCols = narrow.querySelector('zn-form-group')!.shadowRoot!.querySelector('zn-cols')!;
     expect(getComputedStyle(narrowCols.shadowRoot!.querySelector('.cols')!).rowGap).to.not.equal('70px');
   });
+
+  it('fills its container without a label, and stays capped with one', async () => {
+    const plain = await fixture<HTMLElement>(html`<zn-form-group><input></zn-form-group>`);
+    const labelled = await fixture<HTMLElement>(html`<zn-form-group label="Identity" style="--zn-container-lg: 1100px"><input></zn-form-group>`);
+
+    expect(getComputedStyle(plain).maxWidth).to.equal('none');
+    expect(getComputedStyle(labelled).maxWidth).to.equal("1100px");
+  });
 });

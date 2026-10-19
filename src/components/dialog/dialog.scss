@@ -83,6 +83,16 @@
     }
   }
 
+  &__close::part(base) {
+    width: var(--zn-dialog-close-size, var(--zn-button-height, 36px));
+    min-width: var(--zn-dialog-close-size, var(--zn-button-height, 36px));
+    height: var(--zn-dialog-close-size, var(--zn-button-height, 36px));
+    min-height: var(--zn-dialog-close-size, var(--zn-button-height, 36px));
+    max-height: var(--zn-dialog-close-size, var(--zn-button-height, 36px));
+    padding: var(--zn-dialog-close-padding, 6px);
+    color: var(--zn-dialog-close-color, rgb(var(--zn-text)));
+  }
+
   &__label {
     overflow: hidden;
     word-break: break-word;
@@ -97,10 +107,10 @@
     overflow: auto;
     -webkit-overflow-scrolling: touch;
     color: var(--zn-dialog-body-color, var(--zn-color-text-default));
-    font-size: var(--zn-font-size-medium);
+    font-size: var(--zn-dialog-body-font-size, var(--zn-font-size-medium));
     font-weight: var(--zn-font-weight-normal);
     letter-spacing: var(--zn-tracking-normal);
-    line-height: var(--zn-line-height-dense);
+    line-height: var(--zn-dialog-body-line-height, var(--zn-line-height-dense));
   }
 
   &__footer {
@@ -123,7 +133,7 @@
     font-size: var(--zn-dialog-title-font-size, var(--zn-font-size-x-large));
     font-weight: var(--zn-dialog-title-font-weight, var(--zn-font-weight-semibold));
     letter-spacing: var(--zn-letter-spacing-normal);
-    line-height: var(--zn-line-height-dense);
+    line-height: var(--zn-dialog-title-line-height, var(--zn-line-height-dense));
     padding: var(--header-spacing);
   }
 
@@ -145,8 +155,8 @@
   &--default &__title ::slotted(zn-icon),
   &--warning &__title ::slotted(zn-icon) {
     border-radius: var(--zn-border-radius-pill);
-    padding: var(--zn-spacing-2x-small);
-    margin-right: var(--zn-spacing-small);
+    padding: var(--zn-dialog-icon-padding, var(--zn-spacing-2x-small));
+    margin-right: var(--zn-dialog-icon-gap, var(--zn-spacing-small));
   }
 
   &--announcement &__title ::slotted(zn-icon) {
@@ -157,7 +167,7 @@
   }
 
   &__title ::slotted(zn-icon) {
-    background-color: var(--icon-background-color);
+    background-color: var(--zn-dialog-icon-background, var(--icon-background-color));
     color: var(--icon-color);
   }
 
@@ -195,20 +205,20 @@
 
   /** Sizes */
   &--small {
-    --width: 25rem;
+    --width: var(--zn-dialog-width-small, 25rem);
 
     .dialog__body {
-      color: rgb(var(--zn-text));
+      color: var(--zn-dialog-body-color, rgb(var(--zn-text)));
       padding: var(--body-spacing);
     }
   }
 
   &--medium {
-    --width: 30rem;
+    --width: var(--zn-dialog-width-medium, 30rem);
   }
 
   &--large {
-    --width: 37.5rem;
+    --width: var(--zn-dialog-width-large, 37.5rem);
   }
 
   /** Modifiers **/

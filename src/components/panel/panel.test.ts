@@ -71,4 +71,22 @@ describe('<zn-panel>', () => {
 
     expect(el.shadowRoot!.querySelector('.panel')!.classList.contains('panel--empty')).to.be.false;
   });
+
+  it('shows a description under the caption in the header', async () => {
+    const el = await fixture<HTMLElement>(html`<zn-panel caption="Identity" description="Shown to assessors">Body</zn-panel>`);
+    await (el as unknown as {updateComplete: Promise<unknown>}).updateComplete;
+    const header = el.shadowRoot!.querySelector('zn-header')!;
+    await (header as unknown as {updateComplete: Promise<unknown>}).updateComplete;
+
+    expect(header.shadowRoot!.querySelector('.header__description')!.textContent).to.equal('Shown to assessors');
+  });
+
+  it('renders no description element without one', async () => {
+    const el = await fixture<HTMLElement>(html`<zn-panel caption="Identity">Body</zn-panel>`);
+    await (el as unknown as {updateComplete: Promise<unknown>}).updateComplete;
+    const header = el.shadowRoot!.querySelector('zn-header')!;
+    await (header as unknown as {updateComplete: Promise<unknown>}).updateComplete;
+
+    expect(header.shadowRoot!.querySelector('.header__description')).to.not.exist;
+  });
 });

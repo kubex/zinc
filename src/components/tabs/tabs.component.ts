@@ -234,6 +234,13 @@ export default class ZnTabs extends ZincElement {
     }
 
     this._prepareTab(stored);
+    // The stored tab can be gone, say after deleting what it showed; fall back to the tab the container starts on.
+    // A tab still on screen keeps its selection even before its panel loads.
+    const gone = !this._panels.has(stored) && !this._tabs.some(tab => tab.getAttribute('tab') === stored);
+    if (gone && this._defaultTab !== '' && this._panels.has(this._defaultTab)) {
+      this.setActiveTab(this._defaultTab, true, false);
+      return;
+    }
     this.setActiveTab(stored, true, false);
   }
 

@@ -5,6 +5,7 @@ import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property} from 'lit/decorators.js';
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import {Store} from "../../internal/storage";
+import {prefersReducedMotion} from "../../internal/animate";
 import ZincElement from '../../internal/zinc-element';
 import ZnDropdown from "../dropdown";
 import type {ZnMenuSelectEvent} from "../../events/zn-menu-select";
@@ -33,8 +34,15 @@ const NAVBAR_MIN_WIDTH = 200;
  * @slot bottom - Content rendered below the navbar row (e.g. chips, filters).
  *
  * @csspart base - The component's base wrapper.
+ * @csspart indicator - The active-tab indicator that slides between tabs. Exposes
+ *   `--zn-navbar-indicator-top` / `--zn-navbar-indicator-height` (the active tab's box) for styles that fill the tab.
  *
- * @cssproperty --example - An example CSS custom property.
+ * @cssproperty --zn-navbar-tab-indicator-slide - `1` shows the sliding indicator in place of each tab's own line.
+ * @cssproperty --zn-navbar-tab-indicator-duration - Duration of the indicator's leading edge (default 300ms).
+ * @cssproperty --zn-navbar-tab-indicator-easing - Easing of both indicator edges.
+ * @cssproperty --zn-navbar-tab-indicator-trail-duration - Duration of the trailing edge; longer than the lead stretches the indicator.
+ * @cssproperty --zn-navbar-tab-indicator-trail-delay - Delay before the trailing edge follows (default 0ms).
+ * @cssproperty --zn-navbar-tab-indicator-squash - Vertical scale the indicator dips to while it travels (default 1, off).
  */
 export default class ZnNavbar extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -84,6 +92,7 @@ export default class ZnNavbar extends ZincElement {
   private _navItems: HTMLElement | null = null;
   private _indicator: HTMLElement | null = null;
   private _indicatorFrame: number | null = null;
+  private _indicatorTab: HTMLElement | null = null;
   private _expandable: HTMLElement | null = null;
   private _extendedMenu: HTMLElement | null = null;
   private readonly _cloneSources = new WeakMap<HTMLElement, HTMLElement>();
@@ -206,19 +215,43 @@ export default class ZnNavbar extends ZincElement {
       return;
     }
 
-    const width = indicator.offsetWidth;
-    if (width === 0) {
-      return;
+    const box = container.getBoundingClientRect();
+    const left = tab.left - box.left;
+    const previousLeft = parseFloat(indicator.style.left);
+    const ready = indicator.classList.contains('navbar__indicator--ready');
+    if (ready && !Number.isNaN(previousLeft) && Math.abs(left - previousLeft) > 0.5) {
+      indicator.classList.toggle('navbar__indicator--forward', left > previousLeft);
+      indicator.classList.toggle('navbar__indicator--backward', left < previousLeft);
+      if (active !== this._indicatorTab) {
+        this._squashIndicator(indicator);
+      }
     }
+    this._indicatorTab = active ?? null;
 
-    const left = tab.left - container.getBoundingClientRect().left;
-    indicator.style.transform = `translateX(${left}px) scaleX(${tab.width / width})`;
+    indicator.style.left = `${left}px`;
+    indicator.style.right = `${box.right - tab.right}px`;
+    // Exposed for ::part(indicator) styles that fill the tab rather than underline it.
+    indicator.style.setProperty('--zn-navbar-indicator-top', `${tab.top - box.top}px`);
+    indicator.style.setProperty('--zn-navbar-indicator-height', `${tab.height}px`);
     indicator.classList.add('navbar__indicator--shown');
 
     // The first placement jumps into position; only later moves animate.
-    if (!indicator.classList.contains('navbar__indicator--ready')) {
+    if (!ready) {
       requestAnimationFrame(() => indicator.classList.add('navbar__indicator--ready'));
     }
+  }
+
+  /** Thins the indicator while it travels, so a stretched pill reads as liquid keeping its volume. */
+  private _squashIndicator(indicator: HTMLElement) {
+    const squash = parseFloat(getComputedStyle(indicator).getPropertyValue('--zn-navbar-tab-indicator-squash'));
+    if (!squash || squash === 1 || prefersReducedMotion()) {
+      return;
+    }
+
+    indicator.animate(
+      [{scale: '1 1'}, {scale: `1 ${squash}`, offset: 0.35}, {scale: '1 1'}],
+      {duration: 450, easing: 'ease-in-out'}
+    );
   }
 
   private _observeExpandingAction(action: Element) {
@@ -507,7 +540,7 @@ export default class ZnNavbar extends ZincElement {
 
     this._indicator = this.shadowRoot?.querySelector('.navbar__indicator') as HTMLElement || null;
     if (this._indicator?.parentElement) {
-      // The indicator's scale is relative to the container's width.
+      // Tabs can shift inside a resized container while the tab strip keeps its size.
       this._resizeController.observe(this._indicator.parentElement);
     }
     if (this._navItems) {

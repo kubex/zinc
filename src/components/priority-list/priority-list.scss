@@ -70,6 +70,12 @@
 }
 
 // The dragged row's slot. An inset outline, as hover and last-child rules reset the border and flush panels clip it.
+// The border is hidden so it doesn't show between the dashes or past the outline's rounded corners.
+.priority-list__item--dragging,
+.priority-list__item--dragging:hover {
+  border-color: transparent;
+}
+
 .priority-list__item--dragging {
   outline: 1px dashed var(--zn-color-primary-400);
   outline-offset: -1px;
@@ -226,6 +232,11 @@
     &:hover {
       border-color: var(--zn-table-row-divider-color, rgb(var(--zn-border-color)));
     }
+  }
+
+  // Inset past the panel's rounded clip (a corner curve intrudes ~0.3r), as the row may sit at a panel corner
+  .priority-list__item--dragging {
+    outline-offset: calc(-1px - var(--zn-panel-border-radius, var(--zn-border-radius)) * 0.3);
   }
 }
 

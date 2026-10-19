@@ -158,6 +158,28 @@ describe('<zn-tabs>', () => {
       expect(restored.getAttribute('active')).to.equal('second');
     });
 
+    it('starts from the default tab when the restored tab no longer exists', async () => {
+      const el = await renderTabs();
+      await aTimeout(40);
+      el.querySelector('zn-navbar')!.querySelectorAll<HTMLElement>('li')[1].click();
+      await aTimeout(40);
+      el.remove();
+
+      returnWithHistory();
+      const restored = await fixture<ZnTabs>(html`
+        <zn-tabs store-key=${storeKey} active="first">
+          <zn-navbar slot="top">
+            <li tab="first">First</li>
+          </zn-navbar>
+          <div id="first">First panel</div>
+        </zn-tabs>
+      `);
+      await aTimeout(40);
+
+      expect(restored.getAttribute('active')).to.equal('first');
+      expect(restored.querySelector('#first')!.hasAttribute('selected')).to.equal(true);
+    });
+
     it('starts from the default tab when navigating to the location', async () => {
       const first = await renderTabs();
       await aTimeout(40);

@@ -62,6 +62,8 @@ export default class ZnTabs extends ZincElement {
   @property({attribute: 'store-key'}) storeKey: string;
   @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
   @property({attribute: 'padded', type: Boolean, reflect: true}) padded = false;
+  /** Spaces a left or right slot from the content, for side navigation laid out as its own card. */
+  @property({type: Boolean, reflect: true}) gap = false;
   @property({attribute: 'fetch-style', type: String, reflect: true}) fetchStyle = "";
   @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth = false;
   @property({attribute: 'padded-right', type: Boolean, reflect: true}) paddedRight = false;

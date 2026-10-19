@@ -32,7 +32,7 @@
 // label would scroll over the fields it labels. zn-cols wraps below the two columns' bases plus
 // the gap, so 670px = --zn-col-basis * (1 + 2) + 70px — keep in step with both values below.
 @container (min-width: 670px) {
-  .form-control__text {
+  :host(:not([layout="1"])) .form-control__text {
     position: sticky;
     top: var(--zn-form-group-sticky-top);
     // A stretched flex item is as tall as the row, leaving sticky nothing to travel through.
@@ -110,8 +110,9 @@ zn-cols::part(base) {
   gap: var(--zn-gap);
 }
 
+// layout="1" stacks the label above the fields at every width, so there is no gutter to keep.
 @container (min-width: 670px) {
-  zn-cols::part(base) {
+  :host(:not([layout="1"])) zn-cols::part(base) {
     gap: 70px;
   }
 }

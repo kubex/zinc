@@ -18,6 +18,7 @@
   color: var(--zn-text-table-content-color);
 
   &--has-image,
+  &--has-icon,
   &--has-caption,
   &--has-description,
   &--has-properties,
@@ -38,6 +39,11 @@
 
     &:hover {
       background-color: var(--zn-tile-hover-background, var(--zn-color-neutral-100));
+
+      .tile__caption {
+        --tile-caption-hover-color: var(--zn-tile-hover-caption-color);
+        text-decoration: var(--zn-tile-hover-caption-decoration, none);
+      }
     }
   }
 
@@ -88,6 +94,25 @@ a {
   flex-shrink: 0;
 }
 
+.tile__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--zn-border-radius-medium, var(--zn-border-radius));
+  color: var(--zn-color-neutral-fg);
+  background: var(--zn-color-neutral-bg);
+
+  @each $tone in success, warning, danger, info, ai {
+    &--#{$tone} {
+      color: var(--zn-color-#{$tone}-fg);
+      background: var(--zn-color-#{$tone}-bg);
+    }
+  }
+}
+
 .tile__content {
   display: flex;
   flex-direction: column;
@@ -104,7 +129,8 @@ a {
 .tile__caption {
   margin: 0;
   font-weight: 600;
-  color: rgb(var(--zn-text-heading));
+  // Unset outside a linked tile's hover, so each caption falls back to its resting colour
+  color: var(--tile-caption-hover-color, rgb(var(--zn-text-heading)));
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -112,7 +138,7 @@ a {
 
 .tile--plain .tile__caption {
   font-weight: var(--zn-text-table-content-font-weight);
-  color: var(--zn-text-table-content-color);
+  color: var(--tile-caption-hover-color, var(--zn-text-table-content-color));
 }
 
 .tile__description {
@@ -134,6 +160,8 @@ slot.tile__description {
 }
 
 .tile__right {
+  // Keeps actions clickable when a host such as zn-priority-list disables pointer events on the tile
+  pointer-events: auto;
   display: flex;
   align-items: center;
   justify-content: flex-end;

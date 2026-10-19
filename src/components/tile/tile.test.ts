@@ -20,6 +20,16 @@ describe('<zn-tile>', () => {
     expect(el.shadowRoot!.querySelector('slot[name="image"]')).to.exist;
   });
 
+  it('draws the icon in a tinted square', async () => {
+    const el = await fixture<ZnTile>(html`
+      <zn-tile caption="Second chance" icon="tag@lu" icon-color="success"
+               style="--zn-color-success-bg: rgb(1, 2, 3)"></zn-tile>`);
+
+    const square = el.shadowRoot!.querySelector<HTMLElement>('.tile__icon')!;
+    expect(square.querySelector('zn-icon')).to.exist;
+    expect(getComputedStyle(square).backgroundColor).to.equal('rgb(1, 2, 3)');
+  });
+
   it('should render its content as a link when href is set', async () => {
     const el = await fixture<ZnTile>(html`
       <zn-tile href="/users/leslie" caption="Leslie Alexander"></zn-tile>`);

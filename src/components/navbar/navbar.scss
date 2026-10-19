@@ -116,6 +116,12 @@ ul.navbar {
   backdrop-filter: var(--navbar-page-inactive-tab-filter, none);
 }
 
+// zn-page passes its tabs as light-DOM <li>s, which carry no part, so the
+// page can't reach them via ::part(navbar-item)
+:host-context(zn-page) ul.navbar li {
+  padding-bottom: var(--zn-spacing-small);
+}
+
 :host([baseless]) {
   .navbar__container {
     border-bottom: none;
@@ -244,7 +250,6 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 
 :host(:not([stacked]):not([icon-bar])) {
   ul.navbar {
-    height: var(--zn-navbar-height, 40px);
     align-self: end;
   }
 }

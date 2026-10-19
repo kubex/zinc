@@ -47,4 +47,10 @@ describe('<zn-toggle>', () => {
       expect(new FormData(form).get('feature')).to.equal('disabled');
     });
   });
+
+  it('keeps a right-hand label beside the switch', async () => {
+    const el = await fixture<HTMLElement>(html`<zn-toggle label="Short" label-position="right"></zn-toggle>`);
+    const label = el.shadowRoot!.querySelector('label')!;
+    expect(getComputedStyle(label).justifyContent).to.equal('flex-end');
+  });
 });

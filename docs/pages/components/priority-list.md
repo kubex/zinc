@@ -165,6 +165,42 @@ Use the `action-{value}` slot to add interactive elements (buttons, links, etc.)
 </zn-priority-list>
 ```
 
+### Tile Items
+
+Use `zn-tile` items for titled rows: the tile supplies the caption, description, icon square and its own actions, and
+the list adds the handle, priority and ordering. A `locked` item stays where it is and nothing can move past it.
+`move-buttons` adds up and down buttons to each movable item, ahead of any controls in the item's `action-{value}` slot.
+A tile with an `href` stays clickable, underlining its caption on hover.
+
+```html:preview
+<zn-panel flush>
+  <zn-priority-list label="Steps" flush move-buttons>
+    <zn-tile value="offer" caption="Second chance" description="Offer · Default template · Student 20% (20%)" icon="tag@lu" icon-color="success">
+      <zn-chip slot="properties" icon="globe@lu" icon-size="12">1/12</zn-chip>
+      <small slot="properties">100% reach it</small>
+    </zn-tile>
+    <zn-button slot="action-offer" icon="pencil@lu" icon-size="16" icon-button="small" plain tooltip="Edit"></zn-button>
+    <zn-button slot="action-offer" icon="trash-2@lu" icon-size="16" icon-button="small" plain tooltip="Delete"></zn-button>
+    <zn-tile value="message" caption="Before you go" href="#" description="Message · Retention copy" icon="message-square@lu" icon-color="ai">
+      <zn-chip slot="properties" icon="globe@lu" icon-size="12">1/12</zn-chip>
+      <small slot="properties">81% reach it</small>
+    </zn-tile>
+    <zn-button slot="action-message" icon="pencil@lu" icon-size="16" icon-button="small" plain tooltip="Edit"></zn-button>
+    <zn-button slot="action-message" icon="trash-2@lu" icon-size="16" icon-button="small" plain tooltip="Delete"></zn-button>
+    <zn-tile value="survey" caption="Exit survey" description="Survey · Why are you leaving?" icon="circle-check@lu" icon-color="warning">
+      <zn-chip slot="properties" icon="globe@lu" icon-size="12">1/12</zn-chip>
+      <small slot="properties">64% reach it</small>
+    </zn-tile>
+    <zn-button slot="action-survey" icon="pencil@lu" icon-size="16" icon-button="small" plain tooltip="Edit"></zn-button>
+    <zn-button slot="action-survey" icon="trash-2@lu" icon-size="16" icon-button="small" plain tooltip="Delete"></zn-button>
+    <zn-tile value="confirm" caption="Confirmation" description="Separate confirmation step · always the final step"
+             locked>
+      <small slot="properties">58% reach it</small>
+    </zn-tile>
+  </zn-priority-list>
+</zn-panel>
+```
+
 ### Form Submission
 
 When a `name` is set, the component generates hidden inputs for each item as `name[itemValue]=priority`. This example
@@ -231,3 +267,5 @@ Focus any item and use the keyboard to reorder:
 - **Arrow Down** — Move the focused item down one position
 - **Home** — Move the focused item to the top
 - **End** — Move the focused item to the bottom
+
+Locked items can't be moved, and other items can't move past them.

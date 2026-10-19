@@ -339,10 +339,10 @@
   min-height: var(--zn-button-height, 36px);
   max-height: var(--zn-button-height, 36px);
   padding: 6px;
-  box-shadow: none;
+  box-shadow: var(--zn-button-icon-shadow, none);
   margin: 0;
   background: rgb(var(--zn-panel));
-  border-color: var(--zn-button-border-color, rgb(var(--zn-border-color))) !important;
+  border-color: var(--zn-button-border-color, var(--zn-button-icon-border, rgb(var(--zn-border-color)))) !important;
   border-radius: var(--zn-border-radius);
   color: var(--icon-button-color);
   font-weight: inherit;
@@ -374,6 +374,7 @@
     background: rgb(var(--zn-color-tab));
     border-color: var(--zn-button-border-color, transparent) !important;
     border-radius: var(--zn-border-radius-circle);
+    box-shadow: none;
 
     &:hover:not([disabled]), &:active:not([disabled]) {
       background: rgb(var(--zn-color-border));
@@ -383,6 +384,7 @@
   &.button--plain {
     background: transparent;
     border-color: var(--zn-button-border-color, transparent) !important;
+    box-shadow: none;
 
     &:hover:not([disabled]), &:active:not([disabled]) {
       background: rgb(var(--zn-color-tab));

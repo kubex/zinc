@@ -91,6 +91,18 @@ describe('openbyte theme tokens', () => {
     }
   });
 
+  it('gives a bordered icon button the secondary button edge', async () => {
+    setTheme('openbyte');
+    const secondary = await fixture(html`<zn-button color="secondary">Add</zn-button>`);
+    const icon = await fixture(html`<zn-button icon="ellipsis" icon-button="small"></zn-button>`);
+    await (secondary as unknown as {updateComplete: Promise<unknown>}).updateComplete;
+    await (icon as unknown as {updateComplete: Promise<unknown>}).updateComplete;
+    const secondaryBase = getComputedStyle(secondary.shadowRoot!.querySelector('.button')!);
+    const iconBase = getComputedStyle(icon.shadowRoot!.querySelector('.button')!);
+    expect(iconBase.borderTopColor).to.equal(secondaryBase.borderTopColor);
+    expect(iconBase.boxShadow).to.equal(secondaryBase.boxShadow);
+  });
+
   it('sizes a modal page title as a dialog heading', async () => {
     setTheme('openbyte');
     const page = await fixture<HTMLElement>(html`<zn-page modal caption="Add section"></zn-page>`);

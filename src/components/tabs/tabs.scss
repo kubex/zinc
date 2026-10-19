@@ -45,6 +45,14 @@ h1, h2 {
 
 :host([gap]) #mid {
   gap: var(--zn-gap, var(--zn-spacing-medium));
+  align-items: flex-start;
+
+  // The side card keeps its own width; the content takes the rest.
+  > ::slotted([slot="left"]),
+  > ::slotted([slot="right"]) {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
 }
 
 #content {

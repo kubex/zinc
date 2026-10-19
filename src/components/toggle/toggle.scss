@@ -140,8 +140,11 @@
   flex-direction: row;
 }
 
+// The switch leads and the label follows it, so labels of any length line up. A theme can instead put the label
+// first with the switch at the far edge.
 .switch__wrapper--label-right label {
-  flex-direction: row-reverse;
+  flex-direction: var(--zn-toggle-side-label-direction, row-reverse);
+  justify-content: var(--zn-toggle-side-label-justify, flex-end);
 }
 
 // Support inline label

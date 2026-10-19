@@ -105,6 +105,17 @@ Use the `image` slot to add an image or icon to the left side of the tile. This 
 </zn-tile>
 ```
 
+### Tile with Icon
+
+Set `icon` to show an icon in a tinted square before the caption. `icon-color` picks the tint: `success`, `warning`,
+`danger`, `info`, `ai` or `neutral` (the default).
+
+```html:preview
+<zn-tile caption="Second chance" description="Offer · Default template" icon="tag@lu" icon-color="success"></zn-tile>
+<zn-tile caption="Before you go" description="Message · Retention copy" icon="message-square@lu" icon-color="ai"></zn-tile>
+<zn-tile caption="Archive" description="Kept for 90 days" icon="archive@lu"></zn-tile>
+```
+
 ### Clickable Tiles
 
 Add the `href` attribute to make a tile clickable. The tile will render as an anchor tag and display hover effects.

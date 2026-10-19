@@ -8,6 +8,7 @@ import {HasSlotController} from '../../internal/slot';
 import {property, query, state} from 'lit/decorators.js';
 import {repeat} from "lit/directives/repeat.js";
 import ZincElement from '../../internal/zinc-element';
+import ZnButton from '../button';
 import ZnIcon from '../icon';
 import type {ZincFormControl} from '../../internal/zinc-element';
 
@@ -35,11 +36,14 @@ function safeParse(value: string): unknown {
  * @status experimental
  * @since 1.0
  *
+ * @dependency zn-button
  * @dependency zn-icon
  *
  * @slot - The default slot where list items are placed. Each slotted element must have a `value` attribute that
  *   uniquely identifies the item. The component automatically assigns slot names to project each item into the
  *   correct position. The item's position in the list determines its priority (top = `priority-start`, incrementing).
+ *   Use `zn-tile` items for titled rows with their own actions. Set `locked` on an item to pin it where it is.
+ * @slot action-{value} - Controls shown at the end of the item with that `value`.
  * @slot label - The component's label. Required for proper accessibility. Alternatively, use the `label` attribute.
  * @slot label-tooltip - Used to add text displayed in a tooltip next to the label.
  * @slot help-text - Text that describes how to use the component. Alternatively, use the `help-text` attribute.
@@ -66,6 +70,7 @@ function safeParse(value: string): unknown {
  */
 export default class ZnPriorityList extends ZincElement implements ZincFormControl {
   static dependencies = {
+    'zn-button': ZnButton,
     'zn-icon': ZnIcon,
   };
 
@@ -144,6 +149,23 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
   /** The starting priority number. Defaults to 1. */
   @property({type: Number, attribute: 'priority-start'}) priorityStart = 1;
 
+  /** Draws the items as rows divided edge to edge, for a list filling a flush panel; the label is kept for
+   * screen readers only. */
+  @property({type: Boolean, reflect: true}) flush = false;
+
+  /** Lets a click or Enter select an item as well as drag it, for a list that doubles as navigation. The click is
+   * passed on to the item, so a `tab` or link on it acts as if clicked. */
+  @property({type: Boolean, reflect: true}) selectable = false;
+
+  /** The selected item's value. An item marked active by zn-tabs takes precedence, so the list follows its tabs. */
+  @property({reflect: true}) selected = '';
+
+  /** Hides each item's priority number, for lists where the order shows the priority. */
+  @property({type: Boolean, attribute: 'hide-priority', reflect: true}) hidePriority = false;
+
+  /** Shows move up and move down buttons on each item. */
+  @property({type: Boolean, attribute: 'move-buttons', reflect: true}) moveButtons = false;
+
   /**
    * When set, the associated form will be submitted with the given action URL whenever items are reordered.
    * If set to an empty string, the form will be submitted using its existing action.
@@ -157,10 +179,11 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
    */
   @property() order = '';
 
-  // Drag state
+  // Drag state; `draggedKey` styles the placeholder and lags `_dragKey` by a frame
   @state() private draggedKey: string | null = null;
   @state() private isDragging = false;
-  private dragOverKey: string | null = null;
+  private _dragKey: string | null = null;
+  private _dragStartOrder: string[] = [];
 
   /** Gets the validity state object. */
   get validity(): ValidityState {
@@ -172,9 +195,21 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
     return '';
   }
 
+  private _itemObserver = new MutationObserver(() => this.requestUpdate());
+
   connectedCallback() {
     super.connectedCallback();
     this.defaultValue = [...this._value];
+    this._itemObserver.observe(this, {
+      childList: true,
+      subtree: true,
+      attributeFilter: ['locked', 'class'],
+    });
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._itemObserver.disconnect();
   }
 
   protected firstUpdated(_changedProperties: PropertyValues) {
@@ -267,6 +302,35 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
     });
   }
 
+  private _item(key: string) {
+    return this.querySelector<HTMLElement>(`:scope > [value="${CSS.escape(key)}"]`);
+  }
+
+  private _isLocked(key: string) {
+    return this._item(key)?.hasAttribute('locked') ?? false;
+  }
+
+  /** A move is allowed when neither the moved item nor any item it would shift past is locked. */
+  private _canMove(fromIndex: number, toIndex: number) {
+    if (this._isLocked(this._value[fromIndex])) return false;
+    const [low, high] = fromIndex < toIndex ? [fromIndex + 1, toIndex] : [toIndex, fromIndex - 1];
+    for (let i = low; i <= high; i++) {
+      if (this._isLocked(this._value[i])) return false;
+    }
+    return true;
+  }
+
+  private _canStep(index: number, step: number) {
+    const target = index + step;
+    return target >= 0 && target < this._value.length && this._canMove(index, target);
+  }
+
+  private _handleStep(event: Event, key: string, step: number) {
+    event.stopPropagation();
+    const index = this._value.indexOf(key);
+    this._moveItem(index, index + step);
+  }
+
   /**
    * Moves an item from one index to another.
    */
@@ -274,15 +338,14 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
     if (fromIndex === toIndex) return;
     if (fromIndex < 0 || toIndex < 0) return;
     if (fromIndex >= this._value.length || toIndex >= this._value.length) return;
+    if (!this._canMove(fromIndex, toIndex)) return;
 
     const newOrder = [...this._value];
     const [moved] = newOrder.splice(fromIndex, 1);
     newOrder.splice(toIndex, 0, moved);
 
-    this._value = newOrder;
-    this._assignSlotNames();
+    this._reorder(newOrder);
     this._syncHiddenInputs();
-    this.requestUpdate();
 
     this.emit('zn-change');
     this.emit('zn-reorder');
@@ -335,13 +398,18 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
   // --- Drag and Drop Handlers ---
 
   private _handleDragStart(event: DragEvent, key: string) {
-    if (this.disabled) {
+    if (this.disabled || this._isLocked(key)) {
       event.preventDefault();
       return;
     }
 
-    this.draggedKey = key;
+    this._dragKey = key;
+    this._dragStartOrder = [...this._value];
     this.isDragging = true;
+    // Styling the row as a placeholder before the browser snapshots it would fade the drag image too
+    requestAnimationFrame(() => {
+      if (this.isDragging) this.draggedKey = key;
+    });
 
     if (event.dataTransfer) {
       event.dataTransfer.effectAllowed = 'move';
@@ -349,65 +417,114 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
     }
   }
 
-  private _handleDragEnd() {
-    if (this.isDragging) {
-      // Emit events for the final position change
-      this._syncHiddenInputs();
-      this.emit('zn-change');
-      this.emit('zn-reorder');
-      this._submitForm();
+  private _handleDragEnd(event: DragEvent) {
+    if (!this.isDragging) return;
+
+    const startOrder = this._dragStartOrder;
+    this._dragKey = null;
+    this.draggedKey = null;
+    this.isDragging = false;
+
+    // Escape, or a drop outside the list, cancels the drag
+    if (event.dataTransfer?.dropEffect === 'none') {
+      this._reorder(startOrder);
+      return;
     }
 
-    this.draggedKey = null;
-    this.dragOverKey = null;
-    this.isDragging = false;
+    if (startOrder.join('\n') === this._value.join('\n')) return;
+
+    this._syncHiddenInputs();
+    this.emit('zn-change');
+    this.emit('zn-reorder');
+    this._submitForm();
   }
 
   private _handleDragOver(event: DragEvent, key: string) {
+    if (!this.isDragging) return;
     event.preventDefault();
-
-    if (!this.draggedKey || this.draggedKey === key) return;
 
     if (event.dataTransfer) {
       event.dataTransfer.dropEffect = 'move';
     }
 
-    // Move the item in real-time so other items shift around
-    const fromIndex = this._value.indexOf(this.draggedKey);
-    const toIndex = this._value.indexOf(key);
+    if (!this._dragKey || this._dragKey === key) return;
 
-    if (fromIndex === -1 || toIndex === -1 || fromIndex === toIndex) return;
+    const fromIndex = this._value.indexOf(this._dragKey);
+    const toIndex = this._value.indexOf(key);
+    if (fromIndex === -1 || toIndex === -1) return;
+
+    // Only swap once the pointer crosses the target's midpoint, so rows of different heights don't flip back and forth
+    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    const pastMidpoint = event.clientY > rect.top + rect.height / 2;
+    if (fromIndex < toIndex !== pastMidpoint) return;
+    if (!this._canMove(fromIndex, toIndex)) return;
 
     const newOrder = [...this._value];
     const [moved] = newOrder.splice(fromIndex, 1);
     newOrder.splice(toIndex, 0, moved);
-    this._value = newOrder;
-    this._assignSlotNames();
-    this.requestUpdate();
-
-    this.dragOverKey = key;
-  }
-
-  private _handleDragLeave(event: DragEvent, key: string) {
-    const related = event.relatedTarget as Node | null;
-    const target = event.currentTarget as HTMLElement;
-    if (related && target.contains(related)) return;
-
-    if (this.dragOverKey === key) {
-      this.dragOverKey = null;
-    }
+    this._reorder(newOrder);
   }
 
   private _handleDrop(event: DragEvent) {
+    // Dragover has already moved the row into place; dragend announces the change
     event.preventDefault();
-    // Item is already in position from real-time dragover moves
-    // dragend handles cleanup and event emission
+  }
+
+  /** Re-renders in the new order, sliding each row from its old position. */
+  private _reorder(order: string[]) {
+    const items = () => [...this.shadowRoot?.querySelectorAll<HTMLElement>('.priority-list__item') ?? []];
+    const before = new Map(items().map((el, i) => [this._value[i], el.getBoundingClientRect().top]));
+
+    this._value = order;
+    this._assignSlotNames();
+    this.requestUpdate();
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    this.updateComplete.then(() => {
+      items().forEach((el, i) => {
+        const delta = (before.get(this._value[i]) ?? 0) - el.getBoundingClientRect().top;
+        if (delta) {
+          el.animate([{transform: `translateY(${delta}px)`}, {transform: 'none'}], {duration: 150, easing: 'ease-out'});
+        }
+      });
+    });
   }
 
   // --- Keyboard Handlers ---
 
+  private _selectedKey(): string {
+    if (!this.selectable) return '';
+    const active = this._getSlottedItems().find(el => el.classList.contains('zn-tb-active'));
+    return active?.getAttribute('value') || this.selected;
+  }
+
+  private _select(key: string) {
+    if (!this.selectable) return;
+    this.selected = key;
+    const item = this._item(key);
+    if (!item) return;
+    item.click();
+    this.emit('zn-select', {detail: {item}});
+  }
+
+  private _handleItemClick(event: MouseEvent, key: string) {
+    const path = event.composedPath();
+    // An action is its own control, and the click _select passes on to the item bubbles back through the row.
+    if (path.some(el => el instanceof HTMLElement && el.classList.contains('priority-list__actions'))
+      || path.includes(this._item(key)!)) {
+      return;
+    }
+    this._select(key);
+  }
+
   private _handleKeyDown(event: KeyboardEvent, key: string) {
     if (this.disabled) return;
+
+    if (this.selectable && (event.key === 'Enter' || event.key === ' ') && event.target === event.currentTarget) {
+      event.preventDefault();
+      this._select(key);
+      return;
+    }
 
     const index = this._value.indexOf(key);
     if (index === -1) return;
@@ -517,6 +634,7 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
   }
 
   render() {
+    const selectedKey = this._selectedKey();
     const hasLabelSlot = this.hasSlotController.test('label');
     const hasLabelTooltipSlot = this.hasSlotController.test('label-tooltip');
     const hasHelpTextSlot = this.hasSlotController.test('help-text');
@@ -567,37 +685,56 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
             role="listbox"
             aria-label=${this.label || 'Reorderable list'}
             aria-orientation="vertical">
-            ${repeat(this._value, (key) => key, (key, index) => html`
+            ${repeat(this._value, (key) => key, (key, index) => {
+              const item = this._item(key);
+              const locked = item?.hasAttribute('locked') ?? false;
+              const caption = item?.getAttribute('caption') || key;
+              return html`
               <div
                 part="item"
                 class=${classMap({
                   'priority-list__item': true,
                   'priority-list__item--dragging': this.draggedKey === key,
                   'priority-list__item--disabled': this.disabled,
+                  'priority-list__item--locked': locked,
+                  'priority-list__item--selectable': this.selectable,
+                  'priority-list__item--selected': key === selectedKey,
                 })}
                 role="option"
                 tabindex=${this.disabled ? '-1' : '0'}
-                aria-selected="false"
-                aria-label="${key} - priority ${this.priorityStart + index}"
-                draggable=${this.disabled ? 'false' : 'true'}
+                aria-selected=${key === selectedKey ? 'true' : 'false'}
+                aria-label="${caption} - priority ${this.priorityStart + index}"
+                draggable=${this.disabled || locked ? 'false' : 'true'}
                 @dragstart=${(e: DragEvent) => this._handleDragStart(e, key)}
                 @dragend=${this._handleDragEnd}
                 @dragover=${(e: DragEvent) => this._handleDragOver(e, key)}
-                @dragleave=${(e: DragEvent) => this._handleDragLeave(e, key)}
                 @drop=${(e: DragEvent) => this._handleDrop(e)}
+                @click=${(e: MouseEvent) => this._handleItemClick(e, key)}
                 @keydown=${(e: KeyboardEvent) => this._handleKeyDown(e, key)}>
                 <span class="priority-list__handle" part="drag-handle">
-                  <zn-icon src="drag_indicator" size="16"></zn-icon>
+                  <zn-icon src="${locked ? 'lock@lu' : 'drag_indicator'}" size="16"></zn-icon>
                 </span>
                 <span class="priority-list__priority" part="priority">${this.priorityStart + index}</span>
                 <span class="priority-list__content" part="content">
                   <slot name="_item-${key}"></slot>
                 </span>
                 <span class="priority-list__actions" part="actions">
+                  ${this.moveButtons && !locked ? html`
+                    <span class="priority-list__move">
+                      <zn-button icon="chevron-up@lu" icon-size="18" icon-button="small" plain label="Move up"
+                                 tooltip="Move up"
+                                 ?disabled=${this.disabled || !this._canStep(index, -1)}
+                                 @click=${(e: Event) => this._handleStep(e, key, -1)}></zn-button>
+                      <zn-button icon="chevron-down@lu" icon-size="18" icon-button="small" plain label="Move down"
+                                 tooltip="Move down"
+                                 ?disabled=${this.disabled || !this._canStep(index, 1)}
+                                 @click=${(e: Event) => this._handleStep(e, key, 1)}></zn-button>
+                    </span>` : null}
                   <slot name="action-${key}"></slot>
                 </span>
               </div>
-            `)}
+            `;
+            })}
           </div>
 
           <!-- Hidden default slot to capture light DOM children for initial detection -->

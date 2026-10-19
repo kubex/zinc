@@ -72,6 +72,12 @@ describe('openbyte theme tokens', () => {
     expect(getComputedStyle(root).getPropertyValue('--zn-chart-text-color').trim().toLowerCase()).to.equal('#66768e');
   });
 
+  it('puts a toggle\'s side label first with the switch at the far edge', () => {
+    setTheme('openbyte');
+    expect(token(root, '--zn-toggle-side-label-direction')).to.equal('row');
+    expect(token(root, '--zn-toggle-side-label-justify')).to.equal('space-between');
+  });
+
   it('leaves the base theme untouched', () => {
     setTheme('light');
     expect(token(root, '--zn-color-primary')).to.equal('105,54,245');

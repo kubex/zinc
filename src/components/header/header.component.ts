@@ -40,6 +40,8 @@ export default class ZnHeader extends ZincElement {
   @property({type: Boolean}) transparent: boolean = false;
 
   @property() caption: string;
+  /** A line of muted text under the caption. */
+  @property() description: string;
   @property() icon: string;
 
   @property({type: Array}) navigation = [];
@@ -158,6 +160,8 @@ export default class ZnHeader extends ZincElement {
                   <slot name="breadcrumb" class="breadcrumb"></slot>` : null}
                 <slot name="caption">${this.caption}</slot>
                 </span>
+              ${this.description ? html`
+                <span class="header__description" part="description">${this.description}</span>` : null}
             </div>
 
             <div part="header-right" class="header__right">

@@ -1,3 +1,4 @@
+import {ifDefined} from "lit/directives/if-defined.js";
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
@@ -34,6 +35,8 @@ export default class ZnPanel extends ZincElement {
 
   @property({attribute: 'basis-px', type: Number}) basis: number;
   @property() caption: string;
+  /** Help text under the caption, in the panel's header. */
+  @property() description: string;
   @property() icon: string;
   @property({type: Boolean}) tabbed: boolean;
   @property({attribute: 'header-borderless', type: Boolean}) headerBorderless: boolean;
@@ -151,6 +154,7 @@ export default class ZnPanel extends ZincElement {
                        })}"
                        icon="${this.icon}"
                        caption="${this.caption}"
+                       description="${ifDefined(this.description)}"
                        transparent>
               ${hasActionSlot ? html`
                 <slot name="actions" slot="actions" class="panel__header__actions"></slot>` : null}

@@ -254,3 +254,16 @@
     border-bottom: none !important;
   }
 }
+
+.header__left:has(.header__description) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-spacing-2x-small);
+}
+
+.header__description {
+  font-size: var(--zn-header-description-font-size, var(--zn-font-size-x-small));
+  font-weight: normal;
+  line-height: var(--zn-line-height-normal, 1.45);
+  color: var(--zn-header-description-color, var(--zn-text-color-muted));
+}

@@ -158,6 +158,39 @@ describe('<zn-tabs>', () => {
       expect(restored.getAttribute('active')).to.equal('second');
     });
 
+    it('opens a tab added since the page was last shown, with select-added', async () => {
+      const render = (withThird: boolean) => fixture<ZnTabs>(html`
+        <zn-tabs store-key=${storeKey} active="first" select-added>
+          <zn-navbar slot="top">
+            <li tab="first">First</li>
+            <li tab="second">Second</li>
+            ${withThird ? html`<li tab="third">Third</li>` : null}
+          </zn-navbar>
+          <div id="first">First panel</div>
+          <div id="second">Second panel</div>
+          ${withThird ? html`<div id="third">Third panel</div>` : null}
+        </zn-tabs>
+      `);
+
+      const el = await render(false);
+      await aTimeout(40);
+      el.querySelector('zn-navbar')!.querySelectorAll<HTMLElement>('li')[1].click();
+      await aTimeout(40);
+      el.remove();
+
+      returnWithHistory();
+      const same = await render(false);
+      await aTimeout(40);
+      expect(same.getAttribute('active')).to.equal('second');
+      same.remove();
+
+      returnWithHistory();
+      const added = await render(true);
+      await aTimeout(40);
+      expect(added.getAttribute('active')).to.equal('third');
+      expect(added.querySelector('#third')!.hasAttribute('selected')).to.equal(true);
+    });
+
     it('starts from the default tab when the restored tab no longer exists', async () => {
       const el = await renderTabs();
       await aTimeout(40);

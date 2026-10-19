@@ -1,0 +1,67 @@
+@use "../../wc";
+
+:host {
+  display: block;
+  border-radius: var(--zn-border-radius-medium, var(--zn-border-radius));
+  cursor: pointer;
+  user-select: none;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+:host(:focus-visible) {
+  outline: 2px solid rgb(var(--zn-primary));
+  outline-offset: -2px;
+}
+
+.nav-item {
+  @include wc.text-style(menu-link);
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-x-small);
+  padding: var(--zn-nav-item-padding, 7px 10px);
+  border-radius: inherit;
+}
+
+:host(:hover) .nav-item {
+  background: var(--zn-color-neutral-50);
+}
+
+:host(.zn-tb-active) .nav-item {
+  background: rgba(var(--zn-primary), 0.08);
+  color: rgb(var(--zn-primary));
+  font-weight: var(--zn-font-weight-semibold);
+}
+
+.nav-item__label {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-item__count {
+  flex: 0 0 auto;
+  font-size: var(--zn-font-size-small);
+  color: var(--zn-color-neutral-500);
+}
+
+.nav-item__handle {
+  display: none;
+  flex: 0 0 auto;
+  margin-inline-start: -4px;
+  color: var(--zn-color-neutral-400);
+  cursor: grab;
+}
+
+// Set by a sortable zn-nav-list
+:host([sortable]) .nav-item__handle {
+  display: inline-flex;
+}
+
+:host([dragging]) {
+  opacity: 0.5;
+}

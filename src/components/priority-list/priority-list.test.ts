@@ -1,5 +1,5 @@
 import '../../../dist/zn.min.js';
-import {expect, fixture, html} from '@open-wc/testing';
+import {aTimeout, expect, fixture, html} from '@open-wc/testing';
 
 describe('<zn-priority-list>', () => {
   it('should render a component', async () => {
@@ -438,5 +438,30 @@ describe('<zn-priority-list>', () => {
     await el.updateComplete;
 
     expect(el.shadowRoot.querySelectorAll('.priority-list__item')[1].getAttribute('aria-selected')).to.equal('true');
+  });
+
+  it('should round the placeholder to the panel corner it moves into while dragging', async () => {
+    const panel = await fixture(html`
+      <zn-panel flush style="--zn-panel-border-radius: 12px">
+        <zn-priority-list flush>
+          <div value="a">A</div>
+          <div value="b">B</div>
+          <div value="c">C</div>
+        </zn-priority-list>
+      </zn-panel>
+    `);
+    const el = panel.querySelector('zn-priority-list')!;
+    await el.updateComplete;
+    const rows = () => [...el.shadowRoot!.querySelectorAll<HTMLElement>('.priority-list__item')];
+    const placeholderRadius = () => getComputedStyle(el.shadowRoot!.querySelector('.priority-list__item--dragging')!).borderRadius;
+
+    rows()[1].dispatchEvent(new DragEvent('dragstart', {bubbles: true, composed: true, dataTransfer: new DataTransfer()}));
+    await aTimeout(50);
+    expect(placeholderRadius()).to.equal('0px');
+
+    const top = rows()[0].getBoundingClientRect();
+    rows()[0].dispatchEvent(new DragEvent('dragover', {bubbles: true, composed: true, cancelable: true, clientY: top.top + 1}));
+    await el.updateComplete;
+    expect(placeholderRadius()).to.equal('12px 12px 0px 0px');
   });
 });

@@ -90,15 +90,15 @@
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: 0fr;
   opacity: 0;
-  transition: grid-template-rows var(--zn-transition-medium) cubic-bezier(0.32, 0.72, 0, 1),
+  transition: grid-template-rows var(--zn-transition-medium) var(--zn-ease-drawer),
   opacity var(--zn-transition-fast) ease-out;
 
   &__inner {
     min-height: 0;
     padding: 0 var(--zn-spacing-medium) var(--content-block-padding);
     transform: translateY(-4px);
-    transition: transform var(--zn-transition-medium) cubic-bezier(0.32, 0.72, 0, 1),
-    padding-bottom var(--zn-transition-medium) cubic-bezier(0.32, 0.72, 0, 1);
+    transition: transform var(--zn-transition-medium) var(--zn-ease-drawer),
+    padding-bottom var(--zn-transition-medium) var(--zn-ease-drawer);
   }
 
   &--flush &__inner {

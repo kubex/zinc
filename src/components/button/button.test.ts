@@ -71,4 +71,26 @@ describe('<zn-button>', () => {
     await expect(el).to.be.accessible();
   });
 
+
+  it('submits to its formaction, with its name and value', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form action="/default">
+        <zn-button type="submit" formaction="/add" name="intent" value="add">Add</zn-button>
+      </form>
+    `);
+    const button = form.querySelector('zn-button')! as HTMLElement & {updateComplete: Promise<unknown>};
+    await button.updateComplete;
+
+    let action = '';
+    let intent: FormDataEntryValue | null = null;
+    form.addEventListener('submit', (e: SubmitEvent) => {
+      e.preventDefault();
+      action = e.submitter!.getAttribute('formaction') ?? '';
+      intent = new FormData(form, e.submitter).get('intent');
+    });
+    button.click();
+
+    expect(action).to.equal('/add');
+    expect(intent).to.equal('add');
+  });
 });

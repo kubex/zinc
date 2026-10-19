@@ -11,14 +11,14 @@ import ZnButton from "../button";
 import styles from './dialog.scss';
 
 /**
- * @summary Short summary of the component's intended use.
+ * @summary A modal that appears above the page for a decision that blocks the flow.
  * @documentation https://zinc.style/components/dialog
  * @status experimental
  * @since 1.0
  *
  * @dependency zn-button
  *
- * @event zn-show - Emitted when the dialog is opens.
+ * @event zn-show - Emitted when the dialog opens.
  * @event zn-close - Emitted when the dialog is closed.
  * @event {{ source: 'close-button' | 'keyboard' | 'overlay' }} zn-request-close - Emitted when the user attempts to
  * close the dialog by clicking the close button, clicking the overlay, or pressing escape. Calling
@@ -29,7 +29,7 @@ import styles from './dialog.scss';
  * @slot label - The dialog's label. Alternatively you can use the `label` attribute.
  * @slot header-icon - Optional icon to add to the left of the dialog's label (title). A color will be applied
  * to the icon depending on the dialog variant.
- * @slot announcement-intro - Optional Intro text to display below the icon, when using the variant `announcement`.
+ * @slot announcement-intro - Optional intro text to display below the icon, when using the variant `announcement`.
  * @slot header-actions - Optional actions to add to the header. Works best with `<zn-button>` elements.
  * @slot footer - The dialog's footer. This is typically used for buttons representing various options.
  * @slot footer-text - Optional text to include below the footer buttons, when using the variant `announcement`.
@@ -39,14 +39,23 @@ import styles from './dialog.scss';
  * @csspart header-actions - Optional actions to add to the header. Works best with `<zn-button>` elements.
  * @csspart title - The dialog's title.
  * @csspart close-button - The dialog's close button.
- * @csspart close-button__base - The close buttons exported `base` part.
+ * @csspart close-button__base - The close button's exported `base` part.
  * @csspart body - The dialog's body.
  * @csspart footer - The dialog's footer.
  *
- * @cssproperty --width - The preferred width of the dialog. Note the dialog will shrink to accommodate smaller screens.
+ * @cssproperty --width - The preferred width of a `size="custom"` dialog. The dialog shrinks to fit smaller screens.
  * @cssproperty --header-spacing - The amount of padding to use for the header.
  * @cssproperty --body-spacing - The amount of padding to use for the body.
  * @cssproperty --footer-spacing - The amount of padding to use for the footer.
+ * @cssproperty --zn-dialog-width-small - Theme token: the width of `size="small"`.
+ * @cssproperty --zn-dialog-width-medium - Theme token: the width of `size="medium"`.
+ * @cssproperty --zn-dialog-width-large - Theme token: the width of `size="large"`.
+ * @cssproperty --zn-dialog-border-radius - Theme token: the dialog's corner radius.
+ * @cssproperty --zn-dialog-backdrop - Theme token: the backdrop behind the dialog.
+ * @cssproperty --zn-dialog-body-color - Theme token: the body text colour.
+ * @cssproperty --zn-dialog-icon-background - Theme token: the fill behind a default or warning header icon.
+ * @cssproperty --zn-dialog-close-color - Theme token: the close button's icon colour.
+ * @cssproperty --zn-dialog-close-icon-size - Theme token: the close button's icon size, read when the dialog opens.
  */
 export default class ZnDialog extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);

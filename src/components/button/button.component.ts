@@ -274,12 +274,13 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
       dropdown?.hide();
     }
 
+    // Passing the button through carries its name, value and formaction onto the submission.
     if (this.type === 'submit') {
-      this.formControlController.submit();
+      this.formControlController.submit(this);
     }
 
     if (this.type === 'reset') {
-      this.formControlController.reset();
+      this.formControlController.reset(this);
     }
   }
 

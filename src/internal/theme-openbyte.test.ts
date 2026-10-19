@@ -78,6 +78,19 @@ describe('openbyte theme tokens', () => {
     expect(token(root, '--zn-toggle-side-label-justify')).to.equal('space-between');
   });
 
+  it('keeps the secondary button border neutral when a host re-points the active border', async () => {
+    setTheme('openbyte');
+    root.style.setProperty('--zn-color-border-active', '8, 94, 253');
+    try {
+      const button = await fixture(html`<zn-button color="secondary">Add</zn-button>`);
+      await (button as unknown as {updateComplete: Promise<unknown>}).updateComplete;
+      const base = button.shadowRoot!.querySelector('.button')!;
+      expect(getComputedStyle(base).borderTopColor).to.equal('rgb(186, 200, 217)');
+    } finally {
+      root.style.removeProperty('--zn-color-border-active');
+    }
+  });
+
   it('leaves the base theme untouched', () => {
     setTheme('light');
     expect(token(root, '--zn-color-primary')).to.equal('105,54,245');

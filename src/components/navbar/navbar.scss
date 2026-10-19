@@ -78,6 +78,39 @@
   justify-content: space-between;
 }
 
+// One indicator shared by every tab, so switching tabs slides it instead of
+// swapping per-tab lines. Themes opt in with --zn-navbar-tab-indicator-slide: 1.
+.navbar__indicator {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  // Full width and only ever scaled down: stretching a narrow bar up blurs and
+  // wobbles its edges while it moves.
+  width: 100%;
+  height: var(--zn-navbar-tab-indicator-height, 1px);
+  background-color: var(--zn-navbar-tab-indicator-color, rgb(var(--navbar-active-colour)));
+  transform-origin: left;
+  will-change: transform;
+  opacity: 0;
+  pointer-events: none;
+
+  &--shown {
+    opacity: var(--zn-navbar-tab-indicator-slide, 0);
+  }
+
+  // Gentler than --zn-ease-in-out: its slow start and fast middle lurch over a
+  // tab-strip-length move.
+  &--ready {
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar__indicator--ready {
+    transition: none;
+  }
+}
+
 .navbar {
   margin: 0;
 }
@@ -359,7 +392,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       font-weight: var(--zn-text-tab-link-font-weight);
       padding: 0 var(--zn-navbar-tab-padding-inline, calc(var(--zn-base-px, 8px) * 2));
       background: var(--zn-navbar-tab-background, rgb(var(--zn-color-tab)));
-      transition: background-color 100ms ease-in-out;
+      transition: background-color 100ms ease-in-out, color 150ms ease;
       position: relative;
 
       &:hover {
@@ -415,6 +448,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
         background-color: var(--zn-navbar-tab-hover-indicator-color, rgb(var(--navbar-active-colour)));
         transition: all 300ms ease-in-out;
         height: var(--zn-navbar-tab-indicator-height, 1px);
+        opacity: calc(1 - var(--zn-navbar-tab-indicator-slide, 0));
       }
 
       &:hover:before:not(#dropdown-item) {

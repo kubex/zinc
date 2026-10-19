@@ -75,7 +75,15 @@ export default class ZnNavbar extends ZincElement {
     callback: () => this._updateVisibility(),
   });
 
+  private readonly _activeObserver = new MutationController(this, {
+    target: null,
+    config: {attributes: true, attributeFilter: ['class'], subtree: true, childList: true},
+    callback: () => this._scheduleIndicatorSync(),
+  });
+
   private _navItems: HTMLElement | null = null;
+  private _indicator: HTMLElement | null = null;
+  private _indicatorFrame: number | null = null;
   private _expandable: HTMLElement | null = null;
   private _extendedMenu: HTMLElement | null = null;
   private readonly _cloneSources = new WeakMap<HTMLElement, HTMLElement>();
@@ -167,8 +175,51 @@ export default class ZnNavbar extends ZincElement {
     this._resizeFrame = requestAnimationFrame(() => {
       this._resizeFrame = null;
       this.handleResize();
+      this._syncIndicator();
     });
   };
+
+  private _scheduleIndicatorSync = () => {
+    if (this._indicatorFrame !== null) {
+      cancelAnimationFrame(this._indicatorFrame);
+    }
+
+    this._indicatorFrame = requestAnimationFrame(() => {
+      this._indicatorFrame = null;
+      this._syncIndicator();
+    });
+  };
+
+  /** Moves the shared active-tab indicator under the active tab. */
+  private _syncIndicator() {
+    const indicator = this._indicator;
+    const container = indicator?.parentElement;
+    if (!indicator || !container) {
+      return;
+    }
+
+    const active = this.stacked || this.iconBar ? null : this._navItems?.querySelector<HTMLElement>(
+      ':scope > li.active:not(.hidden), :scope > li.zn-tb-active:not(.hidden)');
+    const tab = active?.getBoundingClientRect();
+    if (!tab || tab.width === 0) {
+      indicator.classList.remove('navbar__indicator--shown');
+      return;
+    }
+
+    const width = indicator.offsetWidth;
+    if (width === 0) {
+      return;
+    }
+
+    const left = tab.left - container.getBoundingClientRect().left;
+    indicator.style.transform = `translateX(${left}px) scaleX(${tab.width / width})`;
+    indicator.classList.add('navbar__indicator--shown');
+
+    // The first placement jumps into position; only later moves animate.
+    if (!indicator.classList.contains('navbar__indicator--ready')) {
+      requestAnimationFrame(() => indicator.classList.add('navbar__indicator--ready'));
+    }
+  }
 
   private _observeExpandingAction(action: Element) {
     this._expandingActionObserver.observe(action);
@@ -454,8 +505,14 @@ export default class ZnNavbar extends ZincElement {
     // Load persisted tabs before calculating widths
     this._loadStoredTabs();
 
+    this._indicator = this.shadowRoot?.querySelector('.navbar__indicator') as HTMLElement || null;
+    if (this._indicator?.parentElement) {
+      // The indicator's scale is relative to the container's width.
+      this._resizeController.observe(this._indicator.parentElement);
+    }
     if (this._navItems) {
       this._itemsObserver.observe(this._navItems);
+      this._activeObserver.observe(this._navItems);
     }
     this._expanding.forEach(action => this._observeExpandingAction(action));
     this._updateVisibility();
@@ -617,6 +674,7 @@ export default class ZnNavbar extends ZincElement {
           ${this._postItems}
           ${this._appended}
         </ul>
+        <span class="navbar__indicator" part="indicator" aria-hidden="true"></span>
         ${this._expanding?.length > 0 ? html`
           <div class="expandables">
             ${this._expanding}

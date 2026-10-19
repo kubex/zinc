@@ -71,6 +71,11 @@
   color: inherit;
 }
 
+// A zn-confirm only contributes its dialog, so it must not take part in the label's layout.
+.menu-item__label::slotted(zn-confirm) {
+  display: contents;
+}
+
 .menu-item.menu-item--disabled {
   outline: none;
   opacity: 0.5;

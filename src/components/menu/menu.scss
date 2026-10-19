@@ -84,6 +84,11 @@
 }
 
 
+// A zn-confirm only contributes its dialog, so it must not claim a slot (or a gap) in the item stack.
+zn-confirm, ::slotted(zn-confirm) {
+  display: contents;
+}
+
 ::slotted(zn-menu-item + zn-menu-item) {
   border-top: var(--zn-menu-item-divider, 1px solid rgb(var(--zn-border-color)));
 }

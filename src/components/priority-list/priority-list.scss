@@ -234,9 +234,9 @@
     }
   }
 
-  // Inset past the panel's rounded clip (a corner curve intrudes ~0.3r), as the row may sit at a panel corner
+  // Set while dragging to the radius of any panel corner the row sits in
   .priority-list__item--dragging {
-    outline-offset: calc(-1px - var(--zn-panel-border-radius, var(--zn-border-radius)) * 0.3);
+    border-radius: var(--zn-priority-list-drag-radius, 0);
   }
 }
 

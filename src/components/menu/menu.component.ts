@@ -6,6 +6,7 @@ import ZnConfirm from "../confirm";
 import ZnDropdown from "../dropdown";
 import ZnIcon from "../icon";
 import ZnMenuItem from "../menu-item";
+import ZnMenuLabel from "../menu-label";
 import ZnTooltip from "../tooltip";
 
 import { classMap } from "lit/directives/class-map.js";
@@ -13,11 +14,16 @@ import styles from './menu.scss';
 
 interface NavItem {
   title: string;
+  /** `label` renders a section heading and `divider` a separator; anything else is an item. */
   type: string;
   path: string;
   target: string;
   icon: string;
   style: string;
+  /** A semantic colour for the item, such as `error` for a destructive action. */
+  color?: string;
+  /** A keyboard shortcut shown at the end of the item. */
+  shortcut?: string;
   confirm: {
     type: string;
     title: string;
@@ -56,6 +62,7 @@ export default class ZnMenu extends ZincElement {
     'zn-dropdown': ZnDropdown,
     'zn-icon': ZnIcon,
     'zn-menu-item': ZnMenuItem,
+    'zn-menu-label': ZnMenuLabel,
     'zn-tooltip': ZnTooltip,
   };
 
@@ -118,6 +125,12 @@ export default class ZnMenu extends ZincElement {
           if (item === null || item === undefined) {
             return html``; // Skip null or undefined items
           }
+          if (item.type === 'label') {
+            return html`<zn-menu-label>${item.title}</zn-menu-label>`;
+          }
+          if (item.type === 'divider') {
+            return html`<hr>`;
+          }
           if (item?.confirm) {
             return html`
               <zn-confirm trigger="${ifDefined(item.confirm?.trigger)}"
@@ -129,6 +142,8 @@ export default class ZnMenu extends ZincElement {
                             @keydown=${this.handleKeyDown}
                             id="${item.confirm?.trigger}"
                             variant="${this.itemVariant}"
+                            color="${ifDefined(item.color)}"
+                            shortcut="${ifDefined(item.shortcut)}"
                             confirm>
                 ${(item.icon) ? html`
                   <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
@@ -140,6 +155,8 @@ export default class ZnMenu extends ZincElement {
                 <zn-menu-item value="${item.title}"
                               href="${item.path}"
                               variant="${this.itemVariant}"
+                              color="${ifDefined(item.color)}"
+                              shortcut="${ifDefined(item.shortcut)}"
                               data-target="${ifDefined(item.target)}">
                   ${(item.icon) ? html`
                     <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}

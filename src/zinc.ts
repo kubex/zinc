@@ -19,6 +19,7 @@ export { default as Dialog } from './components/dialog';
 export { default as Dropdown } from './components/dropdown';
 export { default as Menu } from './components/menu';
 export { default as MenuItem } from './components/menu-item';
+export { default as MenuLabel } from './components/menu-label';
 export { default as DefinedLabel } from './components/defined-label';
 export { default as EmptyState } from './components/empty-state';
 export { default as Note } from './components/note';

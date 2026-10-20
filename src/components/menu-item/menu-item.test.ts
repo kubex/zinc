@@ -1,8 +1,18 @@
 import '../../../dist/zn.min.js';
 import {expect, fixture, html, waitUntil} from '@open-wc/testing';
 import type ZnDropdown from '../dropdown/dropdown.component';
+import type ZnMenuItem from './menu-item.component';
 
 describe('<zn-menu-item>', () => {
+  it('should show its shortcut as a key cap only when set', async () => {
+    const el = await fixture<ZnMenuItem>(html`<zn-menu-item>Send email</zn-menu-item>`);
+    expect(el.shadowRoot!.querySelector('[part="shortcut"]')).to.be.null;
+
+    el.shortcut = 'E';
+    await el.updateComplete;
+    expect(el.shadowRoot!.querySelector('[part="shortcut"]')!.textContent).to.equal('E');
+  });
+
   it('should render a component', async () => {
     const el = await fixture(html` <zn-menu-item></zn-menu-item> `);
 

@@ -62,6 +62,8 @@ export default class ZnNavbar extends ZincElement {
   @property({attribute: 'gutter', type: Boolean, reflect: true}) gutter: boolean = false;
   /** Draws the tabs as a segmented control: a grey track with a pill that slides to the active tab. */
   @property({type: Boolean, reflect: true}) pill: boolean = false;
+  /** The id of a zn-tabs elsewhere on the page that this navbar's tabs switch, such as one below a page header. */
+  @property({reflect: true}) tabs: string;
   @property({type: Boolean}) stacked: boolean;
   @property({type: Array}) dropdown = [];
   @property({attribute: "no-pad", type: Boolean}) noPad: false
@@ -423,6 +425,12 @@ export default class ZnNavbar extends ZincElement {
   handleResize = () => {
     if (this._extendedMenu === null || this.iconBar || this.stacked) {
       // If we can't do anything with the nav items, we just return
+      return;
+    }
+
+    // A segmented control shows every option, so it never folds into the more menu
+    if (this.pill) {
+      this._syncLastVisibleItem();
       return;
     }
 

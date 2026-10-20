@@ -773,3 +773,14 @@ button[popovertarget] {
     box-shadow: var(--zn-shadow-small, 0 1px 3px rgba(13, 23, 56, 0.08), 0 1px 2px rgba(13, 23, 56, 0.04));
   }
 }
+
+// Beside page header actions, or ahead of a button menu's buttons, the pill keeps to its own width and drops the
+// panel inset and the gap it keeps above content
+:host([pill]:is([slot="actions"], [slot="prefix"]):not([stacked]):not([icon-bar])) {
+  flex: none;
+  width: max-content;
+
+  ul.navbar {
+    margin: 0;
+  }
+}

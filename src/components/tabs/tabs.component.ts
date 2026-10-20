@@ -22,10 +22,10 @@ import ZincElement from '../../internal/zinc-element';
 import bootStyles from '../../../scss/boot.scss';
 import styles from './tabs.scss';
 
-// Every element that manages its own tabs (ZnTabs and its subclasses). Tab
-// registration must stop at these so an outer container never claims a nested
-// container's tabs.
-export const tabContainerSelector = 'zn-tabs, zn-page, zn-page-nav';
+// Every element that manages its own tabs (ZnTabs and its subclasses), plus a navbar
+// linked to a container elsewhere. Tab registration must stop at these so an outer
+// container never claims a nested or linked container's tabs.
+export const tabContainerSelector = 'zn-tabs, zn-page, zn-page-nav, zn-navbar[tabs]';
 
 /**
  * @summary Short summary of the component's intended use.
@@ -356,6 +356,10 @@ export default class ZnTabs extends ZincElement {
     setTimeout(() => {
       this._registerTabs();
       this._defaultTab = this._current || '';
+      // A linked navbar renders its items after this container can be ready
+      this._linkedNavbars().forEach(navbar => {
+        void (navbar as ZincElement).updateComplete?.then(this.reRegisterTabs);
+      });
 
       const added = this.takeAddedTabs();
       if (added.length > 0) {
@@ -409,7 +413,8 @@ export default class ZnTabs extends ZincElement {
       }
     }
 
-    for (const uriTab of deepQuerySelectorAll("[tab-uri]", this, tabContainerSelector)) {
+    const uriTabs = [this, ...this._linkedNavbars()].flatMap(root => deepQuerySelectorAll("[tab-uri]", root, tabContainerSelector));
+    for (const uriTab of uriTabs) {
       const uri: string = uriTab.getAttribute("tab-uri")!;
       const eleTabId = this._uriToId(uri);
       if (eleTabId === tabId) {
@@ -656,26 +661,37 @@ export default class ZnTabs extends ZincElement {
     }
   }
 
+  /** Navbars elsewhere in this container's root that drive it through `tabs="<this id>"`. */
+  private _linkedNavbars(): Element[] {
+    if (!this.id) {
+      return [];
+    }
+    const root = this.getRootNode() as Document | ShadowRoot;
+    return Array.from(root.querySelectorAll(`zn-navbar[tabs="${CSS.escape(this.id)}"]`));
+  }
+
   _registerTabs = () => {
-    deepQuerySelectorAll('[tab]', this, tabContainerSelector).forEach(ele => {
-      this._addTab(ele as HTMLElement);
-    });
+    for (const root of [this, ...this._linkedNavbars()]) {
+      deepQuerySelectorAll('[tab]', root, tabContainerSelector).forEach(ele => {
+        this._addTab(ele as HTMLElement);
+      });
 
-    deepQuerySelectorAll('[tab-uri]', this, tabContainerSelector).forEach(ele => {
-      if (ele.getAttribute('tab-uri') === "") {
-        ele.setAttribute('tab', "");
-        ele.removeAttribute('tab-uri');
-      }
-      this._addTab(ele as HTMLElement);
-    });
+      deepQuerySelectorAll('[tab-uri]', root, tabContainerSelector).forEach(ele => {
+        if (ele.getAttribute('tab-uri') === "") {
+          ele.setAttribute('tab', "");
+          ele.removeAttribute('tab-uri');
+        }
+        this._addTab(ele as HTMLElement);
+      });
 
-    deepQuerySelectorAll('[ref-tab-uri]', this, tabContainerSelector).forEach(ele => {
-      if (!ele.hasAttribute('ref-tab')) {
-        ele.setAttribute('ref-tab', this._uriToId(ele.getAttribute('ref-tab-uri')!));
-        ele.removeAttribute('ref-tab-uri');
-        this._actions.push(ele as HTMLElement);
-      }
-    });
+      deepQuerySelectorAll('[ref-tab-uri]', root, tabContainerSelector).forEach(ele => {
+        if (!ele.hasAttribute('ref-tab')) {
+          ele.setAttribute('ref-tab', this._uriToId(ele.getAttribute('ref-tab-uri')!));
+          ele.removeAttribute('ref-tab-uri');
+          this._actions.push(ele as HTMLElement);
+        }
+      });
+    }
   }
 
   render() {

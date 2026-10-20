@@ -1843,6 +1843,17 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     }
   }
 
+  // A theme picks the chevron through --zn-select-expand-icon and its size through
+  // --zn-select-expand-icon-size, as zn-icon sizes itself from its size attribute.
+  private expandIconSrc(): string {
+    const value = getComputedStyle(this).getPropertyValue('--zn-select-expand-icon').trim();
+    return value.replace(/^["']|["']$/g, '') || 'keyboard_arrow_down';
+  }
+
+  private expandIconSize(): string {
+    return String(parseInt(getComputedStyle(this).getPropertyValue('--zn-select-expand-icon-size')) || 24);
+  }
+
   render() {
     const hasLabelSlot = this.hasSlotController.test('label');
     const hasLabelTooltipSlot = this.hasSlotController.test('label-tooltip');
@@ -1995,7 +2006,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                     <zn-icon src="error" class="select__expand-icon select__fetch-error-icon"></zn-icon>`
                   : html`
                     <slot name="expand-icon" part="expand-icon" class="select__expand-icon">
-                      <zn-icon src="keyboard_arrow_down"></zn-icon>
+                      <zn-icon src="${this.expandIconSrc()}" size="${this.expandIconSize()}"></zn-icon>
                     </slot>`
               }
             </div>

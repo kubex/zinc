@@ -60,7 +60,7 @@
 .form-control-input {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--zn-spacing-medium) var(--zn-spacing-small);
+  gap: var(--zn-form-row-gap, var(--zn-spacing-medium)) var(--zn-spacing-small);
 
   // `1fr` floors each track at its min-content width, so one long label steals width from
   // the other tracks and the spans stop lining up.
@@ -127,4 +127,23 @@ zn-cols::part(base) {
 // Without a label or help text the group is only its card's field grid, so it fills the card.
 :host(:not([label]):not([help-text])) {
   max-width: none;
+}
+
+:host([compact]) .form-control--has-label .form-control__label {
+  display: block;
+  margin-bottom: 0;
+  font-family: inherit;
+  font-weight: var(--zn-input-label-font-weight);
+  font-size: var(--zn-input-label-font-size-medium);
+  line-height: var(--zn-input-label-line-height);
+}
+
+:host([compact]) .form-control__help-text {
+  margin-top: var(--zn-input-label-spacing, var(--zn-spacing-2x-small));
+  font-size: var(--zn-input-help-text-font-size-medium);
+  line-height: var(--zn-input-help-text-line-height, 1.5);
+}
+
+:host([compact]) zn-cols::part(base) {
+  gap: var(--zn-form-row-gap, var(--zn-spacing-medium));
 }

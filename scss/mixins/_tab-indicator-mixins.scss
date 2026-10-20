@@ -1,0 +1,12 @@
+/// Motion for a pill that slides between segmented tabs. On a tab change it squishes slightly, then its
+/// leading edge glides to the new tab while the trailing edge follows on a damped spring, so it stretches
+/// a little and settles. Neither edge travels beyond the new tab, so the pill can't overflow its track.
+@mixin pill-tab-indicator-motion {
+  // Both edges wait for the squish to reach its deepest point
+  --zn-navbar-tab-indicator-delay: 60ms;
+  --zn-navbar-tab-indicator-squash: 0.9;
+  --zn-navbar-tab-indicator-duration: 280ms;
+  --zn-navbar-tab-indicator-easing: cubic-bezier(0.32, 0.72, 0, 1);
+  --zn-navbar-tab-indicator-trail-duration: 340ms;
+  --zn-navbar-tab-indicator-trail-easing: linear(0, 0.055, 0.177, 0.325, 0.47, 0.601, 0.71, 0.798, 0.865, 0.914, 0.949, 0.973, 0.988, 0.998, 1.003, 1.005, 1.006, 1.006, 1.005, 1.004, 1.004, 1.003, 1.002, 1.001, 1);
+}

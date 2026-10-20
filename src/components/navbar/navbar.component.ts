@@ -4,8 +4,8 @@ import {ifDefined} from "lit/directives/if-defined.js";
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property} from 'lit/decorators.js';
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
+import {squishTabIndicator} from "../../internal/tab-indicator";
 import {Store} from "../../internal/storage";
-import {prefersReducedMotion} from "../../internal/animate";
 import ZincElement from '../../internal/zinc-element';
 import ZnDropdown from "../dropdown";
 import type {ZnMenuSelectEvent} from "../../events/zn-menu-select";
@@ -41,8 +41,10 @@ const NAVBAR_MIN_WIDTH = 200;
  * @cssproperty --zn-navbar-tab-indicator-duration - Duration of the indicator's leading edge (default 300ms).
  * @cssproperty --zn-navbar-tab-indicator-easing - Easing of both indicator edges.
  * @cssproperty --zn-navbar-tab-indicator-trail-duration - Duration of the trailing edge; longer than the lead stretches the indicator.
+ * @cssproperty --zn-navbar-tab-indicator-trail-easing - Easing of the trailing edge; defaults to `--zn-navbar-tab-indicator-easing`.
  * @cssproperty --zn-navbar-tab-indicator-trail-delay - Delay before the trailing edge follows (default 0ms).
- * @cssproperty --zn-navbar-tab-indicator-squash - Vertical scale the indicator dips to while it travels (default 1, off).
+ * @cssproperty --zn-navbar-tab-indicator-delay - Delay before the indicator starts to move (default 0ms).
+ * @cssproperty --zn-navbar-tab-indicator-squash - Vertical scale the indicator squishes to before it travels (default 1, off).
  */
 export default class ZnNavbar extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -58,6 +60,8 @@ export default class ZnNavbar extends ZincElement {
   @property({attribute: 'hide-one', type: Boolean, reflect: true}) hideOne: boolean;
   @property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
   @property({attribute: 'gutter', type: Boolean, reflect: true}) gutter: boolean = false;
+  /** Draws the tabs as a segmented control: a grey track with a pill that slides to the active tab. */
+  @property({type: Boolean, reflect: true}) pill: boolean = false;
   @property({type: Boolean}) stacked: boolean;
   @property({type: Array}) dropdown = [];
   @property({attribute: "no-pad", type: Boolean}) noPad: false
@@ -228,7 +232,7 @@ export default class ZnNavbar extends ZincElement {
     if (ready && tabChanged && !Number.isNaN(previousLeft) && Math.abs(left - previousLeft) > 0.5) {
       indicator.classList.toggle('navbar__indicator--forward', left > previousLeft);
       indicator.classList.toggle('navbar__indicator--backward', left < previousLeft);
-      this._squashIndicator(indicator);
+      squishTabIndicator(indicator);
     }
     this._indicatorTab = active ?? null;
 
@@ -258,18 +262,6 @@ export default class ZnNavbar extends ZincElement {
     }
   }
 
-  /** Thins the indicator while it travels, so a stretched pill reads as liquid keeping its volume. */
-  private _squashIndicator(indicator: HTMLElement) {
-    const squash = parseFloat(getComputedStyle(indicator).getPropertyValue('--zn-navbar-tab-indicator-squash'));
-    if (!squash || squash === 1 || prefersReducedMotion()) {
-      return;
-    }
-
-    indicator.animate(
-      [{scale: '1 1'}, {scale: `1 ${squash}`, offset: 0.35}, {scale: '1 1'}],
-      {duration: 450, easing: 'ease-in-out'}
-    );
-  }
 
   private _observeExpandingAction(action: Element) {
     this._expandingActionObserver.observe(action);

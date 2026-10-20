@@ -30,7 +30,8 @@ interface TabDefinition {
  * @status experimental
  * @since 1.0
  *
- * @slot - Page content. Use zn-tab for named tabs and header-action/header-actions for header actions.
+ * @slot - Page content. Use zn-tab for named tabs; without any, the content is shown as the page's only view. Use
+ *   header-action/header-actions for header actions.
  *   Clicking an element in the content with `tab="<tab id>"` opens that tab.
  * @slot description - Rich subtitle/description content. Falls back to the `summary` attribute when empty.
  * @slot bottom - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.
@@ -52,6 +53,8 @@ export default class ZnPage extends ZnTabs {
 
   private readonly pageSlotController = new HasSlotController(this, 'breadcrumb', 'actions', 'caption', 'description', 'footer');
 
+  /** Caps the header and content at the container width (`--zn-container`), centred, as zn-sp's `width-container` does. */
+  @property({attribute: 'width-container', type: Boolean, reflect: true}) widthContainer = false;
   @property() caption: string;
   @property({attribute: 'entity-id'}) entityId: string;
   @property({attribute: 'entity-id-show', type: Boolean}) entityIdShow: boolean;
@@ -564,7 +567,10 @@ export default class ZnPage extends ZnTabs {
 
         <div class="page__tabs">
           <div id="content" class="page__content" part="content" @scroll="${this.handlePageScroll}">
-            ${this.tabDefinitions
+            ${this.tabDefinitions.length === 0 ? html`
+              <div class="page__default" selected>
+                <slot></slot>
+              </div>` : this.tabDefinitions
               .filter(tab => tab.slotName !== null)
               .map(tab => html`
                 <div id="${tab.id}" ?selected="${tab.selected}">

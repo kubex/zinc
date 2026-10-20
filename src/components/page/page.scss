@@ -397,6 +397,11 @@
   display: block !important;
 }
 
+// A page without tabs shows its content as one view, past the rule that hides unselected tab content
+.page__tabs #content .page__default ::slotted(:not([hidden])) {
+  display: block !important;
+}
+
 // Sticky rather than a sibling of a scrolling content area, as .page is the scroll container.
 .page__footer {
   flex: 0 0 auto;
@@ -492,4 +497,15 @@ zn-navbar {
       display: none;
     }
   }
+}
+
+:host([width-container]) .header .content,
+:host([width-container]) .page__tabs .page__content {
+  max-width: var(--zn-container, 100%);
+  margin-inline: auto;
+}
+
+// The content keeps its gutter inside the cap, so the header is narrower by it to line up
+:host([width-container]) .header .content {
+  max-width: calc(var(--zn-container, 100%) - 2 * var(--zn-gutter, 0px));
 }

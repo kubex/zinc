@@ -316,7 +316,8 @@ export default class ZnDataTable extends ZincElement {
   @property({attribute: 'pill-tabs', type: Boolean, reflect: true}) pillTabs = false;
 
   /** The selected tab's value; the first tab when empty. */
-  @property({reflect: true}) tab = '';
+  // Not the `tab` attribute: on any element that marks a zn-tabs trigger, which is clickable and switches tabs
+  @property({attribute: 'active-tab', reflect: true}) tab = '';
 
   /**
    * Fields for the funnel's filter builder. When set, the funnel opens a popover of

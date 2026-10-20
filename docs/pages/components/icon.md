@@ -377,6 +377,8 @@ Theme tokens control the look:
 - `--zn-avatar-font-weight`: the initials' weight
 - `--zn-avatar-ring-color`: the ring around the presence dot (default: the panel surface)
 
+To overlap several avatars with a tooltip on each, use [Avatar Group](/components/avatar-group).
+
 ### Gravatar
 
 Gravatar provides globally recognized avatars based on email addresses. Simply provide an email address as the `src` and the component will automatically detect it and use Gravatar.

@@ -613,7 +613,7 @@ describe('<zn-data-table>', () => {
     });
   });
 
-  it('shows a server-rendered filter as pills in the slotted filter bar', async () => {
+  it('shows a server-rendered filter as chips under the header of a slotted filter', async () => {
     const originalFetch = window.fetch;
     window.fetch = () => Promise.resolve(new Response(JSON.stringify({
       rows: [{id: '1', cells: [{text: 'Row', column: 'name'}]}], page: 1, perPage: 10, total: 1,
@@ -633,11 +633,13 @@ describe('<zn-data-table>', () => {
         <zn-data-table filter="${filter}" data-uri="/test-data" headers='{"name": {"key": "name", "label": "Name"}}'>
           <zn-data-table-filter slot="filter" filters="${filters}"></zn-data-table-filter>
         </zn-data-table>`);
-      const bar = el.querySelector('zn-data-table-filter') as HTMLElement & { updateComplete: Promise<unknown> };
-      await bar.updateComplete;
+      await waitUntil(() => el.shadowRoot!.querySelector('.table__chips'));
+      const chipsEl = el.shadowRoot!.querySelector<HTMLElement & {updateComplete: Promise<unknown>}>('.table__chips')!;
+      await chipsEl.updateComplete;
 
-      const pills = [...bar.shadowRoot!.querySelectorAll('.filter-bar__pill')].map(p => p.textContent!.trim());
-      expect(pills).to.deep.equal(['Status (2)', 'Department']);
+      const chips = [...chipsEl.shadowRoot!.querySelectorAll('.filter__chip__text')].map(p => p.textContent!.trim());
+      expect(chips).to.deep.equal(['Status is any of Pending Reply, Open']);
+      expect(chipsEl.shadowRoot!.querySelectorAll('.filter__chip__remove').length).to.equal(1);
     } finally {
       window.fetch = originalFetch;
     }
@@ -663,5 +665,207 @@ describe('<zn-data-table>', () => {
     } finally {
       window.fetch = originalFetch;
     }
+  });
+
+  describe('table controls', () => {
+    const rowResponse = () => new Response(JSON.stringify({
+      rows: [{id: '1', cells: [{text: 'Row', column: 'name'}]}], page: 1, perPage: 10, total: 1,
+    }), {status: 200, headers: {'Content-Type': 'application/json'}});
+    const click = (el: Element) => el.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+    const choose = (select: Element, value: string) => {
+      (select as HTMLElement & {value: string}).value = value;
+      select.dispatchEvent(new CustomEvent('zn-change', {bubbles: true, composed: true}));
+    };
+
+    let originalFetch: typeof window.fetch;
+    let bodies: Record<string, unknown>[];
+    beforeEach(() => {
+      originalFetch = window.fetch;
+      bodies = [];
+      window.fetch = (_url: RequestInfo | URL, options?: RequestInit) => {
+        if (options?.body) bodies.push(JSON.parse(options.body as string) as Record<string, unknown>);
+        return Promise.resolve(rowResponse());
+      };
+    });
+    afterEach(() => {
+      window.fetch = originalFetch;
+    });
+
+    const filterTable = async () => {
+      const el = await fixture<ZnDataTable>(html`
+        <zn-data-table data-uri="/test-data" caption="Things" headers='{"name": {"key": "name", "label": "Name"}}'
+                       filter-fields='[{"id":"status","name":"Status","options":{"active":"Active"}}]'></zn-data-table>`);
+      await waitUntil(() => bodies.length > 0);
+      return el;
+    };
+
+    type FilterEl = HTMLElement & {updateComplete: Promise<unknown>};
+    const funnel = (el: ZnDataTable) => el.shadowRoot!.querySelector<FilterEl>('.table__header__right zn-data-table-filter')!;
+    const chipRow = (el: ZnDataTable) => el.shadowRoot!.querySelector<FilterEl>('.table__chips')!;
+    const settle = async (el: ZnDataTable) => {
+      await el.updateComplete;
+      await funnel(el).updateComplete;
+      await chipRow(el)?.updateComplete;
+    };
+
+    const addRule = async (el: ZnDataTable) => {
+      const root = funnel(el).shadowRoot!;
+      choose(root.querySelector('.filter__rule zn-select[aria-label="Filter field"]')!, 'status');
+      await settle(el);
+      await waitUntil(() => root.querySelector('.filter__rule zn-select[aria-label="Filter value"]'));
+      choose(root.querySelector('.filter__rule zn-select[aria-label="Filter value"]')!, 'active');
+      await settle(el);
+    };
+
+    it('opens the filter builder and encodes a completed rule', async () => {
+      const el = await filterTable();
+      const root = funnel(el).shadowRoot!;
+
+      click(root.querySelector('.filter__toggle')!);
+      await settle(el);
+      expect(root.querySelector('.filter__pop')).to.exist;
+
+      await addRule(el);
+      const expected = btoa(JSON.stringify([{key: 'status', comparator: 'eq', value: 'active'}]));
+      await waitUntil(() => bodies[bodies.length - 1].filter === expected);
+      await settle(el);
+
+      expect(el.filter).to.equal(expected);
+      const chips = chipRow(el).shadowRoot!;
+      expect(chips.querySelectorAll('.filter__chip').length).to.equal(1);
+      expect(chips.querySelector('.filter__chip__text')!.textContent!.trim()).to.equal('Status is Active');
+    });
+
+    it('closes the filter builder on Escape and drops incomplete rules', async () => {
+      const el = await filterTable();
+      const root = funnel(el).shadowRoot!;
+
+      click(root.querySelector('.filter__toggle')!);
+      await settle(el);
+      await addRule(el);
+      click(root.querySelector('.filter__pop__foot zn-button[icon="plus@lu"]')!);
+      await settle(el);
+      expect(root.querySelectorAll('.filter__rule').length).to.equal(2);
+
+      document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
+      await settle(el);
+      expect(root.querySelector('.filter__pop')).to.not.exist;
+      expect(chipRow(el).shadowRoot!.querySelectorAll('.filter__chip').length).to.equal(1);
+
+      click(root.querySelector('.filter__toggle')!);
+      await settle(el);
+      expect(root.querySelectorAll('.filter__rule').length).to.equal(1);
+    });
+
+    const headerOrder = (el: ZnDataTable) => {
+      const right = el.shadowRoot!.querySelector('.table__header__right')!;
+      const order = [
+        right.querySelector('slot[name="search"]'),
+        right.querySelector('zn-data-table-filter, slot[name="filter"]'),
+        right.querySelector('zn-dropdown zn-button[icon="columns-3@lu"]')?.closest('zn-dropdown'),
+        right.querySelector('zn-button[icon="refresh-cw@lu"]'),
+        right.querySelector('slot[name="sort"]'),
+        right.querySelector('slot[name="create-action"]'),
+      ];
+      const children = [...right.children];
+      return order.map(node => node ? children.indexOf(node) : -1);
+    };
+    const ascending = (indexes: number[]) => indexes.every((index, i) => index >= 0 && (i === 0 || index > indexes[i - 1]));
+    const twoColumns = '{"name": {"key": "name", "label": "Name"}, "age": {"key": "age", "label": "Age"}}';
+
+    it('orders the header search, funnel, columns, refresh with filter-fields', async () => {
+      const el = await fixture<ZnDataTable>(html`
+        <zn-data-table data-uri="/test-data" caption="Things" headers="${twoColumns}"
+                       filter-fields='[{"id":"status","name":"Status"}]'>
+          <zn-data-table-search slot="search"></zn-data-table-search>
+        </zn-data-table>`);
+      await waitUntil(() => el.shadowRoot!.querySelector('zn-button[icon="refresh-cw@lu"]'));
+
+      const order = headerOrder(el);
+      expect(ascending(order), `header order ${order.join(',')}`).to.be.true;
+    });
+
+    it('orders the header search, funnel, columns, refresh with a slotted filter', async () => {
+      const el = await fixture<ZnDataTable>(html`
+        <zn-data-table data-uri="/test-data" caption="Things" headers="${twoColumns}">
+          <zn-data-table-search slot="search"></zn-data-table-search>
+          <zn-data-table-filter slot="filter" filters='[{"id":"status","name":"Status","operators":["eq"]}]'></zn-data-table-filter>
+        </zn-data-table>`);
+      await waitUntil(() => el.shadowRoot!.querySelector('zn-button[icon="refresh-cw@lu"]'));
+
+      const order = headerOrder(el);
+      expect(ascending(order), `header order ${order.join(',')}`).to.be.true;
+    });
+
+    it('reloads with a slotted filter\'s encoded rules', async () => {
+      const el = await fixture<ZnDataTable>(html`
+        <zn-data-table data-uri="/test-data" caption="Things" headers='{"name": {"key": "name", "label": "Name"}}'>
+          <zn-data-table-filter slot="filter" filters='[{"id":"status","name":"Status","operators":["eq"],"options":{"active":"Active"}}]'></zn-data-table-filter>
+        </zn-data-table>`);
+      await waitUntil(() => bodies.length > 0);
+      const bar = el.querySelector<FilterEl>('zn-data-table-filter')!;
+      const root = bar.shadowRoot!;
+
+      click(root.querySelector('.filter__toggle')!);
+      await bar.updateComplete;
+      choose(root.querySelector('.filter__rule zn-select[aria-label="Filter field"]')!, 'status');
+      await bar.updateComplete;
+      choose(root.querySelector('.filter__rule zn-select[aria-label="Filter value"]')!, 'active');
+
+      const expected = btoa(JSON.stringify([{key: 'status', comparator: 'eq', value: 'active'}]));
+      await waitUntil(() => bodies[bodies.length - 1].filter === expected);
+      await waitUntil(() => el.shadowRoot!.querySelector<FilterEl>('.table__chips')?.shadowRoot?.querySelector('.filter__chip'));
+      expect(root.querySelector('.filter__chip')).to.not.exist;
+    });
+
+    it('selecting a tab reloads with the tab param', async () => {
+      const el = await fixture<ZnDataTable>(html`
+        <zn-data-table data-uri="/test-data" headers='{"name": {"key": "name", "label": "Name"}}'
+                       tabs='[{"value":"a","label":"A"},{"value":"b","label":"B"}]'></zn-data-table>`);
+      await waitUntil(() => bodies.length > 0);
+      expect(bodies[0].tab).to.equal('a');
+
+      const tabs = el.shadowRoot!.querySelectorAll<HTMLElement>('.table__tab');
+      click(tabs[1]);
+      await waitUntil(() => bodies[bodies.length - 1].tab === 'b');
+      await el.updateComplete;
+
+      const second = el.shadowRoot!.querySelectorAll('.table__tab')[1];
+      expect(second.getAttribute('aria-selected')).to.equal('true');
+      expect(el.shadowRoot!.querySelectorAll('.table__tab')[0].getAttribute('aria-selected')).to.equal('false');
+      expect(el.shadowRoot!.querySelector('.table__tabs__indicator')).to.exist;
+    });
+
+    it('sort heading toggles aria-sort with Enter', async () => {
+      const el = await fixture<ZnDataTable>(html`
+        <zn-data-table data-uri="/test-data" headers='{"name": {"key": "name", "label": "Name"}}'></zn-data-table>`);
+      await waitUntil(() => el.shadowRoot!.querySelector('th.table__head[tabindex]'));
+      const head = () => el.shadowRoot!.querySelector('th.table__head[tabindex]')!;
+      expect(head().getAttribute('aria-sort')).to.equal('none');
+      expect(head().querySelector('.table__head__sort--active')).to.not.exist;
+
+      head().dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true, cancelable: true}));
+      await waitUntil(() => head().getAttribute('aria-sort') === 'descending');
+      expect(head().querySelector('.table__head__sort--active zn-icon')!.getAttribute('src')).to.contain('arrow-down');
+
+      head().dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true, cancelable: true}));
+      await waitUntil(() => head().getAttribute('aria-sort') === 'ascending');
+      expect(bodies[bodies.length - 1].sortColumn).to.equal('name');
+    });
+  });
+
+  it('keeps the slotted search readable in a narrow header', async () => {
+    const wrap = await fixture<HTMLElement>(html`
+      <div style="width: 340px">
+        <zn-data-table standalone no-initial-load caption="A fairly long table caption" total-label="rows">
+          <zn-data-table-search slot="search" placeholder="Search..."></zn-data-table-search>
+          <div slot="empty-state">Nothing yet</div>
+        </zn-data-table>
+      </div>`);
+    const el = wrap.querySelector<ZnDataTable>('zn-data-table')!;
+    await el.updateComplete;
+    const search = el.querySelector('zn-data-table-search')!;
+
+    expect(search.getBoundingClientRect().width).to.be.at.least(160);
   });
 });

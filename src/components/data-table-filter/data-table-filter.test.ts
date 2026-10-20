@@ -1,378 +1,353 @@
 import '../../../dist/zn.min.js';
 import {expect, fixture, html, waitUntil} from '@open-wc/testing';
 import type ZnDataTableFilter from './data-table-filter.component';
-import type ZnDatepicker from '../datepicker/datepicker.component';
-import type ZnDropdown from '../dropdown/dropdown.component';
 import type ZnInput from '../input/input.component';
+import type ZnSelect from '../select/select.component';
 
 const FILTERS = [
   {id: 'role', name: 'role', operators: ['in'], options: {pm: 'Project Manager', eng: 'Engineer'}},
-  {id: 'status', name: 'status', operators: ['eq'], options: {active: 'Active', inactive: 'Inactive'}},
-  {id: 'email', name: 'email', operators: ['contains']},
-  {id: 'created', name: 'created', type: 'date', operators: ['eq'], dateSubmitFormat: 'timestamp'},
-  {id: 'age', name: 'age', type: 'number', operators: ['eq', 'gte']}
+  {id: 'status', name: 'Status', operators: ['eq', 'neq'], options: {active: 'Active', inactive: 'Inactive'}},
+  {id: 'email', name: 'Email', operators: ['contains']},
+  {id: 'created', name: 'Created', type: 'date', operators: ['eq', 'before']},
+  {id: 'age', name: 'Age', type: 'number', operators: ['eq', 'gte']},
+  {id: 'state', name: 'State', operators: ['eq', 'in'], options: {open: 'Open', closed: 'Closed'}},
 ];
 
-const clickOn = (el: Element | null | undefined) =>
+const MANY = Array.from({length: 10}, (_, i) => ({id: `f${i}`, name: i === 4 ? 'Mac Hotspot Shield' : `Field ${i}`, operators: ['eq']}));
+
+const click = (el: Element | null | undefined) =>
   el?.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
 
-const decode = (value: string) => JSON.parse(atob(value)) as { key: string; comparator: string; value: string }[];
+const choose = (control: Element, value: string | string[]) => {
+  (control as HTMLElement & {value: string | string[]}).value = value;
+  control.dispatchEvent(new CustomEvent('zn-change', {bubbles: true, composed: true}));
+};
 
-async function filterBar(defaultFilters = '') {
+const decode = (value: string) => JSON.parse(atob(value)) as {key: string; comparator: string; value: string}[];
+const encode = (rules: {key: string; comparator: string; value: string}[]) => btoa(JSON.stringify(rules));
+
+async function filter(attrs: {defaultFilters?: string; value?: string; filters?: unknown[]} = {}) {
   const el = await fixture<ZnDataTableFilter>(html`
-    <zn-data-table-filter default-filters="${defaultFilters}" .filters="${FILTERS}"></zn-data-table-filter>`);
+    <zn-data-table-filter default-filters="${attrs.defaultFilters ?? ''}" .filters="${attrs.filters ?? FILTERS}"
+                          .value="${attrs.value ?? ''}"></zn-data-table-filter>`);
   await el.updateComplete;
   return el;
 }
 
-const pills = (el: ZnDataTableFilter) =>
-  [...el.shadowRoot!.querySelectorAll('.filter-bar__pill')].map(p => p.textContent!.trim());
+const root = (el: ZnDataTableFilter) => el.shadowRoot!;
+const rules = (el: ZnDataTableFilter) => [...root(el).querySelectorAll('.filter__rule')];
+const control = <T extends Element>(el: ZnDataTableFilter, label: string, index = 0) =>
+  rules(el)[index].querySelector<T>(`[aria-label="${label}"]`)!;
+const chips = (el: ZnDataTableFilter) =>
+  [...root(el).querySelectorAll('.filter__chip__text')].map(chip => chip.textContent!.trim());
+
+async function open(el: ZnDataTableFilter) {
+  click(root(el).querySelector('.filter__toggle'));
+  await el.updateComplete;
+}
+
+async function setRule(el: ZnDataTableFilter, key: string, value?: string | string[], index = 0) {
+  choose(control(el, 'Filter field', index), key);
+  await el.updateComplete;
+  if (value === undefined) return;
+  await waitUntil(() => control(el, 'Filter value', index));
+  choose(control(el, 'Filter value', index), value);
+  await el.updateComplete;
+}
 
 describe('<zn-data-table-filter>', () => {
-  it('should render a component', async () => {
-    const el = await fixture(html`
-      <zn-data-table-filter></zn-data-table-filter>`);
+  it('opens the filter popover from the funnel with one empty rule', async () => {
+    const el = await filter();
+    const toggle = root(el).querySelector('.filter__toggle')!;
+    expect(root(el).querySelector('.filter__pop')).to.not.exist;
+    expect(toggle.getAttribute('aria-expanded')).to.equal('false');
+    expect(toggle.classList.contains('filter__toggle--open')).to.be.false;
 
-    expect(el).to.exist;
+    await open(el);
+    expect(toggle.getAttribute('aria-expanded')).to.equal('true');
+    expect(toggle.classList.contains('filter__toggle--open')).to.be.true;
+
+    const pop = root(el).querySelector('.filter__pop')!;
+    expect(pop).to.exist;
+    const head = () => pop.querySelector('.filter__pop__head')!.textContent!.replace(/\s+/g, ' ').trim();
+    expect(head()).to.equal('Filters Choose a value for the empty filter to apply it');
+    expect(rules(el).length).to.equal(1);
+    expect(control<ZnSelect>(el, 'Filter field').value).to.equal('');
+
+    await setRule(el, 'status', 'active');
+    expect(head()).to.equal('Filters Show records that match all of these');
   });
 
-  it('renders a pill for each default filter', async () => {
-    const el = await filterBar('role');
+  it('encodes field, operator and value exactly as the table builder did', async () => {
+    const el = await filter();
+    await open(el);
 
-    expect(pills(el)).to.deep.equal(['Role']);
+    await setRule(el, 'status', 'active');
+
+    expect(el.value).to.equal('W3sia2V5Ijoic3RhdHVzIiwiY29tcGFyYXRvciI6ImVxIiwidmFsdWUiOiJhY3RpdmUifV0=');
+    expect(el.activeCount).to.equal(1);
   });
 
-  it('offers the filters that are not already active', async () => {
-    const el = await filterBar('role');
-
-    const options = [...el.shadowRoot!.querySelectorAll('.filter-bar__add + zn-menu zn-menu-item, zn-menu zn-menu-item')]
-      .map(i => i.getAttribute('value'));
-
-    expect(options).to.include('status');
-    expect(options).to.include('email');
-  });
-
-  it('encodes a selected value as the query-builder payload', async () => {
-    const el = await filterBar('status');
-
-    clickOn(el.shadowRoot!.querySelector('zn-menu-item[value="active"]'));
+  it('offers the field\'s operators and resets operator and value when the field changes', async () => {
+    const el = await filter();
+    await open(el);
+    await setRule(el, 'age', '18');
+    choose(control(el, 'Filter operator'), 'gte');
     await el.updateComplete;
+    expect(decode(el.value)).to.deep.equal([{key: 'age', comparator: 'gte', value: '18'}]);
 
-    expect(decode(el.value)).to.deep.equal([{key: 'status', comparator: 'eq', value: 'active'}]);
-  });
+    const operators = [...control(el, 'Filter operator').querySelectorAll('zn-option')].map(o => o.textContent!.trim());
+    expect(operators).to.deep.equal(['is', 'is at least']);
 
-  it('accumulates values for an `in` filter and counts them on the pill', async () => {
-    const el = await filterBar('role');
-
-    clickOn(el.shadowRoot!.querySelector('zn-menu-item[value="pm"]'));
-    await el.updateComplete;
-    clickOn(el.shadowRoot!.querySelector('zn-menu-item[value="eng"]'));
-    await el.updateComplete;
-
-    expect(decode(el.value)[0].value).to.equal('pm eng');
-    expect(pills(el)).to.deep.equal(['Role (2)']);
-  });
-
-  it('unsets a single-value filter when its selected option is picked again', async () => {
-    const el = await filterBar('status');
-
-    clickOn(el.shadowRoot!.querySelector('zn-menu-item[value="active"]'));
-    await el.updateComplete;
-    clickOn(el.shadowRoot!.querySelector('zn-menu-item[value="active"]'));
-    await el.updateComplete;
-
+    await setRule(el, 'email');
+    expect(control<ZnSelect>(el, 'Filter operator').value).to.equal('contains');
+    expect(control<ZnInput>(el, 'Filter value').value).to.equal('');
     expect(el.value).to.equal('');
   });
 
-  it('leaves valueless filters out of the payload', async () => {
-    const el = await filterBar('role,status');
+  it('narrows a long field list with its search', async () => {
+    const el = await filter({filters: MANY});
+    await open(el);
+    const select = control<ZnSelect>(el, 'Filter field');
+    expect(select.hasAttribute('search')).to.be.true;
 
-    clickOn(el.shadowRoot!.querySelector('zn-menu-item[value="active"]'));
+    expect(select.placeholder).to.equal('Please select...');
+    await select.show();
     await el.updateComplete;
+    expect(select.placeholder).to.equal('Search 10 fields...');
 
-    expect(decode(el.value)).to.deep.equal([{key: 'status', comparator: 'eq', value: 'active'}]);
+    await select.updateComplete;
+    const input = select.shadowRoot!.querySelector<HTMLInputElement>('.select__display-input')!;
+    input.value = 'HOTSPOT';
+    input.dispatchEvent(new Event('input', {bubbles: true, composed: true}));
+    await select.updateComplete;
+
+    const visible = [...select.querySelectorAll<HTMLElement>('zn-option')].filter(o => !o.hidden).map(o => o.textContent!.trim());
+    expect(visible).to.deep.equal(['Mac Hotspot Shield']);
   });
 
-  it('emits zn-filter-change when a value changes', async () => {
-    const el = await filterBar('status');
+  it('joins an `in` multi-select\'s values with spaces', async () => {
+    const el = await filter();
+    await open(el);
+    choose(control(el, 'Filter field'), 'role');
+    await el.updateComplete;
+
+    expect(control(el, 'Filter value').hasAttribute('multiple')).to.be.true;
+    choose(control(el, 'Filter value'), ['pm', 'eng']);
+    await el.updateComplete;
+
+    expect(decode(el.value)).to.deep.equal([{key: 'role', comparator: 'in', value: 'pm eng'}]);
+    expect(chips(el)).to.deep.equal(['Role is any of Project Manager, Engineer']);
+  });
+
+  it('keeps the first value when an `in` rule moves to a single-value operator', async () => {
+    const el = await filter();
+    await open(el);
+    await setRule(el, 'state');
+    choose(control(el, 'Filter operator'), 'in');
+    await el.updateComplete;
+    choose(control(el, 'Filter value'), ['open', 'closed']);
+    await el.updateComplete;
+
+    choose(control(el, 'Filter operator'), 'eq');
+    await el.updateComplete;
+
+    expect(decode(el.value)).to.deep.equal([{key: 'state', comparator: 'eq', value: 'open'}]);
+  });
+
+  it('renders a number input for a number field', async () => {
+    const el = await filter();
+    await open(el);
+    await setRule(el, 'age');
+
+    expect(control(el, 'Filter value').getAttribute('type')).to.equal('number');
+  });
+
+  it('keeps the legacy date encoding and re-encodes on an operator change', async () => {
+    const el = await filter();
+    await open(el);
+    await setRule(el, 'created');
+    expect(control(el, 'Filter value').getAttribute('type')).to.equal('date');
+
+    choose(control(el, 'Filter value'), '2026-10-20');
+    await el.updateComplete;
+    const timestamp = new Date(2026, 9, 20).getTime();
+    expect(decode(el.value)).to.deep.equal([{key: 'created', comparator: 'eq', value: (timestamp / 1000).toString()}]);
+    expect(chips(el)).to.deep.equal(['Created is 2026-10-20']);
+
+    choose(control(el, 'Filter operator'), 'before');
+    await el.updateComplete;
+    const [rule] = decode(el.value);
+    expect(rule.comparator).to.equal('before');
+    expect(Number(rule.value)).to.be.closeTo(-Math.floor((Date.now() - timestamp) / 60_000), 1);
+  });
+
+  it('shows an empty row for each default filter', async () => {
+    const el = await filter({defaultFilters: 'email'});
+    await open(el);
+
+    expect(rules(el).length).to.equal(1);
+    expect(control<ZnSelect>(el, 'Filter field').value).to.equal('email');
+    expect(control<ZnInput>(el, 'Filter value').value).to.equal('');
+    expect(el.value).to.equal('');
+  });
+
+  it('shows chips for a value it is given', async () => {
+    const el = await filter({
+      value: encode([
+        {key: 'status', comparator: 'eq', value: 'active'},
+        {key: 'email', comparator: 'contains', value: 'acme'},
+      ]),
+    });
+
+    expect(chips(el)).to.deep.equal(['Status is Active', 'Email contains acme']);
+    expect(el.activeCount).to.equal(2);
+    expect(root(el).querySelector('.filter__toggle')!.getAttribute('notification')).to.equal('2');
+  });
+
+  it('keeps a single option value with spaces whole', async () => {
+    const el = await filter({
+      filters: [{id: 'stage', name: 'Stage', operators: ['eq', 'in'], options: {'in progress': 'In progress', done: 'Done'}}],
+      value: encode([{key: 'stage', comparator: 'eq', value: 'in progress'}]),
+    });
+
+    expect(chips(el)).to.deep.equal(['Stage is In progress']);
+  });
+
+  it('rebuilds its rules when the value is changed from outside', async () => {
+    const el = await filter({defaultFilters: 'role'});
+
+    el.value = encode([{key: 'status', comparator: 'eq', value: 'active'}]);
+    await el.updateComplete;
+    expect(chips(el)).to.deep.equal(['Status is Active']);
+
+    await open(el);
+    expect(rules(el).length).to.equal(1);
+    expect(control<ZnSelect>(el, 'Filter field').value).to.equal('status');
+  });
+
+  it('emits zn-filter-change only when the encoded value changes', async () => {
+    const el = await filter();
     let emitted = 0;
     el.addEventListener('zn-filter-change', () => emitted++);
+    await open(el);
 
-    clickOn(el.shadowRoot!.querySelector('zn-menu-item[value="active"]'));
-    await waitUntil(() => emitted > 0);
+    await setRule(el, 'status');
+    expect(emitted).to.equal(0);
+    choose(control(el, 'Filter value'), 'active');
+    await el.updateComplete;
 
     expect(emitted).to.equal(1);
   });
 
-  it('keeps a multi-value filter open on select and closes a single-value one', async () => {
-    const el = await filterBar('role,status');
-    const dropdowns = [...el.shadowRoot!.querySelectorAll<ZnDropdown>('zn-dropdown')];
+  it('closes on Escape and drops incomplete rules', async () => {
+    const el = await filter();
+    await open(el);
+    await setRule(el, 'status', 'active');
+    click(root(el).querySelector('.filter__pop__foot zn-button[icon="plus@lu"]'));
+    await el.updateComplete;
+    expect(rules(el).length).to.equal(2);
 
-    const multi = dropdowns.find(d => d.querySelector('zn-menu-item[value="pm"]'))!;
-    const single = dropdowns.find(d => d.querySelector('zn-menu-item[value="active"]'))!;
+    document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
+    await el.updateComplete;
+    expect(root(el).querySelector('.filter__pop')).to.not.exist;
+    expect(root(el).querySelector('.filter__toggle')!.classList.contains('filter__toggle--open')).to.be.false;
 
-    expect(multi.stayOpenOnSelect).to.be.true;
-    expect(single.stayOpenOnSelect).to.be.false;
+    await open(el);
+    expect(rules(el).length).to.equal(1);
   });
 
-  it('counts a typed value as one, however many spaces it contains', async () => {
-    const el = await filterBar('email');
+  it('closes on a click outside and drops incomplete rules', async () => {
+    const el = await filter();
+    await open(el);
+    await setRule(el, 'email');
 
-    const input = el.shadowRoot!.querySelector<ZnInput>('zn-input')!;
-    input.value = 'thats really bad';
-    input.dispatchEvent(new Event('zn-input', {bubbles: true, composed: true}));
-    await waitUntil(() => el.value.length > 0);
+    click(document.body);
+    await el.updateComplete;
+    expect(root(el).querySelector('.filter__pop')).to.not.exist;
+    expect(chips(el)).to.deep.equal([]);
+  });
+
+  it('drops a rule when its chip\'s remove button is clicked', async () => {
+    const el = await filter({value: encode([{key: 'status', comparator: 'eq', value: 'active'}])});
+
+    click(root(el).querySelector('.filter__chip__remove'));
     await el.updateComplete;
 
-    expect(pills(el)).to.deep.equal(['Email: thats really bad']);
-  });
-
-  it('matches suggestions without regard to case', async () => {
-    const el = await filterBar('email');
-    el.suggestions = {email: ['Ada@example.com', 'grace@example.com']};
-
-    const input = el.shadowRoot!.querySelector<ZnInput>('zn-input')!;
-    input.value = 'ADA';
-    input.dispatchEvent(new Event('zn-input', {bubbles: true, composed: true}));
-    await waitUntil(() => el.shadowRoot!.querySelectorAll('.filter-bar__suggestion').length > 0);
-
-    const shown = [...el.shadowRoot!.querySelectorAll('.filter-bar__suggestion')].map(b => b.textContent!.trim());
-
-    expect(shown).to.deep.equal(['Ada@example.com']);
-  });
-
-  it('renders a text input for a filter with no options', async () => {
-    const el = await filterBar('email');
-
-    expect(el.shadowRoot!.querySelector('.filter-bar__editor zn-input')).to.exist;
-  });
-
-  it('renders an inline calendar for a date filter', async () => {
-    const el = await filterBar('created');
-
-    const picker = el.shadowRoot!.querySelector('.filter-bar__editor zn-datepicker');
-
-    expect(picker).to.exist;
-    expect(picker!.hasAttribute('inline')).to.be.true;
-  });
-
-  it('encodes a picked date and labels the pill with it', async () => {
-    const el = await filterBar('created');
-    const picker = el.shadowRoot!.querySelector<ZnDatepicker>('zn-datepicker')!;
-    await picker.updateComplete;
-
-    picker.shadowRoot!.querySelector<HTMLElement>('.air-datepicker-cell.-day-:not(.-other-month-)')!.click();
-    // AirDatepicker reports a selection on the next task, not synchronously
-    await waitUntil(() => el.value.length > 0);
-    await el.updateComplete;
-
-    const [filter] = decode(el.value);
-
-    expect(filter.key).to.equal('created');
-    expect(filter.comparator).to.equal('eq');
-    expect(Number(filter.value)).to.be.greaterThan(0);
-    expect(pills(el)[0]).to.equal(`Created: ${picker.value as string}`);
-  });
-
-  it('offers each operator when a filter defines more than one', async () => {
-    const el = await filterBar('age');
-
-    const operators = [...el.shadowRoot!.querySelectorAll('.filter-bar__operator')].map(o => o.textContent!.trim());
-
-    expect(operators).to.deep.equal(['is', '\u2265']);
-  });
-
-  it('re-encodes the value with the operator the user picks', async () => {
-    const el = await filterBar('age');
-
-    const input = el.shadowRoot!.querySelector<ZnInput>('zn-input')!;
-    input.value = '18';
-    input.dispatchEvent(new Event('zn-input', {bubbles: true, composed: true}));
-    await waitUntil(() => el.value.length > 0);
-
-    clickOn(el.shadowRoot!.querySelectorAll('.filter-bar__operator')[1]);
-    await el.updateComplete;
-
-    expect(decode(el.value)).to.deep.equal([{key: 'age', comparator: 'gte', value: '18'}]);
-    expect(pills(el)).to.deep.equal(['Age \u2265 18']);
-  });
-
-  it('lists operators above the options for a filter that has both', async () => {
-    const el = await fixture<ZnDataTableFilter>(html`
-      <zn-data-table-filter default-filters="state"
-                            .filters="${[{
-                              id: 'state',
-                              name: 'state',
-                              operators: ['eq', 'in'],
-                              options: {open: 'Open', closed: 'Closed'}
-                            }]}"></zn-data-table-filter>`);
-    await el.updateComplete;
-
-    const items = [...el.shadowRoot!.querySelectorAll('zn-menu-item')].map(i => i.textContent!.trim());
-
-    expect(items).to.deep.equal(['is', 'is any of', 'Open', 'Closed']);
-  });
-
-  it('opens the new pill so its value can be set without a second click', async () => {
-    const el = await filterBar();
-
-    clickOn(el.shadowRoot!.querySelector('zn-menu-item[value="status"]'));
-    await el.updateComplete;
-
-    const pill = [...el.shadowRoot!.querySelectorAll<ZnDropdown>('zn-dropdown')]
-      .find(dropdown => dropdown.dataset.key === 'status')!;
-
-    await waitUntil(() => pill.open, 'the new filter\'s panel never opened');
-    expect(pill.open).to.be.true;
-  });
-
-  it('keeps the panel open for an operator but closes it for a value', async () => {
-    const el = await fixture<ZnDataTableFilter>(html`
-      <zn-data-table-filter default-filters="state"
-                            .filters="${[{
-                              id: 'state',
-                              name: 'state',
-                              operators: ['eq', 'in'],
-                              options: {open: 'Open', closed: 'Closed'}
-                            }]}"></zn-data-table-filter>`);
-    await el.updateComplete;
-
-    const pill = el.shadowRoot!.querySelector<ZnDropdown>('zn-dropdown')!;
-    await pill.show();
-
-    const [operator] = [...pill.querySelectorAll('zn-menu-item')];
-    clickOn(operator);
-    await el.updateComplete;
-    expect(pill.open, 'picking an operator should leave the panel open').to.be.true;
-
-    clickOn(pill.querySelector('zn-menu-item[value="open"]'));
-    await waitUntil(() => !pill.open, 'picking a value should close the panel');
-    expect(pill.open).to.be.false;
-  });
-
-  describe('long option lists', () => {
-    const many = Object.fromEntries(
-      ['How To', 'Linux', 'Beta', 'Router', 'TV', 'Other', 'Mac Hotspot Shield', 'General', 'iOS', 'Tutorials']
-        .map((label, index) => [`c${index}`, label])
-    );
-
-    async function categoryBar() {
-      const el = await fixture<ZnDataTableFilter>(html`
-        <zn-data-table-filter default-filters="category"
-                              .filters="${[{
-                                id: 'category',
-                                name: 'category',
-                                operators: ['eq'],
-                                options: many
-                              }]}"></zn-data-table-filter>`);
-      await el.updateComplete;
-      return el;
-    }
-
-    const search = async (el: ZnDataTableFilter, term: string) => {
-      const input = el.shadowRoot!.querySelector<ZnInput>('.filter-bar__option-search')!;
-      input.value = term;
-      input.dispatchEvent(new Event('zn-input', {bubbles: true, composed: true}));
-      await el.updateComplete;
-    };
-
-    const labels = (el: ZnDataTableFilter) =>
-      [...el.shadowRoot!.querySelectorAll('zn-menu-item')].map(item => item.textContent!.trim());
-
-    it('offers a search above the options', async () => {
-      const el = await categoryBar();
-
-      expect(el.shadowRoot!.querySelector('.filter-bar__option-search')).to.exist;
-    });
-
-    it('leaves the search off a short list', async () => {
-      const el = await filterBar('status');
-
-      expect(el.shadowRoot!.querySelector('.filter-bar__option-search')).to.not.exist;
-    });
-
-    it('narrows the options without regard to case', async () => {
-      const el = await categoryBar();
-
-      await search(el, 'HOTSPOT');
-
-      expect(labels(el)).to.deep.equal(['Mac Hotspot Shield']);
-    });
-
-    it('says so when nothing matches', async () => {
-      const el = await categoryBar();
-
-      await search(el, 'nothing here');
-
-      expect(labels(el)).to.deep.equal(['No matches']);
-    });
-  });
-
-  it('drops a filter when its chip\'s remove button is clicked', async () => {
-    const el = await filterBar('role,status');
-    clickOn(el.shadowRoot!.querySelector('zn-menu-item[value="active"]'));
-    await el.updateComplete;
-
-    const chip = [...el.shadowRoot!.querySelectorAll('.filter-bar__chip')]
-      .find(item => item.querySelector('zn-dropdown')!.getAttribute('data-key') === 'status')!;
-    clickOn(chip.querySelector('.filter-bar__remove'));
-    await el.updateComplete;
-
-    expect(pills(el)).to.deep.equal(['Role']);
+    expect(chips(el)).to.deep.equal([]);
     expect(el.value).to.equal('');
   });
 
-  it('clear() removes every pill and empties the value', async () => {
-    const el = await filterBar('role,status');
-    clickOn(el.shadowRoot!.querySelector('zn-menu-item[value="active"]'));
-    await el.updateComplete;
+  it('clear() removes every rule and empties the value', async () => {
+    const el = await filter({value: encode([{key: 'status', comparator: 'eq', value: 'active'}])});
 
     el.clear();
     await el.updateComplete;
 
-    expect(pills(el)).to.deep.equal([]);
+    expect(chips(el)).to.deep.equal([]);
     expect(el.value).to.equal('');
   });
 
-  // Setting `value` (the inverse of emitChange) rebuilds the active pills, so a filter restored
-  // from a shared URL renders exactly as it was when encoded.
-  describe('restore from value', () => {
-    const encode = (conditions: {key: string; comparator: string; value: string}[]) =>
-      btoa(JSON.stringify(conditions));
+  it('offers suggestions matching a typed value, without regard to case', async () => {
+    const el = await filter();
+    el.suggestions = {email: ['Ada@example.com', 'grace@example.com']};
+    await open(el);
+    await setRule(el, 'email');
 
-    it('rebuilds the active pills from an encoded value', async () => {
-      const value = encode([
-        {key: 'status', comparator: 'eq', value: 'active'},
-        {key: 'email', comparator: 'contains', value: 'acme'},
-      ]);
+    const input = control<ZnInput>(el, 'Filter value');
+    input.value = 'ADA';
+    input.dispatchEvent(new Event('zn-input', {bubbles: true, composed: true}));
+    await el.updateComplete;
 
-      const el = await fixture<ZnDataTableFilter>(html`
-        <zn-data-table-filter .filters="${FILTERS}" .value="${value}"></zn-data-table-filter>`);
-      await el.updateComplete;
+    const shown = [...root(el).querySelectorAll('.filter__suggestion')];
+    expect(shown.map(b => b.textContent!.trim())).to.deep.equal(['Ada@example.com']);
 
-      expect(pills(el)).to.deep.equal(['Status: Active', 'Email: acme']);
-    });
+    click(shown[0]);
+    await el.updateComplete;
+    expect(decode(el.value)).to.deep.equal([{key: 'email', comparator: 'contains', value: 'Ada@example.com'}]);
+    expect(root(el).querySelector('.filter__suggestion')).to.not.exist;
+  });
 
-    it('renders no pills for an absent value', async () => {
-      const el = await fixture<ZnDataTableFilter>(html`
-        <zn-data-table-filter .filters="${FILTERS}"></zn-data-table-filter>`);
-      await el.updateComplete;
+  it('forgets typed text when the field changes', async () => {
+    const el = await filter({filters: [...FILTERS, {id: 'name', name: 'Name', operators: ['contains']}]});
+    el.suggestions = {email: ['Ada@example.com'], name: ['Adam']};
+    await open(el);
+    await setRule(el, 'email');
 
-      expect(pills(el)).to.deep.equal([]);
-    });
+    const input = control<ZnInput>(el, 'Filter value');
+    input.value = 'ADA';
+    input.dispatchEvent(new Event('zn-input', {bubbles: true, composed: true}));
+    await el.updateComplete;
+    expect(root(el).querySelector('.filter__suggestion')).to.exist;
 
-    // The production flow sets `value` after `filters` (and after default-filters seeds an empty
-    // pill), so a later value must still win over the valueless default pill.
-    it('lets a value set after default-filters win over the empty default pill', async () => {
-      const el = await fixture<ZnDataTableFilter>(html`
-        <zn-data-table-filter default-filters="role" .filters="${FILTERS}"></zn-data-table-filter>`);
-      await el.updateComplete;
-      expect(pills(el)).to.deep.equal(['Role']);
+    await setRule(el, 'name');
+    expect(root(el).querySelector('.filter__suggestion')).to.not.exist;
+  });
 
-      el.value = encode([{key: 'status', comparator: 'eq', value: 'active'}]);
-      await el.updateComplete;
+  it('hands its chips to a filter whose source it is', async () => {
+    const wrap = await fixture<HTMLDivElement>(html`
+      <div>
+        <zn-data-table-filter .filters="${FILTERS}"
+                              .value="${encode([{key: 'status', comparator: 'eq', value: 'active'}])}"></zn-data-table-filter>
+        <zn-data-table-filter></zn-data-table-filter>
+      </div>`);
+    const [source, mirror] = [...wrap.querySelectorAll<ZnDataTableFilter>('zn-data-table-filter')];
+    mirror.source = source;
+    await mirror.updateComplete;
+    await source.updateComplete;
 
-      expect(pills(el)).to.deep.equal(['Status: Active']);
-    });
+    expect(chips(source)).to.deep.equal([]);
+    expect(chips(mirror)).to.deep.equal(['Status is Active']);
+    expect(root(mirror).querySelector('.filter__toggle')).to.not.exist;
+
+    click(root(mirror).querySelector('.filter__chip__text'));
+    await source.updateComplete;
+    expect(root(source).querySelector('.filter__pop')).to.exist;
+
+    click(root(mirror).querySelector('.filter__chip__remove'));
+    await source.updateComplete;
+    await mirror.updateComplete;
+    expect(source.value).to.equal('');
+    expect(chips(mirror)).to.deep.equal([]);
   });
 });

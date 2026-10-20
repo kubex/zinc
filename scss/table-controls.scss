@@ -1,0 +1,162 @@
+@use "mixins";
+
+.table__tabs {
+  position: relative;
+  display: flex;
+  gap: var(--zn-spacing-x-small);
+  padding: 0 var(--zn-table-edge-padding, var(--zn-spacing-medium));
+  border-bottom: 1px solid rgb(var(--zn-border-color));
+  overflow-x: auto;
+}
+
+// Shares zn-navbar's indicator timing tokens so a theme tunes both together
+.table__tabs__indicator {
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: 0;
+  height: 2px;
+  background-color: rgb(var(--zn-primary));
+  opacity: 0;
+  pointer-events: none;
+
+  --_lead: var(--zn-navbar-tab-indicator-duration, 300ms) var(--zn-navbar-tab-indicator-easing, cubic-bezier(0.4, 0, 0.2, 1)) var(--zn-navbar-tab-indicator-delay, 0ms);
+  --_trail: var(--zn-navbar-tab-indicator-trail-duration, var(--zn-navbar-tab-indicator-duration, 300ms)) var(--zn-navbar-tab-indicator-trail-easing, var(--zn-navbar-tab-indicator-easing, cubic-bezier(0.4, 0, 0.2, 1))) var(--zn-navbar-tab-indicator-trail-delay, var(--zn-navbar-tab-indicator-delay, 0ms));
+}
+
+.table__tabs__indicator--shown {
+  opacity: 1;
+}
+
+.table__tabs__indicator--ready {
+  transition: left var(--_lead), right var(--_lead);
+}
+
+.table__tabs__indicator--ready.table__tabs__indicator--forward {
+  transition: right var(--_lead), left var(--_trail);
+}
+
+.table__tabs__indicator--ready.table__tabs__indicator--backward {
+  transition: left var(--_lead), right var(--_trail);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .table__tabs__indicator--ready,
+  .table__tabs__indicator--ready.table__tabs__indicator--forward,
+  .table__tabs__indicator--ready.table__tabs__indicator--backward {
+    transition: none;
+  }
+}
+
+// Segmented tabs, as zn-navbar[pill]: a grey track with a raised pill that slides to the selected tab
+.table__tabs--pill {
+  @include mixins.pill-tab-indicator-motion;
+  width: fit-content;
+  max-width: calc(100% - 2 * var(--zn-table-edge-padding, var(--zn-spacing-medium)));
+  margin: var(--zn-spacing-small) var(--zn-table-edge-padding, var(--zn-spacing-medium));
+  padding: 2px;
+  gap: 2px;
+  border-bottom: 0;
+  border-radius: 8px;
+  background: var(--zn-color-neutral-100);
+
+  .table__tabs__indicator {
+    top: 2px;
+    bottom: 2px;
+    height: auto;
+    border-radius: 6px;
+    background-color: rgb(var(--zn-panel));
+    box-shadow: var(--zn-shadow-small, 0 1px 3px rgba(13, 23, 56, 0.08), 0 1px 2px rgba(13, 23, 56, 0.04));
+  }
+
+  .table__tab {
+    position: relative;
+    z-index: 1;
+    min-height: calc(var(--zn-density-control-height, 36px) - 6px);
+    padding: 0 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: var(--zn-font-weight-semibold);
+  }
+
+  .table__tab:hover:not([disabled]),
+  .table__tab--active {
+    color: rgb(var(--zn-text));
+  }
+}
+
+// Native buttons, so each property the shared button mixin sets is reset here. They carry no
+// type attribute: the reset's button[type="button"]:not(.button) would outrank this class.
+.table__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  width: auto;
+  height: auto;
+  max-height: none;
+  min-height: 40px;
+  padding: 0 var(--zn-spacing-x-small);
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  font: inherit;
+  // Every tab shares the active weight so switching only changes colour, not label width
+  font-weight: var(--zn-font-weight-semibold);
+  text-transform: none;
+  letter-spacing: normal;
+  color: color-mix(in srgb, rgb(var(--zn-text)) 72%, transparent);
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover:not([disabled]) {
+    background: none;
+    color: rgb(var(--zn-primary));
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgb(var(--zn-primary));
+    outline-offset: -4px;
+    border-radius: var(--zn-border-radius);
+  }
+}
+
+.table__tab--active {
+  color: rgb(var(--zn-primary));
+}
+
+// Circular for a single digit, a pill for longer counts
+.table__tab__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--zn-color-gray-100);
+  color: color-mix(in srgb, rgb(var(--zn-text)) 72%, transparent);
+  font-size: 0.75em;
+  font-weight: var(--zn-font-weight-medium);
+  line-height: 18px;
+}
+
+.table__head__sort {
+  margin: 0;
+  padding: 0;
+  opacity: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.table__head__sort--active {
+  color: rgb(var(--zn-primary));
+}

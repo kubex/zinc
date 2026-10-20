@@ -5,9 +5,10 @@
   display: contents;
 }
 
-//::slotted(zn-sp) {
-//  --zn-sp-padding: 0 !important
-//}
+// Content loaded from a tab's uri sits inline in the tab: the tabs' own padding already spaces it
+#content > [data-self-uri] > zn-sp {
+  --zn-sp-padding: 0;
+}
 
 #mid, #content {
   flex: 1;

@@ -212,7 +212,7 @@ Use the `square` attribute to create square-shaped buttons, useful for icon-only
 
 ### Pill Buttons
 
-Use the `pill` attribute for a label-like trigger rather than an action: fully rounded, sentence case and regular weight, so it reads as a value you can change rather than a command. Used for the filter chips in `zn-data-table-filter`.
+Use the `pill` attribute for a label-like trigger rather than an action: fully rounded, sentence case and regular weight, so it reads as a value you can change rather than a command.
 
 ```html:preview
 <zn-button pill panel-bg icon="chevron-down@lu" icon-position="right">Role</zn-button>

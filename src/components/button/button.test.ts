@@ -39,6 +39,22 @@ describe('<zn-button>', () => {
     expect(base.getAttribute('aria-pressed')).to.equal('false');
   });
 
+  it('forwards aria-expanded and aria-haspopup to the inner button', async () => {
+    const el = await fixture<ZnButton>(html`<zn-button aria-haspopup="dialog" aria-expanded="false">Menu</zn-button>`);
+    const base = el.shadowRoot!.querySelector('[part~="base"]')!;
+    expect(base.getAttribute('aria-haspopup')).to.equal('dialog');
+    expect(base.getAttribute('aria-expanded')).to.equal('false');
+
+    el.setAttribute('aria-expanded', 'true');
+    await el.updateComplete;
+    expect(base.getAttribute('aria-expanded')).to.equal('true');
+
+    const plain = await fixture<ZnButton>(html`<zn-button>Plain</zn-button>`);
+    const plainBase = plain.shadowRoot!.querySelector('[part~="base"]')!;
+    expect(plainBase.hasAttribute('aria-expanded')).to.be.false;
+    expect(plainBase.hasAttribute('aria-haspopup')).to.be.false;
+  });
+
   it('applies size classes', async () => {
     const el = await fixture<ZnButton>(html`<zn-button size="small">Small</zn-button>`);
     const base = el.shadowRoot!.querySelector('[part~="base"]')!;

@@ -1,0 +1,285 @@
+@use "../../wc";
+
+:host {
+  display: block;
+
+  --_divider: var(--zn-table-row-divider-color, rgb(var(--zn-border-color)));
+  --_head: rgb(var(--zn-table-header-background-color));
+  --_group: color-mix(in srgb, rgb(var(--zn-border-color)) 25%, var(--_head));
+}
+
+.report__scroll {
+  overflow-x: auto;
+  @include wc.scrollbars;
+}
+
+.report__scroll--busy tbody td:not(.report__dim),
+.report__scroll--busy tfoot td:not(.report__dim) {
+  opacity: 0.5;
+}
+
+.report__alert {
+  display: block;
+  margin: var(--zn-spacing-small) var(--zn-table-edge-padding, var(--zn-spacing-medium));
+}
+
+.report__skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-spacing-small);
+  padding: var(--zn-table-edge-padding, var(--zn-spacing-medium));
+}
+
+.report {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  @include wc.text-style(table-content);
+  color: rgb(var(--zn-text-heading));
+
+  th, td {
+    padding: 0 var(--zn-density-cell-padding-x, var(--zn-spacing-medium));
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  th:first-child, td:first-child {
+    padding-inline-start: var(--zn-table-edge-padding, var(--zn-spacing-medium));
+  }
+
+  th:last-child, td:last-child {
+    padding-inline-end: var(--zn-table-edge-padding, var(--zn-spacing-medium));
+  }
+
+  th {
+    height: var(--zn-table-header-height, 32px);
+    font-size: var(--zn-table-header-font-size, var(--zn-font-size-x-small));
+    font-weight: var(--zn-font-weight-semibold);
+    color: var(--zn-table-header-color, rgb(var(--zn-text)));
+    background-color: var(--_head);
+    border-bottom: 1px solid rgb(var(--zn-border-color));
+  }
+
+  td {
+    height: var(--zn-table-row-height, 40px);
+    border-bottom: 1px solid var(--_divider);
+  }
+
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+}
+
+.report__groups th {
+  font-weight: var(--zn-font-weight-medium);
+  background-color: var(--_group);
+}
+
+// Keeps each group's label in view beside the frozen column while its group is scrolled past
+.report__glabel {
+  position: sticky;
+  left: calc(var(--_dim-width, 0px) + var(--zn-density-cell-padding-x, var(--zn-spacing-medium)));
+  display: inline-block;
+}
+
+.report thead tr:not(.report__groups) th {
+  cursor: pointer;
+  user-select: none;
+
+  &:focus-visible {
+    outline: var(--zn-focus-ring);
+    outline-offset: calc(-1 * var(--zn-focus-ring-width));
+  }
+}
+
+.report__head {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.report thead .report__num .report__head {
+  justify-content: flex-end;
+}
+
+.report .report__num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.report__sep {
+  border-left: 1px solid var(--_divider);
+}
+
+th.report__sep {
+  border-left-color: rgb(var(--zn-border-color));
+}
+
+// Above the scrolling cells, opaque so they pass behind it
+.report__dim {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background-color: rgb(var(--zn-panel));
+  box-shadow: inset -1px 0 0 var(--_divider);
+}
+
+th.report__dim {
+  z-index: 3;
+  background-color: var(--_head);
+}
+
+.report__groups th.report__dim {
+  background-color: var(--_group);
+  border-bottom-color: transparent;
+}
+
+.report tbody a {
+  color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
+  font-weight: var(--zn-font-weight-medium);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.report__total td {
+  font-weight: var(--zn-font-weight-bold);
+  border-top: 1px solid rgb(var(--zn-border-color));
+  border-bottom: 0;
+  background-color: rgb(var(--zn-panel));
+}
+
+.report__bold {
+  font-weight: var(--zn-font-weight-bold);
+}
+
+.report__pos {
+  color: var(--zn-color-success-fg, rgb(var(--zn-color-success)));
+}
+
+.report__neg {
+  color: var(--zn-color-danger-fg, rgb(var(--zn-color-error)));
+}
+
+zn-panel::part(header-left) {
+  flex-shrink: 0;
+}
+
+// zn-date-range sizes its controls small, so small is raised to the funnel's height
+.report__actions {
+  --zn-button-height-small: var(--zn-button-height);
+  --zn-input-height-small: var(--zn-input-height-medium);
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--zn-spacing-x-small);
+}
+
+.report__search {
+  flex: 0 1 220px;
+  min-width: 180px;
+}
+
+.report__groupby {
+  --zn-text-button-label-transform: none;
+  --zn-text-button-label-font-weight: var(--zn-font-weight-medium, 500);
+}
+
+.report__groupby::part(label) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.report__groupby strong {
+  font-weight: var(--zn-font-weight-bold);
+}
+
+.report__gpop {
+  position: fixed;
+  z-index: var(--zn-z-index-dropdown, 900);
+  width: min(506px, 94vw);
+  box-sizing: border-box;
+  max-height: min(28rem, 70vh);
+  overflow: auto;
+  padding: var(--zn-spacing-x-small);
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: var(--zn-menu-border-radius, var(--zn-border-radius-medium, 8px));
+  box-shadow: var(--zn-menu-shadow, var(--zn-shadow-large, 0 12px 32px rgb(15 23 42 / 0.14)));
+}
+
+.report__gpop--categories {
+  width: min(560px, 94vw);
+}
+
+.report__ggrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--zn-spacing-small);
+}
+
+.report__ggrid--flow {
+  row-gap: 0;
+}
+
+.report__gcat {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.report__gcat__head {
+  padding: 6px 10px 4px;
+  font-size: var(--zn-font-size-x-small);
+  font-weight: var(--zn-font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, rgb(var(--zn-text)) 65%, transparent);
+}
+
+// Native buttons: reset what the shared button mixin applies
+.report__gopt {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  width: 100%;
+  height: var(--zn-density-control-height, 36px);
+  min-height: 0;
+  max-height: none;
+  padding: var(--zn-menu-item-padding, 0 10px);
+  border: 0;
+  border-radius: var(--zn-menu-item-border-radius, var(--zn-border-radius, 6px));
+  background: none;
+  box-shadow: none;
+  font: inherit;
+  font-size: var(--zn-font-size-small);
+  font-weight: var(--zn-font-weight-medium);
+  text-align: left;
+  text-transform: none;
+  letter-spacing: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: rgb(var(--zn-text-heading));
+  cursor: pointer;
+
+  &:hover:not([disabled]) {
+    background: var(--zn-menu-item-hover-background, color-mix(in srgb, rgb(var(--zn-text)) 6%, transparent));
+    color: rgb(var(--zn-text-heading));
+  }
+
+  &:focus-visible {
+    outline: var(--zn-focus-ring);
+    outline-offset: calc(-1 * var(--zn-focus-ring-width));
+  }
+
+  &[aria-current="true"] {
+    font-weight: var(--zn-font-weight-semibold);
+    color: var(--zn-color-primary-600, rgb(var(--zn-primary)));
+  }
+}

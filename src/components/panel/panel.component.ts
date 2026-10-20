@@ -20,6 +20,7 @@ import styles from './panel.scss';
  * @csspart base - The component's base wrapper.
  * @csspart header - The header region, when a caption or actions are given.
  * @csspart header-content - The padded row inside the header, forwarded from zn-header.
+ * @csspart header-left - The caption and description, forwarded from zn-header.
  * @csspart footer - The footer region, when the footer slot is filled.
  *
  * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.
@@ -150,7 +151,7 @@ export default class ZnPanel extends ZincElement {
         <div class="panel__inner">
           ${hasHeader ? html`
             <zn-header part="header"
-                       exportparts="content:header-content"
+                       exportparts="content:header-content, header-left"
                        class="${classMap({
                          "panel__header": true,
                          "panel__header--underline": underlineHeader,

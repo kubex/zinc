@@ -325,7 +325,7 @@ export default class ZnIcon extends ZincElement {
           '--icon-size': this.size + "px",
           '--icon-color': (this.color && !this.isPresetColor(this.color)) ? this.color : null,
           '--icon-fill': (this.fill && !this.isPresetColor(this.fill)) ? this.fill : null,
-          '--avatar-color': this.color ? null : (this.library === 'avatar' ? this.getColorForAvatar(this.getAvatarInitials(this.src)) : null)
+          '--avatar-color': this.color ? null : (this.library === 'avatar' ? this.getColorForAvatar(this.src) : null)
         })}">
           ${this.library && this.library !== "src" ? html`
             ${choose(this.library, [
@@ -458,17 +458,16 @@ export default class ZnIcon extends ZincElement {
   }
 
 
-  protected getColorForAvatar(avatarInitials: string) {
+  protected getColorForAvatar(name: string) {
     const colors = [
       '#00AA55', '#0882a8', '#ed55ed', '#5eae00',
       '#09389e', '#d17300', '#5e0be2', '#5b7a13',
       '#ddb100', '#d400c2', '#DC2A2A', '#a967ff',
     ];
 
-    // Generate a hash from the initials
-    const hash = Array.from(avatarInitials).reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    // Order-sensitive, so names sharing initials or letters still spread across the palette
+    const hash = Array.from(name.trim().toLowerCase()).reduce((acc, char) => (acc * 31 + char.charCodeAt(0)) >>> 0, 0);
 
-    // Use the hash to select a color
     return colors[hash % colors.length];
   }
 }

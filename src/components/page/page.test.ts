@@ -724,7 +724,8 @@ describe('<zn-page>', () => {
     await aTimeout(120);
 
     expect(getComputedStyle(activeNavItem).backgroundColor).to.equal('rgb(1, 2, 3)');
-    expect(getComputedStyle(activeNavItem).transitionDuration).to.equal('0.1s');
+    expect(getComputedStyle(activeNavItem).transitionProperty).to.equal('background-color, color');
+    expect(getComputedStyle(activeNavItem).transitionDuration).to.equal('0.1s, 0.15s');
   });
 
   it('opens the tab flagged with the selected attribute instead of the first', async () => {

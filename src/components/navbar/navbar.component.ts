@@ -161,7 +161,12 @@ export default class ZnNavbar extends ZincElement {
   constructor() {
     super();
     this._resizeController = new ResizeController(this, {
-      callback: () => this._scheduleResize(),
+      // Synced here as well as after the layout pass: the indicator's right edge is
+      // measured from the container, so a stale value would stretch it until the next frame.
+      callback: () => {
+        this._syncIndicator();
+        this._scheduleResize();
+      },
     });
     // eslint-disable-next-line no-new
     new MutationController(this, {
@@ -219,14 +224,20 @@ export default class ZnNavbar extends ZincElement {
     const left = tab.left - box.left;
     const previousLeft = parseFloat(indicator.style.left);
     const ready = indicator.classList.contains('navbar__indicator--ready');
-    if (ready && !Number.isNaN(previousLeft) && Math.abs(left - previousLeft) > 0.5) {
+    const tabChanged = active !== this._indicatorTab;
+    if (ready && tabChanged && !Number.isNaN(previousLeft) && Math.abs(left - previousLeft) > 0.5) {
       indicator.classList.toggle('navbar__indicator--forward', left > previousLeft);
       indicator.classList.toggle('navbar__indicator--backward', left < previousLeft);
-      if (active !== this._indicatorTab) {
-        this._squashIndicator(indicator);
-      }
+      this._squashIndicator(indicator);
     }
     this._indicatorTab = active ?? null;
+
+    // Only a tab change slides; a resize or reflow under the same tab follows it
+    // instantly, unless a slide is still running and should retarget.
+    const follow = ready && !tabChanged && indicator.getAnimations().length === 0;
+    if (follow) {
+      indicator.style.transition = 'none';
+    }
 
     indicator.style.left = `${left}px`;
     indicator.style.right = `${box.right - tab.right}px`;
@@ -234,6 +245,12 @@ export default class ZnNavbar extends ZincElement {
     indicator.style.setProperty('--zn-navbar-indicator-top', `${tab.top - box.top}px`);
     indicator.style.setProperty('--zn-navbar-indicator-height', `${tab.height}px`);
     indicator.classList.add('navbar__indicator--shown');
+
+    if (follow) {
+      // Commit the jump before transitions come back on
+      void indicator.offsetWidth;
+      indicator.style.removeProperty('transition');
+    }
 
     // The first placement jumps into position; only later moves animate.
     if (!ready) {

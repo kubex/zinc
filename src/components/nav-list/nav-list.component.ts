@@ -1,8 +1,8 @@
+import {clipCornerRadius, ReorderController} from '../../internal/reorder';
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController, validValidityState} from '../../internal/form';
 import {HasSlotController} from '../../internal/slot';
 import {property, state} from 'lit/decorators.js';
-import {ReorderController} from '../../internal/reorder';
 import ZincElement from '../../internal/zinc-element';
 import ZnInput from '../input';
 import type {ZincFormControl} from '../../internal/zinc-element';
@@ -147,6 +147,8 @@ export default class ZnNavList extends ZincElement implements ZincFormControl {
       const item = this._item(key);
       if (item) this.append(item);
     }
+    // Measured now, in the final place, before the reorder slide moves the rows
+    this._syncDragCorners();
   }
 
   /** @internal ReorderHost: the row drawn for an item. */
@@ -183,6 +185,20 @@ export default class ZnNavList extends ZincElement implements ZincFormControl {
   protected updated(changed: PropertyValues) {
     super.updated(changed);
     this._syncItems();
+    this._syncDragCorners();
+  }
+
+  /** Rounds a divided list's placeholder into the card corners it moves into while dragging. */
+  private _syncDragCorners() {
+    const dragged = this.reorderController.draggedKey;
+    const item = dragged === null ? null : this._item(dragged);
+    if (!item) return;
+    const radius = this.divide ? clipCornerRadius(item, item) : null;
+    if (radius) {
+      item.style.setProperty('--zn-nav-item-drag-radius', radius);
+    } else {
+      item.style.removeProperty('--zn-nav-item-drag-radius');
+    }
   }
 
   /** Keeps a single tab stop in the list: the selected item when it is visible, otherwise the first. */

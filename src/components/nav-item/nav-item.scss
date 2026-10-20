@@ -100,12 +100,29 @@
 :host([sortable]) {
   // Its own layer, or Chrome draws the drag image over a white box that shows at the rounded corners
   transform: translate(0, 0);
+  // Opaque, or the drag image shows the page through the row
+  background: rgb(var(--zn-panel));
+  cursor: grab;
 }
 
 :host([sortable]) .nav-item__handle {
   display: inline-flex;
 }
 
-:host([dragging]) {
-  opacity: 0.5;
+// The dragged item's slot, matching a zn-priority-list placeholder
+:host([sortable][dragging]) .nav-item,
+:host([sortable][dragging]:hover) .nav-item {
+  outline: 1px dashed var(--zn-color-primary-400);
+  outline-offset: -1px;
+  background: rgba(var(--zn-primary), 0.06);
+  box-shadow: none;
+
+  > * {
+    opacity: 0;
+  }
+}
+
+// Set while dragging to the radius of any card corner the row sits in
+:host([divide][sortable][dragging]) .nav-item {
+  border-radius: var(--zn-nav-item-drag-radius, 0);
 }

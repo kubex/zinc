@@ -72,6 +72,11 @@
   ::slotted(zn-nav-item:not(:last-child)) {
     border-bottom: 1px solid rgb(var(--zn-border-color));
   }
+
+  // Hidden so it doesn't show below the placeholder's dashed outline
+  ::slotted(zn-nav-item[dragging]) {
+    border-bottom-color: transparent;
+  }
 }
 
 .nav-list__empty {

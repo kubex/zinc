@@ -293,7 +293,7 @@ export default class ZnStatsTile extends ZincElement {
       <a class="stat-link" part="link" href="${this.href}" data-target="${ifDefined(this.dataTarget)}"
          gaid="${ifDefined(this.gaid)}">
         ${tile}
-        <zn-icon class="stat-link__icon" src="arrow-up-right@lu" size="16" aria-hidden="true"></zn-icon>
+        <zn-icon class="stat-link__icon" src="arrow-up-right@lu" size="${this.layout === 'tile' ? 18 : 16}" aria-hidden="true"></zn-icon>
       </a>`;
   }
 

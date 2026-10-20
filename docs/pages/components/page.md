@@ -166,6 +166,19 @@ attribute so it can submit a form it sits outside of. In a modal page the footer
 </zn-page>
 ```
 
+### Full Width
+
+The header, tabs and content are capped at the container width (`--zn-container`) and centred. Add `full-width`
+to let them span the whole page. A `flush` page always spans it.
+
+```html:preview
+<zn-page caption="Full Width Page" full-width>
+  <zn-tab caption="Overview">
+    Overview Content
+  </zn-tab>
+</zn-page>
+```
+
 ### Dynamic Tabs
 
 Set `uri` on `zn-tab` to create a dynamic tab. The generated navigation item receives `tab-uri`.

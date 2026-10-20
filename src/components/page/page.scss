@@ -454,6 +454,11 @@ zn-navbar {
   padding-inline: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
 }
 
+// A flush page's content drops the gutter, leaving only its own base-gap padding
+:host([flush]) .header {
+  padding-inline: var(--zn-base-gap, 0);
+}
+
 // The gutter shrinks to 0 on narrow containers, which would run the header actions
 // under the closer. Reserving the closer's own footprint holds the gap steady instead.
 :host([modal]) .header {
@@ -465,6 +470,10 @@ zn-navbar {
     padding-inline: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
     margin-inline-start: var(--zn-page-navbar-offset, 0px);
   }
+}
+
+:host([flush]) zn-navbar::part(navbar) {
+  padding-inline: var(--zn-base-gap, 0);
 }
 
 :host .page__tabs {
@@ -499,19 +508,19 @@ zn-navbar {
   }
 }
 
-:host([width-container]) .header .content,
-:host([width-container]) .page__tabs .page__content {
+:host(:not([full-width]):not([flush])) .header .content,
+:host(:not([full-width]):not([flush])) .page__tabs .page__content {
   max-width: var(--zn-container, 100%);
   margin-inline: auto;
 }
 
 // Content sits inside its gutter plus its zn-sp's base-gap padding, so the header is narrower by both to line up
-:host([width-container]) .header .content {
+:host(:not([full-width]):not([flush])) .header .content {
   max-width: calc(var(--zn-container, 100%) - 2 * (var(--zn-gutter, 0px) + var(--zn-base-gap, 0px)));
 }
 
 // Matches .header .content's box, so the tabs and their underline span the content, not the page
-:host([width-container]) zn-navbar::part(container) {
+:host(:not([full-width]):not([flush])) zn-navbar::part(container) {
   width: min(
     calc(var(--zn-container, 100%) - 2 * (var(--zn-gutter, 0px) + var(--zn-base-gap, 0px))),
     calc(100% - 2 * (var(--zn-gutter, 0px) + var(--zn-base-gap, 0px)))
@@ -519,7 +528,7 @@ zn-navbar {
   margin-inline: auto;
 }
 
-:host([width-container]) zn-navbar::part(navbar) {
+:host(:not([full-width]):not([flush])) zn-navbar::part(navbar) {
   padding-inline: 0;
   margin-inline: 0;
 }

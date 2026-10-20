@@ -53,8 +53,6 @@ export default class ZnPage extends ZnTabs {
 
   private readonly pageSlotController = new HasSlotController(this, 'breadcrumb', 'actions', 'caption', 'description', 'footer');
 
-  /** Caps the header and content at the container width (`--zn-container`), centred, as zn-sp's `width-container` does. */
-  @property({attribute: 'width-container', type: Boolean, reflect: true}) widthContainer = false;
   @property() caption: string;
   @property({attribute: 'entity-id'}) entityId: string;
   @property({attribute: 'entity-id-show', type: Boolean}) entityIdShow: boolean;

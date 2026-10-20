@@ -8,6 +8,7 @@ import type ZnPopup from '../popup';
 
 /** A reactive controller to manage the registration of event listeners for submenus. */
 export class SubmenuController implements ReactiveController {
+  private static readonly openSubmenus = new WeakMap<Element, SubmenuController>();
   private host: ReactiveControllerHost & ZnMenuItem;
   private popupRef: Ref<ZnPopup> = createRef();
   private enableSubmenuTimer = -1;
@@ -35,6 +36,7 @@ export class SubmenuController implements ReactiveController {
   }
 
   hostDisconnected() {
+    this.disableSubmenu();
     this.removeListeners();
   }
 
@@ -227,13 +229,20 @@ export class SubmenuController implements ReactiveController {
   };
 
   private setSubmenuState(state: boolean) {
+    const parent = this.host.parentElement;
+    if (state && parent) {
+      const sibling = SubmenuController.openSubmenus.get(parent);
+      if (sibling && sibling !== this) sibling.disableSubmenu();
+      SubmenuController.openSubmenus.set(parent, this);
+    }
     if (this.popupRef.value) {
       if (this.popupRef.value.active !== state) {
         this.popupRef.value.active = state;
         this.host.requestUpdate();
       }
     }
-    if (!state) {
+    if (!state && parent && SubmenuController.openSubmenus.get(parent) === this) {
+      SubmenuController.openSubmenus.delete(parent);
       this.host.parentElement?.removeAttribute('data-submenu-top');
       this.host.parentElement?.removeAttribute('data-submenu-bottom');
     }
@@ -242,6 +251,9 @@ export class SubmenuController implements ReactiveController {
   // Shows the submenu. Supports disabling the opening delay, e.g. for keyboard events that want to set the focus to the
   // newly opened menu.
   private enableSubmenu(delay = true) {
+    // Mouseover fires again when moving between a row's icon and label.
+    // Keep one timer so focusout can cancel every pending opening.
+    clearTimeout(this.enableSubmenuTimer);
     if (delay) {
       this.enableSubmenuTimer = window.setTimeout(() => {
         this.setSubmenuState(true);

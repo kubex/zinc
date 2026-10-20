@@ -23,6 +23,8 @@ fullWidth: true
 </zn-data-table>
 ```
 
+For reports grouped by a dimension over a date range, with grouped headings and a total row, use [Report Table](/components/report-table).
+
 ## Examples
 
 ### Basic Data Table
@@ -415,9 +417,9 @@ Or use the built-in empty state with custom text:
 
 ### Filtering
 
-Add filtering with the `zn-data-table-filter` component. The header carries a filter toggle beside the refresh button; clicking it reveals a row between the header and the rows holding the `filter` slot, where the filter component shows one pill per active filter alongside add-filter and clear controls. The row stays hidden until the toggle is clicked, and the toggle carries a count of the filters currently applied. Use `default-filters` to show a pill for a filter before the user adds it.
+Add filtering with the [`zn-data-table-filter`](/components/data-table-filter) component in the `filter` slot. It is a funnel in the header, after the search and before the column picker and refresh, with a badge counting the rules that apply. The funnel opens a popover of field / operator / value rules, and each rule that applies shows as a chip in a row under the tabs, with a remove button and Clear all. The row is there only while rules apply. The rules are sent as `filter`. Use `default-filters` to offer a rule for a field when the popover opens with nothing applied.
 
-The table also feeds the bar typeahead values for its text filters, taken from the rows it has loaded and keyed on the column whose name matches the filter's id.
+The table also feeds a slotted filter typeahead values for its text fields, taken from the rows it has loaded and keyed on the column whose name matches the field's id.
 
 :::tip
 In this preview, filter parameters are sent with the request but the static data file returns the same results regardless. With a real server endpoint, results would be filtered based on the applied criteria.
@@ -447,6 +449,27 @@ In this preview, filter parameters are sent with the request but the static data
     ]'>
   </zn-data-table-filter>
 
+</zn-data-table>
+```
+
+Without a slotted filter, set `filter-fields` to the fields and the table renders the funnel itself, in the same place. Its applied rules also reset the table to page 1.
+
+```html:preview
+<zn-data-table
+  standalone
+  caption="Users"
+  data-uri="/data/data-table.json"
+  method="GET"
+  headers='[
+    {"key":"name","label":"Name"},
+    {"key":"email","label":"Email"},
+    {"key":"status","label":"Status"}
+  ]'
+  filter-fields='[
+    {"id":"name","name":"Name","operators":["contains","eq"]},
+    {"id":"status","name":"Status","options":{"active":"Active","inactive":"Inactive"},"operators":["eq","neq"]}
+  ]'>
+  <zn-data-table-search slot="search" placeholder="Search..."></zn-data-table-search>
 </zn-data-table>
 ```
 

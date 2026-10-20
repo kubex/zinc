@@ -4,8 +4,9 @@ import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property, state} from 'lit/decorators.js';
 import {ref} from "lit/directives/ref.js";
+import {renderSortIcon, sortKeyHandler} from "../../internal/table-sort";
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
-import {squishTabIndicator} from "../../internal/tab-indicator";
+import {type TableTab, TabRowController} from "../../internal/table-tabs";
 import {Task} from "@lit/task";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import {type ZnFilterChangeEvent} from "../../events/zn-filter-change";
@@ -15,7 +16,7 @@ import ZnAlert from "../alert";
 import ZnButton from "../button";
 import ZnChip from "../chip";
 import ZnConfirm from "../confirm";
-import ZnDataTableFilter from "../data-table-filter";
+import ZnDataTableFilter, {type FilterField} from "../data-table-filter";
 import ZnDataTableSearch from "../data-table-search";
 import ZnDropdown from "../dropdown";
 import ZnEmptyState from "../empty-state";
@@ -36,6 +37,7 @@ import ZnSelect from "../select";
 // Tables load in such a way that the global sheet has to be re-applied inside the shadow root.
 import bootStyles from '../../../scss/boot.scss';
 import styles from './data-table.scss';
+import tableControlsStyles from '../../../scss/table-controls.scss';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PER_PAGE = 10;
@@ -133,40 +135,6 @@ interface HeaderConfig {
   ifEmpty?: Cell;
 }
 
-interface TableTab {
-  value: string;
-  label: string;
-  count?: number | string;
-}
-
-/** A field offered by the funnel's filter builder; the same shape as a zn-query-builder filter. */
-interface FilterField {
-  id: string;
-  name: string;
-  options?: Record<string, string>;
-  operators?: string[];
-}
-
-interface FilterRule {
-  key: string;
-  comparator: string;
-  value: string;
-}
-
-const FILTER_OPERATOR_LABELS: Record<string, string> = {
-  eq: 'is',
-  neq: 'is not',
-  in: 'is any of',
-  nin: 'is none of',
-  contains: 'contains',
-  like: 'is like',
-  starts: 'starts with',
-  gt: 'is more than',
-  gte: 'is at least',
-  lt: 'is less than',
-  lte: 'is at most',
-};
-
 type DisplayTemplate = (cell: Cell, row: Row, header: HeaderConfig) =>
   TemplateResult | string;
 
@@ -239,7 +207,7 @@ type AllowedInputElement =
  * @cssproperty --example - An example CSS custom property.
  */
 export default class ZnDataTable extends ZincElement {
-  static styles: CSSResultGroup = [unsafeCSS(bootStyles), unsafeCSS(styles)];
+  static styles: CSSResultGroup = [unsafeCSS(bootStyles), unsafeCSS(styles), unsafeCSS(tableControlsStyles)];
   static dependencies = {
     'zn-alert': ZnAlert,
     'zn-button': ZnButton,
@@ -259,6 +227,7 @@ export default class ZnDataTable extends ZincElement {
     'zn-option': ZnOption,
     'zn-select': ZnSelect,
     'zn-data-table-search': ZnDataTableSearch,
+    'zn-data-table-filter': ZnDataTableFilter,
   };
 
   @property({attribute: 'data-uri'}) dataUri: string;
@@ -320,16 +289,15 @@ export default class ZnDataTable extends ZincElement {
   @property({attribute: 'active-tab', reflect: true}) tab = '';
 
   /**
-   * Fields for the funnel's filter builder. When set, the funnel opens a popover of
-   * field / operator / value rules and the applied rules show as chips under the tabs,
-   * in place of the inline `filter` slot. Rules are sent as `filter`, encoded as
-   * zn-data-table-filter encodes them.
+   * Fields for the funnel's filter builder. When set, the table renders its own zn-data-table-filter in the
+   * header, in place of the `filter` slot, and the applied rules show as chips under the tabs. Rules are sent
+   * as `filter`.
    */
   @property({attribute: 'filter-fields', type: Array}) filterFields: FilterField[] = [];
 
-  @state() private _filterRules: FilterRule[] = [];
-  @state() private _filterPopOpen = false;
-  @state() private _filterPopPosition = {top: 0, left: 0};
+  private readonly _fieldsFilter = document.createElement('zn-data-table-filter');
+
+  private readonly _tabRow = new TabRowController(this, {onSelect: (value: string) => this.selectTab(value)});
 
   @property() filters: [] = [];
 
@@ -499,7 +467,6 @@ export default class ZnDataTable extends ZincElement {
   private _hiddenCells: Map<string, Cell[]> = new Map();
   private _secondaryHeaders: HeaderConfig[];
   @state() private _deselectedColumns: Set<string> = new Set();
-  @state() private _filtersOpen = false;
   private _columnDefaultsApplied = false;
   private _formatTemplates: Record<string, DisplayTemplate> = defaultTemplates;
 
@@ -790,7 +757,9 @@ export default class ZnDataTable extends ZincElement {
       || this.hasSlotController.test(ActionSlots.actions.valueOf())
       || this.hasSlotController.test(ActionSlots.create.valueOf())
       || this.hasSlotController.test(ActionSlots.sort.valueOf())
-      || this.hasSlotController.test(ActionSlots.search.valueOf());
+      || this.hasSlotController.test(ActionSlots.search.valueOf())
+      || this.hasSlotController.test(ActionSlots.filter.valueOf())
+      || this.filterFields.length > 0;
 
     const hasInputs = this.hasSlotController.test(ActionSlots.inputs.valueOf());
     const hasControls = hasActions || this.hasColumnSelect() || this.hasRefresh();
@@ -798,14 +767,6 @@ export default class ZnDataTable extends ZincElement {
     // An empty state with no header has nothing to hang off the panel, and consumers
     // often bring their own panel for it, so let it stand on its own
     const bareEmptyState = emptyBody && !hasControls && !this.caption;
-
-    // The filter bar is inline, so it gets its own row rather than a slot in the header
-    const filters = this.hasSlotController.test(ActionSlots.filter.valueOf())
-      ? html`
-        <div class="table__filters" ?hidden="${!this._filtersOpen}">
-          <slot name="${ActionSlots.filter.valueOf()}"></slot>
-        </div>`
-      : nothing;
 
     // Headers do not need to be re-rendered with new data
     return html`
@@ -827,7 +788,6 @@ export default class ZnDataTable extends ZincElement {
               ${this.renderTabs()}
               ${this.renderFilterChips()}
               ${this.renderToolbar()}
-              ${filters}
               ${tableBody}
               ${this.getTableFooter('footer')}
             </zn-panel>`
@@ -836,33 +796,29 @@ export default class ZnDataTable extends ZincElement {
             ${this.renderTabs()}
             ${this.renderFilterChips()}
             ${this.renderToolbar()}
-            ${filters}
             ${tableBody}
             ${this.getTableFooter()}`}
-        ${this.renderFilterPop()}
       </div>
     `;
+  }
+
+  protected willUpdate(changed: PropertyValues) {
+    super.willUpdate(changed);
+    this._fieldsFilter.filters = this.filterFields;
+    this._fieldsFilter.value = this.filter;
   }
 
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('zn-filter-change', this.filterChangeListener);
-    this.addEventListener('zn-clear', this.filterClearListener);
+    this._fieldsFilter.addEventListener('zn-filter-change', this.fieldsFilterChange);
     this.addEventListener('zn-search-change', this.searchChangeListener);
-    document.addEventListener('click', this.filterPopOutsideClick);
-    document.addEventListener('keydown', this.filterPopKeydown);
-    window.addEventListener('resize', this.filterPopReposition);
-    window.addEventListener('scroll', this.filterPopReposition, true);
     // Capture defaults before reading the URL so URL values are treated as deltas, then seed state.
     this._captureSharableDefaults();
     this._readSharableState();
   }
 
   protected firstUpdated() {
-    if (this.filterFields.length > 0) {
-      this.readFilterRules();
-    }
-
     // The filter may come from the URL or straight from a server-rendered attribute
     if (this.filter) {
       const filterEl = this.querySelector('zn-data-table-filter') as (Element & { value?: unknown }) | null;
@@ -877,7 +833,6 @@ export default class ZnDataTable extends ZincElement {
   protected updated(changed: PropertyValues) {
     super.updated(changed);
     this.publishFilterSuggestions();
-    this.syncTabIndicator();
   }
 
   // The filter bar can't see the data, so hand it the values already on screen to type against
@@ -909,21 +864,8 @@ export default class ZnDataTable extends ZincElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('zn-filter-change', this.filterChangeListener);
-    this.removeEventListener('zn-clear', this.filterClearListener);
+    this._fieldsFilter.removeEventListener('zn-filter-change', this.fieldsFilterChange);
     this.removeEventListener('zn-search-change', this.searchChangeListener);
-    document.removeEventListener('click', this.filterPopOutsideClick);
-    document.removeEventListener('keydown', this.filterPopKeydown);
-    window.removeEventListener('resize', this.filterPopReposition);
-    window.removeEventListener('scroll', this.filterPopReposition, true);
-    this._tabBarObserver?.disconnect();
-    this._tabBarObserver = null;
-  }
-
-  // Clearing the filters leaves an empty row behind, so fold it away
-  filterClearListener = (e: Event) => {
-    if (e.target instanceof ZnDataTableFilter) {
-      this._filtersOpen = false;
-    }
   }
 
   filterChangeListener = (e: ZnFilterChangeEvent) => {
@@ -1213,83 +1155,8 @@ export default class ZnDataTable extends ZincElement {
     return this.tab || this.tabs[0]?.value || '';
   }
 
-  private _tabIndicator: HTMLElement | null = null;
-  private _indicatorTab: HTMLElement | null = null;
-  private _tabBarObserver: ResizeObserver | null = null;
-
   private renderTabs() {
-    if (this.tabs.length === 0) return nothing;
-    const active = this.activeTab();
-
-    return html`
-      <div class="${classMap({'table__tabs': true, 'table__tabs--pill': this.pillTabs})}" role="tablist" ${ref((el) => this.observeTabBar(el as HTMLElement | undefined))}>
-        <span class="table__tabs__indicator" part="tab-indicator" aria-hidden="true"
-              ${ref((el) => (this._tabIndicator = (el as HTMLElement) ?? null))}></span>
-        ${this.tabs.map((tab: TableTab) => html`
-          <button role="tab"
-                  aria-selected="${tab.value === active ? 'true' : 'false'}"
-                  class="${classMap({'table__tab': true, 'table__tab--active': tab.value === active})}"
-                  @click="${() => this.selectTab(tab.value)}">
-            ${tab.label}
-            ${tab.count !== undefined && tab.count !== null && tab.count !== '' ? html`
-              <span class="table__tab__count">${tab.count}</span>` : nothing}
-          </button>`)}
-      </div>`;
-  }
-
-  private observeTabBar(bar: HTMLElement | undefined) {
-    this._tabBarObserver?.disconnect();
-    this._tabBarObserver = null;
-    if (!bar) return;
-    this._tabBarObserver = new ResizeObserver(() => this.syncTabIndicator());
-    this._tabBarObserver.observe(bar);
-  }
-
-  /**
-   * One indicator shared by every tab, positioned by its two edges as zn-navbar's is: on a tab
-   * change the edge nearest the destination leads and the other trails, so it slides across.
-   */
-  private syncTabIndicator() {
-    const indicator = this._tabIndicator;
-    const bar = indicator?.parentElement;
-    const active = bar?.querySelector<HTMLElement>('.table__tab--active');
-    if (!indicator || !bar || !active || active.offsetWidth === 0) {
-      indicator?.classList.remove('table__tabs__indicator--shown');
-      return;
-    }
-
-    const left = active.offsetLeft;
-    const right = bar.clientWidth - left - active.offsetWidth;
-    const previousLeft = parseFloat(indicator.style.left);
-    const ready = indicator.classList.contains('table__tabs__indicator--ready');
-    const tabChanged = active !== this._indicatorTab;
-    if (ready && tabChanged && !Number.isNaN(previousLeft) && Math.abs(left - previousLeft) > 0.5) {
-      indicator.classList.toggle('table__tabs__indicator--forward', left > previousLeft);
-      indicator.classList.toggle('table__tabs__indicator--backward', left < previousLeft);
-      squishTabIndicator(indicator);
-    }
-    this._indicatorTab = active;
-
-    // Only a tab change slides; a resize under the same tab follows it instantly, unless a slide is still running
-    const follow = ready && !tabChanged && indicator.getAnimations().length === 0;
-    if (follow) {
-      indicator.style.transition = 'none';
-    }
-
-    indicator.style.left = `${left}px`;
-    indicator.style.right = `${right}px`;
-    indicator.classList.add('table__tabs__indicator--shown');
-
-    if (follow) {
-      // Commit the jump before transitions come back on
-      void indicator.offsetWidth;
-      indicator.style.removeProperty('transition');
-    }
-
-    // The first placement jumps into position; only later moves animate
-    if (!ready) {
-      requestAnimationFrame(() => indicator.classList.add('table__tabs__indicator--ready'));
-    }
+    return this._tabRow.render(this.tabs, this.activeTab(), this.pillTabs);
   }
 
   private selectTab(value: string) {
@@ -1334,23 +1201,12 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private getHeaderControls() {
-    // With the filter builder, search leads the controls and the funnel is the first button
-    if (this.filterFields.length > 0) {
-      return html`
-        <slot name="${ActionSlots.search.valueOf()}"></slot>
-        ${this.getFilterToggle()}
-        <slot name="${ActionSlots.sort.valueOf()}"></slot>
-        ${this.getColumnSelect()}
-        ${this.getRefreshButton()}
-        <slot name="${ActionSlots.create.valueOf()}"></slot>`;
-    }
-
     return html`
+      <slot name="${ActionSlots.search.valueOf()}"></slot>
+      ${this.getFilter()}
       ${this.getColumnSelect()}
-      ${this.getFilterToggle()}
       ${this.getRefreshButton()}
       <slot name="${ActionSlots.sort.valueOf()}"></slot>
-      <slot name="${ActionSlots.search.valueOf()}"></slot>
       <slot name="${ActionSlots.create.valueOf()}"></slot>`;
   }
 
@@ -1359,227 +1215,30 @@ export default class ZnDataTable extends ZincElement {
     return this._hasLoadedData && this._lastLoadHadRows;
   }
 
-  private getFilterToggle() {
-    const builder = this.filterFields.length > 0;
-    if (!builder && !this.hasSlotController.test(ActionSlots.filter.valueOf())) return nothing;
-
-    const applied = this.appliedFilterCount();
-
-    return html`
-      <zn-button icon-button="small"
-                 icon="funnel@lu"
-                 icon-size="18"
-                 tooltip="Filter"
-                 aria-label="Filter"
-                 muted-notifications
-                 notification="${applied || nothing}"
-                 aria-pressed="${builder ? this._filterPopOpen : this._filtersOpen}"
-                 aria-haspopup="${ifDefined(builder ? 'dialog' : undefined)}"
-                 class="${classMap({'table__header__toggle--active': applied > 0, 'table__filter-toggle': builder})}"
-                 @click="${builder ? this.toggleFilterPop : this.toggleFilters}">
-      </zn-button>`;
+  private getFilter() {
+    if (this.filterFields.length > 0) return this._fieldsFilter;
+    if (!this.hasSlotController.test(ActionSlots.filter.valueOf())) return nothing;
+    return html`<slot name="${ActionSlots.filter.valueOf()}"></slot>`;
   }
 
-  private filterField(key: string): FilterField | undefined {
-    return this.filterFields.find(field => field.id === key);
+  private filterSource(): ZnDataTableFilter | null {
+    if (this.filterFields.length > 0) return this._fieldsFilter;
+    return this.querySelector<ZnDataTableFilter>(':scope > zn-data-table-filter[slot="filter"]');
   }
 
-  private isCompleteRule(rule: FilterRule): boolean {
-    return !!this.filterField(rule.key) && !!rule.comparator && rule.value !== '';
+  // The funnel sits in the header, so its chips get a filter of their own in a row under the tabs
+  private renderFilterChips() {
+    const source = this.filterSource();
+    if (!source) return nothing;
+    return html`<zn-data-table-filter class="table__chips" .source="${source}"></zn-data-table-filter>`;
   }
 
-  private ruleText(rule: FilterRule): string {
-    const field = this.filterField(rule.key);
-    const value = field?.options?.[rule.value] ?? rule.value;
-    return `${field?.name ?? rule.key} ${FILTER_OPERATOR_LABELS[rule.comparator] ?? rule.comparator} ${value}`;
-  }
-
-  private readFilterRules() {
-    try {
-      const parsed: unknown = this.filter ? JSON.parse(atob(this.filter)) : [];
-      this._filterRules = Array.isArray(parsed)
-        ? parsed.filter((r: FilterRule) => r && r.key).map((r: FilterRule) => ({key: r.key, comparator: r.comparator, value: String(r.value ?? '')}))
-        : [];
-    } catch {
-      this._filterRules = [];
-    }
-  }
-
-  private setFilterRules(rules: FilterRule[]) {
-    this._filterRules = rules;
-    const complete = rules.filter(rule => this.isCompleteRule(rule));
-    const encoded = complete.length > 0 ? btoa(JSON.stringify(complete)) : '';
-    if (encoded === this.filter) return;
-    this.filter = encoded;
+  private fieldsFilterChange = (e: Event) => {
+    e.stopPropagation();
+    this.filter = this._fieldsFilter.value;
     this.page = 1;
     this._dataTask.run().then(r => r);
-  }
-
-  private updateFilterRule(index: number, change: Partial<FilterRule>) {
-    const rules = this._filterRules.map((rule, i) => {
-      if (i !== index) return rule;
-      const next = {...rule, ...change};
-      // A new field resets the operator and value, which may not apply to it
-      if (change.key !== undefined && change.key !== rule.key) {
-        next.comparator = this.filterField(change.key)?.operators?.[0] ?? 'eq';
-        next.value = '';
-      }
-      return next;
-    });
-    this.setFilterRules(rules);
-  }
-
-  private toggleFilterPop = (e: Event) => {
-    e.stopPropagation();
-    if (this._filterPopOpen) {
-      this.closeFilterPop();
-    } else {
-      this.openFilterPop();
-    }
-  }
-
-  private openFilterPop() {
-    if (this._filterRules.length === 0) {
-      this._filterRules = [{key: '', comparator: '', value: ''}];
-    }
-    this.placeFilterPop();
-    this._filterPopOpen = true;
-  }
-
-  private closeFilterPop() {
-    this._filterPopOpen = false;
-    // Abandoned, incomplete rules go when the builder closes; applied ones stay as chips
-    this._filterRules = this._filterRules.filter(rule => this.isCompleteRule(rule));
-  }
-
-  // Fixed so a panel's overflow can't clip it; anchored under the funnel, right-aligned
-  private placeFilterPop() {
-    const toggle = this.shadowRoot?.querySelector('.table__filter-toggle');
-    if (!toggle) return;
-    const rect = toggle.getBoundingClientRect();
-    const width = Math.min(704, window.innerWidth * 0.94);
-    this._filterPopPosition = {
-      top: rect.bottom + 4,
-      left: Math.max(8, Math.min(rect.right - width, window.innerWidth - width - 8)),
-    };
-  }
-
-  private filterPopOutsideClick = (e: MouseEvent) => {
-    if (!this._filterPopOpen) return;
-    const path = e.composedPath();
-    const pop = this.shadowRoot?.querySelector('.table__fpop');
-    const toggle = this.shadowRoot?.querySelector('.table__filter-toggle');
-    // zn-select renders its listbox in its own shadow root, so selections stay inside the path
-    if ((pop && path.includes(pop)) || (toggle && path.includes(toggle))) return;
-    this.closeFilterPop();
-  }
-
-  private filterPopKeydown = (e: KeyboardEvent) => {
-    if (e.key === 'Escape' && this._filterPopOpen) {
-      this.closeFilterPop();
-    }
-  }
-
-  private filterPopReposition = () => {
-    if (this._filterPopOpen) this.placeFilterPop();
-  }
-
-  private renderFilterPop() {
-    if (!this._filterPopOpen) return nothing;
-
-    const incomplete = this._filterRules.filter(rule => !this.isCompleteRule(rule)).length;
-    const hint = incomplete === 0
-      ? 'Show records that match all of these'
-      : incomplete === 1 ? 'Choose a value for the empty filter to apply it' : 'Choose a value for each empty filter to apply it';
-    const used = new Set(this._filterRules.map(rule => rule.key));
-    const canAdd = this.filterFields.some(field => !used.has(field.id));
-
-    return html`
-      <div class="table__fpop" role="dialog" aria-label="Filters"
-           style="top: ${this._filterPopPosition.top}px; left: ${this._filterPopPosition.left}px">
-        <div class="table__fpop__head">
-          <b>Filters</b>
-          <span class="table__fpop__meta">${hint}</span>
-        </div>
-        <div class="table__fpop__body">
-          ${this._filterRules.map((rule, index) => this.renderFilterRule(rule, index, used))}
-        </div>
-        <div class="table__fpop__foot">
-          <zn-button size="small" color="secondary" icon="plus@lu" icon-size="14" ?disabled="${!canAdd}"
-                     @click="${() => this._filterRules = [...this._filterRules, {key: '', comparator: '', value: ''}]}">
-            Add filter
-          </zn-button>
-          <span class="table__fpop__spacer"></span>
-          ${this._filterRules.some(rule => this.isCompleteRule(rule)) ? html`
-            <zn-button size="small" color="transparent" @click="${() => this.setFilterRules([])}">Clear all</zn-button>` : nothing}
-          <zn-button size="small" color="primary" @click="${() => this.closeFilterPop()}">Done</zn-button>
-        </div>
-      </div>`;
-  }
-
-  private renderFilterRule(rule: FilterRule, index: number, used: Set<string>) {
-    const field = this.filterField(rule.key);
-    const operators = field?.operators?.length ? field.operators : ['eq'];
-    const fields = this.filterFields.filter(f => f.id === rule.key || !used.has(f.id));
-
-    return html`
-      <div class="table__fpop__rule">
-        <zn-select placeholder="Please select..." value="${rule.key}" aria-label="Filter field"
-                   @zn-change="${(e: Event) => this.updateFilterRule(index, {key: (e.target as ZnSelect).value as string})}">
-          <zn-opt-group label="Filter by">
-            ${fields.map(f => html`<zn-option value="${f.id}">${f.name}</zn-option>`)}
-          </zn-opt-group>
-        </zn-select>
-        <zn-select value="${rule.comparator}" ?disabled="${!field}" aria-label="Filter operator"
-                   @zn-change="${(e: Event) => this.updateFilterRule(index, {comparator: (e.target as ZnSelect).value as string})}">
-          ${field ? operators.map(op => html`<zn-option value="${op}">${FILTER_OPERATOR_LABELS[op] ?? op}</zn-option>`) : nothing}
-        </zn-select>
-        ${field?.options ? html`
-          <zn-select placeholder="Value" value="${rule.value}" aria-label="Filter value"
-                     @zn-change="${(e: Event) => this.updateFilterRule(index, {value: (e.target as ZnSelect).value as string})}">
-            ${Object.entries(field.options).map(([value, label]) => html`<zn-option value="${value}">${label}</zn-option>`)}
-          </zn-select>` : html`
-          <zn-input placeholder="Value" value="${rule.value}" ?disabled="${!field}" aria-label="Filter value"
-                    @zn-change="${(e: Event) => this.updateFilterRule(index, {value: (e.target as ZnInput).value as string})}"></zn-input>`}
-        <zn-button icon="trash-2@lu" icon-size="16" icon-color="grey" icon-button="small" plain aria-label="Remove filter"
-                   @click="${() => this.setFilterRules(this._filterRules.filter((_, i) => i !== index))}"></zn-button>
-      </div>`;
-  }
-
-  private renderFilterChips() {
-    if (this.filterFields.length === 0) return nothing;
-    const applied = this._filterRules.filter(rule => this.isCompleteRule(rule));
-    if (applied.length === 0) return nothing;
-
-    return html`
-      <div class="table__chips">
-        <span class="table__chips__label">Filters:</span>
-        ${applied.map(rule => html`
-          <span class="table__chip">
-            <button class="table__chip__text" @click="${(e: Event) => { e.stopPropagation(); this.openFilterPop(); }}">${this.ruleText(rule)}</button>
-            <button class="table__chip__remove" aria-label="Remove filter: ${this.ruleText(rule)}"
-                    @click="${() => this.setFilterRules(this._filterRules.filter(r => r !== rule))}">
-              <zn-icon src="x@lu" size="14"></zn-icon>
-            </button>
-          </span>`)}
-        <button class="table__chips__clear" @click="${() => this.setFilterRules([])}">Clear all</button>
-      </div>`;
-  }
-
-  private toggleFilters = () => {
-    this._filtersOpen = !this._filtersOpen;
-  }
-
-  private appliedFilterCount(): number {
-    if (!this.filter) return 0;
-
-    try {
-      const applied: unknown = JSON.parse(atob(this.filter));
-      return Array.isArray(applied) ? applied.length : 0;
-    } catch {
-      return 0;
-    }
-  }
+  };
 
   private hasColumnSelect(): boolean {
     return !this.hideColumnSelect && this.hasRows() && this.selectableHeaders().length > 1;
@@ -2087,20 +1746,6 @@ export default class ZnDataTable extends ZincElement {
     }
   }
 
-  private getTableSortIcon(key: any) {
-    if (this.sortColumn !== key) {
-      return html`
-        <div class="table__head__sort">
-          <zn-icon src="chevrons_up_down@lu" size="14"></zn-icon>
-        </div>`;
-    }
-
-    return html`
-      <div class="table__head__sort table__head__sort--active">
-        <zn-icon src="${this.sortDirection === 'asc' ? 'arrow-up@lu' : 'arrow-down@lu'}" size="14"></zn-icon>
-      </div>`;
-  }
-
   private renderCellHeader(header: HeaderConfig) {
     const sortable = !Object.values(this.unsortableHeaders).includes(header.key) && !Object.values(this.hiddenHeaders).includes(header.key) && !this.unsortable && header.sortable !== false;
 
@@ -2118,10 +1763,10 @@ export default class ZnDataTable extends ZincElement {
         tabindex="${ifDefined(sortable ? '0' : undefined)}"
         aria-sort="${ifDefined(sortable ? this.sortState(header.key) : undefined)}"
         @click="${sortable ? this.updateSort(header.key) : undefined}"
-        @keydown="${sortable ? (e: KeyboardEvent) => this.handleSortKeyDown(e, header.key) : undefined}">
+        @keydown="${sortable ? sortKeyHandler(this.updateSort(header.key)) : undefined}">
         <div>
           ${header.label}
-          ${sortable ? this.getTableSortIcon(header.key) : nothing}
+          ${sortable ? renderSortIcon(this.sortState(header.key)) : nothing}
         </div>
       </th>
     `;
@@ -2130,12 +1775,6 @@ export default class ZnDataTable extends ZincElement {
   private sortState(key: string): 'ascending' | 'descending' | 'none' {
     if (this.sortColumn !== key) return 'none';
     return this.sortDirection === 'asc' ? 'ascending' : 'descending';
-  }
-
-  private handleSortKeyDown(e: KeyboardEvent, key: string) {
-    if (e.key !== 'Enter' && e.key !== ' ') return;
-    e.preventDefault();
-    this.updateSort(key)();
   }
 
   private renderCellBody(index: number, value: Cell, row: Row) {

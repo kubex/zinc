@@ -137,6 +137,12 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   /** Toggle state, forwarded to the inner button's `aria-pressed`. */
   @property({attribute: 'aria-pressed'}) pressed: 'true' | 'false' | 'mixed';
 
+  /** Popup state, forwarded to the inner button's `aria-expanded`. */
+  @property({attribute: 'aria-expanded'}) expanded: 'true' | 'false';
+
+  /** Popup type, forwarded to the inner button's `aria-haspopup`. */
+  @property({attribute: 'aria-haspopup'}) hasPopup: string;
+
   // Auto Click Specific
   @property({type: Boolean, attribute: 'auto-click'}) autoClick = false;
   @property({type: Number, attribute: 'auto-click-delay'}) autoClickDelay = 2000;
@@ -460,6 +466,8 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         gaid="${ifDefined(this.gaid)}"
         aria-label="${ifDefined(ariaLabel)}"
         aria-pressed="${ifDefined(isLink ? undefined : this.pressed)}"
+        aria-expanded="${ifDefined(this.expanded)}"
+        aria-haspopup="${ifDefined(this.hasPopup)}"
         aria-busy="${this.processing ? 'true' : nothing}"
         data-notification="${ifDefined(notification)}"
         disabled="${this.disabled || nothing}"

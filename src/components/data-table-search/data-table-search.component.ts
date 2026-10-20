@@ -186,6 +186,8 @@ export default class ZnDataTableSearch extends ZincElement implements ZincFormCo
       <div class="data-table-search">
         <zn-input
           type="search"
+          size="small"
+          autocomplete="off"
           name="${this.name}"
           placeholder="${this.placeholder}"
           help-text="${this.helpText}"
@@ -193,11 +195,11 @@ export default class ZnDataTableSearch extends ZincElement implements ZincFormCo
           clearable
           @zn-input="${this.handleInput}"
           @zn-clear="${this.handleClear}">
+          <zn-icon slot="prefix" src="search@lu" size="16"></zn-icon>
           ${this.helpText ? html`
             <zn-tooltip slot="suffix" class="data-table-search__tooltip" content="${this.helpText}">
-              <zn-icon src="info@lu" size="20"></zn-icon>
+              <zn-icon src="info@lu" size="16"></zn-icon>
             </zn-tooltip>` : nothing}
-          <zn-icon slot="suffix" src="search@lu" size="20"></zn-icon>
         </zn-input>
         <slot style="display: none"></slot>
       </div>

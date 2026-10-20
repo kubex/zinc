@@ -163,10 +163,10 @@ ul.navbar {
   backdrop-filter: var(--navbar-page-inactive-tab-filter, none);
 }
 
-// zn-page passes its tabs as light-DOM <li>s, which carry no part, so the
-// page can't reach them via ::part(navbar-item)
-:host-context(zn-page) ul.navbar li {
-  padding-bottom: var(--zn-page-tab-padding-bottom, 0);
+// Space between a tab's label and the indicator under it. Set on the navbar
+// because zn-page passes its tabs as light-DOM <li>s, which carry no part.
+:host(:not([stacked]):not([icon-bar])) ul.navbar > li {
+  padding-bottom: var(--zn-navbar-tab-padding-bottom, 0);
 }
 
 :host([baseless]) {

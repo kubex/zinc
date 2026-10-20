@@ -37,6 +37,9 @@ export default class ZnPanel extends ZincElement {
   @property() caption: string;
   /** Help text under the caption, in the panel's header. */
   @property() description: string;
+
+  /** Sets the description beside the caption rather than under it. */
+  @property({attribute: 'inline-description', type: Boolean}) inlineDescription = false;
   @property() icon: string;
   @property({type: Boolean}) tabbed: boolean;
   @property({attribute: 'header-borderless', type: Boolean}) headerBorderless: boolean;
@@ -155,6 +158,7 @@ export default class ZnPanel extends ZincElement {
                        icon="${this.icon}"
                        caption="${this.caption}"
                        description="${ifDefined(this.description)}"
+                       ?inline-description="${this.inlineDescription}"
                        transparent>
               ${hasActionSlot ? html`
                 <slot name="actions" slot="actions" class="panel__header__actions"></slot>` : null}

@@ -42,6 +42,9 @@ export default class ZnHeader extends ZincElement {
   @property() caption: string;
   /** A line of muted text under the caption. */
   @property() description: string;
+
+  /** Sets the description beside the caption rather than under it, e.g. a row count. */
+  @property({attribute: 'inline-description', type: Boolean}) inlineDescription = false;
   @property() icon: string;
 
   @property({type: Array}) navigation = [];
@@ -116,6 +119,7 @@ export default class ZnHeader extends ZincElement {
       <div class="${classMap({
         'header': true,
         'header--transparent': this.transparent,
+        'header--inline-description': this.inlineDescription,
         'header--full-width': this.fullWidth,
         'header--has-nav': hasNavigation,
         'header--has-breadcrumb': hasBreadcrumb,

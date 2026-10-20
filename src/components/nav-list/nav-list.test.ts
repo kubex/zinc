@@ -118,6 +118,28 @@ describe('<zn-nav-list>', () => {
       expect(list.shadowRoot!.querySelector<HTMLSlotElement>('slot[name="actions"]')!.assignedElements()).to.have.length(1);
     });
 
+    it('rounds a divided list placeholder into the card corner it moves into', async () => {
+      const list = await fixture<ZnNavList>(html`
+        <zn-nav-list divide sortable style="--zn-panel-border-radius: 12px">
+          <zn-nav-item value="a">A</zn-nav-item>
+          <zn-nav-item value="b">B</zn-nav-item>
+          <zn-nav-item value="c">C</zn-nav-item>
+        </zn-nav-list>
+      `);
+      await list.updateComplete;
+      const items = [...list.querySelectorAll<ZnNavItem>('zn-nav-item')];
+      const placeholderRadius = () => getComputedStyle(items[1].shadowRoot!.querySelector('.nav-item')!).borderRadius;
+
+      items[1].dispatchEvent(new DragEvent('dragstart', {bubbles: true, composed: true, dataTransfer: new DataTransfer()}));
+      await aTimeout(50);
+      expect(placeholderRadius()).to.equal('0px');
+
+      const last = items[2].getBoundingClientRect();
+      items[2].dispatchEvent(new DragEvent('dragover', {bubbles: true, composed: true, cancelable: true, clientY: last.bottom - 1}));
+      await list.updateComplete;
+      expect(placeholderRadius()).to.equal('0px 0px 12px 12px');
+    });
+
     it('submits the order with the form and marks the items as draggable', async () => {
       const form = await fixture<HTMLFormElement>(html`
         <form>

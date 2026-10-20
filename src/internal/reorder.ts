@@ -272,3 +272,45 @@ function moved(keys: string[], fromIndex: number, toIndex: number) {
   order.splice(toIndex, 0, item);
   return order;
 }
+
+/**
+ * The border radius that rounds a row's corners where it meets the corners of the nearest rounded ancestor of `host`
+ * that clips it (a flush list in a panel), so a drag placeholder's dashed outline follows the clip there instead of
+ * being cut off. Null when nothing rounded clips the row.
+ */
+export function clipCornerRadius(host: Element, row: HTMLElement): string | null {
+  const parent = (el: Element): Element | null =>
+    el.assignedSlot ?? el.parentElement ?? (el.getRootNode() as ShadowRoot).host ?? null;
+
+  let clip: Element | null = null;
+  for (let el = parent(host); el; el = parent(el)) {
+    const style = getComputedStyle(el);
+    if (style.overflow !== 'visible' && style.borderRadius !== '0px') {
+      clip = el;
+      break;
+    }
+  }
+  if (!clip) return null;
+
+  const style = getComputedStyle(clip);
+  const outer = clip.getBoundingClientRect();
+  const bl = parseFloat(style.borderLeftWidth);
+  const br = parseFloat(style.borderRightWidth);
+  const bt = parseFloat(style.borderTopWidth);
+  const bb = parseFloat(style.borderBottomWidth);
+  const r = row.getBoundingClientRect();
+  const top = Math.abs(r.top - (outer.top + bt)) < 1;
+  const bottom = Math.abs(r.bottom - (outer.bottom - bb)) < 1;
+  const left = Math.abs(r.left - (outer.left + bl)) < 1;
+  const right = Math.abs(r.right - (outer.right - br)) < 1;
+  // The clip follows the padding edge, whose radius is the border radius less the border width
+  const corner = (touches: boolean, radius: string, border: number) =>
+    touches ? `${Math.max(0, parseFloat(radius) - border)}px` : '0px';
+
+  return [
+    corner(top && left, style.borderTopLeftRadius, Math.max(bt, bl)),
+    corner(top && right, style.borderTopRightRadius, Math.max(bt, br)),
+    corner(bottom && right, style.borderBottomRightRadius, Math.max(bb, br)),
+    corner(bottom && left, style.borderBottomLeftRadius, Math.max(bb, bl)),
+  ].join(' ');
+}

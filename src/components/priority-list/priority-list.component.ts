@@ -1,4 +1,5 @@
 import {classMap} from "lit/directives/class-map.js";
+import {clipCornerRadius, ReorderController} from '../../internal/reorder';
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {
   FormControlController,
@@ -6,7 +7,6 @@ import {
 } from "../../internal/form";
 import {HasSlotController} from '../../internal/slot';
 import {property, query, state} from 'lit/decorators.js';
-import {ReorderController} from '../../internal/reorder';
 import {repeat} from "lit/directives/repeat.js";
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from '../button';
@@ -353,49 +353,13 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
     this.emit('zn-select', {detail: {item}});
   }
 
-  /**
-   * Rounds the dragged row's corners where it meets the corners of a rounded ancestor that clips it (a flush list in a
-   * panel), so the dashed outline follows the clip there instead of being cut off.
-   */
   private _matchClipCorners(row: HTMLElement) {
-    const parent = (el: Element): Element | null =>
-      el.assignedSlot ?? el.parentElement ?? (el.getRootNode() as ShadowRoot).host ?? null;
-
-    let clip: Element | null = null;
-    for (let el = parent(this); el; el = parent(el)) {
-      const style = getComputedStyle(el);
-      if (style.overflow !== 'visible' && style.borderRadius !== '0px') {
-        clip = el;
-        break;
-      }
-    }
-
-    if (!clip) {
+    const radius = clipCornerRadius(this, row);
+    if (radius) {
+      row.style.setProperty('--zn-priority-list-drag-radius', radius);
+    } else {
       row.style.removeProperty('--zn-priority-list-drag-radius');
-      return;
     }
-
-    const style = getComputedStyle(clip);
-    const outer = clip.getBoundingClientRect();
-    const bl = parseFloat(style.borderLeftWidth);
-    const br = parseFloat(style.borderRightWidth);
-    const bt = parseFloat(style.borderTopWidth);
-    const bb = parseFloat(style.borderBottomWidth);
-    const r = row.getBoundingClientRect();
-    const top = Math.abs(r.top - (outer.top + bt)) < 1;
-    const bottom = Math.abs(r.bottom - (outer.bottom - bb)) < 1;
-    const left = Math.abs(r.left - (outer.left + bl)) < 1;
-    const right = Math.abs(r.right - (outer.right - br)) < 1;
-    // The clip follows the padding edge, whose radius is the border radius less the border width
-    const corner = (touches: boolean, radius: string, border: number) =>
-      touches ? `${Math.max(0, parseFloat(radius) - border)}px` : '0px';
-
-    row.style.setProperty('--zn-priority-list-drag-radius', [
-      corner(top && left, style.borderTopLeftRadius, Math.max(bt, bl)),
-      corner(top && right, style.borderTopRightRadius, Math.max(bt, br)),
-      corner(bottom && right, style.borderBottomRightRadius, Math.max(bb, br)),
-      corner(bottom && left, style.borderBottomLeftRadius, Math.max(bb, bl)),
-    ].join(' '));
   }
 
   private _handleItemClick(event: MouseEvent, key: string) {

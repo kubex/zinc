@@ -23,6 +23,8 @@ interface CustomButtonWidths {
  * @since 1.0
  *
  * @slot - The default slot.
+ * @slot prefix - Controls shown just before the inline buttons, such as a segmented toggle. Their width is kept
+ *   free when working out which buttons fit.
  *
  */
 export default class ZnButtonMenu extends ZincElement {
@@ -119,6 +121,7 @@ export default class ZnButtonMenu extends ZincElement {
     let remainingWidth = containerWidth;
     this._buttons = [...this._originalButtons];
     remainingWidth -= 50; // Allow for more-vert button
+    remainingWidth -= this.getPrefixWidth();
 
     // Sort the buttons
     this._buttons.sort((a, b) => {
@@ -268,6 +271,12 @@ export default class ZnButtonMenu extends ZincElement {
     })
   }
 
+  private getPrefixWidth(): number {
+    const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="prefix"]');
+    const gap = parseFloat(getComputedStyle(this).getPropertyValue('--menu-gap')) || 0;
+    return (slot?.assignedElements() ?? []).reduce((width, el) => width + (el as HTMLElement).offsetWidth + gap, 0);
+  }
+
   private getButtonLabel(button: ZnButton) {
     const labelSlot = button.shadowRoot?.querySelector<HTMLSlotElement>('slot[part="label"]');
     const slottedLabel = labelSlot ? [...labelSlot.assignedNodes({flatten: true})]
@@ -297,6 +306,7 @@ export default class ZnButtonMenu extends ZincElement {
         'button-menu--no-padding': this.noPadding,
         'button-menu--no-gap': this.noGap,
       })}">
+        <slot name="prefix" @slotchange="${() => this.calculateVisibleButtons()}"></slot>
         <div class="button-menu__container"></div>
         <zn-dropdown placement="bottom-end">
           <zn-button slot="trigger"

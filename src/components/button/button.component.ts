@@ -67,6 +67,8 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @property({attribute: 'hover-color'}) hoverColor: string;
   @property({type: Boolean}) text = false;
   @property({type: Boolean}) outline = false;
+  /** Keeps the filled look where a container forces `text`, such as a page header's action menu. */
+  @property({type: Boolean}) solid = false;
   /** A tinted fill in the button's colour, for secondary actions beside a primary one. */
   @property({type: Boolean}) subtle = false;
   @property({type: Boolean}) disabled = false;
@@ -431,7 +433,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--transparent': this.color === 'transparent',
           'button--star': this.color === 'star',
           'button--outline': this.outline,
-          'button--text': (this.text && !this.outline),
+          'button--text': (this.text && !this.outline && !this.solid),
           'button--icon-button': !!this.iconButton,
           'button--plain': !!this.iconButton && this.plain,
           'button--pill': this.pill,

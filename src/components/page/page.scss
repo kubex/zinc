@@ -505,7 +505,21 @@ zn-navbar {
   margin-inline: auto;
 }
 
-// The content keeps its gutter inside the cap, so the header is narrower by it to line up
+// Content sits inside its gutter plus its zn-sp's base-gap padding, so the header is narrower by both to line up
 :host([width-container]) .header .content {
-  max-width: calc(var(--zn-container, 100%) - 2 * var(--zn-gutter, 0px));
+  max-width: calc(var(--zn-container, 100%) - 2 * (var(--zn-gutter, 0px) + var(--zn-base-gap, 0px)));
+}
+
+// Matches .header .content's box, so the tabs and their underline span the content, not the page
+:host([width-container]) zn-navbar::part(container) {
+  width: min(
+    calc(var(--zn-container, 100%) - 2 * (var(--zn-gutter, 0px) + var(--zn-base-gap, 0px))),
+    calc(100% - 2 * (var(--zn-gutter, 0px) + var(--zn-base-gap, 0px)))
+  );
+  margin-inline: auto;
+}
+
+:host([width-container]) zn-navbar::part(navbar) {
+  padding-inline: 0;
+  margin-inline: 0;
 }

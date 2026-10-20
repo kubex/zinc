@@ -79,6 +79,73 @@ Use the `prefix` slot to add icons to menu items.
 </zn-menu>
 ```
 
+### Section Labels
+
+Head a group of items with `zn-menu-label`. Labels are skipped by keyboard navigation.
+
+```html:preview
+<zn-menu>
+  <zn-menu-label>Customer</zn-menu-label>
+  <zn-menu-item>Send email</zn-menu-item>
+  <zn-menu-item>Issue refund</zn-menu-item>
+  <zn-menu-label>Account</zn-menu-label>
+  <zn-menu-item>Change plan</zn-menu-item>
+</zn-menu>
+```
+
+### Keyboard Shortcuts
+
+Set `shortcut` on an item to show its keyboard shortcut as a key cap at the end of the row. It labels the shortcut only;
+handle the key press yourself.
+
+```html:preview
+<zn-menu>
+  <zn-menu-item shortcut="E">
+    <zn-icon slot="prefix" src="mail@lu" size="18"></zn-icon>
+    Send email
+  </zn-menu-item>
+  <zn-menu-item shortcut="R">
+    <zn-icon slot="prefix" src="undo-2@lu" size="18"></zn-icon>
+    Issue refund
+  </zn-menu-item>
+</zn-menu>
+```
+
+### Actions Menu
+
+A typical actions menu: a label, items with icons and shortcuts, and a destructive item last, after a divider.
+
+```html:preview
+<zn-dropdown>
+  <zn-button slot="trigger" caret color="secondary">Actions</zn-button>
+  <zn-menu>
+    <zn-menu-label>Customer</zn-menu-label>
+    <zn-menu-item shortcut="E"><zn-icon slot="prefix" src="mail@lu" size="18"></zn-icon>Send email</zn-menu-item>
+    <zn-menu-item shortcut="R"><zn-icon slot="prefix" src="undo-2@lu" size="18"></zn-icon>Issue refund</zn-menu-item>
+    <zn-menu-item><zn-icon slot="prefix" src="repeat@lu" size="18"></zn-icon>Retry payment</zn-menu-item>
+    <zn-menu-item><zn-icon slot="prefix" src="copy@lu" size="18"></zn-icon>Copy customer ID</zn-menu-item>
+    <hr>
+    <zn-menu-item color="error"><zn-icon slot="prefix" src="trash-2@lu" size="18"></zn-icon>Delete customer</zn-menu-item>
+  </zn-menu>
+</zn-dropdown>
+```
+
+The `actions` property builds the same menu from data: `type: "label"` adds a label, `type: "divider"` a divider, and
+an item's `color` and `shortcut` work as the attributes do.
+
+```html:preview
+<zn-menu id="actions-menu"></zn-menu>
+<script>
+  document.getElementById('actions-menu').actions = [
+    {type: 'label', title: 'Customer'},
+    {title: 'Send email', icon: 'mail@lu', shortcut: 'E', path: '#'},
+    {title: 'Issue refund', icon: 'undo-2@lu', shortcut: 'R', path: '#'},
+    {type: 'divider'},
+    {title: 'Delete customer', icon: 'trash-2@lu', color: 'error', path: '#'}
+  ];
+</script>
+```
+
 ### Shell Variant
 
 Use `variant="shell"` for the app-shell header dropdown look: a padded, translucent panel with floating rounded items that highlight with the primary colour on hover. The variant is automatically propagated to the menu's items.
@@ -313,16 +380,16 @@ Menus support full keyboard navigation:
 
 ### Dividers
 
-Menu items have no built-in separators — to group items visually, add HTML elements with `role="separator"`.
+Add an `<hr>` between menu items to split them into groups.
 
 ```html:preview
 <zn-menu>
   <zn-menu-item>Cut</zn-menu-item>
   <zn-menu-item>Copy</zn-menu-item>
   <zn-menu-item>Paste</zn-menu-item>
-  <hr style="margin: 0; border: none; border-top: 1px solid rgba(0,0,0,0.1);">
+  <hr>
   <zn-menu-item>Select All</zn-menu-item>
-  <hr style="margin: 0; border: none; border-top: 1px solid rgba(0,0,0,0.1);">
+  <hr>
   <zn-menu-item color="error">Delete</zn-menu-item>
 </zn-menu>
 ```
@@ -351,7 +418,7 @@ A comprehensive example showing various menu features together.
         <zn-menu-item value="doc3">document3.txt</zn-menu-item>
       </zn-menu>
     </zn-menu-item>
-    <hr style="margin: 0; border: none; border-top: 1px solid rgba(0,0,0,0.1);">
+    <hr>
     <zn-menu-item value="save">
       <zn-icon slot="prefix" src="save" size="20"></zn-icon>
       Save
@@ -360,14 +427,14 @@ A comprehensive example showing various menu features together.
       <zn-icon slot="prefix" src="save_as" size="20"></zn-icon>
       Save As...
     </zn-menu-item>
-    <hr style="margin: 0; border: none; border-top: 1px solid rgba(0,0,0,0.1);">
+    <hr>
     <zn-menu-item type="checkbox" value="auto-save" checked>
       Auto Save
     </zn-menu-item>
     <zn-menu-item type="checkbox" value="show-line-numbers">
       Show Line Numbers
     </zn-menu-item>
-    <hr style="margin: 0; border: none; border-top: 1px solid rgba(0,0,0,0.1);">
+    <hr>
     <zn-menu-item value="export">
       Export
       <zn-menu slot="submenu">
@@ -381,7 +448,7 @@ A comprehensive example showing various menu features together.
         </zn-menu-item>
       </zn-menu>
     </zn-menu-item>
-    <hr style="margin: 0; border: none; border-top: 1px solid rgba(0,0,0,0.1);">
+    <hr>
     <zn-menu-item value="close" color="error">
       <zn-icon slot="prefix" src="close" size="20"></zn-icon>
       Close File

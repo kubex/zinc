@@ -174,7 +174,13 @@
 
 .menu-item .menu-item__prefix::slotted(*) {
   --icon-size: var(--zn-font-size-small);
-  margin-inline-end: var(--zn-spacing-small);
+  margin-inline-end: var(--zn-menu-item-icon-gap, var(--zn-spacing-small));
+  color: var(--zn-menu-item-icon-color, inherit);
+}
+
+// A destructive item's icon takes the item's colour
+.menu-item--error .menu-item__prefix::slotted(*) {
+  color: inherit;
 }
 
 // Shell items space the icon via the row gap instead
@@ -190,6 +196,29 @@
 
 .menu-item .menu-item__suffix::slotted(*) {
   margin-inline-start: var(--zn-spacing-x-small);
+}
+
+// A keyboard shortcut, drawn as a key cap at the end of the row
+.menu-item__shortcut {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  min-width: 20px;
+  height: 20px;
+  margin-inline-start: var(--zn-spacing-medium);
+  padding: 0 5px;
+  border: 1px solid rgb(var(--zn-border-color));
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: rgb(var(--zn-panel));
+  font-family: inherit;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: var(--zn-font-weight-medium);
+  line-height: 1;
+  color: var(--zn-color-neutral-500);
 }
 
 /* Safe triangle */

@@ -84,6 +84,26 @@
 }
 
 
+// Width, style and colour are set apart so an unresolved colour token can't drop the line.
+.menu > hr {
+  height: 0;
+  margin: var(--zn-menu-divider-margin, 4px 0);
+  border: 0;
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: var(--zn-menu-divider-color, rgb(var(--zn-border-color)));
+}
+
+// !important because the page's own hr styles otherwise outrank ::slotted()
+::slotted(hr) {
+  height: 0 !important;
+  margin: var(--zn-menu-divider-margin, 4px 0) !important;
+  border: 0 !important;
+  border-top-width: 1px !important;
+  border-top-style: solid !important;
+  border-top-color: var(--zn-menu-divider-color, rgb(var(--zn-border-color))) !important;
+}
+
 // A zn-confirm only contributes its dialog, so it must not claim a slot (or a gap) in the item stack.
 zn-confirm, ::slotted(zn-confirm) {
   display: contents;
@@ -91,4 +111,14 @@ zn-confirm, ::slotted(zn-confirm) {
 
 ::slotted(zn-menu-item + zn-menu-item) {
   border-top: var(--zn-menu-item-divider, 1px solid rgb(var(--zn-border-color)));
+}
+
+// A group divider, shown even when the theme drops the line between items
+::slotted(hr) {
+  flex: 0 0 auto;
+  margin: var(--zn-spacing-3x-small, 2px) 0;
+  border: none;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: rgb(var(--zn-border-color));
 }

@@ -113,16 +113,23 @@ export default class ZnPage extends ZnTabs {
     this.classList.toggle('alt-pressed', false);
   };
 
-  // A theme picks the separator through --zn-page-breadcrumb-separator-icon.
+  // A theme picks the separator through --zn-page-breadcrumb-separator-icon and its size through
+  // --zn-page-breadcrumb-separator-size, as zn-icon sizes itself from its size attribute.
   private breadcrumbSeparatorIcon(): string {
     const value = getComputedStyle(this).getPropertyValue('--zn-page-breadcrumb-separator-icon').trim();
     return value.replace(/^["']|["']$/g, '') || 'arrow-right@lu';
   }
 
+  private breadcrumbSeparatorSize(): string {
+    return String(parseInt(getComputedStyle(this).getPropertyValue('--zn-page-breadcrumb-separator-size')) || 16);
+  }
+
   private syncBreadcrumbSeparators() {
     const src = this.breadcrumbSeparatorIcon();
+    const size = this.breadcrumbSeparatorSize();
     this.querySelectorAll(':scope > [data-breadcrumb-separator]').forEach(icon => {
       if (icon.getAttribute('src') !== src) icon.setAttribute('src', src);
+      if (icon.getAttribute('size') !== size) icon.setAttribute('size', size);
     });
   }
 
@@ -148,7 +155,7 @@ export default class ZnPage extends ZnTabs {
 
       const icon = document.createElement('zn-icon');
       icon.setAttribute('src', this.breadcrumbSeparatorIcon());
-      icon.setAttribute('size', '16');
+      icon.setAttribute('size', this.breadcrumbSeparatorSize());
       icon.setAttribute('slot', 'breadcrumb');
       icon.setAttribute('data-breadcrumb-separator', '');
       anchor.after(icon);
@@ -536,7 +543,7 @@ export default class ZnPage extends ZnTabs {
                       <span class="header__crumbs">
                         <slot name="breadcrumb" class="breadcrumb"
                               @slotchange="${this.handleBreadcrumbSlotChange}"></slot>
-                        <zn-icon class="breadcrumb__separator" src="${this.breadcrumbSeparatorIcon()}" size="16"></zn-icon>
+                        <zn-icon class="breadcrumb__separator" src="${this.breadcrumbSeparatorIcon()}" size="${this.breadcrumbSeparatorSize()}"></zn-icon>
                         ${this.caption ? html`<span class="breadcrumb__current">${this.caption}</span>` : null}
                       </span>` : null}
                     <slot name="caption">${this.caption}</slot>

@@ -216,7 +216,7 @@ export default class ZnButtonMenu extends ZincElement {
               if (iconLibrary) {
                 iconElement.setAttribute('library', iconLibrary);
               }
-              iconElement.setAttribute('size', '18');
+              iconElement.setAttribute('size', '16');
               iconElement.setAttribute('slot', 'prefix');
               menuItem.appendChild(iconElement);
             }

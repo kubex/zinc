@@ -335,6 +335,48 @@ Using shorthand notation:
 <zn-icon src="Jane Smith@av" size="40" round></zn-icon>
 ```
 
+#### Avatar Sizes
+
+`size` takes the named avatar sizes `sm` (22px), `md` (28px), `lg` (40px) and `xl` (56px), as well as a number of pixels.
+
+```html:preview
+<zn-icon src="Fiona Hart" library="avatar" size="sm" round></zn-icon>
+<zn-icon src="Fiona Hart" library="avatar" size="md" round></zn-icon>
+<zn-icon src="Fiona Hart" library="avatar" size="lg" round></zn-icon>
+<zn-icon src="Harry Hill" library="avatar" size="xl" round></zn-icon>
+```
+
+#### Presence
+
+Set `presence` to `online`, `away`, `busy`, `meeting` or `offline` to show a live-status dot. Use it only where live
+status matters, such as agents and teams.
+
+```html:preview
+<zn-icon src="Ben Brooks" library="avatar" size="md" color="success" presence="online" round></zn-icon>
+<zn-icon src="Jade Ellis" library="avatar" size="md" color="warning" presence="away" round></zn-icon>
+<zn-icon src="Kai Walsh" library="avatar" size="md" color="error" presence="busy" round></zn-icon>
+<zn-icon src="Mia Nash" library="avatar" size="md" presence="meeting" round></zn-icon>
+<zn-icon src="Ola Reed" library="avatar" size="md" presence="offline" round></zn-icon>
+```
+
+#### Tinted and Solid Avatars
+
+Avatars are solid circles unless the theme tints them — the OpenByte theme draws initials on a tinted circle. Add
+`solid` to keep an avatar solid in a tinting theme, such as a dark `default` avatar for the signed-in user.
+
+```html:preview
+<zn-icon src="Ann Isaacs" library="avatar" size="md" color="violet" round></zn-icon>
+<zn-icon src="Mark Nolan" library="avatar" size="md" color="default" solid round></zn-icon>
+```
+
+Theme tokens control the look:
+
+- `--zn-avatar-tint`: `1` draws a tinted circle with darker initials; `0` (the default) a solid circle
+- `--zn-avatar-default-color`: the colour of avatars without a `color`, in place of the colour picked from the name
+- `--zn-avatar-font-scale`: the initials' size as a fraction of the avatar's (default `0.4167`)
+- `--zn-avatar-font-weight`: the initials' weight
+- `--zn-avatar-ring-color`: the ring around the presence dot (default: the panel surface)
+
 ### Gravatar
 
 Gravatar provides globally recognized avatars based on email addresses. Simply provide an email address as the `src` and the component will automatically detect it and use Gravatar.
@@ -455,7 +497,8 @@ The icon component exposes CSS custom properties for advanced styling:
 
 ### CSS Parts
 
-The icon component exposes the `icon` part for styling the internal icon element:
+The icon component exposes the `icon` part for styling the internal icon element, and `presence` for an avatar's
+status dot:
 
 ```html:preview
 <style>

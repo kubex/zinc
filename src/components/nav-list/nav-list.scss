@@ -65,6 +65,15 @@
   overflow-y: auto;
 }
 
+:host([divide]) .nav-list__list {
+  gap: 0;
+  padding: 0;
+
+  ::slotted(zn-nav-item:not(:last-child)) {
+    border-bottom: 1px solid rgb(var(--zn-border-color));
+  }
+}
+
 .nav-list__empty {
   margin: 0;
   padding: var(--zn-spacing-small) 10px;

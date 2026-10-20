@@ -45,6 +45,27 @@ describe('<zn-nav-list>', () => {
     expect(el.shadowRoot!.querySelector('[part="count"]')!.textContent).to.equal('12');
   });
 
+  it('should render the description', async () => {
+    const el = await fixture<ZnNavItem>(html`<zn-nav-item description="Wrap-up and follow-up">Closing</zn-nav-item>`);
+    expect(el.shadowRoot!.querySelector('[part="description"]')!.textContent).to.equal('Wrap-up and follow-up');
+  });
+
+  it('should mark its items when divided', async () => {
+    const list = await fixture<ZnNavList>(html`
+      <zn-nav-list divide>
+        <zn-nav-item>General</zn-nav-item>
+        <zn-nav-item>Closing</zn-nav-item>
+      </zn-nav-list>
+    `);
+    await list.updateComplete;
+    const items = [...list.querySelectorAll('zn-nav-item')];
+    expect(items.every(item => item.hasAttribute('divide'))).to.be.true;
+
+    list.divide = false;
+    await list.updateComplete;
+    expect(items.some(item => item.hasAttribute('divide'))).to.be.false;
+  });
+
   it('should filter items by label and show the empty message', async () => {
     const list = await fixture<ZnNavList>(html`
       <zn-nav-list searchable>

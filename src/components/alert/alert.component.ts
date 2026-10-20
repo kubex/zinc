@@ -26,6 +26,8 @@ export default class ZnAlert extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property({type: String}) icon: string = '';
+  /** The status icon's size in pixels. */
+  @property({attribute: 'icon-size', type: Number}) iconSize = 24;
   @property({type: String}) caption: string = '';
   @property({type: Boolean}) collapse: boolean = false;
   @property({type: String, reflect: true}) appearance: 'transparent' | 'solid' = 'transparent';
@@ -40,11 +42,11 @@ export default class ZnAlert extends ZincElement {
     if (this.icon) {
       if (this.collapse) {
         icon = this.icon ? html`
-          <zn-icon class="alert-icon" src="${this.icon}" id="xy2" @click="${this.hideAlert}"
+          <zn-icon class="alert-icon" src="${this.icon}" size="${this.iconSize}" id="xy2" @click="${this.hideAlert}"
                    style="cursor: pointer"></zn-icon>` : "";
       } else {
         icon = this.icon ? html`
-          <zn-icon class="alert-icon" src="${this.icon}" id="xy2"></zn-icon>` : '';
+          <zn-icon class="alert-icon" src="${this.icon}" size="${this.iconSize}" id="xy2"></zn-icon>` : '';
       }
     }
 

@@ -32,6 +32,10 @@ export type IconLibrary = "src" | "material" | "material-outlined" | "material-r
   "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line" |
   "lucide";
 
+export type AvatarPresence = 'online' | 'away' | 'busy' | 'meeting' | 'offline';
+
+const namedSizes: Record<string, number> = {sm: 22, md: 28, lg: 40, xl: 56};
+
 export type IconColor =
   "default"
   | "primary"
@@ -77,7 +81,11 @@ export default class ZnIcon extends ZincElement {
 
   @property({reflect: true}) alt: string;
 
-  @property({type: Number, reflect: true}) size: number = 24;
+  /** Size in pixels, or one of the avatar sizes `sm` (22), `md` (28), `lg` (40) and `xl` (56). */
+  @property({
+    reflect: true,
+    converter: {fromAttribute: (value: string | null) => namedSizes[value ?? ''] ?? (value === null ? 24 : Number(value))}
+  }) size: number = 24;
 
   @property({type: Boolean, reflect: true}) round = false;
   @property({type: Boolean, reflect: true}) tile = false;
@@ -93,6 +101,12 @@ export default class ZnIcon extends ZincElement {
   @property({type: Boolean}) blink: boolean = false;
 
   @property({type: Boolean}) squared: boolean = false;
+
+  /** A live-status dot on an avatar: `online`, `away`, `busy`, `meeting` or `offline`. */
+  @property({reflect: true}) presence: AvatarPresence;
+
+  /** Draws an avatar as a solid circle even where the theme tints avatars. */
+  @property({type: Boolean, reflect: true}) solid = false;
 
   private static readonly presetColors = new Set([
     'default', 'primary', 'accent', 'info', 'warning', 'error', 'success',
@@ -300,6 +314,8 @@ export default class ZnIcon extends ZincElement {
           'icon--pink': this.color === "pink",
           'icon--grey': this.color === "grey",
           'icon--avatar': this.library === "avatar",
+          'icon--avatar-solid': this.library === "avatar" && this.solid,
+          'icon--has-color': Boolean(this.color),
           'icon--padded': this.padded,
           'icon--blink': this.blink,
           'icon--squared': this.squared,
@@ -326,7 +342,8 @@ export default class ZnIcon extends ZincElement {
                                            src="https://www.gravatar.com/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`],
               ["libravatar", () => html`<img part="icon" alt="${this.alt}"
                                              src="https://seccdn.libravatar.org/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`],
-              ["avatar", () => html`<span class="avatar__text">${this.getAvatarInitials(this.src)}</span>`]
+              ["avatar", () => html`<span class="avatar__text" role="img"
+                                          aria-label="${this.alt || this.src}">${this.getAvatarInitials(this.src)}</span>`]
             ], () => html`Library not supported: ${this.library}`)}` : ''}
 
           ${(!this.library || this.library === 'src') && this.src ? html`
@@ -336,7 +353,10 @@ export default class ZnIcon extends ZincElement {
           ${!this.library && !this.src ? html`
             <slot></slot>` : ''}
         </div>
-      </div>`;
+      </div>
+      ${this.presence ? html`
+        <span part="presence" class="presence presence--${this.presence}" role="img"
+              aria-label="${this.presence}"></span>` : ''}`;
   }
 
   private getAvatarInitials(avatar: string) {

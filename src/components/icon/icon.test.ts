@@ -75,4 +75,33 @@ describe('<zn-icon>', () => {
     expect(el.library).to.equal('material-symbols-outlined');
     expect(el.src).to.equal('home@lu');
   });
+
+  it('should accept the named avatar sizes', async () => {
+    const el = await fixture<ZnIcon>(html`<zn-icon src="Fiona Hart" library="avatar" size="lg"></zn-icon>`);
+    expect(el.size).to.equal(40);
+    expect(el.shadowRoot!.querySelector<HTMLElement>('.icon')!.getBoundingClientRect().width).to.equal(40);
+  });
+
+  it('should still accept a size in pixels', async () => {
+    const el = await fixture<ZnIcon>(html`<zn-icon src="home" size="18"></zn-icon>`);
+    expect(el.size).to.equal(18);
+  });
+
+  it('should show a presence dot only when presence is set', async () => {
+    const el = await fixture<ZnIcon>(html`<zn-icon src="Ben Brooks" library="avatar" round></zn-icon>`);
+    expect(el.shadowRoot!.querySelector('[part="presence"]')).to.be.null;
+
+    el.presence = 'online';
+    await el.updateComplete;
+    const dot = el.shadowRoot!.querySelector('[part="presence"]')!;
+    expect(dot.classList.contains('presence--online')).to.be.true;
+    expect(dot.getAttribute('aria-label')).to.equal('online');
+  });
+
+  it('should name an avatar for assistive technology', async () => {
+    const el = await fixture<ZnIcon>(html`<zn-icon src="BB" alt="Ben Brooks" library="avatar"></zn-icon>`);
+    const text = el.shadowRoot!.querySelector('.avatar__text')!;
+    expect(text.getAttribute('role')).to.equal('img');
+    expect(text.getAttribute('aria-label')).to.equal('Ben Brooks');
+  });
 });

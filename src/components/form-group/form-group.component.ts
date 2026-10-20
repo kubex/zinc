@@ -43,6 +43,9 @@ export default class ZnFormGroup extends ZincElement {
   @property({ attribute: 'cols', type: Boolean }) forceCols = false;
   @property({ attribute: 'layout', type: String }) layout = "1,2";
 
+  /** Labels the group like one of its fields and keeps it tight to them, for a section inside a form or dialog. */
+  @property({ type: Boolean, reflect: true }) compact = false;
+
   @property({ attribute: 'pad', type: Boolean }) pad: boolean = false;
 
   /** The scroller the label is moved against by hand; null while native sticky is enough. */

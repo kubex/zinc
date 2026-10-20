@@ -15,12 +15,13 @@
 }
 
 /* Label */
+// Inline-block sits in the inherited line box, which can be taller than the label; block sizes it to its own line.
 .form-control--has-label .form-control__label {
-  display: inline-block;
+  display: var(--zn-input-label-display, inline-block);
   color: var(--zn-input-label-color);
   font-weight: var(--zn-input-label-font-weight);
   line-height: var(--zn-input-label-line-height);
-  margin-bottom: var(--zn-spacing-x-small);
+  margin-bottom: var(--zn-input-label-spacing, var(--zn-spacing-x-small));
 }
 
 .form-control--has-label.form-control--medium .form-control__label {
@@ -35,6 +36,13 @@
   content: var(--zn-input-required-content);
   margin-inline-start: var(--zn-input-required-content-offset);
   color: var(--zn-input-required-content-color);
+}
+
+:host([optional]) .form-control--has-label .form-control__label::after {
+  content: var(--zn-input-optional-content, 'optional');
+  margin-inline-start: var(--zn-input-optional-content-offset, var(--zn-spacing-2x-small));
+  color: var(--zn-input-help-text-color);
+  font-weight: var(--zn-font-weight-normal, 400);
 }
 
 .form-control--has-label.form-control--radio-group .form-control__label,
@@ -98,6 +106,11 @@
 .checkbox--has-selected-content .checkbox__selected-content {
   display: block;
   margin-top: var(--zn-spacing-small);
+}
+
+// Unset, the declaration is invalid at computed time and the line height inherits as before.
+.form-control--has-help-text .form-control__help-text {
+  line-height: var(--zn-input-help-text-line-height);
 }
 
 .form-control--has-help-text.form-control--small .form-control__help-text {

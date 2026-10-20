@@ -24,10 +24,31 @@
   --zn-page-closer-gap: var(--zn-spacing-x-small);
 }
 
-// A theme can give a modal a dialog-sized title; without one it keeps the page title's size.
+// A theme can give a modal dialog-sized type and spacing; without one it keeps the page's.
 :host([modal]) {
   --zn-page-caption-font-size: var(--zn-page-modal-caption-font-size);
   --zn-page-caption-line-height: var(--zn-page-modal-caption-line-height);
+  --zn-base-gap: var(--zn-page-modal-gap);
+}
+
+:host([modal]) .header {
+  padding-top: var(--zn-page-modal-header-padding-top, var(--zn-page-header-padding-block, calc(var(--zn-base-px) * 3)));
+  padding-bottom: var(--zn-page-modal-header-padding-bottom, calc(var(--zn-page-header-padding-block, calc(var(--zn-base-px) * 3)) - var(--zn-base-gap)));
+}
+
+:host([modal]) .header__left {
+  gap: var(--zn-page-modal-title-gap, var(--zn-page-title-gap, var(--zn-spacing-2x-small)));
+}
+
+:host([modal]) .header__description {
+  font-size: var(--zn-page-modal-description-font-size, var(--zn-text-subheading-font-size));
+  line-height: var(--zn-page-modal-description-line-height, var(--zn-text-subheading-line-height));
+  color: var(--zn-page-modal-description-color, var(--zn-text-subheading-color));
+}
+
+// The content's own base-gap padding sets the space under the header, so a tighter gap pulls it up.
+:host([modal]) .page__tabs {
+  margin-top: calc(var(--zn-page-modal-header-gap, var(--zn-base-gap)) - var(--zn-base-gap));
 }
 
 :host([panel]) {

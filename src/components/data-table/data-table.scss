@@ -30,6 +30,11 @@ table {
     overflow: hidden;
   }
 
+  // A caption with a line of detail under it would otherwise fill the row edge to edge; its row grows instead
+  tbody tr.table__row--data td:has(.table__cell--subtext) {
+    padding-block: var(--zn-table-multiline-padding-block, 10px);
+  }
+
   tbody tr.table__row--details td {
     background-color: rgb(var(--zn-shadow));
   }
@@ -303,8 +308,8 @@ table {
       opacity: 0;
       pointer-events: none;
 
-      --_lead: var(--zn-navbar-tab-indicator-duration, 300ms) var(--zn-navbar-tab-indicator-easing, cubic-bezier(0.4, 0, 0.2, 1));
-      --_trail: var(--zn-navbar-tab-indicator-trail-duration, var(--zn-navbar-tab-indicator-duration, 300ms)) var(--zn-navbar-tab-indicator-easing, cubic-bezier(0.4, 0, 0.2, 1)) var(--zn-navbar-tab-indicator-trail-delay, 0ms);
+      --_lead: var(--zn-navbar-tab-indicator-duration, 300ms) var(--zn-navbar-tab-indicator-easing, cubic-bezier(0.4, 0, 0.2, 1)) var(--zn-navbar-tab-indicator-delay, 0ms);
+      --_trail: var(--zn-navbar-tab-indicator-trail-duration, var(--zn-navbar-tab-indicator-duration, 300ms)) var(--zn-navbar-tab-indicator-trail-easing, var(--zn-navbar-tab-indicator-easing, cubic-bezier(0.4, 0, 0.2, 1))) var(--zn-navbar-tab-indicator-trail-delay, var(--zn-navbar-tab-indicator-delay, 0ms));
 
       &--shown {
         opacity: 1;
@@ -328,6 +333,43 @@ table {
         &--ready.table__tabs__indicator--backward {
           transition: none;
         }
+      }
+    }
+  }
+
+  // Segmented tabs, as zn-navbar[pill]: a grey track with a raised pill that slides to the selected tab
+  &__tabs--pill {
+    @include wc.pill-tab-indicator-motion;
+    width: fit-content;
+    max-width: calc(100% - 2 * var(--zn-table-edge-padding, var(--zn-spacing-medium)));
+    margin: var(--zn-spacing-small) var(--zn-table-edge-padding, var(--zn-spacing-medium));
+    padding: 2px;
+    gap: 2px;
+    border-bottom: 0;
+    border-radius: 8px;
+    background: var(--zn-color-neutral-100);
+
+    .table__tabs__indicator {
+      top: 2px;
+      bottom: 2px;
+      height: auto;
+      border-radius: 6px;
+      background-color: rgb(var(--zn-panel));
+      box-shadow: var(--zn-shadow-small, 0 1px 3px rgba(13, 23, 56, 0.08), 0 1px 2px rgba(13, 23, 56, 0.04));
+    }
+
+    .table__tab {
+      position: relative;
+      z-index: 1;
+      min-height: calc(var(--zn-density-control-height, 36px) - 6px);
+      padding: 0 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: var(--zn-font-weight-semibold);
+
+      &:hover:not([disabled]),
+      &--active {
+        color: rgb(var(--zn-text));
       }
     }
   }

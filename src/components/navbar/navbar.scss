@@ -93,10 +93,10 @@
   opacity: 0;
   pointer-events: none;
 
-  --_lead: var(--zn-navbar-tab-indicator-duration, 300ms) var(--zn-navbar-tab-indicator-easing, cubic-bezier(0.4, 0, 0.2, 1));
+  --_lead: var(--zn-navbar-tab-indicator-duration, 300ms) var(--zn-navbar-tab-indicator-easing, cubic-bezier(0.4, 0, 0.2, 1)) var(--zn-navbar-tab-indicator-delay, 0ms);
   // The edge furthest from the destination; a longer or delayed trail stretches
   // the indicator towards the new tab before it catches up.
-  --_trail: var(--zn-navbar-tab-indicator-trail-duration, var(--zn-navbar-tab-indicator-duration, 300ms)) var(--zn-navbar-tab-indicator-easing, cubic-bezier(0.4, 0, 0.2, 1)) var(--zn-navbar-tab-indicator-trail-delay, 0ms);
+  --_trail: var(--zn-navbar-tab-indicator-trail-duration, var(--zn-navbar-tab-indicator-duration, 300ms)) var(--zn-navbar-tab-indicator-trail-easing, var(--zn-navbar-tab-indicator-easing, cubic-bezier(0.4, 0, 0.2, 1))) var(--zn-navbar-tab-indicator-trail-delay, var(--zn-navbar-tab-indicator-delay, 0ms));
 
   &--shown {
     opacity: var(--zn-navbar-tab-indicator-slide, 0);
@@ -720,5 +720,56 @@ button[popovertarget] {
         }
       }
     }
+  }
+}
+
+// Segmented tabs: a grey track with a raised pill that slides, stretches and settles on the active tab.
+// Matches the tab strip's own :not([stacked]):not([icon-bar]) specificity so its height and padding give way.
+:host([pill]:not([stacked]):not([icon-bar])) {
+  --zn-navbar-tab-indicator-slide: 1;
+  --zn-navbar-tab-background: transparent;
+  --zn-navbar-tab-hover-background: transparent;
+  --zn-navbar-tab-hover-backdrop: transparent;
+  --zn-navbar-tab-active-background: transparent;
+  --zn-text-tab-link-active-color: rgb(var(--zn-text));
+  @include wc.pill-tab-indicator-motion;
+
+  .navbar__container {
+    border-bottom: 0;
+  }
+
+  ul.navbar {
+    width: fit-content;
+    min-width: 0;
+    height: auto;
+    // In line with the panel's caption and contents rather than the tab strip's inset
+    margin-inline: var(--zn-panel-padding, var(--zn-spacing-medium));
+    margin-bottom: var(--zn-spacing-small);
+    padding: 2px;
+    gap: 2px;
+    border-radius: 8px;
+    background: var(--zn-color-neutral-100);
+
+    > li {
+      z-index: 1;
+      height: calc(var(--zn-density-control-height, 36px) - 6px);
+      min-height: 0;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      font-size: 12px;
+      font-weight: var(--zn-font-weight-semibold);
+    }
+  }
+
+  .navbar__indicator {
+    z-index: 0;
+    top: var(--zn-navbar-indicator-top);
+    bottom: auto;
+    height: var(--zn-navbar-indicator-height);
+    border-radius: 6px;
+    background: rgb(var(--zn-panel));
+    box-shadow: var(--zn-shadow-small, 0 1px 3px rgba(13, 23, 56, 0.08), 0 1px 2px rgba(13, 23, 56, 0.04));
   }
 }

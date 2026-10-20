@@ -55,6 +55,11 @@ table:not(.remarkd-table) {
     white-space: normal;
   }
 
+  // Keep in step with zn-data-table: a cell with a meta line grows its row rather than filling it edge to edge
+  td:has(.zn-table-meta) {
+    padding-block: var(--zn-table-multiline-padding-block, 10px);
+  }
+
   // A secondary line under the cell's main text.
   .zn-table-meta {
     display: block;

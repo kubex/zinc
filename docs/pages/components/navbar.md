@@ -56,6 +56,21 @@ layout: component
 </zn-navbar>
 ```
 
+### Pill
+
+Add the `pill` attribute to draw the tabs as a segmented control: a grey track with a raised pill that slides to the
+active tab, stretching and settling with a spring as it moves.
+
+```html:preview
+<zn-tabs>
+  <zn-navbar slot="top" pill navigation='[{"tab":"","title":"All"},{"tab":"active","title":"Active"},{"tab":"draft","title":"Draft"},{"tab":"archived","title":"Archived"}]'></zn-navbar>
+  <div id="">All</div>
+  <div id="active">Active</div>
+  <div id="draft">Draft</div>
+  <div id="archived">Archived</div>
+</zn-tabs>
+```
+
 ### Sliding Indicator
 
 Set `--zn-navbar-tab-indicator-slide: 1` to replace each tab's own line with a single indicator that slides to the active tab. Style it with `::part(indicator)`; `--zn-navbar-indicator-top` and `--zn-navbar-indicator-height` give the active tab's box, so the indicator can fill the tab as a pill instead of underlining it.
@@ -110,17 +125,23 @@ Set `--zn-navbar-tab-indicator-slide: 1` to replace each tab's own line with a s
 
 ### Liquid Indicator
 
-The indicator moves by its two edges. Give the trailing edge a longer duration or a delay and it stretches towards the new tab before catching up; `--zn-navbar-tab-indicator-squash` thins it while it travels, and a spring easing makes it wobble as it lands. Reduced motion turns all of this off.
+`zn-navbar pill` draws the tabs as a segmented control with this motion built in. The indicator moves by its two
+edges: on a tab change it squishes slightly during `--zn-navbar-tab-indicator-delay`, then its leading edge glides to
+the new tab while the trailing edge follows on a damped spring, so it stretches a little and settles. Neither edge
+travels beyond the new tab. Reduced motion turns all of this off.
 
 ```html:preview
 <style>
   .liquid-tabs zn-navbar {
-    --zn-navbar-tab-indicator-duration: 500ms;
-    --zn-navbar-tab-indicator-trail-duration: 550ms;
-    --zn-navbar-tab-indicator-trail-delay: 70ms;
-    --zn-navbar-tab-indicator-squash: 0.85;
-    /* Damped spring: ~5% overshoot, one settle */
-    --zn-navbar-tab-indicator-easing: linear(0, 0.021, 0.077, 0.156, 0.249, 0.348, 0.447, 0.543, 0.633, 0.713, 0.785, 0.846, 0.897, 0.94, 0.973, 0.999, 1.018, 1.031, 1.04, 1.044, 1.046, 1.045, 1.043, 1.039, 1.035, 1.031, 1.026, 1.022, 1.018, 1.014, 1.01, 1.007, 1.005, 1.003, 1.001, 1, 1);
+    /* Squish, then move once the squish is at its deepest */
+    --zn-navbar-tab-indicator-delay: 60ms;
+    --zn-navbar-tab-indicator-squash: 0.9;
+    /* The leading edge glides in on a drawer curve */
+    --zn-navbar-tab-indicator-duration: 280ms;
+    --zn-navbar-tab-indicator-easing: cubic-bezier(0.32, 0.72, 0, 1);
+    /* The trailing edge follows on a well-damped spring */
+    --zn-navbar-tab-indicator-trail-duration: 340ms;
+    --zn-navbar-tab-indicator-trail-easing: linear(0, 0.055, 0.177, 0.325, 0.47, 0.601, 0.71, 0.798, 0.865, 0.914, 0.949, 0.973, 0.988, 0.998, 1.003, 1.005, 1.006, 1.006, 1.005, 1.004, 1.004, 1.003, 1.002, 1.001, 1);
   }
 </style>
 

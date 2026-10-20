@@ -5,6 +5,7 @@ import {ifDefined} from "lit/directives/if-defined.js";
 import {property, state} from 'lit/decorators.js';
 import {ref} from "lit/directives/ref.js";
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
+import {squishTabIndicator} from "../../internal/tab-indicator";
 import {Task} from "@lit/task";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import {type ZnFilterChangeEvent} from "../../events/zn-filter-change";
@@ -310,6 +311,9 @@ export default class ZnDataTable extends ZincElement {
   @property({type: Array}) tabs: TableTab[] = [];
 
   @property({attribute: 'tab-param'}) tabParam = 'tab';
+
+  /** Draws the tabs as a segmented control: a grey track with a pill that slides to the selected tab. */
+  @property({attribute: 'pill-tabs', type: Boolean, reflect: true}) pillTabs = false;
 
   /** The selected tab's value; the first tab when empty. */
   @property({reflect: true}) tab = '';
@@ -1209,6 +1213,7 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private _tabIndicator: HTMLElement | null = null;
+  private _indicatorTab: HTMLElement | null = null;
   private _tabBarObserver: ResizeObserver | null = null;
 
   private renderTabs() {
@@ -1216,7 +1221,7 @@ export default class ZnDataTable extends ZincElement {
     const active = this.activeTab();
 
     return html`
-      <div class="table__tabs" role="tablist" ${ref((el) => this.observeTabBar(el as HTMLElement | undefined))}>
+      <div class="${classMap({'table__tabs': true, 'table__tabs--pill': this.pillTabs})}" role="tablist" ${ref((el) => this.observeTabBar(el as HTMLElement | undefined))}>
         <span class="table__tabs__indicator" part="tab-indicator" aria-hidden="true"
               ${ref((el) => (this._tabIndicator = (el as HTMLElement) ?? null))}></span>
         ${this.tabs.map((tab: TableTab) => html`
@@ -1256,14 +1261,29 @@ export default class ZnDataTable extends ZincElement {
     const right = bar.clientWidth - left - active.offsetWidth;
     const previousLeft = parseFloat(indicator.style.left);
     const ready = indicator.classList.contains('table__tabs__indicator--ready');
-    if (ready && !Number.isNaN(previousLeft) && Math.abs(left - previousLeft) > 0.5) {
+    const tabChanged = active !== this._indicatorTab;
+    if (ready && tabChanged && !Number.isNaN(previousLeft) && Math.abs(left - previousLeft) > 0.5) {
       indicator.classList.toggle('table__tabs__indicator--forward', left > previousLeft);
       indicator.classList.toggle('table__tabs__indicator--backward', left < previousLeft);
+      squishTabIndicator(indicator);
+    }
+    this._indicatorTab = active;
+
+    // Only a tab change slides; a resize under the same tab follows it instantly, unless a slide is still running
+    const follow = ready && !tabChanged && indicator.getAnimations().length === 0;
+    if (follow) {
+      indicator.style.transition = 'none';
     }
 
     indicator.style.left = `${left}px`;
     indicator.style.right = `${right}px`;
     indicator.classList.add('table__tabs__indicator--shown');
+
+    if (follow) {
+      // Commit the jump before transitions come back on
+      void indicator.offsetWidth;
+      indicator.style.removeProperty('transition');
+    }
 
     // The first placement jumps into position; only later moves animate
     if (!ready) {
@@ -2214,8 +2234,9 @@ export default class ZnDataTable extends ZincElement {
     if (changed) this.updateKeys();
   }
 
+  /** Rows are selectable when an action works on the selection; creating does not. */
   private isSelectable(): boolean {
-    return [ActionSlots.delete, ActionSlots.modify, ActionSlots.actions, ActionSlots.create]
+    return [ActionSlots.delete, ActionSlots.modify, ActionSlots.actions]
       .some(slot => this.hasSlotController.test(slot.valueOf()));
   }
 

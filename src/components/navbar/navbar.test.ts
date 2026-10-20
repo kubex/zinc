@@ -10,6 +10,18 @@ describe('<zn-navbar>', () => {
     expect(el).to.exist;
   });
 
+  it('fills the active tab with the sliding indicator when drawn as pills', async () => {
+    const el = await fixture<ZnNavbar>(html`
+      <zn-navbar pill navigation='[{"tab":"","title":"All","active":true},{"tab":"draft","title":"Draft"}]'></zn-navbar>
+    `);
+    await aTimeout(100);
+
+    const indicator = el.shadowRoot!.querySelector<HTMLElement>('[part="indicator"]')!;
+    const tab = el.shadowRoot!.querySelector<HTMLElement>('ul.navbar > li')!;
+    expect(getComputedStyle(indicator).opacity).to.equal('1');
+    expect(indicator.getBoundingClientRect().height).to.be.closeTo(tab.getBoundingClientRect().height, 1);
+  });
+
   it('does not move Lit-owned light DOM items when the parent rerenders', async () => {
     const host = document.createElement('div');
     document.body.append(host);

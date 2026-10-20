@@ -36,6 +36,9 @@ export default class ZnEmptyState extends ZincElement {
 
   @property({type: Boolean}) padded: boolean = false;
 
+  /** Draws the icon small inside a tinted, rounded tile rather than as a large glyph. */
+  @property({type: Boolean, reflect: true}) tile: boolean = false;
+
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'caption', 'description');
 
   render() {
@@ -50,7 +53,9 @@ export default class ZnEmptyState extends ZincElement {
         <div class="empty-state__wrapper">
           ${this.icon || this.hasSlotController.test('icon')
             ? html`
-              <zn-icon src="${this.icon}" size="48" color="${this.type ? this.type : 'primary'}"></zn-icon>`
+              ${this.tile
+                ? html`<span class="empty-state__tile"><zn-icon src="${this.icon}" size="20"></zn-icon></span>`
+                : html`<zn-icon src="${this.icon}" size="48" color="${this.type ? this.type : 'primary'}"></zn-icon>`}`
             : ''}
           ${this.caption || this.hasSlotController.test('caption')
             ? html`

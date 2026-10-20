@@ -68,6 +68,9 @@ export default class ZnNavList extends ZincElement implements ZincFormControl {
   /** A heading for the card, shown with the `actions` slot above the items. */
   @property() caption = '';
 
+  /** Draws the items as full-width rows split by dividers, marking the selected one with a bar on its edge. */
+  @property({type: Boolean, reflect: true}) divide = false;
+
   /** Lets the items be dragged, or moved with Alt+Arrow keys, into a new order. */
   @property({type: Boolean, reflect: true}) sortable = false;
 
@@ -164,12 +167,13 @@ export default class ZnNavList extends ZincElement implements ZincFormControl {
 
   private _handleSlotChange() {
     this._syncTabStops();
-    this._syncSortable();
+    this._syncItems();
   }
 
-  private _syncSortable() {
+  private _syncItems() {
     const dragged = this.reorderController.draggedKey;
     for (const item of this._items) {
+      item.toggleAttribute('divide', this.divide);
       item.toggleAttribute('sortable', this.sortable);
       item.draggable = this.sortable && !this.disabled && !this.reorderLocked(this._key(item));
       item.toggleAttribute('dragging', this._key(item) === dragged);
@@ -178,7 +182,7 @@ export default class ZnNavList extends ZincElement implements ZincFormControl {
 
   protected updated(changed: PropertyValues) {
     super.updated(changed);
-    this._syncSortable();
+    this._syncItems();
   }
 
   /** Keeps a single tab stop in the list: the selected item when it is visible, otherwise the first. */

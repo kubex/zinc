@@ -1,7 +1,7 @@
 ---
 meta:
   title: Nav Item
-  description: A selectable row in a nav list, with an optional count.
+  description: A selectable row in a nav list, with an optional description and count.
 layout: component
 ---
 

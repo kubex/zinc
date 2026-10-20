@@ -68,6 +68,25 @@ Set `count` on an item to show a count at the end of the row. Long labels are tr
 </zn-nav-list>
 ```
 
+### Divided
+
+Add the `divide` attribute for full-width rows split by dividers, with the selected row marked by a bar on its edge
+and counts drawn as pills. Give an item a `description` for a line of detail below its label.
+
+```html:preview
+<zn-tabs flush gap>
+  <zn-nav-list slot="left" caption="Sections" divide>
+    <zn-nav-item tab="" count="6" description="Opening, discovery and resolution">General</zn-nav-item>
+    <zn-nav-item tab="security" count="5" description="Identity checks and disclosures">Security &amp; compliance</zn-nav-item>
+    <zn-nav-item tab="closing" count="3" description="Wrap-up and follow-up">Closing</zn-nav-item>
+  </zn-nav-list>
+
+  <zn-panel id="" caption="General"><p>General contents.</p></zn-panel>
+  <zn-panel id="security" caption="Security &amp; compliance"><p>Security contents.</p></zn-panel>
+  <zn-panel id="closing" caption="Closing"><p>Closing contents.</p></zn-panel>
+</zn-tabs>
+```
+
 ### Search
 
 Add the `searchable` attribute to filter the items by their label. Set `search-placeholder` and `empty-label` to change

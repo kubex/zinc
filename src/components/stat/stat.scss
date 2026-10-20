@@ -11,9 +11,8 @@
   display: block;
 }
 
-.stat-tile--card {
-  --stat-tone: var(--zn-color-neutral-400);
-
+// Doubled class out-ranks the default layout's `.stat-tile .x` rules, which the card also matches.
+.stat-tile.stat-tile--card {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -34,14 +33,18 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    margin: 0;
     font-family: var(--zn-text-chart-minor-font-family, inherit);
     font-size: var(--zn-text-chart-minor-font-size);
-    line-height: var(--zn-text-chart-minor-line-height);
+    line-height: 1.2;
     font-weight: var(--zn-text-chart-minor-font-weight);
     color: var(--zn-text-chart-minor-color);
   }
 
   .amount {
+    display: block;
+    flex-grow: 0;
+    padding: 0;
     font-family: var(--zn-text-chart-major-font-family, inherit);
     font-size: var(--zn-text-chart-major-font-size);
     font-weight: var(--zn-text-chart-major-font-weight);
@@ -83,7 +86,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--stat-tone);
+  background: var(--stat-tone, var(--zn-color-neutral-400));
 }
 
 .stat-tile--selectable {
@@ -135,6 +138,8 @@
 
 // A linked tile is a card in its own right, so it lifts rather than tinting the row.
 :host([layout="tile"]) .stat-link {
+  height: 100%;
+
   &:hover {
     background-color: transparent;
 

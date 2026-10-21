@@ -55,7 +55,7 @@
   justify-content: center;
   width: var(--toggle-size);
   height: var(--toggle-size);
-  border: solid var(--zn-checkbox-border-width, var(--zn-input-border-width)) var(--zn-input-border-color);
+  border: solid var(--zn-checkbox-border-width, var(--zn-input-border-width)) var(--zn-checkbox-border-color, var(--zn-input-border-color));
   border-radius: 50%;
   background-color: var(--zn-input-background-color);
   color: var(--zn-color-neutral-0);
@@ -74,28 +74,27 @@
 }
 
 .radio__checked-icon {
-  --icon-size: var(--toggle-size);
-  --icon-color: var(--zn-color-primary);
-
-  display: inline-flex;
+  width: 40%;
+  height: 40%;
+  border-radius: 50%;
+  background-color: currentColor;
 }
 
 /* Hover */
 .radio:not(.radio--checked):not(.radio--disabled) .radio__control:hover {
-  border-color: rgb(var(--zn-primary));
-  background-color: rgb(var(--zn-primary), .2);
+  border-color: var(--zn-color-primary-500);
 }
 
 /* Checked */
 .radio--checked .radio__control {
-  color: rgb(var(--zn-primary));
-  border: none;
+  border-color: var(--zn-color-primary-600);
+  background-color: var(--zn-color-primary-600);
 }
 
 /* Checked + hover */
 .radio.radio--checked:not(.radio--disabled) .radio__control:hover {
-  color: rgba(var(--zn-primary), .6);
-  border: none;
+  border-color: var(--zn-color-primary-500);
+  background-color: var(--zn-color-primary-500);
 }
 
 /* Focus */
@@ -169,14 +168,27 @@
 .radio--contained {
   padding: 1.375rem var(--zn-spacing-large) 1.375rem var(--zn-spacing-medium);
   border: 1px solid var(--zn-color-gray-400);
+  // A transparent outline from the start lets the checked outline fade in rather than pop.
+  outline: 1px solid transparent;
   width: 100%;
   height: 100%;
+  transition: background-color var(--zn-transition-fast) ease-out,
+  border-color var(--zn-transition-fast) ease-out,
+  outline-color var(--zn-transition-fast) ease-out,
+  scale var(--zn-transition-fast) cubic-bezier(0.2, 0, 0, 1);
+
+  .radio__label {
+    transition: color var(--zn-transition-fast) ease-out;
+  }
 }
 
 :not(.radio--disabled).radio--contained:hover,
 :not(.radio--disabled).radio--contained.radio--checked:hover {
   background-color: var(--zn-selection-card-hover-background, var(--zn-color-purple-50));
-  transition: var(--zn-transition-medium) all;
+}
+
+:not(.radio--disabled).radio--contained:active {
+  scale: 0.99;
 }
 
 .radio--contained.radio--checked .radio__label {
@@ -191,12 +203,60 @@
 
 .radio--contained.radio--checked {
   background-color: var(--zn-selection-card-checked-background, var(--zn-color-purple-100));
-  border: 1px solid var(--zn-selection-card-checked-color, var(--zn-color-purple-600));
-  outline: 1px solid var(--zn-selection-card-checked-color, var(--zn-color-purple-600));
-  transition: var(--zn-transition-medium) all;
+  border-color: var(--zn-selection-card-checked-color, var(--zn-color-purple-600));
+  outline-color: var(--zn-selection-card-checked-color, var(--zn-color-purple-600));
 }
 
 /* When the control isn't checked, hide the circle for Windows High Contrast mode a11y */
 .radio:not(.radio--checked) svg circle {
   opacity: 0;
+}
+
+/* Icon and SVG card images take the card's state colour */
+.radio--contained .selection-card__image-container {
+  color: var(--zn-color-gray-500);
+  transition: color var(--zn-transition-fast) ease-out;
+}
+
+.radio--contained.radio--checked .selection-card__image-container {
+  color: var(--zn-selection-card-checked-color, var(--zn-color-purple-600));
+}
+
+/* Selected content expands and collapses with the checked state */
+.radio__selected-content-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  // Hidden content stays out of the tab order once collapsed.
+  visibility: hidden;
+  transition: grid-template-rows 200ms cubic-bezier(0.2, 0, 0, 1),
+  opacity 120ms ease-out,
+  visibility 0s 200ms;
+}
+
+.radio--checked .radio__selected-content-wrapper {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  transition: grid-template-rows 200ms cubic-bezier(0.2, 0, 0, 1),
+  opacity 150ms ease-out 50ms,
+  visibility 0s;
+
+  .radio__selected-content-inner {
+    // Unclips once expanded so focus rings and popups inside aren't cut off.
+    overflow: visible;
+    transition: overflow 0s 200ms allow-discrete;
+  }
+}
+
+.radio__selected-content-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .radio__selected-content-wrapper,
+  .radio--checked .radio__selected-content-wrapper {
+    transition: none;
+  }
 }

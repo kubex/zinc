@@ -1,3 +1,4 @@
+import {animateTo} from "../../internal/animate";
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {defaultValue} from "../../internal/default-value";
@@ -38,7 +39,7 @@ import styles from './radio.scss';
  * @csspart base - The component's base wrapper.
  * @csspart control - The square container that wraps the radio's checked state.
  * @csspart control--checked - Matches the control part when the radio is checked.
- * @csspart checked-icon - The checked icon, an `<zn-icon>` element.
+ * @csspart checked-icon - The checked dot, a `<span>` element.
  * @csspart image-container - The wrapper around the built-in image or image slot.
  * @csspart image - The built-in image.
  * @csspart card-title - The title inside a selection card.
@@ -68,6 +69,9 @@ export default class ZnRadio extends ZincElement implements ZincFormControl {
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'description', 'image');
 
   @query('input[type="radio"]') input: HTMLInputElement;
+  @query('.radio__control') control: HTMLElement;
+
+  private animateChanges = false;
 
   @state() private hasFocus = false;
 
@@ -147,15 +151,33 @@ export default class ZnRadio extends ZincElement implements ZincFormControl {
 
   firstUpdated() {
     this.formControlController.updateValidity();
+    // The radio group syncs `checked` right after first render; waiting a frame keeps that from animating.
+    requestAnimationFrame(() => (this.animateChanges = true));
   }
 
   private handleClick() {
-    if (this.disabled) {
+    if (this.disabled || this.checked) {
       return;
     }
 
-    this.checked = !this.checked;
+    this.checked = true;
+    this.uncheckNamedSiblings();
     this.emit('zn-change');
+  }
+
+  /** Each input sits in its own shadow root, so the browser can't group same-named radios outside a radio group. */
+  private uncheckNamedSiblings() {
+    if (!this.name || this.closest('zn-radio-group')) {
+      return;
+    }
+
+    const root = this.getRootNode() as Document | ShadowRoot;
+    const form = this.closest('form');
+    root.querySelectorAll<ZnRadio>('zn-radio').forEach(radio => {
+      if (radio !== this && radio.name === this.name && radio.closest('form') === form) {
+        radio.checked = false;
+      }
+    });
   }
 
   private handleBlur() {
@@ -189,9 +211,17 @@ export default class ZnRadio extends ZincElement implements ZincFormControl {
   }
 
   @watch(['checked'], {waitUntilFirstUpdate: true})
-  handleStateChange() {
+  async handleStateChange() {
     this.input.checked = this.checked; // force a sync update
     this.formControlController.updateValidity();
+
+    await this.updateComplete;
+    const dot = this.control.querySelector('.radio__checked-icon');
+    if (dot && this.animateChanges) {
+      const easing = 'cubic-bezier(0.2, 0, 0, 1)';
+      animateTo(this.control, [{scale: '0.9'}, {scale: '1'}], {duration: 160, easing});
+      animateTo(dot, [{scale: '0'}, {scale: '1'}], {duration: 180, easing});
+    }
   }
 
   /** Simulates a click on the radio. */
@@ -318,8 +348,7 @@ export default class ZnRadio extends ZincElement implements ZincFormControl {
             class="radio__control selection-card__control">
             ${this.checked
               ? html`
-                <zn-icon part="checked-icon" size="18" class="radio__checked-icon"
-                         src="radio_button_checked"></zn-icon>`
+                <span part="checked-icon" class="radio__checked-icon"></span>`
               : ''}
           </span>
 
@@ -345,16 +374,15 @@ export default class ZnRadio extends ZincElement implements ZincFormControl {
               part="description">
               <slot name="description">${this.description}</slot>
             </div>
-            ${this.checked
-              ? html`
-                <zn-animation name="fadeIn" easing="ease" duration="300" iterations="1" play>
-                  <slot
-                    name="selected-content"
-                    part="selected-content"
-                    class="radio__selected-content"
-                    @click=${this.handleSelectedContentClick}></slot>
-                </zn-animation>`
-              : ''}
+            <div class="radio__selected-content-wrapper">
+              <div class="radio__selected-content-inner">
+                <slot
+                  name="selected-content"
+                  part="selected-content"
+                  class="radio__selected-content"
+                  @click=${this.handleSelectedContentClick}></slot>
+              </div>
+            </div>
           </div>
         </label>
       </div>

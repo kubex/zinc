@@ -29,7 +29,7 @@ $text-roles: (
   "chart-minor": ("size": 12px, "line": 16px, "weight": semibold),
   "chart-major": ("size": 25px, "line": 28px, "weight": bold, "family": heading, "letter-spacing": -0.02em),
   "button-label": ("size": 13px, "line": 16px, "weight": semibold, "transform": none),
-  "chip": ("size": 11px, "line": 16px, "weight": semibold, "transform": none),
+  "chip": ("size": 12px, "line": 16px, "weight": medium, "transform": none),
   "navbar-link": ("size": 13px, "line": 16px, "weight": semibold),
   "tab-link": ("size": 13px, "line": 16px, "weight": semibold),
   "tab-link-active": ("size": 13px, "line": 16px, "weight": semibold),
@@ -109,6 +109,8 @@ $comfortable: (
   --zn-button-height-large: #{map.get($d, "control-height-lg")};
   --zn-button-icon-width: #{map.get($d, "control-height")};
   --zn-button-pill-height: #{map.get($d, "control-height-sm")};
+  --zn-chip-height: #{map.get($d, "control-height-sm")};
+  --zn-select-tag-height: #{map.get($d, "input-height-x-small")};
 
   $pad: map.get($d, "card-padding");
   --zn-panel-padding: #{$pad};
@@ -283,7 +285,8 @@ html[t="openbyte"], body[t="openbyte"], html.theme-openbyte, body.theme-openbyte
   --zn-border-radius-large: 12px;
   --zn-panel-border-radius: 12px;
   --zn-dialog-border-radius: 16px;
-  --zn-chip-border-radius: 6px;
+  --zn-chip-border-radius: 999px;
+  --zn-select-tag-border-radius: 6px;
 
   --zn-shadow-x-small: 0 1px 2px rgba(13, 23, 56, 0.05);
   --zn-shadow-small: 0 1px 3px rgba(13, 23, 56, 0.08), 0 1px 2px rgba(13, 23, 56, 0.04);
@@ -434,17 +437,20 @@ html[t="openbyte"], body[t="openbyte"], html.theme-openbyte, body.theme-openbyte
    * Chips and status
    *************************************************************/
 
-  --zn-chip-height: 20px;
-  --zn-chip-padding-inline: 7px;
-  --zn-chip-gap: 5px;
+  --zn-chip-padding-inline: 12px;
+  --zn-chip-gap: 4.8px;
+  --zn-chip-icon-padding-start: 8px;
   --zn-chip-letter-spacing: normal;
   --zn-chip-border-width: 1px;
-  --zn-chip-neutral-fg: var(--zn-color-neutral-fg);
-  --zn-chip-neutral-bg: var(--zn-color-neutral-bg);
-  --zn-chip-neutral-line: var(--zn-color-neutral-line);
+  --zn-chip-neutral-fg: rgb(var(--zn-text));
+  --zn-chip-neutral-bg: var(--zn-input-background-color);
+  --zn-chip-neutral-line: var(--zn-input-border-color);
   --zn-chip-primary-fg: var(--zn-color-info-fg);
   --zn-chip-primary-bg: var(--zn-color-info-bg);
-  --zn-chip-primary-line: var(--zn-color-info-line);
+  --zn-chip-primary-line: var(--zn-color-primary-400);
+  --zn-chip-action-color: var(--zn-color-neutral-500);
+  --zn-chip-action-hover-color: rgb(var(--zn-text));
+  --zn-chip-action-hover-background: var(--zn-color-neutral-100);
 
   --zn-status-indicator-size: 8px;
   --zn-status-indicator-fill-alpha: 1;

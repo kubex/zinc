@@ -38,6 +38,8 @@ export { default as IconPicker } from './components/icon-picker';
 export { default as InlineEdit } from './components/inline-edit';
 export { default as Pagination } from './components/pagination';
 export { default as VerticalStepper } from './components/vertical-stepper';
+export { default as Diff } from './components/diff';
+export { default as DiffRow } from './components/diff-row';
 export { default as Timer } from './components/timer';
 export { default as Tabs } from './components/tabs';
 export { default as Panel } from './components/panel';

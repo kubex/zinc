@@ -77,16 +77,6 @@ Use the `size` attribute to pick a smaller or larger button. Heights follow the 
 <zn-button size="large">Large</zn-button>
 ```
 
-### Subtle
-
-Use the `subtle` attribute for a tinted button, for secondary actions that sit beside a primary one.
-
-```html:preview
-<zn-button subtle>Subtle</zn-button>
-<zn-button subtle color="success">Subtle</zn-button>
-<zn-button subtle color="error">Subtle</zn-button>
-```
-
 ### Outline
 
 Use the `outline` attribute to set the button's outline.

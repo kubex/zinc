@@ -66,20 +66,6 @@ describe('<zn-button>', () => {
     expect(base.classList.contains('button--large')).to.be.true;
   });
 
-  it('renders subtle instead of standard', async () => {
-    const el = await fixture<ZnButton>(html`<zn-button subtle>Subtle</zn-button>`);
-    const base = el.shadowRoot!.querySelector('[part~="base"]')!;
-    expect(base.classList.contains('button--subtle')).to.be.true;
-    expect(base.classList.contains('button--standard')).to.be.false;
-  });
-
-  it('ignores subtle on outline buttons', async () => {
-    const el = await fixture<ZnButton>(html`<zn-button subtle outline>Outline</zn-button>`);
-    const base = el.shadowRoot!.querySelector('[part~="base"]')!;
-    expect(base.classList.contains('button--subtle')).to.be.false;
-    expect(base.classList.contains('button--outline')).to.be.true;
-  });
-
   it('applies the ai color', async () => {
     const el = await fixture<ZnButton>(html`<zn-button color="ai">Summarise</zn-button>`);
     const base = el.shadowRoot!.querySelector('[part~="base"]')!;

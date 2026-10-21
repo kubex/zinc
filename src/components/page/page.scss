@@ -525,14 +525,19 @@ zn-navbar {
   }
 }
 
-:host(:not([full-width]):not([flush])) .header .content,
-:host(:not([full-width]):not([flush])) .page__tabs .page__content {
-  max-width: var(--zn-container, 100%);
-  margin-inline: auto;
+// #content is the scroller, so it spans the page and centres its content with padding, keeping the scrollbar at the page edge.
+// The inset holds the scrollbar off the window edge, and comes off the end padding to keep the content centred.
+:host(:not([full-width]):not([flush])) .page__tabs #content.page__content {
+  --content-inline: calc(max(0px, (100% - var(--zn-container, 100%)) / 2) + var(--zn-gutter, 0px));
+  --scrollbar-inset: var(--zn-page-scrollbar-inset, 4px);
+  width: auto;
+  margin-inline-end: var(--scrollbar-inset);
+  padding-inline: var(--content-inline) max(0px, var(--content-inline) - var(--scrollbar-inset));
 }
 
 // Content sits inside its gutter plus its zn-sp's base-gap padding, so the header is narrower by both to line up
 :host(:not([full-width]):not([flush])) .header .content {
+  margin-inline: auto;
   max-width: calc(var(--zn-container, 100%) - 2 * (var(--zn-gutter, 0px) + var(--zn-base-gap, 0px)));
 }
 

@@ -89,6 +89,12 @@
   background: var(--stat-tone, var(--zn-color-neutral-400));
 }
 
+@mixin selected-tile {
+  border-color: rgb(var(--zn-primary));
+  background: var(--zn-color-primary-50);
+  box-shadow: 0 0 0 1px rgb(var(--zn-primary));
+}
+
 .stat-tile--selectable {
   cursor: pointer;
 
@@ -102,10 +108,13 @@
   }
 
   &[aria-pressed="true"] {
-    border-color: rgb(var(--zn-primary));
-    background: var(--zn-color-primary-50);
-    box-shadow: 0 0 0 1px rgb(var(--zn-primary));
+    @include selected-tile;
   }
+}
+
+// A linked tile marks the view it is showing, such as the filter a page is on.
+:host([selected][href]) .stat-tile--card {
+  @include selected-tile;
 }
 
 .delta {

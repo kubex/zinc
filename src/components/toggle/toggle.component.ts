@@ -1,3 +1,4 @@
+import { animateTo } from "../../internal/animate";
 import { classMap } from "lit/directives/class-map.js";
 import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
 import { defaultValue } from "../../internal/default-value";
@@ -45,6 +46,7 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
   });
 
   @query('input[type="checkbox"]') input: HTMLInputElement;
+  @query('.switch__control') knob: HTMLElement;
 
   @state() hasFocus: boolean = false;
 
@@ -97,6 +99,21 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
   firstUpdated(_changedProperties: PropertyValues) {
     this.formControlController.updateValidity();
     super.firstUpdated(_changedProperties);
+  }
+
+  updated(changedProperties: PropertyValues<this>) {
+    super.updated(changedProperties);
+    // Skips the first render so a toggle that loads checked doesn't wobble into place.
+    if (changedProperties.has('checked') && changedProperties.get('checked') !== undefined) {
+      animateTo(this.knob, [
+        { scale: '1 1' },
+        { scale: '1.35 0.8', offset: 0.3 },
+        { scale: '0.85 1.12', offset: 0.55 },
+        { scale: '1.06 0.95', offset: 0.72 },
+        { scale: '0.98 1.02', offset: 0.86 },
+        { scale: '1 1' }
+      ], { duration: 500, easing: 'ease-out' });
+    }
   }
 
   private handleBlur() {

@@ -23,6 +23,7 @@
   --track-height: var(--zn-toggle-track-height, 24px);
   --knob-size: var(--zn-toggle-knob-size, 20.32px);
   --knob-inset: var(--zn-toggle-knob-inset, 0.92px);
+  --track-border-width: var(--zn-toggle-track-border-width, 0.92px);
 
   box-sizing: border-box;
   text-align: left;
@@ -39,9 +40,9 @@
   // the surface behind it on dark themes, which left the switch reading as a
   // free-floating knob with no discoverable control boundary. The checked state
   // below repaints the border in the accent colour.
-  border: var(--zn-toggle-track-border-width, 0.92px) solid var(--zn-toggle-track-border-color, rgb(var(--zn-border-color)));
+  border: var(--track-border-width) solid var(--zn-toggle-track-border-color, rgb(var(--zn-border-color)));
   margin: var(--zn-toggle-margin);
-  transition: color .2s ease-in-out, background-color .4s ease-in-out, border-color .2s ease-in-out;
+  transition: color .25s ease-out, background-color .25s ease-out, border-color .25s ease-out;
 }
 
 :host(:focus) .switch__input-wrapper {
@@ -53,7 +54,7 @@
   border-color: rgb(var(--zn-color-primary));
 
   .switch__control {
-    left: calc(100% - var(--knob-size) - var(--knob-inset));
+    translate: calc(var(--track-width) - 2 * var(--track-border-width) - var(--knob-size) - 2 * var(--knob-inset)) -50%;
     // The knob carries the on/off state, so it takes the on-primary ink: a
     // white knob on a light accent (neon lime, amber) is invisible.
     background: rgb(var(--zn-color-on-primary, 255, 255, 255));
@@ -108,9 +109,15 @@
   border-radius: 50%;
   background: var(--zn-toggle-knob-color, #fff);
   box-shadow: var(--zn-toggle-knob-shadow, none);
-  transform: translateY(-50%);
-  transition: left .3s ease-in-out, background-color .4s ease-in-out;
+  // Position lives in `translate` so the squish animation's `scale` doesn't scale the travel distance too.
+  translate: 0 -50%;
+  // Springy curve: overshoots the far edge slightly, then settles.
+  transition: translate .5s linear(0, 0.4 12%, 0.85 25%, 1.06 38%, 1.03 50%, 0.985 64%, 1.005 80%, 1), background-color .25s ease-out;
   outline: none;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: background-color .25s ease-out;
+  }
 }
 
 .switch__input {

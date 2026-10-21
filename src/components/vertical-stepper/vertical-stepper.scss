@@ -1,67 +1,74 @@
 @use "../../wc";
 
+@mixin neutral-marker {
+  --marker-fg: rgb(var(--zn-color-muted-text));
+  --marker-bg: var(--zn-vertical-stepper-marker-background, rgba(var(--zn-border-color), .10));
+  --marker-line: var(--zn-vertical-stepper-line-color, rgba(var(--zn-border-color), .60));
+}
+
+:host {
+  @include neutral-marker;
+
+  display: block;
+}
+
 .vs {
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
+  gap: var(--zn-spacing-small);
   width: 100%;
 
   &__left {
-    flex-shrink: 1;
-    flex-grow: 0;
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0 var(--zn-spacing-small);
   }
 
   &__icon {
-    width: var(--zn-vertical-stepper-marker-size, var(--zn-spacing-large));
-    height: var(--zn-vertical-stepper-marker-size, var(--zn-spacing-large));
+    width: var(--zn-vertical-stepper-marker-size, 28px);
+    height: var(--zn-vertical-stepper-marker-size, 28px);
     display: flex;
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    background-color: var(--zn-vertical-stepper-marker-background, rgb(var(--zn-input-bg)));
-    border-width: 1px;
+    box-sizing: border-box;
+    color: var(--marker-fg);
+    background-color: var(--marker-bg);
+    border: 1px solid var(--marker-line);
     border-radius: 100%;
   }
 
   &__line {
-    min-height: 50px;
-    width: var(--zn-vertical-stepper-line-width, 4px);
-    border-width: var(--zn-vertical-stepper-line-border-width, 1px);
-    border-top: none;
-    border-bottom: none;
-    background-color: var(--zn-vertical-stepper-line-color, rgba(var(--zn-input-bg)));
+    width: var(--zn-vertical-stepper-line-width, 1px);
+    min-height: var(--zn-vertical-stepper-gap, var(--zn-spacing-medium));
     flex-grow: 1;
+    background-color: var(--zn-vertical-stepper-line-color, rgba(var(--zn-border-color), .60));
   }
 
   &__right {
-    display: flex;
-    flex-direction: column;
-    gap: var(--zn-spacing-x-small);
     flex-grow: 1;
-    margin-bottom: 50px;
-
-    &:last-of-type {
-      margin-bottom: 0;
-    }
+    min-width: 0;
+    // Centres a single line of text on the marker.
+    padding-top: calc((var(--zn-vertical-stepper-marker-size, 28px) - 20px) / 2);
+    padding-bottom: var(--zn-vertical-stepper-gap, var(--zn-spacing-medium));
+    font-size: var(--zn-vertical-stepper-caption-font-size, 14px);
+    line-height: 20px;
+    color: rgb(var(--zn-text-heading));
   }
 
   &__caption {
-    font-size: var(--zn-vertical-stepper-caption-font-size, 14px);
-    color: rgb(var(--zn-text-heading));
-    line-height: 20px;
+    display: inline;
     font-weight: 600;
   }
 
-
   &__description {
-    font-size: 12px;
-    font-weight: var(--zn-vertical-stepper-description-font-weight, 500);
-    line-height: 18px;
-    color: var(--zn-vertical-stepper-description-color, rgb(var(--zn-text)));
+    display: inline;
+    font-weight: var(--zn-vertical-stepper-description-font-weight, 400);
+    color: var(--zn-vertical-stepper-description-color, rgb(var(--zn-text-heading)));
+  }
+
+  &__caption:not(:empty) + &__description:not(:empty)::before {
+    content: " — ";
   }
 }
 
@@ -69,20 +76,32 @@
   .vs__line {
     display: none;
   }
-}
 
-:host([first]) {
-  .vs {
-    margin-top: 10px;
+  .vs__right {
+    padding-bottom: 0;
   }
 }
 
 :host([active]) {
-  .vs__icon {
-    background-color: rgb(var(--zn-primary));
-  }
+  --marker-fg: rgba(var(--zn-primary), .9);
+  --marker-bg: rgba(var(--zn-primary), .10);
+  --marker-line: rgba(var(--zn-primary), .30);
+}
 
-  .vs__line {
-    background-color: rgb(var(--zn-primary));
+@each $type, $role in (error: danger, info: info, warning: warning, success: success, ai: ai) {
+  :host([type="#{$type}"]) {
+    --marker-fg: var(--zn-color-#{$role}-fg);
+    --marker-bg: var(--zn-color-#{$role}-bg);
+    --marker-line: var(--zn-color-#{$role}-line);
   }
+}
+
+:host([type="primary"]) {
+  --marker-fg: rgba(var(--zn-primary), .9);
+  --marker-bg: rgba(var(--zn-primary), .10);
+  --marker-line: rgba(var(--zn-primary), .30);
+}
+
+:host([type="neutral"]) {
+  @include neutral-marker;
 }

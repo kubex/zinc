@@ -15,6 +15,7 @@ import styles from './vertical-stepper.scss';
  * @property {boolean} active - When true, highlights this step as the current active step in the process.
  * @property {string} description - A descriptive text explaining what happens in this step or its current status.
  * @property {string} caption - The main label/title for this step.
+ * @property {string} type - Marker colour: neutral, primary, success, error, warning, info or ai (AI-generated steps only). Overrides `active`.
  *
  * @slot icon - Optional slot for adding an icon or indicator before the step content.
  *
@@ -35,6 +36,8 @@ export default class ZnVerticalStepper extends ZincElement {
   @property({ reflect: true }) description: string;
   @property({ reflect: true }) caption: string;
 
+  @property({ reflect: true }) type: 'neutral' | 'primary' | 'success' | 'error' | 'warning' | 'info' | 'ai';
+
   render() {
     return html`
       <div class="vs">
@@ -45,12 +48,7 @@ export default class ZnVerticalStepper extends ZincElement {
           <div class="vs__line"></div>
         </div>
         <div class="vs__right">
-          <div class="vs__caption">
-            ${this.caption}
-          </div>
-          <div class="vs__description">
-            ${this.description}
-          </div>
+          <span class="vs__caption">${this.caption}</span><span class="vs__description">${this.description}</span>
         </div>
       </div>
     `;

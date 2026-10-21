@@ -35,17 +35,17 @@ Use the `active` attribute to highlight the current step in the process. The act
 
 ### With Custom Icons
 
-Use the `icon` slot to add custom icons or indicators for each step. The icon is centred in the step's 32px circle, so keep it at the default 24px size or smaller.
+Use the `icon` slot to add custom icons or indicators for each step. The icon is centred in the step's 28px marker; use `size="16"`.
 
 ```html:preview
 <zn-vertical-stepper caption="Personal Details" description="Enter your name and contact information" first active>
-  <zn-icon slot="icon" src="person"></zn-icon>
+  <zn-icon slot="icon" src="person" size="16"></zn-icon>
 </zn-vertical-stepper>
 <zn-vertical-stepper caption="Address" description="Provide your shipping address">
-  <zn-icon slot="icon" src="home"></zn-icon>
+  <zn-icon slot="icon" src="home" size="16"></zn-icon>
 </zn-vertical-stepper>
 <zn-vertical-stepper caption="Payment" description="Add payment method" last>
-  <zn-icon slot="icon" src="credit_card"></zn-icon>
+  <zn-icon slot="icon" src="credit_card" size="16"></zn-icon>
 </zn-vertical-stepper>
 ```
 
@@ -54,17 +54,17 @@ Use the `icon` slot to add custom icons or indicators for each step. The icon is
 Show completed steps with check marks or success icons.
 
 ```html:preview
-<zn-vertical-stepper caption="Registration" description="Account created successfully" first>
-  <zn-icon slot="icon" src="check_circle" style="color: rgb(var(--zn-success))"></zn-icon>
+<zn-vertical-stepper type="success" caption="Registration" description="Account created successfully" first>
+  <zn-icon slot="icon" src="check" size="16"></zn-icon>
 </zn-vertical-stepper>
-<zn-vertical-stepper caption="Verification" description="Email verified" active>
-  <zn-icon slot="icon" src="check_circle" style="color: rgb(var(--zn-success))"></zn-icon>
+<zn-vertical-stepper type="success" caption="Verification" description="Email verified" active>
+  <zn-icon slot="icon" src="check" size="16"></zn-icon>
 </zn-vertical-stepper>
 <zn-vertical-stepper caption="Payment Setup" description="Add your payment method">
-  <zn-icon slot="icon" src="pending" style="color: rgb(var(--zn-text-secondary))"></zn-icon>
+  <zn-icon slot="icon" src="pending" size="16"></zn-icon>
 </zn-vertical-stepper>
 <zn-vertical-stepper caption="Complete Profile" description="Upload profile picture" last>
-  <zn-icon slot="icon" src="pending" style="color: rgb(var(--zn-text-secondary))"></zn-icon>
+  <zn-icon slot="icon" src="pending" size="16"></zn-icon>
 </zn-vertical-stepper>
 ```
 
@@ -73,17 +73,17 @@ Show completed steps with check marks or success icons.
 A practical example showing an order fulfillment process with different step states.
 
 ```html:preview
-<zn-vertical-stepper caption="Order Received" description="Order #12345 received on Jan 20, 2026" first>
-  <zn-icon slot="icon" src="check_circle" style="color: rgb(var(--zn-success))"></zn-icon>
+<zn-vertical-stepper type="success" caption="Order Received" description="Order #12345 received on Jan 20, 2026" first>
+  <zn-icon slot="icon" src="check" size="16"></zn-icon>
 </zn-vertical-stepper>
-<zn-vertical-stepper caption="Processing" description="Your order is being prepared" active>
-  <zn-icon slot="icon" src="shopping_bag" style="color: rgb(var(--zn-primary))"></zn-icon>
+<zn-vertical-stepper type="primary" caption="Processing" description="Your order is being prepared" active>
+  <zn-icon slot="icon" src="shopping_bag" size="16"></zn-icon>
 </zn-vertical-stepper>
 <zn-vertical-stepper caption="Shipped" description="Estimated delivery: Jan 25, 2026">
-  <zn-icon slot="icon" src="local_shipping" style="color: rgb(var(--zn-text-secondary))"></zn-icon>
+  <zn-icon slot="icon" src="local_shipping" size="16"></zn-icon>
 </zn-vertical-stepper>
 <zn-vertical-stepper caption="Delivered" description="Package will arrive at your doorstep" last>
-  <zn-icon slot="icon" src="home" style="color: rgb(var(--zn-text-secondary))"></zn-icon>
+  <zn-icon slot="icon" src="home" size="16"></zn-icon>
 </zn-vertical-stepper>
 ```
 
@@ -102,28 +102,28 @@ Create continuous step lists by omitting the `first` and `last` attributes when 
 Show detailed installation or setup progress with descriptive text for each phase.
 
 ```html:preview
-<zn-vertical-stepper
+<zn-vertical-stepper type="success"
   caption="Download"
   description="Downloading installer files (45 MB)"
   first>
-  <zn-icon slot="icon" src="check_circle" style="color: rgb(var(--zn-success))"></zn-icon>
+  <zn-icon slot="icon" src="check" size="16"></zn-icon>
 </zn-vertical-stepper>
-<zn-vertical-stepper
+<zn-vertical-stepper type="primary"
   caption="Extract"
   description="Extracting packages and dependencies"
   active>
-  <zn-icon slot="icon" src="folder_zip" style="color: rgb(var(--zn-primary))"></zn-icon>
+  <zn-icon slot="icon" src="folder_zip" size="16"></zn-icon>
 </zn-vertical-stepper>
 <zn-vertical-stepper
   caption="Install"
   description="Installing application components">
-  <zn-icon slot="icon" src="pending" style="color: rgb(var(--zn-text-secondary))"></zn-icon>
+  <zn-icon slot="icon" src="pending" size="16"></zn-icon>
 </zn-vertical-stepper>
 <zn-vertical-stepper
   caption="Configure"
   description="Setting up initial configuration"
   last>
-  <zn-icon slot="icon" src="pending" style="color: rgb(var(--zn-text-secondary))"></zn-icon>
+  <zn-icon slot="icon" src="pending" size="16"></zn-icon>
 </zn-vertical-stepper>
 ```
 
@@ -132,33 +132,33 @@ Show detailed installation or setup progress with descriptive text for each phas
 A multi-step onboarding flow with clear descriptions for each phase.
 
 ```html:preview
-<zn-vertical-stepper
+<zn-vertical-stepper type="success"
   caption="Welcome"
   description="Introduction to the platform and key features"
   first>
-  <zn-icon slot="icon" src="check_circle" style="color: rgb(var(--zn-success))"></zn-icon>
+  <zn-icon slot="icon" src="check" size="16"></zn-icon>
 </zn-vertical-stepper>
-<zn-vertical-stepper
+<zn-vertical-stepper type="primary"
   caption="Team Setup"
   description="Invite team members and assign roles"
   active>
-  <zn-icon slot="icon" src="group_add" style="color: rgb(var(--zn-primary))"></zn-icon>
+  <zn-icon slot="icon" src="group_add" size="16"></zn-icon>
 </zn-vertical-stepper>
 <zn-vertical-stepper
   caption="Project Configuration"
   description="Set up your first project and workspace">
-  <zn-icon slot="icon" src="settings" style="color: rgb(var(--zn-text-secondary))"></zn-icon>
+  <zn-icon slot="icon" src="settings" size="16"></zn-icon>
 </zn-vertical-stepper>
 <zn-vertical-stepper
   caption="Integration"
   description="Connect external tools and services">
-  <zn-icon slot="icon" src="link" style="color: rgb(var(--zn-text-secondary))"></zn-icon>
+  <zn-icon slot="icon" src="link" size="16"></zn-icon>
 </zn-vertical-stepper>
 <zn-vertical-stepper
   caption="Launch"
   description="Review settings and go live"
   last>
-  <zn-icon slot="icon" src="rocket_launch" style="color: rgb(var(--zn-text-secondary))"></zn-icon>
+  <zn-icon slot="icon" src="rocket_launch" size="16"></zn-icon>
 </zn-vertical-stepper>
 ```
 
@@ -167,23 +167,23 @@ A multi-step onboarding flow with clear descriptions for each phase.
 Show error or warning states in your stepper workflow.
 
 ```html:preview
-<zn-vertical-stepper
+<zn-vertical-stepper type="success"
   caption="Validation"
   description="Form validation passed"
   first>
-  <zn-icon slot="icon" src="check_circle" style="color: rgb(var(--zn-success))"></zn-icon>
+  <zn-icon slot="icon" src="check" size="16"></zn-icon>
 </zn-vertical-stepper>
-<zn-vertical-stepper
+<zn-vertical-stepper type="error"
   caption="Payment Processing"
   description="Payment failed - card declined"
   active>
-  <zn-icon slot="icon" src="error" style="color: rgb(var(--zn-error))"></zn-icon>
+  <zn-icon slot="icon" src="error" size="16"></zn-icon>
 </zn-vertical-stepper>
 <zn-vertical-stepper
   caption="Confirmation"
   description="Order confirmation email"
   last>
-  <zn-icon slot="icon" src="pending" style="color: rgb(var(--zn-text-secondary))"></zn-icon>
+  <zn-icon slot="icon" src="pending" size="16"></zn-icon>
 </zn-vertical-stepper>
 ```
 
@@ -199,20 +199,20 @@ Update vertical stepper states dynamically based on user actions.
     description="Complete this step"
     first
     active>
-    <zn-icon slot="icon" src="radio_button_checked"></zn-icon>
+    <zn-icon slot="icon" src="radio_button_checked" size="16"></zn-icon>
   </zn-vertical-stepper>
   <zn-vertical-stepper
     id="v-step-2"
     caption="Step 2"
     description="Pending">
-    <zn-icon slot="icon" src="radio_button_unchecked"></zn-icon>
+    <zn-icon slot="icon" src="radio_button_unchecked" size="16"></zn-icon>
   </zn-vertical-stepper>
   <zn-vertical-stepper
     id="v-step-3"
     caption="Step 3"
     description="Pending"
     last>
-    <zn-icon slot="icon" src="radio_button_unchecked"></zn-icon>
+    <zn-icon slot="icon" src="radio_button_unchecked" size="16"></zn-icon>
   </zn-vertical-stepper>
 </div>
 <br />
@@ -234,20 +234,20 @@ Update vertical stepper states dynamically based on user actions.
       if (i < currentVStep) {
         // Completed step
         step.removeAttribute('active');
-        icon.setAttribute('src', 'check_circle');
-        icon.style.color = 'rgb(var(--zn-success))';
+        icon.setAttribute('src', 'check');
+        step.type = 'success';
         step.description = 'Completed';
       } else if (i === currentVStep) {
         // Active step
         step.setAttribute('active', '');
         icon.setAttribute('src', 'radio_button_checked');
-        icon.style.color = 'rgb(var(--zn-primary))';
+        step.type = 'primary';
         step.description = 'In Progress';
       } else {
         // Future step
         step.removeAttribute('active');
         icon.setAttribute('src', 'radio_button_unchecked');
-        icon.style.color = 'rgb(var(--zn-text-secondary))';
+        step.type = 'neutral';
         step.description = 'Pending';
       }
     }
@@ -275,24 +275,24 @@ Update vertical stepper states dynamically based on user actions.
 
 ### Compact Vertical Stepper
 
-Create a more compact layout by adjusting spacing with CSS.
+Tighten the space between steps with `--zn-vertical-stepper-gap`.
 
 ```html:preview
 <div class="compact-stepper">
-  <zn-vertical-stepper caption="Login" description="User authenticated" first>
-    <zn-icon slot="icon" src="check_circle" style="color: rgb(var(--zn-success))"></zn-icon>
+  <zn-vertical-stepper type="success" caption="Login" description="User authenticated" first>
+    <zn-icon slot="icon" src="check" size="16"></zn-icon>
   </zn-vertical-stepper>
   <zn-vertical-stepper caption="Dashboard" description="Loading user data" active>
-    <zn-icon slot="icon" src="dashboard"></zn-icon>
+    <zn-icon slot="icon" src="dashboard" size="16"></zn-icon>
   </zn-vertical-stepper>
   <zn-vertical-stepper caption="Reports" description="View analytics" last>
-    <zn-icon slot="icon" src="bar_chart"></zn-icon>
+    <zn-icon slot="icon" src="bar_chart" size="16"></zn-icon>
   </zn-vertical-stepper>
 </div>
 
 <style>
   .compact-stepper zn-vertical-stepper {
-    margin: 8px 0;
+    --zn-vertical-stepper-gap: 4px;
   }
 </style>
 ```
@@ -313,23 +313,23 @@ Combine vertical and horizontal steppers for complex workflows where the horizon
 </zn-stepper>
 <br /><br />
 <div style="padding-left: 20px;">
-  <zn-vertical-stepper
+  <zn-vertical-stepper type="success"
     caption="Basic Info"
     description="Name, email, and contact details"
     first>
-    <zn-icon slot="icon" src="check_circle" style="color: rgb(var(--zn-success))"></zn-icon>
+    <zn-icon slot="icon" src="check" size="16"></zn-icon>
   </zn-vertical-stepper>
-  <zn-vertical-stepper
+  <zn-vertical-stepper type="primary"
     caption="Profile Photo"
     description="Upload your profile picture"
     active>
-    <zn-icon slot="icon" src="photo_camera" style="color: rgb(var(--zn-primary))"></zn-icon>
+    <zn-icon slot="icon" src="photo_camera" size="16"></zn-icon>
   </zn-vertical-stepper>
   <zn-vertical-stepper
     caption="Preferences"
     description="Set notification and privacy settings"
     last>
-    <zn-icon slot="icon" src="tune" style="color: rgb(var(--zn-text-secondary))"></zn-icon>
+    <zn-icon slot="icon" src="tune" size="16"></zn-icon>
   </zn-vertical-stepper>
 </div>
 ```
@@ -346,7 +346,7 @@ Add interactive elements next to each step for expanded functionality.
       description="Check all modifications before committing"
       first
       active>
-      <zn-icon slot="icon" src="preview"></zn-icon>
+      <zn-icon slot="icon" src="preview" size="16"></zn-icon>
     </zn-vertical-stepper>
   </div>
   <zn-button icon="edit" color="transparent">Edit</zn-button>
@@ -356,7 +356,7 @@ Add interactive elements next to each step for expanded functionality.
     <zn-vertical-stepper
       caption="Run Tests"
       description="Execute test suite">
-      <zn-icon slot="icon" src="pending"></zn-icon>
+      <zn-icon slot="icon" src="pending" size="16"></zn-icon>
     </zn-vertical-stepper>
   </div>
   <zn-button icon="play_arrow" color="transparent" disabled>Run</zn-button>
@@ -367,7 +367,7 @@ Add interactive elements next to each step for expanded functionality.
       caption="Deploy"
       description="Push changes to production"
       last>
-      <zn-icon slot="icon" src="pending"></zn-icon>
+      <zn-icon slot="icon" src="pending" size="16"></zn-icon>
     </zn-vertical-stepper>
   </div>
   <zn-button icon="publish" color="transparent" disabled>Deploy</zn-button>
@@ -379,37 +379,37 @@ Add interactive elements next to each step for expanded functionality.
 Show hierarchical relationships by nesting vertical steppers or indenting them.
 
 ```html:preview
-<zn-vertical-stepper
+<zn-vertical-stepper type="success"
   caption="Phase 1: Planning"
   description="Define project scope and requirements"
   first>
-  <zn-icon slot="icon" src="check_circle" style="color: rgb(var(--zn-success))"></zn-icon>
+  <zn-icon slot="icon" src="check" size="16"></zn-icon>
 </zn-vertical-stepper>
 
 <div style="padding-left: 40px;">
-  <zn-vertical-stepper
+  <zn-vertical-stepper type="success"
     caption="1.1 Research"
     description="Market analysis completed">
-    <zn-icon slot="icon" src="check_circle" style="color: rgb(var(--zn-success))"></zn-icon>
+    <zn-icon slot="icon" src="check" size="16"></zn-icon>
   </zn-vertical-stepper>
-  <zn-vertical-stepper
+  <zn-vertical-stepper type="success"
     caption="1.2 Design"
     description="Wireframes and mockups">
-    <zn-icon slot="icon" src="check_circle" style="color: rgb(var(--zn-success))"></zn-icon>
+    <zn-icon slot="icon" src="check" size="16"></zn-icon>
   </zn-vertical-stepper>
 </div>
 
-<zn-vertical-stepper
+<zn-vertical-stepper type="primary"
   caption="Phase 2: Development"
   description="Build and test features"
   active>
-  <zn-icon slot="icon" src="code" style="color: rgb(var(--zn-primary))"></zn-icon>
+  <zn-icon slot="icon" src="code" size="16"></zn-icon>
 </zn-vertical-stepper>
 
 <zn-vertical-stepper
   caption="Phase 3: Deployment"
   description="Release to production"
   last>
-  <zn-icon slot="icon" src="pending"></zn-icon>
+  <zn-icon slot="icon" src="pending" size="16"></zn-icon>
 </zn-vertical-stepper>
 ```

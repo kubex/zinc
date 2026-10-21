@@ -41,8 +41,7 @@ export default class ZnBadge extends ZincElement {
         'badge--dot': this.dot,
       })}">
         ${this.type === 'ai' ? html`
-          <zn-icon class="badge__icon" src="sparkle" library="lucide"
-                   size="${this.size === 'large' ? 14 : 12}"></zn-icon>` : ''}
+          <zn-icon class="badge__icon" src="sparkle" library="lucide" size="14"></zn-icon>` : ''}
         <slot></slot>
       </span>
     `;

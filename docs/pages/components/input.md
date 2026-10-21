@@ -136,27 +136,35 @@ the [Properties table](#properties) for the full list of options.
 
 #### Color Input
 
-The color input type displays a clickable color swatch on the right that opens the browser's native color picker. The color value is shown as editable text in the input field, allowing users to either pick a color visually or enter a color value directly.
+A colour input shows the colour and its value in one field: a swatch, then the value. Type a colour in any format —
+HEX, RGB, HSL, OKLCH, a colour name or a CSS variable such as `var(--zn-color-primary)` — and the swatch follows. The
+field works out which format was typed and keeps writing the value that way. A value that isn't a colour turns the field
+red.
 
-Use the `color-format` attribute to specify the format: `hex` (default), `rgb`, or `oklch`.
+The swatch opens a panel with a colour area (saturation across, brightness down), a hue slider and the colour's HEX,
+RGB, HSL and OKLCH values. Edit any one and the others follow; working in a row switches the field to that format.
+Escape or a click outside closes the panel.
+
+`color-format` sets the format the value starts in: `hex` (default), `rgb`, `hsl` or `oklch`.
 
 ```html:preview
-<zn-input type="color" label="Hex Format (default)" value="#3b82f6">
-  <div slot="help-text">Default format. Click the swatch to pick a color, or type a hex value like #3b82f6.</div>
+<zn-input type="color" label="Brand colour" value="#085EFD"></zn-input>
+<br />
+<zn-input type="color" label="Accent" color-format="rgb" value="#7557F5">
+  <div slot="help-text">Starts as RGB.</div>
 </zn-input>
 <br />
-<zn-input type="color" label="RGB Format" color-format="rgb" value="rgb(139, 92, 246)">
-  <div slot="help-text">Type RGB values like rgb(139, 92, 246). The picker converts to/from hex automatically.</div>
+<zn-input type="color" label="Highlight" color-format="hsl" value="hsl(219, 100%, 50%)">
+  <div slot="help-text">Starts as HSL.</div>
 </zn-input>
 <br />
-<zn-input type="color" label="OKLCH Format" color-format="oklch" value="oklch(0.628 0.225 292.6)">
-  <div slot="help-text">Type OKLCH values like oklch(0.628 0.225 292.6). The picker converts to/from hex automatically.</div>
+<zn-input type="color" label="Surface" color-format="oklch" value="oklch(37.1% 0.222 274.9)">
+  <div slot="help-text">Starts as OKLCH.</div>
 </zn-input>
 <br />
-<zn-input type="color" label="Background Color" value="#f59e0b" clearable>
-  <div slot="help-text">Use the <code>clearable</code> attribute to allow clearing the color value.</div>
+<zn-input type="color" label="Background colour" value="#F59E0B" clearable>
+  <div slot="help-text">Use the <code>clearable</code> attribute to allow clearing the colour.</div>
 </zn-input>
-<br />
 ```
 
 #### Range Input

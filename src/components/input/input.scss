@@ -103,10 +103,10 @@
   text-overflow: ellipsis;
 }
 
-/* Color input text should use monospace font */
 input[type='text'].input__control[data-color-input] {
-  font-family: var(--zn-font-mono, 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace);
-  font-size: 0.9em;
+  font-family: var(--zn-font-family-mono);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
 }
 
 .input__control::-webkit-search-decoration,
@@ -398,47 +398,63 @@ input[type='date']::-webkit-calendar-picker-indicator {
   background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="14" width="12.25" viewBox="0 0 448 512"><path fill="%236d7176" d="M128 0c13.3 0 24 10.7 24 24V64H296V24c0-13.3 10.7-24 24-24s24 10.7 24 24V64h40c35.3 0 64 28.7 64 64v16 48V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V192 144 128C0 92.7 28.7 64 64 64h40V24c0-13.3 10.7-24 24-24zM400 192H48V448c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V192zM112 256h96c8.8 0 16 7.2 16 16v96c0 8.8-7.2 16-16 16H112c-8.8 0-16-7.2-16-16V272c0-8.8 7.2-16 16-16z"/></svg>');
 }
 
-/* Color input styling — the preview fills the trailing edge of the field */
+/* Colour inputs lead with a swatch that opens the colour panel, divided from the value */
 .input__color-swatch {
-  display: inline-flex;
+  display: grid;
+  place-content: center;
+  flex: 0 0 auto;
   align-self: stretch;
-  border: none;
-  border-inline-start: solid var(--zn-input-border-width) var(--zn-input-border-color);
-  border-radius: 0;
-  background-color: var(--zn-color-neutral-0);
-  cursor: pointer;
-  overflow: hidden;
-  position: relative;
-  flex-shrink: 0;
+  padding: 0;
   margin: 0;
+  background: transparent;
+  border: none;
+  border-inline-end: solid var(--zn-input-border-width) var(--zn-input-border-color);
+  cursor: pointer;
 
-  &:hover .input__color-swatch-inner {
-    filter: brightness(0.95);
+  &:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--zn-focus-ring-color);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
   }
 }
 
 .input__color-swatch-inner {
-  width: 100%;
-  height: 100%;
-  background-color: var(--color-value, #000000);
-  transition: var(--zn-transition-fast) filter;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px var(--zn-input-border-color);
 }
 
-/* Size adjustments for color inputs — .input clips the trailing corners */
 .input--x-small .input__color-swatch {
-  width: calc(var(--zn-input-height-x-small) * 1.2);
+  width: var(--zn-input-height-x-small);
 }
 
 .input--small .input__color-swatch {
-  width: calc(var(--zn-input-height-small) * 1.2);
+  width: var(--zn-input-height-small);
 }
 
 .input--medium .input__color-swatch {
-  width: calc(var(--zn-input-height-medium) * 1.2);
+  width: var(--zn-input-height-medium);
 }
 
 .input--large .input__color-swatch {
-  width: calc(var(--zn-input-height-large) * 1.2);
+  width: var(--zn-input-height-large);
+}
+
+.input--standard.input--color-invalid:not(.input--disabled) {
+  border-color: var(--zn-input-border-color-invalid);
+}
+
+.input--color-invalid .input__control,
+.input--color-invalid:hover .input__control {
+  color: var(--zn-color-danger-fg);
+}
+
+.input__color-popup::part(popup) {
+  z-index: var(--zn-z-index-dropdown);
 }
 
 /* Range inputs render as a bare track, with the value shown in the context note above */
@@ -556,17 +572,3 @@ input[type='date']::-webkit-calendar-picker-indicator {
 .input--range .input__control:focus-visible::-moz-range-thumb {
   box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color);
 }
-
-/* Hide the native color input but keep it functional */
-.input__color-picker {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-  padding: 0;
-  margin: 0;
-  pointer-events: none;
-  border: none;
-  visibility: hidden;
-}
-

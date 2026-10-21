@@ -131,6 +131,7 @@ export { default as NavList } from './components/nav-list';
 export { default as NavItem } from './components/nav-item';
 export { default as AvatarGroup } from './components/avatar-group';
 export { default as Badge } from './components/badge';
+export { default as ColorPicker } from './components/color-picker';
 /* plop:component */
 
 // Base Component

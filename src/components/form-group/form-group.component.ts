@@ -44,7 +44,7 @@ export default class ZnFormGroup extends ZincElement {
   @property({ attribute: 'layout', type: String }) layout = "1,2";
 
   /** Labels the group like one of its fields and keeps it tight to them, for a section inside a form or dialog. */
-  @property({ type: Boolean, reflect: true }) compact = false;
+  @property({ type: Boolean }) compact = false;
 
   @property({ attribute: 'pad', type: Boolean }) pad: boolean = false;
 
@@ -329,7 +329,10 @@ export default class ZnFormGroup extends ZincElement {
           'form-control--has-label': hasLabel,
           'form-control--has-label-tooltip': hasLabelTooltip,
           'form-control--has-help-text': hasHelpText,
-          'form-control--pad': this.pad
+          'form-control--pad': this.pad,
+          'form-control--compact': this.compact,
+          'form-control--stacked': this.layout === '1',
+          'form-control--full': !hasLabel && !hasHelpText
         })}"
         aria-labelledby="label"
         aria-describedby="help-text">

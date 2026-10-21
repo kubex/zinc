@@ -241,6 +241,68 @@ describe('<zn-input>', () => {
     });
   });
 
+  describe('type="color"', () => {
+    const typeInto = async (el: ZnInput, text: string) => {
+      const control = el.shadowRoot!.querySelector<HTMLInputElement>('.input__control')!;
+      control.focus();
+      control.value = text;
+      control.dispatchEvent(new Event('input', {bubbles: true, composed: true}));
+      control.dispatchEvent(new Event('change'));
+      control.blur();
+      await el.updateComplete;
+      await el.updateComplete;
+    };
+
+    it('writes the starting value in color-format', async () => {
+      const el = await fixture<ZnInput>(html`<zn-input type="color" color-format="rgb" value="#7557F5"></zn-input>`);
+      await el.updateComplete;
+
+      expect(el.value).to.equal('rgb(117, 87, 245)');
+    });
+
+    it('switches to the format that was typed and keeps a tidy value as written', async () => {
+      const el = await fixture<ZnInput>(html`<zn-input type="color" value="#085EFD"></zn-input>`);
+
+      await typeInto(el, 'oklch(70% 0.15 250)');
+
+      expect(el.colorFormat).to.equal('oklch');
+      expect(el.value).to.equal('oklch(70% 0.15 250)');
+    });
+
+    it('writes a name out in the current format', async () => {
+      const el = await fixture<ZnInput>(html`<zn-input type="color" value="#085EFD"></zn-input>`);
+
+      await typeInto(el, 'rebeccapurple');
+
+      expect(el.value).to.equal('#663399');
+    });
+
+    it('marks text that is not a colour as invalid', async () => {
+      const el = await fixture<ZnInput>(html`<zn-input type="color" value="#085EFD"></zn-input>`);
+
+      await typeInto(el, 'not a colour');
+
+      const control = el.shadowRoot!.querySelector('.input__control')!;
+      expect(control.getAttribute('aria-invalid')).to.equal('true');
+      expect(el.shadowRoot!.querySelector('[part="base"]')!.classList.contains('input--color-invalid')).to.be.true;
+    });
+
+    it('opens the colour panel from the swatch and closes it on Escape', async () => {
+      const el = await fixture<ZnInput>(html`<zn-input type="color" value="#085EFD"></zn-input>`);
+      const swatch = el.shadowRoot!.querySelector<HTMLButtonElement>('.input__color-swatch')!;
+
+      swatch.click();
+      await el.updateComplete;
+      expect(swatch.getAttribute('aria-expanded')).to.equal('true');
+      expect(el.shadowRoot!.querySelector('zn-color-picker')).to.exist;
+
+      document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape'}));
+      await el.updateComplete;
+      expect(swatch.getAttribute('aria-expanded')).to.equal('false');
+      expect(el.shadowRoot!.querySelector('zn-color-picker')).to.not.exist;
+    });
+  });
+
   describe('slash menu', () => {
     function slashMenuOf(el: ZnInput) {
       return el.shadowRoot!.querySelector<ZnSlashMenu>('zn-slash-menu');

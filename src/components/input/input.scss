@@ -100,6 +100,7 @@
   cursor: inherit;
   -webkit-appearance: none;
   line-height: var(--zn-input-line-height);
+  text-overflow: ellipsis;
 }
 
 /* Color input text should use monospace font */
@@ -341,7 +342,7 @@ input[type='text'].input__control[data-color-input] {
  */
 
 .input__clear:not(.input__clear--visible) {
-  visibility: hidden;
+  display: none;
 }
 
 .input__clear,
@@ -373,7 +374,7 @@ input[type='text'].input__control[data-color-input] {
 }
 
 .input--empty .input__clear {
-  visibility: hidden;
+  display: none;
 }
 
 /* Don't show the browser's password toggle in Edge */

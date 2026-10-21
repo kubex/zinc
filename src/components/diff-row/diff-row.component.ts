@@ -1,7 +1,7 @@
 import { type CSSResultGroup, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
-import ZnChip from '../chip';
+import ZnBadge from '../badge';
 
 import styles from './diff-row.scss';
 
@@ -13,7 +13,7 @@ const changeLabels = { changed: 'Changed', added: 'Added', removed: 'Removed' } 
  * @status experimental
  * @since 1.1
  *
- * @dependency zn-chip
+ * @dependency zn-badge
  *
  * @property {string} caption - The item's name, shown in both columns.
  * @property {string} change - How the item changed: `changed`, `added` or `removed`. Unchanged when empty.
@@ -33,7 +33,7 @@ const changeLabels = { changed: 'Changed', added: 'Added', removed: 'Removed' } 
 export default class ZnDiffRow extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
   static dependencies = {
-    'zn-chip': ZnChip,
+    'zn-badge': ZnBadge,
   };
 
   @property() caption = '';
@@ -51,12 +51,12 @@ export default class ZnDiffRow extends ZincElement {
         </div>`;
     }
     const label = this.change ? changeLabels[this.change] : '';
-    const chipType = this.change === 'added' ? 'success' : this.change === 'removed' ? 'error' : 'info';
+    const badgeType = this.change === 'added' ? 'success' : this.change === 'removed' ? 'danger' : 'info';
     return html`
       <div class="row__cell" part="${side}" role="cell">
         <span class="row__caption">
           ${this.caption}
-          ${side === 'after' && label ? html`<zn-chip size="small" type="${chipType}">${label}</zn-chip>` : ''}
+          ${side === 'after' && label ? html`<zn-badge type="${badgeType}">${label}</zn-badge>` : ''}
         </span>
         <span class="row__details"><slot name="${side}"></slot></span>
       </div>`;

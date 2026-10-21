@@ -16,8 +16,8 @@ import styles from './diff.scss';
  * @property {string} afterDescription - A line under the right heading.
  *
  * @slot - The `zn-diff-row`s.
- * @slot before - Inline content after the left heading, such as a status chip.
- * @slot after - Inline content after the right heading, such as a status chip.
+ * @slot before - Inline content after the left heading, such as a status badge.
+ * @slot after - Inline content after the right heading, such as a status badge.
  *
  * @csspart base - The table.
  * @csspart head - The sticky row of column headings.

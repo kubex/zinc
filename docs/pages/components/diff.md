@@ -8,7 +8,7 @@ layout: component
 ```html:preview
 <zn-diff before-caption="Version 2" before-description="Published 30 Sep 2026"
          after-caption="Version 3" after-description="Published 12 Oct 2026">
-  <zn-chip slot="after" size="small" type="success">Live</zn-chip>
+  <zn-badge slot="after" type="success">Live</zn-badge>
   <zn-diff-row caption="Settings" heading></zn-diff-row>
   <zn-diff-row caption="Passing score" change="changed">
     <span slot="before">75%</span>

@@ -8,15 +8,15 @@ describe('<zn-diff-row>', () => {
     const cells = el.shadowRoot!.querySelectorAll('[role="cell"]');
     expect(cells).to.have.length(2);
     expect(el.shadowRoot!.querySelector('.row__cell--absent')).to.not.exist;
-    expect(el.shadowRoot!.querySelector('zn-chip')).to.not.exist;
+    expect(el.shadowRoot!.querySelector('zn-badge')).to.not.exist;
   });
 
   it('labels a changed row in the newer column', async () => {
     const el = await fixture(html`<zn-diff-row caption="Passing score" change="changed"></zn-diff-row>`);
 
-    const chip = el.shadowRoot!.querySelector('[part="after"] zn-chip');
-    expect(chip?.textContent).to.equal('Changed');
-    expect(chip?.getAttribute('type')).to.equal('info');
+    const badge = el.shadowRoot!.querySelector('[part="after"] zn-badge');
+    expect(badge?.textContent).to.equal('Changed');
+    expect(badge?.getAttribute('type')).to.equal('info');
   });
 
   it('shows a placeholder on the side an added or removed item is missing from', async () => {

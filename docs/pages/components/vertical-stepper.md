@@ -187,6 +187,50 @@ Show error or warning states in your stepper workflow.
 </zn-vertical-stepper>
 ```
 
+### Content, Suffix and Actions
+
+Use the default slot for metadata or chips below the caption, the `suffix` slot for chips inline after it, and the `actions` slot for controls at the end of the step. The line grows with the step, so taller content keeps the steps joined.
+
+```html:preview
+<zn-vertical-stepper caption="Version 4" type="warning" dashed first>
+  <span slot="icon">v4</span>
+  <zn-chip slot="suffix" size="small" type="warning">Draft</zn-chip>
+  <span>Last saved today 09:12</span>
+  <zn-button slot="actions" color="secondary">Continue editing</zn-button>
+</zn-vertical-stepper>
+<zn-vertical-stepper caption="Version 3" type="success">
+  <span slot="icon">v3</span>
+  <zn-chip slot="suffix" size="small" type="success">Live</zn-chip>
+  <span>Published 12 Oct 2026 · effective 14 Oct 2026</span>
+  <zn-button slot="actions" color="secondary">View</zn-button>
+</zn-vertical-stepper>
+<zn-vertical-stepper caption="Version 2" last>
+  <span slot="icon">v2</span>
+  <zn-chip slot="suffix" size="small">Superseded</zn-chip>
+  <span>Published 30 Sep 2026 · effective 30 Sep 2026</span>
+  <zn-button slot="actions" color="secondary">View</zn-button>
+</zn-vertical-stepper>
+```
+
+### Selected Steps and Highlighted Lines
+
+Use `selected` to ring a picked step's marker, and `highlight-line` to colour the line from a step to the next, such as the range between two compared versions. `dashed` draws the marker's border dashed for a step that is not final.
+
+```html:preview
+<zn-vertical-stepper caption="Version 4" description="Draft" type="warning" dashed first>
+  <span slot="icon">v4</span>
+</zn-vertical-stepper>
+<zn-vertical-stepper caption="Version 3" description="Compare from here" type="success" selected highlight-line>
+  <span slot="icon">v3</span>
+</zn-vertical-stepper>
+<zn-vertical-stepper caption="Version 2" description="Included in the comparison" highlight-line>
+  <span slot="icon">v2</span>
+</zn-vertical-stepper>
+<zn-vertical-stepper caption="Version 1" description="Compare to here" selected last>
+  <span slot="icon">v1</span>
+</zn-vertical-stepper>
+```
+
 ### Dynamic Vertical Stepper
 
 Update vertical stepper states dynamically based on user actions.

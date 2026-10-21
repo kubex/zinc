@@ -36,6 +36,12 @@
     background-color: var(--marker-bg);
     border: 1px solid var(--marker-line);
     border-radius: 100%;
+    // Above the line, so a selected step's ring covers it.
+    position: relative;
+    z-index: 1;
+    font-size: 12px;
+    font-weight: 600;
+    transition: box-shadow var(--zn-transition-fast, 150ms);
   }
 
   &__line {
@@ -61,6 +67,38 @@
     font-weight: 600;
   }
 
+  &__suffix {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: var(--zn-spacing-2x-small);
+    margin-inline-start: var(--zn-spacing-x-small);
+    vertical-align: middle;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--zn-spacing-x-small);
+    margin-top: var(--zn-spacing-2x-small);
+    font-size: var(--zn-font-size-small);
+    color: rgb(var(--zn-color-muted-text));
+  }
+
+  &__actions {
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--zn-spacing-x-small);
+    min-height: var(--zn-vertical-stepper-marker-size, 28px);
+    padding-bottom: var(--zn-vertical-stepper-gap, var(--zn-spacing-medium));
+  }
+
+  [hidden] {
+    display: none;
+  }
+
   &__description {
     display: inline;
     font-weight: var(--zn-vertical-stepper-description-font-weight, 400);
@@ -77,9 +115,23 @@
     display: none;
   }
 
-  .vs__right {
+  .vs__right,
+  .vs__actions {
     padding-bottom: 0;
   }
+}
+
+:host([dashed]) .vs__icon {
+  border-style: dashed;
+}
+
+:host([selected]) .vs__icon {
+  box-shadow: 0 0 0 2px var(--zn-vertical-stepper-ring-gap-color, rgb(var(--zn-panel))),
+  0 0 0 4px var(--zn-vertical-stepper-selected-color, rgb(var(--zn-primary)));
+}
+
+:host([highlight-line]) .vs__line {
+  background-color: var(--zn-vertical-stepper-selected-color, rgb(var(--zn-primary)));
 }
 
 :host([active]) {

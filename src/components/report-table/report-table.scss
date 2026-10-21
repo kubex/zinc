@@ -13,9 +13,15 @@
   @include wc.scrollbars;
 }
 
+.report__scroll tbody td,
+.report__scroll tfoot td {
+  transition: opacity var(--zn-transition-fast, 150ms);
+}
+
+// The frozen column stays opaque, or the scrolling cells would show through it
 .report__scroll--busy tbody td:not(.report__dim),
 .report__scroll--busy tfoot td:not(.report__dim) {
-  opacity: 0.5;
+  opacity: 0.3;
 }
 
 .report__alert {

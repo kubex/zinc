@@ -715,6 +715,8 @@ describe('<zn-data-table>', () => {
       await waitUntil(() => root.querySelector('.filter__rule zn-select[aria-label="Filter value"]'));
       choose(root.querySelector('.filter__rule zn-select[aria-label="Filter value"]')!, 'active');
       await settle(el);
+      click(root.querySelector('.filter__pop__foot zn-button[color="primary"]')!);
+      await settle(el);
     };
 
     it('opens the filter builder and encodes a completed rule', async () => {
@@ -743,6 +745,8 @@ describe('<zn-data-table>', () => {
       click(root.querySelector('.filter__toggle')!);
       await settle(el);
       await addRule(el);
+      click(root.querySelector('.filter__toggle')!);
+      await settle(el);
       click(root.querySelector('.filter__pop__foot zn-button[icon="plus@lu"]')!);
       await settle(el);
       expect(root.querySelectorAll('.filter__rule').length).to.equal(2);
@@ -811,6 +815,8 @@ describe('<zn-data-table>', () => {
       choose(root.querySelector('.filter__rule zn-select[aria-label="Filter field"]')!, 'status');
       await bar.updateComplete;
       choose(root.querySelector('.filter__rule zn-select[aria-label="Filter value"]')!, 'active');
+      await bar.updateComplete;
+      click(root.querySelector('.filter__pop__foot zn-button[color="primary"]')!);
 
       const expected = btoa(JSON.stringify([{key: 'status', comparator: 'eq', value: 'active'}]));
       await waitUntil(() => bodies[bodies.length - 1].filter === expected);

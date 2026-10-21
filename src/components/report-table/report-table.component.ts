@@ -369,7 +369,9 @@ export default class ZnReportTable extends ZincElement {
     const dimension = response.dimension?.label ?? '';
 
     return html`
-      <div class="report__scroll ${busy ? 'report__scroll--busy' : ''}" aria-busy="${busy ? 'true' : 'false'}">
+      <div class="table__frame">
+      ${busy ? html`<div class="table__loader" aria-hidden="true"></div>` : nothing}
+      <div class="report__scroll table__enter ${busy ? 'report__scroll--busy' : ''}" aria-busy="${busy ? 'true' : 'false'}">
         <table class="report">
           <thead>
           <tr class="report__groups">
@@ -412,6 +414,7 @@ export default class ZnReportTable extends ZincElement {
           </tr>
           </tfoot>
         </table>
+      </div>
       </div>`;
   }
 
@@ -439,10 +442,12 @@ export default class ZnReportTable extends ZincElement {
 
     if (rows.length === 0) {
       return html`${alert}
-        <slot name="empty-state">
-          <zn-empty-state caption="No results found" icon="search"
-                          description="Nothing matched this report. Try another date range or filter."></zn-empty-state>
-        </slot>`;
+        <div class="table__enter">
+          <slot name="empty-state">
+            <zn-empty-state caption="No results found" icon="search"
+                            description="Nothing matched this report. Try another date range or filter."></zn-empty-state>
+          </slot>
+        </div>`;
     }
 
     return html`${alert}${this.renderTable(response, rows, busy)}`;
@@ -450,7 +455,7 @@ export default class ZnReportTable extends ZincElement {
 
   private renderSkeleton(): TemplateResult {
     return html`
-      <div class="report__skeleton">
+      <div class="report__skeleton table__enter">
         ${[0, 1, 2, 3, 4].map(() => html`<zn-skeleton></zn-skeleton>`)}
       </div>`;
   }
@@ -529,15 +534,18 @@ export default class ZnReportTable extends ZincElement {
     this.search = e.detail.value;
   };
 
-  // Lets the sticky group labels clear the frozen first column
+  // Lets the sticky group labels clear the frozen first column, and the loader sit under the header
   private observeDim = (el: Element | undefined) => {
     this.dimObserver?.disconnect();
     this.dimObserver = null;
     if (!el) return;
+    const head = el.closest('thead')!;
     this.dimObserver = new ResizeObserver(() => {
       this.style.setProperty('--_dim-width', `${(el as HTMLElement).offsetWidth}px`);
+      this.style.setProperty('--_head-height', `${head.offsetHeight}px`);
     });
     this.dimObserver.observe(el);
+    this.dimObserver.observe(head);
   };
 
   disconnectedCallback() {

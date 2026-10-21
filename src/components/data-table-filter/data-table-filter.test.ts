@@ -46,6 +46,11 @@ async function open(el: ZnDataTableFilter) {
   await el.updateComplete;
 }
 
+async function apply(el: ZnDataTableFilter) {
+  click(root(el).querySelector('.filter__pop__foot zn-button[color="primary"]'));
+  await el.updateComplete;
+}
+
 async function setRule(el: ZnDataTableFilter, key: string, value?: string | string[], index = 0) {
   choose(control(el, 'Filter field', index), key);
   await el.updateComplete;
@@ -83,6 +88,7 @@ describe('<zn-data-table-filter>', () => {
     await open(el);
 
     await setRule(el, 'status', 'active');
+    await apply(el);
 
     expect(el.value).to.equal('W3sia2V5Ijoic3RhdHVzIiwiY29tcGFyYXRvciI6ImVxIiwidmFsdWUiOiJhY3RpdmUifV0=');
     expect(el.activeCount).to.equal(1);
@@ -94,14 +100,17 @@ describe('<zn-data-table-filter>', () => {
     await setRule(el, 'age', '18');
     choose(control(el, 'Filter operator'), 'gte');
     await el.updateComplete;
+    await apply(el);
     expect(decode(el.value)).to.deep.equal([{key: 'age', comparator: 'gte', value: '18'}]);
 
+    await open(el);
     const operators = [...control(el, 'Filter operator').querySelectorAll('zn-option')].map(o => o.textContent!.trim());
     expect(operators).to.deep.equal(['is', 'is at least']);
 
     await setRule(el, 'email');
     expect(control<ZnSelect>(el, 'Filter operator').value).to.equal('contains');
     expect(control<ZnInput>(el, 'Filter value').value).to.equal('');
+    await apply(el);
     expect(el.value).to.equal('');
   });
 
@@ -135,6 +144,7 @@ describe('<zn-data-table-filter>', () => {
     expect(control(el, 'Filter value').hasAttribute('multiple')).to.be.true;
     choose(control(el, 'Filter value'), ['pm', 'eng']);
     await el.updateComplete;
+    await apply(el);
 
     expect(decode(el.value)).to.deep.equal([{key: 'role', comparator: 'in', value: 'pm eng'}]);
     expect(chips(el)).to.deep.equal(['Role is any of Project Manager, Engineer']);
@@ -151,6 +161,7 @@ describe('<zn-data-table-filter>', () => {
 
     choose(control(el, 'Filter operator'), 'eq');
     await el.updateComplete;
+    await apply(el);
 
     expect(decode(el.value)).to.deep.equal([{key: 'state', comparator: 'eq', value: 'open'}]);
   });
@@ -171,12 +182,15 @@ describe('<zn-data-table-filter>', () => {
 
     choose(control(el, 'Filter value'), '2026-10-20');
     await el.updateComplete;
+    await apply(el);
     const timestamp = new Date(2026, 9, 20).getTime();
     expect(decode(el.value)).to.deep.equal([{key: 'created', comparator: 'eq', value: (timestamp / 1000).toString()}]);
     expect(chips(el)).to.deep.equal(['Created is 2026-10-20']);
 
+    await open(el);
     choose(control(el, 'Filter operator'), 'before');
     await el.updateComplete;
+    await apply(el);
     const [rule] = decode(el.value);
     expect(rule.comparator).to.equal('before');
     expect(Number(rule.value)).to.be.closeTo(-Math.floor((Date.now() - timestamp) / 60_000), 1);
@@ -226,21 +240,27 @@ describe('<zn-data-table-filter>', () => {
     expect(control<ZnSelect>(el, 'Filter field').value).to.equal('status');
   });
 
-  it('emits zn-filter-change only when the encoded value changes', async () => {
+  it('emits zn-filter-change only when Apply changes the encoded value', async () => {
     const el = await filter();
     let emitted = 0;
     el.addEventListener('zn-filter-change', () => emitted++);
     await open(el);
 
-    await setRule(el, 'status');
+    await setRule(el, 'status', 'active');
     expect(emitted).to.equal(0);
-    choose(control(el, 'Filter value'), 'active');
-    await el.updateComplete;
+    expect(el.value).to.equal('');
+    expect(chips(el)).to.deep.equal([]);
 
+    await apply(el);
+    expect(emitted).to.equal(1);
+    expect(root(el).querySelector('.filter__pop')).to.not.exist;
+
+    await open(el);
+    await apply(el);
     expect(emitted).to.equal(1);
   });
 
-  it('closes on Escape and drops incomplete rules', async () => {
+  it('closes on Escape and discards unapplied rules', async () => {
     const el = await filter();
     await open(el);
     await setRule(el, 'status', 'active');
@@ -253,8 +273,10 @@ describe('<zn-data-table-filter>', () => {
     expect(root(el).querySelector('.filter__pop')).to.not.exist;
     expect(root(el).querySelector('.filter__toggle')!.classList.contains('filter__toggle--open')).to.be.false;
 
+    expect(el.value).to.equal('');
     await open(el);
     expect(rules(el).length).to.equal(1);
+    expect(control<ZnSelect>(el, 'Filter field').value).to.equal('');
   });
 
   it('closes on a click outside and drops incomplete rules', async () => {
@@ -304,8 +326,9 @@ describe('<zn-data-table-filter>', () => {
 
     click(shown[0]);
     await el.updateComplete;
-    expect(decode(el.value)).to.deep.equal([{key: 'email', comparator: 'contains', value: 'Ada@example.com'}]);
     expect(root(el).querySelector('.filter__suggestion')).to.not.exist;
+    await apply(el);
+    expect(decode(el.value)).to.deep.equal([{key: 'email', comparator: 'contains', value: 'Ada@example.com'}]);
   });
 
   it('forgets typed text when the field changes', async () => {

@@ -427,6 +427,8 @@ describe('<zn-report-table>', () => {
         await funnel.updateComplete;
         await waitUntil(() => root.querySelector('.filter__rule zn-select[aria-label="Filter value"]'));
         choose(root.querySelector('.filter__rule zn-select[aria-label="Filter value"]')!, 'active');
+        await funnel.updateComplete;
+        click(root.querySelector('.filter__pop__foot zn-button[color="primary"]')!);
 
         const expected = btoa(JSON.stringify([{key: 'status', comparator: 'eq', value: 'active'}]));
         await waitUntil(() => stub.calls.length === 2);

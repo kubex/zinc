@@ -125,6 +125,7 @@ export { default as Background } from './components/background';
 export { default as NavList } from './components/nav-list';
 export { default as NavItem } from './components/nav-item';
 export { default as AvatarGroup } from './components/avatar-group';
+export { default as Badge } from './components/badge';
 /* plop:component */
 
 // Base Component

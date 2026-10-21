@@ -47,7 +47,7 @@ export default class ZnStatsTile extends ZincElement {
   /** Renders a `tile` as a toggle button, for tiles that filter the content below them. */
   @property({type: Boolean}) selectable = false;
 
-  /** Whether a `selectable` tile is pressed. */
+  /** Whether a `selectable` tile is pressed, or a linked tile marks the view the page is showing. */
   @property({type: Boolean, reflect: true}) selected = false;
 
   /** How `show-delta` compares with `previous`: the relative change, or the difference in points. */

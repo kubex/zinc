@@ -66,7 +66,7 @@ export default class ZnProgressBar extends ZincElement {
         <rect
           part="fill"
           fill="var(--zn-progress-bar-color)"
-          width="${this.value}%"
+          style="width: ${this.value}%"
           height="100%"
           clip-path="url(#clip-path)"
           rx="4px"

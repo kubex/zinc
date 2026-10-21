@@ -753,7 +753,8 @@ button[popovertarget] {
 
     > li {
       z-index: 1;
-      height: calc(var(--zn-density-control-height, 36px) - 6px);
+      // Less the track's padding, so the track stands as tall as a button
+      height: calc(var(--zn-button-height, var(--zn-density-control-height, 36px)) - 4px);
       min-height: 0;
       padding: 0 12px;
       border: 0;
@@ -761,6 +762,15 @@ button[popovertarget] {
       background: transparent;
       font-size: 12px;
       font-weight: var(--zn-font-weight-semibold);
+
+      // A link item is clickable across the whole segment, not just its label
+      > a {
+        display: flex;
+        align-items: center;
+        align-self: stretch;
+        margin-inline: -12px;
+        padding-inline: 12px;
+      }
     }
   }
 

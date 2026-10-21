@@ -20,6 +20,7 @@ import styles from './toggle.scss';
  * @dependency zn-tooltip
  *
  * @event zn-input - Emitted when the toggle receives input.
+ * @event zn-change - Emitted when the toggle is switched on or off.
  *
  * @slot - The toggle's label.
  * @slot description - A description of the toggle's label. Alternatively, you can use the `description` attribute.
@@ -115,6 +116,7 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
 
   private handleClick() {
     this.checked = !this.checked;
+    this.emit('zn-change');
     if (this.triggerSubmit) {
       this.formControlController.submit();
     }

@@ -3,7 +3,6 @@
 :host {
   display: block;
   line-height: var(--zn-line-height-dense);
-  max-width: var(--zn-container-lg);
   --zn-col-gap: calc(var(--zn-spacing-medium, 20px) * 3);
   --zn-form-group-sticky-top: var(--zn-spacing-medium, 20px);
 }
@@ -13,6 +12,7 @@
   border: none;
   padding: 0;
   margin: 0;
+  max-width: var(--zn-container-lg);
 }
 
 .form-control__label {
@@ -33,7 +33,7 @@
 // label would scroll over the fields it labels. zn-cols wraps below the two columns' bases plus
 // the gap, so 670px = --zn-col-basis * (1 + 2) + 70px — keep in step with both values below.
 @container (min-width: 670px) {
-  :host(:not([layout="1"])) .form-control__text {
+  .form-control:not(.form-control--stacked) .form-control__text {
     position: sticky;
     top: var(--zn-form-group-sticky-top);
     // A stretched flex item is as tall as the row, leaving sticky nothing to travel through.
@@ -113,7 +113,7 @@ zn-cols::part(base) {
 
 // layout="1" stacks the label above the fields at every width, so there is no gutter to keep.
 @container (min-width: 670px) {
-  :host(:not([layout="1"])) zn-cols::part(base) {
+  .form-control:not(.form-control--stacked) zn-cols::part(base) {
     gap: 70px;
   }
 }
@@ -125,11 +125,11 @@ zn-cols::part(base) {
 }
 
 // Without a label or help text the group is only its card's field grid, so it fills the card.
-:host(:not([label]):not([help-text])) {
+.form-control--full {
   max-width: none;
 }
 
-:host([compact]) .form-control--has-label .form-control__label {
+.form-control--compact.form-control--has-label .form-control__label {
   display: block;
   margin-bottom: 0;
   font-family: inherit;
@@ -138,12 +138,12 @@ zn-cols::part(base) {
   line-height: var(--zn-input-label-line-height);
 }
 
-:host([compact]) .form-control__help-text {
+.form-control--compact .form-control__help-text {
   margin-top: var(--zn-input-label-spacing, var(--zn-spacing-2x-small));
   font-size: var(--zn-input-help-text-font-size-medium);
   line-height: var(--zn-input-help-text-line-height, 1.5);
 }
 
-:host([compact]) zn-cols::part(base) {
+.form-control--compact zn-cols::part(base) {
   gap: var(--zn-form-row-gap, var(--zn-spacing-medium));
 }

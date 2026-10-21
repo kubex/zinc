@@ -161,7 +161,14 @@
 /* The tags are rendered into the shadow (not slotted), so target them as descendants. Only the remove
    "X" is clickable (pointer); the chip body isn't, so give it a default cursor rather than letting it
    inherit the combobox's text cursor in search/free-text mode. */
+// Flex, so the inline chip isn't seated on the line box's baseline.
+.select__tags > div {
+  display: flex;
+}
+
 .select__tags zn-chip {
+  --zn-chip-border-radius: var(--zn-select-tag-border-radius);
+  --zn-chip-height: var(--zn-select-tag-height);
   cursor: default;
 }
 

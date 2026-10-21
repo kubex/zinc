@@ -14,6 +14,7 @@
   --chip-solid: rgb(var(--zn-color-muted-text));
   --chip-ink: 255, 255, 255;
 
+  box-sizing: border-box;
   display: inline-flex;
   font-size: var(--zn-text-chip-font-size);
   font-family: var(--zn-font-family-sans);
@@ -24,8 +25,7 @@
   height: var(--zn-chip-height, var(--zn-spacing-medium));
   color: var(--chip-fg);
   background: var(--chip-bg);
-  // Inset, so the hairline never changes the chip's size.
-  box-shadow: inset 0 0 0 var(--zn-chip-border-width, 0px) var(--chip-line);
+  border: var(--zn-chip-border-width, 0px) solid var(--chip-line);
   text-align: center;
   gap: var(--zn-chip-gap, var(--zn-spacing-x-small));
   width: fit-content;
@@ -97,7 +97,7 @@
 .chip--solid {
   color: rgb(var(--chip-ink));
   background: var(--chip-solid);
-  box-shadow: none;
+  border-color: var(--chip-solid);
 }
 
 .chip--dot::before {
@@ -135,4 +135,34 @@
 
 .chip--with-icon {
   padding-left: var(--zn-spacing-2x-small);
+}
+
+.chip--with-icon.chip--with-content {
+  padding-left: var(--zn-chip-icon-padding-start, var(--zn-spacing-2x-small));
+}
+
+.chip__action {
+  // Slotted zn-buttons inherit these, shrinking them to fit the circle.
+  --zn-button-height: 100%;
+  --zn-button-icon-width: 100%;
+
+  display: inline-grid;
+  place-content: center;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-inline: -1.6px -8px;
+  border-radius: 50%;
+  overflow: hidden;
+  color: var(--zn-chip-action-color, currentColor);
+
+  // zn-button's own :host colour would otherwise beat inheriting from this slot.
+  &::slotted(*) {
+    color: inherit;
+  }
+
+  &:hover {
+    color: var(--zn-chip-action-hover-color, currentColor);
+    background: var(--zn-chip-action-hover-background, rgba(var(--zn-border-color), .3));
+  }
 }

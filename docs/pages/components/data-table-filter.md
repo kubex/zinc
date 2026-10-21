@@ -12,7 +12,7 @@ layout: component
 </zn-data-table-filter>
 ```
 
-The funnel opens a popover headed **Filters · Show records that match all of these**. Each row is a rule: pick a field, an operator and a value, or remove the row with its trash button. **+ Add filter** adds a row for a field not yet used, **Clear all** removes every rule, and **Done** closes the popover. A rule applies once it has a field, an operator and a value, and while any row is still empty the heading says so. Closing the popover, with Done, Escape or a click outside it, drops the rows that are still empty.
+The funnel opens a popover headed **Filters · Show records that match all of these**. Each row is a rule: pick a field, an operator and a value, or remove the row with its trash button. **+ Add filter** adds a row for a field not yet used, and **Clear all** removes every rule. Nothing reaches the table until **Apply**, which closes the popover and applies every rule that has a field, an operator and a value; while any row is still empty the heading says so. Closing the popover with Escape or a click outside it discards the edits.
 
 The rules that apply show as chips after the funnel, and the funnel's badge counts them. A chip's text opens the popover again, and its X removes that rule. Inside a [`zn-data-table`](/components/data-table#filtering) or [`zn-report-table`](/components/report-table) the funnel sits in the header and the chips get a row of their own under it.
 

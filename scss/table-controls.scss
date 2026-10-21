@@ -160,3 +160,51 @@
 .table__head__sort--active {
   color: rgb(var(--zn-primary));
 }
+
+// Sits on the header's bottom border; the component measures the header into --_head-height
+.table__frame {
+  position: relative;
+}
+
+.table__loader {
+  position: absolute;
+  inset: calc(var(--_head-height, 0px) - 2px) 0 auto;
+  z-index: 4;
+  height: 2px;
+  overflow: hidden;
+  background-color: color-mix(in srgb, rgb(var(--zn-primary)) 20%, transparent);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    width: 40%;
+    background-color: rgb(var(--zn-primary));
+    animation: table-loading 1.2s ease-in-out infinite;
+  }
+}
+
+@keyframes table-loading {
+  from { left: -40%; }
+  to { left: 100%; }
+}
+
+// Lit swaps the table, empty state and skeleton for fresh DOM, so each fades in as it arrives
+.table__enter {
+  animation: table-enter var(--zn-transition-medium, 250ms) ease-out;
+}
+
+@keyframes table-enter {
+  from { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .table__loader::before {
+    width: 100%;
+    animation: none;
+  }
+
+  .table__enter {
+    animation: none;
+  }
+}

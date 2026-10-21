@@ -91,7 +91,7 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
     width: () => Math.min(704, window.innerWidth * 0.94),
     align: 'end',
     focus: ['.filter__rule:last-of-type zn-select[aria-label="Filter field"]'],
-    onHide: () => this.dropIncomplete(),
+    onHide: () => this.discard(),
   });
 
   private _mirrors = new Set<ZnDataTableFilter>();
@@ -147,7 +147,7 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
 
   /** Number of rules that apply. */
   get activeCount(): number {
-    return this.applied().length;
+    return this.committed().length;
   }
 
   /** Opens the filter builder. */
@@ -218,6 +218,17 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
   }
 
   private readValue() {
+    const pending = this._popover.open ? this._rules.filter(rule => !this.isComplete(rule)) : [];
+    this._rules = [...this.decoded(), ...pending];
+    this._emitted = this.value;
+  }
+
+  /** The complete rules in `value`, which the builder's edits only reach once they are applied. */
+  private committed(): FilterRule[] {
+    return this.decoded().filter(rule => this.isComplete(rule));
+  }
+
+  private decoded(): FilterRule[] {
     let decoded: unknown = [];
     try {
       decoded = this.value ? JSON.parse(atob(this.value)) : [];
@@ -225,15 +236,11 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
       decoded = [];
     }
 
-    const rules = Array.isArray(decoded)
+    return Array.isArray(decoded)
       ? decoded
         .filter((entry: Partial<FilterRule> | null) => typeof entry?.key === 'string' && entry.key)
         .map((entry: {key: string; comparator?: string; value?: unknown}) => this.ruleFrom(entry))
       : [];
-
-    const pending = this._popover.open ? this._rules.filter(rule => !this.isComplete(rule)) : [];
-    this._rules = [...rules, ...pending];
-    this._emitted = this.value;
   }
 
   private ruleFrom(entry: {key: string; comparator?: string; value?: unknown}): FilterRule {
@@ -278,10 +285,6 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
 
   private isComplete(rule: FilterRule): boolean {
     return !!this.field(rule.key) && !!rule.comparator && rule.value !== '';
-  }
-
-  private applied(): FilterRule[] {
-    return this._rules.filter(rule => this.isComplete(rule));
   }
 
   // Option keys keep the space-separated wire format the query builder uses; typed values can contain spaces of
@@ -343,7 +346,7 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
       }
       return next;
     });
-    this.setRules(rules);
+    this.setLocal(rules);
   }
 
   private dateChange(index: number, field: FilterField, input: string) {
@@ -427,9 +430,14 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
     }
   };
 
-  // Abandoned, incomplete rules go when the builder closes; applied ones stay as chips
-  private dropIncomplete() {
-    this._rules = this.applied();
+  private apply() {
+    this.setRules(this._rules);
+    this.hide();
+  }
+
+  // Closing without applying abandons the builder's edits
+  private discard() {
+    this._rules = this.committed();
     this._typing = null;
   }
 
@@ -481,8 +489,8 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
           </zn-button>
           <span class="filter__pop__spacer"></span>
           ${this._rules.some(rule => this.isComplete(rule)) ? html`
-            <zn-button size="small" color="transparent" @click="${() => this.setRules([])}">Clear all</zn-button>` : nothing}
-          <zn-button size="small" color="primary" @click="${() => this.hide()}">Done</zn-button>
+            <zn-button size="small" color="transparent" @click="${() => this.setLocal([])}">Clear all</zn-button>` : nothing}
+          <zn-button size="small" color="primary" @click="${() => this.apply()}">Apply</zn-button>
         </div>
       </div>`;
   }
@@ -511,7 +519,7 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
         </zn-select>
         ${this.renderValue(rule, index, field)}
         <zn-button icon="trash-2@lu" icon-size="16" icon-color="grey" icon-button="small" plain aria-label="Remove filter"
-                   @click="${() => this.setRules(this._rules.filter((_, i) => i !== index))}"></zn-button>
+                   @click="${() => this.setLocal(this._rules.filter((_, i) => i !== index))}"></zn-button>
         ${field ? this.renderSuggestions(field, rule, index) : nothing}
       </div>`;
   }
@@ -561,7 +569,7 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
   }
 
   private renderChips(owner: ZnDataTableFilter) {
-    const applied = owner.applied();
+    const applied = owner.committed();
     if (applied.length === 0) return nothing;
 
     return html`
@@ -574,7 +582,7 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
               owner.show();
             }}">${owner.ruleText(rule)}</button>
             <button class="filter__chip__remove" aria-label="Remove filter: ${owner.ruleText(rule)}"
-                    @click="${() => owner.setRules(owner._rules.filter(r => r !== rule))}">
+                    @click="${() => owner.setRules(applied.filter(r => r !== rule))}">
               <zn-icon src="x@lu" size="14"></zn-icon>
             </button>
           </span>`)}

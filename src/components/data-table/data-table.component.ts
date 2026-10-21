@@ -329,6 +329,7 @@ export default class ZnDataTable extends ZincElement {
   private _hasLoadedData = false;
   private _lastLoadHadRows = false;
   private _lastTableContent: TemplateResult = html``;
+  private _headObserver: ResizeObserver | null = null;
 
   // Sharable (URL <-> state) sync
   private _sharableInitialised = false;
@@ -866,6 +867,8 @@ export default class ZnDataTable extends ZincElement {
     this.removeEventListener('zn-filter-change', this.filterChangeListener);
     this._fieldsFilter.removeEventListener('zn-filter-change', this.fieldsFilterChange);
     this.removeEventListener('zn-search-change', this.searchChangeListener);
+    this._headObserver?.disconnect();
+    this._headObserver = null;
   }
 
   filterChangeListener = (e: ZnFilterChangeEvent) => {
@@ -914,7 +917,7 @@ export default class ZnDataTable extends ZincElement {
   emptyState() {
     if (this.isNarrowed || (this.noInitialLoad && !this._initialLoad)) {
       return html`
-        <div class="table--empty">
+        <div class="table--empty table__enter">
           <slot name="no-results">
             <zn-empty-state caption="No Results Found" icon="search">
               <p>Nothing matched your search. Try adjusting your filters.</p>
@@ -924,7 +927,7 @@ export default class ZnDataTable extends ZincElement {
     }
 
     return html`
-      <div class="table--empty">
+      <div class="table--empty table__enter">
         <slot name="empty-state">
           <zn-empty-state
             caption="${this.emptyStateCaption ? this.emptyStateCaption : (this.caption ? "No " + this.caption.toLowerCase() + " found" : "No data found")}"
@@ -1077,12 +1080,12 @@ export default class ZnDataTable extends ZincElement {
     const colCount = filteredHeaders.length + (this.rowHasActions ? 1 : 0) + (anyHidden ? 1 : 0) + (showCheckboxes ? 1 : 0);
 
     return html`
-      <div class="table__scroll">
+      <div class="table__scroll table__enter">
         <table class="${classMap({
           'table': true,
           'with-hover': !this.unsortable && this.isSelectable(),
         })}">
-          <thead>
+          <thead ${ref(this.observeHead)}>
           <tr>
             ${showCheckboxes ? this.renderSelectAllCheckbox() : nothing}
             ${anyHidden ? html`
@@ -1121,8 +1124,24 @@ export default class ZnDataTable extends ZincElement {
   // Pending and loaded states share this template so Lit keeps the table's DOM (and focus) across loads
   private tableContent(content: TemplateResult, pending: boolean) {
     return html`
-      <div class="${classMap({'reduced-opacity': pending})}">${content}</div>`;
+      <div class="${classMap({'table__frame': true, 'reduced-opacity': pending})}">
+        ${pending ? html`<div class="table__loader" aria-hidden="true"></div>` : nothing}
+        ${content}
+      </div>`;
   }
+
+  private observeHead = (el: Element | undefined) => {
+    this._headObserver?.disconnect();
+    this._headObserver = null;
+    if (!el) return;
+    this._headObserver = new ResizeObserver(([entry]) => {
+      const height = `${Math.round(entry.borderBoxSize[0].blockSize)}px`;
+      if (this.style.getPropertyValue('--_head-height') !== height) {
+        this.style.setProperty('--_head-height', height);
+      }
+    });
+    this._headObserver.observe(el);
+  };
 
   getTableHeader() {
     return html`
@@ -2000,7 +2019,7 @@ export default class ZnDataTable extends ZincElement {
 
   private loadingTable() {
     return html`
-      <div class="table__scroll">
+      <div class="table__scroll table__enter">
         <table class="table">
           <thead>
           <tr>

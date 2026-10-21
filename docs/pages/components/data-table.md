@@ -804,7 +804,7 @@ Cells support various styling options through the data response format. Each cel
       "id": "1",
       "cells": [
         {"text": "John Doe", "column": "name", "style": "bold"},
-        {"text": "Active", "column": "status", "chipColor": "success"},
+        {"text": "Active", "column": "status", "badgeType": "success"},
         {"text": "admin@example.com", "column": "email", "copyable": true},
         {"text": "View", "column": "action", "uri": "/users/1", "color": "info"}
       ]
@@ -822,6 +822,7 @@ Available cell properties:
 - `style`: Comma-separated styles (bold, italic, mono, code, border, center)
 - `color`: Text color
 - `chipColor`: Renders as a chip with specified color
+- `badgeType`: Renders as a badge of the given type (`neutral`, `success`, `warning`, `danger`, `info` or `ai`)
 - `uri`: Makes cell content a link
 - `target`: Link target attribute
 - `copyable`: Adds a copy button

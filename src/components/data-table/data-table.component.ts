@@ -13,6 +13,7 @@ import {type ZnFilterChangeEvent} from "../../events/zn-filter-change";
 import {type ZnSearchChangeEvent} from "../../events/zn-search-change";
 import ZincElement from '../../internal/zinc-element';
 import ZnAlert from "../alert";
+import ZnBadge from "../badge";
 import ZnButton from "../button";
 import ZnChip from "../chip";
 import ZnConfirm from "../confirm";
@@ -58,6 +59,7 @@ interface Cell {
   hoverContent?: string;
   hoverPlacement?: string;
   chipColor?: string;
+  badgeType?: string;
   gaid?: string;
   sortValue?: string;
   uri?: string;
@@ -177,6 +179,7 @@ type AllowedInputElement =
  * @since 1.0
  *
  * @dependency zn-alert
+ * @dependency zn-badge
  * @dependency zn-button
  * @dependency zn-empty-state
  * @dependency zn-chip
@@ -210,6 +213,7 @@ export default class ZnDataTable extends ZincElement {
   static styles: CSSResultGroup = [unsafeCSS(bootStyles), unsafeCSS(styles), unsafeCSS(tableControlsStyles)];
   static dependencies = {
     'zn-alert': ZnAlert,
+    'zn-badge': ZnBadge,
     'zn-button': ZnButton,
     'zn-empty-state': ZnEmptyState,
     'zn-chip': ZnChip,
@@ -1686,6 +1690,11 @@ export default class ZnDataTable extends ZincElement {
     if (data.chipColor) {
       content = html`
         <zn-chip type="${data.chipColor}" title="${ifDefined(data.title)}">${content}</zn-chip>`;
+    }
+
+    if (data.badgeType) {
+      content = html`
+        <zn-badge type="${data.badgeType}" title="${ifDefined(data.title)}">${content}</zn-badge>`;
     }
 
 

@@ -92,7 +92,8 @@
 @mixin selected-tile {
   border-color: rgb(var(--zn-primary));
   background: var(--zn-color-primary-50);
-  box-shadow: 0 0 0 1px rgb(var(--zn-primary));
+  // Inset, so a container clipping at the tile's edge can't cut the ring off
+  box-shadow: inset 0 0 0 1px rgb(var(--zn-primary));
 }
 
 .stat-tile--selectable {
@@ -172,6 +173,13 @@
 
   .stat-tile--card {
     transition: border-color var(--zn-transition-fast), box-shadow var(--zn-transition-fast);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :host([layout="tile"][selected]) .stat-link:hover .stat-tile--card {
+    border-color: rgb(var(--zn-primary));
+    box-shadow: inset 0 0 0 1px rgb(var(--zn-primary)), var(--zn-shadow-medium);
   }
 }
 

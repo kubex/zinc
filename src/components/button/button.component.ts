@@ -69,8 +69,6 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @property({type: Boolean}) outline = false;
   /** Keeps the filled look where a container forces `text`, such as a page header's action menu. */
   @property({type: Boolean}) solid = false;
-  /** A tinted fill in the button's colour, for secondary actions beside a primary one. */
-  @property({type: Boolean}) subtle = false;
   @property({type: Boolean}) disabled = false;
   @property({type: Boolean}) grow = false;
   @property({type: Boolean}) square = false;
@@ -435,7 +433,6 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--ai': this.color === 'ai',
           'button--small': this.size === 'small',
           'button--large': this.size === 'large',
-          'button--subtle': this.subtle && !this.outline && !this.text,
           'button--transparent': this.color === 'transparent',
           'button--star': this.color === 'star',
           'button--outline': this.outline,
@@ -447,7 +444,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--icon-button-small': this.iconButton === 'small',
           'button--icon-button-round': this.iconButton === 'round',
           'button--grow': this.grow,
-          'button--standard': !this.outline && !this.text && !this.subtle,
+          'button--standard': !this.outline && !this.text,
           'button--with-icon': this.icon,
           'button--icon-left': this.iconPosition === 'left',
           'button--icon-right': this.iconPosition === 'right',

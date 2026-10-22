@@ -151,14 +151,18 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
   }
 
   private handleKeyDown(event: KeyboardEvent) {
-    if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(event.key)) {
+    if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'Enter'].includes(event.key)) {
       return;
     }
 
     const radios = this.getAllRadios().filter(radio => !radio.disabled);
     const checkedRadio = radios.find(radio => radio.checked) ?? radios[0];
-    const incr = event.key === ' ' ? 0 : ['ArrowUp', 'ArrowLeft'].includes(event.key) ? -1 : 1;
-    let index = radios.indexOf(checkedRadio) + incr;
+    const isSelectKey = event.key === ' ' || event.key === 'Enter';
+    // Each radio is its own tab stop, so Space/Enter select the focused radio rather than the checked one.
+    const focusedRadio = (event.target as HTMLElement).closest<ZnRadio>('zn-radio');
+    const fromRadio = isSelectKey && focusedRadio && radios.includes(focusedRadio) ? focusedRadio : checkedRadio;
+    const incr = isSelectKey ? 0 : ['ArrowUp', 'ArrowLeft'].includes(event.key) ? -1 : 1;
+    let index = radios.indexOf(fromRadio) + incr;
 
     if (index < 0) {
       index = radios.length - 1;

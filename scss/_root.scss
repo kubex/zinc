@@ -9,6 +9,10 @@
   --zn-base-gap: calc(var(--zn-base-px) * 2);
   // Resolved here, so a modal zn-page can set --zn-base-gap from it without referencing itself.
   --zn-page-modal-gap: var(--zn-base-gap);
+  // A modal shell overlays its own close button at --zn-page-modal-gap from the page edge;
+  // these describe it so the header can keep clear of it and size its actions to match.
+  --zn-page-closer-size: 36px;
+  --zn-page-closer-gap: var(--zn-spacing-x-small);
   --zn-gutter: 2px;
   --zn-default-margin: 0 auto 0 0;
   --zn-icon-size: 20px;

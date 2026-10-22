@@ -214,8 +214,10 @@ export default class ZnMenu extends ZincElement {
       event.preventDefault();
       event.stopPropagation();
 
-      // Simulate a click to support @click handlers on menu items that also work with the keyboard
-      item?.click();
+      // Simulate a click to support @click handlers on menu items that also work with the keyboard. A link item's
+      // <a> is in its shadow root, and only a click on the anchor itself follows it.
+      const anchor = item?.shadowRoot?.querySelector<HTMLElement>('a#anchor');
+      (anchor ?? item)?.click();
     }
 
     // Move the selection when pressing down or up

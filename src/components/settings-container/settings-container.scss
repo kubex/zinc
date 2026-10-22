@@ -71,13 +71,26 @@
 
 .setting-container__toggle-button::part(icon) {
   rotate: 0deg;
-  transition: rotate 0.9s ease-in-out, color 0.9s ease-in-out;
+  transition: rotate var(--zn-transition-medium) var(--zn-ease-out), color var(--zn-transition-fast) ease;
 }
 
-.setting-container__dropdown[open] .setting-container__toggle-button::part(icon), .setting-container__toggle-button:hover::part(icon) {
+.setting-container__dropdown[open] .setting-container__toggle-button::part(icon) {
   color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
-  cursor: pointer;
-  rotate: 380deg;
+  rotate: 90deg;
+}
+
+@include wc.hover-fine {
+  .setting-container__toggle-button:hover::part(icon) {
+    color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
+    cursor: pointer;
+    rotate: 90deg;
+  }
+}
+
+@include wc.reduced-motion {
+  .setting-container__toggle-button::part(icon) {
+    transition: color var(--zn-transition-fast) ease;
+  }
 }
 
 zn-button {

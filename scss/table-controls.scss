@@ -178,15 +178,11 @@
     content: '';
     position: absolute;
     inset-block: 0;
+    left: 0;
     width: 40%;
     background-color: rgb(var(--zn-primary));
-    animation: table-loading 1.2s ease-in-out infinite;
+    @include mixins.sweep(1.2s, -100%, 250%, ease-in-out);
   }
-}
-
-@keyframes table-loading {
-  from { left: -40%; }
-  to { left: 100%; }
 }
 
 // Lit swaps the table, empty state and skeleton for fresh DOM, so each fades in as it arrives

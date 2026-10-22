@@ -1,4 +1,4 @@
-import {animateTo} from "../../internal/animate";
+import {animateTo, EASE_OUT} from "../../internal/animate";
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {defaultValue} from "../../internal/default-value";
@@ -219,9 +219,8 @@ export default class ZnRadio extends ZincElement implements ZincFormControl {
     await this.updateComplete;
     const dot = this.control.querySelector('.radio__checked-icon');
     if (dot && this.animateChanges) {
-      const easing = 'cubic-bezier(0.2, 0, 0, 1)';
-      animateTo(this.control, [{scale: '0.9'}, {scale: '1'}], {duration: 160, easing});
-      animateTo(dot, [{scale: '0'}, {scale: '1'}], {duration: 180, easing});
+      animateTo(this.control, [{scale: '0.9'}, {scale: '1'}], {duration: 160, easing: EASE_OUT});
+      animateTo(dot, [{scale: '0'}, {scale: '1'}], {duration: 180, easing: EASE_OUT});
     }
   }
 

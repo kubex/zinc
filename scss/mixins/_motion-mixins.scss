@@ -1,0 +1,49 @@
+/// Wraps rules that should only apply when the user asked for less motion.
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+/// Gates hover-only motion so touch devices don't fire it on tap.
+@mixin hover-fine {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}
+
+/// Scale-down press feedback for any clickable surface. Sets `transition`, so it replaces any
+/// transition list already on the element.
+@mixin press($scale: 0.97) {
+  transition: transform 160ms var(--zn-ease-out);
+
+  &:active:not([disabled]) {
+    transform: scale($scale);
+  }
+}
+
+/// Continuous rotation for loading spinners.
+@mixin spin($duration: 1s) {
+  animation: zn-spin $duration linear infinite;
+
+  @at-root {
+    @keyframes zn-spin {
+      to { rotate: 1turn; }
+    }
+  }
+}
+
+/// Indeterminate loader that slides the element across its (overflow: hidden) parent.
+/// Positions are percentages of the element's own width.
+@mixin sweep($duration, $from: -100%, $to: 100%, $easing: linear) {
+  animation: zn-sweep $duration $easing infinite;
+  --_sweep-from: #{$from};
+  --_sweep-to: #{$to};
+
+  @at-root {
+    @keyframes zn-sweep {
+      from { translate: var(--_sweep-from) 0; }
+      to { translate: var(--_sweep-to) 0; }
+    }
+  }
+}

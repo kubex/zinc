@@ -405,14 +405,9 @@
 
 /* Fetch loading spinner */
 .select__spinner {
-  animation: spin 1s linear infinite;
+  @include wc.spin;
   --icon-size: var(--zn-font-size-large);
   --icon-color: var(--zn-input-icon-color);
-}
-
-@keyframes spin {
-  from { rotate: 0deg; }
-  to { rotate: 360deg; }
 }
 
 /* Fetch error icon */

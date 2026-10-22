@@ -1,4 +1,4 @@
-import {animateTo} from "../../internal/animate";
+import {animateTo, EASE_OUT} from "../../internal/animate";
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {defaultValue} from "../../internal/default-value";
@@ -242,24 +242,23 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
     this.formControlController.updateValidity();
 
     await this.updateComplete;
-    const easing = 'cubic-bezier(0.2, 0, 0, 1)';
-    animateTo(this.control, [{scale: '0.9'}, {scale: '1'}], {duration: 160, easing});
+    animateTo(this.control, [{scale: '0.9'}, {scale: '1'}], {duration: 160, easing: EASE_OUT});
 
     const tick = this.control.querySelector('.checkbox__checked-icon');
     if (tick) {
-      animateTo(tick, [{strokeDashoffset: 12}, {strokeDashoffset: 0}], {duration: 180, delay: 40, easing, fill: 'backwards'});
+      animateTo(tick, [{strokeDashoffset: 12}, {strokeDashoffset: 0}], {duration: 180, delay: 40, easing: EASE_OUT, fill: 'backwards'});
     }
 
     if (this.uncheckedIcon && this.uncheckedIcon !== this.checkedIcon && !this.indeterminate) {
       animateTo(this.control.querySelector('.checkbox__icon')!, [
         {scale: '0.6', opacity: 0},
         {scale: '1', opacity: 1}
-      ], {duration: 180, easing});
+      ], {duration: 180, easing: EASE_OUT});
     }
 
     const bar = this.control.querySelector('.checkbox__indeterminate-icon');
     if (bar) {
-      animateTo(bar, [{scale: '0 1'}, {scale: '1 1'}], {duration: 160, easing});
+      animateTo(bar, [{scale: '0 1'}, {scale: '1 1'}], {duration: 160, easing: EASE_OUT});
     }
   }
 

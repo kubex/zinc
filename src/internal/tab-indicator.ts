@@ -1,4 +1,4 @@
-import {parseDuration, prefersReducedMotion} from './animate';
+import {EASE_DRAWER, EASE_OUT, parseDuration, prefersReducedMotion} from './animate';
 
 const SQUISH = 'tab-indicator-squish';
 
@@ -24,8 +24,8 @@ export function squishTabIndicator(indicator: HTMLElement) {
   indicator.getAnimations().filter(animation => animation.id === SQUISH).forEach(animation => animation.cancel());
 
   const animation = indicator.animate([
-    {scale: from, easing: 'cubic-bezier(0.23, 1, 0.32, 1)'},
-    {scale: `1 ${squash}`, offset: delay > 0 ? delay / total : 0.25, easing: 'cubic-bezier(0.32, 0.72, 0, 1)'},
+    {scale: from, easing: EASE_OUT},
+    {scale: `1 ${squash}`, offset: delay > 0 ? delay / total : 0.25, easing: EASE_DRAWER},
     {scale: '1 1'},
   ], {duration: total});
   animation.id = SQUISH;

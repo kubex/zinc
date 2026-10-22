@@ -489,17 +489,11 @@
   border: 2px solid currentColor;
   border-right-color: transparent;
   border-radius: 50%;
-  animation: button-spin .7s linear infinite;
+  @include wc.spin(.7s);
 }
 
 .button__label--replaced {
   display: none;
-}
-
-@keyframes button-spin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .button--relative-wrapper {

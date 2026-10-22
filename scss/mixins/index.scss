@@ -2,6 +2,7 @@
 @forward "helper-mixins";
 @forward "typography-mixins";
 @forward "tab-indicator-mixins";
+@forward "motion-mixins";
 
 
 @mixin cosmic-border() {
@@ -29,5 +30,12 @@
     );
 
     animation: rotate-gradient 6s linear infinite;
+  }
+
+  @at-root {
+    @keyframes rotate-gradient {
+      from { --rotate: 0deg; }
+      to { --rotate: 360deg; }
+    }
   }
 }

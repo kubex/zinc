@@ -1,3 +1,7 @@
+// Keep in sync with --zn-ease-* in scss/themes/_light.scss; WAAPI easing can't read var().
+export const EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)';
+export const EASE_DRAWER = 'cubic-bezier(0.32, 0.72, 0, 1)';
+
 /**
  * Animates an element using keyframes. Returns a promise that resolves after the animation completes or gets canceled.
  */

@@ -1,3 +1,4 @@
+import {EASE_OUT, prefersReducedMotion} from './animate';
 import type {FormControlController} from './form';
 import type {ReactiveController, ReactiveControllerHost} from 'lit';
 
@@ -205,7 +206,7 @@ export class ReorderController implements ReactiveController {
     const before = new Map(this.keys().map(key => [key, this.host.reorderRow(key)?.getBoundingClientRect().top]));
     this.host.applyReorder(keys);
 
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (prefersReducedMotion()) return;
     void this.host.updateComplete.then(() => {
       for (const key of keys) {
         const row = this.host.reorderRow(key);
@@ -213,7 +214,7 @@ export class ReorderController implements ReactiveController {
         if (!row || top === undefined) continue;
         const delta = top - row.getBoundingClientRect().top;
         if (delta) {
-          row.animate([{transform: `translateY(${delta}px)`}, {transform: 'none'}], {duration: 150, easing: 'ease-out'});
+          row.animate([{transform: `translateY(${delta}px)`}, {transform: 'none'}], {duration: 150, easing: EASE_OUT});
         }
       }
     });

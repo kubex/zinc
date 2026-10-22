@@ -76,6 +76,13 @@ export default class ZnTile extends ZincElement {
     return this.href || this.dataUri;
   }
 
+  // An <a> without href, as data-uri renders, is neither focusable nor activated by Enter on its own
+  private _handleLinkKeyDown(e: KeyboardEvent) {
+    if (this.href || !this.dataUri || e.key !== 'Enter' || e.target !== e.currentTarget) return;
+    e.preventDefault();
+    (e.currentTarget as HTMLElement).click();
+  }
+
   private _handleActionsClick(e: MouseEvent) {
     if (!this._isLink()) return;
 
@@ -128,6 +135,9 @@ export default class ZnTile extends ZincElement {
           gaid="${ifDefined(this.gaid)}"
           data-target="${ifDefined(this.dataTarget)}"
           draggable="${ifDefined(isLink ? 'false' : undefined)}"
+          role="${ifDefined(this.dataUri && !this.href ? 'link' : undefined)}"
+          tabindex="${ifDefined(this.dataUri && !this.href ? '0' : undefined)}"
+          @keydown="${this._handleLinkKeyDown}"
           class="tile__link">
           ${!hasCaption && !hasDescription && !hasProperties && !hasActions && !hasIcon ? html`
             <slot></slot>

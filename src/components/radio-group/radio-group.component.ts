@@ -155,6 +155,11 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
       return;
     }
 
+    // Keys typed into controls inside a radio's selected content belong to those controls
+    if (event.composedPath().some(el => el instanceof HTMLElement && el.slot === 'selected-content')) {
+      return;
+    }
+
     const radios = this.getAllRadios().filter(radio => !radio.disabled);
     const checkedRadio = radios.find(radio => radio.checked) ?? radios[0];
     const isSelectKey = event.key === ' ' || event.key === 'Enter';
@@ -214,10 +219,6 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
         }
       })
     );
-
-    if (radios.length > 0 && !radios.some(radio => radio.checked)) {
-      radios[0].setAttribute('tabindex', '0');
-    }
   }
 
   private syncRadios() {

@@ -107,6 +107,11 @@
     }
 
     #expander {
+      &:focus-visible {
+        outline: var(--zn-focus-ring);
+        outline-offset: calc(-1 * var(--zn-focus-ring-width));
+      }
+
       cursor: pointer;
       display: flex;
       flex-direction: row-reverse;

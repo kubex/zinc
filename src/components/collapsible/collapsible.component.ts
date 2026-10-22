@@ -160,6 +160,16 @@ export default class ZnCollapsible extends ZincElement {
     }
   }
 
+  handleHeaderKeyDown = (e: KeyboardEvent) => {
+    // Keys from controls slotted into the header are theirs
+    if (e.target !== e.currentTarget || (e.key !== 'Enter' && e.key !== ' ')) {
+      return;
+    }
+
+    e.preventDefault();
+    this.expanded = !this.expanded;
+  }
+
   public recalculateNumberOfItems = () => {
     const assignedElements = this.hasSlotController.getDefaultSlot()
       .filter(node => node.nodeType === Node.ELEMENT_NODE) as HTMLElement[];
@@ -179,7 +189,10 @@ export default class ZnCollapsible extends ZincElement {
 
     return html`
       <div @click="${() => (!this.expanded ? (this.expanded = true) : '')}">
-        <slot name="header" part="header" class="header" @click="${this.handleCollapse}">
+        <div class="header-toggle" role="button" tabindex="0" aria-expanded="${this.expanded}"
+             @click="${this.handleCollapse}"
+             @keydown="${this.handleHeaderKeyDown}">
+        <slot name="header" part="header" class="header">
           <div class="header__left">
             <p part="caption" class="caption">
               <slot name="caption">${this.caption}</slot>
@@ -199,11 +212,12 @@ export default class ZnCollapsible extends ZincElement {
               <zn-icon library="material-outlined" src="expand_more" class="expand"></zn-icon>` : ''}
           </div>
         </slot>
+        </div>
         <div class=${classMap({
           'content': true,
           'content--flush': this.flush,
           'content--animating': this.animating,
-        })} part="content" @transitionend="${this.handleTransitionEnd}">
+        })} part="content" ?inert="${!this.expanded}" @transitionend="${this.handleTransitionEnd}">
           <div class="content__inner">
             <slot @slotchange="${this.requestUpdate}"></slot>
           </div>

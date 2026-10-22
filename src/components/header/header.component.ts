@@ -145,10 +145,9 @@ export default class ZnHeader extends ZincElement {
 
         <div class="content" part="content">
           ${hasPreviousPath ? html`
-            <a href="${this.previousPath}" class="caption__back"
-               data-target="${this.previousTarget ? this.previousTarget : ''}">
-              <zn-button icon="arrow-left@lu" icon-size="20" icon-button="small" plain></zn-button>
-            </a>` : null}
+            <zn-button href="${this.previousPath}" class="caption__back" label="Back"
+               data-target="${this.previousTarget ? this.previousTarget : ''}"
+               icon="arrow-left@lu" icon-size="20" icon-button="small" plain></zn-button>` : null}
 
           ${hasDefaultSlot ? html`
             <div class="actions">

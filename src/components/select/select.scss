@@ -176,6 +176,11 @@
   cursor: pointer;
 }
 
+.select__tags zn-icon[slot="action"]:focus-visible {
+  outline: var(--zn-focus-ring);
+  border-radius: var(--zn-border-radius-small);
+}
+
 .select--disabled .select__tags,
 .select--disabled .select__tags zn-chip,
 .select--disabled .select__tags zn-icon[slot="action"] {
@@ -373,6 +378,10 @@
 
 .select__clear:focus {
   outline: none;
+}
+
+.select__clear:focus-visible {
+  outline: var(--zn-focus-ring);
 }
 
 /* Expand icon */

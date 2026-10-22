@@ -161,8 +161,14 @@
       display: none;
     }
 
+    // Visually hidden rather than display: none, so keyboard users can still tab to them
     .item__actions {
-      display: none;
+      display: flex;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
     }
 
     &:hover {
@@ -171,7 +177,11 @@
       }
 
       .item__actions {
-        display: flex;
+        position: static;
+        width: auto;
+        height: auto;
+        overflow: visible;
+        clip-path: none;
       }
     }
   }
@@ -217,4 +227,13 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
   }
+}
+
+// Slotted actions take focus in the light DOM, which only the host's :focus-within sees
+:host(:focus-within) .item--edit-on-hover .item__actions {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip-path: none;
 }

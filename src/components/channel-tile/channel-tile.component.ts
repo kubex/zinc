@@ -197,6 +197,13 @@ export default class ZnChannelTile extends ZincElement {
     this._accept();
   };
 
+  // A click, so listeners on the host see keyboard activation too
+  private _handleKeyDown = (e: KeyboardEvent) => {
+    if (e.target !== e.currentTarget || (e.key !== 'Enter' && e.key !== ' ')) return;
+    e.preventDefault();
+    (e.currentTarget as HTMLElement).click();
+  };
+
   protected render(): unknown {
     const title = this.title || (this.available ? 'Available' : '');
     const countdown = this._isCountingDown() ? this._countdownPercent() : null;
@@ -214,7 +221,8 @@ export default class ZnChannelTile extends ZincElement {
         })}
         role="button"
         tabindex="0"
-        @click=${this._handleClick}>
+        @click=${this._handleClick}
+        @keydown=${this._handleKeyDown}>
         <div class="channel-tile__header">${this.header ? html`<h3>${this.header}</h3>` : ''}</div>
         ${countdown !== null
           ? html`

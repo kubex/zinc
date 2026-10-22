@@ -52,8 +52,12 @@
       display: none;
     }
 
-    &:hover .button--edit {
-      display: inline-block;
+    &:hover .button--edit,
+    .button--edit:focus-within {
+      position: static;
+      width: auto;
+      height: auto;
+      clip-path: none;
     }
   }
 
@@ -173,8 +177,13 @@
     align-items: center;
     justify-content: flex-end;
 
+    // Visually hidden rather than display: none, so keyboard users can still tab to it
     .button--edit {
-      display: none;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
     }
   }
 

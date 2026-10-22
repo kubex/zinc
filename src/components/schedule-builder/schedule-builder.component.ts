@@ -1158,7 +1158,21 @@ export default class ZnScheduleBuilder extends ZincElement implements ZincFormCo
 
     this._commitShownDays({...shown, [day]: ranges});
     // The new range may merge into a neighbour, so find where it actually landed.
-    this._editing = {day, index: Math.max(ranges.findIndex(item => item.start === range.start), 0)};
+    void this._openEditor(day, Math.max(ranges.findIndex(item => item.start === range.start), 0));
+  }
+
+  private async _openEditor(day: ScheduleDay, index: number) {
+    this._editing = {day, index};
+    await this.updateComplete;
+    this.shadowRoot?.querySelector<ZnInput>('.list__editor zn-input')?.focus();
+  }
+
+  /** Focuses a day's range chip, clamped to the chips there are; the day's "Add range" button when it has none. */
+  private async _focusRangeChip(day: ScheduleDay, index: number) {
+    await this.updateComplete;
+    const row = this.shadowRoot?.querySelector(`.list__row[data-day="${day}"]`);
+    const chips = row?.querySelectorAll<HTMLElement>('.list__chip') ?? [];
+    (chips[Math.min(index, chips.length - 1)] ?? row?.querySelector<HTMLElement>('.list__add'))?.focus();
   }
 
   private _handleRemoveRange(day: ScheduleDay, index: number) {
@@ -1167,6 +1181,7 @@ export default class ZnScheduleBuilder extends ZincElement implements ZincFormCo
     const shown = this._storedAsShown;
     this._editing = null;
     this._commitShownDays({...shown, [day]: shown[day].filter((_, position) => position !== index)});
+    void this._focusRangeChip(day, index);
   }
 
   private _handleRangeEdit(day: ScheduleDay, index: number, edge: 'start' | 'end', value: string) {
@@ -1186,10 +1201,12 @@ export default class ZnScheduleBuilder extends ZincElement implements ZincFormCo
   }
 
   private _handleEditorKeyDown(event: KeyboardEvent) {
-    if (event.key === 'Enter' || event.key === 'Escape') {
+    if ((event.key === 'Enter' || event.key === 'Escape') && this._editing) {
       event.preventDefault();
       event.stopPropagation();
+      const {day, index} = this._editing;
       this._editing = null;
+      void this._focusRangeChip(day, index);
     }
   }
 
@@ -1340,9 +1357,7 @@ export default class ZnScheduleBuilder extends ZincElement implements ZincFormCo
             </div>
 
             <div class="schedule-builder__canvas calendar__canvas"
-                 role="grid"
-                 aria-label="Weekly opening hours"
-                 aria-readonly=${!this._isEditable}
+                 aria-hidden="true"
                  @pointerdown=${this._handleCanvasPointerDown}
                  @pointermove=${this._handleCanvasPointerMove}
                  @pointerup=${this._handleCanvasPointerUp}
@@ -1372,7 +1387,7 @@ export default class ZnScheduleBuilder extends ZincElement implements ZincFormCo
     }
 
     return html`
-      <div class="calendar__col" role="row" aria-label=${DAY_LABELS[day].long}>${slots}</div>`;
+      <div class="calendar__col">${slots}</div>`;
   }
 
   private _renderSummary(days: ScheduleDayMap) {
@@ -1411,7 +1426,7 @@ export default class ZnScheduleBuilder extends ZincElement implements ZincFormCo
     const note = this._dayNote(day);
 
     return html`
-      <div class=${classMap({list__row: true, 'list__row--editing': editing > -1})}>
+      <div class=${classMap({list__row: true, 'list__row--editing': editing > -1})} data-day=${day}>
         <div class=${classMap({list__day: true, 'list__day--closed': ranges.length === 0})}>
           ${DAY_LABELS[day].short}
         </div>
@@ -1443,7 +1458,7 @@ export default class ZnScheduleBuilder extends ZincElement implements ZincFormCo
               class=${classMap({list__chip: true, 'list__chip--reduced': reduced})}
               ?disabled=${!this._isEditable}
               @click=${() => {
-                if (this._isEditable) this._editing = {day, index};
+                if (this._isEditable) void this._openEditor(day, index);
               }}>
         ${this._formatRange(range)}
       </button>`;

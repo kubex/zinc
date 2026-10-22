@@ -531,10 +531,9 @@ export default class ZnPage extends ZnTabs {
 
             <div class="content">
               ${hasPreviousPath ? html`
-                <a href="${this.previousPath}" class="caption__back"
-                   data-target="${this.previousTarget ? this.previousTarget : ''}">
-                  <zn-button icon="arrow-left@lu" icon-size="24" icon-button="small" plain></zn-button>
-                </a>` : null}
+                <zn-button href="${this.previousPath}" class="caption__back" label="Back"
+                   data-target="${this.previousTarget ? this.previousTarget : ''}"
+                   icon="arrow-left@lu" icon-size="24" icon-button="small" plain></zn-button>` : null}
 
               <div class="caption">
                 <div class="header__left">

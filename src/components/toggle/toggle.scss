@@ -45,8 +45,9 @@
   transition: color .25s ease-out, background-color .25s ease-out, border-color .25s ease-out;
 }
 
-:host(:focus) .switch__input-wrapper {
-  outline: rgb(var(--zn-primary)) solid 1px;
+.switch__input-wrapper:has(.switch__input:focus-visible) {
+  outline: var(--zn-focus-ring);
+  outline-offset: var(--zn-focus-ring-offset);
 }
 
 :host([checked]) .switch__input-wrapper {

@@ -61,6 +61,15 @@ describe('<zn-confirm-modal>', () => {
     expect(confirm.shadowRoot!.textContent).to.contain('Loading');
   });
 
+  it('keeps the confirm button focusable while loading', async () => {
+    const {confirm} = await submittedConfirm();
+
+    const buttons = confirm.shadowRoot!.querySelectorAll('zn-button[slot="footer"]');
+    expect(buttons[0].hasAttribute('disabled')).to.be.true;
+    expect(buttons[1].hasAttribute('disabled')).to.be.false;
+    expect(buttons[1].hasAttribute('processing')).to.be.true;
+  });
+
   it('reports failure when the response carries a danger alert', async () => {
     const {confirm, form, dialog} = await submittedConfirm();
 
@@ -85,6 +94,7 @@ describe('<zn-confirm-modal>', () => {
     expect(buttons.length).to.equal(1);
     expect(buttons[0].textContent!.trim()).to.equal('Close');
     expect(buttons[0].hasAttribute('dialog-closer')).to.be.true;
+    expect(confirm.shadowRoot!.activeElement).to.equal(buttons[0]);
   });
 
   it('reports failure when the request errors', async () => {

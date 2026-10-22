@@ -105,7 +105,7 @@ export default class ZnSplitButton extends ZincElement implements ZincFormContro
                      @click=${this.handleTriggerClick}>
             ${this.caption}
           </zn-button>
-          <zn-button icon="keyboard_arrow_down"></zn-button>
+          <zn-button icon="keyboard_arrow_down" label="More options"></zn-button>
         </zn-button-group>
       </div>
     `;

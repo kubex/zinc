@@ -1481,8 +1481,15 @@ export default class ZnDataTable extends ZincElement {
         </zn-menu>
       </zn-dropdown>
       <div class="table__actions-source">
-        <slot name="${ActionSlots.actions.valueOf()}"></slot>
+        <slot name="${ActionSlots.actions.valueOf()}" @slotchange="${this.hideActionSources}"></slot>
       </div>`;
+  }
+
+  // Inert per item rather than on the wrapper: an inert ancestor would also make a zn-confirm's modal dialog inert
+  private hideActionSources = (event: Event) => {
+    (event.target as HTMLSlotElement).assignedElements().forEach(el => {
+      if (!(el instanceof ZnConfirm)) (el as HTMLElement).inert = true;
+    });
   }
 
   private actionTrigger(item: HTMLElement): HTMLElement | null {
@@ -1511,12 +1518,24 @@ export default class ZnDataTable extends ZincElement {
   }
 
   goToPage(page: number) {
+    const focused = this.shadowRoot?.activeElement;
     this.page = page;
     this.selectedRows = [];
     this.numberOfRowsSelected = 0;
     this._dataTask.run().then(r => r);
 
     this.resizeObserver.observe(this);
+
+    if (focused instanceof ZnButton && focused.classList.contains('table__footer__page')) {
+      this.keepPagerFocus(focused);
+    }
+  }
+
+  private async keepPagerFocus(button: ZnButton) {
+    await this.updateComplete;
+    if (button.disabled || !button.isConnected) {
+      this.shadowRoot?.querySelector<ZnButton>('.table__footer__page--active')?.button?.focus();
+    }
   }
 
   goToFirstPage() {

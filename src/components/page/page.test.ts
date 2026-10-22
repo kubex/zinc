@@ -399,6 +399,85 @@ describe('<zn-page>', () => {
     expect(activeItem?.getAttribute('tab')).to.equal('details');
   });
 
+  it('shows tabs inside a tab as a pill tab set without a header', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Outer Page">
+        <zn-tab caption="Overview">
+          <zn-tab caption="Invoices">Invoices Content</zn-tab>
+          <zn-tab caption="Payments" selected>Payments Content</zn-tab>
+        </zn-tab>
+        <zn-tab caption="Other">Other Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(50);
+
+    const group = el.querySelector<ZnPage>('zn-tab > zn-page')!;
+    expect(group.getAttribute('navigation-style')).to.equal('pills');
+    expect(group.querySelectorAll(':scope > zn-tab').length).to.equal(2);
+    expect(el.shadowRoot!.querySelector('zn-navbar')!.hasAttribute('pill')).to.be.false;
+
+    const navbar = group.shadowRoot!.querySelector('zn-navbar')!;
+    expect(navbar.hasAttribute('pill')).to.be.true;
+    expect(Array.from(navbar.querySelectorAll('li')).map(li => li.textContent?.trim())).to.deep.equal(['Invoices', 'Payments']);
+    expect(getComputedStyle(group.shadowRoot!.querySelector('.header')!).display).to.equal('none');
+    expect(group.getAttribute('active')).to.equal('payments');
+
+    // An app sidebar restyles the group, which must still sit inside the parent's padding without adding its own
+    group.setAttribute('navigation-style', 'sidebar');
+    await aTimeout(20);
+    expect(getComputedStyle(group.shadowRoot!.querySelector('#content')!).paddingLeft).to.equal('0px');
+  });
+
+  it('keeps a nested page\'s tab bar and header', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Outer Page">
+        <zn-tab caption="Overview">
+          <zn-page caption="Inner Page" nested>
+            <zn-tab caption="Overview">Inner Overview</zn-tab>
+            <zn-tab caption="Details">Inner Details</zn-tab>
+          </zn-page>
+        </zn-tab>
+        <zn-tab caption="Other">Other Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const inner = el.querySelector<ZnPage>('zn-page')!;
+    expect(inner.shadowRoot!.querySelector('zn-navbar')!.hasAttribute('pill')).to.be.false;
+    expect(getComputedStyle(inner.shadowRoot!.querySelector('.header')!).display).to.not.equal('none');
+  });
+
+  it('hides an empty header', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page>
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+        <zn-tab caption="Details">Details Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    expect(getComputedStyle(el.shadowRoot!.querySelector('.header')!).display).to.equal('none');
+  });
+
+  it('hides its navbar in the sidebar style unless it has bottom content', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title" navigation-style="sidebar">
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+        <zn-tab caption="Details">Details Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    expect(getComputedStyle(navbar).display).to.equal('none');
+
+    const chip = document.createElement('zn-chip');
+    chip.slot = 'bottom';
+    el.append(chip);
+    await aTimeout(20);
+    expect(getComputedStyle(navbar).display).to.not.equal('none');
+  });
+
   it('leaves content tab links inside a nested page to that page', async () => {
     const outerPage = await fixture<ZnPage>(html`
       <zn-page caption="Nested Content Tab Link">
@@ -513,9 +592,9 @@ describe('<zn-page>', () => {
     const el = await fixture<ZnPage>(html`
       <zn-page caption="Page Title">
         <zn-tab caption="Later">Later Content</zn-tab>
-        <zn-tab caption="Second" priority="20">Second Content</zn-tab>
+        <zn-tab caption="Second" priority="10">Second Content</zn-tab>
         <zn-tab caption="Overview">Overview Content</zn-tab>
-        <zn-tab caption="First" priority="10">First Content</zn-tab>
+        <zn-tab caption="First" priority="20">First Content</zn-tab>
         <zn-tab caption="Dynamic" priority="15" uri="/dynamic"></zn-tab>
       </zn-page>
     `);
@@ -533,6 +612,22 @@ describe('<zn-page>', () => {
     expect(navItems[0].getAttribute('tab')).to.equal('');
     expect(navItems[2].getAttribute('tab-uri')).to.equal('/dynamic');
     expect(el.querySelector<HTMLElement>('zn-tab[caption="Dynamic"]')!.getAttribute('id')).to.equal('dynamic');
+  });
+
+  it('shows a tab icon before its caption', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title">
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+        <zn-tab caption="History" icon="history" uri="/history"></zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    const historyItem = navbar.shadowRoot!.querySelector('li[tab-uri="/history"]')!;
+    expect(historyItem.querySelector('zn-icon')!.getAttribute('src')).to.equal('history');
+    expect(historyItem.textContent?.trim()).to.equal('History');
+    expect(navbar.shadowRoot!.querySelector('li[tab=""] zn-icon')).to.be.null;
   });
 
   it('preserves source order for tabs without priority', async () => {

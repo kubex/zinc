@@ -112,6 +112,47 @@ describe('<zn-tabs>', () => {
 
       expect(wrapper.scrollTop).to.equal(0);
     });
+
+    it('scrolls nested enclosing scrollers only as far as the tabs need', async () => {
+      const outer = await fixture<HTMLElement>(html`
+        <div style="height: 300px; overflow: auto;">
+          <div style="height: 2000px;">Above the inner scroller</div>
+          <div style="height: 300px; overflow: auto;">
+            <zn-tabs active="first">${panels}</zn-tabs>
+          </div>
+          <div style="height: 2000px;">Below the inner scroller</div>
+        </div>
+      `);
+      const inner = outer.children[1] as HTMLElement;
+      const el = inner.querySelector<ZnTabs>('zn-tabs')!;
+      await aTimeout(40);
+
+      inner.scrollTop = 500;
+      outer.scrollTop = 2100;
+
+      await openSecondTab(el);
+
+      expect(inner.scrollTop).to.equal(0);
+      expect(outer.scrollTop).to.equal(2000);
+    });
+
+    it('leaves an enclosing scroller alone while the tabs are still in view', async () => {
+      const wrapper = await fixture<HTMLElement>(html`
+        <div style="height: 200px; overflow: auto;">
+          <div style="height: 100px;">Above the tabs</div>
+          <zn-tabs active="first">${panels}</zn-tabs>
+        </div>
+      `);
+      const el = wrapper.querySelector<ZnTabs>('zn-tabs')!;
+      await aTimeout(40);
+
+      wrapper.scrollTop = 60;
+      expect(wrapper.scrollTop, 'the enclosing scroller never scrolled').to.equal(60);
+
+      await openSecondTab(el);
+
+      expect(wrapper.scrollTop).to.equal(60);
+    });
   });
 
   describe('selection persistence', () => {

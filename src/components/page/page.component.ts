@@ -17,6 +17,7 @@ import styles from './page.scss';
 interface TabDefinition {
   id: string;
   caption: string;
+  icon: string | null;
   priority: number | null;
   sourceIndex: number;
   uri: string | null;
@@ -30,8 +31,8 @@ interface TabDefinition {
  * @status experimental
  * @since 1.0
  *
- * @slot - Page content. Use zn-tab for named tabs; without any, the content is shown as the page's only view. Use
- *   header-action/header-actions for header actions.
+ * @slot - Page content. Use zn-tab for named tabs; without any, the content is shown as the page's only view. A zn-tab
+ *   holding zn-tabs shows them as a second tab set, drawn as pills. Use header-action/header-actions for header actions.
  *   Clicking an element in the content with `tab="<tab id>"` opens that tab.
  * @slot caption-badges - Badges shown beside the caption, wrapping onto the next line as one group.
  * @slot description - Rich subtitle/description content. Falls back to the `summary` attribute when empty.
@@ -52,7 +53,7 @@ export default class ZnPage extends ZnTabs {
     'zn-tab': ZnTab
   };
 
-  private readonly pageSlotController = new HasSlotController(this, 'breadcrumb', 'actions', 'caption', 'description', 'footer');
+  private readonly pageSlotController = new HasSlotController(this, 'breadcrumb', 'actions', 'bottom', 'caption', 'description', 'footer');
 
   @property() caption: string;
   @property({attribute: 'entity-id'}) entityId: string;
@@ -60,8 +61,11 @@ export default class ZnPage extends ZnTabs {
   @property({attribute: 'full-location'}) fullLocation: string;
   @property({type: Boolean, reflect: true}) modal = false;
   @property({type: Boolean, reflect: true}) nested = false;
-  // Set when the tabs are shown outside the page (such as a sidebar), so the header pads as if it had none
-  @property({type: Boolean, reflect: true, attribute: 'external-navigation'}) externalNavigation = false;
+  /**
+   * The tab design: `tabs` (the default), `pills` for a second tab set below a main tab bar, shown without the page
+   * header, or `sidebar` when the tabs are shown outside the page, which hides the tab bar unless it has bottom content.
+   */
+  @property({attribute: 'navigation-style', reflect: true}) navigationStyle: 'tabs' | 'pills' | 'sidebar' | undefined;
   @property({type: Boolean, reflect: true}) primary = false; // margin
   @property({attribute: 'previous-path'}) previousPath: string;
   @property({attribute: 'previous-target'}) previousTarget: string;
@@ -215,6 +219,7 @@ export default class ZnPage extends ZnTabs {
 
     tabElements.forEach((tab, index) => {
       const caption = tab.getAttribute('caption') || 'Tab';
+      const icon = tab.getAttribute('icon');
       const explicitId = tab.getAttribute('id');
       const id = this.uniqueId(explicitId !== null ? explicitId : this.captionToId(caption), usedIds);
       const priority = this.parsePriority(tab.getAttribute('priority'));
@@ -223,15 +228,36 @@ export default class ZnPage extends ZnTabs {
       const selected = tab.hasAttribute('selected');
 
       tab.id = id;
+      this.groupInnerTabs(tab);
 
       if (!uri) {
         tab.slot = slotName!;
       }
 
-      tabs.push({id, caption, priority, sourceIndex: index, uri, slotName, selected});
+      tabs.push({id, caption, icon, priority, sourceIndex: index, uri, slotName, selected});
     });
 
     this.tabDefinitions = tabs.sort((a, b) => this.compareTabs(a, b));
+  }
+
+  // shortcut: inner tabs added after the group is built stay plain content; move them into the group page to show them
+  private groupInnerTabs(tab: HTMLElement) {
+    const innerTabs = Array.from(tab.children).filter(child => child.tagName === 'ZN-TAB');
+    if (innerTabs.length === 0) {
+      return;
+    }
+
+    const group = document.createElement('zn-page');
+    // flush keeps it from padding the parent's content again when an app sidebar restyles it from pills
+    group.setAttribute('nested', '');
+    group.setAttribute('flush', '');
+    group.setAttribute('navigation-style', 'pills');
+    innerTabs[0].before(group);
+    group.append(...innerTabs);
+  }
+
+  private renderTabCaption(tab: TabDefinition) {
+    return tab.icon ? html`<zn-icon src="${tab.icon}" size="20"></zn-icon>${tab.caption}` : tab.caption;
   }
 
   private parsePriority(value: string | null): number | null {
@@ -253,7 +279,7 @@ export default class ZnPage extends ZnTabs {
     }
 
     if (a.priority !== null && b.priority !== null && a.priority !== b.priority) {
-      return a.priority - b.priority;
+      return b.priority - a.priority;
     }
 
     if (a.priority !== null && b.priority === null) {
@@ -431,7 +457,7 @@ export default class ZnPage extends ZnTabs {
     }
 
     this.pageHistoryKey = pages
-      .map(page => page.id || page.getAttribute('caption') || 'page')
+      .map(page => page.id || page.getAttribute('caption') || page.parentElement?.getAttribute('caption') || 'page')
       .join('/');
     return this.pageHistoryKey;
   }
@@ -497,6 +523,11 @@ export default class ZnPage extends ZnTabs {
     const hasPreviousPath = this.previousPath;
     const hasDescription = !!this.summary || this.pageSlotController.test('description');
     const hasFooter = this.pageSlotController.test('footer');
+    const externalNavigation = this.navigationStyle === 'sidebar';
+    const hasHeader = this.navigationStyle !== 'pills' && Boolean(
+      this.caption || hasDescription || hasBreadcrumb || hasEntityId || hasFullLocation || hasPreviousPath ||
+      this.pageSlotController.test('caption') || this.pageSlotController.test('actions')
+    );
 
     return html`
       <div class="page" part="base" @scroll="${this.handlePageScroll}">
@@ -509,10 +540,12 @@ export default class ZnPage extends ZnTabs {
             'header--has-breadcrumb': hasBreadcrumb,
             'header--has-entity-id': hasEntityId,
             'header--has-full-location': hasFullLocation,
-            'header--has-navigation': hasNavigation && !this.externalNavigation,
+            'header--has-navigation': hasNavigation && !externalNavigation,
+            // Tab content is flushed whenever there are tabs, so sidebar tabs still need the header's bottom padding.
+            'header--has-tabs': hasNavigation,
             'header--has-previous': hasPreviousPath,
             'header--has-description': hasDescription
-          })}">
+          })}" ?hidden="${!hasHeader}">
             ${hasFullLocation || hasEntityId ? html`
               <div class="${classMap({
                 'alt-overlay': true,
@@ -564,11 +597,13 @@ export default class ZnPage extends ZnTabs {
           </div>
 
           ${hasNavigation ? html`
-            <zn-navbar hide-one @zn-select="${this.handleNavigationSelect}">
+            <zn-navbar hide-one ?pill="${this.navigationStyle === 'pills'}"
+                       ?hidden="${externalNavigation && !this.pageSlotController.test('bottom')}"
+                       @zn-select="${this.handleNavigationSelect}">
               ${this.tabDefinitions.map(tab => tab.uri ? html`
-                <li tab-uri="${tab.uri}">${tab.caption}</li>
+                <li tab-uri="${tab.uri}">${this.renderTabCaption(tab)}</li>
               ` : html`
-                <li tab="${tab.id}">${tab.caption}</li>
+                <li tab="${tab.id}">${this.renderTabCaption(tab)}</li>
               `)}
               <slot name="bottom" slot="bottom"></slot>
             </zn-navbar>

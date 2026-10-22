@@ -160,7 +160,7 @@
   margin: 0;
   padding: var(--zn-page-header-padding-block, calc(var(--zn-base-px) * 3)) var(--zn-base-gap) calc(var(--zn-page-header-padding-block, calc(var(--zn-base-px) * 3)) - var(--zn-base-gap)) var(--zn-base-gap);
 
-  &.header--has-navigation {
+  &.header--has-tabs {
     padding: var(--zn-page-header-padding-block, calc(var(--zn-base-px) * 3)) var(--zn-base-gap);
   }
 
@@ -438,13 +438,32 @@
   background: var(--zn-dialog-footer-background, rgb(var(--zn-page-content-background, var(--zn-body))));
 }
 
-:host([flush]) {
+// A pills page sits inside its parent's padded content, so like a flush page it adds no inset of its own
+:host(:is([flush], [navigation-style="pills"])) {
   .page__tabs, .page__tabs .page__content#content {
     padding: 0;
   }
 }
 
-zn-navbar {
+zn-navbar[hidden], .header[hidden] {
+  display: none;
+}
+
+// The tab content's zn-sp padding spaces the pills from the content, as it does a tab bar. Without a header, the pills
+// take the same gap from the tab bar above, and line up with that padding.
+:host([navigation-style="pills"]) .page__header {
+  padding-top: var(--zn-base-gap, 0);
+}
+
+:host([navigation-style="pills"]) zn-navbar {
+  --zn-panel-padding: var(--zn-base-gap, 0);
+
+  &::part(navbar) {
+    margin-bottom: 0;
+  }
+}
+
+zn-navbar:not([pill]) {
 
   &::part(navbar) {
     padding-left: var(--zn-base-gap);
@@ -483,14 +502,14 @@ zn-navbar {
   --zn-button-icon-width: var(--zn-page-closer-size);
 }
 
-:host zn-navbar {
+:host zn-navbar:not([pill]) {
   &::part(navbar) {
     padding-inline: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
     margin-inline-start: var(--zn-page-navbar-offset, 0px);
   }
 }
 
-:host([flush]) zn-navbar::part(navbar) {
+:host([flush]) zn-navbar:not([pill])::part(navbar) {
   padding-inline: var(--zn-base-gap, 0);
 }
 
@@ -528,7 +547,7 @@ zn-navbar {
 
 // #content is the scroller, so it spans the page and centres its content with padding, keeping the scrollbar at the page edge.
 // The inset holds the scrollbar off the window edge, and comes off the end padding to keep the content centred.
-:host(:not([full-width]):not([flush])) .page__tabs #content.page__content {
+:host(:not([full-width]):not([flush]):not([navigation-style="pills"])) .page__tabs #content.page__content {
   --content-inline: calc(max(0px, (100% - var(--zn-container, 100%)) / 2) + var(--zn-gutter, 0px));
   --scrollbar-inset: var(--zn-page-scrollbar-inset, 4px);
   width: auto;
@@ -558,7 +577,7 @@ zn-navbar {
 }
 
 // Matches .header .content's box, so the tabs and their underline span the content, not the page
-:host(:not([full-width]):not([flush])) zn-navbar::part(container) {
+:host(:not([full-width]):not([flush])) zn-navbar:not([pill])::part(container) {
   width: min(
     calc(var(--zn-container, 100%) - 2 * (var(--zn-gutter, 0px) + var(--zn-base-gap, 0px))),
     calc(100% - 2 * (var(--zn-gutter, 0px) + var(--zn-base-gap, 0px)))
@@ -566,7 +585,7 @@ zn-navbar {
   margin-inline: auto;
 }
 
-:host(:not([full-width]):not([flush])) zn-navbar::part(navbar) {
+:host(:not([full-width]):not([flush])) zn-navbar:not([pill])::part(navbar) {
   padding-inline: 0;
   margin-inline: 0;
 }

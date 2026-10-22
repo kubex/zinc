@@ -222,41 +222,4 @@
   color: var(--zn-selection-card-checked-color, var(--zn-color-purple-600));
 }
 
-/* Selected content expands and collapses with the checked state */
-.radio__selected-content-wrapper {
-  display: grid;
-  grid-template-rows: 0fr;
-  opacity: 0;
-  // Hidden content stays out of the tab order once collapsed.
-  visibility: hidden;
-  transition: grid-template-rows 200ms var(--zn-ease-drawer),
-  opacity 120ms ease-out,
-  visibility 0s 200ms;
-}
-
-.radio--checked .radio__selected-content-wrapper {
-  grid-template-rows: 1fr;
-  opacity: 1;
-  visibility: visible;
-  transition: grid-template-rows 200ms var(--zn-ease-drawer),
-  opacity 150ms ease-out 50ms,
-  visibility 0s;
-
-  .radio__selected-content-inner {
-    // Unclips once expanded so focus rings and popups inside aren't cut off.
-    overflow: visible;
-    transition: overflow 0s 200ms allow-discrete;
-  }
-}
-
-.radio__selected-content-inner {
-  min-height: 0;
-  overflow: hidden;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .radio__selected-content-wrapper,
-  .radio--checked .radio__selected-content-wrapper {
-    transition: none;
-  }
-}
+@include wc.selected-content-reveal(radio);

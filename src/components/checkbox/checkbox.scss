@@ -361,44 +361,7 @@
   color: var(--checkbox-color);
 }
 
-/* Selected content expands and collapses with the checked state */
-.checkbox__selected-content-wrapper {
-  display: grid;
-  grid-template-rows: 0fr;
-  opacity: 0;
-  // Hidden content stays out of the tab order once collapsed.
-  visibility: hidden;
-  transition: grid-template-rows 200ms var(--zn-ease-drawer),
-  opacity 120ms ease-out,
-  visibility 0s 200ms;
-}
-
-.checkbox--checked .checkbox__selected-content-wrapper {
-  grid-template-rows: 1fr;
-  opacity: 1;
-  visibility: visible;
-  transition: grid-template-rows 200ms var(--zn-ease-drawer),
-  opacity 150ms ease-out 50ms,
-  visibility 0s;
-
-  .checkbox__selected-content-inner {
-    // Unclips once expanded so focus rings and popups inside aren't cut off.
-    overflow: visible;
-    transition: overflow 0s 200ms allow-discrete;
-  }
-}
-
-.checkbox__selected-content-inner {
-  min-height: 0;
-  overflow: hidden;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .checkbox__selected-content-wrapper,
-  .checkbox--checked .checkbox__selected-content-wrapper {
-    transition: none;
-  }
-}
+@include wc.selected-content-reveal(checkbox);
 
 /* Icon and SVG card images take the card's state colour */
 .checkbox--contained .selection-card__image-container {

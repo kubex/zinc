@@ -6,6 +6,7 @@ import {FormControlController} from "../../internal/form";
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {live} from "lit/directives/live.js";
+import {PointerIntentController} from "../../internal/pointer-intent";
 import {property, query, state} from 'lit/decorators.js';
 import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
@@ -72,6 +73,7 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
     setValue: (control: ZnCheckbox, checked: boolean) => (control.checked = checked)
   });
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'description', 'image');
+  private readonly pointerIntent = new PointerIntentController(this);
 
   @query('input[type="checkbox"]') input: HTMLInputElement;
   @query('.checkbox__control') control: HTMLElement;
@@ -241,7 +243,12 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
     this.input.indeterminate = this.indeterminate; // force a sync update
     this.formControlController.updateValidity();
 
+    const animate = this.pointerIntent.consume();
     await this.updateComplete;
+    if (!animate) {
+      return;
+    }
+
     animateTo(this.control, [{scale: '0.9'}, {scale: '1'}], {duration: 160, easing: EASE_OUT});
 
     const tick = this.control.querySelector('.checkbox__checked-icon');

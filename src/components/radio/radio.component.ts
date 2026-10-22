@@ -6,6 +6,7 @@ import {FormControlController} from "../../internal/form";
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {live} from "lit/directives/live.js";
+import {PointerIntentController} from "../../internal/pointer-intent";
 import {property, query, state} from 'lit/decorators.js';
 import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
@@ -71,7 +72,7 @@ export default class ZnRadio extends ZincElement implements ZincFormControl {
   @query('input[type="radio"]') input: HTMLInputElement;
   @query('.radio__control') control: HTMLElement;
 
-  private animateChanges = false;
+  private readonly pointerIntent = new PointerIntentController(this);
 
   @state() private hasFocus = false;
 
@@ -151,8 +152,6 @@ export default class ZnRadio extends ZincElement implements ZincFormControl {
 
   firstUpdated() {
     this.formControlController.updateValidity();
-    // The radio group syncs `checked` right after first render; waiting a frame keeps that from animating.
-    requestAnimationFrame(() => (this.animateChanges = true));
   }
 
   private handleClick() {
@@ -216,11 +215,12 @@ export default class ZnRadio extends ZincElement implements ZincFormControl {
     this.input.checked = this.checked; // force a sync update
     this.formControlController.updateValidity();
 
+    const animate = this.pointerIntent.consume();
     await this.updateComplete;
     const dot = this.control.querySelector('.radio__checked-icon');
-    if (dot && this.animateChanges) {
+    if (dot && animate) {
       animateTo(this.control, [{scale: '0.9'}, {scale: '1'}], {duration: 160, easing: EASE_OUT});
-      animateTo(dot, [{scale: '0'}, {scale: '1'}], {duration: 180, easing: EASE_OUT});
+      animateTo(dot, [{scale: '0.5', opacity: 0}, {scale: '1', opacity: 1}], {duration: 180, easing: EASE_OUT});
     }
   }
 

@@ -213,10 +213,12 @@ export default class ZnSlideout extends ZincElement {
               part="close-button"
               exportparts="base:close-button__base"
               class="slideout__close"
-              icon="close"
-              icon-size="24"
+              icon="x@lu"
+              icon-size="16"
+              icon-button="small"
+              plain
               type="button"
-              color="transparent"
+              label="Close"
               @click="${() => this.requestClose('close-button')}"
             ></zn-button>
           </div>

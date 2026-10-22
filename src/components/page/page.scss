@@ -18,10 +18,6 @@
   // this :host declaration would otherwise beat any inherited value.
   --zn-page-content-background: var(--zn-page-canvas, var(--zn-body));
   --zn-page-header-background: var(--zn-page-surface-background, var(--zn-page-background, var(--zn-body)));
-  // A modal shell overlays its own close button at --zn-base-gap from the page edge;
-  // these describe it so the header can keep clear of it.
-  --zn-page-closer-size: 36px;
-  --zn-page-closer-gap: var(--zn-spacing-x-small);
 }
 
 // A theme can give a modal dialog-sized type and spacing; without one it keeps the page's.
@@ -480,6 +476,11 @@ zn-navbar {
 // under the closer. Reserving the closer's own footprint holds the gap steady instead.
 :host([modal]) .header {
   padding-inline-end: calc(var(--zn-base-gap, 0) + var(--zn-page-closer-size) + var(--zn-page-closer-gap));
+}
+
+:host([modal]) .header slot[name="actions"]::slotted(*) {
+  --zn-button-height: var(--zn-page-closer-size);
+  --zn-button-icon-width: var(--zn-page-closer-size);
 }
 
 :host zn-navbar {

@@ -345,7 +345,39 @@ export default class ZnTabs extends ZincElement {
       tab.addEventListener('mouseover', this.fetchUriTab.bind(this, tab));
     }
     tab.addEventListener('click', this._handleClick.bind(this));
+
+    // Plain elements (usually <li>) are not focusable; custom elements and tabs wrapping a control manage their own
+    const focusable = 'a[href], button, input, select, textarea, [tabindex]';
+    if (!tab.localName.includes('-') && !tab.matches(focusable) && !tab.querySelector(focusable)) {
+      tab.tabIndex = 0;
+      tab.addEventListener('keydown', this._handleTabKeyDown);
+    }
   }
+
+  private readonly _handleTabKeyDown = (event: KeyboardEvent) => {
+    const tab = event.currentTarget as HTMLElement;
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      tab.click();
+      return;
+    }
+
+    const siblings = this._tabs.filter(t => t.parentElement === tab.parentElement && t.tabIndex >= 0);
+    const index = siblings.indexOf(tab);
+    const target = {
+      ArrowRight: index + 1,
+      ArrowDown: index + 1,
+      ArrowLeft: index - 1,
+      ArrowUp: index - 1,
+      Home: 0,
+      End: siblings.length - 1
+    }[event.key];
+    if (target === undefined) {
+      return;
+    }
+    event.preventDefault();
+    siblings[(target + siblings.length) % siblings.length].focus();
+  };
 
   reRegisterTabs = () => {
     this._registerTabs();

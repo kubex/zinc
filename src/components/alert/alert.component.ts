@@ -42,8 +42,9 @@ export default class ZnAlert extends ZincElement {
     if (this.icon) {
       if (this.collapse) {
         icon = this.icon ? html`
-          <zn-icon class="alert-icon" src="${this.icon}" size="${this.iconSize}" id="xy2" @click="${this.hideAlert}"
-                   style="cursor: pointer"></zn-icon>` : "";
+          <button type="button" class="alert-dismiss" aria-label="Dismiss" @click="${this.hideAlert}">
+            <zn-icon class="alert-icon" src="${this.icon}" size="${this.iconSize}" id="xy2"></zn-icon>
+          </button>` : "";
       } else {
         icon = this.icon ? html`
           <zn-icon class="alert-icon" src="${this.icon}" size="${this.iconSize}" id="xy2"></zn-icon>` : '';

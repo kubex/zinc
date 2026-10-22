@@ -3,6 +3,7 @@ import {deepQuerySelectorAll} from "../../utilities/query";
 import {HasSlotController} from "../../internal/slot";
 import {html, unsafeCSS} from 'lit';
 import {htmlToText, looksLikeHtml} from './html-text';
+import {ifDefined} from "lit/directives/if-defined.js";
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property, queryAssignedNodes, queryAsync, state} from 'lit/decorators.js';
 import {sanitizeHtml} from '../../utilities/sanitize-html';
@@ -107,6 +108,23 @@ export default class ContentBlock extends ZincElement {
       this._replaceDebounce = 0;
     }
     super.disconnectedCallback();
+  }
+
+  private _handleHeaderKeyDown(e: KeyboardEvent) {
+    // Keys from the header's own actions belong to them
+    if (e.target !== e.currentTarget || (e.key !== 'Enter' && e.key !== ' ')) {
+      return;
+    }
+
+    e.preventDefault();
+    this._collapseContent(e);
+  }
+
+  private _handleReplyKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      (e.currentTarget as HTMLElement).click();
+    }
   }
 
   private _collapseContent(e: Event) {
@@ -230,7 +248,12 @@ export default class ContentBlock extends ZincElement {
         'content-block--collapsible': !this.noCollapse
       })}">
 
-        <div class="content-block-header" @click="${this._collapseContent}">
+        <div class="content-block-header"
+             role="${ifDefined(this.noCollapse ? undefined : 'button')}"
+             tabindex="${ifDefined(this.noCollapse ? undefined : '0')}"
+             aria-expanded="${ifDefined(this.noCollapse ? undefined : String(!this.short))}"
+             @click="${this._collapseContent}"
+             @keydown="${this._handleHeaderKeyDown}">
           <div class="content-block-header__icon">
             <slot name="icon">
               <zn-icon src="${this.avatar}"
@@ -276,7 +299,9 @@ export default class ContentBlock extends ZincElement {
           <div class="${classMap({'text-content': true, 'hidden': initialShowHtml})}">
             ${text.map((section) => html`
               ${section.type === 'reply' ? html`
-                <div class="toggle-reply" @click="${this.showReply}">...</div>` : ''}
+                <div class="toggle-reply" role="button" tabindex="0" aria-label="Show quoted text"
+                     @click="${this.showReply}"
+                     @keydown="${this._handleReplyKeyDown}">...</div>` : ''}
               <div class=${classMap({
                 'text-section': true,
                 'text-section--reply': section.type === 'reply',

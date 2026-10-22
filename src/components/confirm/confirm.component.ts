@@ -6,6 +6,7 @@ import {ifDefined} from "lit/directives/if-defined.js";
 import {property, query, state} from 'lit/decorators.js';
 import ZincElement from "../../internal/zinc-element";
 import ZnDialog from "../dialog";
+import type ZnButton from "../button";
 
 import styles from './confirm.scss';
 
@@ -169,7 +170,7 @@ export default class ZnConfirm extends ZincElement {
    * The console dispatches the pagelet lifecycle on the form it submitted. Without it the loading
    * state only ends when a response happens to reload the page, so every failure hangs the dialog.
    */
-  private settle = (event: Event) => {
+  private settle = async (event: Event) => {
     const response = (event as CustomEvent<{ response?: PageletResponse }>).detail?.response;
     this.stopWatching();
     if (event.type === 'error' || this.responseFailed(response)) {
@@ -179,6 +180,8 @@ export default class ZnConfirm extends ZincElement {
       if (this.dialog?.closer) {
         this.dialog.closer.disabled = false;
       }
+      await this.updateComplete;
+      this.renderRoot.querySelector<ZnButton>('zn-button[dialog-closer]')?.button?.focus();
       return;
     }
     this.hide();
@@ -237,7 +240,7 @@ export default class ZnConfirm extends ZincElement {
           <zn-button outline color="${this.type}" slot="footer" dialog-closer disabled=${this.loading || nothing}>
             ${this.cancelText}
           </zn-button>
-          <zn-button color="${this.type}" slot="footer" @click="${this.submitDialog}" disabled=${this.loading || nothing}>
+          <zn-button color="${this.type}" slot="footer" @click="${this.submitDialog}" ?processing=${this.loading}>
             ${this.confirmText}
           </zn-button>`}
 
@@ -246,6 +249,8 @@ export default class ZnConfirm extends ZincElement {
   }
 
   submitDialog() {
+    if (this.loading) return;
+
     // get the form from the slot
     let form = this.querySelector('form');
     if (!form && this.action) {

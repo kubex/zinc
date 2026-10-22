@@ -104,6 +104,10 @@
   }
 
   .breadcrumb-menu-toggle {
+    &:focus-visible {
+      outline: var(--zn-focus-ring);
+    }
+
     cursor: pointer;
     margin-left: var(--zn-base-gap);
 
@@ -148,7 +152,10 @@
     height: 100%;
     bottom: 0;
     z-index: var(--zn-z-index-page-nav);
-    transition: left var(--page-nav-animation-duration) ease-in-out, opacity var(--page-nav-animation-duration) ease-in-out;
+    // Visibility keeps the closed menu out of the tab order; it flips only after the slide-out finishes
+    visibility: hidden;
+    transition: left var(--page-nav-animation-duration) ease-in-out, opacity var(--page-nav-animation-duration) ease-in-out,
+    visibility var(--page-nav-animation-duration);
   }
 
   .tabs {
@@ -158,6 +165,7 @@
   }
 
   .navigation.active {
+    visibility: visible;
     pointer-events: all;
     left: 0;
     opacity: 1;

@@ -660,7 +660,10 @@ button[popovertarget] {
         height: 100%;
         padding-left: 0;
         padding-right: 0;
-        outline: none;
+
+        &:not(:focus-visible) {
+          outline: none;
+        }
 
         &:hover {
           background-color: transparent;

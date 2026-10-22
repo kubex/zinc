@@ -422,6 +422,20 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
     this.updateRule(index, {value: next});
   }
 
+  // A removed control takes focus with it, so hand focus to the first selector that matches after the re-render
+  private async keepFocus(owner: ZnDataTableFilter, ...selectors: string[]) {
+    const focused = this.shadowRoot?.activeElement;
+    if (!focused) return;
+    await owner.updateComplete;
+    await this.updateComplete;
+    if (focused.isConnected) return;
+
+    const target = selectors
+      .map(selector => this.shadowRoot?.querySelector(selector) ?? owner.shadowRoot?.querySelector(selector))
+      .find(Boolean);
+    (target instanceof ZnButton ? target.button : target as HTMLElement | undefined)?.focus();
+  }
+
   private toggle = () => {
     if (this._popover.open) {
       this.hide();
@@ -483,13 +497,16 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
           ${this._rules.map((rule, index) => this.renderRule(rule, index, used))}
         </div>
         <div class="filter__pop__foot">
-          <zn-button size="small" color="secondary" icon="plus@lu" icon-size="14" ?disabled="${!canAdd}"
+          <zn-button class="filter__add" size="small" color="secondary" icon="plus@lu" icon-size="14" ?disabled="${!canAdd}"
                      @click="${() => this.setLocal([...this._rules, {key: '', comparator: '', value: ''}])}">
             Add filter
           </zn-button>
           <span class="filter__pop__spacer"></span>
           ${this._rules.some(rule => this.isComplete(rule)) ? html`
-            <zn-button size="small" color="transparent" @click="${() => this.setLocal([])}">Clear all</zn-button>` : nothing}
+            <zn-button size="small" color="transparent" @click="${() => {
+              this.keepFocus(this, '.filter__add');
+              this.setLocal([]);
+            }}">Clear all</zn-button>` : nothing}
           <zn-button size="small" color="primary" @click="${() => this.apply()}">Apply</zn-button>
         </div>
       </div>`;
@@ -518,8 +535,12 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
           ${field ? this.operators(field).map(op => html`<zn-option value="${op}">${this.operatorLabel(op)}</zn-option>`) : nothing}
         </zn-select>
         ${this.renderValue(rule, index, field)}
-        <zn-button icon="trash-2@lu" icon-size="16" icon-color="grey" icon-button="small" plain aria-label="Remove filter"
-                   @click="${() => this.setLocal(this._rules.filter((_, i) => i !== index))}"></zn-button>
+        <zn-button class="filter__remove" icon="trash-2@lu" icon-size="16" icon-color="grey" icon-button="small" plain
+                   aria-label="Remove filter"
+                   @click="${() => {
+                     this.keepFocus(this, '.filter__rule:last-of-type .filter__remove', '.filter__add');
+                     this.setLocal(this._rules.filter((_, i) => i !== index));
+                   }}"></zn-button>
         ${field ? this.renderSuggestions(field, rule, index) : nothing}
       </div>`;
   }
@@ -560,9 +581,9 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
     if (suggestions.length === 0) return nothing;
 
     return html`
-      <div class="filter__suggestions" role="listbox" aria-label="Suggestions">
+      <div class="filter__suggestions" role="group" aria-label="Suggestions">
         ${suggestions.map(value => html`
-          <button class="filter__suggestion" role="option" aria-selected="false"
+          <button class="filter__suggestion"
                   @mousedown="${(e: Event) => e.preventDefault()}"
                   @click="${() => this.applySuggestion(index, field, rule, value)}">${value}</button>`)}
       </div>`;
@@ -582,11 +603,17 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
               owner.show();
             }}">${owner.ruleText(rule)}</button>
             <button class="filter__chip__remove" aria-label="Remove filter: ${owner.ruleText(rule)}"
-                    @click="${() => owner.setRules(applied.filter(r => r !== rule))}">
+                    @click="${() => {
+                      this.keepFocus(owner, '.filter__chip:last-of-type .filter__chip__remove', '.filter__toggle');
+                      owner.setRules(applied.filter(r => r !== rule));
+                    }}">
               <zn-icon src="x@lu" size="14"></zn-icon>
             </button>
           </span>`)}
-        <button class="filter__chips__clear" @click="${() => owner.setRules([])}">Clear all</button>
+        <button class="filter__chips__clear" @click="${() => {
+          this.keepFocus(owner, '.filter__toggle');
+          owner.setRules([]);
+        }}">Clear all</button>
       </div>`;
   }
 

@@ -37,7 +37,7 @@ describe('<zn-datepicker>', () => {
   });
 
   describe('Escape key', () => {
-    it('blurs the inner input when focused and the calendar is closed', async () => {
+    it('keeps focus on the inner input when the calendar is closed', async () => {
       const el = await fixture<ZnDatepicker>(html`<zn-datepicker></zn-datepicker>`);
       await el.updateComplete;
 
@@ -62,7 +62,7 @@ describe('<zn-datepicker>', () => {
       }));
       await el.updateComplete;
 
-      expect(el.shadowRoot!.activeElement, 'inner input should be blurred').to.not.equal(el.input);
+      expect(el.shadowRoot!.activeElement, 'inner input should keep focus').to.equal(el.input);
     });
   });
 });

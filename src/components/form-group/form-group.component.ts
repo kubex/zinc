@@ -351,10 +351,11 @@ export default class ZnFormGroup extends ZincElement {
                   ${hasLabelTooltip
                     ? html`
                       <zn-tooltip class="form-control--label-tooltip">
-                        <div slot="content">
+                        <div slot="content" id="label-tooltip">
                           <slot name="label-tooltip">${this.labelTooltip}</slot>
                         </div>
-                        <zn-icon src="info"></zn-icon>
+                        <zn-icon src="info" tabindex="0" role="img" aria-label="More information"
+                                 aria-describedby="label-tooltip"></zn-icon>
                       </zn-tooltip>`
                     : ''}
                 </label>` : html``}

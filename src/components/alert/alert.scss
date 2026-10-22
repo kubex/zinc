@@ -16,6 +16,20 @@
   background-color: var(--zn-alert-solid-background, rgb(var(--zn-panel)));
 }
 
+.alert-dismiss {
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: var(--zn-focus-ring);
+    border-radius: var(--zn-border-radius-small);
+  }
+}
+
 .alert-icon {
   padding: var(--zn-alert-icon-padding, var(--zn-spacing-2x-small) var(--zn-spacing-x-small));
   margin-top: var(--zn-alert-icon-offset, 0);

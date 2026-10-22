@@ -57,6 +57,7 @@ export default class ZnExpandingAction extends ZincElement {
   private _preload = true;
   private _metaObserved = false;
   private _placementObserver?: MutationObserver;
+  private _fillHadFocus = false;
 
   private readonly _countObserver = new MutationController(this, {
     target: null,
@@ -242,6 +243,29 @@ export default class ZnExpandingAction extends ZincElement {
     this.open = false;
   }
 
+  protected willUpdate(changed: PropertyValues<this>) {
+    super.willUpdate(changed);
+    if (changed.has('open') && !this.open) {
+      this._fillHadFocus = !!this.shadowRoot?.querySelector('.expanding-action--fill:focus-within');
+    }
+  }
+
+  protected updated(changed: PropertyValues<this>) {
+    super.updated(changed);
+    if (this.method !== 'fill' || !changed.has('open') || changed.get('open') === undefined) return;
+    if (this.open) {
+      this.shadowRoot?.querySelector<HTMLElement>('#content')?.focus();
+    } else if (this._fillHadFocus) {
+      this.shadowRoot?.querySelector<HTMLElement>('.expanding-action__button')?.focus();
+    }
+  }
+
+  private _handleFillKeyDown = (e: KeyboardEvent) => {
+    if (this.method !== 'fill' || e.key !== 'Escape' || !this.open) return;
+    e.stopPropagation();
+    this.open = false;
+  }
+
   private _updateTriggerSide = () => {
     const trigger = this.shadowRoot?.querySelector('.expanding-action__dropdown zn-button[slot="trigger"]');
     const content = this.shadowRoot?.querySelector('#content');
@@ -300,7 +324,8 @@ export default class ZnExpandingAction extends ZincElement {
         style=${styleMap({
           '--expanding-action-basis': this.method === "drop" && this.basis ? this.basis.replace('px', '') + 'px' : 'none',
           '--expanding-action-max-height': this.method === "drop" && this.maxHeight ? this.maxHeight.replace('px', '') + 'px' : null,
-        })}>
+        })}
+        @keydown=${this._handleFillKeyDown}>
         ${this.method === 'drop' ? this.renderDropdown() : this.renderFill()}
       </div>`;
   }
@@ -338,7 +363,7 @@ export default class ZnExpandingAction extends ZincElement {
   protected renderFill() {
     return html`
       <zn-icon src="${this.icon}" size="20"></zn-icon>
-      <div id="content" class="expanding-action__content">
+      <div id="content" class="expanding-action__content" tabindex="-1">
         <slot></slot>
       </div>
       <zn-button slot="trigger"

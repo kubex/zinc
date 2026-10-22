@@ -144,14 +144,11 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
   }
 
   private handleKeyDown(event: KeyboardEvent) {
-    if (event.key === 'ArrowLeft') {
-      event.preventDefault();
-      this.checked = false;
-    }
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    event.preventDefault();
 
-    if (event.key === 'ArrowRight') {
-      event.preventDefault();
-      this.checked = true;
+    if (this.checked !== (event.key === 'ArrowRight')) {
+      this.input.click();
     }
   }
 

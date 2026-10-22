@@ -1,7 +1,14 @@
-import {clampRange, defaultPresets, isIso, monthGrid, pick, rangeLabel, todayIso} from './date-range-math';
+import {addMonths, clampRange, defaultPresets, isIso, monthGrid, pick, rangeLabel, todayIso} from './date-range-math';
 import {expect} from '@open-wc/testing';
 
 describe('date-range-math', () => {
+  it('moves by months, clamping to the shorter month', () => {
+    expect(addMonths('2026-01-31', 1)).to.equal('2026-02-28');
+    expect(addMonths('2026-03-15', -1)).to.equal('2026-02-15');
+    expect(addMonths('2026-12-10', 1)).to.equal('2027-01-10');
+    expect(addMonths('2024-02-29', 12)).to.equal('2025-02-28');
+  });
+
   it('lists the eight quick ranges relative to today', () => {
     const presets = defaultPresets('2026-10-20');
     const byLabel = Object.fromEntries(presets.map(p => [p.label, {from: p.from, to: p.to}]));

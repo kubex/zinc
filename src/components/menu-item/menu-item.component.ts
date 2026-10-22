@@ -219,6 +219,7 @@ export default class ZnMenuItem extends ZincElement {
         part="base"
         data-path=${ifDefined(this.dataPath)}
         href=${ifDefined(this.href)}
+        tabindex=${ifDefined(isLink ? '-1' : undefined)}
         target=${ifDefined(isLink ? this.target : undefined)}
         data-target=${ifDefined(isLink ? this.dataTarget : undefined)}
         rel=${ifDefined(isLink ? this.rel : undefined)}

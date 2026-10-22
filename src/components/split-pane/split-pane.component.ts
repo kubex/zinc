@@ -154,7 +154,7 @@ export default class ZnSplitPane extends ZincElement {
     }.bind(this);
 
     this.mouseUpHandler = function () {
-      this._store.set(this.storeKey, Math.round(this.currentPixelSize) + "," + Math.round(this.currentPercentSize) + "," + this.currentContainerSize);
+      this.storeSize();
       this.classList.remove('resizing');
       window.removeEventListener('touchmove', this.mouseMoveHandler);
       window.removeEventListener('mousemove', this.mouseMoveHandler);
@@ -168,6 +168,41 @@ export default class ZnSplitPane extends ZincElement {
 
     window.addEventListener('mousemove', this.mouseMoveHandler);
     window.addEventListener('mouseup', this.mouseUpHandler);
+  }
+
+  private storeSize() {
+    this._store.set(this.storeKey, Math.round(this.currentPixelSize) + "," + Math.round(this.currentPercentSize) + "," + this.currentContainerSize);
+  }
+
+  private handleResizerKeyDown(e: KeyboardEvent) {
+    if (this.hide === 'primary' || this.hide === 'secondary') {
+      return;
+    }
+
+    this.currentContainerSize = this.vertical ? this.getBoundingClientRect().height : this.getBoundingClientRect().width;
+    const step = this.calculatePixels ? 10 : this.currentContainerSize / 100;
+    let size: number;
+    switch (e.key) {
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        size = this.currentPixelSize - step;
+        break;
+      case 'ArrowRight':
+      case 'ArrowDown':
+        size = this.currentPixelSize + step;
+        break;
+      case 'Home':
+        size = 0;
+        break;
+      case 'End':
+        size = this.currentContainerSize;
+        break;
+      default:
+        return;
+    }
+    e.preventDefault();
+    this.setSize(size);
+    this.storeSize();
   }
 
   setSize(primaryPanelPixels: number) {
@@ -216,6 +251,7 @@ export default class ZnSplitPane extends ZincElement {
     this.currentPixelSize = pixelSize;
     this.currentPercentSize = percentSize;
     this.primaryFull = this.calculatePixels ? (this.currentPixelSize + 'px') : (this.currentPercentSize + '%');
+    this.requestUpdate();
   }
 
   _setFocusPane(idx: number) {
@@ -304,9 +340,16 @@ export default class ZnSplitPane extends ZincElement {
         --resize-size: ${resizeWidth};
         --resize-margin: ${resizeMargin};
       }</style>
-      <ul id="split-nav">
+      <ul id="split-nav" role="tablist">
         ${this.getNavigationItems().map(item => html`
-          <li class="${item.active ? 'active' : ''}" @click="${item.select}">
+          <li class="${item.active ? 'active' : ''}" role="tab" tabindex="0" aria-selected="${item.active}"
+              @click="${item.select}"
+              @keydown="${(e: KeyboardEvent) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  item.select();
+                }
+              }}">
             ${item.caption}
           </li>
         `)}
@@ -314,7 +357,12 @@ export default class ZnSplitPane extends ZincElement {
       <div id="primary-pane">
         <slot name="primary" @slotchange="${() => this.requestUpdate()}"></slot>
       </div>
-      <div @mousedown="${this.resize}" @touchstart="${this.resize}" id="resizer"></div>
+      <div @mousedown="${this.resize}" @touchstart="${this.resize}" @keydown="${this.handleResizerKeyDown}" id="resizer"
+           role="separator" tabindex="0"
+           aria-orientation="${this.vertical ? 'horizontal' : 'vertical'}"
+           aria-valuenow="${Math.round(this.calculatePixels ? this.currentPixelSize : this.currentPercentSize)}"
+           aria-valuemin="${this.minimumPaneSize}"
+           aria-valuemax="${this.maximumPaneSize || (this.calculatePixels ? Math.round(this.currentContainerSize) : 100)}"></div>
       <div id="secondary-pane">
         <slot name="secondary" @slotchange="${() => this.requestUpdate()}"></slot>
       </div>

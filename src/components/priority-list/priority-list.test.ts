@@ -204,7 +204,7 @@ describe('<zn-priority-list>', () => {
     });
 
     const item = el.shadowRoot.querySelector('.priority-list__item');
-    item.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowDown', bubbles: true, composed: true, cancelable: true}));
+    item.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowDown', altKey: true, bubbles: true, composed: true, cancelable: true}));
     await el.updateComplete;
 
     document.removeEventListener('zn-register-element', onRegister);
@@ -277,12 +277,33 @@ describe('<zn-priority-list>', () => {
     await el.updateComplete;
 
     const items = el.shadowRoot.querySelectorAll('.priority-list__item');
-    items[2].dispatchEvent(new KeyboardEvent('keydown', {key: 'Home', bubbles: true}));
-    items[1].dispatchEvent(new KeyboardEvent('keydown', {key: 'End', bubbles: true}));
+    items[2].dispatchEvent(new KeyboardEvent('keydown', {key: 'Home', altKey: true, bubbles: true}));
+    items[1].dispatchEvent(new KeyboardEvent('keydown', {key: 'End', altKey: true, bubbles: true}));
     await el.updateComplete;
 
     expect(el.value).to.deep.equal(['a', 'b', 'c']);
     expect(items[2].getAttribute('draggable')).to.equal('false');
+  });
+
+  it('keeps one tab stop and moves focus with plain arrows', async () => {
+    const el = await fixture(html`
+      <zn-priority-list>
+        <div value="a">A</div>
+        <div value="b">B</div>
+      </zn-priority-list>
+    `) as any;
+    await el.updateComplete;
+
+    const [first, second] = el.shadowRoot.querySelectorAll('.priority-list__item');
+    expect([first.getAttribute('tabindex'), second.getAttribute('tabindex')]).to.deep.equal(['0', '-1']);
+
+    first.focus();
+    first.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowDown', bubbles: true, composed: true, cancelable: true}));
+    await el.updateComplete;
+
+    expect(el.value).to.deep.equal(['a', 'b']);
+    expect(el.shadowRoot.activeElement).to.equal(second);
+    expect([first.getAttribute('tabindex'), second.getAttribute('tabindex')]).to.deep.equal(['-1', '0']);
   });
 
   it('moves items with the move buttons', async () => {

@@ -339,8 +339,15 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   };
 
   handleInput = (e: Event) => {
-    if (this.disabled || !this.isEditing) {
+    if (this.disabled) {
       return;
+    }
+
+    // Keyboard users tab straight into the field, so typing starts an edit as a click would
+    if (!this.isEditing) {
+      this._valueBeforeEdit = this.value;
+      this._editStartValue = this.value;
+      this.isEditing = true;
     }
 
     this.value = (e.target as (HTMLInputElement | HTMLSelectElement)).value;

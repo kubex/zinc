@@ -261,11 +261,11 @@ priority assignments.
 
 ### Keyboard Navigation
 
-Focus any item and use the keyboard to reorder:
+The list is a single tab stop. Arrow Up, Arrow Down, Home and End move focus between items; hold Alt to reorder:
 
-- **Arrow Up** — Move the focused item up one position
-- **Arrow Down** — Move the focused item down one position
-- **Home** — Move the focused item to the top
-- **End** — Move the focused item to the bottom
+- **Alt + Arrow Up** — Move the focused item up one position
+- **Alt + Arrow Down** — Move the focused item down one position
+- **Alt + Home** — Move the focused item to the top
+- **Alt + End** — Move the focused item to the bottom
 
 Locked items can't be moved, and other items can't move past them.

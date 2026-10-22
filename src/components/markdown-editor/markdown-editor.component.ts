@@ -214,6 +214,13 @@ export default class ZnMarkdownEditor extends ZnPanel implements ZincFormControl
     this.viewMode = mode;
   };
 
+  private handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Escape' && this.expanded) {
+      e.stopPropagation();
+      this.expanded = false;
+    }
+  };
+
   private handleExpandToggle = () => {
     this.expanded = !this.expanded;
   };
@@ -290,7 +297,7 @@ export default class ZnMarkdownEditor extends ZnPanel implements ZincFormControl
                 'markdown-editor--split': this.viewMode === 'split',
                 'markdown-editor--preview-only': this.viewMode === 'preview',
                 'markdown-editor--expanded': this.expanded,
-              })}>
+              })} @keydown=${this.handleKeyDown}>
                 ${hasLabel ? html`
                   <label class="markdown-editor__label">
                     <slot name="label">${this.label}</slot>

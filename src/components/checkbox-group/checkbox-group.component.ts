@@ -317,7 +317,6 @@ export default class ZnCheckboxGroup extends ZincElement implements ZincFormCont
           'form-control--has-label-tooltip': hasLabelTooltip,
           'form-control--has-help-text': hasHelpText
         })}
-        role="listbox"
         aria-labelledby="label"
         aria-describedby="help-text"
         aria-errormessage="error-message">

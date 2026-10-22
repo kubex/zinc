@@ -1,5 +1,6 @@
 import {
   addDays,
+  addMonths,
   clampRange,
   type DatePreset,
   daysBetween,
@@ -197,7 +198,11 @@ export default class ZnDateRange extends ZincElement {
   }
 
   private shiftMonth(by: number) {
-    const date = new Date(Date.UTC(this.view.year, this.view.month0 + by, 1));
+    this.shiftTo(this.view.year, this.view.month0 + by);
+  }
+
+  private shiftTo(year: number, month0: number) {
+    const date = new Date(Date.UTC(year, month0, 1));
     this.view = {year: date.getUTCFullYear(), month0: date.getUTCMonth()};
   }
 
@@ -221,13 +226,24 @@ export default class ZnDateRange extends ZincElement {
   }
 
   private dayKeydown = async (e: KeyboardEvent) => {
-    const step = KEY_STEPS[e.key];
     const current = (e.target as HTMLElement).dataset.date;
-    if (!step || !current) return;
+    if (!current) return;
+    // Weeks start on Monday
+    const weekday = (toUtc(current).getUTCDay() + 6) % 7;
+    const pageBy = e.shiftKey ? 12 : 1;
+    const next = KEY_STEPS[e.key] ? addDays(current, KEY_STEPS[e.key])
+      : e.key === 'Home' ? addDays(current, -weekday)
+        : e.key === 'End' ? addDays(current, 6 - weekday)
+          : e.key === 'PageUp' ? addMonths(current, -pageBy)
+            : e.key === 'PageDown' ? addMonths(current, pageBy)
+              : null;
+    if (!next) return;
     e.preventDefault();
-    const next = addDays(current, step);
     if (!this.visible(next)) {
-      this.shiftMonth(step < 0 ? -1 : 1);
+      // Backwards lands in the first visible month, forwards in the last
+      const lastVisible = next < current ? 0 : (this.narrow ? 0 : 1);
+      const at = toUtc(next);
+      this.shiftTo(at.getUTCFullYear(), at.getUTCMonth() - lastVisible);
     }
     this.focusDay = next;
     await this.updateComplete;

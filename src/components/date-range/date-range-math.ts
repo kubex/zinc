@@ -34,6 +34,15 @@ export function addDays(iso: Iso, days: number): Iso {
   return fromUtc(date);
 }
 
+/** The same day `months` away, clamped to the target month's last day. */
+export function addMonths(iso: Iso, months: number): Iso {
+  const date = toUtc(iso);
+  const target = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + months, 1));
+  const lastDay = new Date(Date.UTC(target.getUTCFullYear(), target.getUTCMonth() + 1, 0)).getUTCDate();
+  target.setUTCDate(Math.min(date.getUTCDate(), lastDay));
+  return fromUtc(target);
+}
+
 export function daysBetween(from: Iso, to: Iso): number {
   return Math.round((toUtc(to).getTime() - toUtc(from).getTime()) / 86400000);
 }

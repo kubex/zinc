@@ -121,6 +121,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
   @state() private isUserTyping = false;
   @state() private colorOpen = false;
   @state() private colorInvalid = false;
+  private escapeSwallowed = false;
   @property() title = "" // make reactive pass through
 
   private __numberInput = Object.assign(document.createElement('input'), {type: 'number'});
@@ -466,14 +467,18 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
 
   private handleKeyDown(event: KeyboardEvent) {
     // The slash menu claims its own keys; while it is open Escape closes it and Enter picks an item,
-    // rather than blurring the field or submitting the form
+    // rather than reaching the field or submitting the form
     if (this.slashController.open) return;
 
+    // The first Escape stays in the field so it doesn't also dismiss a containing popup; a repeat bubbles
     if (event.key === 'Escape') {
-      this.input.blur();
-      event.stopPropagation();
+      if (!this.escapeSwallowed) {
+        this.escapeSwallowed = true;
+        event.stopPropagation();
+      }
       return;
     }
+    this.escapeSwallowed = false;
 
     const hasModifier = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
 
@@ -819,10 +824,11 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
           ${hasLabelTooltip
             ? html`
               <zn-tooltip class="form-control--label-tooltip">
-                <div slot="content">
+                <div slot="content" id="label-tooltip">
                   <slot name="label-tooltip">${this.labelTooltip}</slot>
                 </div>
-                <zn-icon src="info"></zn-icon>
+                <zn-icon src="info" tabindex="0" role="img" aria-label="More information"
+                         aria-describedby="label-tooltip"></zn-icon>
               </zn-tooltip>`
             : ''}
 
@@ -948,8 +954,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
                   class="input__password-toggle"
                   type="button"
                   aria-label=${this.localize.term(this.passwordVisible ? 'hidePassword' : 'showPassword')}
-                  @click=${this.handlePasswordToggle}
-                  tabindex="-1">
+                  @click=${this.handlePasswordToggle}>
                   ${this.passwordVisible
                     ? html`
                       <slot name="show-password-icon">

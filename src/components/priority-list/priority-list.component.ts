@@ -99,6 +99,7 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
   private readonly reorderController: ReorderController = new ReorderController(this, {
     formControl: this.formControlController,
     fallbackFields: () => this.name ? this.getPriorityMap().map(({key, priority}) => [`${this.name}[${key}]`, String(priority)]) : [],
+    modifier: 'alt',
     focus: key => this.reorderRow(key)?.focus(),
   });
 
@@ -129,6 +130,9 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
   private _value: string[] = [];
 
   @state() defaultValue: string[] = [];
+
+  /** The item holding the list's single tab stop. */
+  @state() private _focusKey = '';
 
   /** The component's label. Required for proper accessibility. */
   @property() label = '';
@@ -331,9 +335,20 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
     return this._item(key)?.hasAttribute('locked') ?? false;
   }
 
-  private _handleStep(event: Event, key: string, step: number) {
+  private async _handleStep(event: Event, key: string, step: number) {
     event.stopPropagation();
-    this.reorderController.step(key, step);
+    const button = event.currentTarget as ZnButton;
+    const hadFocus = button.matches(':focus-within');
+    if (!this.reorderController.step(key, step) || !hadFocus) return;
+
+    // Moving the row can detach it, which drops focus even when the button stays enabled
+    await this.updateComplete;
+    const target = [button, ...button.parentElement!.querySelectorAll<ZnButton>('zn-button')].find(b => !b.disabled);
+    if (target) {
+      target.button.focus();
+    } else {
+      this.reorderRow(key)?.focus();
+    }
   }
 
   // --- Keyboard Handlers ---
@@ -381,7 +396,19 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
       return;
     }
 
-    this.reorderController.handleKeyDown(event, key);
+    if (this.reorderController.handleKeyDown(event, key) || event.target !== event.currentTarget) return;
+
+    const index = this._value.indexOf(key);
+    const next = {
+      ArrowUp: index - 1,
+      ArrowDown: index + 1,
+      Home: 0,
+      End: this._value.length - 1,
+    }[event.key];
+    if (next === undefined) return;
+
+    event.preventDefault();
+    this.reorderRow(this._value[Math.max(0, Math.min(next, this._value.length - 1))])?.focus();
   }
 
   // --- Slot Change Handler ---
@@ -458,6 +485,7 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
 
   render() {
     const selectedKey = this._selectedKey();
+    const tabStop = [this._focusKey, selectedKey].find(key => key && this._value.includes(key)) ?? this._value[0];
     const hasLabelSlot = this.hasSlotController.test('label');
     const hasLabelTooltipSlot = this.hasSlotController.test('label-tooltip');
     const hasHelpTextSlot = this.hasSlotController.test('help-text');
@@ -525,7 +553,7 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
                   'priority-list__item--selected': key === selectedKey,
                 })}
                 role="option"
-                tabindex=${this.disabled ? '-1' : '0'}
+                tabindex=${!this.disabled && key === tabStop ? '0' : '-1'}
                 aria-selected=${key === selectedKey ? 'true' : 'false'}
                 aria-label="${caption} - priority ${this.priorityStart + index}"
                 draggable=${this.disabled || locked ? 'false' : 'true'}
@@ -533,6 +561,7 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
                 @dragend=${(e: DragEvent) => this.reorderController.handleDragEnd(e)}
                 @dragover=${(e: DragEvent) => this.reorderController.handleDragOver(e, key)}
                 @drop=${(e: DragEvent) => this.reorderController.handleDrop(e)}
+                @focus=${() => { this._focusKey = key; }}
                 @click=${(e: MouseEvent) => this._handleItemClick(e, key)}
                 @keydown=${(e: KeyboardEvent) => this._handleKeyDown(e, key)}>
                 <span class="priority-list__handle" part="drag-handle">

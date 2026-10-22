@@ -184,6 +184,7 @@ export default class ZnNavList extends ZincElement implements ZincFormControl {
 
   protected updated(changed: PropertyValues) {
     super.updated(changed);
+    if (changed.has('disabled')) this._syncTabStops();
     this._syncItems();
     this._syncDragCorners();
   }
@@ -201,10 +202,10 @@ export default class ZnNavList extends ZincElement implements ZincFormControl {
     }
   }
 
-  /** Keeps a single tab stop in the list: the selected item when it is visible, otherwise the first. */
+  /** Keeps a single tab stop in the list (none when disabled): the selected item when it is visible, otherwise the first. */
   private _syncTabStops() {
     const visible = this._visibleItems;
-    const stop = visible.find(item => item.selected) ?? visible[0];
+    const stop = this.disabled ? null : visible.find(item => item.selected) ?? visible[0];
     for (const item of this._items) {
       item.tabIndex = item === stop ? 0 : -1;
     }

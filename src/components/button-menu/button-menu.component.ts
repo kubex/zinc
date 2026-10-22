@@ -112,6 +112,7 @@ export default class ZnButtonMenu extends ZincElement {
 
   calculateVisibleButtons() {
     const containerWidth = this.containerWidth;
+    const focused = this.shadowRoot?.activeElement as ZnButton | null;
 
     let primaryButtons = 0;
     let secondaryButtons = 0;
@@ -182,6 +183,11 @@ export default class ZnButtonMenu extends ZincElement {
     });
 
     this.calculateMenuButtons(totalButtons, visibleButtons, this._buttons);
+
+    if (focused && this.shadowRoot?.activeElement !== focused) {
+      const target = focused.isConnected ? focused : this.shadowRoot?.querySelector<ZnButton>('zn-button[slot="trigger"]');
+      target?.button?.focus();
+    }
   }
 
   calculateMenuButtons(totalButtons: number, visibleButtons: number, buttons: CustomButtonWidths[]) {
@@ -313,7 +319,8 @@ export default class ZnButtonMenu extends ZincElement {
                      icon="ellipsis"
                      icon-library="lucide"
                      icon-size="${this.iconSize}"
-                     icon-button="small"></zn-button>
+                     icon-button="small"
+                     label="More actions"></zn-button>
           <zn-menu></zn-menu>
         </zn-dropdown>
         <slot></slot>

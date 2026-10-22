@@ -68,6 +68,7 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
   });
   /** Ensures we only attempt to derive the initial value from light DOM content once */
   private _didInitFromContent = false;
+  private escapeSwallowed = false;
 
   private readonly slashController = new SlashMenuController(this, {
     menu: () => this.mountSlashMenu(),
@@ -377,10 +378,15 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
     // The slash menu claims its own keys before this handler runs; Escape closes it, not the field
     if (this.slashController.open) return;
 
+    // The first Escape stays in the field so it doesn't also dismiss a containing popup; a repeat bubbles
     if (event.key === 'Escape') {
-      this.input.blur();
-      event.stopPropagation();
+      if (!this.escapeSwallowed) {
+        this.escapeSwallowed = true;
+        event.stopPropagation();
+      }
+      return;
     }
+    this.escapeSwallowed = false;
   }
 
   private setTextareaHeight() {

@@ -4,6 +4,7 @@ import {continueList, indentList, isEmptyListItem} from './list-continuation';
 import {type CSSResultGroup, html, type PropertyValues, type TemplateResult, unsafeCSS} from 'lit';
 import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
+import {ifDefined} from "lit/directives/if-defined.js";
 import {pastedRemarkd} from './paste';
 import {property, query, state} from 'lit/decorators.js';
 import {parse as remarkdParse} from "remarkd-js";
@@ -652,7 +653,11 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
     }
   }
 
-  private handleRenderedClick(e: MouseEvent, index: number) {
+  private get editable() {
+    return !this.disabled && !this.readonly;
+  }
+
+  private handleRenderedClick(e: Event, index: number) {
     const checkbox = (e.target as HTMLElement).closest<HTMLInputElement>('input[type="checkbox"]');
     if (checkbox) {
       // Toggle the task in the source rather than opening the editor.
@@ -791,7 +796,9 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   private handleImageControlsKeydown = (e: KeyboardEvent) => {
     if (e.key === 'Escape') {
       e.preventDefault();
+      const index = this.editingIndex;
       this.closeImageEdit();
+      if (index !== null) void this.focusRenderedBlock(index);
     } else if (e.key === 'Enter' && (e.target as HTMLElement).tagName === 'INPUT') {
       e.preventDefault();
       this.saveImageEdit();
@@ -992,12 +999,39 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       this.insertDraftBlock(next);
     } else if (e.key === 'Escape' || (e.key === 'Enter' && (e.metaKey || e.ctrlKey))) {
       e.preventDefault();
-      input.blur();
+      this.suppressBlurCommit = true;
+      const index = this.editingIndex ?? 0;
+      this.commitEdit();
+      void this.focusRenderedBlock(index);
     } else if (e.key === 'Backspace' && input.value === '') {
       e.preventDefault();
-      input.blur();
+      this.suppressBlurCommit = true;
+      const index = this.editingIndex ?? 0;
+      this.commitEdit();
+      void this.focusRenderedBlock(index - 1);
     }
   };
+
+  /** Focuses the rendered block at `index`, clamped to the blocks there are; the add row when there are none. */
+  private async focusRenderedBlock(index: number) {
+    await this.updateComplete;
+    this.suppressBlurCommit = false;
+    const blocks = this.shadowRoot?.querySelectorAll('.remarkd-editor__block') ?? [];
+    const block = blocks[Math.max(0, Math.min(index, blocks.length - 1))];
+    const target = block?.querySelector<HTMLElement>(':scope > .remarkd-editor__rendered')
+      ?? this.shadowRoot?.querySelector<HTMLElement>('.remarkd-editor__add');
+    target?.focus({preventScroll: true});
+    this.reveal(target);
+  }
+
+  private moveBlock(from: number, to: number) {
+    if (!this.editable || to < 0 || to >= this.blocks.length) return;
+    const blocks = [...this.blocks];
+    const [moved] = blocks.splice(from, 1);
+    blocks.splice(to, 0, moved);
+    this.updateBlocks(blocks);
+    void this.focusRenderedBlock(to);
+  }
 
   /**
    * The draft to commit when Enter should finish the block — pressed on a trailing blank line or
@@ -1865,7 +1899,19 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
                // its own inner body div carries the marker instead, see renderConditional.
                'remarkd-editor__rendered--parsed': !include && !conditional && !meta,
              })}
-             @click=${(e: MouseEvent) => this.handleRenderedClick(e, index)}>${
+             tabindex=${ifDefined(this.editable ? '0' : undefined)}
+             @click=${(e: MouseEvent) => this.handleRenderedClick(e, index)}
+             @keydown=${(e: KeyboardEvent) => {
+               // Links and task checkboxes inside the block keep their own keys
+               if (e.target !== e.currentTarget) return;
+               if (e.altKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+                 e.preventDefault();
+                 this.moveBlock(index, index + (e.key === 'ArrowUp' ? -1 : 1));
+               } else if (e.key === 'Enter') {
+                 e.preventDefault();
+                 this.handleRenderedClick(e, index);
+               }
+             }}>${
           include ? this.renderIncludeChip(include)
             : conditional ? conditional
               : meta ? this.renderMetaChips(meta)
@@ -2012,7 +2058,16 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
         })}>
           ${this.rawMode ? this.renderRaw() : html`
             ${this.renderBody()}
-            <div class="remarkd-editor__add" @click=${() => this.insertDraftBlock(this.blocks.length)}>
+            <div class="remarkd-editor__add"
+                 role=${ifDefined(this.editable ? 'button' : undefined)}
+                 tabindex=${ifDefined(this.editable ? '0' : undefined)}
+                 aria-label=${ifDefined(this.editable ? 'Add block' : undefined)}
+                 @click=${() => this.insertDraftBlock(this.blocks.length)}
+                 @keydown=${(e: KeyboardEvent) => {
+                   if (e.key !== 'Enter' && e.key !== ' ') return;
+                   e.preventDefault();
+                   this.insertDraftBlock(this.blocks.length);
+                 }}>
               ${this.blocks.length === 0 && this.editingIndex === null ? this.placeholder : ''}
             </div>`}
         </div>

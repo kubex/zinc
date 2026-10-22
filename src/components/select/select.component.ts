@@ -97,6 +97,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   private readonly hasSlotController = new HasSlotController(this, 'help-text', 'label');
   private readonly localize = new LocalizeController(this);
   private typeToSelectString = '';
+  private escapeSwallowed = false;
   private typeToSelectTimeout: number;
   private closeWatcher: CloseWatcher | null;
 
@@ -344,7 +345,11 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         ${option.getTextLabel()}
         ${(!this.nonRemovable) ? html`
           <zn-icon slot="action" src="close" size="16"
-                   @click=${(e: any) => this.handleTagRemove(e as ZnRemoveEvent, option)}></zn-icon>` : nothing}
+                   role="button"
+                   tabindex=${this.disabled ? '-1' : '0'}
+                   aria-label="Remove ${option.getTextLabel()}"
+                   @click=${(e: any) => this.handleTagRemove(e as ZnRemoveEvent, option)}
+                   @keydown=${(e: KeyboardEvent) => this.handleTagRemoveKeyDown(e, option)}></zn-icon>` : nothing}
       </zn-chip>
     `;
   };
@@ -513,13 +518,6 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       event.stopPropagation();
       this.hide().then();
       this.displayInput.focus({preventScroll: true});
-    }
-
-    // Blur the display input when Escape is pressed and the dropdown is closed,
-    // so a second Escape press can bubble (e.g. close a containing dialog).
-    if (event.key === 'Escape' && !this.open) {
-      event.stopPropagation();
-      this.displayInput.blur();
     }
 
     // Handle enter and space. When pressing space, we allow for type to select behaviors so if there's anything in the
@@ -723,6 +721,14 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   }
 
   private handleComboboxKeyDown(event: KeyboardEvent) {
+    // The first Escape on a closed select stays here; a repeat bubbles so it can dismiss a containing popup
+    if (event.key === 'Escape' && !this.open) {
+      if (this.escapeSwallowed) return;
+      this.escapeSwallowed = true;
+    } else {
+      this.escapeSwallowed = false;
+    }
+
     if (event.key === 'Tab') {
       return;
     }
@@ -1151,7 +1157,17 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     }
   }
 
-  private handleTagRemove(event: ZnRemoveEvent, option: ZnOption) {
+  private handleTagRemoveKeyDown(event: KeyboardEvent, option: ZnOption) {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+
+    const removeButtons = () => [...this.shadowRoot!.querySelectorAll<HTMLElement>('.select__tags zn-icon[slot="action"]')];
+    const index = removeButtons().indexOf(event.currentTarget as HTMLElement);
+    this.handleTagRemove(event, option);
+    this.updateComplete.then(() => (removeButtons()[index] ?? this.displayInput).focus());
+  }
+
+  private handleTagRemove(event: Event, option: ZnOption) {
     event.stopPropagation();
     event.stopImmediatePropagation();
 
@@ -1990,8 +2006,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                     type="button"
                     aria-label=${this.localize.term('clearEntry')}
                     @mousedown=${this.handleClearMouseDown}
-                    @click=${this.handleClearClick}
-                    tabindex="-1">
+                    @click=${this.handleClearClick}>
                     <slot name="clear-icon">
                       <zn-icon src="circle-x@lu" size="20"></zn-icon>
                     </slot>

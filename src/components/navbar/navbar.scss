@@ -81,47 +81,19 @@
 // One indicator shared by every tab, so switching tabs slides it instead of
 // swapping per-tab lines. Themes opt in with --zn-navbar-tab-indicator-slide: 1.
 .navbar__indicator {
-  // Positioned by its two edges, rather than translate + scale, so each edge can
-  // keep its own timing and a rounded or shadowed indicator (styled via
-  // ::part(indicator)) keeps its shape mid-move.
+  // Placed by left and width, and slid with transform alone so the move stays smooth while the page is busy.
   position: absolute;
   left: 0;
-  right: 100%;
+  width: 0;
+  transform-origin: left center;
   bottom: -1px;
   height: var(--zn-navbar-tab-indicator-height, 1px);
   background-color: var(--zn-navbar-tab-indicator-color, rgb(var(--navbar-active-colour)));
   opacity: 0;
   pointer-events: none;
 
-  --_lead: var(--zn-navbar-tab-indicator-duration, 300ms) var(--zn-navbar-tab-indicator-easing, cubic-bezier(0.4, 0, 0.2, 1)) var(--zn-navbar-tab-indicator-delay, 0ms);
-  // The edge furthest from the destination; a longer or delayed trail stretches
-  // the indicator towards the new tab before it catches up.
-  --_trail: var(--zn-navbar-tab-indicator-trail-duration, var(--zn-navbar-tab-indicator-duration, 300ms)) var(--zn-navbar-tab-indicator-trail-easing, var(--zn-navbar-tab-indicator-easing, cubic-bezier(0.4, 0, 0.2, 1))) var(--zn-navbar-tab-indicator-trail-delay, var(--zn-navbar-tab-indicator-delay, 0ms));
-
   &--shown {
     opacity: var(--zn-navbar-tab-indicator-slide, 0);
-  }
-
-  // Default curve is gentler than --zn-ease-in-out, whose slow start and fast
-  // middle lurch over a tab-strip-length move.
-  &--ready {
-    transition: left var(--_lead), right var(--_lead);
-  }
-
-  &--ready.navbar__indicator--forward {
-    transition: right var(--_lead), left var(--_trail);
-  }
-
-  &--ready.navbar__indicator--backward {
-    transition: left var(--_lead), right var(--_trail);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .navbar__indicator--ready,
-  .navbar__indicator--ready.navbar__indicator--forward,
-  .navbar__indicator--ready.navbar__indicator--backward {
-    transition: none;
   }
 }
 

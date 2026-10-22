@@ -4,7 +4,7 @@ import {ifDefined} from "lit/directives/if-defined.js";
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property} from 'lit/decorators.js';
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
-import {squishTabIndicator} from "../../internal/tab-indicator";
+import {type IndicatorEdges, slideTabIndicator, squishTabIndicator} from "../../internal/tab-indicator";
 import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 import ZnDropdown from "../dropdown";
@@ -99,6 +99,7 @@ export default class ZnNavbar extends ZincElement {
   private _indicator: HTMLElement | null = null;
   private _indicatorFrame: number | null = null;
   private _indicatorTab: HTMLElement | null = null;
+  private _indicatorTarget: IndicatorEdges | null = null;
   private _expandable: HTMLElement | null = null;
   private _extendedMenu: HTMLElement | null = null;
   private readonly _cloneSources = new WeakMap<HTMLElement, HTMLElement>();
@@ -223,39 +224,37 @@ export default class ZnNavbar extends ZincElement {
     const tab = active?.getBoundingClientRect();
     if (!tab || tab.width === 0) {
       indicator.classList.remove('navbar__indicator--shown');
+      this._indicatorTarget = null;
       return;
     }
 
     const box = container.getBoundingClientRect();
-    const left = tab.left - box.left;
-    const previousLeft = parseFloat(indicator.style.left);
-    const ready = indicator.classList.contains('navbar__indicator--ready');
+    const target = {left: tab.left - box.left, right: tab.right - box.left};
+    const previous = this._indicatorTarget;
     const tabChanged = active !== this._indicatorTab;
-    if (ready && tabChanged && !Number.isNaN(previousLeft) && Math.abs(left - previousLeft) > 0.5) {
-      indicator.classList.toggle('navbar__indicator--forward', left > previousLeft);
-      indicator.classList.toggle('navbar__indicator--backward', left < previousLeft);
-      squishTabIndicator(indicator);
-    }
     this._indicatorTab = active ?? null;
-
-    // Only a tab change slides; a resize or reflow under the same tab follows it
-    // instantly, unless a slide is still running and should retarget.
-    const follow = ready && !tabChanged && indicator.getAnimations().length === 0;
-    if (follow) {
-      indicator.style.transition = 'none';
-    }
-
-    indicator.style.left = `${left}px`;
-    indicator.style.right = `${box.right - tab.right}px`;
     // Exposed for ::part(indicator) styles that fill the tab rather than underline it.
     indicator.style.setProperty('--zn-navbar-indicator-top', `${tab.top - box.top}px`);
     indicator.style.setProperty('--zn-navbar-indicator-height', `${tab.height}px`);
     indicator.classList.add('navbar__indicator--shown');
+    if (previous && Math.abs(previous.left - target.left) < 0.5 && Math.abs(previous.right - target.right) < 0.5) {
+      return;
+    }
 
-    if (follow) {
-      // Commit the jump before transitions come back on
-      void indicator.offsetWidth;
-      indicator.style.removeProperty('transition');
+    // Only a tab change slides; a resize or reflow under the same tab follows it instantly, unless a slide is still
+    // running and should retarget. Either way the slide starts from where the indicator is drawn right now.
+    const ready = indicator.classList.contains('navbar__indicator--ready');
+    const slide = ready && previous !== null && (tabChanged || indicator.getAnimations().length > 0);
+    const drawn = indicator.getBoundingClientRect();
+    if (slide && tabChanged) {
+      squishTabIndicator(indicator);
+    }
+
+    indicator.style.left = `${target.left}px`;
+    indicator.style.width = `${target.right - target.left}px`;
+    this._indicatorTarget = target;
+    if (slide) {
+      slideTabIndicator(indicator, {left: drawn.left - box.left, right: drawn.right - box.left}, target);
     }
 
     // The first placement jumps into position; only later moves animate.

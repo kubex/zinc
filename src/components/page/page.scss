@@ -160,7 +160,7 @@
   margin: 0;
   padding: var(--zn-page-header-padding-block, calc(var(--zn-base-px) * 3)) var(--zn-base-gap) calc(var(--zn-page-header-padding-block, calc(var(--zn-base-px) * 3)) - var(--zn-base-gap)) var(--zn-base-gap);
 
-  &.header--has-tabs {
+  &.header--has-navigation {
     padding: var(--zn-page-header-padding-block, calc(var(--zn-base-px) * 3)) var(--zn-base-gap);
   }
 
@@ -449,9 +449,9 @@ zn-navbar[hidden], .header[hidden] {
   display: none;
 }
 
-// The tab content's zn-sp padding spaces the pills from the content, as it does a tab bar. Without a header, the pills
-// take the same gap from the tab bar above, and line up with that padding.
-:host([navigation-style="pills"]) .page__header {
+// The tab content's zn-sp padding spaces the tabs from the content. Without a header, as with pills, the tabs take
+// the same gap from whatever sits above the page, and line up with that padding.
+.page__header--headless {
   padding-top: var(--zn-base-gap, 0);
 }
 

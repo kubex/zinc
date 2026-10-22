@@ -533,7 +533,8 @@ export default class ZnPage extends ZnTabs {
       <div class="page" part="base" @scroll="${this.handlePageScroll}">
         <div class="${classMap({
           'page__header': true,
-          'page__header--scrolled-no-navigation': this.scrolled && !hasNavigation
+          'page__header--scrolled-no-navigation': this.scrolled && !hasNavigation,
+          'page__header--headless': !hasHeader && hasNavigation
         })}" part="header">
           <div class="${classMap({
             'header': true,
@@ -541,8 +542,6 @@ export default class ZnPage extends ZnTabs {
             'header--has-entity-id': hasEntityId,
             'header--has-full-location': hasFullLocation,
             'header--has-navigation': hasNavigation && !externalNavigation,
-            // Tab content is flushed whenever there are tabs, so sidebar tabs still need the header's bottom padding.
-            'header--has-tabs': hasNavigation,
             'header--has-previous': hasPreviousPath,
             'header--has-description': hasDescription
           })}" ?hidden="${!hasHeader}">

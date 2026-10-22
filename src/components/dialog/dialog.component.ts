@@ -4,6 +4,7 @@ import {HasSlotController} from "../../internal/slot";
 import {idSelector} from "../../utilities/query";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property, query, state} from 'lit/decorators.js';
+import {registerCosmicBorder} from "../../internal/cosmic-border";
 import {unlockBodyScrolling} from "../../internal/scroll";
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from "../button";
@@ -123,18 +124,7 @@ export default class ZnDialog extends ZincElement {
         trigger.addEventListener('click', () => this.show());
       }
     }
-    if (window.CSS.registerProperty) {
-      try {
-        window.CSS.registerProperty({
-          inherits: false,
-          initialValue: '0deg',
-          name: '--rotate',
-          syntax: '<angle>',
-        });
-      } catch (e) {
-        // do nothing
-      }
-    }
+    registerCosmicBorder();
   }
 
   disconnectedCallback() {

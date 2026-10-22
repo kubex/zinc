@@ -1,6 +1,7 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {property} from 'lit/decorators.js';
+import {registerCosmicBorder} from "../../internal/cosmic-border";
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './alert.scss';
@@ -35,6 +36,11 @@ export default class ZnAlert extends ZincElement {
   @property({type: String}) level: 'primary' | 'error' | 'info' | 'success' | 'warning' | 'note' | 'cosmic' | 'ai' = 'info';
   @property({type: Boolean, reflect: true}) center: boolean = false;
   @property({type: String}) size: 'small' | 'medium' | 'large' = 'medium';
+
+  connectedCallback() {
+    super.connectedCallback();
+    registerCosmicBorder();
+  }
 
   render() {
     let icon;

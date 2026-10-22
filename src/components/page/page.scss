@@ -535,6 +535,21 @@ zn-navbar {
   padding-inline: var(--content-inline) max(0px, var(--content-inline) - var(--scrollbar-inset));
 }
 
+.header__title {
+  display: flex;
+  flex-wrap: var(--zn-page-caption-wrap, nowrap);
+  align-items: center;
+  gap: var(--zn-spacing-2x-small) var(--zn-spacing-x-small);
+  min-width: 0;
+}
+
+// Badges stay on one line so they wrap below the caption as a group
+.header__title ::slotted([slot="caption-badges"]) {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--zn-spacing-x-small);
+}
+
 // Content sits inside its gutter plus its zn-sp's base-gap padding, so the header is narrower by both to line up
 :host(:not([full-width]):not([flush])) .header .content {
   margin-inline: auto;

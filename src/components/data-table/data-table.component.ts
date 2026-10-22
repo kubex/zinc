@@ -280,6 +280,9 @@ export default class ZnDataTable extends ZincElement {
   /** Unit for the row total shown with the caption: "publishers" reads "16 publishers". */
   @property({attribute: 'total-label'}) totalLabel = '';
 
+  /** Unit used when the total is exactly one: "publisher" reads "1 publisher". Falls back to `total-label`. */
+  @property({attribute: 'total-label-singular'}) totalLabelSingular = '';
+
   /** Tabs rendered inside the table. The selected tab's value is sent as `tab-param` with every request. */
   @property({type: Array}) tabs: TableTab[] = [];
 
@@ -1171,7 +1174,8 @@ export default class ZnDataTable extends ZincElement {
     if (this.isNarrowed && tabCount !== undefined && tabCount !== null && tabCount !== '') {
       return `${this._totalRows.toLocaleString()} of ${tabCount}`;
     }
-    return `${this._totalRows.toLocaleString()} ${this.totalLabel}`;
+    const label = this._totalRows === 1 && this.totalLabelSingular ? this.totalLabelSingular : this.totalLabel;
+    return `${this._totalRows.toLocaleString()} ${label}`;
   }
 
   private activeTab(): string {

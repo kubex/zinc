@@ -860,6 +860,28 @@ describe('<zn-data-table>', () => {
     });
   });
 
+  it('uses the singular total label for a single row', async () => {
+    const originalFetch = window.fetch;
+    window.fetch = () => Promise.resolve(new Response(JSON.stringify({
+      rows: [{id: '1', cells: [{text: 'Row', column: 'name'}]}],
+      page: 1,
+      perPage: 10,
+      total: 1,
+    }), {status: 200, headers: {'Content-Type': 'application/json'}}));
+
+    try {
+      const el = await fixture<ZnDataTable>(html`
+        <zn-data-table standalone caption="Emails" total-label="emails" total-label-singular="email" data-uri="/test-data"
+                       headers='{"name": {"key": "name", "label": "Name"}}'></zn-data-table>`);
+      await waitUntil(() => el.shadowRoot!.querySelector('tbody tr.table__row--data'));
+      await el.updateComplete;
+
+      expect(el.shadowRoot!.innerHTML).to.match(/1 email["<]/);
+    } finally {
+      window.fetch = originalFetch;
+    }
+  });
+
   it('keeps the slotted search readable in a narrow header', async () => {
     const wrap = await fixture<HTMLElement>(html`
       <div style="width: 340px">

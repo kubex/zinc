@@ -1,8 +1,6 @@
-import {animateTo, stopAnimations} from '../../internal/animate.js';
 import {classMap} from "lit/directives/class-map.js";
 import {ConditionalController} from "../../internal/conditional";
 import {FormControlController} from "../../internal/form";
-import {getAnimation, setDefaultAnimation} from "../../utilities/animation-registry";
 import {HasSlotController} from "../../internal/slot";
 import {html, nothing, unsafeCSS} from 'lit';
 import {LocalizeController} from "../../utilities/localize";
@@ -1692,7 +1690,6 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       this.emit('zn-show');
       this.addOpenListeners();
 
-      await stopAnimations(this.popup.popup);
       this.listbox.hidden = false;
       this.popup.active = true;
 
@@ -1708,8 +1705,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         });
       }
 
-      const {keyframes, options} = getAnimation(this, 'select.show', {dir: this.localize.dir()});
-      await animateTo(this.popup.popup, keyframes, options);
+      await this.popup.updateComplete;
 
       // Make sure the current option is scrolled into view (required for Safari)
       if (this.currentOption) {
@@ -1735,9 +1731,6 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         this.displayInput.value = this.multiple ? '' : this.displayLabel;
       }
 
-      await stopAnimations(this.popup.popup);
-      const {keyframes, options} = getAnimation(this, 'select.hide', {dir: this.localize.dir()});
-      await animateTo(this.popup.popup, keyframes, options);
       this.listbox.hidden = true;
       this.popup.active = false;
 
@@ -2105,19 +2098,3 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     `;
   }
 }
-
-setDefaultAnimation('select.show', {
-  keyframes: [
-    {opacity: 0, scale: 0.9},
-    {opacity: 1, scale: 1}
-  ],
-  options: {duration: 100, easing: 'ease'}
-});
-
-setDefaultAnimation('select.hide', {
-  keyframes: [
-    {opacity: 1, scale: 1},
-    {opacity: 0, scale: 0.9}
-  ],
-  options: {duration: 100, easing: 'ease'}
-});

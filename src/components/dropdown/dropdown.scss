@@ -4,37 +4,8 @@
   display: inline-block;
 }
 
-// Pops in from its trigger on open; closing is instant
 .dropdown::part(popup) {
   z-index: var(--zn-z-index-dropdown);
-  transform-origin: top;
-  transition: opacity var(--zn-dropdown-duration, 120ms) var(--zn-ease-out, cubic-bezier(0.23, 1, 0.32, 1)),
-              translate var(--zn-dropdown-duration, 120ms) var(--zn-ease-out, cubic-bezier(0.23, 1, 0.32, 1)),
-              scale var(--zn-dropdown-duration, 120ms) var(--zn-ease-out, cubic-bezier(0.23, 1, 0.32, 1));
 }
 
-.dropdown[data-current-placement^="top"]::part(popup) {
-  transform-origin: bottom;
-}
-
-@starting-style {
-  .dropdown::part(popup) {
-    opacity: 0;
-    translate: 0 -3px;
-    scale: .98;
-  }
-
-  .dropdown[data-current-placement^="top"]::part(popup) {
-    translate: 0 3px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  @starting-style {
-    .dropdown::part(popup),
-    .dropdown[data-current-placement^="top"]::part(popup) {
-      translate: 0 0;
-      scale: 1;
-    }
-  }
-}
+@include wc.popover-motion('.dropdown');

@@ -22,6 +22,42 @@
   }
 }
 
+/// Pops a zn-popup in from its trigger on open; closing is instant. `$host` is the zn-popup's selector.
+@mixin popover-motion($host, $duration: var(--zn-dropdown-duration, 120ms)) {
+  #{$host}::part(popup) {
+    transform-origin: top;
+    transition: opacity $duration var(--zn-ease-out),
+                translate $duration var(--zn-ease-out),
+                scale $duration var(--zn-ease-out);
+
+    @starting-style {
+      opacity: 0;
+      translate: 0 -3px;
+      scale: .98;
+    }
+
+    @include reduced-motion {
+      transition: opacity $duration var(--zn-ease-out);
+    }
+  }
+
+  #{$host}[data-current-placement^="top"]::part(popup) {
+    transform-origin: bottom;
+
+    @starting-style {
+      translate: 0 3px;
+    }
+  }
+
+  @each $side, $origin-y in (bottom: top, top: bottom) {
+    @each $align, $origin-x in (start: left, end: right) {
+      #{$host}[data-current-placement="#{$side}-#{$align}"]::part(popup) {
+        transform-origin: $origin-x $origin-y;
+      }
+    }
+  }
+}
+
 /// Continuous rotation for loading spinners.
 @mixin spin($duration: 1s) {
   animation: zn-spin $duration linear infinite;

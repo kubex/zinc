@@ -17,13 +17,7 @@
   z-index: var(--zn-z-index-dropdown);
 }
 
-.select[data-current-placement^='top']::part(popup) {
-  transform-origin: bottom;
-}
-
-.select[data-current-placement^='bottom']::part(popup) {
-  transform-origin: top;
-}
+@include wc.popover-motion('.select');
 
 /* Combobox */
 .select__combobox {

@@ -156,7 +156,8 @@ export default class ZnRadio extends ZincElement implements ZincFormControl {
   }
 
   private handleClick() {
-    if (this.disabled || this.checked) {
+    // A radio group checks its radio on the label click, before this input click, so grouped radios must still emit.
+    if (this.disabled || (this.checked && !this.closest('zn-radio-group'))) {
       return;
     }
 

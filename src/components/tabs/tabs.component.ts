@@ -9,7 +9,7 @@ import {
   replaceHistoryTab,
   TAB_STORE_PREFIX
 } from './tabs-navigation';
-import {getScrolledAncestors, scrollToTop} from "../../internal/scroll";
+import {getScrolledAncestors, revealTop} from "../../internal/scroll";
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {md5} from "../../utilities/md5";
@@ -644,7 +644,7 @@ export default class ZnTabs extends ZincElement {
 
     updateTabs();
 
-    scrollToTop(scrolled);
+    revealTop(scrolled, this);
 
     return true;
   }

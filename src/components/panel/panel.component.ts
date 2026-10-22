@@ -3,6 +3,7 @@ import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
 import {property, state} from 'lit/decorators.js';
+import {registerCosmicBorder} from "../../internal/cosmic-border";
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './panel.scss';
@@ -81,18 +82,7 @@ export default class ZnPanel extends ZincElement {
       this.observeBodyContent();
     }
 
-    if (window.CSS.registerProperty) {
-      try {
-        window.CSS.registerProperty({
-          inherits: false,
-          initialValue: '0deg',
-          name: '--rotate',
-          syntax: '<angle>',
-        });
-      } catch (e) {
-        // do nothing
-      }
-    }
+    registerCosmicBorder();
   }
 
   disconnectedCallback() {

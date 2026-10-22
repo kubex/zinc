@@ -58,6 +58,47 @@
   }
 }
 
+/// Expands a control's `__selected-content-wrapper` while it is `--checked`. `$block` is the BEM block, e.g. `checkbox`.
+@mixin selected-content-reveal($block) {
+  .#{$block}__selected-content-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    // Hidden content stays out of the tab order once collapsed.
+    visibility: hidden;
+    transition: grid-template-rows 200ms var(--zn-ease-drawer),
+    opacity 120ms ease-out,
+    visibility 0s 200ms;
+  }
+
+  .#{$block}--checked .#{$block}__selected-content-wrapper {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    visibility: visible;
+    transition: grid-template-rows 200ms var(--zn-ease-drawer),
+    opacity 150ms ease-out 50ms,
+    visibility 0s;
+
+    .#{$block}__selected-content-inner {
+      // Unclips once expanded so focus rings and popups inside aren't cut off.
+      overflow: visible;
+      transition: overflow 0s 200ms allow-discrete;
+    }
+  }
+
+  .#{$block}__selected-content-inner {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  @include reduced-motion {
+    .#{$block}__selected-content-wrapper,
+    .#{$block}--checked .#{$block}__selected-content-wrapper {
+      transition: none;
+    }
+  }
+}
+
 /// Continuous rotation for loading spinners.
 @mixin spin($duration: 1s) {
   animation: zn-spin $duration linear infinite;

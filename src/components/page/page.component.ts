@@ -33,6 +33,7 @@ interface TabDefinition {
  * @slot - Page content. Use zn-tab for named tabs; without any, the content is shown as the page's only view. Use
  *   header-action/header-actions for header actions.
  *   Clicking an element in the content with `tab="<tab id>"` opens that tab.
+ * @slot caption-badges - Badges shown beside the caption, wrapping onto the next line as one group.
  * @slot description - Rich subtitle/description content. Falls back to the `summary` attribute when empty.
  * @slot bottom - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.
  * @slot footer - Actions pinned below the content, such as a form's `zn-form-actions`. In a modal page it takes the
@@ -59,6 +60,8 @@ export default class ZnPage extends ZnTabs {
   @property({attribute: 'full-location'}) fullLocation: string;
   @property({type: Boolean, reflect: true}) modal = false;
   @property({type: Boolean, reflect: true}) nested = false;
+  // Set when the tabs are shown outside the page (such as a sidebar), so the header pads as if it had none
+  @property({type: Boolean, reflect: true, attribute: 'external-navigation'}) externalNavigation = false;
   @property({type: Boolean, reflect: true}) primary = false; // margin
   @property({attribute: 'previous-path'}) previousPath: string;
   @property({attribute: 'previous-target'}) previousTarget: string;
@@ -506,7 +509,7 @@ export default class ZnPage extends ZnTabs {
             'header--has-breadcrumb': hasBreadcrumb,
             'header--has-entity-id': hasEntityId,
             'header--has-full-location': hasFullLocation,
-            'header--has-navigation': hasNavigation,
+            'header--has-navigation': hasNavigation && !this.externalNavigation,
             'header--has-previous': hasPreviousPath,
             'header--has-description': hasDescription
           })}">
@@ -545,7 +548,10 @@ export default class ZnPage extends ZnTabs {
                         <zn-icon class="breadcrumb__separator" src="${this.breadcrumbSeparatorIcon()}" size="${this.breadcrumbSeparatorSize()}"></zn-icon>
                         ${this.caption ? html`<span class="breadcrumb__current">${this.caption}</span>` : null}
                       </span>` : null}
-                    <slot name="caption">${this.caption}</slot>
+                    <span class="header__title">
+                      <slot name="caption">${this.caption}</slot>
+                      <slot name="caption-badges"></slot>
+                    </span>
                   </span>
                   <span class="header__description"><slot name="description">${this.summary}</slot></span>
                 </div>

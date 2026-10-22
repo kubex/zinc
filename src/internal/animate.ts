@@ -11,14 +11,24 @@ export function animateTo(el: Element, keyframes: Keyframe[], options?: Keyframe
       throw new Error('Promise-based animations must be finite.');
     }
 
-    const animation = el.animate(keyframes, {
-      ...options,
-      duration: prefersReducedMotion() ? 0 : options!.duration
-    });
+    let animation: Animation;
+    if (prefersReducedMotion()) {
+      const fade = reduceKeyframes(keyframes);
+      const fades = fade.some(keyframe => 'opacity' in keyframe);
+      animation = el.animate(fade, {...options, duration: fades ? Math.min(Number(options?.duration ?? 0), 150) : 0});
+    } else {
+      animation = el.animate(keyframes, options);
+    }
 
     animation.addEventListener('cancel', resolve, {once: true});
     animation.addEventListener('finish', resolve, {once: true});
   });
+}
+
+/** Keeps only the opacity of each keyframe: fades still aid comprehension under reduced motion, movement doesn't. */
+function reduceKeyframes(keyframes: Keyframe[]): Keyframe[] {
+  const kept = ['offset', 'easing', 'composite', 'opacity'];
+  return keyframes.map(keyframe => Object.fromEntries(Object.entries(keyframe).filter(([key]) => kept.includes(key))));
 }
 
 /** Parses a CSS duration and returns the number of milliseconds. */

@@ -58,7 +58,7 @@ export default class ZnDropdown extends ZincElement {
   @property({attribute: false}) containingElement?: HTMLElement;
 
   /** The distance in pixels from which to offset the panel away from the trigger */
-  @property({type: Number}) distance: number = 0;
+  @property({type: Number}) distance: number = 4;
 
   /** The distance in pixels from which to offset the panel away from the trigger */
   @property({type: Number}) skidding: number = 0;

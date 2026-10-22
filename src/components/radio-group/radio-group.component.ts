@@ -172,10 +172,14 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
       radio.checked = false;
     });
 
+    const oldValue = this.value;
     this.value = radios[index].value;
     radios[index].checked = true;
-    radios[index].shadowRoot!.querySelector('button')!.focus();
+    radios[index].focus();
 
+    if (this.value !== oldValue) {
+      this.emit('zn-change');
+    }
 
     event.preventDefault();
   }

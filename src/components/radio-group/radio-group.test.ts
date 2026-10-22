@@ -22,4 +22,22 @@ describe('<zn-radio-group>', () => {
       expect(child).to.have.attribute('square');
     });
   });
+
+  it('selects the next radio and emits zn-change on arrow key', async () => {
+    const el = await fixture<HTMLElement & { value: string }>(html`
+      <zn-radio-group value="one">
+        <zn-radio value="one">One</zn-radio>
+        <zn-radio value="two">Two</zn-radio>
+      </zn-radio-group>
+    `);
+    const radios = el.querySelectorAll<HTMLElement & { checked: boolean }>('zn-radio');
+    let changes = 0;
+    el.addEventListener('zn-change', () => changes++);
+
+    radios[0].dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true, composed: true}));
+
+    expect(el.value).to.equal('two');
+    expect(radios[1].checked).to.be.true;
+    expect(changes).to.equal(1);
+  });
 });

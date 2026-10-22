@@ -165,6 +165,19 @@ export default class ZnDialog extends ZincElement {
     this.hide();
   }
 
+  // Escape on a native modal dialog closes it directly, bypassing zn-request-close
+  private handleCancel = (event: Event) => {
+    event.preventDefault();
+    this.requestClose('keyboard');
+  };
+
+  // The browser can refuse to cancel a repeated Escape, closing the dialog anyway
+  private handleNativeClose = () => {
+    if (this.open) {
+      this.hide();
+    }
+  };
+
   private addOpenListeners() {
     if ('CloseWatcher' in window) {
       this.closeWatcher?.destroy();
@@ -221,6 +234,8 @@ export default class ZnDialog extends ZincElement {
     return html`
       <dialog
         part="base"
+        @cancel=${this.handleCancel}
+        @close=${this.handleNativeClose}
         role="alertdialog"
         aria-modal="true"
         aria-label=${ifDefined(this.noHeader ? this.label : undefined)}

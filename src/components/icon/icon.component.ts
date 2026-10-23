@@ -28,9 +28,23 @@ function loadLucideIcons(): Promise<void> {
   return lucidePromise;
 }
 
+// Country flags (3:2 SVGs keyed by ISO 3166 alpha-2 code) load lazily like lucide
+let flagIcons: Record<string, string> | undefined;
+let flagPromise: Promise<void> | undefined;
+
+function loadFlagIcons(): Promise<void> {
+  flagPromise ??= import('country-flag-icons/string/3x2').then(m => {
+    flagIcons = m as unknown as Record<string, string>;
+  }).catch((error: unknown) => {
+    flagPromise = undefined;
+    console.warn('<zn-icon> failed to load the flag icon chunk', error);
+  });
+  return flagPromise;
+}
+
 export type IconLibrary = "src" | "material" | "material-outlined" | "material-round" | "material-sharp" |
   "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line" |
-  "lucide";
+  "lucide" | "flag";
 
 export type AvatarPresence = 'online' | 'away' | 'busy' | 'meeting' | 'offline';
 
@@ -162,6 +176,8 @@ export default class ZnIcon extends ZincElement {
       case "lucide":
       case "lu":
         return "lucide";
+      case "flag":
+        return "flag";
       case 'brand':
       case 'brands':
         return "brands";
@@ -201,6 +217,13 @@ export default class ZnIcon extends ZincElement {
     if (this.library === 'lucide' && !lucideIcons) {
       await loadLucideIcons();
       if (lucideIcons) {
+        this.requestUpdate();
+        await super.getUpdateComplete();
+      }
+    }
+    if (this.library === 'flag' && !flagIcons) {
+      await loadFlagIcons();
+      if (flagIcons) {
         this.requestUpdate();
         await super.getUpdateComplete();
       }
@@ -315,6 +338,7 @@ export default class ZnIcon extends ZincElement {
           'icon--grey': this.color === "grey",
           'icon--avatar': this.library === "avatar",
           'icon--avatar-solid': this.library === "avatar" && this.solid,
+          'icon--flag': this.library === "flag",
           'icon--has-color': Boolean(this.color),
           'icon--padded': this.padded,
           'icon--blink': this.blink,
@@ -337,6 +361,7 @@ export default class ZnIcon extends ZincElement {
               ["brands", () => html`<i part="icon" class="kb">${this.src}</i>`],
               ["line", () => html`<i part="icon" class="lni lni-${this.src}"></i>`],
               ["lucide", () => this.renderLucideIcon()],
+              ["flag", () => this.renderFlagIcon()],
               ["material-symbols-outlined", () => html`<i part="icon" class="mi mi--symbol-outlined">${this.src}</i>`],
               ["gravatar", () => html`<img part="icon" alt="${this.alt}"
                                            src="https://www.gravatar.com/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`],
@@ -394,6 +419,21 @@ export default class ZnIcon extends ZincElement {
     }
 
     return unsafeSVG(this.getLucideSvg(icon));
+  }
+
+  private renderFlagIcon() {
+    if (!flagIcons) {
+      void loadFlagIcons().then(() => {
+        if (flagIcons) {
+          this.requestUpdate();
+        }
+      });
+      return html``;
+    }
+
+    const code = (this.src ?? '').toUpperCase();
+    const svg = Object.prototype.hasOwnProperty.call(flagIcons, code) ? flagIcons[code] : undefined;
+    return svg ? html`<span part="icon" class="flag" role="img" aria-label="${this.alt || code}">${unsafeSVG(svg)}</span>` : html``;
   }
 
   private getLucideIcon(src = ''): IconNode | undefined {

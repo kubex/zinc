@@ -212,6 +212,34 @@ describe('<zn-report-table>', () => {
       })),
     });
 
+    it('highlights ticked rows, ticks all shown, and clears on group by change', async () => {
+      const {el, stub} = await mount(html`
+        <zn-report-table data-uri="/report" group-by="a" group-bys='[{"value":"a","label":"A"},{"value":"b","label":"B"}]'></zn-report-table>`);
+      try {
+        const root = el.shadowRoot!;
+        const selected = () => cells(el, 'tbody tr').map(row => row.getAttribute('aria-selected'));
+
+        root.querySelector('tbody zn-checkbox')!.shadowRoot!.querySelector<HTMLInputElement>('input')!.click();
+        await el.updateComplete;
+        expect(selected()).to.deep.equal(['true', 'false']);
+
+        const all = root.querySelector<HTMLElement & {indeterminate: boolean}>('thead zn-checkbox')!;
+        expect(all.indeterminate).to.be.true;
+        all.shadowRoot!.querySelector<HTMLInputElement>('input')!.click();
+        await el.updateComplete;
+        expect(selected()).to.deep.equal(['true', 'true']);
+        expect(root.querySelector('thead tr:not(.report__groups) th.report__dim')!.getAttribute('aria-sort')).to.equal('none');
+
+        click(root.querySelector('.report__groupby')!);
+        await el.updateComplete;
+        click(cells(el, '.report__gpop .report__gopt')[1]);
+        await el.updateComplete;
+        expect(selected()).to.deep.equal(['false', 'false']);
+      } finally {
+        stub.restore();
+      }
+    });
+
     it('search narrows rows and switches to computed totals', async () => {
       const {el, stub} = await mount(html`<zn-report-table data-uri="/report" locale="en-US" caption="Day Compare"></zn-report-table>`, () => sixRows);
       try {

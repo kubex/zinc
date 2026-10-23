@@ -150,6 +150,27 @@ th.report__dim {
   }
 }
 
+// A lone blue digit beside black ones barely reads as a link
+.report tbody .report__num a {
+  font-weight: var(--zn-font-weight-semibold);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+  text-underline-offset: 3px;
+
+  &:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+// Lighter than the headings, and opaque so cells scrolling behind the frozen column don't show through
+.report tbody tr:hover td {
+  background-color: color-mix(in srgb, var(--_head) 50%, rgb(var(--zn-panel)));
+}
+
+.report tbody tr[aria-selected="true"] td {
+  background-color: var(--zn-table-row-selected-background, var(--zn-color-primary-50, color-mix(in srgb, rgb(var(--zn-primary)) 8%, rgb(var(--zn-panel)))));
+}
+
 .report__total td {
   font-weight: var(--zn-font-weight-bold);
   border-top: 1px solid rgb(var(--zn-border-color));

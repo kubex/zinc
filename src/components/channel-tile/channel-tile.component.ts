@@ -269,14 +269,9 @@ export default class ZnChannelTile extends ZincElement {
       <slot name="leading">
         ${this.icon
           ? html`
-            <zn-button icon=${this.icon}
-                       icon-size="20"
-                       icon-button="round"
-                       color=${this.color}
-                       class="${classMap({
-                         [`channel-tile--${this.color}`]: true,
-                       })}"
-                       no-hover></zn-button>`
+            <span class="channel-tile__lead">
+              <zn-icon src=${this.icon} size="16"></zn-icon>
+            </span>`
           : ''}
       </slot>`;
   }
@@ -284,32 +279,36 @@ export default class ZnChannelTile extends ZincElement {
   private _renderAvailableAction() {
     if (this.incoming && this.rejectable) {
       return html`
-        <button class="channel-tile__reject" type="button" aria-label=${this.rejectLabel}
+        <button class="channel-tile__lead channel-tile__reject" type="button" aria-label=${this.rejectLabel}
                 @click=${this._handleReject}>
-          <zn-icon src=${this.rejectIcon} size="22"></zn-icon>
+          <zn-icon src=${this.rejectIcon} size="16"></zn-icon>
         </button>`;
     }
 
     if (this.acceptUri) {
       return html`
-        <zn-button href=${this.acceptUri}
-                   icon=${this.acceptIcon}
-                   icon-size="20"
-                   icon-button="round"
-                   gaid=${this.acceptGaid}
-                   loading-text="Accepting"
-                   no-hover>
-        </zn-button>`;
+        <span class="channel-tile__lead">
+          <zn-button href=${this.acceptUri}
+                     icon=${this.acceptIcon}
+                     icon-size="16"
+                     icon-button="round"
+                     gaid=${this.acceptGaid}
+                     loading-text="Accepting"
+                     plain>
+          </zn-button>
+        </span>`;
     }
 
     return html`
-      <slot name="action">
-        <zn-button icon=${this.acceptIcon}
-                   icon-size="20"
-                   icon-button="round"
-                   gaid=${this.acceptGaid}
-                   no-hover>
-        </zn-button>
-      </slot>`;
+      <span class="channel-tile__lead">
+        <slot name="action">
+          <zn-button icon=${this.acceptIcon}
+                     icon-size="16"
+                     icon-button="round"
+                     gaid=${this.acceptGaid}
+                     plain>
+          </zn-button>
+        </slot>
+      </span>`;
   }
 }

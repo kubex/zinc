@@ -447,6 +447,31 @@ describe('<zn-page>', () => {
     expect(getComputedStyle(inner.shadowRoot!.querySelector('.header')!).display).to.not.equal('none');
   });
 
+  it('gives a nested page\'s header the card title style and a single inset', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Outer Page">
+        <zn-tab caption="Overview">
+          <zn-page caption="Inner Page" summary="Inner summary" nested>
+            <zn-tab caption="Overview">Inner Overview</zn-tab>
+            <zn-tab caption="Details">Inner Details</zn-tab>
+          </zn-page>
+        </zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const inner = el.querySelector<ZnPage>('zn-page')!;
+    inner.style.setProperty('--zn-text-h1-font-size', '14px');
+    inner.style.setProperty('--zn-base-gap', '16px');
+    const root = inner.shadowRoot!;
+    const header = getComputedStyle(root.querySelector('.header')!);
+    expect(header.paddingLeft).to.equal('16px');
+    expect(header.paddingRight).to.equal('16px');
+    expect(getComputedStyle(root.querySelector('.header .content')!).maxWidth).to.equal('100%');
+    expect(getComputedStyle(root.querySelector('.header__caption')!).fontSize).to.equal('14px');
+    expect(getComputedStyle(root.querySelector('.header__left')!).rowGap).to.equal('0px');
+  });
+
   it('hides an empty header', async () => {
     const el = await fixture<ZnPage>(html`
       <zn-page>

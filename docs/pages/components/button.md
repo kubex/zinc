@@ -289,6 +289,33 @@ You can also override form attributes using `formaction`, `formmethod`, `formenc
 </form>
 ```
 
+### Long Press Menu
+
+Put a `<zn-menu>` in the `menu` slot to give a button advanced options, the way an app in the macOS Dock shows its menu when held. A click still runs the button's own action; holding it for `long-press-delay` milliseconds (500 by default) opens the menu instead. Keep holding and drag onto an item, then release, to choose it in one gesture.
+
+Right click, <kbd>Arrow Down</kbd>, <kbd>Shift</kbd>+<kbd>F10</kbd> and the context menu key also open the menu. Use `menu-placement` to change where it opens.
+
+Clicks on menu items bubble through the button, so a `click` listener on the button also hears them. Wire item actions through the menu's `zn-select` event, or check `event.target`.
+
+```html:preview
+<zn-button color="primary" class="long-press-example" long-press-delay="400">
+  Send
+  <zn-menu slot="menu">
+    <zn-menu-item value="schedule">Schedule send</zn-menu-item>
+    <zn-menu-item value="draft">Save as draft</zn-menu-item>
+    <zn-menu-item value="test">Send a test to myself</zn-menu-item>
+  </zn-menu>
+</zn-button>
+
+<script type="module">
+  const button = document.querySelector('.long-press-example');
+  button.addEventListener('click', e => {
+    if (e.target === button) alert('Send');
+  });
+  button.querySelector('zn-menu').addEventListener('zn-select', e => alert(e.detail.item.value));
+</script>
+```
+
 ### Dropdown Closer
 
 Use the `dropdown-closer` attribute to automatically close parent dropdowns when the button is clicked.

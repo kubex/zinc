@@ -95,4 +95,70 @@ describe('<zn-button>', () => {
     expect(action).to.equal('/add');
     expect(intent).to.equal('add');
   });
+
+  describe('long press menu', () => {
+    const menuFixture = () => fixture<ZnButton>(html`
+      <zn-button long-press-delay="50">
+        Send
+        <zn-menu slot="menu">
+          <zn-menu-item value="draft">Save as draft</zn-menu-item>
+        </zn-menu>
+      </zn-button>
+    `);
+
+    const press = (base: Element, type: string) =>
+      base.dispatchEvent(new PointerEvent(type, {bubbles: true, composed: true, button: 0, clientX: 5, clientY: 5}));
+
+    it('announces the menu on the inner button', async () => {
+      const el = await menuFixture();
+      const base = el.shadowRoot!.querySelector('[part~="base"]')!;
+      expect(base.getAttribute('aria-haspopup')).to.equal('menu');
+      expect(base.getAttribute('aria-expanded')).to.equal('false');
+    });
+
+    it('runs the click action on a short press', async () => {
+      const el = await menuFixture();
+      const base = el.shadowRoot!.querySelector('[part~="base"]')! as HTMLElement;
+      let clicks = 0;
+      el.addEventListener('click', () => clicks++);
+
+      press(base, 'pointerdown');
+      press(document.body, 'pointerup');
+      base.click();
+
+      expect(clicks).to.equal(1);
+      expect(el.menuDropdown.open).to.be.false;
+    });
+
+    it('opens the menu on a long press and swallows the click that ends it', async () => {
+      const el = await menuFixture();
+      const base = el.shadowRoot!.querySelector('[part~="base"]')! as HTMLElement;
+      let clicks = 0;
+      el.addEventListener('click', () => clicks++);
+
+      press(base, 'pointerdown');
+      await new Promise(resolve => setTimeout(resolve, 100));
+      press(document.body, 'pointerup');
+      base.click();
+
+      expect(el.menuDropdown.open).to.be.true;
+      expect(clicks).to.equal(0);
+      expect(base.getAttribute('aria-expanded')).to.equal('true');
+    });
+
+    it('opens the menu with ArrowDown', async () => {
+      const el = await menuFixture();
+      const base = el.shadowRoot!.querySelector('[part~="base"]')!;
+
+      base.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowDown', bubbles: true, composed: true}));
+      await el.menuDropdown.updateComplete;
+
+      expect(el.menuDropdown.open).to.be.true;
+    });
+
+    it('renders no dropdown without a menu', async () => {
+      const el = await fixture<ZnButton>(html`<zn-button>Plain</zn-button>`);
+      expect(el.shadowRoot!.querySelector('zn-dropdown')).to.be.null;
+    });
+  });
 });

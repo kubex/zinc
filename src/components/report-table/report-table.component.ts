@@ -26,6 +26,7 @@ import {Task} from '@lit/task';
 import ZincElement from '../../internal/zinc-element';
 import ZnAlert from '../alert';
 import ZnButton from '../button';
+import ZnCheckbox from '../checkbox';
 import ZnDataTableFilter from '../data-table-filter';
 import ZnDataTableSearch from '../data-table-search';
 import ZnDateRange from '../date-range';
@@ -76,6 +77,7 @@ function rawValue(values: ReportValues, path: string): unknown {
  *
  * @dependency zn-alert
  * @dependency zn-button
+ * @dependency zn-checkbox
  * @dependency zn-data-table-filter
  * @dependency zn-data-table-search
  * @dependency zn-date-range
@@ -94,6 +96,7 @@ export default class ZnReportTable extends ZincElement {
   static dependencies = {
     'zn-alert': ZnAlert,
     'zn-button': ZnButton,
+    'zn-checkbox': ZnCheckbox,
     'zn-date-range': ZnDateRange,
     'zn-empty-state': ZnEmptyState,
     'zn-icon': ZnIcon,
@@ -141,6 +144,7 @@ export default class ZnReportTable extends ZincElement {
   @state() protected search = '';
   @state() private sortKey = '';
   @state() private sortDirection: 'asc' | 'desc' = 'desc';
+  @state() private selected = new Set<string>();
 
   private sharableDefaults: Record<SharableKey, string> | null = null;
   private adoption: {from: string; to: string} | null = null;
@@ -270,6 +274,9 @@ export default class ZnReportTable extends ZincElement {
   }
 
   private change(patch: Partial<Pick<ZnReportTable, 'type' | 'groupBy' | 'from' | 'to' | 'filter'>>) {
+    if (patch.groupBy !== undefined && patch.groupBy !== this.groupBy) {
+      this.selected = new Set();
+    }
     Object.assign(this, patch);
     this.emit('zn-report-change', {
       detail: {type: this.type, groupBy: this.groupBy, from: this.from, to: this.to, filter: this.filter},
@@ -380,7 +387,7 @@ export default class ZnReportTable extends ZincElement {
               <th class="report__sep" colspan="${group.columns.length}"><span class="report__glabel">${group.label}</span></th>`)}
           </tr>
           <tr>
-            ${this.renderHeading(DIMENSION, dimension, {report__dim: true})}
+            ${this.renderHeading(DIMENSION, dimension, {report__dim: true}, this.renderSelectAll(rows))}
             ${groups.map(group => group.columns.map((column, index) => this.renderHeading(
               column.key,
               group.columns.length === 1 && column.label === group.label ? '' : column.label,
@@ -390,9 +397,14 @@ export default class ZnReportTable extends ZincElement {
           </thead>
           <tbody>
           ${repeat(rows, row => row.id, row => html`
-            <tr>
+            <tr aria-selected="${this.selected.has(row.id) ? 'true' : 'false'}">
               <td class="report__dim">
-                ${row.uri ? this.renderLink({uri: row.uri, target: row.target}, row.label) : row.label}
+                <span class="report__head">
+                  <zn-checkbox class="report__check" size="small" aria-label="Select ${row.label}"
+                               .checked="${this.selected.has(row.id)}"
+                               @zn-change="${() => this.toggleRow(row.id)}"></zn-checkbox>
+                  ${row.uri ? this.renderLink({uri: row.uri, target: row.target}, row.label) : row.label}
+                </span>
               </td>
               ${groups.map(group => group.columns.map((column, index) => {
                 const value = this.cellValue(column, row);
@@ -418,13 +430,37 @@ export default class ZnReportTable extends ZincElement {
       </div>`;
   }
 
-  private renderHeading(key: string, label: string, classes: Record<string, boolean>): TemplateResult {
+  private renderHeading(key: string, label: string, classes: Record<string, boolean>, prefix: TemplateResult | typeof nothing = nothing): TemplateResult {
     const sort = () => this.cycleSort(key);
     return html`
       <th class=${classMap(classes)} tabindex="0" aria-sort="${this.sortState(key)}"
           @click="${sort}" @keydown="${sortKeyHandler(sort)}">
-        <span class="report__head">${label}${renderSortIcon(this.sortState(key))}</span>
+        <span class="report__head">${prefix}${label}${renderSortIcon(this.sortState(key))}</span>
       </th>`;
+  }
+
+  // Inside a sortable heading, so its clicks and keys must not reach the heading's sort handlers
+  private renderSelectAll(rows: ReportRow[]): TemplateResult {
+    const count = rows.filter(row => this.selected.has(row.id)).length;
+    return html`
+      <zn-checkbox class="report__check" size="small" aria-label="Select all shown"
+                   .checked="${count > 0 && count === rows.length}"
+                   .indeterminate="${count > 0 && count < rows.length}"
+                   @click="${(e: Event) => e.stopPropagation()}"
+                   @keydown="${(e: Event) => e.stopPropagation()}"
+                   @zn-change="${() => this.toggleAll(rows, count < rows.length)}"></zn-checkbox>`;
+  }
+
+  private toggleRow(id: string) {
+    const selected = new Set(this.selected);
+    if (!selected.delete(id)) selected.add(id);
+    this.selected = selected;
+  }
+
+  private toggleAll(rows: ReportRow[], select: boolean) {
+    const selected = new Set(this.selected);
+    rows.forEach(row => select ? selected.add(row.id) : selected.delete(row.id));
+    this.selected = selected;
   }
 
   private renderBody(rows: ReportRow[], busy: boolean): TemplateResult {

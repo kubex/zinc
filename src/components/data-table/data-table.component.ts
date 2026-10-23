@@ -60,6 +60,7 @@ interface Cell {
   hoverPlacement?: string;
   chipColor?: string;
   badgeType?: string;
+  badgeDot?: boolean;
   gaid?: string;
   sortValue?: string;
   uri?: string;
@@ -1717,7 +1718,7 @@ export default class ZnDataTable extends ZincElement {
 
     if (data.badgeType) {
       content = html`
-        <zn-badge type="${data.badgeType}" title="${ifDefined(data.title)}">${content}</zn-badge>`;
+        <zn-badge type="${data.badgeType}" ?dot="${data.badgeDot}" title="${ifDefined(data.title)}">${content}</zn-badge>`;
     }
 
 

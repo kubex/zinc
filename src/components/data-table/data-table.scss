@@ -496,3 +496,8 @@ tbody tr.table__row--error td {
 .table__cell--subtext{
   @include wc.text-style(subheading-small);
 }
+
+// Muted cells are mostly placeholders ("—"), so they sit lighter than the global muted text
+zn-style.zn-muted {
+  color: var(--zn-color-neutral-400, rgb(var(--zn-color-muted-text)));
+}

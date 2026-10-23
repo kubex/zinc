@@ -55,6 +55,19 @@ describe('<zn-icon>', () => {
     expect(svg).to.exist;
   });
 
+  it('should render country flags from the flag library', async () => {
+    const el = await fixture<ZnIcon>(html`<zn-icon src="gb@flag" size="20"></zn-icon>`);
+
+    expect(el.library).to.equal('flag');
+    expect(el.shadowRoot?.querySelector('.flag[aria-label="GB"] svg')).to.exist;
+  });
+
+  it('should render nothing for an unknown flag', async () => {
+    const el = await fixture<ZnIcon>(html`<zn-icon src="zz@flag"></zn-icon>`);
+
+    expect(el.shadowRoot?.querySelector('.flag')).to.not.exist;
+  });
+
   it('should remove a matching library indicator from the icon src', async () => {
     const el = await fixture<ZnIcon>(html`
       <zn-icon src="home@lu" library="lucide" size="48"></zn-icon>

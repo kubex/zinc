@@ -16,9 +16,17 @@ describe('report-math', () => {
     expect(compileFormula('{a}')({a: '12.5'})).to.equal(12.5);
   });
 
+  it('evaluates min and max with any number of arguments', () => {
+    expect(compileFormula('max(0, {a} - {b})')({a: 1, b: 5})).to.equal(0);
+    expect(compileFormula('min(1, {a} / {b})')({a: 9, b: 3})).to.equal(1);
+    expect(compileFormula('MAX(1, 2, 3)')({})).to.equal(3);
+  });
+
   it('throws SyntaxError on bad syntax', () => {
     expect(() => compileFormula('1 +')).to.throw(SyntaxError);
     expect(() => compileFormula('{a')).to.throw(SyntaxError);
+    expect(() => compileFormula('sum(1, 2)')).to.throw(SyntaxError);
+    expect(() => compileFormula('max 1')).to.throw(SyntaxError);
   });
 
   it('shows 0 for an invalid formula and warns once', () => {

@@ -120,6 +120,40 @@ describe('<zn-report-table>', () => {
     expect(cells(el, 'tbody td a')).to.have.length(2);
   });
 
+  it('only shows tick boxes when selectable', async () => {
+    const el = await load(report());
+
+    expect(cells(el, 'zn-checkbox')).to.have.length(0);
+    expect(cells(el, 'tbody tr[aria-selected]')).to.have.length(0);
+  });
+
+  it('hides columns that are empty in every row, and their groups', async () => {
+    const el = await load(report({
+      groups: [
+        {label: 'Shown', columns: [{key: 'a', label: 'A', value: 'a'}, {key: 'zero', label: 'Zero', value: 'z'}]},
+        {label: 'Empty', columns: [{key: 'b', label: 'B', value: 'b'}]},
+      ],
+      rows: [{id: 'r', label: 'Row', values: {a: 1, z: 0, b: 0}}],
+    }), html`<zn-report-table data-uri="/report" locale="en-US" hide-empty-columns></zn-report-table>`);
+
+    expect(cells(el, 'thead tr:not(.report__groups) th').map(th => th.textContent!.trim())).to.deep.equal(['Publisher', 'A']);
+    expect(cells(el, '.report__glabel').map(label => label.textContent!.trim())).to.deep.equal(['Shown']);
+  });
+
+  it('shades heatmap cells against their column maximum', async () => {
+    const el = await load(report({
+      groups: [{label: 'Counts', columns: [{key: 'n', label: 'N', value: 'n'}]}],
+      rows: [
+        {id: 'a', label: 'A', values: {n: 4}},
+        {id: 'b', label: 'B', values: {n: 2}},
+        {id: 'c', label: 'C', values: {n: 0}},
+      ],
+    }), html`<zn-report-table data-uri="/report" locale="en-US" heatmap></zn-report-table>`);
+
+    const heat = cells(el, 'tbody td.report__num').map(td => td.style.getPropertyValue('--_heat'));
+    expect(heat).to.deep.equal(['1.000', '0.500', '']);
+  });
+
   it('computes totals from formulas', async () => {
     const el = await load(report());
 
@@ -214,7 +248,8 @@ describe('<zn-report-table>', () => {
 
     it('highlights ticked rows, ticks all shown, and clears on group by change', async () => {
       const {el, stub} = await mount(html`
-        <zn-report-table data-uri="/report" group-by="a" group-bys='[{"value":"a","label":"A"},{"value":"b","label":"B"}]'></zn-report-table>`);
+        <zn-report-table data-uri="/report" group-by="a" selectable
+                         group-bys='[{"value":"a","label":"A"},{"value":"b","label":"B"}]'></zn-report-table>`);
       try {
         const root = el.shadowRoot!;
         const selected = () => cells(el, 'tbody tr').map(row => row.getAttribute('aria-selected'));

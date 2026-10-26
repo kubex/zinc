@@ -21,6 +21,7 @@ import {property, state} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
 import {renderSortIcon, sortKeyHandler, type SortState} from '../../internal/table-sort';
 import {repeat} from 'lit/directives/repeat.js';
+import {styleMap} from 'lit/directives/style-map.js';
 import {TabRowController} from '../../internal/table-tabs';
 import {Task} from '@lit/task';
 import ZincElement from '../../internal/zinc-element';
@@ -139,6 +140,15 @@ export default class ZnReportTable extends ZincElement {
 
   /** Mirrors the type, group by, dates, filter and search to the URL query string, and reads them back on load. */
   @property({type: Boolean}) sharable = false;
+
+  /** Leaves out columns that are zero or empty in every row, and groups left without columns. */
+  @property({attribute: 'hide-empty-columns', type: Boolean}) hideEmptyColumns = false;
+
+  /** Gives each row a tick box that highlights it, with one in the heading for every row shown. */
+  @property({type: Boolean}) selectable = false;
+
+  /** Shades number cells by their size against the largest in their column. */
+  @property({type: Boolean}) heatmap = false;
 
   @state() protected response: ReportResponse | null = null;
   @state() protected search = '';
@@ -370,8 +380,30 @@ export default class ZnReportTable extends ZincElement {
     };
   }
 
+  private displayGroups(response: ReportResponse): ReportGroup[] {
+    if (!this.hideEmptyColumns) return response.groups;
+    const filled = (column: ReportColumn) => response.rows.some(row => {
+      const value = this.cellValue(column, row);
+      return typeof value === 'number' ? value !== 0 : value !== null && value !== '';
+    });
+    return response.groups
+      .map(group => ({...group, columns: group.columns.filter(filled)}))
+      .filter(group => group.columns.length > 0);
+  }
+
+  private heatScales(groups: ReportGroup[], rows: ReportRow[]): Map<string, number> {
+    const scales = new Map<string, number>();
+    if (!this.heatmap) return scales;
+    groups.flatMap(group => group.columns).filter(column => column.format !== 'text').forEach(column => {
+      const max = Math.max(0, ...rows.map(row => Math.abs(Number(this.cellValue(column, row)) || 0)));
+      if (max > 0) scales.set(column.key, max);
+    });
+    return scales;
+  }
+
   private renderTable(response: ReportResponse, rows: ReportRow[], busy: boolean): TemplateResult {
-    const groups = response.groups;
+    const groups = this.displayGroups(response);
+    const scales = this.heatScales(groups, rows);
     const totals = this.totalsFor(rows);
     const dimension = response.dimension?.label ?? '';
 
@@ -387,7 +419,7 @@ export default class ZnReportTable extends ZincElement {
               <th class="report__sep" colspan="${group.columns.length}"><span class="report__glabel">${group.label}</span></th>`)}
           </tr>
           <tr>
-            ${this.renderHeading(DIMENSION, dimension, {report__dim: true}, this.renderSelectAll(rows))}
+            ${this.renderHeading(DIMENSION, dimension, {report__dim: true}, this.selectable ? this.renderSelectAll(rows) : nothing)}
             ${groups.map(group => group.columns.map((column, index) => this.renderHeading(
               column.key,
               group.columns.length === 1 && column.label === group.label ? '' : column.label,
@@ -397,12 +429,13 @@ export default class ZnReportTable extends ZincElement {
           </thead>
           <tbody>
           ${repeat(rows, row => row.id, row => html`
-            <tr aria-selected="${this.selected.has(row.id) ? 'true' : 'false'}">
+            <tr aria-selected="${ifDefined(this.selectable ? String(this.selected.has(row.id)) : undefined)}">
               <td class="report__dim">
                 <span class="report__head">
-                  <zn-checkbox class="report__check" size="small" aria-label="Select ${row.label}"
-                               .checked="${this.selected.has(row.id)}"
-                               @zn-change="${() => this.toggleRow(row.id)}"></zn-checkbox>
+                  ${this.selectable ? html`
+                    <zn-checkbox class="report__check" size="small" aria-label="Select ${row.label}"
+                                 .checked="${this.selected.has(row.id)}"
+                                 @zn-change="${() => this.toggleRow(row.id)}"></zn-checkbox>` : nothing}
                   ${row.uri ? this.renderLink({uri: row.uri, target: row.target}, row.label) : row.label}
                 </span>
               </td>
@@ -410,8 +443,11 @@ export default class ZnReportTable extends ZincElement {
                 const value = this.cellValue(column, row);
                 const link = row.links?.[column.key];
                 const text = this.format(column, value);
+                const scale = scales.get(column.key);
+                const heat = scale && typeof value === 'number' && value !== 0 ? Math.abs(value) / scale : 0;
                 return html`
-                  <td class=${classMap(this.cellClasses(column, value, index === 0))}>${link ? this.renderLink(link, text) : text}</td>`;
+                  <td class=${classMap({...this.cellClasses(column, value, index === 0), report__heat: heat > 0, 'report__heat--neg': heat > 0 && (value as number) < 0})}
+                      style=${styleMap({'--_heat': heat > 0 ? heat.toFixed(3) : undefined})}>${link ? this.renderLink(link, text) : text}</td>`;
               }))}
             </tr>`)}
           </tbody>

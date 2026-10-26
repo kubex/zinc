@@ -6,13 +6,33 @@
 
 .date-range__trigger {
   --zn-text-button-label-transform: none;
-  --zn-text-button-label-font-weight: var(--zn-font-weight-medium, 500);
+  --zn-text-button-label-font-weight: var(--zn-input-font-weight);
 }
 
 .date-range__trigger::part(label) {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+}
+
+.date-range__trigger::part(base) {
+  font-size: var(--zn-input-font-size-medium);
+  font-weight: var(--zn-input-font-weight);
+  color: var(--zn-input-color);
+  background-color: var(--zn-input-background-color);
+  border: solid var(--zn-input-border-width) var(--zn-input-border-color);
+  border-radius: var(--zn-input-border-radius-medium);
+  box-shadow: var(--zn-input-shadow, none);
+}
+
+.date-range__trigger:hover::part(base) {
+  background-color: var(--zn-input-background-color-hover);
+  border-color: var(--zn-input-border-color-hover);
+}
+
+.date-range__trigger::part(icon),
+.date-range__chevron {
+  color: var(--zn-input-icon-color);
 }
 
 .date-range__pop {

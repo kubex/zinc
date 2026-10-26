@@ -87,6 +87,9 @@ export default class ZnDateRange extends ZincElement {
   /** Submits `name[from]` and `name[to]` with the form. */
   @property() name = '';
 
+  /** The trigger button's size. */
+  @property() size: 'small' | 'medium' | 'large' = 'small';
+
   @state() private draft: {from: Iso | ''; to: Iso | ''} = {from: '', to: ''};
   @state() private view = {year: 0, month0: 0};
   @state() private focusDay: Iso = '';
@@ -268,7 +271,7 @@ export default class ZnDateRange extends ZincElement {
 
   render() {
     return html`
-      <zn-button class="date-range__trigger" part="trigger" panel-bg size="small" icon="calendar@lu"
+      <zn-button class="date-range__trigger" part="trigger" panel-bg size="${this.size}" icon="calendar@lu"
                  icon-size="16" aria-haspopup="dialog" aria-expanded="${this.anchor.open}" @click="${this.toggle}">
         ${rangeLabel(this.rangeFrom, this.rangeTo)}
         <zn-icon class="date-range__chevron" src="chevron-down@lu" size="14"></zn-icon>

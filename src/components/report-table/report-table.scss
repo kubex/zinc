@@ -167,6 +167,16 @@ th.report__dim {
   background-color: color-mix(in srgb, var(--_head) 50%, rgb(var(--zn-panel)));
 }
 
+// After the hover rule, so a hovered row keeps its shading
+.report tbody tr td.report__heat {
+  --_heat-color: rgb(var(--zn-primary));
+  background-color: color-mix(in srgb, var(--_heat-color) calc(var(--_heat) * 32%), rgb(var(--zn-panel)));
+}
+
+.report tbody tr td.report__heat--neg {
+  --_heat-color: var(--zn-color-success-fg, rgb(var(--zn-color-success)));
+}
+
 .report tbody tr[aria-selected="true"] td {
   background-color: var(--zn-table-row-selected-background, var(--zn-color-primary-50, color-mix(in srgb, rgb(var(--zn-primary)) 8%, rgb(var(--zn-panel)))));
 }

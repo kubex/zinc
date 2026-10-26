@@ -28,6 +28,12 @@ describe('formatValue', () => {
     expect(formatValue(col({format: 'number'}), -0.2, opts)).to.equal('0');
   });
 
+  it('formats durations in seconds as hours and minutes', () => {
+    expect(formatValue(col({format: 'duration'}), 5400, opts)).to.equal('1:30');
+    expect(formatValue(col({format: 'duration'}), 59, opts)).to.equal('0:01');
+    expect(formatValue(col({format: 'duration'}), -3600, opts)).to.equal('-1:00');
+  });
+
   it('formats percent', () => {
     expect(formatValue(col({format: 'percent', decimals: 2}), -0.0157, opts)).to.equal('-1.57%');
   });

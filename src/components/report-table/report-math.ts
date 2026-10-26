@@ -2,7 +2,7 @@ import type {FilterField} from '../data-table-filter/data-table-filter.component
 
 export interface ReportValues {[key: string]: number | string | ReportValues}
 
-export type ReportFormat = 'number' | 'decimal' | 'percent' | 'currency' | 'financial' | 'text';
+export type ReportFormat = 'number' | 'decimal' | 'percent' | 'currency' | 'financial' | 'duration' | 'text';
 export type ReportStyle = 'none' | 'breakeven' | 'ibreakeven' | 'bold';
 export interface ReportColumn {
   key: string; label: string; format?: ReportFormat; decimals?: number; style?: ReportStyle;
@@ -50,7 +50,8 @@ export function resolvePath(values: ReportValues | undefined, path: string): num
   return toNumber(current);
 }
 
-type Token = {type: 'num'; value: number} | {type: 'path'; value: string} | {type: 'op'; value: string};
+type Token = {type: 'num'; value: number} | {type: 'path'; value: string} | {type: 'op'; value: string}
+  | {type: 'fn'; value: 'min' | 'max'};
 
 function tokenize(source: string): Token[] {
   const tokens: Token[] = [];
@@ -59,9 +60,16 @@ function tokenize(source: string): Token[] {
     const ch = source[i];
     if (/\s/.test(ch)) {
       i++;
-    } else if ('+-*/()'.includes(ch)) {
+    } else if ('+-*/(),'.includes(ch)) {
       tokens.push({type: 'op', value: ch});
       i++;
+    } else if (/[a-z]/i.test(ch)) {
+      const name = /^[a-z]+/i.exec(source.slice(i))![0].toLowerCase();
+      if (name !== 'min' && name !== 'max') {
+        throw new SyntaxError(`Unknown function "${name}" at ${i}`);
+      }
+      tokens.push({type: 'fn', value: name});
+      i += name.length;
     } else if (ch === '{') {
       const end = source.indexOf('}', i);
       if (end === -1) {
@@ -135,6 +143,23 @@ function parse(tokens: Token[]): Formula {
     if (token.type === 'path') {
       const path = token.value;
       return v => resolvePath(v, path);
+    }
+    if (token.type === 'fn') {
+      const pick = token.value === 'min' ? Math.min : Math.max;
+      if (!isOp('(')) {
+        throw new SyntaxError(`Missing "(" after ${token.value}`);
+      }
+      pos++;
+      const args = [expression()];
+      while (isOp(',')) {
+        pos++;
+        args.push(expression());
+      }
+      if (!isOp(')')) {
+        throw new SyntaxError('Missing closing parenthesis');
+      }
+      pos++;
+      return v => pick(...args.map(arg => arg(v)));
     }
     if (token.value === '(') {
       const inner = expression();

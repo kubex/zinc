@@ -18,6 +18,12 @@ export function formatValue(column: ReportColumn, value: number | string | null,
     return String(value);
   }
 
+  if (format === 'duration') {
+    const minutes = Math.round(Math.abs(value) / 60);
+    const text = `${Math.floor(minutes / 60)}:${String(minutes % 60).padStart(2, '0')}`;
+    return value < 0 ? `-${text}` : text;
+  }
+
   const decimals = displayDecimals(column);
   const scaled = format === 'percent' ? value * 100 : value;
   const rounded = round(scaled, decimals);

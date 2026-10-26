@@ -608,12 +608,23 @@ zn-navbar:not([pill]) {
     padding-inline: var(--zn-base-gap, 0);
   }
 
+  // Nested pages sit side by side, so the header band is one fixed height whether or not the page has a back
+  // button, actions, a description or caption badges, keeping their tab bars level.
   .header .content {
     max-width: 100%;
+    flex-wrap: nowrap;
+    align-items: center;
+    height: var(--zn-page-nested-header-height, 44px);
   }
 
+  .header .caption {
+    align-items: center;
+  }
+
+  // The tab bar is one fixed height too, whether or not it has expanding actions.
   zn-navbar:not([pill])::part(container) {
     width: 100%;
+    height: var(--zn-page-nested-navbar-height, 40px);
   }
 
   zn-navbar:not([pill])::part(navbar) {

@@ -337,7 +337,8 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 
     &--end {
       right: var(--navbar-scroll-inset-end, 0px);
-      margin-inline-start: calc(-1 * var(--navbar-scroll-size));
+      // Ends inset-end short of the tabs so the ::before reaching over the inset stays within them; past them it is scrollable overflow
+      margin-inline: calc(-1 * (var(--navbar-scroll-size) + var(--navbar-scroll-inset-end, 0px))) var(--navbar-scroll-inset-end, 0px);
       justify-content: flex-end;
 
       &::before {

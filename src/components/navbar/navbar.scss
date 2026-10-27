@@ -64,7 +64,7 @@
 
       // Hover is the plain tab tint — without the body-coloured ::after
       // backdrop the generic hover paints, which reads as white
-      &:hover:not(.active):not(.zn-tb-active):not(.more)::after {
+      &:hover:not(.active):not(.zn-tb-active)::after {
         display: none;
       }
     }
@@ -86,7 +86,7 @@
   left: 0;
   width: 0;
   transform-origin: left center;
-  bottom: -1px;
+  bottom: 0;
   height: var(--zn-navbar-tab-indicator-height, 1px);
   background-color: var(--zn-navbar-tab-indicator-color, rgb(var(--navbar-active-colour)));
   opacity: 0;
@@ -269,16 +269,121 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 
 
 :host(:not([stacked]):not([icon-bar])) {
-  ul.navbar {
-    height: var(--zn-navbar-tab-strip-height, var(--zn-navbar-height, 40px));
+  // Tabs that don't fit scroll sideways under a floating arrow at each edge that has more
+  .navbar__strip {
+    --navbar-scroll-size: 56px; // keep in sync with NAVBAR_SCROLL_EDGE in navbar.component.ts
+    --navbar-scroll-button-size: calc(var(--zn-density-control-height, 36px) - 6px);
+    --navbar-scroll-fade: rgb(var(--navbar-active-colour));
+    // Fully faded by the button's inner edge
+    --navbar-scroll-fade-size: calc(16px + var(--navbar-scroll-size) - var(--navbar-scroll-button-size));
+
+    position: relative;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    // The tab lines and indicator overlap the border below by a pixel; this keeps that pixel inside the scrollport
+    padding-bottom: 1px;
+    margin-bottom: -1px;
     align-self: end;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  ul.navbar {
+    flex: none;
+    height: var(--zn-navbar-tab-strip-height, var(--zn-navbar-height, 40px));
+  }
+
+  .navbar__scroll {
+    position: sticky;
+    z-index: 2;
+    flex: none;
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    width: var(--navbar-scroll-size);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--zn-transition-fast, 150ms) ease;
+
+    // Tabs passing under the arrow soften and fade into the surface behind it
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      // Down over the border row too, redrawing the border so the active tab's line doesn't run under the arrow
+      bottom: -1px;
+      border-bottom: 1px solid rgb(var(--zn-border-color));
+      background: var(--navbar-scroll-fade);
+      backdrop-filter: blur(1px);
+    }
+
+    &--start {
+      left: var(--navbar-scroll-inset-start, 0px);
+      margin-inline-end: calc(-1 * var(--navbar-scroll-size));
+      justify-content: flex-start;
+
+      // Also covers the inset behind the arrow, so tabs scrolled past it don't show at the strip's edge
+      &::before {
+        left: calc(-1 * var(--navbar-scroll-inset-start, 0px));
+        right: -16px;
+        mask-image: linear-gradient(to left, transparent, #000 var(--navbar-scroll-fade-size));
+      }
+    }
+
+    &--end {
+      right: var(--navbar-scroll-inset-end, 0px);
+      margin-inline-start: calc(-1 * var(--navbar-scroll-size));
+      justify-content: flex-end;
+
+      &::before {
+        left: -16px;
+        right: calc(-1 * var(--navbar-scroll-inset-end, 0px));
+        mask-image: linear-gradient(to right, transparent, #000 var(--navbar-scroll-fade-size));
+      }
+    }
+  }
+
+  .navbar__scroll-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--navbar-scroll-button-size);
+    height: var(--navbar-scroll-button-size);
+    margin: 0;
+    padding: 0;
+    border: 1px solid rgb(var(--zn-border-color));
+    border-radius: var(--zn-border-radius, 8px);
+    background: rgb(var(--zn-panel));
+    box-shadow: var(--zn-shadow-small, 0 1px 3px rgba(13, 23, 56, 0.08), 0 1px 2px rgba(13, 23, 56, 0.04));
+    color: rgb(var(--zn-text));
+    cursor: pointer;
+    transition: background-color var(--zn-transition-fast, 150ms) ease;
+
+    &:hover {
+      background: linear-gradient(rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.03)), rgb(var(--zn-panel));
+    }
+
+    &:focus-visible {
+      outline: 2px solid rgb(var(--zn-primary));
+      outline-offset: 1px;
+    }
+  }
+
+  .navbar__strip--scroll-start .navbar__scroll--start,
+  .navbar__strip--scroll-end .navbar__scroll--end {
+    opacity: 1;
+    pointer-events: auto;
   }
 }
 
-:host(:not([stacked]):not([icon-bar]):not([icon-only])) {
-  ul.navbar {
-    min-width: 200px;
-  }
+:host(:not([stacked]):not([icon-bar]):not([icon-only])) .navbar__strip {
+  min-width: 200px;
 }
 
 :host([icon-only]:not([stacked]):not([icon-bar])) {
@@ -314,17 +419,8 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       }
     }
 
-    &:not(.has-hidden) > li.last-visible {
+    > li.last-visible {
       border-top-right-radius: var(--zn-navbar-tab-radius, 6px);
-    }
-
-    &.has-hidden > li.more {
-      border-top-right-radius: var(--zn-navbar-tab-radius, 6px);
-    }
-
-    &.more-only > li.more {
-      border-left-width: var(--zn-navbar-tab-border-width, 1px);
-      border-top-left-radius: var(--zn-navbar-tab-radius, 6px);
     }
   }
 }
@@ -354,23 +450,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
     gap: 0;
     list-style: none;
 
-    li.more {
-      display: none;
-    }
-
-    &.has-hidden {
-      li.more {
-        display: flex;
-      }
-    }
-
     li {
-      &.hidden {
-        visibility: hidden;
-        position: absolute;
-        pointer-events: none;
-      }
-
       .closer {
         display: none;
       }
@@ -584,119 +664,6 @@ button[popovertarget] {
 }
 
 
-:host {
-  ul.navbar {
-    li.more {
-      // Let the trigger fill the whole cell so clicking anywhere in the
-      // "more" item opens the dropdown, not just the icon itself.
-      padding: 0;
-      width: 40px;
-      min-width: 40px;
-
-      zn-dropdown,
-      zn-button[slot="trigger"] {
-        height: 100%;
-        width: 100%;
-      }
-
-      zn-button[slot="trigger"] zn-icon {
-        transition: transform 200ms ease-in-out;
-        --icon-color: var(--zn-text-tab-link-color);
-      }
-
-      zn-dropdown[open] zn-button[slot="trigger"] zn-icon {
-        transform: rotate(90deg);
-        --icon-color: var(--zn-text-tab-link-active-color);
-      }
-
-      &:has(zn-dropdown[open]) {
-        background: rgb(var(--zn-panel));
-
-        &::after {
-          content: '';
-          position: absolute;
-          inset: auto 0 -1px 0;
-          height: 1px;
-          border-radius: 0;
-          background: rgb(var(--zn-panel));
-          z-index: 1;
-        }
-      }
-
-      // Fill the cell whatever the row height; the button's own 36px cap would leave the icon off its centre line.
-      zn-button::part(base) {
-        height: 100%;
-        min-height: 0;
-        max-height: 100%;
-        padding-left: 0;
-        padding-right: 0;
-
-        &:not(:focus-visible) {
-          outline: none;
-        }
-
-        &:hover {
-          background-color: transparent;
-        }
-      }
-
-      ul#extended-menu {
-        --navbar-more-trigger-width: 40px;
-
-        box-shadow: 0 4px 8px -4px rgba(33, 33, 33, 0.1);
-        border: 1px solid rgb(var(--zn-border-color));
-        border-top: 0;
-        border-radius: 0 0 var(--zn-border-radius) var(--zn-border-radius);
-        overflow: hidden;
-        position: relative;
-        inset-inline-end: -1px;
-
-        &::before {
-          content: '';
-          position: absolute;
-          inset: 0 calc(var(--navbar-more-trigger-width) - 2px) auto 0;
-          height: 1px;
-          background: rgb(var(--zn-border-color));
-          z-index: 2;
-        }
-
-        background: rgb(var(--zn-panel));
-        display: flex;
-        flex-direction: column;
-        height: auto;
-        width: fit-content;
-        min-width: var(--zn-size-spanel);
-        margin: -1px 0 0;
-        padding: 1px;
-
-        li {
-          justify-content: left;
-          background: rgb(var(--zn-panel));
-          font-size: var(--zn-text-menu-link-font-size);
-          line-height: var(--zn-text-menu-link-line-height);
-          font-weight: var(--zn-text-menu-link-font-weight);
-          color: var(--zn-text-menu-link-color);
-          padding: var(--zn-spacing-small) var(--zn-spacing-medium);
-
-          &:hover {
-            background: linear-gradient(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06)), rgb(var(--zn-panel));
-          }
-
-          &.active, &.zn-tb-active {
-            font-weight: var(--zn-text-tab-link-font-weight);
-            color: var(--zn-text-tab-link-color);
-          }
-
-          &.active::before, &.zn-tb-active::before {
-            left: 0;
-            right: 0;
-          }
-        }
-      }
-    }
-  }
-}
-
 // Segmented tabs: a grey track with a raised pill that slides, stretches and settles on the active tab.
 // Matches the tab strip's own :not([stacked]):not([icon-bar]) specificity so its height and padding give way.
 :host([pill]:not([stacked]):not([icon-bar])) {
@@ -712,17 +679,21 @@ button[popovertarget] {
     border-bottom: 0;
   }
 
-  ul.navbar {
+  .navbar__strip {
     width: fit-content;
     min-width: 0;
-    height: auto;
     // In line with the panel's caption and contents rather than the tab strip's inset
     margin-inline: var(--zn-panel-padding, var(--zn-spacing-medium));
     margin-bottom: var(--zn-spacing-small);
     padding: 2px;
-    gap: 2px;
     border-radius: 8px;
     background: var(--zn-color-neutral-100);
+  }
+
+  ul.navbar {
+    height: auto;
+    margin: 0;
+    gap: 2px;
 
     > li {
       z-index: 1;
@@ -747,6 +718,31 @@ button[popovertarget] {
     }
   }
 
+  // Sticky edges sit inside the track's padding, so the arrows reach over it to cover tabs scrolling past
+  .navbar__strip {
+    --navbar-scroll-button-size: calc(var(--zn-button-height, var(--zn-density-control-height, 36px)) - 4px);
+    --navbar-scroll-fade: var(--zn-color-neutral-100);
+  }
+
+  .navbar__scroll--start {
+    left: -2px;
+    padding-left: 2px;
+  }
+
+  .navbar__scroll--end {
+    right: -2px;
+    padding-right: 2px;
+  }
+
+  .navbar__scroll::before {
+    bottom: 0;
+    border-bottom: 0;
+  }
+
+  .navbar__scroll-button {
+    border-radius: 6px;
+  }
+
   .navbar__indicator {
     z-index: 0;
     top: var(--zn-navbar-indicator-top);
@@ -764,7 +760,7 @@ button[popovertarget] {
   flex: none;
   width: max-content;
 
-  ul.navbar {
+  .navbar__strip {
     margin: 0;
   }
 }

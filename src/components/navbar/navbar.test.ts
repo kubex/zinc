@@ -56,187 +56,73 @@ describe('<zn-navbar>', () => {
     }
   });
 
-  it('reserves at least 200px for visible nav items when expandables need space', async () => {
+  it('keeps at least 200px for the tabs beside expandables', async () => {
     const el = await fixture<ZnNavbar>(html`
       <zn-navbar>
         <li>One</li>
         <li>Two</li>
-        <li>Three</li>
-        <li>Four</li>
         <zn-expanding-action></zn-expanding-action>
       </zn-navbar>
     `);
     await aTimeout(150);
 
-    const nav = el.shadowRoot!.querySelector<HTMLElement>('ul.navbar')!;
-    const expandable = el.shadowRoot!.querySelector<HTMLElement>('.expandables')!;
-    const items = Array.from(nav.querySelectorAll<HTMLElement>(':scope > li:not(.more)'));
-
-    Object.defineProperty(el, 'offsetWidth', {configurable: true, get: () => 500});
-    Object.defineProperty(expandable, 'offsetWidth', {configurable: true, get: () => 400});
-    Object.defineProperty(expandable, 'getBoundingClientRect', {
-      configurable: true,
-      value: () => ({width: 400})
-    });
-    items.forEach(item => {
-      Object.defineProperty(item, 'offsetWidth', {configurable: true, get: () => 120});
-      Object.defineProperty(item, 'getBoundingClientRect', {
-        configurable: true,
-        value: () => ({width: 120})
-      });
-    });
-
-    el.handleResize();
-
-    expect(getComputedStyle(nav).minWidth).to.equal('200px');
-    expect(items[0].classList.contains('hidden')).to.equal(false);
-    expect(items[1].classList.contains('hidden')).to.equal(true);
+    const strip = el.shadowRoot!.querySelector<HTMLElement>('.navbar__strip')!;
+    expect(getComputedStyle(strip).minWidth).to.equal('200px');
+    expect(strip.style.maxWidth).to.equal('');
   });
 
-  it('accounts for open fill expandables when collapsing nav items', async () => {
+  it('gives an open fill expandable room by narrowing the tabs', async () => {
     const el = await fixture<ZnNavbar>(html`
       <zn-navbar>
         <li>One</li>
         <li>Two</li>
-        <li>Three</li>
-        <li>Four</li>
         <zn-expanding-action method="fill" open></zn-expanding-action>
       </zn-navbar>
     `);
     await aTimeout(150);
 
-    const nav = el.shadowRoot!.querySelector<HTMLElement>('ul.navbar')!;
-    const expandable = el.shadowRoot!.querySelector<HTMLElement>('.expandables')!;
-    const items = Array.from(nav.querySelectorAll<HTMLElement>(':scope > li:not(.more)'));
-
-    Object.defineProperty(el, 'offsetWidth', {configurable: true, get: () => 1000});
-    Object.defineProperty(expandable, 'offsetWidth', {configurable: true, get: () => 40});
-    Object.defineProperty(expandable, 'getBoundingClientRect', {
-      configurable: true,
-      value: () => ({width: 40})
-    });
-    items.forEach(item => {
-      Object.defineProperty(item, 'offsetWidth', {configurable: true, get: () => 120});
-      Object.defineProperty(item, 'getBoundingClientRect', {
-        configurable: true,
-        value: () => ({width: 120})
-      });
-    });
+    const strip = el.shadowRoot!.querySelector<HTMLElement>('.navbar__strip')!;
+    Object.defineProperty(el, 'offsetWidth', {configurable: true, get: () => 1100});
 
     el.handleResize();
 
-    expect(items[0].classList.contains('hidden')).to.equal(false);
-    expect(items[1].classList.contains('hidden')).to.equal(true);
+    expect(strip.style.maxWidth).to.equal('300px');
   });
 
-  it('reserves nav padding and the more button before leaving items visible', async () => {
+  it('shows a scroll arrow at each edge with tabs beyond it', async () => {
+    const tabs = Array.from({length: 12}, (_, i) => ({tab: `t${i}`, title: `Tab number ${i}`}));
     const el = await fixture<ZnNavbar>(html`
-      <zn-navbar>
-        <li>One</li>
-        <li>Two</li>
-        <li>Three</li>
-      </zn-navbar>
+      <zn-navbar style="width: 400px" navigation="${JSON.stringify(tabs)}"></zn-navbar>
     `);
     await aTimeout(150);
 
-    const nav = el.shadowRoot!.querySelector<HTMLElement>('ul.navbar')!;
-    const more = nav.querySelector<HTMLElement>(':scope > li.more')!;
-    const items = Array.from(nav.querySelectorAll<HTMLElement>(':scope > li:not(.more)'));
-    nav.style.paddingLeft = '20px';
-    nav.style.paddingRight = '20px';
+    const strip = el.shadowRoot!.querySelector<HTMLElement>('.navbar__strip')!;
+    const end = el.shadowRoot!.querySelector<HTMLElement>('.navbar__scroll--end')!;
+    expect(strip.classList.contains('navbar__strip--scroll-start')).to.equal(false);
+    expect(strip.classList.contains('navbar__strip--scroll-end')).to.equal(true);
+    await waitUntil(() => getComputedStyle(end).opacity === '1', 'end arrow should show');
 
-    Object.defineProperty(el, 'offsetWidth', {configurable: true, get: () => 290});
-    Object.defineProperty(more, 'offsetWidth', {configurable: true, get: () => 60});
-    Object.defineProperty(more, 'getBoundingClientRect', {
-      configurable: true,
-      value: () => ({width: 60})
-    });
-    items.forEach(item => {
-      Object.defineProperty(item, 'offsetWidth', {configurable: true, get: () => 120});
-      Object.defineProperty(item, 'getBoundingClientRect', {
-        configurable: true,
-        value: () => ({width: 120})
-      });
-    });
+    strip.scrollLeft = strip.scrollWidth;
+    strip.dispatchEvent(new Event('scroll'));
 
-    el.handleResize();
-
-    expect(items[0].classList.contains('hidden')).to.equal(false);
-    expect(items[1].classList.contains('hidden')).to.equal(true);
-    expect(nav.classList.contains('has-hidden')).to.equal(true);
+    expect(strip.classList.contains('navbar__strip--scroll-start')).to.equal(true);
+    expect(strip.classList.contains('navbar__strip--scroll-end')).to.equal(false);
   });
 
-  it('rounds the more button instead of the last visible nav item when items are hidden', async () => {
+  it('scrolls a newly active tab clear of the arrows', async () => {
+    const tabs = Array.from({length: 12}, (_, i) => ({tab: `t${i}`, title: `Tab number ${i}`}));
     const el = await fixture<ZnNavbar>(html`
-      <zn-navbar>
-        <li>One</li>
-        <li>Two</li>
-        <li>Three</li>
-      </zn-navbar>
+      <zn-navbar style="width: 400px" navigation="${JSON.stringify(tabs)}"></zn-navbar>
     `);
     await aTimeout(150);
 
-    const nav = el.shadowRoot!.querySelector<HTMLElement>('ul.navbar')!;
-    const more = nav.querySelector<HTMLElement>(':scope > li.more')!;
-    const items = Array.from(nav.querySelectorAll<HTMLElement>(':scope > li:not(.more)'));
+    const strip = el.shadowRoot!.querySelector<HTMLElement>('.navbar__strip')!;
+    const tab = strip.querySelectorAll<HTMLElement>('ul.navbar > li')[6];
+    tab.classList.add('active');
+    await waitUntil(() => strip.scrollLeft > 0, 'strip should scroll to the active tab');
+    await aTimeout(600);
 
-    Object.defineProperty(el, 'offsetWidth', {configurable: true, get: () => 250});
-    Object.defineProperty(more, 'offsetWidth', {configurable: true, get: () => 60});
-    Object.defineProperty(more, 'getBoundingClientRect', {
-      configurable: true,
-      value: () => ({width: 60})
-    });
-    items.forEach(item => {
-      Object.defineProperty(item, 'offsetWidth', {configurable: true, get: () => 100});
-      Object.defineProperty(item, 'getBoundingClientRect', {
-        configurable: true,
-        value: () => ({width: 100})
-      });
-    });
-
-    el.handleResize();
-
-    expect(nav.classList.contains('has-hidden')).to.equal(true);
-    expect(items[0].classList.contains('last-visible')).to.equal(true);
-    expect(items[1].classList.contains('hidden')).to.equal(true);
-    expect(getComputedStyle(items[0]).borderTopRightRadius).to.equal('0px');
-    expect(getComputedStyle(more).borderTopRightRadius).to.equal('6px');
-  });
-
-  it('keeps the left border when only the more button is visible', async () => {
-    const el = await fixture<ZnNavbar>(html`
-      <zn-navbar>
-        <li>One</li>
-        <li>Two</li>
-      </zn-navbar>
-    `);
-    await aTimeout(150);
-
-    const nav = el.shadowRoot!.querySelector<HTMLElement>('ul.navbar')!;
-    const more = nav.querySelector<HTMLElement>(':scope > li.more')!;
-    const items = Array.from(nav.querySelectorAll<HTMLElement>(':scope > li:not(.more)'));
-
-    Object.defineProperty(el, 'offsetWidth', {configurable: true, get: () => 100});
-    Object.defineProperty(more, 'offsetWidth', {configurable: true, get: () => 60});
-    Object.defineProperty(more, 'getBoundingClientRect', {
-      configurable: true,
-      value: () => ({width: 60})
-    });
-    items.forEach(item => {
-      Object.defineProperty(item, 'offsetWidth', {configurable: true, get: () => 150});
-      Object.defineProperty(item, 'getBoundingClientRect', {
-        configurable: true,
-        value: () => ({width: 150})
-      });
-    });
-
-    el.handleResize();
-
-    expect(nav.classList.contains('has-hidden')).to.equal(true);
-    expect(nav.classList.contains('more-only')).to.equal(true);
-    expect(items.every(item => item.classList.contains('hidden'))).to.equal(true);
-    expect(getComputedStyle(more).borderLeftWidth).to.equal('1px');
-    expect(getComputedStyle(more).borderTopLeftRadius).to.equal('6px');
+    expect(tab.offsetLeft + tab.offsetWidth).to.be.at.most(strip.scrollLeft + strip.clientWidth - 55);
   });
 
   describe('hide-one', () => {
@@ -289,7 +175,7 @@ describe('<zn-navbar>', () => {
       <zn-navbar style="--zn-navbar-tab-background: rgb(1, 2, 3); --zn-navbar-tab-radius: 0px"
                  navigation='[{"path":"#a","title":"A"},{"path":"#b","title":"B"}]'></zn-navbar>`);
     await el.updateComplete;
-    const tab = el.shadowRoot!.querySelector<HTMLElement>('ul.navbar > li:not(.active):not(.more)')!;
+    const tab = el.shadowRoot!.querySelector<HTMLElement>('ul.navbar > li:not(.active)')!;
 
     expect(getComputedStyle(tab).backgroundColor).to.equal('rgb(1, 2, 3)');
     expect(getComputedStyle(el.shadowRoot!.querySelector('ul.navbar > li')!).borderTopLeftRadius).to.equal('0px');

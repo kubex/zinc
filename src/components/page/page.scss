@@ -491,12 +491,6 @@ zn-navbar:not([pill]) {
   padding-inline: var(--zn-base-gap, 0);
 }
 
-// The gutter shrinks to 0 on narrow containers, which would run the header actions
-// under the closer. Reserving the closer's own footprint holds the gap steady instead.
-:host([modal]) .header {
-  padding-inline-end: calc(var(--zn-base-gap, 0) + var(--zn-page-closer-size) + var(--zn-page-closer-gap));
-}
-
 :host([modal]) .header slot[name="actions"]::slotted(*) {
   --zn-button-height: var(--zn-page-closer-size);
   --zn-button-icon-width: var(--zn-page-closer-size);
@@ -630,4 +624,12 @@ zn-navbar:not([pill]) {
   zn-navbar:not([pill])::part(navbar) {
     padding-inline: var(--zn-base-gap, 0);
   }
+}
+
+// The gutter shrinks to 0 on narrow containers, which would run the header actions
+// under the closer. Reserving the closer's own footprint holds the gap steady instead.
+// Placed after the nested block, which a nested modal page would otherwise lose to.
+:host([modal]) .header,
+:host([modal][nested]) .header {
+  padding-inline-end: calc(var(--zn-base-gap, 0) + var(--zn-page-closer-size) + var(--zn-page-closer-gap));
 }

@@ -192,6 +192,26 @@ describe('<zn-report-table>', () => {
     expect(el.shadowRoot!.querySelector('zn-panel')!.getAttribute('caption')).to.equal('Day Compare');
   });
 
+  it('shows the skeleton while refetching an empty report', async () => {
+    let release!: (response: Response) => void;
+    const stub = stubFetch(index => index === 0
+      ? json(report({rows: []}))
+      : new Promise<Response>(resolve => (release = resolve)));
+    try {
+      const el = await fixture<ZnReportTable>(html`<zn-report-table data-uri="/report" from="2026-10-01"></zn-report-table>`);
+      await waitUntil(() => el.shadowRoot?.querySelector('zn-empty-state'));
+
+      el.from = '2025-06-01';
+      await waitUntil(() => el.shadowRoot!.querySelector('.report__skeleton'));
+      expect(el.shadowRoot!.querySelector('zn-empty-state')).to.not.exist;
+
+      release(json(report({rows: []})));
+      await waitUntil(() => el.shadowRoot!.querySelector('zn-empty-state'));
+    } finally {
+      stub.restore();
+    }
+  });
+
   it('tolerates nil and empty-array payloads', async () => {
     const empty = await load({groups: null, rows: null});
     expect(empty.shadowRoot!.querySelector('zn-panel zn-empty-state')).to.exist;

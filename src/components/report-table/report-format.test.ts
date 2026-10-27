@@ -1,5 +1,5 @@
 import {expect} from '@open-wc/testing';
-import {formatValue, toneClass} from './report-format';
+import {formatValue, toneClass, unitLabel} from './report-format';
 import type {ReportColumn} from './report-math';
 
 const col = (c: Partial<ReportColumn>): ReportColumn => ({key: 'k', label: 'K', ...c});
@@ -28,10 +28,19 @@ describe('formatValue', () => {
     expect(formatValue(col({format: 'number'}), -0.2, opts)).to.equal('0');
   });
 
-  it('formats durations in seconds as hours and minutes', () => {
-    expect(formatValue(col({format: 'duration'}), 5400, opts)).to.equal('1:30');
-    expect(formatValue(col({format: 'duration'}), 59, opts)).to.equal('0:01');
-    expect(formatValue(col({format: 'duration'}), -3600, opts)).to.equal('-1:00');
+  it('formats durations in seconds as hours, minutes and seconds', () => {
+    expect(formatValue(col({format: 'duration'}), 5400, opts)).to.equal('01:30:00');
+    expect(formatValue(col({format: 'duration'}), 59, opts)).to.equal('00:00:59');
+    expect(formatValue(col({format: 'duration'}), 453906, opts)).to.equal('126:05:06');
+    expect(formatValue(col({format: 'duration'}), -3600, opts)).to.equal('-01:00:00');
+  });
+
+  it('labels the unit of durations, currency and percent', () => {
+    expect(unitLabel(col({format: 'duration'}), 'USD')).to.equal('hh:mm:ss');
+    expect(unitLabel(col({format: 'currency'}), 'USD')).to.equal('USD');
+    expect(unitLabel(col({format: 'currency', currency: 'GBP'}), 'USD')).to.equal('GBP');
+    expect(unitLabel(col({format: 'percent'}), 'USD')).to.equal('%');
+    expect(unitLabel(col({format: 'number'}), 'USD')).to.equal('');
   });
 
   it('formats percent', () => {

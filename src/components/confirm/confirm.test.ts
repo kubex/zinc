@@ -127,4 +127,25 @@ describe('<zn-confirm-modal>', () => {
 
     expect(confirm.shadowRoot!.textContent).to.not.contain('Failed');
   });
+  it('submits to its current action after the action changes', async () => {
+    const confirm = await fixture<HTMLElement & {action: string; updateComplete: Promise<void>; show: () => void}>(
+      html`<zn-confirm caption="Delete" action="/items/1/delete"></zn-confirm>`);
+    const posted: string[] = [];
+    document.addEventListener('submit', e => {
+      e.preventDefault();
+      posted.push(new URL((e.target as HTMLFormElement).action).pathname);
+    });
+    const submit = async () => {
+      confirm.show();
+      await confirm.updateComplete;
+      click(confirm.shadowRoot!.querySelectorAll('zn-button[slot="footer"]')[1]);
+    };
+
+    await submit();
+    confirm.action = '/items/2/delete';
+    await confirm.updateComplete;
+    await submit();
+
+    expect(posted).to.deep.equal(['/items/1/delete', '/items/2/delete']);
+  });
 });

@@ -14,7 +14,7 @@ import {
 } from './report-math';
 import {type CSSResultGroup, html, nothing, type PropertyValues, type TemplateResult, unsafeCSS} from 'lit';
 import {type DatePreset, todayIso} from '../date-range/date-range-math';
-import {formatValue, toneClass} from './report-format';
+import {formatValue, toneClass, unitLabel} from './report-format';
 import {HasSlotController} from '../../internal/slot';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {property, state} from 'lit/decorators.js';
@@ -424,6 +424,8 @@ export default class ZnReportTable extends ZincElement {
               column.key,
               group.columns.length === 1 && column.label === group.label ? '' : column.label,
               {report__num: column.format !== 'text', report__sep: index === 0},
+              nothing,
+              unitLabel(column, this.response?.currency ?? this.currency ?? 'USD'),
             )))}
           </tr>
           </thead>
@@ -466,12 +468,12 @@ export default class ZnReportTable extends ZincElement {
       </div>`;
   }
 
-  private renderHeading(key: string, label: string, classes: Record<string, boolean>, prefix: TemplateResult | typeof nothing = nothing): TemplateResult {
+  private renderHeading(key: string, label: string, classes: Record<string, boolean>, prefix: TemplateResult | typeof nothing = nothing, unit = ''): TemplateResult {
     const sort = () => this.cycleSort(key);
     return html`
       <th class=${classMap(classes)} tabindex="0" aria-sort="${this.sortState(key)}"
           @click="${sort}" @keydown="${sortKeyHandler(sort)}">
-        <span class="report__head">${prefix}${label}${renderSortIcon(this.sortState(key))}</span>
+        <span class="report__head">${prefix}${label}${unit ? html`<span class="report__unit">${unit}</span>` : nothing}${renderSortIcon(this.sortState(key))}</span>
       </th>`;
   }
 
@@ -513,6 +515,7 @@ export default class ZnReportTable extends ZincElement {
       : nothing;
 
     if (rows.length === 0) {
+      if (busy) return this.renderSkeleton();
       return html`${alert}
         <div class="table__enter">
           <slot name="empty-state">

@@ -1,5 +1,6 @@
 import '../../../dist/zn.min.js';
 import {expect, fixture, html, waitUntil} from '@open-wc/testing';
+import type ZnConfirm from '../confirm/confirm.component';
 import type ZnDropdown from '../dropdown/dropdown.component';
 import type ZnMenuItem from './menu-item.component';
 
@@ -54,5 +55,25 @@ describe('<zn-menu-item>', () => {
       await waitUntil(() => !dropdown.open);
       expect(dropdown.open).to.be.false;
     });
+  });
+
+  it('closes its dropdown once the confirm dialog closes', async () => {
+    const dropdown = await fixture<ZnDropdown>(html`
+      <zn-dropdown>
+        <zn-button slot="trigger">Open</zn-button>
+        <zn-menu>
+          <zn-confirm trigger="delete-item" content="Delete?"></zn-confirm>
+          <zn-menu-item id="delete-item" confirm>Delete</zn-menu-item>
+        </zn-menu>
+      </zn-dropdown>`);
+    await dropdown.show();
+    const confirm = dropdown.querySelector<ZnConfirm>('zn-confirm')!;
+
+    dropdown.querySelector('zn-menu-item')!.click();
+    await dropdown.updateComplete;
+    expect(dropdown.open).to.be.true;
+
+    confirm.hide();
+    await waitUntil(() => !dropdown.open);
   });
 });

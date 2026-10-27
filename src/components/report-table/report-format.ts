@@ -19,9 +19,10 @@ export function formatValue(column: ReportColumn, value: number | string | null,
   }
 
   if (format === 'duration') {
-    const minutes = Math.round(Math.abs(value) / 60);
-    const text = `${Math.floor(minutes / 60)}:${String(minutes % 60).padStart(2, '0')}`;
-    return value < 0 ? `-${text}` : text;
+    const seconds = Math.round(Math.abs(value));
+    const pad = (part: number) => String(part).padStart(2, '0');
+    const text = `${pad(Math.floor(seconds / 3600))}:${pad(Math.floor(seconds / 60) % 60)}:${pad(seconds % 60)}`;
+    return value < 0 && seconds > 0 ? `-${text}` : text;
   }
 
   const decimals = displayDecimals(column);
@@ -41,6 +42,19 @@ export function formatValue(column: ReportColumn, value: number | string | null,
   const text = new Intl.NumberFormat(opts.locale, {style: 'decimal', ...digits}).format(abs);
   const signed = rounded < 0 ? `-${text}` : text;
   return format === 'percent' ? `${signed}%` : signed;
+}
+
+export function unitLabel(column: ReportColumn, currency: string): string {
+  switch (column.format) {
+    case 'duration':
+      return 'hh:mm:ss';
+    case 'currency':
+      return column.currency ?? currency;
+    case 'percent':
+      return '%';
+    default:
+      return '';
+  }
 }
 
 export function toneClass(column: ReportColumn, value: number | null): 'report__pos' | 'report__neg' | '' {

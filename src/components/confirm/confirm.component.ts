@@ -103,6 +103,8 @@ export default class ZnConfirm extends ZincElement {
 
   private submitted: HTMLFormElement | null = null;
 
+  private generatedForm: HTMLFormElement | null = null;
+
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
     if (this.open) {
@@ -251,10 +253,15 @@ export default class ZnConfirm extends ZincElement {
   submitDialog() {
     if (this.loading) return;
 
+    // Rebuilt per submit: a re-rendered list can reuse this element for another row with a different action
+    this.generatedForm?.remove();
+    this.generatedForm = null;
+
     // get the form from the slot
     let form = this.querySelector('form');
     if (!form && this.action) {
       form = document.createElement('form') as HTMLFormElement;
+      this.generatedForm = form;
       form.action = this.action;
       form.method = 'POST';
 

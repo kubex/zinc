@@ -146,9 +146,13 @@ export default class ZnMenuItem extends ZincElement {
     if (!this.isSubmenu()) {
       const composedPath = event.composedPath();
       const closestMenu: Element | null = composedPath.find((el: Element) => el?.getAttribute?.('role') === 'menu') as Element;
-      if (this.confirm) return;
-
       const dropdown = closestMenu?.closest('zn-dropdown') as ZnDropdown | null;
+      if (this.confirm) {
+        // The confirm dialog lives inside the dropdown panel, so the dropdown can only close once the dialog does
+        dropdown?.addEventListener('zn-close', () => dropdown.hide(), {once: true});
+        return;
+      }
+
       if (!dropdown?.stayOpenOnSelect && !this.keepOpen) {
         dropdown?.hide();
       }

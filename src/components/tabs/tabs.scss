@@ -27,8 +27,12 @@
   max-height: 100%;
   width: 100%;
 
-  zn-header::part(base) {
-    //border-bottom-width: 0 !important;
+  zn-header {
+    padding: var(--zn-panel-header-padding, var(--zn-base-gap));
+  }
+
+  zn-header::part(content) {
+    padding: 0;
   }
 }
 

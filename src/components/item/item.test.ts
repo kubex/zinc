@@ -15,4 +15,14 @@ describe('<zn-item>', () => {
     expect(content).to.exist;
     expect(getComputedStyle(content!).textAlign).to.equal('right');
   });
+
+  it('renders a fact with a muted caption above its value', async () => {
+    const el = await fixture<HTMLElement>(html`<zn-item fact caption="Sender">noreply@example.com</zn-item>`);
+    await (el as unknown as {updateComplete: Promise<unknown>}).updateComplete;
+    const base = el.shadowRoot!.querySelector('.item')!;
+
+    expect(base.classList.contains('item--fact')).to.be.true;
+    expect(getComputedStyle(base).flexDirection).to.equal('column');
+    expect(getComputedStyle(el.shadowRoot!.querySelector('.item__caption')!).fontWeight).to.equal('400');
+  });
 });

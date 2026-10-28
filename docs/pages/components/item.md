@@ -49,6 +49,19 @@ Use `align-end` to right align the content value.
 </zn-sp>
 ```
 
+### Facts
+
+Use `fact` for a grid of headline attributes: a small muted caption above the value. Lay them out with `zn-cols`.
+
+```html:preview
+<zn-cols layout="1,1,1" basis="150">
+  <zn-item fact caption="Sender">noreply@example.com</zn-item>
+  <zn-item fact caption="Service">Fortifi (Email)</zn-item>
+  <zn-item fact caption="List type">Customer</zn-item>
+  <zn-item fact caption="Created">17 Sep 2026</zn-item>
+</zn-cols>
+```
+
 ### Icons
 
 ```html:preview

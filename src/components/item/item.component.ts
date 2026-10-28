@@ -37,6 +37,9 @@ export default class ZnItem extends ZincElement {
 
   @property({type: Boolean}) stacked: boolean;
 
+  /** A fact in a grid of headline attributes: a small muted caption above the value, without padding. */
+  @property({type: Boolean, reflect: true}) fact: boolean;
+
   @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
 
   @property({attribute: 'edit-on-hover', type: Boolean}) editOnHover: boolean;
@@ -117,6 +120,7 @@ export default class ZnItem extends ZincElement {
           'item': true,
           'item--with-content': this._hasContent(),
           'item--stacked': this.stacked,
+          'item--fact': this.fact,
           'item--edit-on-hover': this.editOnHover,
           'item--inline': this.inline,
           'item--grid': this.grid,

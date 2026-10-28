@@ -586,7 +586,7 @@ zn-navbar:not([pill]) {
 
 // A nested page keeps its own header inside the parent's tab when the app navigates with a nav-bar. It sits within
 // the parent's content like a card, so it takes the card title's type and a single base-gap inset, as a flush page does.
-:host([nested]:not([navigation-style="sidebar"])) {
+:host([nested]:not([navigation-style="sidebar"])):not([modal]) {
   --zn-page-caption-font-size: var(--zn-text-h1-font-size);
   --zn-page-caption-line-height: var(--zn-icon-size, 20px);
   --zn-page-title-gap: 0;

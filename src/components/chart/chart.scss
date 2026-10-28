@@ -8,3 +8,124 @@
 .chart {
   position: relative;
 }
+
+.chart--loading #chart {
+  visibility: hidden;
+}
+
+// Mirrors the cartesian grid in builders.ts (left 40, right 20, top 40, bottom 30)
+.loading {
+  position: absolute;
+  inset: 0 0 auto;
+  pointer-events: none;
+
+  &--out {
+    animation: loading-out .4s ease-out both;
+  }
+}
+
+// ECharts pads its legend by 5px
+.loading__legend {
+  position: absolute;
+  top: 7px;
+  right: 5px;
+  display: flex;
+  gap: 12px;
+}
+
+.loading__pill {
+  display: block;
+  height: 10px;
+  border-radius: 5px;
+  background: var(--zn-skeleton-background, rgb(var(--zn-border-color)));
+}
+
+.loading__plot {
+  position: absolute;
+  inset: 40px 20px 30px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.loading__row {
+  position: relative;
+  height: 1px;
+  background: rgb(var(--zn-border-color));
+}
+
+.loading__label {
+  position: absolute;
+  right: calc(100% + 8px);
+  top: -4px;
+  width: 22px;
+  height: 8px;
+}
+
+.loading__x {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+
+  .loading__pill {
+    width: 44px;
+    height: 8px;
+  }
+}
+
+.loading__track {
+  position: relative;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--zn-skeleton-background, rgb(var(--zn-border-color)));
+
+  .loading__label {
+    top: -3px;
+  }
+
+  // Clipped here rather than on the track, which would cut off its axis label
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    overflow: hidden;
+    background: linear-gradient(90deg, transparent, var(--zn-chart-color-1, rgb(var(--zn-primary))), transparent) no-repeat;
+    background-size: 40% 100%;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .loading__row,
+  .loading__x,
+  .loading__legend .loading__pill {
+    animation: loading-pulse 1.4s ease-in-out infinite;
+  }
+
+  .loading__track::before {
+    animation: loading-sweep 1.4s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading__track::before {
+    display: none;
+  }
+}
+
+@keyframes loading-pulse {
+  0%, 100% { opacity: .4; }
+  50% { opacity: 1; }
+}
+
+@keyframes loading-sweep {
+  from { background-position: -70% 0; }
+  to { background-position: 170% 0; }
+}
+
+@keyframes loading-out {
+  to { opacity: 0; }
+}

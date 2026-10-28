@@ -104,10 +104,13 @@ function baseOption(props: BuilderProps, tooltipTrigger: 'axis' | 'item'): EChar
         : undefined,
     },
     legend: {
+      type: 'scroll',
       top: 0,
       right: 0,
       icon: 'circle',
       textStyle: { color: textColor },
+      pageIconSize: 10,
+      pageTextStyle: { color: textColor },
     },
   };
 }

@@ -263,8 +263,25 @@
 
 .header--inline-description .header__left:has(.header__description) {
   flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
   align-items: baseline;
-  gap: var(--zn-spacing-x-small);
+  gap: 0 var(--zn-spacing-x-small);
+}
+
+// Narrow headers drop the actions onto their own row instead of squeezing the caption
+.header .caption {
+  flex-wrap: wrap;
+  row-gap: var(--zn-spacing-small);
+}
+
+.header__caption {
+  flex-shrink: 0;
+  min-width: min-content;
+}
+
+.header__right {
+  min-width: min-content;
 }
 
 .header__description {

@@ -1,7 +1,8 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {ifDefined} from "lit/directives/if-defined.js";
-import {property} from 'lit/decorators.js';
+import {keyed} from "lit/directives/keyed.js";
+import {property, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import type {IconColor} from '../icon';
 
@@ -76,7 +77,17 @@ export default class ZnStatsTile extends ZincElement {
    * `sparkColor`. The stat's own attributes show until it loads. */
   @property({attribute: 'data-url'}) dataUrl = '';
 
+  /** Shows a `tile` as a placeholder. Set while `data-url` loads; the sparkline draws in once it clears. */
+  @property({type: Boolean, reflect: true}) loading = false;
+
+  @state() private loaded = false;
+
   private static readonly loadableKeys = ['caption', 'amount', 'description', 'previous', 'spark', 'sparkColor'] as const;
+
+  protected willUpdate(changed: PropertyValues) {
+    super.willUpdate(changed);
+    if (changed.has('dataUrl') && this.dataUrl) this.loading = true;
+  }
 
   protected updated(changed: PropertyValues) {
     super.updated(changed);
@@ -89,12 +100,18 @@ export default class ZnStatsTile extends ZincElement {
         credentials: 'same-origin',
         headers: {Accept: 'application/json', 'x-kx-fetch-style': 'raw-json'},
       });
-      if (!res.ok || url !== this.dataUrl) return;
-      const body = await res.json() as Partial<Record<typeof ZnStatsTile.loadableKeys[number], unknown>>;
-      for (const key of ZnStatsTile.loadableKeys) {
-        if (body[key] !== undefined && body[key] !== null) this[key] = String(body[key]);
+      if (url !== this.dataUrl) return;
+      if (res.ok) {
+        const body = await res.json() as Partial<Record<typeof ZnStatsTile.loadableKeys[number], unknown>>;
+        for (const key of ZnStatsTile.loadableKeys) {
+          if (body[key] !== undefined && body[key] !== null) this[key] = String(body[key]);
+        }
       }
-    } catch { /* keep the placeholder */ }
+    } catch { /* fall back to the stat's own attributes */ }
+    if (url === this.dataUrl) {
+      this.loaded = true;
+      this.loading = false;
+    }
   }
 
   // Amounts are display strings, so drop separators and symbols ("48,201", "$2,941") before comparing.
@@ -253,6 +270,12 @@ export default class ZnStatsTile extends ZincElement {
   }
 
   private renderSpark() {
+    if (this.loading) {
+      return html`<div class="spark spark--loading" part="spark">
+        <span class="spark__track" style="--stat-spark: ${this.sparkStroke()}"></span>
+      </div>`;
+    }
+
     const data = this.spark.split(',').map(v => parseFloat(v)).filter(v => !Number.isNaN(v));
     if (data.length < 2) {
       return null;
@@ -285,20 +308,26 @@ export default class ZnStatsTile extends ZincElement {
   }
 
   private renderTile() {
-    const delta = this.tileDelta();
+    const delta = this.loading ? null : this.tileDelta();
+    const description = this.description
+      || (this.loading ? html`<span class="loading-text">Loading</span>` : '');
     const classes = classMap({
       'stat-tile': true,
       'stat-tile--card': true,
       'stat-tile--selectable': this.selectable,
+      'stat-tile--loaded': this.loaded,
       [`stat-tile--tone-${this.tone}`]: !!this.tone,
     });
-    const body = html`
+    // Keyed so the loaded content is new nodes, which replays its entrance animations
+    const body = keyed(this.loading, html`
       <span class="caption" part="caption">${this.caption}</span>
-      <span class="amount" part="amount">${this.renderAmount()}</span>
-      ${delta || this.description ? html`
-        <span class="foot" part="foot">${delta}${this.description ? html`<span>${this.description}</span>` : null}</span>` : null}
+      <span class="amount" part="amount">${this.loading
+        ? html`<span class="amount__skeleton"></span>`
+        : this.renderAmount()}</span>
+      ${delta || description ? html`
+        <span class="foot" part="foot">${delta}${description ? html`<span>${description}</span>` : null}</span>` : null}
       ${this.renderSpark()}
-      <slot></slot>`;
+      <slot></slot>`);
 
     return this.selectable
       ? html`<button type="button" part="base" class="${classes}" aria-pressed="${this.selected ? 'true' : 'false'}"

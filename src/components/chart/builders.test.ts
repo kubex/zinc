@@ -443,6 +443,11 @@ describe('cartesian legends', () => {
     expect((two.legend as any).show).to.equal(true);
     expect((oneVisible.legend as any).show).to.equal(false);
   });
+
+  it('scrolls the legend on one line so it never wraps into the grid', () => {
+    const opt = buildLineOption({ ...baseProps, data: [{ name: 'A', data: [1] }, { name: 'B', data: [2] }] });
+    expect((opt.legend as any).type).to.equal('scroll');
+  });
 });
 
 describe('markLatest', () => {

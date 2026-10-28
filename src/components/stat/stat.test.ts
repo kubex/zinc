@@ -97,4 +97,35 @@ describe('<zn-stat> data-url', () => {
     expect(el.description).to.equal('80 in 24 hours');
     expect(el.spark).to.equal('1,2,3');
   });
+
+  it('shows a placeholder while loading and the sparkline once loaded', async () => {
+    let resolve!: (r: Response) => void;
+    window.fetch = (() => new Promise<Response>(r => { resolve = r; })) as typeof fetch;
+    const el = await fixture<ZnStatsTile>(html`
+      <zn-stat layout="tile" caption="Sent" data-url="/metrics/stats"></zn-stat>`);
+
+    expect(el.loading).to.equal(true);
+    expect(el.shadowRoot!.querySelector('.amount__skeleton')).to.exist;
+    expect(el.shadowRoot!.querySelector('.loading-text')).to.exist;
+    expect(el.shadowRoot!.querySelector('.spark__track')).to.exist;
+
+    resolve(new Response(JSON.stringify({amount: '12', spark: '1,2,3'})));
+    await new Promise(r => setTimeout(r, 50));
+    await el.updateComplete;
+
+    expect(el.loading).to.equal(false);
+    expect(el.shadowRoot!.querySelector('.amount__skeleton')).to.not.exist;
+    expect(el.shadowRoot!.querySelector('.spark svg')).to.exist;
+  });
+
+  it('stops loading when the request fails', async () => {
+    window.fetch = (() => Promise.resolve(new Response('', {status: 500}))) as typeof fetch;
+    const el = await fixture<ZnStatsTile>(html`
+      <zn-stat layout="tile" caption="Sent" amount="0" data-url="/metrics/stats"></zn-stat>`);
+    await new Promise(r => setTimeout(r, 50));
+    await el.updateComplete;
+
+    expect(el.loading).to.equal(false);
+    expect(el.amount).to.equal('0');
+  });
 });

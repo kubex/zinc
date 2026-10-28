@@ -158,4 +158,29 @@ describe('<zn-chart>', () => {
       window.fetch = original;
     }
   });
+
+  it('shows a placeholder until data-url loads', async () => {
+    const original = window.fetch;
+    let resolve!: (r: Response) => void;
+    window.fetch = (() => new Promise<Response>(r => { resolve = r; })) as any;
+
+    try {
+      const el: any = await fixture(html`<zn-chart type="line" data-url="/metrics/chart"></zn-chart>`);
+      await el.initPromise;
+      expect(el.shadowRoot.querySelector('.loading')).to.exist;
+      expect(el.shadowRoot.querySelector('.chart--loading')).to.exist;
+
+      resolve(new Response(JSON.stringify([{name: 'Sent', data: [1, 2]}])));
+      await new Promise(r => setTimeout(r, 50));
+      await el.updateComplete;
+      expect(el.shadowRoot.querySelector('.chart--loading')).to.not.exist;
+      expect(el.chart.getOption().series[0].data).to.deep.equal([1, 2]);
+
+      await new Promise(r => setTimeout(r, 450));
+      await el.updateComplete;
+      expect(el.shadowRoot.querySelector('.loading')).to.not.exist;
+    } finally {
+      window.fetch = original;
+    }
+  });
 });

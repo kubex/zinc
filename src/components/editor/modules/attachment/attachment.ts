@@ -3,7 +3,8 @@ import type Toolbar from "../toolbar/toolbar";
 
 interface AttachmentOptions {
   upload: (file: File) => Promise<{ path: any; url: any; filename: any }>;
-  onFileUploaded?: (node: HTMLElement, {url}: { url: string }) => void;
+  // node is null when the chip was removed (or reset) during the upload
+  onFileUploaded?: (node: HTMLElement | null, {url}: { url: string }) => void;
   onFileUploadFailed?: (error: Error) => void;
   attachmentInput?: HTMLInputElement;
 }
@@ -68,10 +69,11 @@ export default class Attachment {
     }
 
     if (typeof this._options.upload === 'function') {
+      // the rejection handler covers only the upload, so each upload settles exactly once
       this._options.upload(file).then(async ({path, url}: { path: string; url: string }) => {
         await this._uploadAttachment(file, url);
-        this._updateAttachment(attachmentId, url, path);
-      }).catch((err: Error) => {
+        return {path, url};
+      }).then(({path, url}) => this._updateAttachment(attachmentId, url, path), (err: Error) => {
         console.warn(err.message);
         this._markAttachmentFailed(attachmentId, 'Upload failed');
         this._options.onFileUploadFailed?.(err);
@@ -119,8 +121,11 @@ export default class Attachment {
   }
 
   private _updateAttachment(id: string, url: string, filename: string) {
-    const element = this._quill.container.querySelector(`#${id}`);
-    if (!element) return;
+    const element = this._quill.container.querySelector<HTMLElement>(`#${id}`);
+    if (!element) {
+      this._options.onFileUploaded?.(null, {url});
+      return;
+    }
 
     this._revokeObjectUrl(element);
     element.setAttribute('href', url);
@@ -134,7 +139,7 @@ export default class Attachment {
     }
 
     if (this._options.onFileUploaded) {
-      this._options.onFileUploaded(element as HTMLElement, {url});
+      this._options.onFileUploaded(element, {url});
     }
 
     // add the url to the hidden input

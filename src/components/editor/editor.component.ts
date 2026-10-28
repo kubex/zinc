@@ -110,6 +110,8 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   private quillElement: Quill;
   private _content: string = '';
   private _selectionRange: Range = {index: 0, length: 0};
+  // in-flight attachment uploads; the leave-page prompt stays while any is running
+  private _pendingUploads = 0;
 
   get validity(): ValidityState {
     return this.editorHtml.validity;
@@ -244,13 +246,10 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         ...(this.attachmentsEnabled && {
           attachment: {
             attachmentInput: this.getForm()?.querySelector('input[name="attachments"]'),
-            onFileUploaded: () => {
-              window.onbeforeunload = () => null;
-            },
-            onFileUploadFailed: () => {
-              window.onbeforeunload = () => null;
-            },
+            onFileUploaded: () => this._settleUpload(),
+            onFileUploadFailed: () => this._settleUpload(),
             upload: async (file: File) => {
+              this._pendingUploads++;
               window.onbeforeunload = () => 'You have unsaved changes. Are you sure you want to leave?';
 
               const fd = new FormData();
@@ -432,6 +431,13 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       this._store.remove(this.storeKey);
     } else {
       this._store.set(this.storeKey, this.value);
+    }
+  }
+
+  private _settleUpload() {
+    this._pendingUploads--;
+    if (this._pendingUploads === 0) {
+      window.onbeforeunload = () => null;
     }
   }
 

@@ -12,11 +12,9 @@ interface AttachmentOptions {
 // Mirrors the server's upload body-size limit.
 const MAX_ATTACHMENT_BYTES = 30 * 1024 * 1024;
 
-const generateId = () => {
-  const name = 'attachment';
-  const id = new Date().getTime();
-  return `${name}_${id}`;
-};
+let nextAttachmentId = 0;
+
+const generateId = () => `attachment_${++nextAttachmentId}`;
 
 export default class Attachment {
   private _quill: Quill;
@@ -51,11 +49,9 @@ export default class Attachment {
   }
 
   private _fileChanged() {
-    if (!this._fileHolder?.files || this._fileHolder.files.length < 0) {
-      return;
-    }
+    const file = this._fileHolder?.files?.[0];
+    if (!file) return;
 
-    const file = this._fileHolder.files[0];
     this.addAttachment(file);
   }
 
@@ -78,6 +74,8 @@ export default class Attachment {
         this._markAttachmentFailed(attachmentId, 'Upload failed');
         this._options.onFileUploadFailed?.(err);
       });
+    } else {
+      this._markAttachmentFailed(attachmentId, 'Upload failed');
     }
   }
 

@@ -152,7 +152,7 @@ export default class ZnChart extends ZincElement {
         animationThreshold: 10000,
       });
     } else {
-      this.chart?.setOption(option, { replaceMerge: ['series', 'legend', 'xAxis'] });
+      this.chart?.setOption(option, { replaceMerge: ['series', 'legend', 'xAxis', 'yAxis'] });
     }
     this.replaceLiveSeries = false;
   }

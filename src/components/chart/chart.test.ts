@@ -150,6 +150,7 @@ describe('<zn-chart>', () => {
       expect((calls[0].headers as Record<string, string>)['x-kx-fetch-style']).to.equal('raw-json');
       expect(el.categories).to.deep.equal(['a', 'b']);
       expect(el.chart.getOption().series[0].data).to.deep.equal([1, 2]);
+      expect(el.chart.getOption().yAxis[0].max).to.not.equal(6);
 
       await new Promise(r => setTimeout(r, 1200));
       expect(calls.length).to.equal(1);

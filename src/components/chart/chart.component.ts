@@ -47,6 +47,7 @@ export default class ZnChart extends ZincElement {
   @property({ type: Boolean }) stacked = false;
 
   @property({ type: Boolean }) live = false;
+  /** JSON series polled with `live`; otherwise fetched once, as a series array or `{categories, data}`. */
   @property({ attribute: 'data-url' }) dataUrl = '';
   @property({ attribute: 'stream-url' }) streamUrl = '';
   @property({ attribute: 'live-renew-url' }) liveRenewUrl = '';
@@ -93,6 +94,7 @@ export default class ZnChart extends ZincElement {
   private initPromise?: Promise<void>;
   private liveTimer?: number;
   private pollAbort?: AbortController;
+  private loadedUrl = '';
   @state() private liveStatus = 'connecting';
   private liveWindow = new LiveWindow();
   private replaceLiveSeries = true;
@@ -292,7 +294,8 @@ export default class ZnChart extends ZincElement {
 
   private startLive() {
     this.stopLive(); this.liveWindow = new LiveWindow(); this.replaceLiveSeries = true;
-    if (!this.live || !this.isConnected) return;
+    if (!this.isConnected) return;
+    if (!this.live) { void this.loadData(); return; }
     if (this.streamUrl || this.liveRenewUrl) {
       try { this.transport.start(this.streamUrl, this.liveRenewUrl); } catch { this.stopLive(); }
       return;
@@ -310,6 +313,28 @@ export default class ZnChart extends ZincElement {
       if (!controller.signal.aborted) this.liveTimer = window.setTimeout(() => void poll(), Math.max(250, this.liveInterval));
     };
     this.liveTimer = window.setTimeout(() => void poll(), Math.max(250, this.liveInterval));
+  }
+
+  private async loadData() {
+    if (!this.dataUrl || this.dataUrl === this.loadedUrl) return;
+    const controller = new AbortController(); this.pollAbort = controller;
+    try {
+      const res = await fetch(this.dataUrl, {
+        signal: controller.signal,
+        credentials: 'same-origin',
+        headers: { Accept: 'application/json', 'x-kx-fetch-style': 'raw-json' },
+      });
+      if (!res.ok) return;
+      const body = await res.json() as SeriesItem[] | { data?: SeriesItem[]; categories?: string[] };
+      if (controller.signal.aborted) return;
+      this.loadedUrl = this.dataUrl;
+      if (Array.isArray(body)) {
+        this.data = body;
+      } else {
+        this.categories = body.categories ?? this.categories;
+        this.data = body.data ?? [];
+      }
+    } catch { /* keep what the chart already shows */ }
   }
 
   private reinit() {

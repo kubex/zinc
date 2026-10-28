@@ -1,5 +1,6 @@
 import '../../../dist/zn.min.js';
 import { expect, fixture, html } from '@open-wc/testing';
+import type ZnStatsTile from './stat.component';
 
 describe('<zn-stat>', () => {
   it('should render a component', async () => {
@@ -73,5 +74,27 @@ describe('<zn-stat>', () => {
     await el.updateComplete;
     expect(el.selected).to.be.true;
     expect(button.getAttribute('aria-pressed')).to.equal('true');
+  });
+});
+
+describe('<zn-stat> data-url', () => {
+  const original = window.fetch;
+  afterEach(() => { window.fetch = original; });
+
+  it('keeps its own attributes until the data loads, then takes the response', async () => {
+    let resolve!: (r: Response) => void;
+    window.fetch = (() => new Promise<Response>(r => { resolve = r; })) as typeof fetch;
+    const el = await fixture<ZnStatsTile>(html`
+      <zn-stat layout="tile" caption="Sent" amount="—" data-url="/metrics/stats"></zn-stat>`);
+
+    expect(el.amount).to.equal('—');
+    resolve(new Response(JSON.stringify({amount: '1,204', description: '80 in 24 hours', spark: '1,2,3'})));
+    await new Promise(r => setTimeout(r, 50));
+    await el.updateComplete;
+
+    expect(el.caption).to.equal('Sent');
+    expect(el.amount).to.equal('1,204');
+    expect(el.description).to.equal('80 in 24 hours');
+    expect(el.spark).to.equal('1,2,3');
   });
 });

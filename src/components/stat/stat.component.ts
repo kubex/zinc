@@ -1,5 +1,5 @@
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
@@ -71,6 +71,31 @@ export default class ZnStatsTile extends ZincElement {
   @property({attribute: 'data-target'}) dataTarget: string;
 
   @property() gaid: string;
+
+  /** JSON fetched once to fill the stat: any of `caption`, `amount`, `description`, `previous`, `spark` and
+   * `sparkColor`. The stat's own attributes show until it loads. */
+  @property({attribute: 'data-url'}) dataUrl = '';
+
+  private static readonly loadableKeys = ['caption', 'amount', 'description', 'previous', 'spark', 'sparkColor'] as const;
+
+  protected updated(changed: PropertyValues) {
+    super.updated(changed);
+    if (changed.has('dataUrl') && this.dataUrl) void this.loadData(this.dataUrl);
+  }
+
+  private async loadData(url: string) {
+    try {
+      const res = await fetch(url, {
+        credentials: 'same-origin',
+        headers: {Accept: 'application/json', 'x-kx-fetch-style': 'raw-json'},
+      });
+      if (!res.ok || url !== this.dataUrl) return;
+      const body = await res.json() as Partial<Record<typeof ZnStatsTile.loadableKeys[number], unknown>>;
+      for (const key of ZnStatsTile.loadableKeys) {
+        if (body[key] !== undefined && body[key] !== null) this[key] = String(body[key]);
+      }
+    } catch { /* keep the placeholder */ }
+  }
 
   // Amounts are display strings, so drop separators and symbols ("48,201", "$2,941") before comparing.
   private parseNumber(value: string) {

@@ -247,6 +247,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
             onFileUploaded: () => {
               window.onbeforeunload = () => null;
             },
+            onFileUploadFailed: () => {
+              window.onbeforeunload = () => null;
+            },
             upload: async (file: File) => {
               window.onbeforeunload = () => 'You have unsaved changes. Are you sure you want to leave?';
 

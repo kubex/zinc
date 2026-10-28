@@ -4,8 +4,12 @@ import type Toolbar from "../toolbar/toolbar";
 interface AttachmentOptions {
   upload: (file: File) => Promise<{ path: any; url: any; filename: any }>;
   onFileUploaded?: (node: HTMLElement, {url}: { url: string }) => void;
+  onFileUploadFailed?: (error: Error) => void;
   attachmentInput?: HTMLInputElement;
 }
+
+// Mirrors the server's upload body-size limit.
+const MAX_ATTACHMENT_BYTES = 30 * 1024 * 1024;
 
 const generateId = () => {
   const name = 'attachment';
@@ -56,27 +60,21 @@ export default class Attachment {
 
   public addAttachment(file: File, dataUrl?: string) {
     const attachmentId = generateId();
-    const insertWithDataUrl = (base64: string) => {
-      this._insertAttachment({dataUrl: base64, file, id: attachmentId});
-    };
+    this._insertAttachment({href: dataUrl || URL.createObjectURL(file), file, id: attachmentId});
 
-    if (dataUrl) {
-      insertWithDataUrl(dataUrl);
-    } else {
-      const fileReader = new FileReader();
-      fileReader.addEventListener('load', () => {
-        const base64Content = fileReader.result as string;
-        insertWithDataUrl(base64Content);
-      }, false);
-      fileReader.readAsDataURL(file);
+    if (file.size > MAX_ATTACHMENT_BYTES) {
+      this._markAttachmentFailed(attachmentId, 'File too large (max 30 MB)');
+      return;
     }
 
     if (typeof this._options.upload === 'function') {
       this._options.upload(file).then(async ({path, url}: { path: string; url: string }) => {
         await this._uploadAttachment(file, url);
         this._updateAttachment(attachmentId, url, path);
-      }).catch((err: { message: string }) => {
+      }).catch((err: Error) => {
         console.warn(err.message);
+        this._markAttachmentFailed(attachmentId, 'Upload failed');
+        this._options.onFileUploadFailed?.(err);
       });
     }
   }
@@ -98,14 +96,33 @@ export default class Attachment {
     this._quill.container.appendChild(attachmentContainer);
   }
 
-  private _insertAttachment({dataUrl, file, id}: { dataUrl: string; file: File; id: string }) {
-    this._attachmentContainer.appendChild(this._createAttachment(dataUrl, file, id));
+  private _insertAttachment({href, file, id}: { href: string; file: File; id: string }) {
+    this._attachmentContainer.appendChild(this._createAttachment(href, file, id));
+  }
+
+  private _markAttachmentFailed(id: string, message: string) {
+    const element = this._quill.container.querySelector<HTMLElement>(`#${id}`);
+    if (!element) return;
+
+    const attachmentName = element.querySelector('.attachment-name');
+    if (attachmentName) {
+      attachmentName.textContent = message;
+    }
+    element.style.borderColor = '#d93025';
+  }
+
+  private _revokeObjectUrl(element: Element) {
+    const href = element.getAttribute('href');
+    if (href?.startsWith('blob:')) {
+      URL.revokeObjectURL(href);
+    }
   }
 
   private _updateAttachment(id: string, url: string, filename: string) {
     const element = this._quill.container.querySelector(`#${id}`);
     if (!element) return;
 
+    this._revokeObjectUrl(element);
     element.setAttribute('href', url);
     const attachmentName = element.querySelector('.attachment-name');
     if (attachmentName) {
@@ -131,9 +148,9 @@ export default class Attachment {
     }
   }
 
-  private _createAttachment(dataUrl: string, file: File, id: string) {
+  private _createAttachment(href: string, file: File, id: string) {
     const attachment = document.createElement('a');
-    attachment.setAttribute('href', dataUrl);
+    attachment.setAttribute('href', href);
     attachment.setAttribute('id', id);
     attachment.setAttribute('download', file.name);
     attachment.style.padding = '10px';
@@ -165,6 +182,7 @@ export default class Attachment {
 
   /** Clear every staged attachment preview and reset the backing form input. */
   public reset() {
+    Array.from(this._attachmentContainer.children).forEach(chip => this._revokeObjectUrl(chip));
     this._attachmentContainer.replaceChildren();
     const attachments = this._options.attachmentInput;
     if (attachments) {
@@ -175,6 +193,7 @@ export default class Attachment {
   private _removeAttachment(id: string) {
     const attachment = this._quill.container.querySelector(`#${id}`);
     if (attachment) {
+      this._revokeObjectUrl(attachment);
       attachment.remove();
     }
 

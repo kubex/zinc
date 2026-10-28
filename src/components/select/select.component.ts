@@ -318,6 +318,9 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   /** The select's required attribute. */
   @property({type: Boolean, reflect: true}) required = false;
 
+  /** Short text shown next to the label, styled like the help text, e.g. `optional`. */
+  @property({attribute: 'label-note'}) labelNote = '';
+
   @property({attribute: 'cache-key'}) cacheKey: string = "";
 
   @property({type: Boolean, attribute: 'trigger-submit'}) triggerSubmit = false;
@@ -1906,6 +1909,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                 <zn-icon src="info"></zn-icon>
               </zn-tooltip>`
             : ''}
+          ${this.labelNote ? html`<span class="form-control__label-note">${this.labelNote}</span>` : ''}
         </label>
         ${hasContextNote
           ? html`

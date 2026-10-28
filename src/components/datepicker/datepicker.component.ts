@@ -128,6 +128,9 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
   /** Makes the input a required field. */
   @property({type: Boolean, reflect: true}) required = false;
 
+  /** Short text shown next to the label, styled like the help text, e.g. `optional`. */
+  @property({attribute: 'label-note'}) labelNote = '';
+
   /** Adds a clear button to the calendar for removing a selected date. **/
   @property({type: Boolean}) clearable = false;
 
@@ -730,6 +733,7 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
                 <zn-icon src="info"></zn-icon>
               </zn-tooltip>`
             : ''}
+          ${this.labelNote ? html`<span class="form-control__label-note">${this.labelNote}</span>` : ''}
         </label>
 
         ${hasContextNote

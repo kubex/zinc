@@ -140,6 +140,9 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
   /** Makes the textarea a required field. */
   @property({type: Boolean, reflect: true}) required = false;
 
+  /** Short text shown next to the label, styled like the help text, e.g. `optional`. */
+  @property({attribute: 'label-note'}) labelNote = '';
+
   /** The minimum length of input that will be considered valid. */
   @property({type: Number}) minlength: number;
 
@@ -542,6 +545,7 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
                 <zn-icon library="fa" src="info"></zn-icon>
               </zn-tooltip>`
             : ''}
+          ${this.labelNote ? html`<span class="form-control__label-note">${this.labelNote}</span>` : ''}
         </label>
         ${hasContextNote
           ? html`<span class="form-control__label-context-note"><slot

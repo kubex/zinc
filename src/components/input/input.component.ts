@@ -217,6 +217,9 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
   /** Makes the input a required field. */
   @property({type: Boolean, reflect: true}) required = false;
 
+  /** Short text shown next to the label, styled like the help text, e.g. `optional`. */
+  @property({attribute: 'label-note'}) labelNote = '';
+
   /** A regular expression pattern to validate input against. */
   @property() pattern: string;
 
@@ -832,6 +835,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
               </zn-tooltip>`
             : ''}
 
+          ${this.labelNote ? html`<span class="form-control__label-note">${this.labelNote}</span>` : ''}
         </label>
 
         ${hasContextNote

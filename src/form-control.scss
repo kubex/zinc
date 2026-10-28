@@ -38,11 +38,26 @@
   color: var(--zn-input-required-content-color);
 }
 
-:host([optional]) .form-control--has-label .form-control__label::after {
-  content: var(--zn-input-optional-content, 'optional');
-  margin-inline-start: var(--zn-input-optional-content-offset, var(--zn-spacing-2x-small));
+.form-control__label-note {
+  margin-inline-start: var(--zn-input-label-note-offset, var(--zn-spacing-2x-small));
   color: var(--zn-input-help-text-color);
   font-weight: var(--zn-font-weight-normal, 400);
+}
+
+.form-control--has-label-tooltip .form-control__label-note {
+  margin-inline-start: 0;
+}
+
+.form-control--small .form-control__label-note {
+  font-size: var(--zn-input-help-text-font-size-small);
+}
+
+.form-control--medium .form-control__label-note {
+  font-size: var(--zn-input-help-text-font-size-medium);
+}
+
+.form-control--large .form-control__label-note {
+  font-size: var(--zn-input-help-text-font-size-large);
 }
 
 .form-control--has-label.form-control--radio-group .form-control__label,

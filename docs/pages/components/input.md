@@ -36,6 +36,17 @@ Add descriptive help text to an input with the `help-text` attribute. For help t
 </zn-input>
 ```
 
+### Label Note
+
+Use the `label-note` attribute to show short text next to the label, styled like the help text. This is useful for
+marking a field as optional.
+
+```html:preview
+<zn-input label="Middle name" label-note="optional"></zn-input>
+<br />
+<zn-input label="Nickname" label-note="optional" label-tooltip="What friends call you"></zn-input>
+```
+
 ### Label with Tooltip
 
 Use the `label-tooltip` attribute to add text that appears in a tooltip triggered by an info icon next to the label.

@@ -64,6 +64,7 @@ export enum QueryBuilderOperators {
   NMatch = 'nmatch',
   Contains = 'contains',
   DoesNotContain = 'doesnotcontain',
+  DnContain = 'dncontain',
   Starts = 'starts',
   NStarts = 'nstarts',
   Ends = 'ends',
@@ -72,6 +73,8 @@ export enum QueryBuilderOperators {
   NWild = 'nwild',
   Like = 'like',
   NLike = 'nlike',
+  LikeIn = 'likein',
+  NLikeIn = 'nlikein',
   Fuzzy = 'fuzzy',
   NFuzzy = 'nfuzzy',
   Gte = 'gte',
@@ -97,6 +100,7 @@ export const operatorText: { [key in QueryBuilderOperators]: string } = {
   [QueryBuilderOperators.NMatch]: 'Does Not Match',
   [QueryBuilderOperators.Contains]: 'Contains',
   [QueryBuilderOperators.DoesNotContain]: 'Does Not Contain',
+  [QueryBuilderOperators.DnContain]: 'Does Not Contain',
   [QueryBuilderOperators.Starts]: 'Starts With',
   [QueryBuilderOperators.NStarts]: 'Does Not Start With',
   [QueryBuilderOperators.Ends]: 'Ends With',
@@ -105,6 +109,8 @@ export const operatorText: { [key in QueryBuilderOperators]: string } = {
   [QueryBuilderOperators.NWild]: 'Does Not Match Wildcard',
   [QueryBuilderOperators.Like]: 'Like Match With',
   [QueryBuilderOperators.NLike]: 'Does Not Like Match With',
+  [QueryBuilderOperators.LikeIn]: 'Like Any Of',
+  [QueryBuilderOperators.NLikeIn]: 'Not Like Any Of',
   [QueryBuilderOperators.Fuzzy]: 'Fuzzy Match With',
   [QueryBuilderOperators.NFuzzy]: 'Does Not Match Fuzzy With',
   [QueryBuilderOperators.Gte]: 'Greater Than or Equals',
@@ -112,6 +118,12 @@ export const operatorText: { [key in QueryBuilderOperators]: string } = {
   [QueryBuilderOperators.Lt]: 'Less Than',
   [QueryBuilderOperators.Lte]: 'Less Than or Equals',
 };
+
+export interface QueryBuilderRule {
+  key: string;
+  comparator: string;
+  value: string | string[];
+}
 
 export interface CreatedRule {
   id: string;
@@ -167,8 +179,15 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     }
   }) showValues: string[] = [];
 
+  /** Rules to start with, in the shape the builder submits. */
+  @property({type: Array}) rules: QueryBuilderRule[] = [];
+
+  /** Allows a filter to be added more than once, e.g. for a date range. */
+  @property({type: Boolean}) repeatable: boolean = false;
+
 
   private get _usedFilterIds(): Set<string> {
+    if (this.repeatable) return new Set();
     return new Set([...this._selectedRules.values()].map(rule => rule.id));
   }
 
@@ -187,6 +206,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
         this._addRule(null, item);
       });
     }
+    this.rules?.forEach(rule => this._addRule(null, rule.key, undefined, rule));
     this._handleChange();
     this._formController.updateValidity();
   }
@@ -225,7 +245,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     this.emit("zn-change");
   }
 
-  private _addRule(event: Event | null, value: string, pos?: number) {
+  private _addRule(event: Event | null, value: string, pos?: number, initial?: QueryBuilderRule) {
     const target = event?.target as ZnSelect;
     const id = value ? value : target.value;
     if (id === '') return;
@@ -236,11 +256,16 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
 
     const uniqueId = Math.random().toString(36).substring(7);
 
+    const defaultOperator = filter.operators.length > 0 ? filter.operators[0] : QueryBuilderOperators.Eq;
+    const selectedComparator = initial && filter.operators.includes(initial.comparator as QueryBuilderOperators)
+      ? initial.comparator as QueryBuilderOperators
+      : defaultOperator;
+
     this._selectedRules.set(uniqueId, {
       id: filter.id,
       name: filter.name,
-      operator: filter.operators.length > 0 ? filter.operators[0] : QueryBuilderOperators.Eq,
-      value: ''
+      operator: selectedComparator,
+      value: (initial?.value ?? '') as string
     });
 
     const availableFilters = this.filters.filter(item => item.id === filter.id || !this._usedFilterIds.has(item.id));
@@ -271,7 +296,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
                      this._updateOperatorValue(uniqueId, e)
                      this._changeValueInput(uniqueId, e, filter);
                    }}"
-                   value="${filter.operators[0]}"
+                   value="${selectedComparator}"
                    ?disabled="${filter.operators.length === 1}">
           ${filter.operators.map((item: QueryBuilderOperators) => {
             return html`
@@ -289,10 +314,9 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
                  @click="${(e: Event) => this._removeRule(uniqueId, e)}">
       </zn-button>`;
 
-    const selectedComparator = filter.operators.length > 0 ? filter.operators[0] : QueryBuilderOperators.Eq;
     const wrapper = html`
       <div class="query-builder__wrapper">
-        ${this._createInput(filter, uniqueId, selectedComparator)}
+        ${this._createInput(filter, uniqueId, selectedComparator, initial?.value)}
         ${remove}
       </div>
     `;
@@ -316,7 +340,8 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     // Reset back to default placeholder
     this.addRule.value = '';
     this.addRule.displayLabel = '';
-    this.addRule.selectedOptions[0].selected = false;
+    const selected = this.addRule.selectedOptions[0];
+    if (selected) selected.selected = false;
 
     // Auto scroll to keep the add rule select in view
     if (target === this.addRule && this.parentElement?.classList.contains('dropdown__query-builder')) {
@@ -329,7 +354,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     this._handleChange();
   }
 
-  private _createInput(filter: QueryBuilderItem, uniqueId: string, selectedComparator: QueryBuilderOperators) {
+  private _createInput(filter: QueryBuilderItem, uniqueId: string, selectedComparator: QueryBuilderOperators, value?: string | string[]) {
     let input: ZnSelect | ZnInput | ZnDatepicker | null;
     switch (filter.type) {
       case 'bool':
@@ -354,7 +379,45 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
         break;
       }
     }
+
+    if (input && value !== undefined && value !== '') {
+      input.value = this._inputValue(filter, selectedComparator, value);
+    }
     return input;
+  }
+
+  private _inputValue(filter: QueryBuilderItem, operator: QueryBuilderOperators, value: string | string[]): string | string[] {
+    switch (filter.type) {
+      case 'bool':
+      case 'boolean':
+        return ['1', 'true'].includes(String(value).toLowerCase()) ? '1' : '0';
+      case 'date':
+      case 'dateTime': {
+        const date = this._submittedDate(String(value), operator, filter.dateSubmitFormat);
+        const pad = (n: number) => String(n).padStart(2, '0');
+        return `${pad(date.getMonth() + 1)}/${pad(date.getDate())}/${date.getFullYear()}`;
+      }
+      default:
+        if (filter.options && (operator === QueryBuilderOperators.In || operator === QueryBuilderOperators.Nin)) {
+          return Array.isArray(value) ? value.map(String) : String(value).split(',');
+        }
+        return Array.isArray(value) ? value.join(',') : String(value);
+    }
+  }
+
+  /** Reverses _updateDateValue, so a submitted date value can be shown again. */
+  private _submittedDate(value: string, operator: QueryBuilderOperators, submitFormat: QueryBuilderDateSubmitFormat = 'legacy'): Date {
+    switch (submitFormat) {
+      case 'timestamp':
+        return new Date(Number(value));
+      case 'iso':
+        return new Date(value);
+      default:
+        if (operator === QueryBuilderOperators.Eq || operator === QueryBuilderOperators.Neq) {
+          return new Date(Number(value) * 1000);
+        }
+        return new Date(Date.now() - Math.abs(Number(value)) * 60_000);
+    }
   }
 
   private _changeValueInput(uniqueId: string, changeEvent: ZnChangeEvent, filter: QueryBuilderItem) {

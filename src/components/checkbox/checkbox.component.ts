@@ -115,6 +115,9 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
   /** Squares off the corners of the container drawn by `contained`, which is rounded by default. */
   @property({type: Boolean, reflect: true}) square = false;
 
+  /** Centres the text of a contained checkbox that has no image or `card-title`. */
+  @property({type: Boolean, reflect: true}) centered = false;
+
   /** URL for the image shown in a contained checkbox. */
   @property() src = '';
 
@@ -125,8 +128,8 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
   @property({attribute: 'image-position', reflect: true}) imagePosition: SelectionCardImagePosition = 'left';
 
   /**
-   * Places the checkbox indicator within a contained card. Use `none` to hide the indicator so the card itself
-   * shows the selected state. Requires `contained`.
+   * Places the checkbox indicator within a contained card. A contained checkbox without an image or `card-title` hides it
+   * at `start`, as does `none`. Requires `contained`.
    */
   @property({attribute: 'control-position', reflect: true}) controlPosition: SelectionCardControlPosition = 'start';
 

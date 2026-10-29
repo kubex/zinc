@@ -164,6 +164,55 @@
   -webkit-user-select: none;
 }
 
+/* Scale: the control becomes a bar segment with the label centred beneath it. */
+.radio--scale {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--zn-spacing-x-small);
+  width: 100%;
+  padding-block: var(--zn-spacing-x-small);
+
+  .radio__control {
+    width: 100%;
+    height: var(--zn-radio-scale-segment-height, 0.875rem);
+    border: none;
+    border-radius: var(--zn-radio-scale-segment-radius, 4px);
+    background-color: var(--zn-color-neutral-200);
+  }
+
+  .radio__checked-icon {
+    display: none;
+  }
+
+  .radio__label {
+    margin-inline-start: 0;
+    text-align: center;
+    font-size: var(--zn-font-size-small);
+    font-weight: var(--zn-font-weight-medium, 500);
+    line-height: var(--zn-line-height-dense);
+    color: var(--zn-text-color-muted, var(--zn-color-neutral-500));
+  }
+}
+
+.radio.radio--scale:not(.radio--checked):not(.radio--disabled) .radio__control:hover {
+  background-color: var(--zn-color-primary-200);
+}
+
+.radio.radio--scale.radio--filled .radio__control,
+.radio.radio--scale.radio--filled:not(.radio--disabled) .radio__control:hover {
+  background-color: var(--zn-color-primary-600);
+}
+
+.radio.radio--scale.radio--checked .radio__control {
+  outline: 2px solid var(--zn-color-primary-600);
+  outline-offset: 2px;
+}
+
+.radio.radio--scale.radio--checked .radio__label {
+  color: var(--zn-color-primary-fg, var(--zn-color-primary-600));
+  font-weight: var(--zn-font-weight-semibold, 600);
+}
+
 /* Contained */
 .radio--contained {
   padding: 1.375rem var(--zn-spacing-large) 1.375rem var(--zn-spacing-medium);

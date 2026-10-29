@@ -102,6 +102,9 @@ export default class ZnRadio extends ZincElement implements ZincFormControl {
   /** Squares off the corners of the container drawn by `contained`, which is rounded by default. */
   @property({type: Boolean, reflect: true}) square = false;
 
+  /** Centres the text of a contained radio that has no image or `card-title`. */
+  @property({type: Boolean, reflect: true}) centered = false;
+
   /** URL for the image shown in a contained radio. */
   @property() src = '';
 
@@ -112,13 +115,19 @@ export default class ZnRadio extends ZincElement implements ZincFormControl {
   @property({attribute: 'image-position', reflect: true}) imagePosition: SelectionCardImagePosition = 'left';
 
   /**
-   * Places the radio indicator within a contained card. Use `none` to hide the indicator so the card itself
-   * shows the selected state. Requires `contained`.
+   * Places the radio indicator within a contained card. A contained radio without an image or `card-title` hides it
+   * at `start`, as does `none`. Requires `contained`.
    */
   @property({attribute: 'control-position', reflect: true}) controlPosition: SelectionCardControlPosition = 'start';
 
   /** Applies styles relevant to radios in a horizontal layout. */
   @property({type: Boolean, reflect: true}) horizontal = false;
+
+  /** Draws the radio as one segment of a scale. Set by a radio group with `scale`. */
+  @property({type: Boolean, reflect: true}) scale = false;
+
+  /** Fills a scale segment, as one at or before the group's checked radio. Set by a radio group with `scale`. */
+  @property({type: Boolean, reflect: true}) filled = false;
 
   /** The default value of the form control. Primarily used for resetting the form control. */
   @defaultValue('checked') defaultChecked = false;
@@ -315,6 +324,8 @@ export default class ZnRadio extends ZincElement implements ZincFormControl {
             'radio--focused': this.hasFocus,
             'radio--contained': this.contained,
             'radio--horizontal': this.horizontal,
+            'radio--scale': this.scale,
+            'radio--filled': this.scale && this.filled,
             'radio--small': this.size === 'small',
             'radio--medium': this.size === 'medium',
             'radio--large': this.size === 'large',

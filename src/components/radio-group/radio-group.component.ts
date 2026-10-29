@@ -77,11 +77,20 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
   /** Squares off the corners of every contained radio in the group, which are rounded by default. */
   @property({type: Boolean, reflect: true}) square = false;
 
+  /** Centres the text of every contained radio in the group. */
+  @property({type: Boolean, reflect: true}) centered = false;
+
   /**
    * Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from
    * `--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.
    */
   @property({type: Boolean, reflect: true}) wrap = false;
+
+  /**
+   * Lays the radios out as a segmented scale, in document order, filling every segment up to the checked one. Suits
+   * ordered answers such as 1 to 10, and unlike a range input it has no value until one is picked.
+   */
+  @property({type: Boolean, reflect: true}) scale = false;
 
   /**
    * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
@@ -217,8 +226,22 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
         if (this.square) {
           radio.square = true;
         }
+
+        if (this.centered) {
+          radio.centered = true;
+        }
       })
     );
+    this.syncScale();
+  }
+
+  private syncScale() {
+    const radios = this.getAllRadios();
+    const checkedIndex = radios.findIndex(radio => radio.value === this.value);
+    radios.forEach((radio, index) => {
+      radio.scale = this.scale;
+      radio.filled = this.scale && checkedIndex >= 0 && index <= checkedIndex;
+    });
   }
 
   private syncRadios() {
@@ -237,11 +260,17 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
   private updateCheckedRadio() {
     const radios = this.getAllRadios();
     radios.forEach(radio => (radio.checked = radio.value === this.value));
+    this.syncScale();
     this.formControlController.setValidity(this.validity?.valid);
   }
 
   @watch('size', {waitUntilFirstUpdate: true})
   handleSizeChange() {
+    this.syncRadios();
+  }
+
+  @watch('scale', {waitUntilFirstUpdate: true})
+  handleScaleChange() {
     this.syncRadios();
   }
 

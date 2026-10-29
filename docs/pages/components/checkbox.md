@@ -172,7 +172,7 @@ Use the `checked-icon` and `unchecked-icon` attributes to display custom icons f
 
 ### Contained Style
 
-Add the `contained` attribute to draw a card-like container around a checkbox. This style is useful for giving more emphasis to a checkbox or list of checkboxes.
+Add the `contained` attribute to draw a card-like container around a checkbox. This style is useful for giving more emphasis to a checkbox or list of checkboxes. The container shows the checked state, so the checkbox indicator is hidden; set `control-position` to place one in the card.
 
 ```html:preview
 <zn-checkbox description="Grants access to cash account and charge card features" contained>Financial products access</zn-checkbox>

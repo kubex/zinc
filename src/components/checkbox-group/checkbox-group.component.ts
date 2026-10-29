@@ -81,6 +81,9 @@ export default class ZnCheckboxGroup extends ZincElement implements ZincFormCont
   /** Squares off the corners of every contained checkbox in the group, which are rounded by default. */
   @property({type: Boolean, reflect: true}) square = false;
 
+  /** Centres the text of every contained checkbox in the group. */
+  @property({type: Boolean, reflect: true}) centered = false;
+
   /**
    * Lays horizontal contained checkboxes out as a wrapping row instead of an equal-width grid, so each one sizes from
    * `--zn-checkbox-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.
@@ -172,6 +175,10 @@ export default class ZnCheckboxGroup extends ZincElement implements ZincFormCont
 
         if (this.square) {
           checkbox.square = true;
+        }
+
+        if (this.centered) {
+          checkbox.centered = true;
         }
 
         // Add class to checkboxes in a Checkbox Group so that we can style them without using :slotted

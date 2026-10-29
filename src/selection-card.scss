@@ -183,6 +183,31 @@ $control-positions: (
   }
 }
 
+/* A plain contained radio or checkbox shows its state through the container, so it drops the indicator too. */
+:host([contained]) [part~="base"]:not(.selection-card) {
+  padding-inline-start: var(--zn-spacing-large);
+
+  .selection-card__control {
+    display: none;
+  }
+
+  .selection-card__content {
+    margin-inline-start: 0;
+  }
+
+  &:has(input:focus-visible) {
+    outline: var(--zn-focus-ring);
+    outline-offset: var(--zn-focus-ring-offset);
+  }
+}
+
+/* `centered` centres a plain contained radio or checkbox's text, evening out the start padding left for the indicator. */
+:host([contained][centered]) [part~="base"]:not(.selection-card) {
+  justify-content: center;
+  padding-inline: var(--zn-spacing-large);
+  text-align: center;
+}
+
 /* Contained radios and checkboxes are rounded by default; `square` opts out. */
 :host([contained]) [part~="base"] {
   border-radius: var(--zn-selection-card-border-radius, var(--zn-border-radius));

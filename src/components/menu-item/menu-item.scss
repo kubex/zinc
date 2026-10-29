@@ -178,8 +178,9 @@
   color: var(--zn-menu-item-icon-color, inherit);
 }
 
-// A destructive item's icon takes the item's colour
-.menu-item--error .menu-item__prefix::slotted(*) {
+// A destructive or cautionary item's icon takes the item's colour
+.menu-item--error .menu-item__prefix::slotted(*),
+.menu-item--warning .menu-item__prefix::slotted(*) {
   color: inherit;
 }
 
@@ -335,9 +336,9 @@ zn-popup::part(popup) {
 }
 
 .menu-item--warning {
-  --color: rgb(var(--zn-color-warning));
-  --hover-color: rgb(var(--zn-color-on-warning, 255, 255, 255));
-  --hover-bg: rgba(var(--zn-color-warning), 0.9);
+  --color: var(--zn-color-warning-fg, rgb(var(--zn-color-warning)));
+  --hover-color: var(--zn-menu-item-warning-hover-color, rgb(var(--zn-color-on-warning, 255, 255, 255)));
+  --hover-bg: var(--zn-menu-item-warning-hover-background, rgba(var(--zn-color-warning), 0.9));
 }
 
 .menu-item--success {

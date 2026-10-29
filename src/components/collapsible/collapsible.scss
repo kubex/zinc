@@ -24,7 +24,6 @@
   .caption {
     font-weight: 600;
     margin: 0;
-    flex-grow: 1;
     width: 100%;
     color: rgb(var(--zn-text-heading));
   }
@@ -131,11 +130,20 @@
 
 @media (prefers-reduced-motion: reduce) {
   .content,
-  .content__inner {
+  .content__inner,
+  .expand {
     transition-duration: 0s;
   }
 }
 
 .expand {
   margin-left: var(--zn-spacing-medium);
+  color: rgb(var(--zn-color-muted-text));
+  transition: transform var(--zn-transition-medium) var(--zn-ease-out), color var(--zn-transition-fast) ease;
+}
+
+@include wc.hover-fine {
+  .header-toggle:hover .expand {
+    color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
+  }
 }

@@ -209,7 +209,7 @@ export default class ZnCollapsible extends ZincElement {
             ${this.showNumber && !this.expanded ? html`
               <zn-chip size="small" type="primary">${this.numberOfItems}</zn-chip>` : ''}
             ${this.showArrow ? html`
-              <zn-icon library="material-outlined" src="expand_more" class="expand"></zn-icon>` : ''}
+              <zn-icon src="chevron-down@lu" size="18" class="expand"></zn-icon>` : ''}
           </div>
         </slot>
         </div>

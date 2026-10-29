@@ -755,6 +755,16 @@ button[popovertarget] {
   }
 }
 
+// Track 26px, pill 22px
+:host([pill][size="small"]) {
+  --zn-button-height: 26px;
+}
+
+// A flush pill sits where it is placed, such as above a form field, without the panel inset
+:host([pill][flush]:not([stacked]):not([icon-bar])) .navbar__strip {
+  margin: 0 0 calc(var(--zn-spacing-unit, 8px) * 1.5);
+}
+
 // Beside page header actions, or ahead of a button menu's buttons, the pill keeps to its own width and drops the
 // panel inset and the gap it keeps above content
 :host([pill]:is([slot="actions"], [slot="prefix"]):not([stacked]):not([icon-bar])) {

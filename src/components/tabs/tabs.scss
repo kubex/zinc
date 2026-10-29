@@ -89,8 +89,13 @@ h1, h2 {
 }
 
 :host([no-scroll]) {
+  // Clipped rather than hidden so focus rings on fields flush with the edge still show
+  .tabs, #mid, #content {
+    overflow: clip;
+    overflow-clip-margin: var(--zn-focus-ring-outset);
+  }
+
   #content {
-    overflow: hidden;
 
     > div {
       max-height: 100%;

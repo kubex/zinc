@@ -64,6 +64,8 @@ export default class ZnNavbar extends ZincElement {
   @property({attribute: 'gutter', type: Boolean, reflect: true}) gutter: boolean = false;
   /** Draws the tabs as a segmented control: a grey track with a pill that slides to the active tab. */
   @property({type: Boolean, reflect: true}) pill: boolean = false;
+  /** With `pill`, `small` draws a shorter track to sit with small controls, such as above a form field. */
+  @property({reflect: true}) size: 'small' | 'medium' = 'medium';
   /** The id of a zn-tabs elsewhere on the page that this navbar's tabs switch, such as one below a page header. */
   @property({reflect: true}) tabs: string;
   @property({type: Boolean}) stacked: boolean;

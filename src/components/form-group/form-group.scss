@@ -125,7 +125,9 @@ zn-cols::part(base) {
 }
 
 // Without a label or help text the group is only its card's field grid, so it fills the card.
-.form-control--full {
+// A compact stacked group labels its fields the way an input does, so it fills the same width.
+.form-control--full,
+.form-control--compact.form-control--stacked {
   max-width: none;
 }
 
@@ -146,4 +148,9 @@ zn-cols::part(base) {
 
 .form-control--compact zn-cols::part(base) {
   gap: var(--zn-form-row-gap, var(--zn-spacing-medium));
+}
+
+// Stacked, the label sits over its fields as an input's does
+.form-control--compact.form-control--stacked zn-cols::part(base) {
+  gap: var(--zn-input-label-spacing, var(--zn-spacing-2x-small));
 }

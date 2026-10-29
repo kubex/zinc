@@ -171,14 +171,9 @@ export default class ZnButtonMenu extends ZincElement {
       menu.innerHTML = '';
     }
 
-    // Add colors to the buttons depending on type
     this._buttons.forEach((button: CustomButtonWidths, index: number) => {
       if (index < visibleButtons) {
         this.shadowRoot?.querySelector('.button-menu__container')?.appendChild(button.button);
-
-        if (button.button.hasAttribute('primary') || button.button.hasAttribute('secondary')) {
-          button.button.setAttribute('text', "");
-        }
       }
     });
 

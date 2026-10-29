@@ -237,6 +237,12 @@
 
 .checkbox__label {
   display: inline-block;
+
+  // Without a label, its margin would sit the box off-centre
+  &[hidden] {
+    display: none;
+  }
+
   color: var(--zn-input-label-color);
   line-height: var(--toggle-size);
   margin-inline-start: 0.75em;

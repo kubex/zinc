@@ -88,6 +88,12 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   /** Adds a Source button that switches to editing the raw HTML, which is submitted as written. */
   @property({attribute: 'source', type: Boolean}) sourceEnabled = false;
 
+  /** Shows only the content, without a toolbar or box, such as the source beside a translation. */
+  @property({type: Boolean, reflect: true}) readonly = false;
+
+  /** With `compact`, a short label inside the box ahead of the content, such as a language code. */
+  @property() prefix = '';
+
   @state() private _sourceMode = false;
 
   /** Text under the editor that describes how to use it. If you need to display HTML, use the `help-text` slot instead. */
@@ -310,6 +316,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         history: {}
       },
       placeholder: this.placeholder,
+      readOnly: this.readonly,
       theme: 'snow',
       bounds: this.editor,
     });
@@ -684,21 +691,25 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         <zn-toolbar id="toolbar" ?data-source=${this._sourceMode}>
           <slot name="tools"></slot>
         </zn-toolbar>
-        ${this.sourceEnabled ? html`
+        ${this.sourceEnabled && !this.readonly ? html`
           <zn-button class="editor__source-toggle" color="transparent" size="small"
                      icon="${this._sourceMode ? 'pencil@lu' : 'code@lu'}" icon-size="16"
                      @click=${this._toggleSource}>${this._sourceMode ? 'Editor' : 'Source'}</zn-button>` : ''}
       </div>
       <slot name="context-items" style="display: none;"></slot>
-      <div id="editor" x-editor-id="${this.id}" ?hidden=${this._sourceMode}></div>
-      ${this.sourceEnabled ? html`
-        <textarea class="editor__source" spellcheck="false" ?hidden=${!this._sourceMode}
-                  @input=${this._handleSourceInput}></textarea>` : ''}
+      <div class="editor__box ${this.prefix ? 'editor__box--prefixed' : ''}">
+        ${this.prefix ? html`<span class="editor__prefix">${this.prefix}</span>` : ''}
+        <div id="editor" x-editor-id="${this.id}" ?hidden=${this._sourceMode}></div>
+        ${this.sourceEnabled ? html`
+          <textarea class="editor__source" spellcheck="false" ?hidden=${!this._sourceMode}
+                    @input=${this._handleSourceInput}></textarea>` : ''}
+      </div>
       <input type="text" id="editorHtml" name="${this.name}" value="${this.value}" style="display: none;">
       <div id="action-container" class="ql-toolbar ql-snow">
         <slot name="actions"></slot>
       </div>
-      <div class="form-control form-control--medium ${this.helpText || this.hasSlotController.test('help-text') ? 'form-control--has-help-text' : ''}">
+      <div class="form-control form-control--medium form-control--has-help-text"
+           ?hidden=${!this.helpText && !this.hasSlotController.test('help-text')}>
         <div part="form-control-help-text" class="form-control__help-text">
           <slot name="help-text">${this.helpText}</slot>
         </div>

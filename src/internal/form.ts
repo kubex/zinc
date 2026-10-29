@@ -442,7 +442,7 @@ export class FormControlController implements ReactiveController {
       this.host.isConnected &&
       !disabled &&
       !isButton &&
-      name.length > 0 &&
+      !!name &&
       typeof value !== 'undefined'
     ) {
       const isPassword = (this.host as HTMLElement & { type?: string }).type === 'password';

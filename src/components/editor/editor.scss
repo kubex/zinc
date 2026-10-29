@@ -182,6 +182,26 @@
   }
 }
 
+.editor__box {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.editor__prefix {
+  position: absolute;
+  z-index: 1;
+  top: var(--zn-spacing-x-small);
+  left: calc(var(--zn-spacing-unit, 8px) * 1.5);
+  color: rgb(var(--zn-text));
+  font-size: 12px;
+  font-weight: 700;
+  line-height: calc(var(--zn-input-font-size-medium) * 1.5);
+  pointer-events: none;
+}
+
 .editor__source {
   display: block;
   width: 100%;
@@ -253,9 +273,15 @@
     padding: 0;
   }
 
+  .editor__box {
+    display: block;
+    flex: none;
+  }
+
   .ql-editor {
-    padding: var(--zn-spacing-x-small) var(--zn-spacing-small);
+    padding: var(--zn-spacing-x-small) calc(var(--zn-spacing-unit, 8px) * 1.5);
     font-size: var(--zn-input-font-size-medium);
+    line-height: 1.5;
     background-color: transparent;
 
     > * + * {
@@ -264,8 +290,8 @@
   }
 
   .ql-editor.ql-blank:before {
-    left: var(--zn-spacing-small);
-    right: var(--zn-spacing-small);
+    left: calc(var(--zn-spacing-unit, 8px) * 1.5);
+    right: calc(var(--zn-spacing-unit, 8px) * 1.5);
     font-style: normal;
     color: var(--zn-input-placeholder-color);
   }
@@ -277,6 +303,67 @@
 
   .form-control__help-text {
     margin-top: 0;
+  }
+}
+
+// The prefix's gutter: its width, and the space either side of it
+:host([compact]) .editor__box--prefixed {
+  .ql-editor,
+  .editor__source {
+    padding-left: calc(var(--zn-spacing-unit, 8px) * 3 + 32px);
+  }
+
+  .ql-editor.ql-blank:before {
+    left: calc(var(--zn-spacing-unit, 8px) * 3 + 32px);
+  }
+}
+
+.form-control[hidden] {
+  display: none;
+}
+
+// Content only, such as a translation's source shown beside it
+:host([readonly]) {
+  min-height: 0;
+  max-height: none;
+  flex: none;
+  overflow: visible;
+  background-color: transparent;
+
+  .editor__bar,
+  #action-container {
+    display: none;
+  }
+
+  .editor__box {
+    display: block;
+  }
+
+  #editor {
+    flex: none;
+    height: auto;
+    border: 0;
+    background-color: transparent;
+    box-shadow: none;
+    resize: none;
+  }
+
+  .ql-container {
+    padding: 0;
+  }
+
+  .ql-editor {
+    height: auto;
+    padding: 0;
+    overflow: visible;
+    line-height: 1.5;
+    color: inherit;
+    font-size: inherit;
+    background-color: transparent;
+
+    > * + * {
+      margin-top: var(--zn-spacing-x-small);
+    }
   }
 }
 

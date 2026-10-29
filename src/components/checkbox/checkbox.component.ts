@@ -427,7 +427,8 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
               </span>`
             : ''}
 
-          <div part="label" class="checkbox__label selection-card__content">
+          <div part="label" class="checkbox__label selection-card__content"
+               ?hidden=${!hasDefaultSlot && !this.cardTitle && !hasDescription}>
             <span part="card-title" class="selection-card__title">
               <slot></slot>${hasDefaultSlot ? '' : this.cardTitle}
             </span>

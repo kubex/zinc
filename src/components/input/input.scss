@@ -128,6 +128,11 @@ input[type='text'].input__control[data-color-input] {
   outline: none;
 }
 
+.input__prefix {
+  // Holds the text at the same start for prefixes of differing widths, such as language codes
+  min-width: var(--zn-input-prefix-min-width, 0);
+}
+
 .input__prefix,
 .input__suffix {
   display: inline-flex;

@@ -178,6 +178,7 @@
     border: none;
     border-radius: var(--zn-radio-scale-segment-radius, 4px);
     background-color: var(--zn-color-neutral-200);
+    transition: background-color var(--zn-transition-fast) ease-out;
   }
 
   .radio__checked-icon {
@@ -191,16 +192,26 @@
     font-weight: var(--zn-font-weight-medium, 500);
     line-height: var(--zn-line-height-dense);
     color: var(--zn-text-color-muted, var(--zn-color-neutral-500));
+    transition: color var(--zn-transition-fast) ease-out;
   }
 }
 
-.radio.radio--scale:not(.radio--checked):not(.radio--disabled) .radio__control:hover {
-  background-color: var(--zn-color-primary-200);
+.radio.radio--scale:not(.radio--disabled):hover {
+  .radio__control {
+    background-color: var(--zn-color-primary-400);
+  }
+
+  .radio__label {
+    color: var(--zn-color-primary-fg, var(--zn-color-primary-600));
+  }
 }
 
-.radio.radio--scale.radio--filled .radio__control,
-.radio.radio--scale.radio--filled:not(.radio--disabled) .radio__control:hover {
+.radio.radio--scale.radio--filled .radio__control {
   background-color: var(--zn-color-primary-600);
+}
+
+.radio.radio--scale.radio--filled:not(.radio--disabled):hover .radio__control {
+  background-color: var(--zn-color-primary-700);
 }
 
 .radio.radio--scale.radio--checked .radio__control {

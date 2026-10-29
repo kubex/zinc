@@ -148,4 +148,15 @@ describe('<zn-confirm-modal>', () => {
 
     expect(posted).to.deep.equal(['/items/1/delete', '/items/2/delete']);
   });
+
+  it('labels its buttons from the dashed text attributes', async () => {
+    const confirm = await fixture<HTMLElement & {updateComplete: Promise<void>}>(html`
+      <zn-confirm confirm-text="Archive" cancel-text="Keep"></zn-confirm>
+    `);
+    await confirm.updateComplete;
+
+    const buttons = confirm.shadowRoot!.querySelectorAll('zn-button[slot="footer"]');
+    expect(buttons[0].textContent!.trim()).to.equal('Keep');
+    expect(buttons[1].textContent!.trim()).to.equal('Archive');
+  });
 });

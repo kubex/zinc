@@ -35,9 +35,15 @@
     padding-bottom: 10px;
   }
 
+  // A row's parts would otherwise all shrink from their bases, leaving the selects only as wide as their arrow
   &__key,
   &__comparator {
-    flex-basis: 60%;
+    flex: 0 1 220px;
+    min-width: 140px;
+  }
+
+  &__row > .query-builder__wrapper {
+    flex: 1 1 200px;
   }
 
   &__value {

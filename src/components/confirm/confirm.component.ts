@@ -67,11 +67,11 @@ export default class ZnConfirm extends ZincElement {
 
   @property() content: string = '';
 
-  @property() confirmText: string = "Confirm";
+  @property({attribute: 'confirm-text'}) confirmText: string = "Confirm";
 
-  @property() cancelText: string = "Cancel";
+  @property({attribute: 'cancel-text'}) cancelText: string = "Cancel";
 
-  @property() closeText: string = "Close";
+  @property({attribute: 'close-text'}) closeText: string = "Close";
 
   @property({type: Boolean, attribute: 'hide-icon'}) hideIcon: boolean = false;
 

@@ -399,6 +399,31 @@ describe('<zn-page>', () => {
     expect(activeItem?.getAttribute('tab')).to.equal('details');
   });
 
+  it('opens a tab from a tab attribute inside a uri tab, which loads into the page\'s shadow root', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Uri Tab Link">
+        <zn-tab caption="Details" id="details">Details Content</zn-tab>
+        <zn-tab caption="Publish" uri="/publish-tab"></zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(40);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    navbar.shadowRoot!.querySelector<HTMLElement>('li[tab-uri="/publish-tab"]')!.click();
+    await aTimeout(100);
+
+    const panel = el.shadowRoot!.querySelector<HTMLElement>('#content > div[data-self-uri="/publish-tab"]')!;
+    const link = document.createElement('span');
+    link.setAttribute('tab', 'details');
+    link.textContent = 'Edit in Details';
+    panel.replaceChildren(link);
+    expect(el.getAttribute('active')).to.not.equal('details');
+
+    link.click();
+    await aTimeout(40);
+    expect(el.getAttribute('active')).to.equal('details');
+  });
+
   it('shows tabs inside a tab as a pill tab set without a header', async () => {
     const el = await fixture<ZnPage>(html`
       <zn-page caption="Outer Page">

@@ -343,12 +343,18 @@ export default class ZnPage extends ZnTabs {
   }
 
   // Only elements whose nearest tab container is this page count, so links inside a nested
-  // zn-tabs or zn-page drive that container instead.
+  // zn-tabs or zn-page drive that container instead. The container is found along the event path
+  // because uri tabs load into this page's shadow root, which closest() cannot climb out of.
   private handleContentTabClick = (event: MouseEvent) => {
-    const link = event.composedPath().find((node): node is HTMLElement =>
-      node instanceof HTMLElement && node.hasAttribute('tab') && node.closest(tabContainerSelector) === this
-    );
-    if (!link || link.hasAttribute('disabled')) {
+    const path = event.composedPath();
+    const index = path.findIndex(node => node instanceof HTMLElement && node.hasAttribute('tab'));
+    const link = path[index] as HTMLElement | undefined;
+    // The page's own navbar items select through zn-select.
+    if (!link || link.hasAttribute('disabled') || link.closest('zn-navbar')) {
+      return;
+    }
+    const container = path.slice(index + 1).find(node => node instanceof Element && node.matches(tabContainerSelector));
+    if (container !== this) {
       return;
     }
 

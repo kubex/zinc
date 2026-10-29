@@ -119,6 +119,61 @@ In ticket mode (default), Enter creates new lines. Forms must be submitted using
 </script>
 ```
 
+### Compact
+
+Add `compact` to draw the editor as a form field: a bordered, resizable box under a small toolbar of bold, italic,
+link and lists. Add `source` for a button that switches to editing the raw HTML, which is submitted exactly as written.
+Switching back to the editor reduces the HTML to what the editor can show.
+
+```html:preview
+<zn-editor
+  name="body"
+  interaction-type="ticket"
+  compact
+  source
+  links
+  placeholder="Write the email"
+  help-text="Use Source to paste a designed HTML email."
+  value="<p>Thanks for signing up.</p><p>Reply to this email if you need anything.</p>">
+</zn-editor>
+```
+
+### Help Text
+
+Add text under the editor with the `help-text` attribute, or the `help-text` slot for HTML.
+
+```html:preview
+<zn-editor
+  name="content"
+  help-text="Type / to see what you can insert."
+  style="height: 250px">
+</zn-editor>
+```
+
+{% raw %}
+
+### Merge Fields
+
+Add `merge-fields` to show `{{token}}` replacements as highlighted chips. Each chip is labelled from the
+`zn-editor-quick-action` whose `content` is that token, so the same actions offer them from the `/` menu. The editor's
+value keeps the raw tokens, and tokens inside attributes such as a link's `href` are left as text.
+
+```html:preview
+<zn-editor
+  name="body"
+  interaction-type="ticket"
+  merge-fields
+  value="<p>Hi {{recipient.firstName}}, welcome to {{brand.displayName}}.</p>"
+  style="height: 250px">
+  <zn-editor-quick-action slot="context-items" icon="braces@lu" label="First name"
+                          content="{{recipient.firstName}}"></zn-editor-quick-action>
+  <zn-editor-quick-action slot="context-items" icon="braces@lu" label="Brand name"
+                          content="{{brand.displayName}}"></zn-editor-quick-action>
+</zn-editor>
+```
+
+{% endraw %}
+
 ### Caching Unsent Content
 
 Set a `store-key` to cache what the agent has typed, so an unsent reply survives page reloads and navigation. Content is saved as it is typed, restored when an editor with the same key next loads, and cleared when the form is submitted or the editor is emptied.

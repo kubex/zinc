@@ -49,8 +49,7 @@ describe('<zn-editor>', () => {
       document.dispatchEvent(new Event('zn-editor-update'));
       await el.updateComplete;
 
-      // Quill's getSemanticHTML encodes spaces as &nbsp;
-      expect(sessionStorage.getItem(KEY)).to.contain('Typed&nbsp;reply');
+      expect(sessionStorage.getItem(KEY)).to.contain('Typed reply');
     });
 
     it('should clear cached content on form submit', async () => {
@@ -62,10 +61,27 @@ describe('<zn-editor>', () => {
 
       document.dispatchEvent(new Event('zn-editor-update'));
       await el.updateComplete;
-      expect(sessionStorage.getItem(KEY)).to.contain('Typed&nbsp;reply');
+      expect(sessionStorage.getItem(KEY)).to.contain('Typed reply');
 
       form.requestSubmit();
       expect(sessionStorage.getItem(KEY)).to.equal(null);
+    });
+  });
+
+  describe('merge fields', () => {
+    it('should show tokens as labelled chips and keep the raw token in the value', async () => {
+      const el = await fixture<ZnEditor>(html`
+        <zn-editor merge-fields .value=${'<p>Hi {{ recipient.firstName }}</p>'}>
+          <zn-editor-quick-action slot="context-items" icon="braces@lu" label="First name"
+                                  content="{{recipient.firstName}}"></zn-editor-quick-action>
+        </zn-editor>`);
+
+      const chip = el.shadowRoot!.querySelector<HTMLElement>('.ql-merge-field')!;
+      expect(chip.textContent).to.contain('First name');
+
+      (el as unknown as { quillElement: { insertText: (i: number, t: string, s: string) => void } })
+        .quillElement.insertText(0, 'Oh ', 'user');
+      expect(el.value).to.equal('<p>Oh Hi {{recipient.firstName}}</p>');
     });
   });
 });

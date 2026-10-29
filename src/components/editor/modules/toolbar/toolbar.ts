@@ -86,7 +86,10 @@ class Toolbar extends QuillToolbar {
     const range = this._quill.getSelection();
     const formats: Record<string, unknown> = range ? this._quill.getFormat(range) : {};
     const current = formats[key];
-    const next: boolean | string | number = value !== undefined ? value as boolean | string | number : !(current as boolean);
+    let next: boolean | string | number = value !== undefined ? value as boolean | string | number : !(current as boolean);
+    if (key === 'list' && current === value) {
+      next = false;
+    }
     this._quill.format(key, next);
   }
 
@@ -194,6 +197,8 @@ class Toolbar extends QuillToolbar {
     this._syncButtonState('bold@lu', !!formats.bold);
     this._syncButtonState('italic@lu', !!formats.italic);
     this._syncButtonState('underline@lu', !!formats.underline);
+    this._syncButtonState('list@lu', formats.list === 'bullet');
+    this._syncButtonState('list-ordered@lu', formats.list === 'ordered');
 
     this._updateHeadingFormatMenu(formats);
     this._updateListFormatMenu(formats);

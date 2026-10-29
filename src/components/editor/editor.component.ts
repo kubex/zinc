@@ -1,8 +1,9 @@
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {deepQuerySelectorAll, idSelector} from "../../utilities/query";
 import {FormControlController} from '../../internal/form';
+import {HasSlotController} from "../../internal/slot";
 import {on} from "../../utilities/on";
-import {property, query} from 'lit/decorators.js';
+import {property, query, state} from 'lit/decorators.js';
 import {Store} from "../../internal/storage";
 import Attachment from "./modules/attachment/attachment";
 import ContextMenu from "./modules/context-menu/context-menu";
@@ -12,6 +13,7 @@ import DragAndDrop from "./modules/drag-drop/drag-drop";
 import Emoji from "./modules/emoji/emoji";
 import HeadlessEmoji from "./modules/emoji/headless/headless-emoji";
 import ImageResize from "./modules/image-resize/image-resize";
+import MergeField, {MergeFieldBlot, normaliseToken} from "./modules/merge-field/merge-field";
 import Quill from "quill";
 import QuillAI from "./modules/ai";
 import TimeTracking from "./modules/time-tracking/time-tracking";
@@ -23,7 +25,9 @@ import type {Range} from "quill";
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type {ZnEditorInsertEvent} from "./modules/events/zn-editor-insert";
 import type ToolbarComponent from "./modules/toolbar/toolbar.component";
+import type ZnEditorQuickAction from "./modules/context-menu/quick-action";
 
+import formControlStyles from '../../form-control.scss';
 import styles from './editor.scss';
 
 export interface EditorFeatureConfig {
@@ -36,6 +40,7 @@ export interface EditorFeatureConfig {
   datesEnabled?: boolean;
   emojisEnabled?: boolean;
   codeEnabled?: boolean;
+  compact?: boolean;
 }
 
 /**
@@ -50,15 +55,17 @@ export interface EditorFeatureConfig {
  *
  * @slot - The default slot.
  * @slot example - An example slot.
+ * @slot help-text - Text under the editor. Alternatively, use the `help-text` attribute.
  *
  * @csspart base - The component's base wrapper.
  *
  * @cssproperty --example - An example CSS custom property.
  */
 export default class ZnEditor extends ZincElement implements ZincFormControl {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
 
   private formControlController = new FormControlController(this, {});
+  private readonly hasSlotController = new HasSlotController(this, 'help-text');
 
   @query('#editor')
   private editor: HTMLElement;
@@ -72,6 +79,19 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   @property({reflect: true}) id: string;
   @property() name: string;
   @property() value: string;
+
+  @property() placeholder = 'Compose your reply...';
+
+  /** Draws the editor as a form field: a bordered, resizable box under a small toolbar of bold, italic, link and lists. */
+  @property({type: Boolean, reflect: true}) compact = false;
+
+  /** Adds a Source button that switches to editing the raw HTML, which is submitted as written. */
+  @property({attribute: 'source', type: Boolean}) sourceEnabled = false;
+
+  @state() private _sourceMode = false;
+
+  /** Text under the editor that describes how to use it. If you need to display HTML, use the `help-text` slot instead. */
+  @property({attribute: 'help-text'}) helpText = '';
 
   @property({attribute: 'interaction-type', type: String})
   interactionType: 'ticket' | 'chat' = 'chat';
@@ -90,6 +110,12 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   @property({attribute: 'emojis', type: Boolean}) emojisEnabled: boolean = false;
   @property({attribute: 'code', type: Boolean}) codeEnabled: boolean = false;
   @property({attribute: 'ai', type: Boolean}) aiEnabled: boolean = false;
+
+  /**
+   * Shows `{{token}}` replacements as highlighted chips, labelled from the matching `context-items`
+   * quick action. The value still holds the raw tokens.
+   */
+  @property({attribute: 'merge-fields', type: Boolean}) mergeFieldsEnabled: boolean = false;
   @property({attribute: 'ai-path'}) aiPath: string = '';
 
   /**
@@ -172,6 +198,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     Quill.register({'modules/imageResize': ImageResize}, true);
     Quill.register({'modules/contextMenu': ContextMenu}, true);
     Quill.register({'modules/dialog': Dialog}, true);
+    if (this.mergeFieldsEnabled) {
+      Quill.register({'formats/mergeField': MergeFieldBlot, 'modules/mergeField': MergeField}, true);
+    }
 
     /* AI Modules */
     if (this.aiEnabled) {
@@ -210,6 +239,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       datesEnabled: this.datesEnabled,
       emojisEnabled: this.emojisEnabled,
       codeEnabled: this.codeEnabled,
+      compact: this.compact,
     };
 
     const quill = new Quill(this.editor, {
@@ -224,6 +254,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         keyboard: {
           bindings: bindings
         },
+        ...(this.mergeFieldsEnabled && {
+          mergeField: {labels: this._mergeFieldLabels()}
+        }),
         dialog: {
           editorId: this.id
         },
@@ -276,7 +309,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         imageResize: {},
         history: {}
       },
-      placeholder: 'Compose your reply...',
+      placeholder: this.placeholder,
       theme: 'snow',
       bounds: this.editor,
     });
@@ -414,8 +447,38 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     super.firstUpdated(_changedProperties);
   }
 
+  private _toggleSource() {
+    const source = this.renderRoot.querySelector<HTMLTextAreaElement>('.editor__source')!;
+    if (!this._sourceMode) {
+      source.value = this.value ?? '';
+    } else {
+      // Back in the editor the HTML is reduced to what it can show
+      const delta = this.quillElement.clipboard.convert({html: source.value});
+      this.quillElement.setContents(delta, Quill.sources.USER);
+    }
+    this._sourceMode = !this._sourceMode;
+  }
+
+  private _handleSourceInput(e: Event) {
+    this.value = (e.target as HTMLTextAreaElement).value;
+    this.editorHtml.value = this.value;
+    this._cacheContent();
+    this.emit('zn-change');
+  }
+
+  private _mergeFieldLabels(): Record<string, string> {
+    const labels: Record<string, string> = {};
+    this.querySelectorAll<ZnEditorQuickAction>('zn-editor-quick-action[slot="context-items"]').forEach(action => {
+      if (action.content && action.label) {
+        labels[normaliseToken(action.content)] = action.label;
+      }
+    });
+    return labels;
+  }
+
   private _handleTextChange() {
-    this.value = this.quillElement.getSemanticHTML();
+    // Quill writes every space as &nbsp;, which stops text wrapping; only runs of spaces need it
+    this.value = this.quillElement.getSemanticHTML().replace(/&nbsp;(?!&nbsp;)/g, ' ');
     this.editorHtml.value = this.value;
     this._cacheContent();
     this.emit('zn-change');
@@ -617,14 +680,28 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
   render() {
     return html`
-      <zn-toolbar id="toolbar">
-        <slot name="tools"></slot>
-      </zn-toolbar>
+      <div class="editor__bar">
+        <zn-toolbar id="toolbar" ?data-source=${this._sourceMode}>
+          <slot name="tools"></slot>
+        </zn-toolbar>
+        ${this.sourceEnabled ? html`
+          <zn-button class="editor__source-toggle" color="transparent" size="small"
+                     icon="${this._sourceMode ? 'pencil@lu' : 'code@lu'}" icon-size="16"
+                     @click=${this._toggleSource}>${this._sourceMode ? 'Editor' : 'Source'}</zn-button>` : ''}
+      </div>
       <slot name="context-items" style="display: none;"></slot>
-      <div id="editor" x-editor-id="${this.id}"></div>
+      <div id="editor" x-editor-id="${this.id}" ?hidden=${this._sourceMode}></div>
+      ${this.sourceEnabled ? html`
+        <textarea class="editor__source" spellcheck="false" ?hidden=${!this._sourceMode}
+                  @input=${this._handleSourceInput}></textarea>` : ''}
       <input type="text" id="editorHtml" name="${this.name}" value="${this.value}" style="display: none;">
       <div id="action-container" class="ql-toolbar ql-snow">
         <slot name="actions"></slot>
+      </div>
+      <div class="form-control form-control--medium ${this.helpText || this.hasSlotController.test('help-text') ? 'form-control--has-help-text' : ''}">
+        <div part="form-control-help-text" class="form-control__help-text">
+          <slot name="help-text">${this.helpText}</slot>
+        </div>
       </div>
     `;
   }

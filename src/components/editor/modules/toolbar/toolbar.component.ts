@@ -1,5 +1,5 @@
 import {colorDataProvider} from "../../../data-select/providers/color-data-provider";
-import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from "lit";
+import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from "lit";
 import {property, query, queryAll} from "lit/decorators.js";
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import ZincElement from "../../../../internal/zinc-element";
@@ -173,6 +173,7 @@ export default class ToolbarComponent extends ZincElement {
   }
 
   private calculateOverflow() {
+    if (this._featureConfig.compact) return;
     const groups = Array.from(this._groups || []);
     if (!groups.length) return;
 
@@ -464,6 +465,10 @@ export default class ToolbarComponent extends ZincElement {
   }
 
   render() {
+    if (this._featureConfig.compact) {
+      return this._compactToolbar();
+    }
+
     const showInsertOptions = this._featureConfig.dividersEnabled ||
       this._featureConfig.linksEnabled ||
       this._featureConfig.attachmentsEnabled ||
@@ -541,6 +546,27 @@ export default class ToolbarComponent extends ZincElement {
           </zn-menu-item>
         </zn-menu>
       </zn-dropdown>`;
+  }
+
+  private _compactToolbar() {
+    const button = (icon: string, label: string, format: string, type = '') => html`
+      <zn-button class="toolbar__format-button" icon-button="small" plain icon="${icon}" icon-size="16"
+                 tooltip="${label}" data-format="${format}"
+                 data-format-type="${type || nothing}"></zn-button>`;
+
+    return html`
+      <div class="toolbar toolbar--compact">
+        <div class="toolbar__group">
+          ${button('bold@lu', 'Bold', 'bold')}
+          ${button('italic@lu', 'Italic', 'italic')}
+          ${this._featureConfig.linksEnabled ? button('link@lu', 'Link', 'link') : ''}
+          ${button('list@lu', 'Bulleted list', 'list', 'bullet')}
+          ${button('list-ordered@lu', 'Numbered list', 'list', 'ordered')}
+        </div>
+        <div class="toolbar__group">
+          <slot></slot>
+        </div>
+      </div>`;
   }
 
   private _formatOptions() {

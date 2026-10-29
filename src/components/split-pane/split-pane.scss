@@ -6,14 +6,13 @@
   gap: 0 calc(var(--zn-base-gap) / 2);
 }
 
-// Slotted panes are light DOM, which ::-webkit-scrollbar rules here cannot reach, so they take the standard properties.
+// Slotted panes are light DOM, out of reach of the ::-webkit-scrollbar rules here
 ::slotted(*) {
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: mixins.$scrollbar-thumb transparent;
+  @include mixins.scrollbars-standard;
 }
 
 :host {
@@ -48,8 +47,13 @@
     overflow: auto;
   }
 
+  --resizer-line: transparent;
+  --resizer-active: var(--zn-split-pane-handle-hover, rgb(var(--zn-primary)));
+
   #resizer {
     position: relative;
+    outline: none;
+    cursor: col-resize;
 
     &:after {
       content: "";
@@ -62,14 +66,55 @@
       display: block;
       position: absolute;
       z-index: 1;
-      transition: background-color 200ms ease-in-out;
+      background-color: var(--resizer-line);
+      transition: background-color var(--zn-transition-fast) var(--zn-ease-out),
+      width var(--zn-transition-fast) var(--zn-ease-out),
+      height var(--zn-transition-fast) var(--zn-ease-out);
     }
+  }
 
-    cursor: col-resize;
+  #grip {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    z-index: 2;
+    width: 4px;
+    height: 28px;
+    border-radius: 999px;
+    background-color: color-mix(in srgb, rgb(var(--zn-border-color)), rgb(var(--zn-text)) 20%);
+    box-shadow: 0 0 0 2px var(--zn-split-pane-gutter, rgb(var(--zn-body)));
+    pointer-events: none;
+    transition: background-color var(--zn-transition-fast) var(--zn-ease-out),
+    scale var(--zn-transition-fast) var(--zn-ease-out);
+  }
 
-    &:hover:before {
-      background-color: var(--zn-split-pane-handle-hover, rgb(var(--zn-blue)));
+  @include wc.hover-fine {
+    // Delay the hover highlight so the cursor passing over the gutter doesn't flash it.
+    #resizer:hover {
+      &:before, #grip {
+        transition-delay: 150ms;
+        background-color: var(--resizer-active);
+      }
     }
+  }
+
+  #resizer:focus-visible {
+    &:before, #grip {
+      background-color: var(--resizer-active);
+    }
+  }
+
+  #resizer:focus-visible #grip {
+    outline: var(--zn-focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+:host(.resizing) #resizer {
+  &:before, #grip {
+    background-color: var(--resizer-active);
+    transition-delay: 0ms;
   }
 }
 
@@ -170,6 +215,32 @@
       left: 50%;
       transform: translateX(-50%);
     }
+
+    &:focus-visible:before {
+      width: 2px;
+    }
+  }
+
+  @include wc.hover-fine {
+    #resizer:hover {
+      &:before {
+        width: 2px;
+      }
+
+      #grip {
+        scale: 1 1.3;
+      }
+    }
+  }
+}
+
+:host(.resizing:not([vertical])) #resizer {
+  &:before {
+    width: 2px;
+  }
+
+  #grip {
+    scale: 1 1.3;
   }
 }
 
@@ -296,6 +367,41 @@
       top: 50%;
       transform: translateY(-50%);
     }
+
+    &:focus-visible:before {
+      height: 2px;
+    }
+  }
+
+  #grip {
+    width: 28px;
+    height: 4px;
+  }
+
+  @include wc.hover-fine {
+    #resizer:hover {
+      &:before {
+        height: 2px;
+      }
+
+      #grip {
+        scale: 1.3 1;
+      }
+    }
+  }
+}
+
+:host(.resizing[vertical]) {
+  cursor: row-resize;
+
+  #resizer {
+    &:before {
+      height: 2px;
+    }
+
+    #grip {
+      scale: 1.3 1;
+    }
   }
 }
 
@@ -367,26 +473,11 @@ $padding: 8px;
         border-bottom-width: 0 !important;
       }
     }
-
-    #resizer::before {
-      background-color: transparent !important;
-    }
   }
 }
 
-:host([padded]:not(.resizing)),
-:host([padded-right]:not(.resizing)) {
-  #resizer::before {
-    background-color: transparent;
-  }
-
-  #resizer:hover::before {
-    background-color: var(--zn-split-pane-handle-hover, rgb(var(--zn-blue))) !important;
-  }
-}
-
-:host([bordered]) #resizer:before {
-  background-color: rgb(var(--zn-border-color));
+:host([bordered]:not([padded]):not([padded-right])) {
+  --resizer-line: rgb(var(--zn-border-color));
 }
 
 #split-nav li:focus-visible {
@@ -394,6 +485,9 @@ $padding: 8px;
   outline-offset: calc(-1 * var(--zn-focus-ring-width));
 }
 
-#resizer:focus-visible {
-  outline: var(--zn-focus-ring);
+@include wc.reduced-motion {
+  #grip {
+    scale: none !important;
+    transition-property: background-color;
+  }
 }

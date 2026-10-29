@@ -362,7 +362,9 @@ export default class ZnSplitPane extends ZincElement {
            aria-orientation="${this.vertical ? 'horizontal' : 'vertical'}"
            aria-valuenow="${Math.round(this.calculatePixels ? this.currentPixelSize : this.currentPercentSize)}"
            aria-valuemin="${this.minimumPaneSize}"
-           aria-valuemax="${this.maximumPaneSize || (this.calculatePixels ? Math.round(this.currentContainerSize) : 100)}"></div>
+           aria-valuemax="${this.maximumPaneSize || (this.calculatePixels ? Math.round(this.currentContainerSize) : 100)}">
+        <span id="grip"></span>
+      </div>
       <div id="secondary-pane">
         <slot name="secondary" @slotchange="${() => this.requestUpdate()}"></slot>
       </div>

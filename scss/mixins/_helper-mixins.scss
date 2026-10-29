@@ -27,11 +27,19 @@ $scrollbar-thumb-hover: rgba(var(--inverse-base), 0.6);
   }
 }
 
+// Chrome ignores ::-webkit-scrollbar wherever these are set, and scrollbar-color
+// inherits, so only browsers without the webkit pseudo-elements get them
+@mixin scrollbars-standard {
+  @supports not selector(::-webkit-scrollbar) {
+    scrollbar-width: thin;
+    scrollbar-color: $scrollbar-thumb transparent;
+  }
+}
+
 // `scrollbars` only reaches descendant scroll areas; this styles an element that
 // is itself the scroller
 @mixin scrollbars-self {
-  scrollbar-width: thin;
-  scrollbar-color: $scrollbar-thumb transparent;
+  @include scrollbars-standard;
 
   &::-webkit-scrollbar {
     width: $scrollbar-size;

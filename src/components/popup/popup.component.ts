@@ -1,7 +1,6 @@
 import {arrow, autoUpdate, computePosition, flip, offset, platform, shift, size} from '@floating-ui/dom';
 import {classMap} from 'lit/directives/class-map.js';
 import {html, unsafeCSS} from 'lit';
-import {offsetParent} from 'composed-offset-position';
 import {property, query} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import type {CSSResultGroup} from 'lit';
@@ -381,11 +380,6 @@ export default class ZnPopup extends ZincElement {
       );
     }
 
-    const getOffsetParent =
-      this.strategy === 'absolute'
-        ? (element: Element) => platform.getOffsetParent(element, offsetParent)
-        : platform.getOffsetParent;
-
     // A closed popover has no size to measure, so it would first land on top of its anchor
     if (this.popup.isConnected && !this.popup.matches(':popover-open')) {
       this.popup.style.visibility = 'hidden';
@@ -396,9 +390,10 @@ export default class ZnPopup extends ZincElement {
       placement: this.placement,
       middleware,
       strategy: this.strategy,
+      // The popup is a popover in the top layer, so the page, not any ancestor, is what it is positioned within
       platform: {
         ...platform,
-        getOffsetParent
+        getOffsetParent: () => window
       }
     }).then(({x, y, middlewareData, placement}:
              { x: number; y: number; middlewareData: MiddlewareData; placement: string }) => {

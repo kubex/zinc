@@ -596,7 +596,7 @@ export default class ZnPage extends ZnTabs {
           </div>
 
           ${hasNavigation ? html`
-            <zn-navbar hide-one ?pill="${this.navigationStyle === 'pills'}"
+            <zn-navbar class="page__navbar" hide-one ?pill="${this.navigationStyle === 'pills'}"
                        ?hidden="${externalNavigation && !this.pageSlotController.test('bottom')}"
                        @zn-select="${this.handleNavigationSelect}">
               ${this.tabDefinitions.map(tab => tab.uri ? html`

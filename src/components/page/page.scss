@@ -445,7 +445,7 @@
   }
 }
 
-zn-navbar[hidden], .header[hidden] {
+zn-navbar.page__navbar[hidden], .header[hidden] {
   display: none;
 }
 
@@ -455,7 +455,7 @@ zn-navbar[hidden], .header[hidden] {
   padding-top: var(--zn-base-gap, 0);
 }
 
-:host([navigation-style="pills"]) zn-navbar {
+:host([navigation-style="pills"]) zn-navbar.page__navbar {
   --zn-panel-padding: var(--zn-base-gap, 0);
 
   &::part(navbar) {
@@ -463,7 +463,7 @@ zn-navbar[hidden], .header[hidden] {
   }
 }
 
-zn-navbar:not([pill]) {
+zn-navbar.page__navbar:not([pill]) {
 
   &::part(navbar) {
     padding-left: var(--zn-base-gap);
@@ -496,14 +496,14 @@ zn-navbar:not([pill]) {
   --zn-button-icon-width: var(--zn-page-closer-size);
 }
 
-:host zn-navbar:not([pill]) {
+:host zn-navbar.page__navbar:not([pill]) {
   &::part(navbar) {
     padding-inline: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
     margin-inline-start: var(--zn-page-navbar-offset, 0px);
   }
 }
 
-:host([flush]) zn-navbar:not([pill])::part(navbar) {
+:host([flush]) zn-navbar.page__navbar:not([pill])::part(navbar) {
   padding-inline: var(--zn-base-gap, 0);
 }
 
@@ -571,7 +571,7 @@ zn-navbar:not([pill]) {
 }
 
 // Matches .header .content's box, so the tabs and their underline span the content, not the page
-:host(:not([full-width]):not([flush])) zn-navbar:not([pill])::part(container) {
+:host(:not([full-width]):not([flush])) zn-navbar.page__navbar:not([pill])::part(container) {
   width: min(
     calc(var(--zn-container, 100%) - 2 * (var(--zn-gutter, 0px) + var(--zn-base-gap, 0px))),
     calc(100% - 2 * (var(--zn-gutter, 0px) + var(--zn-base-gap, 0px)))
@@ -579,7 +579,7 @@ zn-navbar:not([pill]) {
   margin-inline: auto;
 }
 
-:host(:not([full-width]):not([flush])) zn-navbar:not([pill])::part(navbar) {
+:host(:not([full-width]):not([flush])) zn-navbar.page__navbar:not([pill])::part(navbar) {
   padding-inline: 0;
   margin-inline: 0;
 }
@@ -616,12 +616,12 @@ zn-navbar:not([pill]) {
   }
 
   // The tab bar is one fixed height too, whether or not it has expanding actions.
-  zn-navbar:not([pill])::part(container) {
+  zn-navbar.page__navbar:not([pill])::part(container) {
     width: 100%;
     height: var(--zn-page-nested-navbar-height, 40px);
   }
 
-  zn-navbar:not([pill])::part(navbar) {
+  zn-navbar.page__navbar:not([pill])::part(navbar) {
     padding-inline: var(--zn-base-gap, 0);
   }
 }

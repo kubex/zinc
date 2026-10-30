@@ -40,6 +40,19 @@ html, body {
   height: 100%;
   width: 100%;
   max-width: 100%;
+
+  // Room to scroll the end clear of anything hung over the pane's bottom edge, such as pull tabs. As the last flex
+  // item it lands after content that overflows the container, where padding would sit underneath it.
+  &::after {
+    content: "";
+    flex: none;
+    height: var(--zn-pane-end-inset, 0px);
+  }
+
+  // Only the outermost app container leaves that room
+  > * {
+    --zn-pane-end-inset: 0px;
+  }
 }
 
 .inline-app-container, .app-container.inline-app-container, [inline-container] .app-container {

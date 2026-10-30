@@ -14,6 +14,17 @@
       ]
     },
     {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
+        }
+      ]
+    },
+    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -50,17 +61,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
-        }
-      ]
-    },
-    {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -135,6 +135,58 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/audio-select"
+        }
+      ]
+    },
+    {
+      "name": "zn-background",
+      "description": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n---\n\n\n### **Slots:**\n - _default_ - Content displayed above the background layers.\n\n### **CSS Properties:**\n - **--zn-background-color** - Fallback colour when the `color` attribute is not set. _(default: undefined)_\n- **--zn-background-image-position** - Position of the background image. Defaults to `center`. _(default: undefined)_\n- **--zn-background-overlay-angle** - Direction of the overlay gradient. Defaults to `110deg`. _(default: undefined)_\n- **--zn-background-floating-icon-color** - Colour of the floating icons. Defaults to `currentColor`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's full-size background canvas.\n- **image** - The decorative background image.\n- **overlay** - The contrast overlay between the image and content.\n- **floating-icons** - The non-interactive layer containing the floating icons.\n- **floating-icon** - Each floating `zn-icon`.\n- **content** - The wrapper around the default slot.",
+      "attributes": [
+        {
+          "name": "image",
+          "description": "URL of the decorative background image.",
+          "values": []
+        },
+        {
+          "name": "color",
+          "description": "CSS colour painted beneath the image.",
+          "values": []
+        },
+        {
+          "name": "image-strength",
+          "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
+          "values": [{ "name": "BackgroundImageStrength" }]
+        },
+        {
+          "name": "motion",
+          "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
+          "values": [{ "name": "BackgroundMotion" }]
+        },
+        {
+          "name": "overlay",
+          "description": "Strength of the contrast gradient above the image.",
+          "values": [{ "name": "BackgroundOverlay" }]
+        },
+        {
+          "name": "overlay-tone",
+          "description": "Whether the overlay uses a light or dark contrast treatment.",
+          "values": [{ "name": "BackgroundOverlayTone" }]
+        },
+        {
+          "name": "floating-icons",
+          "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
+          "values": []
+        },
+        {
+          "name": "paused",
+          "description": "Pauses background motion without changing the selected motion treatment.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/background"
         }
       ]
     },
@@ -312,58 +364,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/button"
-        }
-      ]
-    },
-    {
-      "name": "zn-background",
-      "description": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n---\n\n\n### **Slots:**\n - _default_ - Content displayed above the background layers.\n\n### **CSS Properties:**\n - **--zn-background-color** - Fallback colour when the `color` attribute is not set. _(default: undefined)_\n- **--zn-background-image-position** - Position of the background image. Defaults to `center`. _(default: undefined)_\n- **--zn-background-overlay-angle** - Direction of the overlay gradient. Defaults to `110deg`. _(default: undefined)_\n- **--zn-background-floating-icon-color** - Colour of the floating icons. Defaults to `currentColor`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's full-size background canvas.\n- **image** - The decorative background image.\n- **overlay** - The contrast overlay between the image and content.\n- **floating-icons** - The non-interactive layer containing the floating icons.\n- **floating-icon** - Each floating `zn-icon`.\n- **content** - The wrapper around the default slot.",
-      "attributes": [
-        {
-          "name": "image",
-          "description": "URL of the decorative background image.",
-          "values": []
-        },
-        {
-          "name": "color",
-          "description": "CSS colour painted beneath the image.",
-          "values": []
-        },
-        {
-          "name": "image-strength",
-          "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
-          "values": [{ "name": "BackgroundImageStrength" }]
-        },
-        {
-          "name": "motion",
-          "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
-          "values": [{ "name": "BackgroundMotion" }]
-        },
-        {
-          "name": "overlay",
-          "description": "Strength of the contrast gradient above the image.",
-          "values": [{ "name": "BackgroundOverlay" }]
-        },
-        {
-          "name": "overlay-tone",
-          "description": "Whether the overlay uses a light or dark contrast treatment.",
-          "values": [{ "name": "BackgroundOverlayTone" }]
-        },
-        {
-          "name": "floating-icons",
-          "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
-          "values": []
-        },
-        {
-          "name": "paused",
-          "description": "Pauses background motion without changing the selected motion treatment.",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/background"
         }
       ]
     },
@@ -1929,33 +1929,6 @@
       ]
     },
     {
-      "name": "zn-flow-builder",
-      "description": "A drag-and-drop visual flow builder: steps panel, pan/zoom canvas, and a config inspector.\n---\n\n\n### **Events:**\n - **zn-flow-change** - Emitted whenever the flow state changes. `event.detail.state` is the new FlowState.\n- **zn-flow-selection-change** - Emitted when the selected node changes. `event.detail.nodeId`.\n- **zn-flow-connect** - Emitted when a connection is created. `event.detail.connection`.\n\n### **Methods:**\n - **restoreAutoSave(): _boolean_** - Load the auto-saved flow, if one exists within the 1-day TTL.\n- **toJSON(): _FlowState_** - The full flow state — nodes with their positions, connections, branch\ndata, and notes — ready for persisting. Lets `JSON.stringify(builder)`\nserialize the flow directly, e.g. as a POST body.\n\n### **Slots:**\n - _default_ - `<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the step into the right tab and collapsible grouping of the rendered panel. A step may nest `<zn-flow-filter>` declarations (each holding `<zn-flow-filter-field>`s, whose operator / option choices are nested `<zn-flow-operator>` / `<zn-flow-option>` elements) — or set a `branch-filters` JSON attribute — to drive the built-in branch conditions editor.\n- **header-left** - Actions shown on the left of the header bar (e.g. Close / Undo All Changes).\n- **header-right** - Actions shown on the right of the header bar (e.g. Apply Changes).\n- **sidebar** - Extra right-panel content (status, version history), below the configuration errors.\n\n### **CSS Parts:**\n - **base** - The grid wrapper.\n- **header** - The full-width header action bar (only rendered when header slots are filled).\n- **steps** - The left steps panel.\n- **inspector** - The right panel while a node or branch is selected.",
-      "attributes": [
-        { "name": "heading", "values": [] },
-        { "name": "subheading", "values": [] },
-        {
-          "name": "auto-save",
-          "description": "Auto-save the flow to localStorage (1-day TTL). Omit to disable. A bare\n`auto-save` saves every 5 minutes; a numeric value sets the interval in\nminutes (`auto-save=\"5\"`). Restore with `restoreAutoSave()`.",
-          "values": []
-        },
-        {
-          "name": "entrypoints-hint",
-          "description": "Optional hint shown beneath each steps-panel tab.",
-          "values": []
-        },
-        { "name": "triggers-hint", "values": [] },
-        { "name": "actions-hint", "values": [] },
-        { "name": "rules-hint", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/flow-builder"
-        }
-      ]
-    },
-    {
       "name": "zn-form-actions",
       "description": "Standard action row for the bottom of a form. Renders a submit button by default; opt in to more\nwith `with-cancel` and `with-reset`.\n---\n\n\n### **Events:**\n - **zn-cancel** - Emitted when the cancel button is clicked.\n\n### **Slots:**\n - _default_ - Extra actions, placed before the buttons. `align=\"start\"` on a child moves it to the start of the row; any number can sit on either side. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.\n\n### **CSS Parts:**\n - **cancel-button** - The cancel button.\n- **reset-button** - The reset button.\n- **submit-button** - The submit button.",
       "attributes": [
@@ -2009,6 +1982,33 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/form-actions"
+        }
+      ]
+    },
+    {
+      "name": "zn-flow-builder",
+      "description": "A drag-and-drop visual flow builder: steps panel, pan/zoom canvas, and a config inspector.\n---\n\n\n### **Events:**\n - **zn-flow-change** - Emitted whenever the flow state changes. `event.detail.state` is the new FlowState.\n- **zn-flow-selection-change** - Emitted when the selected node changes. `event.detail.nodeId`.\n- **zn-flow-connect** - Emitted when a connection is created. `event.detail.connection`.\n\n### **Methods:**\n - **restoreAutoSave(): _boolean_** - Load the auto-saved flow, if one exists within the 1-day TTL.\n- **toJSON(): _FlowState_** - The full flow state — nodes with their positions, connections, branch\ndata, and notes — ready for persisting. Lets `JSON.stringify(builder)`\nserialize the flow directly, e.g. as a POST body.\n\n### **Slots:**\n - _default_ - `<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the step into the right tab and collapsible grouping of the rendered panel. A step may nest `<zn-flow-filter>` declarations (each holding `<zn-flow-filter-field>`s, whose operator / option choices are nested `<zn-flow-operator>` / `<zn-flow-option>` elements) — or set a `branch-filters` JSON attribute — to drive the built-in branch conditions editor.\n- **header-left** - Actions shown on the left of the header bar (e.g. Close / Undo All Changes).\n- **header-right** - Actions shown on the right of the header bar (e.g. Apply Changes).\n- **sidebar** - Extra right-panel content (status, version history), below the configuration errors.\n\n### **CSS Parts:**\n - **base** - The grid wrapper.\n- **header** - The full-width header action bar (only rendered when header slots are filled).\n- **steps** - The left steps panel.\n- **inspector** - The right panel while a node or branch is selected.",
+      "attributes": [
+        { "name": "heading", "values": [] },
+        { "name": "subheading", "values": [] },
+        {
+          "name": "auto-save",
+          "description": "Auto-save the flow to localStorage (1-day TTL). Omit to disable. A bare\n`auto-save` saves every 5 minutes; a numeric value sets the interval in\nminutes (`auto-save=\"5\"`). Restore with `restoreAutoSave()`.",
+          "values": []
+        },
+        {
+          "name": "entrypoints-hint",
+          "description": "Optional hint shown beneath each steps-panel tab.",
+          "values": []
+        },
+        { "name": "triggers-hint", "values": [] },
+        { "name": "actions-hint", "values": [] },
+        { "name": "rules-hint", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/flow-builder"
         }
       ]
     },
@@ -2790,6 +2790,105 @@
       ]
     },
     {
+      "name": "zn-menu-item",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **getTextLabel()** - Returns a text label based on the contents of the menu item's default slot.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        {
+          "name": "type",
+          "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
+          "values": [{ "name": "normal" }, { "name": "checkbox" }]
+        },
+        {
+          "name": "variant",
+          "description": "The item's visual style. A standalone item defaults to navigation styling;\na parent zn-menu sets this to `dropdown` or `shell` automatically.",
+          "values": [
+            { "name": "default" },
+            { "name": "dropdown" },
+            { "name": "shell" }
+          ]
+        },
+        {
+          "name": "checked",
+          "description": "Draws the item in a checked state.",
+          "values": []
+        },
+        {
+          "name": "checked-position",
+          "values": [{ "name": "left" }, { "name": "right" }]
+        },
+        {
+          "name": "value",
+          "description": "A unique value to store in the menu item. This can be used as a way to identify menu items when selected.",
+          "values": []
+        },
+        {
+          "name": "loading",
+          "description": "Draws the menu item in a loading state.",
+          "values": []
+        },
+        {
+          "name": "disabled",
+          "description": "Draws the menu item in a disabled state, preventing selection.",
+          "values": []
+        },
+        { "name": "color", "values": [] },
+        { "name": "href", "values": [] },
+        { "name": "data-path", "values": [] },
+        {
+          "name": "target",
+          "values": [
+            { "name": "_self" },
+            { "name": "_blank" },
+            { "name": "_parent" },
+            { "name": "_top" }
+          ]
+        },
+        {
+          "name": "data-target",
+          "values": [{ "name": "modal" }, { "name": "slide" }]
+        },
+        { "name": "rel", "values": [] },
+        { "name": "gaid", "values": [] },
+        { "name": "confirm", "values": [] },
+        {
+          "name": "keep-open",
+          "description": "Leaves a containing dropdown open when this item is selected, whatever the dropdown's own setting.",
+          "values": []
+        },
+        {
+          "name": "flush",
+          "description": "Removes all padding from the menu item.",
+          "values": []
+        },
+        {
+          "name": "flush-x",
+          "description": "Removes horizontal (left/right) padding only. Ignored if flush is set.",
+          "values": []
+        },
+        {
+          "name": "flush-y",
+          "description": "Removes vertical (top/bottom) padding only. Ignored if flush is set.",
+          "values": []
+        },
+        {
+          "name": "no-border",
+          "description": "Removes the border from the menu item.",
+          "values": []
+        },
+        {
+          "name": "active",
+          "description": "Marks the menu item as currently active/selected.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/menu-item"
+        }
+      ]
+    },
+    {
       "name": "zn-navbar",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **expand** - Expanding action panels rendered alongside the navbar items.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters).\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -2928,105 +3027,6 @@
       ],
       "references": [
         { "name": "Documentation", "url": "https://zinc.style/components/page" }
-      ]
-    },
-    {
-      "name": "zn-menu-item",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **getTextLabel()** - Returns a text label based on the contents of the menu item's default slot.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        {
-          "name": "type",
-          "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
-          "values": [{ "name": "normal" }, { "name": "checkbox" }]
-        },
-        {
-          "name": "variant",
-          "description": "The item's visual style. A standalone item defaults to navigation styling;\na parent zn-menu sets this to `dropdown` or `shell` automatically.",
-          "values": [
-            { "name": "default" },
-            { "name": "dropdown" },
-            { "name": "shell" }
-          ]
-        },
-        {
-          "name": "checked",
-          "description": "Draws the item in a checked state.",
-          "values": []
-        },
-        {
-          "name": "checked-position",
-          "values": [{ "name": "left" }, { "name": "right" }]
-        },
-        {
-          "name": "value",
-          "description": "A unique value to store in the menu item. This can be used as a way to identify menu items when selected.",
-          "values": []
-        },
-        {
-          "name": "loading",
-          "description": "Draws the menu item in a loading state.",
-          "values": []
-        },
-        {
-          "name": "disabled",
-          "description": "Draws the menu item in a disabled state, preventing selection.",
-          "values": []
-        },
-        { "name": "color", "values": [] },
-        { "name": "href", "values": [] },
-        { "name": "data-path", "values": [] },
-        {
-          "name": "target",
-          "values": [
-            { "name": "_self" },
-            { "name": "_blank" },
-            { "name": "_parent" },
-            { "name": "_top" }
-          ]
-        },
-        {
-          "name": "data-target",
-          "values": [{ "name": "modal" }, { "name": "slide" }]
-        },
-        { "name": "rel", "values": [] },
-        { "name": "gaid", "values": [] },
-        { "name": "confirm", "values": [] },
-        {
-          "name": "keep-open",
-          "description": "Leaves a containing dropdown open when this item is selected, whatever the dropdown's own setting.",
-          "values": []
-        },
-        {
-          "name": "flush",
-          "description": "Removes all padding from the menu item.",
-          "values": []
-        },
-        {
-          "name": "flush-x",
-          "description": "Removes horizontal (left/right) padding only. Ignored if flush is set.",
-          "values": []
-        },
-        {
-          "name": "flush-y",
-          "description": "Removes vertical (top/bottom) padding only. Ignored if flush is set.",
-          "values": []
-        },
-        {
-          "name": "no-border",
-          "description": "Removes the border from the menu item.",
-          "values": []
-        },
-        {
-          "name": "active",
-          "description": "Marks the menu item as currently active/selected.",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/menu-item"
-        }
       ]
     },
     {
@@ -3458,6 +3458,23 @@
       ]
     },
     {
+      "name": "zn-progress-bar",
+      "description": "Progress bars provide visual feedback about the completion status of a task or process.\n---\n\n\n### **CSS Properties:**\n - **--zn-border-color** - The color of the progress bar background track. _(default: undefined)_\n- **--zn-progress-bar-color** - The color of the progress bar fill. _(default: undefined)_\n- **--zn-text-heading** - The color of the caption text. _(default: undefined)_\n- **--zn-text** - The color of the progress percentage and description text. _(default: undefined)_\n- **--zn-spacing-x-small** - The spacing between header/footer and the progress bar. _(default: undefined)_\n\n### **CSS Parts:**\n - **header** - The header container that contains the caption and progress text.\n- **caption** - The caption text element.\n- **progress** - The progress percentage text element.\n- **bar** - The SVG element containing the progress bar.\n- **track** - The background track of the progress bar.\n- **fill** - The filled portion of the progress bar indicating progress.\n- **footer** - The footer container that contains the description.\n- **info** - The description text element.",
+      "attributes": [
+        { "name": "caption", "values": [] },
+        { "name": "color", "values": [{ "name": "ProgressBarColor" }] },
+        { "name": "description", "values": [] },
+        { "name": "value", "values": [] },
+        { "name": "show-progress", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/progress-bar"
+        }
+      ]
+    },
+    {
       "name": "zn-progress-tile",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -3492,23 +3509,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/query-builder"
-        }
-      ]
-    },
-    {
-      "name": "zn-progress-bar",
-      "description": "Progress bars provide visual feedback about the completion status of a task or process.\n---\n\n\n### **CSS Properties:**\n - **--zn-border-color** - The color of the progress bar background track. _(default: undefined)_\n- **--zn-progress-bar-color** - The color of the progress bar fill. _(default: undefined)_\n- **--zn-text-heading** - The color of the caption text. _(default: undefined)_\n- **--zn-text** - The color of the progress percentage and description text. _(default: undefined)_\n- **--zn-spacing-x-small** - The spacing between header/footer and the progress bar. _(default: undefined)_\n\n### **CSS Parts:**\n - **header** - The header container that contains the caption and progress text.\n- **caption** - The caption text element.\n- **progress** - The progress percentage text element.\n- **bar** - The SVG element containing the progress bar.\n- **track** - The background track of the progress bar.\n- **fill** - The filled portion of the progress bar indicating progress.\n- **footer** - The footer container that contains the description.\n- **info** - The description text element.",
-      "attributes": [
-        { "name": "caption", "values": [] },
-        { "name": "color", "values": [{ "name": "ProgressBarColor" }] },
-        { "name": "description", "values": [] },
-        { "name": "value", "values": [] },
-        { "name": "show-progress", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/progress-bar"
         }
       ]
     },
@@ -3612,6 +3612,47 @@
       ]
     },
     {
+      "name": "zn-rating",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity()** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n- **help-text** - Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n- **--preview-color** - The color of the preview value. _(default: undefined)_\n- **--preview-size** - The font size of the preview value. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the symbols and help text.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **preview** - The value shown next to the symbols when `preview` is enabled.",
+      "attributes": [
+        { "name": "label", "values": [] },
+        {
+          "name": "help-text",
+          "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
+          "values": []
+        },
+        { "name": "name", "values": [] },
+        { "name": "value", "values": [] },
+        { "name": "max", "values": [] },
+        { "name": "precision", "values": [] },
+        { "name": "readonly", "values": [] },
+        { "name": "disabled", "values": [] },
+        {
+          "name": "preview",
+          "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
+          "values": []
+        },
+        {
+          "name": "size",
+          "values": [
+            { "name": "small" },
+            { "name": "medium" },
+            { "name": "large" }
+          ]
+        },
+        {
+          "name": "getSymbol",
+          "values": [{ "name": "(value: number) => string" }]
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/rating"
+        }
+      ]
+    },
+    {
       "name": "zn-radio-group",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--zn-radio-group-column-width** - Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -3684,47 +3725,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/radio-group"
-        }
-      ]
-    },
-    {
-      "name": "zn-rating",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity()** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n- **help-text** - Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n- **--preview-color** - The color of the preview value. _(default: undefined)_\n- **--preview-size** - The font size of the preview value. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the symbols and help text.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **preview** - The value shown next to the symbols when `preview` is enabled.",
-      "attributes": [
-        { "name": "label", "values": [] },
-        {
-          "name": "help-text",
-          "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
-          "values": []
-        },
-        { "name": "name", "values": [] },
-        { "name": "value", "values": [] },
-        { "name": "max", "values": [] },
-        { "name": "precision", "values": [] },
-        { "name": "readonly", "values": [] },
-        { "name": "disabled", "values": [] },
-        {
-          "name": "preview",
-          "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
-          "values": []
-        },
-        {
-          "name": "size",
-          "values": [
-            { "name": "small" },
-            { "name": "medium" },
-            { "name": "large" }
-          ]
-        },
-        {
-          "name": "getSymbol",
-          "values": [{ "name": "(value: number) => string" }]
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/rating"
         }
       ]
     },
@@ -4161,6 +4161,22 @@
       ]
     },
     {
+      "name": "zn-sidebar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "caption", "values": [] },
+        { "name": "open", "values": [] },
+        { "name": "start-scrolled", "values": [] },
+        { "name": "wide", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/sidebar"
+        }
+      ]
+    },
+    {
       "name": "zn-simple-chart",
       "description": "A simple, pre-styled bar chart.\n---\n",
       "attributes": [
@@ -4176,18 +4192,34 @@
       ]
     },
     {
-      "name": "zn-sidebar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "name": "zn-skeleton",
+      "description": "Skeleton loaders provide visual placeholders while content is loading, improving perceived performance and user experience.\n---\n",
       "attributes": [
-        { "name": "caption", "values": [] },
-        { "name": "open", "values": [] },
-        { "name": "start-scrolled", "values": [] },
-        { "name": "wide", "values": [] }
+        {
+          "name": "speed",
+          "description": "Animation speed for the shimmer effect. Default: \"3s\"",
+          "values": []
+        },
+        {
+          "name": "width",
+          "description": "Width of the skeleton element. Default: \"100%\"",
+          "values": []
+        },
+        {
+          "name": "height",
+          "description": "Height of the skeleton element. Default: \"20px\"",
+          "values": []
+        },
+        {
+          "name": "radius",
+          "description": "Border radius of the skeleton element. Default: \"4px\"",
+          "values": []
+        }
       ],
       "references": [
         {
           "name": "Documentation",
-          "url": "https://zinc.style/components/sidebar"
+          "url": "https://zinc.style/components/skeleton"
         }
       ]
     },
@@ -4250,38 +4282,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/slash-item"
-        }
-      ]
-    },
-    {
-      "name": "zn-skeleton",
-      "description": "Skeleton loaders provide visual placeholders while content is loading, improving perceived performance and user experience.\n---\n",
-      "attributes": [
-        {
-          "name": "speed",
-          "description": "Animation speed for the shimmer effect. Default: \"3s\"",
-          "values": []
-        },
-        {
-          "name": "width",
-          "description": "Width of the skeleton element. Default: \"100%\"",
-          "values": []
-        },
-        {
-          "name": "height",
-          "description": "Height of the skeleton element. Default: \"20px\"",
-          "values": []
-        },
-        {
-          "name": "radius",
-          "description": "Border radius of the skeleton element. Default: \"4px\"",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/skeleton"
         }
       ]
     },
@@ -5382,6 +5382,48 @@
       ]
     },
     {
+      "name": "zn-translation-grid",
+      "description": "Shows how far each language's translation has got, with a column per language to choose and enable it,\nand optionally a row per translated field.\n---\n\n\n### **Slots:**\n - _default_ - Help text under the legend.\n- **enable-{code}** - The control that enables the language with that code, such as a `zn-checkbox` in a form. The Enable row only shows when at least one is given.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        {
+          "name": "languages",
+          "description": "The languages, in column order, as a JSON array of `{code, label, status, href}`.",
+          "values": [{ "name": "TranslationGridLanguage[]" }]
+        },
+        {
+          "name": "fields",
+          "description": "A row per translated field, as a JSON array of `{key, label, cells}`; without it there is one Translation row.",
+          "values": [{ "name": "TranslationGridField[]" }]
+        },
+        {
+          "name": "selected",
+          "description": "The code of the language being edited.",
+          "values": []
+        },
+        {
+          "name": "selected-field",
+          "description": "The key of the field being edited, when there are `fields`.",
+          "values": []
+        },
+        {
+          "name": "link-target",
+          "description": "Where the language links open, as a console `data-target`; `self` replaces the content they sit in.",
+          "values": []
+        },
+        {
+          "name": "source-label",
+          "description": "Names the source in the legend, such as \"English changed\".",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/translation-grid"
+        }
+      ]
+    },
+    {
       "name": "zn-translation-group",
       "description": "Puts several zn-translations fields behind one language select, so a whole form's worth of copy is\ntranslated a language at a time.\n---\n\n\n### **Events:**\n - **zn-language-change** - Emitted when the active language changes. Detail: `{ language: string }`.\n\n### **Slots:**\n - _default_ - The `zn-translations` fields the select drives.\n- **actions** - Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on the right, as zinc's form action rows do; `align=\"start\"` moves one to the left. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.\n- **footer** - Content displayed in the grey panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n- **--zn-panel-header-padding** - Padding around the header row. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-footer-padding** - Padding around the footer row. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **form-group** - The form group holding the caption, the language select and the fields.\n- **actions** - The row of buttons at the bottom of the body.\n- **language-field** - The select that chooses the language every child is editing, in the group's chip slot.\n- **language-select** - The select itself.\n- **header** - The header region, when a caption or actions are given.\n- **header-content** - The padded row inside the header, forwarded from zn-header.\n- **footer** - The footer region, when the footer slot is filled.",
       "attributes": [
@@ -5559,48 +5601,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/translations"
-        }
-      ]
-    },
-    {
-      "name": "zn-translation-grid",
-      "description": "Shows how far each language's translation has got, with a column per language to choose and enable it,\nand optionally a row per translated field.\n---\n\n\n### **Slots:**\n - _default_ - Help text under the legend.\n- **enable-{code}** - The control that enables the language with that code, such as a `zn-checkbox` in a form. The Enable row only shows when at least one is given.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        {
-          "name": "languages",
-          "description": "The languages, in column order, as a JSON array of `{code, label, status, href}`.",
-          "values": [{ "name": "TranslationGridLanguage[]" }]
-        },
-        {
-          "name": "fields",
-          "description": "A row per translated field, as a JSON array of `{key, label, cells}`; without it there is one Translation row.",
-          "values": [{ "name": "TranslationGridField[]" }]
-        },
-        {
-          "name": "selected",
-          "description": "The code of the language being edited.",
-          "values": []
-        },
-        {
-          "name": "selected-field",
-          "description": "The key of the field being edited, when there are `fields`.",
-          "values": []
-        },
-        {
-          "name": "link-target",
-          "description": "Where the language links open, as a console `data-target`; `self` replaces the content they sit in.",
-          "values": []
-        },
-        {
-          "name": "source-label",
-          "description": "Names the source in the legend, such as \"English changed\".",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/translation-grid"
         }
       ]
     },

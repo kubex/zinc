@@ -58,6 +58,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -246,79 +319,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -838,6 +838,269 @@
           "declaration": {
             "name": "ZnAudioSelect",
             "module": "components/audio-select/audio-select.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/background/background.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnBackground",
+          "cssProperties": [
+            {
+              "description": "Fallback colour when the `color` attribute is not set.",
+              "name": "--zn-background-color"
+            },
+            {
+              "description": "Position of the background image. Defaults to `center`.",
+              "name": "--zn-background-image-position"
+            },
+            {
+              "description": "Direction of the overlay gradient. Defaults to `110deg`.",
+              "name": "--zn-background-overlay-angle"
+            },
+            {
+              "description": "Colour of the floating icons. Defaults to `currentColor`.",
+              "name": "--zn-background-floating-icon-color"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's full-size background canvas.",
+              "name": "base"
+            },
+            {
+              "description": "The decorative background image.",
+              "name": "image"
+            },
+            {
+              "description": "The contrast overlay between the image and content.",
+              "name": "overlay"
+            },
+            {
+              "description": "The non-interactive layer containing the floating icons.",
+              "name": "floating-icons"
+            },
+            {
+              "description": "Each floating `zn-icon`.",
+              "name": "floating-icon"
+            },
+            {
+              "description": "The wrapper around the default slot.",
+              "name": "content"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Content displayed above the background layers.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{'zn-icon': ZnIcon}"
+            },
+            {
+              "kind": "field",
+              "name": "resizeObserver",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ResizeController<number>(this, { callback: entries => { const width = entries[0]?.contentRect.width ?? this.offsetWidth; return Math.max(1, Math.min(width * 0.05, 150)); }, })"
+            },
+            {
+              "kind": "field",
+              "name": "image",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "URL of the decorative background image.",
+              "attribute": "image"
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "CSS colour painted beneath the image.",
+              "attribute": "color"
+            },
+            {
+              "kind": "field",
+              "name": "imageStrength",
+              "type": {
+                "text": "BackgroundImageStrength"
+              },
+              "default": "'full'",
+              "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
+              "attribute": "image-strength",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "motion",
+              "type": {
+                "text": "BackgroundMotion"
+              },
+              "default": "'none'",
+              "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
+              "attribute": "motion",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "overlay",
+              "type": {
+                "text": "BackgroundOverlay"
+              },
+              "default": "'soft'",
+              "description": "Strength of the contrast gradient above the image.",
+              "attribute": "overlay",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "overlayTone",
+              "type": {
+                "text": "BackgroundOverlayTone"
+              },
+              "default": "'light'",
+              "description": "Whether the overlay uses a light or dark contrast treatment.",
+              "attribute": "overlay-tone",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "floatingIcons",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
+              "attribute": "floating-icons"
+            },
+            {
+              "kind": "field",
+              "name": "paused",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Pauses background motion without changing the selected motion treatment.",
+              "attribute": "paused",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "image",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "URL of the decorative background image.",
+              "fieldName": "image"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "CSS colour painted beneath the image.",
+              "fieldName": "color"
+            },
+            {
+              "name": "image-strength",
+              "type": {
+                "text": "BackgroundImageStrength"
+              },
+              "default": "'full'",
+              "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
+              "fieldName": "imageStrength"
+            },
+            {
+              "name": "motion",
+              "type": {
+                "text": "BackgroundMotion"
+              },
+              "default": "'none'",
+              "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
+              "fieldName": "motion"
+            },
+            {
+              "name": "overlay",
+              "type": {
+                "text": "BackgroundOverlay"
+              },
+              "default": "'soft'",
+              "description": "Strength of the contrast gradient above the image.",
+              "fieldName": "overlay"
+            },
+            {
+              "name": "overlay-tone",
+              "type": {
+                "text": "BackgroundOverlayTone"
+              },
+              "default": "'light'",
+              "description": "Whether the overlay uses a light or dark contrast treatment.",
+              "fieldName": "overlayTone"
+            },
+            {
+              "name": "floating-icons",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
+              "fieldName": "floatingIcons"
+            },
+            {
+              "name": "paused",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Pauses background motion without changing the selected motion treatment.",
+              "fieldName": "paused"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.",
+          "tagNameWithoutPrefix": "background",
+          "tagName": "zn-background",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n *\n * @documentation https://zinc.style/components/background\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - Content displayed above the background layers.\n *\n * @csspart base - The component's full-size background canvas.\n * @csspart image - The decorative background image.\n * @csspart overlay - The contrast overlay between the image and content.\n * @csspart floating-icons - The non-interactive layer containing the floating icons.\n * @csspart floating-icon - Each floating `zn-icon`.\n * @csspart content - The wrapper around the default slot.\n *\n * @cssproperty --zn-background-color - Fallback colour when the `color` attribute is not set.\n * @cssproperty --zn-background-image-position - Position of the background image. Defaults to `center`.\n * @cssproperty --zn-background-overlay-angle - Direction of the overlay gradient. Defaults to `110deg`.\n * @cssproperty --zn-background-floating-icon-color - Colour of the floating icons. Defaults to `currentColor`.\n */",
+          "documentation": "https://zinc.style/components/background",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-icon"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnBackground",
+            "module": "components/background/background.js"
           }
         }
       ]
@@ -2226,269 +2489,6 @@
           "declaration": {
             "name": "ZnButton",
             "module": "components/button/button.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/background/background.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnBackground",
-          "cssProperties": [
-            {
-              "description": "Fallback colour when the `color` attribute is not set.",
-              "name": "--zn-background-color"
-            },
-            {
-              "description": "Position of the background image. Defaults to `center`.",
-              "name": "--zn-background-image-position"
-            },
-            {
-              "description": "Direction of the overlay gradient. Defaults to `110deg`.",
-              "name": "--zn-background-overlay-angle"
-            },
-            {
-              "description": "Colour of the floating icons. Defaults to `currentColor`.",
-              "name": "--zn-background-floating-icon-color"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's full-size background canvas.",
-              "name": "base"
-            },
-            {
-              "description": "The decorative background image.",
-              "name": "image"
-            },
-            {
-              "description": "The contrast overlay between the image and content.",
-              "name": "overlay"
-            },
-            {
-              "description": "The non-interactive layer containing the floating icons.",
-              "name": "floating-icons"
-            },
-            {
-              "description": "Each floating `zn-icon`.",
-              "name": "floating-icon"
-            },
-            {
-              "description": "The wrapper around the default slot.",
-              "name": "content"
-            }
-          ],
-          "slots": [
-            {
-              "description": "Content displayed above the background layers.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{'zn-icon': ZnIcon}"
-            },
-            {
-              "kind": "field",
-              "name": "resizeObserver",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new ResizeController<number>(this, { callback: entries => { const width = entries[0]?.contentRect.width ?? this.offsetWidth; return Math.max(1, Math.min(width * 0.05, 150)); }, })"
-            },
-            {
-              "kind": "field",
-              "name": "image",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "URL of the decorative background image.",
-              "attribute": "image"
-            },
-            {
-              "kind": "field",
-              "name": "color",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "CSS colour painted beneath the image.",
-              "attribute": "color"
-            },
-            {
-              "kind": "field",
-              "name": "imageStrength",
-              "type": {
-                "text": "BackgroundImageStrength"
-              },
-              "default": "'full'",
-              "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
-              "attribute": "image-strength",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "motion",
-              "type": {
-                "text": "BackgroundMotion"
-              },
-              "default": "'none'",
-              "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
-              "attribute": "motion",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "overlay",
-              "type": {
-                "text": "BackgroundOverlay"
-              },
-              "default": "'soft'",
-              "description": "Strength of the contrast gradient above the image.",
-              "attribute": "overlay",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "overlayTone",
-              "type": {
-                "text": "BackgroundOverlayTone"
-              },
-              "default": "'light'",
-              "description": "Whether the overlay uses a light or dark contrast treatment.",
-              "attribute": "overlay-tone",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "floatingIcons",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
-              "attribute": "floating-icons"
-            },
-            {
-              "kind": "field",
-              "name": "paused",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Pauses background motion without changing the selected motion treatment.",
-              "attribute": "paused",
-              "reflects": true
-            }
-          ],
-          "attributes": [
-            {
-              "name": "image",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "URL of the decorative background image.",
-              "fieldName": "image"
-            },
-            {
-              "name": "color",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "CSS colour painted beneath the image.",
-              "fieldName": "color"
-            },
-            {
-              "name": "image-strength",
-              "type": {
-                "text": "BackgroundImageStrength"
-              },
-              "default": "'full'",
-              "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
-              "fieldName": "imageStrength"
-            },
-            {
-              "name": "motion",
-              "type": {
-                "text": "BackgroundMotion"
-              },
-              "default": "'none'",
-              "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
-              "fieldName": "motion"
-            },
-            {
-              "name": "overlay",
-              "type": {
-                "text": "BackgroundOverlay"
-              },
-              "default": "'soft'",
-              "description": "Strength of the contrast gradient above the image.",
-              "fieldName": "overlay"
-            },
-            {
-              "name": "overlay-tone",
-              "type": {
-                "text": "BackgroundOverlayTone"
-              },
-              "default": "'light'",
-              "description": "Whether the overlay uses a light or dark contrast treatment.",
-              "fieldName": "overlayTone"
-            },
-            {
-              "name": "floating-icons",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
-              "fieldName": "floatingIcons"
-            },
-            {
-              "name": "paused",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Pauses background motion without changing the selected motion treatment.",
-              "fieldName": "paused"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.",
-          "tagNameWithoutPrefix": "background",
-          "tagName": "zn-background",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n *\n * @documentation https://zinc.style/components/background\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - Content displayed above the background layers.\n *\n * @csspart base - The component's full-size background canvas.\n * @csspart image - The decorative background image.\n * @csspart overlay - The contrast overlay between the image and content.\n * @csspart floating-icons - The non-interactive layer containing the floating icons.\n * @csspart floating-icon - Each floating `zn-icon`.\n * @csspart content - The wrapper around the default slot.\n *\n * @cssproperty --zn-background-color - Fallback colour when the `color` attribute is not set.\n * @cssproperty --zn-background-image-position - Position of the background image. Defaults to `center`.\n * @cssproperty --zn-background-overlay-angle - Direction of the overlay gradient. Defaults to `110deg`.\n * @cssproperty --zn-background-floating-icon-color - Colour of the floating icons. Defaults to `currentColor`.\n */",
-          "documentation": "https://zinc.style/components/background",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-icon"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnBackground",
-            "module": "components/background/background.js"
           }
         }
       ]
@@ -16532,6 +16532,275 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/form-actions/form-actions.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnFormActions",
+          "cssParts": [
+            {
+              "description": "The cancel button.",
+              "name": "cancel-button"
+            },
+            {
+              "description": "The reset button.",
+              "name": "reset-button"
+            },
+            {
+              "description": "The submit button.",
+              "name": "submit-button"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Extra actions, placed before the buttons. `align=\"start\"` on a child moves it to the start of the row; any number can sit on either side. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-button': ZnButton }"
+            },
+            {
+              "kind": "field",
+              "name": "submitText",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Save'",
+              "description": "The submit button's text.",
+              "attribute": "submit-text"
+            },
+            {
+              "kind": "field",
+              "name": "submitIcon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'check@lu'",
+              "description": "The submit button's icon.",
+              "attribute": "submit-icon"
+            },
+            {
+              "kind": "field",
+              "name": "withCancel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Adds a cancel button. Closes the containing dialog or slideout, if any, and emits `zn-cancel`.",
+              "attribute": "with-cancel"
+            },
+            {
+              "kind": "field",
+              "name": "cancelText",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Cancel'",
+              "description": "The cancel button's text.",
+              "attribute": "cancel-text"
+            },
+            {
+              "kind": "field",
+              "name": "cancelIcon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'x@lu'",
+              "description": "The cancel button's icon.",
+              "attribute": "cancel-icon"
+            },
+            {
+              "kind": "field",
+              "name": "withReset",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Adds a reset button that resets the form.",
+              "attribute": "with-reset"
+            },
+            {
+              "kind": "field",
+              "name": "resetText",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Reset'",
+              "description": "The reset button's text.",
+              "attribute": "reset-text"
+            },
+            {
+              "kind": "field",
+              "name": "resetIcon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'rotate-ccw@lu'",
+              "description": "The reset button's icon.",
+              "attribute": "reset-icon"
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "The id of the form to act on. If omitted, the closest containing form is used.",
+              "attribute": "form"
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "handleCancel",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleReset",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleSubmit",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the cancel button is clicked.",
+              "name": "zn-cancel"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "submit-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Save'",
+              "description": "The submit button's text.",
+              "fieldName": "submitText"
+            },
+            {
+              "name": "submit-icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'check@lu'",
+              "description": "The submit button's icon.",
+              "fieldName": "submitIcon"
+            },
+            {
+              "name": "with-cancel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Adds a cancel button. Closes the containing dialog or slideout, if any, and emits `zn-cancel`.",
+              "fieldName": "withCancel"
+            },
+            {
+              "name": "cancel-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Cancel'",
+              "description": "The cancel button's text.",
+              "fieldName": "cancelText"
+            },
+            {
+              "name": "cancel-icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'x@lu'",
+              "description": "The cancel button's icon.",
+              "fieldName": "cancelIcon"
+            },
+            {
+              "name": "with-reset",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Adds a reset button that resets the form.",
+              "fieldName": "withReset"
+            },
+            {
+              "name": "reset-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Reset'",
+              "description": "The reset button's text.",
+              "fieldName": "resetText"
+            },
+            {
+              "name": "reset-icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "'rotate-ccw@lu'",
+              "description": "The reset button's icon.",
+              "fieldName": "resetIcon"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "The id of the form to act on. If omitted, the closest containing form is used.",
+              "fieldName": "form"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Standard action row for the bottom of a form. Renders a submit button by default; opt in to more\nwith `with-cancel` and `with-reset`.",
+          "tagNameWithoutPrefix": "form-actions",
+          "tagName": "zn-form-actions",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Standard action row for the bottom of a form. Renders a submit button by default; opt in to more\n * with `with-cancel` and `with-reset`.\n * @documentation https://zinc.style/components/form-actions\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n *\n * @event zn-cancel - Emitted when the cancel button is clicked.\n *\n * @slot - Extra actions, placed before the buttons. `align=\"start\"` on a child moves it to the start of the row; any\n * number can sit on either side. Write them in the order they should be read — the sides are set by CSS ordering, so\n * markup order is what a keyboard follows.\n *\n * @csspart cancel-button - The cancel button.\n * @csspart reset-button - The reset button.\n * @csspart submit-button - The submit button.\n */",
+          "documentation": "https://zinc.style/components/form-actions",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-button"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnFormActions",
+            "module": "components/form-actions/form-actions.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/flow-builder/flow-builder.js",
       "declarations": [
         {
@@ -17931,275 +18200,6 @@
           "declaration": {
             "name": "ZnFlowBuilder",
             "module": "components/flow-builder/flow-builder.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/form-actions/form-actions.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnFormActions",
-          "cssParts": [
-            {
-              "description": "The cancel button.",
-              "name": "cancel-button"
-            },
-            {
-              "description": "The reset button.",
-              "name": "reset-button"
-            },
-            {
-              "description": "The submit button.",
-              "name": "submit-button"
-            }
-          ],
-          "slots": [
-            {
-              "description": "Extra actions, placed before the buttons. `align=\"start\"` on a child moves it to the start of the row; any number can sit on either side. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ 'zn-button': ZnButton }"
-            },
-            {
-              "kind": "field",
-              "name": "submitText",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Save'",
-              "description": "The submit button's text.",
-              "attribute": "submit-text"
-            },
-            {
-              "kind": "field",
-              "name": "submitIcon",
-              "type": {
-                "text": "string"
-              },
-              "default": "'check@lu'",
-              "description": "The submit button's icon.",
-              "attribute": "submit-icon"
-            },
-            {
-              "kind": "field",
-              "name": "withCancel",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Adds a cancel button. Closes the containing dialog or slideout, if any, and emits `zn-cancel`.",
-              "attribute": "with-cancel"
-            },
-            {
-              "kind": "field",
-              "name": "cancelText",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Cancel'",
-              "description": "The cancel button's text.",
-              "attribute": "cancel-text"
-            },
-            {
-              "kind": "field",
-              "name": "cancelIcon",
-              "type": {
-                "text": "string"
-              },
-              "default": "'x@lu'",
-              "description": "The cancel button's icon.",
-              "attribute": "cancel-icon"
-            },
-            {
-              "kind": "field",
-              "name": "withReset",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Adds a reset button that resets the form.",
-              "attribute": "with-reset"
-            },
-            {
-              "kind": "field",
-              "name": "resetText",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Reset'",
-              "description": "The reset button's text.",
-              "attribute": "reset-text"
-            },
-            {
-              "kind": "field",
-              "name": "resetIcon",
-              "type": {
-                "text": "string"
-              },
-              "default": "'rotate-ccw@lu'",
-              "description": "The reset button's icon.",
-              "attribute": "reset-icon"
-            },
-            {
-              "kind": "field",
-              "name": "form",
-              "type": {
-                "text": "string"
-              },
-              "description": "The id of the form to act on. If omitted, the closest containing form is used.",
-              "attribute": "form"
-            },
-            {
-              "kind": "method",
-              "name": "getForm",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "HTMLFormElement | null"
-                }
-              }
-            },
-            {
-              "kind": "field",
-              "name": "handleCancel",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleReset",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleSubmit",
-              "privacy": "private"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted when the cancel button is clicked.",
-              "name": "zn-cancel"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "submit-text",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Save'",
-              "description": "The submit button's text.",
-              "fieldName": "submitText"
-            },
-            {
-              "name": "submit-icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "'check@lu'",
-              "description": "The submit button's icon.",
-              "fieldName": "submitIcon"
-            },
-            {
-              "name": "with-cancel",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Adds a cancel button. Closes the containing dialog or slideout, if any, and emits `zn-cancel`.",
-              "fieldName": "withCancel"
-            },
-            {
-              "name": "cancel-text",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Cancel'",
-              "description": "The cancel button's text.",
-              "fieldName": "cancelText"
-            },
-            {
-              "name": "cancel-icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "'x@lu'",
-              "description": "The cancel button's icon.",
-              "fieldName": "cancelIcon"
-            },
-            {
-              "name": "with-reset",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Adds a reset button that resets the form.",
-              "fieldName": "withReset"
-            },
-            {
-              "name": "reset-text",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Reset'",
-              "description": "The reset button's text.",
-              "fieldName": "resetText"
-            },
-            {
-              "name": "reset-icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "'rotate-ccw@lu'",
-              "description": "The reset button's icon.",
-              "fieldName": "resetIcon"
-            },
-            {
-              "name": "form",
-              "type": {
-                "text": "string"
-              },
-              "description": "The id of the form to act on. If omitted, the closest containing form is used.",
-              "fieldName": "form"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Standard action row for the bottom of a form. Renders a submit button by default; opt in to more\nwith `with-cancel` and `with-reset`.",
-          "tagNameWithoutPrefix": "form-actions",
-          "tagName": "zn-form-actions",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Standard action row for the bottom of a form. Renders a submit button by default; opt in to more\n * with `with-cancel` and `with-reset`.\n * @documentation https://zinc.style/components/form-actions\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n *\n * @event zn-cancel - Emitted when the cancel button is clicked.\n *\n * @slot - Extra actions, placed before the buttons. `align=\"start\"` on a child moves it to the start of the row; any\n * number can sit on either side. Write them in the order they should be read — the sides are set by CSS ordering, so\n * markup order is what a keyboard follows.\n *\n * @csspart cancel-button - The cancel button.\n * @csspart reset-button - The reset button.\n * @csspart submit-button - The submit button.\n */",
-          "documentation": "https://zinc.style/components/form-actions",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-button"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnFormActions",
-            "module": "components/form-actions/form-actions.js"
           }
         }
       ]
@@ -25286,6 +25286,550 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/menu-item/menu-item.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnMenuItem",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-icon': ZnIcon, 'zn-popup': ZnPopup }"
+            },
+            {
+              "kind": "field",
+              "name": "cachedTextLabel",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "defaultSlot",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "menuItem",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "'normal' | 'checkbox'"
+              },
+              "default": "'normal'",
+              "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
+              "attribute": "type"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'default' | 'dropdown' | 'shell'"
+              },
+              "default": "'default'",
+              "description": "The item's visual style. A standalone item defaults to navigation styling;\na parent zn-menu sets this to `dropdown` or `shell` automatically.",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "checked",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the item in a checked state.",
+              "attribute": "checked",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "checkedPosition",
+              "type": {
+                "text": "'left' | 'right'"
+              },
+              "default": "'left'",
+              "attribute": "checked-position",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A unique value to store in the menu item. This can be used as a way to identify menu items when selected.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the menu item in a loading state.",
+              "attribute": "loading",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the menu item in a disabled state, preventing selection.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "color"
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "dataPath",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "data-path"
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "'_self' | '_blank' | '_parent' | '_top' | string"
+              },
+              "attribute": "target"
+            },
+            {
+              "kind": "field",
+              "name": "dataTarget",
+              "type": {
+                "text": "'modal' | 'slide' | string"
+              },
+              "attribute": "data-target"
+            },
+            {
+              "kind": "field",
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'noreferrer noopener'",
+              "attribute": "rel"
+            },
+            {
+              "kind": "field",
+              "name": "gaid",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "gaid"
+            },
+            {
+              "kind": "field",
+              "name": "confirm",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "confirm",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "keepOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Leaves a containing dropdown open when this item is selected, whatever the dropdown's own setting.",
+              "attribute": "keep-open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Removes all padding from the menu item.",
+              "attribute": "flush",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "flushX",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Removes horizontal (left/right) padding only. Ignored if flush is set.",
+              "attribute": "flush-x",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "flushY",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Removes vertical (top/bottom) padding only. Ignored if flush is set.",
+              "attribute": "flush-y",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "noBorder",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Removes the border from the menu item.",
+              "attribute": "no-border",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "active",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the menu item as currently active/selected.",
+              "attribute": "active",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'submenu')"
+            },
+            {
+              "kind": "field",
+              "name": "submenuController",
+              "type": {
+                "text": "SubmenuController"
+              },
+              "privacy": "private",
+              "default": "new SubmenuController(this, this.hasSlotController, this.localize)"
+            },
+            {
+              "kind": "method",
+              "name": "handleDefaultSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleHostClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleMouseOver",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleCheckedChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleDisabledChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleTypeChange"
+            },
+            {
+              "kind": "method",
+              "name": "getTextLabel",
+              "description": "Returns a text label based on the contents of the menu item's default slot."
+            },
+            {
+              "kind": "method",
+              "name": "isSubmenu"
+            },
+            {
+              "kind": "method",
+              "name": "_isLink",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "type",
+              "type": {
+                "text": "'normal' | 'checkbox'"
+              },
+              "default": "'normal'",
+              "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
+              "fieldName": "type"
+            },
+            {
+              "name": "variant",
+              "type": {
+                "text": "'default' | 'dropdown' | 'shell'"
+              },
+              "default": "'default'",
+              "description": "The item's visual style. A standalone item defaults to navigation styling;\na parent zn-menu sets this to `dropdown` or `shell` automatically.",
+              "fieldName": "variant"
+            },
+            {
+              "name": "checked",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the item in a checked state.",
+              "fieldName": "checked"
+            },
+            {
+              "name": "checked-position",
+              "type": {
+                "text": "'left' | 'right'"
+              },
+              "default": "'left'",
+              "fieldName": "checkedPosition"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A unique value to store in the menu item. This can be used as a way to identify menu items when selected.",
+              "fieldName": "value"
+            },
+            {
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the menu item in a loading state.",
+              "fieldName": "loading"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the menu item in a disabled state, preventing selection.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "color"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "href"
+            },
+            {
+              "name": "data-path",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "dataPath"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "'_self' | '_blank' | '_parent' | '_top' | string"
+              },
+              "fieldName": "target"
+            },
+            {
+              "name": "data-target",
+              "type": {
+                "text": "'modal' | 'slide' | string"
+              },
+              "fieldName": "dataTarget"
+            },
+            {
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'noreferrer noopener'",
+              "fieldName": "rel"
+            },
+            {
+              "name": "gaid",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "gaid"
+            },
+            {
+              "name": "confirm",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "confirm"
+            },
+            {
+              "name": "keep-open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Leaves a containing dropdown open when this item is selected, whatever the dropdown's own setting.",
+              "fieldName": "keepOpen"
+            },
+            {
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Removes all padding from the menu item.",
+              "fieldName": "flush"
+            },
+            {
+              "name": "flush-x",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Removes horizontal (left/right) padding only. Ignored if flush is set.",
+              "fieldName": "flushX"
+            },
+            {
+              "name": "flush-y",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Removes vertical (top/bottom) padding only. Ignored if flush is set.",
+              "fieldName": "flushY"
+            },
+            {
+              "name": "no-border",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Removes the border from the menu item.",
+              "fieldName": "noBorder"
+            },
+            {
+              "name": "active",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the menu item as currently active/selected.",
+              "fieldName": "active"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "menu-item",
+          "tagName": "zn-menu-item",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/menu-item\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/menu-item",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnMenuItem",
+            "module": "components/menu-item/menu-item.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/navbar/navbar.js",
       "declarations": [
         {
@@ -28491,550 +29035,6 @@
           "declaration": {
             "name": "ZnPage",
             "module": "components/page/page.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/menu-item/menu-item.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnMenuItem",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ 'zn-icon': ZnIcon, 'zn-popup': ZnPopup }"
-            },
-            {
-              "kind": "field",
-              "name": "cachedTextLabel",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "defaultSlot",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "menuItem",
-              "type": {
-                "text": "HTMLElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "type",
-              "type": {
-                "text": "'normal' | 'checkbox'"
-              },
-              "default": "'normal'",
-              "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
-              "attribute": "type"
-            },
-            {
-              "kind": "field",
-              "name": "variant",
-              "type": {
-                "text": "'default' | 'dropdown' | 'shell'"
-              },
-              "default": "'default'",
-              "description": "The item's visual style. A standalone item defaults to navigation styling;\na parent zn-menu sets this to `dropdown` or `shell` automatically.",
-              "attribute": "variant",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "checked",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws the item in a checked state.",
-              "attribute": "checked",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "checkedPosition",
-              "type": {
-                "text": "'left' | 'right'"
-              },
-              "default": "'left'",
-              "attribute": "checked-position",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "A unique value to store in the menu item. This can be used as a way to identify menu items when selected.",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "loading",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws the menu item in a loading state.",
-              "attribute": "loading",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws the menu item in a disabled state, preventing selection.",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "color",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "color"
-            },
-            {
-              "kind": "field",
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "href"
-            },
-            {
-              "kind": "field",
-              "name": "dataPath",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "data-path"
-            },
-            {
-              "kind": "field",
-              "name": "target",
-              "type": {
-                "text": "'_self' | '_blank' | '_parent' | '_top' | string"
-              },
-              "attribute": "target"
-            },
-            {
-              "kind": "field",
-              "name": "dataTarget",
-              "type": {
-                "text": "'modal' | 'slide' | string"
-              },
-              "attribute": "data-target"
-            },
-            {
-              "kind": "field",
-              "name": "rel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'noreferrer noopener'",
-              "attribute": "rel"
-            },
-            {
-              "kind": "field",
-              "name": "gaid",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "gaid"
-            },
-            {
-              "kind": "field",
-              "name": "confirm",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "confirm",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "keepOpen",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Leaves a containing dropdown open when this item is selected, whatever the dropdown's own setting.",
-              "attribute": "keep-open",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Removes all padding from the menu item.",
-              "attribute": "flush",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "flushX",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Removes horizontal (left/right) padding only. Ignored if flush is set.",
-              "attribute": "flush-x",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "flushY",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Removes vertical (top/bottom) padding only. Ignored if flush is set.",
-              "attribute": "flush-y",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "noBorder",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Removes the border from the menu item.",
-              "attribute": "no-border",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "active",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Marks the menu item as currently active/selected.",
-              "attribute": "active",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            },
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, 'submenu')"
-            },
-            {
-              "kind": "field",
-              "name": "submenuController",
-              "type": {
-                "text": "SubmenuController"
-              },
-              "privacy": "private",
-              "default": "new SubmenuController(this, this.hasSlotController, this.localize)"
-            },
-            {
-              "kind": "method",
-              "name": "handleDefaultSlotChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleHostClick",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleMouseOver",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleCheckedChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleDisabledChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleTypeChange"
-            },
-            {
-              "kind": "method",
-              "name": "getTextLabel",
-              "description": "Returns a text label based on the contents of the menu item's default slot."
-            },
-            {
-              "kind": "method",
-              "name": "isSubmenu"
-            },
-            {
-              "kind": "method",
-              "name": "_isLink",
-              "privacy": "private"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "type",
-              "type": {
-                "text": "'normal' | 'checkbox'"
-              },
-              "default": "'normal'",
-              "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
-              "fieldName": "type"
-            },
-            {
-              "name": "variant",
-              "type": {
-                "text": "'default' | 'dropdown' | 'shell'"
-              },
-              "default": "'default'",
-              "description": "The item's visual style. A standalone item defaults to navigation styling;\na parent zn-menu sets this to `dropdown` or `shell` automatically.",
-              "fieldName": "variant"
-            },
-            {
-              "name": "checked",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws the item in a checked state.",
-              "fieldName": "checked"
-            },
-            {
-              "name": "checked-position",
-              "type": {
-                "text": "'left' | 'right'"
-              },
-              "default": "'left'",
-              "fieldName": "checkedPosition"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "A unique value to store in the menu item. This can be used as a way to identify menu items when selected.",
-              "fieldName": "value"
-            },
-            {
-              "name": "loading",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws the menu item in a loading state.",
-              "fieldName": "loading"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws the menu item in a disabled state, preventing selection.",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "color",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "color"
-            },
-            {
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "href"
-            },
-            {
-              "name": "data-path",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "dataPath"
-            },
-            {
-              "name": "target",
-              "type": {
-                "text": "'_self' | '_blank' | '_parent' | '_top' | string"
-              },
-              "fieldName": "target"
-            },
-            {
-              "name": "data-target",
-              "type": {
-                "text": "'modal' | 'slide' | string"
-              },
-              "fieldName": "dataTarget"
-            },
-            {
-              "name": "rel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'noreferrer noopener'",
-              "fieldName": "rel"
-            },
-            {
-              "name": "gaid",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "gaid"
-            },
-            {
-              "name": "confirm",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "confirm"
-            },
-            {
-              "name": "keep-open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Leaves a containing dropdown open when this item is selected, whatever the dropdown's own setting.",
-              "fieldName": "keepOpen"
-            },
-            {
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Removes all padding from the menu item.",
-              "fieldName": "flush"
-            },
-            {
-              "name": "flush-x",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Removes horizontal (left/right) padding only. Ignored if flush is set.",
-              "fieldName": "flushX"
-            },
-            {
-              "name": "flush-y",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Removes vertical (top/bottom) padding only. Ignored if flush is set.",
-              "fieldName": "flushY"
-            },
-            {
-              "name": "no-border",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Removes the border from the menu item.",
-              "fieldName": "noBorder"
-            },
-            {
-              "name": "active",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Marks the menu item as currently active/selected.",
-              "fieldName": "active"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "menu-item",
-          "tagName": "zn-menu-item",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/menu-item\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/menu-item",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnMenuItem",
-            "module": "components/menu-item/menu-item.js"
           }
         }
       ]
@@ -34227,6 +34227,181 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/progress-bar/progress-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnProgressBar",
+          "cssProperties": [
+            {
+              "description": "The color of the progress bar background track.",
+              "name": "--zn-border-color"
+            },
+            {
+              "description": "The color of the progress bar fill.",
+              "name": "--zn-progress-bar-color"
+            },
+            {
+              "description": "The color of the caption text.",
+              "name": "--zn-text-heading"
+            },
+            {
+              "description": "The color of the progress percentage and description text.",
+              "name": "--zn-text"
+            },
+            {
+              "description": "The spacing between header/footer and the progress bar.",
+              "name": "--zn-spacing-x-small"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The header container that contains the caption and progress text.",
+              "name": "header"
+            },
+            {
+              "description": "The caption text element.",
+              "name": "caption"
+            },
+            {
+              "description": "The progress percentage text element.",
+              "name": "progress"
+            },
+            {
+              "description": "The SVG element containing the progress bar.",
+              "name": "bar"
+            },
+            {
+              "description": "The background track of the progress bar.",
+              "name": "track"
+            },
+            {
+              "description": "The filled portion of the progress bar indicating progress.",
+              "name": "fill"
+            },
+            {
+              "description": "The footer container that contains the description.",
+              "name": "footer"
+            },
+            {
+              "description": "The description text element.",
+              "name": "info"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "caption",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "ProgressBarColor"
+              },
+              "default": "'current'",
+              "attribute": "color",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "description",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "number | undefined"
+              },
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "showProgress",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "attribute": "show-progress",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "caption",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "caption"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "ProgressBarColor"
+              },
+              "default": "'current'",
+              "fieldName": "color"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "description"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "number | undefined"
+              },
+              "fieldName": "value"
+            },
+            {
+              "name": "show-progress",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "fieldName": "showProgress"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Progress bars provide visual feedback about the completion status of a task or process.",
+          "tagNameWithoutPrefix": "progress-bar",
+          "tagName": "zn-progress-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Progress bars provide visual feedback about the completion status of a task or process.\n * @documentation https://zinc.style/components/progress-bar\n * @status experimental\n * @since 1.0\n *\n * @csspart header - The header container that contains the caption and progress text.\n * @csspart caption - The caption text element.\n * @csspart progress - The progress percentage text element.\n * @csspart bar - The SVG element containing the progress bar.\n * @csspart track - The background track of the progress bar.\n * @csspart fill - The filled portion of the progress bar indicating progress.\n * @csspart footer - The footer container that contains the description.\n * @csspart info - The description text element.\n *\n * @cssproperty --zn-border-color - The color of the progress bar background track.\n * @cssproperty --zn-progress-bar-color - The color of the progress bar fill.\n * @cssproperty --zn-text-heading - The color of the caption text.\n * @cssproperty --zn-text - The color of the progress percentage and description text.\n * @cssproperty --zn-spacing-x-small - The spacing between header/footer and the progress bar.\n */",
+          "documentation": "https://zinc.style/components/progress-bar",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnProgressBar",
+            "module": "components/progress-bar/progress-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/progress-tile/progress-tile.js",
       "declarations": [
         {
@@ -35087,181 +35262,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/progress-bar/progress-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnProgressBar",
-          "cssProperties": [
-            {
-              "description": "The color of the progress bar background track.",
-              "name": "--zn-border-color"
-            },
-            {
-              "description": "The color of the progress bar fill.",
-              "name": "--zn-progress-bar-color"
-            },
-            {
-              "description": "The color of the caption text.",
-              "name": "--zn-text-heading"
-            },
-            {
-              "description": "The color of the progress percentage and description text.",
-              "name": "--zn-text"
-            },
-            {
-              "description": "The spacing between header/footer and the progress bar.",
-              "name": "--zn-spacing-x-small"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The header container that contains the caption and progress text.",
-              "name": "header"
-            },
-            {
-              "description": "The caption text element.",
-              "name": "caption"
-            },
-            {
-              "description": "The progress percentage text element.",
-              "name": "progress"
-            },
-            {
-              "description": "The SVG element containing the progress bar.",
-              "name": "bar"
-            },
-            {
-              "description": "The background track of the progress bar.",
-              "name": "track"
-            },
-            {
-              "description": "The filled portion of the progress bar indicating progress.",
-              "name": "fill"
-            },
-            {
-              "description": "The footer container that contains the description.",
-              "name": "footer"
-            },
-            {
-              "description": "The description text element.",
-              "name": "info"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string | undefined"
-              },
-              "attribute": "caption",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "color",
-              "type": {
-                "text": "ProgressBarColor"
-              },
-              "default": "'current'",
-              "attribute": "color",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "description",
-              "type": {
-                "text": "string | undefined"
-              },
-              "attribute": "description",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "number | undefined"
-              },
-              "attribute": "value",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "showProgress",
-              "type": {
-                "text": "boolean | undefined"
-              },
-              "attribute": "show-progress",
-              "reflects": true
-            }
-          ],
-          "attributes": [
-            {
-              "name": "caption",
-              "type": {
-                "text": "string | undefined"
-              },
-              "fieldName": "caption"
-            },
-            {
-              "name": "color",
-              "type": {
-                "text": "ProgressBarColor"
-              },
-              "default": "'current'",
-              "fieldName": "color"
-            },
-            {
-              "name": "description",
-              "type": {
-                "text": "string | undefined"
-              },
-              "fieldName": "description"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "number | undefined"
-              },
-              "fieldName": "value"
-            },
-            {
-              "name": "show-progress",
-              "type": {
-                "text": "boolean | undefined"
-              },
-              "fieldName": "showProgress"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Progress bars provide visual feedback about the completion status of a task or process.",
-          "tagNameWithoutPrefix": "progress-bar",
-          "tagName": "zn-progress-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Progress bars provide visual feedback about the completion status of a task or process.\n * @documentation https://zinc.style/components/progress-bar\n * @status experimental\n * @since 1.0\n *\n * @csspart header - The header container that contains the caption and progress text.\n * @csspart caption - The caption text element.\n * @csspart progress - The progress percentage text element.\n * @csspart bar - The SVG element containing the progress bar.\n * @csspart track - The background track of the progress bar.\n * @csspart fill - The filled portion of the progress bar indicating progress.\n * @csspart footer - The footer container that contains the description.\n * @csspart info - The description text element.\n *\n * @cssproperty --zn-border-color - The color of the progress bar background track.\n * @cssproperty --zn-progress-bar-color - The color of the progress bar fill.\n * @cssproperty --zn-text-heading - The color of the caption text.\n * @cssproperty --zn-text - The color of the progress percentage and description text.\n * @cssproperty --zn-spacing-x-small - The spacing between header/footer and the progress bar.\n */",
-          "documentation": "https://zinc.style/components/progress-bar",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnProgressBar",
-            "module": "components/progress-bar/progress-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/radio/radio.js",
       "declarations": [
         {
@@ -35952,505 +35952,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/radio-group/radio-group.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnRadioGroup",
-          "cssProperties": [
-            {
-              "description": "Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set.",
-              "name": "--zn-radio-group-column-width"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "formControlController",
-              "privacy": "protected",
-              "readonly": true,
-              "default": "new FormControlController(this)"
-            },
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, 'help-text', 'label')"
-            },
-            {
-              "kind": "field",
-              "name": "customValidityMessage",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "default": "''"
-            },
-            {
-              "kind": "field",
-              "name": "validationTimeout",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "defaultSlot",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "validationInput",
-              "type": {
-                "text": "HTMLInputElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "errorMessage",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "default": "''"
-            },
-            {
-              "kind": "field",
-              "name": "defaultValue",
-              "type": {
-                "text": "string"
-              },
-              "default": "''"
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The radio group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
-              "attribute": "label"
-            },
-            {
-              "kind": "field",
-              "name": "labelTooltip",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
-              "attribute": "label-tooltip"
-            },
-            {
-              "kind": "field",
-              "name": "helpText",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The radio groups' help text. If you need to display HTML, use the `help-text` slot instead.",
-              "attribute": "help-text"
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The name of the radio group, submitted as a name/value pair with form data.",
-              "attribute": "name"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The current value of the radio group, submitted as a name/value pair with form data.",
-              "attribute": "value",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "default": "'medium'",
-              "description": "The radio group's size. This size will be applied to all child radios",
-              "attribute": "size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "horizontal",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "The radio group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
-              "attribute": "horizontal",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "contained",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "The radio group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child radios.",
-              "attribute": "contained",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "square",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Squares off the corners of every contained radio in the group, which are rounded by default.",
-              "attribute": "square",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "wrap",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
-              "attribute": "wrap",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "form",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
-              "attribute": "form",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Ensures a child radio is checked before allowing the containing form to submit.",
-              "attribute": "required",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "validity",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "validationMessage",
-              "description": "Gets the validation message",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "getAllRadios",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleRadioClick",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "handleKeyDown",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "KeyboardEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "handleLabelClick",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleInvalid",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "Event"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "syncRadioElements",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "syncRadios",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "updateCheckedRadio",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleSizeChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleValueChange"
-            },
-            {
-              "kind": "method",
-              "name": "checkValidity",
-              "description": "Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid."
-            },
-            {
-              "kind": "method",
-              "name": "getForm",
-              "return": {
-                "type": {
-                  "text": "HTMLFormElement | null"
-                }
-              },
-              "description": "Gets the associated form, if one exists."
-            },
-            {
-              "kind": "method",
-              "name": "reportValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "description": "Checks for validity and shows the browser's validation message if the control is invalid."
-            },
-            {
-              "kind": "method",
-              "name": "setCustomValidity",
-              "parameters": [
-                {
-                  "name": "message",
-                  "default": "''"
-                }
-              ],
-              "description": "Sets a custom validation message. Pass an empty string to restore validity."
-            },
-            {
-              "kind": "method",
-              "name": "focus",
-              "privacy": "public",
-              "parameters": [
-                {
-                  "name": "options",
-                  "optional": true,
-                  "type": {
-                    "text": "FocusOptions"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The radio group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
-              "fieldName": "label"
-            },
-            {
-              "name": "label-tooltip",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
-              "fieldName": "labelTooltip"
-            },
-            {
-              "name": "help-text",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The radio groups' help text. If you need to display HTML, use the `help-text` slot instead.",
-              "fieldName": "helpText"
-            },
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The name of the radio group, submitted as a name/value pair with form data.",
-              "fieldName": "name"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The current value of the radio group, submitted as a name/value pair with form data.",
-              "fieldName": "value"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "default": "'medium'",
-              "description": "The radio group's size. This size will be applied to all child radios",
-              "fieldName": "size"
-            },
-            {
-              "name": "horizontal",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "The radio group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
-              "fieldName": "horizontal"
-            },
-            {
-              "name": "contained",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "The radio group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child radios.",
-              "fieldName": "contained"
-            },
-            {
-              "name": "square",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Squares off the corners of every contained radio in the group, which are rounded by default.",
-              "fieldName": "square"
-            },
-            {
-              "name": "wrap",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
-              "fieldName": "wrap"
-            },
-            {
-              "name": "form",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
-              "fieldName": "form"
-            },
-            {
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Ensures a child radio is checked before allowing the containing form to submit.",
-              "fieldName": "required"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "radio-group",
-          "tagName": "zn-radio-group",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/radio-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --zn-radio-group-column-width - Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set.\n */",
-          "documentation": "https://zinc.style/components/radio-group",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnRadioGroup",
-            "module": "components/radio-group/radio-group.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/rating/rating.js",
       "declarations": [
         {
@@ -37011,6 +36512,505 @@
           "declaration": {
             "name": "ZnRating",
             "module": "components/rating/rating.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/radio-group/radio-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnRadioGroup",
+          "cssProperties": [
+            {
+              "description": "Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set.",
+              "name": "--zn-radio-group-column-width"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "formControlController",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new FormControlController(this)"
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'help-text', 'label')"
+            },
+            {
+              "kind": "field",
+              "name": "customValidityMessage",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "validationTimeout",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "defaultSlot",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationInput",
+              "type": {
+                "text": "HTMLInputElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "errorMessage",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The radio group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "labelTooltip",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
+              "attribute": "label-tooltip"
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The radio groups' help text. If you need to display HTML, use the `help-text` slot instead.",
+              "attribute": "help-text"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The name of the radio group, submitted as a name/value pair with form data.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The current value of the radio group, submitted as a name/value pair with form data.",
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "description": "The radio group's size. This size will be applied to all child radios",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "horizontal",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The radio group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
+              "attribute": "horizontal",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "contained",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The radio group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child radios.",
+              "attribute": "contained",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "square",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Squares off the corners of every contained radio in the group, which are rounded by default.",
+              "attribute": "square",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "wrap",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
+              "attribute": "wrap",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+              "attribute": "form",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Ensures a child radio is checked before allowing the containing form to submit.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "description": "Gets the validation message",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "getAllRadios",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleRadioClick",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleKeyDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleLabelClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleInvalid",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "syncRadioElements",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "syncRadios",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "updateCheckedRadio",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleSizeChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleValueChange"
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "description": "Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid."
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              },
+              "description": "Gets the associated form, if one exists."
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Checks for validity and shows the browser's validation message if the control is invalid."
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "parameters": [
+                {
+                  "name": "message",
+                  "default": "''"
+                }
+              ],
+              "description": "Sets a custom validation message. Pass an empty string to restore validity."
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The radio group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
+              "fieldName": "label"
+            },
+            {
+              "name": "label-tooltip",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
+              "fieldName": "labelTooltip"
+            },
+            {
+              "name": "help-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The radio groups' help text. If you need to display HTML, use the `help-text` slot instead.",
+              "fieldName": "helpText"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The name of the radio group, submitted as a name/value pair with form data.",
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The current value of the radio group, submitted as a name/value pair with form data.",
+              "fieldName": "value"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "description": "The radio group's size. This size will be applied to all child radios",
+              "fieldName": "size"
+            },
+            {
+              "name": "horizontal",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The radio group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
+              "fieldName": "horizontal"
+            },
+            {
+              "name": "contained",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The radio group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child radios.",
+              "fieldName": "contained"
+            },
+            {
+              "name": "square",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Squares off the corners of every contained radio in the group, which are rounded by default.",
+              "fieldName": "square"
+            },
+            {
+              "name": "wrap",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
+              "fieldName": "wrap"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+              "fieldName": "form"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Ensures a child radio is checked before allowing the containing form to submit.",
+              "fieldName": "required"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "radio-group",
+          "tagName": "zn-radio-group",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/radio-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --zn-radio-group-column-width - Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set.\n */",
+          "documentation": "https://zinc.style/components/radio-group",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnRadioGroup",
+            "module": "components/radio-group/radio-group.js"
           }
         }
       ]
@@ -42843,128 +42843,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/simple-chart/simple-chart.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnSimpleChart",
-          "members": [
-            {
-              "kind": "field",
-              "name": "datasets",
-              "type": {
-                "text": "{ data: number[] }[] | undefined"
-              },
-              "attribute": "datasets"
-            },
-            {
-              "kind": "field",
-              "name": "labels",
-              "type": {
-                "text": "string[] | undefined"
-              },
-              "attribute": "labels"
-            },
-            {
-              "kind": "field",
-              "name": "enableAnimations",
-              "type": {
-                "text": "boolean | number"
-              },
-              "default": "false",
-              "attribute": "enable-animations"
-            },
-            {
-              "kind": "field",
-              "name": "chart",
-              "type": {
-                "text": "ECharts | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "initPromise",
-              "type": {
-                "text": "Promise<void> | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "resizeObserver",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new ResizeController(this, { target: null, skipInitial: true, callback: () => this.chart?.resize(), })"
-            },
-            {
-              "kind": "method",
-              "name": "getUpdateComplete",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "Promise<boolean>"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "initChart",
-              "privacy": "private"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "datasets",
-              "type": {
-                "text": "{ data: number[] }[] | undefined"
-              },
-              "fieldName": "datasets"
-            },
-            {
-              "name": "labels",
-              "type": {
-                "text": "string[] | undefined"
-              },
-              "fieldName": "labels"
-            },
-            {
-              "name": "enable-animations",
-              "type": {
-                "text": "boolean | number"
-              },
-              "default": "false",
-              "fieldName": "enableAnimations"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "A simple, pre-styled bar chart.",
-          "tagNameWithoutPrefix": "simple-chart",
-          "tagName": "zn-simple-chart",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary A simple, pre-styled bar chart.\n * @documentation https://zinc.style/components/simple-chart\n * @status experimental\n * @since 1.0\n */",
-          "documentation": "https://zinc.style/components/simple-chart",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnSimpleChart",
-            "module": "components/simple-chart/simple-chart.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/sidebar/sidebar.js",
       "declarations": [
         {
@@ -43122,6 +43000,241 @@
           "declaration": {
             "name": "ZnSidebar",
             "module": "components/sidebar/sidebar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/simple-chart/simple-chart.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnSimpleChart",
+          "members": [
+            {
+              "kind": "field",
+              "name": "datasets",
+              "type": {
+                "text": "{ data: number[] }[] | undefined"
+              },
+              "attribute": "datasets"
+            },
+            {
+              "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "attribute": "labels"
+            },
+            {
+              "kind": "field",
+              "name": "enableAnimations",
+              "type": {
+                "text": "boolean | number"
+              },
+              "default": "false",
+              "attribute": "enable-animations"
+            },
+            {
+              "kind": "field",
+              "name": "chart",
+              "type": {
+                "text": "ECharts | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "initPromise",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "resizeObserver",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ResizeController(this, { target: null, skipInitial: true, callback: () => this.chart?.resize(), })"
+            },
+            {
+              "kind": "method",
+              "name": "getUpdateComplete",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "Promise<boolean>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "initChart",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "datasets",
+              "type": {
+                "text": "{ data: number[] }[] | undefined"
+              },
+              "fieldName": "datasets"
+            },
+            {
+              "name": "labels",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "fieldName": "labels"
+            },
+            {
+              "name": "enable-animations",
+              "type": {
+                "text": "boolean | number"
+              },
+              "default": "false",
+              "fieldName": "enableAnimations"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A simple, pre-styled bar chart.",
+          "tagNameWithoutPrefix": "simple-chart",
+          "tagName": "zn-simple-chart",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A simple, pre-styled bar chart.\n * @documentation https://zinc.style/components/simple-chart\n * @status experimental\n * @since 1.0\n */",
+          "documentation": "https://zinc.style/components/simple-chart",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnSimpleChart",
+            "module": "components/simple-chart/simple-chart.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/skeleton/skeleton.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnSkeleton",
+          "members": [
+            {
+              "kind": "field",
+              "name": "speed",
+              "type": {
+                "text": "string"
+              },
+              "default": "'3s'",
+              "description": "Animation speed for the shimmer effect. Default: \"3s\"",
+              "attribute": "speed"
+            },
+            {
+              "kind": "field",
+              "name": "width",
+              "type": {
+                "text": "string"
+              },
+              "default": "'100%'",
+              "description": "Width of the skeleton element. Default: \"100%\"",
+              "attribute": "width"
+            },
+            {
+              "kind": "field",
+              "name": "height",
+              "type": {
+                "text": "string"
+              },
+              "default": "'20px'",
+              "description": "Height of the skeleton element. Default: \"20px\"",
+              "attribute": "height"
+            },
+            {
+              "kind": "field",
+              "name": "radius",
+              "type": {
+                "text": "string"
+              },
+              "default": "'4px'",
+              "description": "Border radius of the skeleton element. Default: \"4px\"",
+              "attribute": "radius"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "speed",
+              "type": {
+                "text": "string"
+              },
+              "default": "'3s'",
+              "description": "Animation speed for the shimmer effect. Default: \"3s\"",
+              "fieldName": "speed"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "string"
+              },
+              "default": "'100%'",
+              "description": "Width of the skeleton element. Default: \"100%\"",
+              "fieldName": "width"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "string"
+              },
+              "default": "'20px'",
+              "description": "Height of the skeleton element. Default: \"20px\"",
+              "fieldName": "height"
+            },
+            {
+              "name": "radius",
+              "type": {
+                "text": "string"
+              },
+              "default": "'4px'",
+              "description": "Border radius of the skeleton element. Default: \"4px\"",
+              "fieldName": "radius"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Skeleton loaders provide visual placeholders while content is loading, improving perceived performance and user experience.",
+          "tagNameWithoutPrefix": "skeleton",
+          "tagName": "zn-skeleton",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Skeleton loaders provide visual placeholders while content is loading, improving perceived performance and user experience.\n * @documentation https://zinc.style/components/skeleton\n * @status experimental\n * @since 1.0\n *\n * @property {string} speed - Animation speed for the shimmer effect. Default: \"3s\"\n * @property {string} width - Width of the skeleton element. Default: \"100%\"\n * @property {string} height - Height of the skeleton element. Default: \"20px\"\n * @property {string} radius - Border radius of the skeleton element. Default: \"4px\"\n */",
+          "documentation": "https://zinc.style/components/skeleton",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnSkeleton",
+            "module": "components/skeleton/skeleton.js"
           }
         }
       ]
@@ -43359,119 +43472,6 @@
           "declaration": {
             "name": "ZnSlashItem",
             "module": "components/slash-item/slash-item.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/skeleton/skeleton.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnSkeleton",
-          "members": [
-            {
-              "kind": "field",
-              "name": "speed",
-              "type": {
-                "text": "string"
-              },
-              "default": "'3s'",
-              "description": "Animation speed for the shimmer effect. Default: \"3s\"",
-              "attribute": "speed"
-            },
-            {
-              "kind": "field",
-              "name": "width",
-              "type": {
-                "text": "string"
-              },
-              "default": "'100%'",
-              "description": "Width of the skeleton element. Default: \"100%\"",
-              "attribute": "width"
-            },
-            {
-              "kind": "field",
-              "name": "height",
-              "type": {
-                "text": "string"
-              },
-              "default": "'20px'",
-              "description": "Height of the skeleton element. Default: \"20px\"",
-              "attribute": "height"
-            },
-            {
-              "kind": "field",
-              "name": "radius",
-              "type": {
-                "text": "string"
-              },
-              "default": "'4px'",
-              "description": "Border radius of the skeleton element. Default: \"4px\"",
-              "attribute": "radius"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "speed",
-              "type": {
-                "text": "string"
-              },
-              "default": "'3s'",
-              "description": "Animation speed for the shimmer effect. Default: \"3s\"",
-              "fieldName": "speed"
-            },
-            {
-              "name": "width",
-              "type": {
-                "text": "string"
-              },
-              "default": "'100%'",
-              "description": "Width of the skeleton element. Default: \"100%\"",
-              "fieldName": "width"
-            },
-            {
-              "name": "height",
-              "type": {
-                "text": "string"
-              },
-              "default": "'20px'",
-              "description": "Height of the skeleton element. Default: \"20px\"",
-              "fieldName": "height"
-            },
-            {
-              "name": "radius",
-              "type": {
-                "text": "string"
-              },
-              "default": "'4px'",
-              "description": "Border radius of the skeleton element. Default: \"4px\"",
-              "fieldName": "radius"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Skeleton loaders provide visual placeholders while content is loading, improving perceived performance and user experience.",
-          "tagNameWithoutPrefix": "skeleton",
-          "tagName": "zn-skeleton",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Skeleton loaders provide visual placeholders while content is loading, improving perceived performance and user experience.\n * @documentation https://zinc.style/components/skeleton\n * @status experimental\n * @since 1.0\n *\n * @property {string} speed - Animation speed for the shimmer effect. Default: \"3s\"\n * @property {string} width - Width of the skeleton element. Default: \"100%\"\n * @property {string} height - Height of the skeleton element. Default: \"20px\"\n * @property {string} radius - Border radius of the skeleton element. Default: \"4px\"\n */",
-          "documentation": "https://zinc.style/components/skeleton",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnSkeleton",
-            "module": "components/skeleton/skeleton.js"
           }
         }
       ]
@@ -52920,6 +52920,279 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/translation-grid/translation-grid.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnTranslationGrid",
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Help text under the legend.",
+              "name": ""
+            },
+            {
+              "description": "The control that enables the language with that code, such as a `zn-checkbox` in a form. The Enable row only shows when at least one is given.",
+              "name": "enable-{code}"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "languages",
+              "type": {
+                "text": "TranslationGridLanguage[]"
+              },
+              "default": "[]",
+              "description": "The languages, in column order, as a JSON array of `{code, label, status, href}`.",
+              "attribute": "languages"
+            },
+            {
+              "kind": "field",
+              "name": "fields",
+              "type": {
+                "text": "TranslationGridField[]"
+              },
+              "default": "[]",
+              "description": "A row per translated field, as a JSON array of `{key, label, cells}`; without it there is one Translation row.",
+              "attribute": "fields"
+            },
+            {
+              "kind": "field",
+              "name": "selected",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The code of the language being edited.",
+              "attribute": "selected",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "selectedField",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The key of the field being edited, when there are `fields`.",
+              "attribute": "selected-field",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "linkTarget",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Where the language links open, as a console `data-target`; `self` replaces the content they sit in.",
+              "attribute": "link-target"
+            },
+            {
+              "kind": "field",
+              "name": "sourceLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'English'",
+              "description": "Names the source in the legend, such as \"English changed\".",
+              "attribute": "source-label"
+            },
+            {
+              "kind": "method",
+              "name": "_statusLabel",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "status",
+                  "type": {
+                    "text": "TranslationStatus"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_link",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "href",
+                  "type": {
+                    "text": "string | undefined"
+                  }
+                },
+                {
+                  "name": "selected",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "content",
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "block",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "label",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "status",
+                  "optional": true,
+                  "type": {
+                    "text": "TranslationStatus"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_cell",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "language",
+                  "type": {
+                    "text": "TranslationGridLanguage"
+                  }
+                },
+                {
+                  "name": "cell",
+                  "type": {
+                    "text": "TranslationGridCell | undefined"
+                  }
+                },
+                {
+                  "name": "selected",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "row",
+                  "default": "''"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_rows",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_legend",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "status",
+                  "type": {
+                    "text": "TranslationStatus"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "languages",
+              "type": {
+                "text": "TranslationGridLanguage[]"
+              },
+              "default": "[]",
+              "description": "The languages, in column order, as a JSON array of `{code, label, status, href}`.",
+              "fieldName": "languages"
+            },
+            {
+              "name": "fields",
+              "type": {
+                "text": "TranslationGridField[]"
+              },
+              "default": "[]",
+              "description": "A row per translated field, as a JSON array of `{key, label, cells}`; without it there is one Translation row.",
+              "fieldName": "fields"
+            },
+            {
+              "name": "selected",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The code of the language being edited.",
+              "fieldName": "selected"
+            },
+            {
+              "name": "selected-field",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The key of the field being edited, when there are `fields`.",
+              "fieldName": "selectedField"
+            },
+            {
+              "name": "link-target",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Where the language links open, as a console `data-target`; `self` replaces the content they sit in.",
+              "fieldName": "linkTarget"
+            },
+            {
+              "name": "source-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'English'",
+              "description": "Names the source in the legend, such as \"English changed\".",
+              "fieldName": "sourceLabel"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Shows how far each language's translation has got, with a column per language to choose and enable it,\nand optionally a row per translated field.",
+          "tagNameWithoutPrefix": "translation-grid",
+          "tagName": "zn-translation-grid",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Shows how far each language's translation has got, with a column per language to choose and enable it,\n * and optionally a row per translated field.\n * @documentation https://zinc.style/components/translation-grid\n * @status experimental\n * @since 1.0\n *\n * @slot - Help text under the legend.\n * @slot enable-{code} - The control that enables the language with that code, such as a `zn-checkbox` in a form.\n *   The Enable row only shows when at least one is given.\n *\n * @csspart base - The component's base wrapper.\n */",
+          "documentation": "https://zinc.style/components/translation-grid",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnTranslationGrid",
+            "module": "components/translation-grid/translation-grid.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/translation-group/translation-group.js",
       "declarations": [
         {
@@ -54438,279 +54711,6 @@
           "declaration": {
             "name": "ZnTranslations",
             "module": "components/translations/translations.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/translation-grid/translation-grid.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnTranslationGrid",
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "Help text under the legend.",
-              "name": ""
-            },
-            {
-              "description": "The control that enables the language with that code, such as a `zn-checkbox` in a form. The Enable row only shows when at least one is given.",
-              "name": "enable-{code}"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "languages",
-              "type": {
-                "text": "TranslationGridLanguage[]"
-              },
-              "default": "[]",
-              "description": "The languages, in column order, as a JSON array of `{code, label, status, href}`.",
-              "attribute": "languages"
-            },
-            {
-              "kind": "field",
-              "name": "fields",
-              "type": {
-                "text": "TranslationGridField[]"
-              },
-              "default": "[]",
-              "description": "A row per translated field, as a JSON array of `{key, label, cells}`; without it there is one Translation row.",
-              "attribute": "fields"
-            },
-            {
-              "kind": "field",
-              "name": "selected",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The code of the language being edited.",
-              "attribute": "selected",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "selectedField",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The key of the field being edited, when there are `fields`.",
-              "attribute": "selected-field",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "linkTarget",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Where the language links open, as a console `data-target`; `self` replaces the content they sit in.",
-              "attribute": "link-target"
-            },
-            {
-              "kind": "field",
-              "name": "sourceLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'English'",
-              "description": "Names the source in the legend, such as \"English changed\".",
-              "attribute": "source-label"
-            },
-            {
-              "kind": "method",
-              "name": "_statusLabel",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "status",
-                  "type": {
-                    "text": "TranslationStatus"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_link",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "href",
-                  "type": {
-                    "text": "string | undefined"
-                  }
-                },
-                {
-                  "name": "selected",
-                  "type": {
-                    "text": "boolean"
-                  }
-                },
-                {
-                  "name": "content",
-                  "type": {
-                    "text": "unknown"
-                  }
-                },
-                {
-                  "name": "block",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "label",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "status",
-                  "optional": true,
-                  "type": {
-                    "text": "TranslationStatus"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_cell",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "language",
-                  "type": {
-                    "text": "TranslationGridLanguage"
-                  }
-                },
-                {
-                  "name": "cell",
-                  "type": {
-                    "text": "TranslationGridCell | undefined"
-                  }
-                },
-                {
-                  "name": "selected",
-                  "type": {
-                    "text": "boolean"
-                  }
-                },
-                {
-                  "name": "row",
-                  "default": "''"
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_rows",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_legend",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "status",
-                  "type": {
-                    "text": "TranslationStatus"
-                  }
-                }
-              ]
-            }
-          ],
-          "attributes": [
-            {
-              "name": "languages",
-              "type": {
-                "text": "TranslationGridLanguage[]"
-              },
-              "default": "[]",
-              "description": "The languages, in column order, as a JSON array of `{code, label, status, href}`.",
-              "fieldName": "languages"
-            },
-            {
-              "name": "fields",
-              "type": {
-                "text": "TranslationGridField[]"
-              },
-              "default": "[]",
-              "description": "A row per translated field, as a JSON array of `{key, label, cells}`; without it there is one Translation row.",
-              "fieldName": "fields"
-            },
-            {
-              "name": "selected",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The code of the language being edited.",
-              "fieldName": "selected"
-            },
-            {
-              "name": "selected-field",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The key of the field being edited, when there are `fields`.",
-              "fieldName": "selectedField"
-            },
-            {
-              "name": "link-target",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Where the language links open, as a console `data-target`; `self` replaces the content they sit in.",
-              "fieldName": "linkTarget"
-            },
-            {
-              "name": "source-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'English'",
-              "description": "Names the source in the legend, such as \"English changed\".",
-              "fieldName": "sourceLabel"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Shows how far each language's translation has got, with a column per language to choose and enable it,\nand optionally a row per translated field.",
-          "tagNameWithoutPrefix": "translation-grid",
-          "tagName": "zn-translation-grid",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Shows how far each language's translation has got, with a column per language to choose and enable it,\n * and optionally a row per translated field.\n * @documentation https://zinc.style/components/translation-grid\n * @status experimental\n * @since 1.0\n *\n * @slot - Help text under the legend.\n * @slot enable-{code} - The control that enables the language with that code, such as a `zn-checkbox` in a form.\n *   The Enable row only shows when at least one is given.\n *\n * @csspart base - The component's base wrapper.\n */",
-          "documentation": "https://zinc.style/components/translation-grid",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnTranslationGrid",
-            "module": "components/translation-grid/translation-grid.js"
           }
         }
       ]

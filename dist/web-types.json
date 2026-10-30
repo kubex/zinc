@@ -16,6 +16,28 @@
           "js": { "properties": [], "events": [] }
         },
         {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -75,28 +97,6 @@
               { "name": "center", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -246,6 +246,108 @@
               { "name": "label", "type": "string" },
               { "name": "placeholder", "type": "string" },
               { "name": "files", "type": "AudioFile[]" }
+            ],
+            "events": []
+          }
+        },
+        {
+          "name": "zn-background",
+          "description": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n\n---\n\n\n### **Slots:**\n - _default_ - Content displayed above the background layers.\n\n### **CSS Properties:**\n - **--zn-background-color** - Fallback colour when the `color` attribute is not set. _(default: undefined)_\n- **--zn-background-image-position** - Position of the background image. Defaults to `center`. _(default: undefined)_\n- **--zn-background-overlay-angle** - Direction of the overlay gradient. Defaults to `110deg`. _(default: undefined)_\n- **--zn-background-floating-icon-color** - Colour of the floating icons. Defaults to `currentColor`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's full-size background canvas.\n- **image** - The decorative background image.\n- **overlay** - The contrast overlay between the image and content.\n- **floating-icons** - The non-interactive layer containing the floating icons.\n- **floating-icon** - Each floating `zn-icon`.\n- **content** - The wrapper around the default slot.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "image",
+              "description": "URL of the decorative background image.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "color",
+              "description": "CSS colour painted beneath the image.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "image-strength",
+              "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
+              "value": {
+                "type": "BackgroundImageStrength",
+                "default": "'full'"
+              }
+            },
+            {
+              "name": "motion",
+              "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
+              "value": { "type": "BackgroundMotion", "default": "'none'" }
+            },
+            {
+              "name": "overlay",
+              "description": "Strength of the contrast gradient above the image.",
+              "value": { "type": "BackgroundOverlay", "default": "'soft'" }
+            },
+            {
+              "name": "overlay-tone",
+              "description": "Whether the overlay uses a light or dark contrast treatment.",
+              "value": { "type": "BackgroundOverlayTone", "default": "'light'" }
+            },
+            {
+              "name": "floating-icons",
+              "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "paused",
+              "description": "Pauses background motion without changing the selected motion treatment.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Content displayed above the background layers."
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              {
+                "name": "image",
+                "description": "URL of the decorative background image.",
+                "type": "string"
+              },
+              {
+                "name": "color",
+                "description": "CSS colour painted beneath the image.",
+                "type": "string"
+              },
+              {
+                "name": "imageStrength",
+                "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
+                "type": "BackgroundImageStrength"
+              },
+              {
+                "name": "motion",
+                "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
+                "type": "BackgroundMotion"
+              },
+              {
+                "name": "overlay",
+                "description": "Strength of the contrast gradient above the image.",
+                "type": "BackgroundOverlay"
+              },
+              {
+                "name": "overlayTone",
+                "description": "Whether the overlay uses a light or dark contrast treatment.",
+                "type": "BackgroundOverlayTone"
+              },
+              {
+                "name": "floatingIcons",
+                "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
+                "type": "string"
+              },
+              {
+                "name": "paused",
+                "description": "Pauses background motion without changing the selected motion treatment.",
+                "type": "boolean"
+              }
             ],
             "events": []
           }
@@ -602,108 +704,6 @@
                 "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied."
               }
             ]
-          }
-        },
-        {
-          "name": "zn-background",
-          "description": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n\n---\n\n\n### **Slots:**\n - _default_ - Content displayed above the background layers.\n\n### **CSS Properties:**\n - **--zn-background-color** - Fallback colour when the `color` attribute is not set. _(default: undefined)_\n- **--zn-background-image-position** - Position of the background image. Defaults to `center`. _(default: undefined)_\n- **--zn-background-overlay-angle** - Direction of the overlay gradient. Defaults to `110deg`. _(default: undefined)_\n- **--zn-background-floating-icon-color** - Colour of the floating icons. Defaults to `currentColor`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's full-size background canvas.\n- **image** - The decorative background image.\n- **overlay** - The contrast overlay between the image and content.\n- **floating-icons** - The non-interactive layer containing the floating icons.\n- **floating-icon** - Each floating `zn-icon`.\n- **content** - The wrapper around the default slot.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "image",
-              "description": "URL of the decorative background image.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "color",
-              "description": "CSS colour painted beneath the image.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "image-strength",
-              "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
-              "value": {
-                "type": "BackgroundImageStrength",
-                "default": "'full'"
-              }
-            },
-            {
-              "name": "motion",
-              "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
-              "value": { "type": "BackgroundMotion", "default": "'none'" }
-            },
-            {
-              "name": "overlay",
-              "description": "Strength of the contrast gradient above the image.",
-              "value": { "type": "BackgroundOverlay", "default": "'soft'" }
-            },
-            {
-              "name": "overlay-tone",
-              "description": "Whether the overlay uses a light or dark contrast treatment.",
-              "value": { "type": "BackgroundOverlayTone", "default": "'light'" }
-            },
-            {
-              "name": "floating-icons",
-              "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "paused",
-              "description": "Pauses background motion without changing the selected motion treatment.",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "slots": [
-            {
-              "name": "",
-              "description": "Content displayed above the background layers."
-            }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              {
-                "name": "image",
-                "description": "URL of the decorative background image.",
-                "type": "string"
-              },
-              {
-                "name": "color",
-                "description": "CSS colour painted beneath the image.",
-                "type": "string"
-              },
-              {
-                "name": "imageStrength",
-                "description": "Visibility of the image: `soft` (30%), `medium` (62%) or `full` (100%).",
-                "type": "BackgroundImageStrength"
-              },
-              {
-                "name": "motion",
-                "description": "Subtle animation applied to the image. Motion stops when reduced motion is requested.",
-                "type": "BackgroundMotion"
-              },
-              {
-                "name": "overlay",
-                "description": "Strength of the contrast gradient above the image.",
-                "type": "BackgroundOverlay"
-              },
-              {
-                "name": "overlayTone",
-                "description": "Whether the overlay uses a light or dark contrast treatment.",
-                "type": "BackgroundOverlayTone"
-              },
-              {
-                "name": "floatingIcons",
-                "description": "Comma-separated Zinc icon names placed as ambient decoration. At most eight are rendered.",
-                "type": "string"
-              },
-              {
-                "name": "paused",
-                "description": "Pauses background motion without changing the selected motion treatment.",
-                "type": "boolean"
-              }
-            ],
-            "events": []
           }
         },
         {
@@ -4490,125 +4490,6 @@
           }
         },
         {
-          "name": "zn-flow-builder",
-          "description": "A drag-and-drop visual flow builder: steps panel, pan/zoom canvas, and a config inspector.\n\n---\n\n\n### **Events:**\n - **zn-flow-change** - Emitted whenever the flow state changes. `event.detail.state` is the new FlowState.\n- **zn-flow-selection-change** - Emitted when the selected node changes. `event.detail.nodeId`.\n- **zn-flow-connect** - Emitted when a connection is created. `event.detail.connection`.\n\n### **Methods:**\n - **restoreAutoSave(): _boolean_** - Load the auto-saved flow, if one exists within the 1-day TTL.\n- **toJSON(): _FlowState_** - The full flow state — nodes with their positions, connections, branch\ndata, and notes — ready for persisting. Lets `JSON.stringify(builder)`\nserialize the flow directly, e.g. as a POST body.\n\n### **Slots:**\n - _default_ - `<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the step into the right tab and collapsible grouping of the rendered panel. A step may nest `<zn-flow-filter>` declarations (each holding `<zn-flow-filter-field>`s, whose operator / option choices are nested `<zn-flow-operator>` / `<zn-flow-option>` elements) — or set a `branch-filters` JSON attribute — to drive the built-in branch conditions editor.\n- **header-left** - Actions shown on the left of the header bar (e.g. Close / Undo All Changes).\n- **header-right** - Actions shown on the right of the header bar (e.g. Apply Changes).\n- **sidebar** - Extra right-panel content (status, version history), below the configuration errors.\n\n### **CSS Parts:**\n - **base** - The grid wrapper.\n- **header** - The full-width header action bar (only rendered when header slots are filled).\n- **steps** - The left steps panel.\n- **inspector** - The right panel while a node or branch is selected.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "heading",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "subheading",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "auto-save",
-              "description": "Auto-save the flow to localStorage (1-day TTL). Omit to disable. A bare\n`auto-save` saves every 5 minutes; a numeric value sets the interval in\nminutes (`auto-save=\"5\"`). Restore with `restoreAutoSave()`.",
-              "value": { "type": "number | null", "default": "null" }
-            },
-            {
-              "name": "entrypoints-hint",
-              "description": "Optional hint shown beneath each steps-panel tab.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "triggers-hint",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "actions-hint",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "rules-hint",
-              "value": { "type": "string", "default": "''" }
-            }
-          ],
-          "slots": [
-            {
-              "name": "",
-              "description": "`<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the step into the right tab and collapsible grouping of the rendered panel. A step may nest `<zn-flow-filter>` declarations (each holding `<zn-flow-filter-field>`s, whose operator / option choices are nested `<zn-flow-operator>` / `<zn-flow-option>` elements) — or set a `branch-filters` JSON attribute — to drive the built-in branch conditions editor."
-            },
-            {
-              "name": "header-left",
-              "description": "Actions shown on the left of the header bar (e.g. Close / Undo All Changes)."
-            },
-            {
-              "name": "header-right",
-              "description": "Actions shown on the right of the header bar (e.g. Apply Changes)."
-            },
-            {
-              "name": "sidebar",
-              "description": "Extra right-panel content (status, version history), below the configuration errors."
-            }
-          ],
-          "events": [
-            {
-              "name": "zn-flow-change",
-              "description": "Emitted whenever the flow state changes. `event.detail.state` is the new FlowState."
-            },
-            {
-              "name": "zn-flow-selection-change",
-              "description": "Emitted when the selected node changes. `event.detail.nodeId`."
-            },
-            {
-              "name": "zn-flow-connect",
-              "description": "Emitted when a connection is created. `event.detail.connection`."
-            }
-          ],
-          "js": {
-            "properties": [
-              {
-                "name": "nodeTypes",
-                "description": "Node types to make available, registered into the internal registry.",
-                "type": "FlowNodeType[]"
-              },
-              { "name": "heading", "type": "string" },
-              { "name": "subheading", "type": "string" },
-              {
-                "name": "errorNodes",
-                "description": "Node ids flagged as having configuration errors (drives the red node styling).",
-                "type": "string[]"
-              },
-              {
-                "name": "autoSave",
-                "description": "Auto-save the flow to localStorage (1-day TTL). Omit to disable. A bare\n`auto-save` saves every 5 minutes; a numeric value sets the interval in\nminutes (`auto-save=\"5\"`). Restore with `restoreAutoSave()`.",
-                "type": "number | null"
-              },
-              {
-                "name": "entrypointsHint",
-                "description": "Optional hint shown beneath each steps-panel tab.",
-                "type": "string"
-              },
-              { "name": "triggersHint", "type": "string" },
-              { "name": "actionsHint", "type": "string" },
-              { "name": "rulesHint", "type": "string" },
-              { "name": "value", "type": "string" },
-              { "name": "undo" },
-              { "name": "redo" },
-              {
-                "name": "untangle",
-                "description": "Auto-arrange the nodes into evenly spaced layers that follow the flow,\nanimating them into place (wires and pills track them since everything is\nderived from the node coordinates). Undoable as a single step."
-              }
-            ],
-            "events": [
-              {
-                "name": "zn-flow-change",
-                "description": "Emitted whenever the flow state changes. `event.detail.state` is the new FlowState."
-              },
-              {
-                "name": "zn-flow-selection-change",
-                "description": "Emitted when the selected node changes. `event.detail.nodeId`."
-              },
-              {
-                "name": "zn-flow-connect",
-                "description": "Emitted when a connection is created. `event.detail.connection`."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-form-actions",
           "description": "Standard action row for the bottom of a form. Renders a submit button by default; opt in to more\nwith `with-cancel` and `with-reset`.\n\n---\n\n\n### **Events:**\n - **zn-cancel** - Emitted when the cancel button is clicked.\n\n### **Slots:**\n - _default_ - Extra actions, placed before the buttons. `align=\"start\"` on a child moves it to the start of the row; any number can sit on either side. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.\n\n### **CSS Parts:**\n - **cancel-button** - The cancel button.\n- **reset-button** - The reset button.\n- **submit-button** - The submit button.",
           "doc-url": "",
@@ -4723,6 +4604,125 @@
               {
                 "name": "zn-cancel",
                 "description": "Emitted when the cancel button is clicked."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-flow-builder",
+          "description": "A drag-and-drop visual flow builder: steps panel, pan/zoom canvas, and a config inspector.\n\n---\n\n\n### **Events:**\n - **zn-flow-change** - Emitted whenever the flow state changes. `event.detail.state` is the new FlowState.\n- **zn-flow-selection-change** - Emitted when the selected node changes. `event.detail.nodeId`.\n- **zn-flow-connect** - Emitted when a connection is created. `event.detail.connection`.\n\n### **Methods:**\n - **restoreAutoSave(): _boolean_** - Load the auto-saved flow, if one exists within the 1-day TTL.\n- **toJSON(): _FlowState_** - The full flow state — nodes with their positions, connections, branch\ndata, and notes — ready for persisting. Lets `JSON.stringify(builder)`\nserialize the flow directly, e.g. as a POST body.\n\n### **Slots:**\n - _default_ - `<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the step into the right tab and collapsible grouping of the rendered panel. A step may nest `<zn-flow-filter>` declarations (each holding `<zn-flow-filter-field>`s, whose operator / option choices are nested `<zn-flow-operator>` / `<zn-flow-option>` elements) — or set a `branch-filters` JSON attribute — to drive the built-in branch conditions editor.\n- **header-left** - Actions shown on the left of the header bar (e.g. Close / Undo All Changes).\n- **header-right** - Actions shown on the right of the header bar (e.g. Apply Changes).\n- **sidebar** - Extra right-panel content (status, version history), below the configuration errors.\n\n### **CSS Parts:**\n - **base** - The grid wrapper.\n- **header** - The full-width header action bar (only rendered when header slots are filled).\n- **steps** - The left steps panel.\n- **inspector** - The right panel while a node or branch is selected.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "heading",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "subheading",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "auto-save",
+              "description": "Auto-save the flow to localStorage (1-day TTL). Omit to disable. A bare\n`auto-save` saves every 5 minutes; a numeric value sets the interval in\nminutes (`auto-save=\"5\"`). Restore with `restoreAutoSave()`.",
+              "value": { "type": "number | null", "default": "null" }
+            },
+            {
+              "name": "entrypoints-hint",
+              "description": "Optional hint shown beneath each steps-panel tab.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "triggers-hint",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "actions-hint",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "rules-hint",
+              "value": { "type": "string", "default": "''" }
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "`<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the step into the right tab and collapsible grouping of the rendered panel. A step may nest `<zn-flow-filter>` declarations (each holding `<zn-flow-filter-field>`s, whose operator / option choices are nested `<zn-flow-operator>` / `<zn-flow-option>` elements) — or set a `branch-filters` JSON attribute — to drive the built-in branch conditions editor."
+            },
+            {
+              "name": "header-left",
+              "description": "Actions shown on the left of the header bar (e.g. Close / Undo All Changes)."
+            },
+            {
+              "name": "header-right",
+              "description": "Actions shown on the right of the header bar (e.g. Apply Changes)."
+            },
+            {
+              "name": "sidebar",
+              "description": "Extra right-panel content (status, version history), below the configuration errors."
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-flow-change",
+              "description": "Emitted whenever the flow state changes. `event.detail.state` is the new FlowState."
+            },
+            {
+              "name": "zn-flow-selection-change",
+              "description": "Emitted when the selected node changes. `event.detail.nodeId`."
+            },
+            {
+              "name": "zn-flow-connect",
+              "description": "Emitted when a connection is created. `event.detail.connection`."
+            }
+          ],
+          "js": {
+            "properties": [
+              {
+                "name": "nodeTypes",
+                "description": "Node types to make available, registered into the internal registry.",
+                "type": "FlowNodeType[]"
+              },
+              { "name": "heading", "type": "string" },
+              { "name": "subheading", "type": "string" },
+              {
+                "name": "errorNodes",
+                "description": "Node ids flagged as having configuration errors (drives the red node styling).",
+                "type": "string[]"
+              },
+              {
+                "name": "autoSave",
+                "description": "Auto-save the flow to localStorage (1-day TTL). Omit to disable. A bare\n`auto-save` saves every 5 minutes; a numeric value sets the interval in\nminutes (`auto-save=\"5\"`). Restore with `restoreAutoSave()`.",
+                "type": "number | null"
+              },
+              {
+                "name": "entrypointsHint",
+                "description": "Optional hint shown beneath each steps-panel tab.",
+                "type": "string"
+              },
+              { "name": "triggersHint", "type": "string" },
+              { "name": "actionsHint", "type": "string" },
+              { "name": "rulesHint", "type": "string" },
+              { "name": "value", "type": "string" },
+              { "name": "undo" },
+              { "name": "redo" },
+              {
+                "name": "untangle",
+                "description": "Auto-arrange the nodes into evenly spaced layers that follow the flow,\nanimating them into place (wires and pills track them since everything is\nderived from the node coordinates). Undoable as a single step."
+              }
+            ],
+            "events": [
+              {
+                "name": "zn-flow-change",
+                "description": "Emitted whenever the flow state changes. `event.detail.state` is the new FlowState."
+              },
+              {
+                "name": "zn-flow-selection-change",
+                "description": "Emitted when the selected node changes. `event.detail.nodeId`."
+              },
+              {
+                "name": "zn-flow-connect",
+                "description": "Emitted when a connection is created. `event.detail.connection`."
               }
             ]
           }
@@ -6559,6 +6559,196 @@
           }
         },
         {
+          "name": "zn-menu-item",
+          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **getTextLabel()** - Returns a text label based on the contents of the menu item's default slot.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "type",
+              "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
+              "value": {
+                "type": "'normal' | 'checkbox'",
+                "default": "'normal'"
+              }
+            },
+            {
+              "name": "variant",
+              "description": "The item's visual style. A standalone item defaults to navigation styling;\na parent zn-menu sets this to `dropdown` or `shell` automatically.",
+              "value": {
+                "type": "'default' | 'dropdown' | 'shell'",
+                "default": "'default'"
+              }
+            },
+            {
+              "name": "checked",
+              "description": "Draws the item in a checked state.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "checked-position",
+              "value": { "type": "'left' | 'right'", "default": "'left'" }
+            },
+            {
+              "name": "value",
+              "description": "A unique value to store in the menu item. This can be used as a way to identify menu items when selected.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "loading",
+              "description": "Draws the menu item in a loading state.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "disabled",
+              "description": "Draws the menu item in a disabled state, preventing selection.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "color", "value": { "type": "string" } },
+            { "name": "href", "value": { "type": "string" } },
+            { "name": "data-path", "value": { "type": "string" } },
+            {
+              "name": "target",
+              "value": {
+                "type": "'_self' | '_blank' | '_parent' | '_top' | string"
+              }
+            },
+            {
+              "name": "data-target",
+              "value": { "type": "'modal' | 'slide' | string" }
+            },
+            {
+              "name": "rel",
+              "value": { "type": "string", "default": "'noreferrer noopener'" }
+            },
+            { "name": "gaid", "value": { "type": "string" } },
+            {
+              "name": "confirm",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "keep-open",
+              "description": "Leaves a containing dropdown open when this item is selected, whatever the dropdown's own setting.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "flush",
+              "description": "Removes all padding from the menu item.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "flush-x",
+              "description": "Removes horizontal (left/right) padding only. Ignored if flush is set.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "flush-y",
+              "description": "Removes vertical (top/bottom) padding only. Ignored if flush is set.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "no-border",
+              "description": "Removes the border from the menu item.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "active",
+              "description": "Marks the menu item as currently active/selected.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "defaultSlot", "type": "HTMLSlotElement" },
+              { "name": "menuItem", "type": "HTMLElement" },
+              {
+                "name": "type",
+                "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
+                "type": "'normal' | 'checkbox'"
+              },
+              {
+                "name": "variant",
+                "description": "The item's visual style. A standalone item defaults to navigation styling;\na parent zn-menu sets this to `dropdown` or `shell` automatically.",
+                "type": "'default' | 'dropdown' | 'shell'"
+              },
+              {
+                "name": "checked",
+                "description": "Draws the item in a checked state.",
+                "type": "boolean"
+              },
+              { "name": "checkedPosition", "type": "'left' | 'right'" },
+              {
+                "name": "value",
+                "description": "A unique value to store in the menu item. This can be used as a way to identify menu items when selected.",
+                "type": "string"
+              },
+              {
+                "name": "loading",
+                "description": "Draws the menu item in a loading state.",
+                "type": "boolean"
+              },
+              {
+                "name": "disabled",
+                "description": "Draws the menu item in a disabled state, preventing selection.",
+                "type": "boolean"
+              },
+              { "name": "color", "type": "string" },
+              { "name": "href", "type": "string" },
+              { "name": "dataPath", "type": "string" },
+              {
+                "name": "target",
+                "type": "'_self' | '_blank' | '_parent' | '_top' | string"
+              },
+              { "name": "dataTarget", "type": "'modal' | 'slide' | string" },
+              { "name": "rel", "type": "string" },
+              { "name": "gaid", "type": "string" },
+              { "name": "confirm", "type": "boolean" },
+              {
+                "name": "keepOpen",
+                "description": "Leaves a containing dropdown open when this item is selected, whatever the dropdown's own setting.",
+                "type": "boolean"
+              },
+              {
+                "name": "flush",
+                "description": "Removes all padding from the menu item.",
+                "type": "boolean"
+              },
+              {
+                "name": "flushX",
+                "description": "Removes horizontal (left/right) padding only. Ignored if flush is set.",
+                "type": "boolean"
+              },
+              {
+                "name": "flushY",
+                "description": "Removes vertical (top/bottom) padding only. Ignored if flush is set.",
+                "type": "boolean"
+              },
+              {
+                "name": "noBorder",
+                "description": "Removes the border from the menu item.",
+                "type": "boolean"
+              },
+              {
+                "name": "active",
+                "description": "Marks the menu item as currently active/selected.",
+                "type": "boolean"
+              }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-navbar",
           "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **expand** - Expanding action panels rendered alongside the navbar items.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters).\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -6939,196 +7129,6 @@
               { "name": "monitor", "type": "string" },
               { "name": "description", "type": "string" },
               { "name": "reRegisterTabs" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-menu-item",
-          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **getTextLabel()** - Returns a text label based on the contents of the menu item's default slot.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "type",
-              "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
-              "value": {
-                "type": "'normal' | 'checkbox'",
-                "default": "'normal'"
-              }
-            },
-            {
-              "name": "variant",
-              "description": "The item's visual style. A standalone item defaults to navigation styling;\na parent zn-menu sets this to `dropdown` or `shell` automatically.",
-              "value": {
-                "type": "'default' | 'dropdown' | 'shell'",
-                "default": "'default'"
-              }
-            },
-            {
-              "name": "checked",
-              "description": "Draws the item in a checked state.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "checked-position",
-              "value": { "type": "'left' | 'right'", "default": "'left'" }
-            },
-            {
-              "name": "value",
-              "description": "A unique value to store in the menu item. This can be used as a way to identify menu items when selected.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "loading",
-              "description": "Draws the menu item in a loading state.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "disabled",
-              "description": "Draws the menu item in a disabled state, preventing selection.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "color", "value": { "type": "string" } },
-            { "name": "href", "value": { "type": "string" } },
-            { "name": "data-path", "value": { "type": "string" } },
-            {
-              "name": "target",
-              "value": {
-                "type": "'_self' | '_blank' | '_parent' | '_top' | string"
-              }
-            },
-            {
-              "name": "data-target",
-              "value": { "type": "'modal' | 'slide' | string" }
-            },
-            {
-              "name": "rel",
-              "value": { "type": "string", "default": "'noreferrer noopener'" }
-            },
-            { "name": "gaid", "value": { "type": "string" } },
-            {
-              "name": "confirm",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "keep-open",
-              "description": "Leaves a containing dropdown open when this item is selected, whatever the dropdown's own setting.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "flush",
-              "description": "Removes all padding from the menu item.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "flush-x",
-              "description": "Removes horizontal (left/right) padding only. Ignored if flush is set.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "flush-y",
-              "description": "Removes vertical (top/bottom) padding only. Ignored if flush is set.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "no-border",
-              "description": "Removes the border from the menu item.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "active",
-              "description": "Marks the menu item as currently active/selected.",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "defaultSlot", "type": "HTMLSlotElement" },
-              { "name": "menuItem", "type": "HTMLElement" },
-              {
-                "name": "type",
-                "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
-                "type": "'normal' | 'checkbox'"
-              },
-              {
-                "name": "variant",
-                "description": "The item's visual style. A standalone item defaults to navigation styling;\na parent zn-menu sets this to `dropdown` or `shell` automatically.",
-                "type": "'default' | 'dropdown' | 'shell'"
-              },
-              {
-                "name": "checked",
-                "description": "Draws the item in a checked state.",
-                "type": "boolean"
-              },
-              { "name": "checkedPosition", "type": "'left' | 'right'" },
-              {
-                "name": "value",
-                "description": "A unique value to store in the menu item. This can be used as a way to identify menu items when selected.",
-                "type": "string"
-              },
-              {
-                "name": "loading",
-                "description": "Draws the menu item in a loading state.",
-                "type": "boolean"
-              },
-              {
-                "name": "disabled",
-                "description": "Draws the menu item in a disabled state, preventing selection.",
-                "type": "boolean"
-              },
-              { "name": "color", "type": "string" },
-              { "name": "href", "type": "string" },
-              { "name": "dataPath", "type": "string" },
-              {
-                "name": "target",
-                "type": "'_self' | '_blank' | '_parent' | '_top' | string"
-              },
-              { "name": "dataTarget", "type": "'modal' | 'slide' | string" },
-              { "name": "rel", "type": "string" },
-              { "name": "gaid", "type": "string" },
-              { "name": "confirm", "type": "boolean" },
-              {
-                "name": "keepOpen",
-                "description": "Leaves a containing dropdown open when this item is selected, whatever the dropdown's own setting.",
-                "type": "boolean"
-              },
-              {
-                "name": "flush",
-                "description": "Removes all padding from the menu item.",
-                "type": "boolean"
-              },
-              {
-                "name": "flushX",
-                "description": "Removes horizontal (left/right) padding only. Ignored if flush is set.",
-                "type": "boolean"
-              },
-              {
-                "name": "flushY",
-                "description": "Removes vertical (top/bottom) padding only. Ignored if flush is set.",
-                "type": "boolean"
-              },
-              {
-                "name": "noBorder",
-                "description": "Removes the border from the menu item.",
-                "type": "boolean"
-              },
-              {
-                "name": "active",
-                "description": "Marks the menu item as currently active/selected.",
-                "type": "boolean"
-              }
             ],
             "events": [
               {
@@ -8087,6 +8087,38 @@
           }
         },
         {
+          "name": "zn-progress-bar",
+          "description": "Progress bars provide visual feedback about the completion status of a task or process.\n\n---\n\n\n### **CSS Properties:**\n - **--zn-border-color** - The color of the progress bar background track. _(default: undefined)_\n- **--zn-progress-bar-color** - The color of the progress bar fill. _(default: undefined)_\n- **--zn-text-heading** - The color of the caption text. _(default: undefined)_\n- **--zn-text** - The color of the progress percentage and description text. _(default: undefined)_\n- **--zn-spacing-x-small** - The spacing between header/footer and the progress bar. _(default: undefined)_\n\n### **CSS Parts:**\n - **header** - The header container that contains the caption and progress text.\n- **caption** - The caption text element.\n- **progress** - The progress percentage text element.\n- **bar** - The SVG element containing the progress bar.\n- **track** - The background track of the progress bar.\n- **fill** - The filled portion of the progress bar indicating progress.\n- **footer** - The footer container that contains the description.\n- **info** - The description text element.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "caption", "value": { "type": "string | undefined" } },
+            {
+              "name": "color",
+              "value": { "type": "ProgressBarColor", "default": "'current'" }
+            },
+            {
+              "name": "description",
+              "value": { "type": "string | undefined" }
+            },
+            { "name": "value", "value": { "type": "number | undefined" } },
+            {
+              "name": "show-progress",
+              "value": { "type": "boolean | undefined" }
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "caption", "type": "string | undefined" },
+              { "name": "color", "type": "ProgressBarColor" },
+              { "name": "description", "type": "string | undefined" },
+              { "name": "value", "type": "number | undefined" },
+              { "name": "showProgress", "type": "boolean | undefined" }
+            ],
+            "events": []
+          }
+        },
+        {
           "name": "zn-progress-tile",
           "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -8168,38 +8200,6 @@
               { "name": "showValues", "type": "string[]" },
               { "name": "validationMessage", "type": "string" },
               { "name": "validity", "type": "ValidityState" }
-            ],
-            "events": []
-          }
-        },
-        {
-          "name": "zn-progress-bar",
-          "description": "Progress bars provide visual feedback about the completion status of a task or process.\n\n---\n\n\n### **CSS Properties:**\n - **--zn-border-color** - The color of the progress bar background track. _(default: undefined)_\n- **--zn-progress-bar-color** - The color of the progress bar fill. _(default: undefined)_\n- **--zn-text-heading** - The color of the caption text. _(default: undefined)_\n- **--zn-text** - The color of the progress percentage and description text. _(default: undefined)_\n- **--zn-spacing-x-small** - The spacing between header/footer and the progress bar. _(default: undefined)_\n\n### **CSS Parts:**\n - **header** - The header container that contains the caption and progress text.\n- **caption** - The caption text element.\n- **progress** - The progress percentage text element.\n- **bar** - The SVG element containing the progress bar.\n- **track** - The background track of the progress bar.\n- **fill** - The filled portion of the progress bar indicating progress.\n- **footer** - The footer container that contains the description.\n- **info** - The description text element.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "caption", "value": { "type": "string | undefined" } },
-            {
-              "name": "color",
-              "value": { "type": "ProgressBarColor", "default": "'current'" }
-            },
-            {
-              "name": "description",
-              "value": { "type": "string | undefined" }
-            },
-            { "name": "value", "value": { "type": "number | undefined" } },
-            {
-              "name": "show-progress",
-              "value": { "type": "boolean | undefined" }
-            }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              { "name": "caption", "type": "string | undefined" },
-              { "name": "color", "type": "ProgressBarColor" },
-              { "name": "description", "type": "string | undefined" },
-              { "name": "value", "type": "number | undefined" },
-              { "name": "showProgress", "type": "boolean | undefined" }
             ],
             "events": []
           }
@@ -8464,6 +8464,105 @@
           }
         },
         {
+          "name": "zn-rating",
+          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity()** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n- **help-text** - Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n- **--preview-color** - The color of the preview value. _(default: undefined)_\n- **--preview-size** - The font size of the preview value. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the symbols and help text.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **preview** - The value shown next to the symbols when `preview` is enabled.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "label", "value": { "type": "string" } },
+            {
+              "name": "help-text",
+              "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
+              "value": { "type": "string", "default": "''" }
+            },
+            { "name": "name", "value": { "type": "string" } },
+            { "name": "value", "value": { "type": "number", "default": "0" } },
+            { "name": "max", "value": { "type": "number", "default": "5" } },
+            {
+              "name": "precision",
+              "value": { "type": "number", "default": "1" }
+            },
+            {
+              "name": "readonly",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "disabled",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "preview",
+              "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "size",
+              "value": {
+                "type": "'small' | 'medium' | 'large'",
+                "default": "'medium'"
+              }
+            },
+            {
+              "name": "getSymbol",
+              "value": { "type": "(value: number) => string" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." },
+            {
+              "name": "help-text",
+              "description": "Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute."
+            }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "rating", "type": "HTMLElement" },
+              { "name": "symbols", "type": "HTMLElement" },
+              { "name": "label", "type": "string" },
+              {
+                "name": "helpText",
+                "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
+                "type": "string"
+              },
+              { "name": "name", "type": "string" },
+              { "name": "value", "type": "number" },
+              {
+                "name": "defaultValue",
+                "description": "The default value of the form control. Primarily used for resetting the form control.",
+                "type": "number"
+              },
+              { "name": "max", "type": "number" },
+              { "name": "precision", "type": "number" },
+              { "name": "readonly", "type": "boolean" },
+              { "name": "disabled", "type": "boolean" },
+              {
+                "name": "preview",
+                "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
+                "type": "boolean"
+              },
+              { "name": "size", "type": "'small' | 'medium' | 'large'" },
+              { "name": "getSymbol", "type": "(value: number) => string" },
+              {
+                "name": "validity",
+                "description": "Gets the validity state object"
+              },
+              {
+                "name": "validationMessage",
+                "description": "Gets the validation message"
+              }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-radio-group",
           "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--zn-radio-group-column-width** - Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -8605,105 +8704,6 @@
                 "type": "boolean"
               },
               { "name": "validity" },
-              {
-                "name": "validationMessage",
-                "description": "Gets the validation message"
-              }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-rating",
-          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity()** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n- **help-text** - Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n- **--preview-color** - The color of the preview value. _(default: undefined)_\n- **--preview-size** - The font size of the preview value. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the symbols and help text.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **preview** - The value shown next to the symbols when `preview` is enabled.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "label", "value": { "type": "string" } },
-            {
-              "name": "help-text",
-              "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
-              "value": { "type": "string", "default": "''" }
-            },
-            { "name": "name", "value": { "type": "string" } },
-            { "name": "value", "value": { "type": "number", "default": "0" } },
-            { "name": "max", "value": { "type": "number", "default": "5" } },
-            {
-              "name": "precision",
-              "value": { "type": "number", "default": "1" }
-            },
-            {
-              "name": "readonly",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "disabled",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "preview",
-              "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "size",
-              "value": {
-                "type": "'small' | 'medium' | 'large'",
-                "default": "'medium'"
-              }
-            },
-            {
-              "name": "getSymbol",
-              "value": { "type": "(value: number) => string" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." },
-            {
-              "name": "help-text",
-              "description": "Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute."
-            }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "rating", "type": "HTMLElement" },
-              { "name": "symbols", "type": "HTMLElement" },
-              { "name": "label", "type": "string" },
-              {
-                "name": "helpText",
-                "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
-                "type": "string"
-              },
-              { "name": "name", "type": "string" },
-              { "name": "value", "type": "number" },
-              {
-                "name": "defaultValue",
-                "description": "The default value of the form control. Primarily used for resetting the form control.",
-                "type": "number"
-              },
-              { "name": "max", "type": "number" },
-              { "name": "precision", "type": "number" },
-              { "name": "readonly", "type": "boolean" },
-              { "name": "disabled", "type": "boolean" },
-              {
-                "name": "preview",
-                "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
-                "type": "boolean"
-              },
-              { "name": "size", "type": "'small' | 'medium' | 'large'" },
-              { "name": "getSymbol", "type": "(value: number) => string" },
-              {
-                "name": "validity",
-                "description": "Gets the validity state object"
-              },
               {
                 "name": "validationMessage",
                 "description": "Gets the validation message"
@@ -9824,34 +9824,6 @@
           }
         },
         {
-          "name": "zn-simple-chart",
-          "description": "A simple, pre-styled bar chart.\n\n---\n",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "datasets",
-              "value": { "type": "{ data: number[] }[] | undefined" }
-            },
-            { "name": "labels", "value": { "type": "string[] | undefined" } },
-            {
-              "name": "enable-animations",
-              "value": { "type": "boolean | number", "default": "false" }
-            }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              {
-                "name": "datasets",
-                "type": "{ data: number[] }[] | undefined"
-              },
-              { "name": "labels", "type": "string[] | undefined" },
-              { "name": "enableAnimations", "type": "boolean | number" }
-            ],
-            "events": []
-          }
-        },
-        {
           "name": "zn-sidebar",
           "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -9890,6 +9862,87 @@
                 "description": "Emitted as an example."
               }
             ]
+          }
+        },
+        {
+          "name": "zn-simple-chart",
+          "description": "A simple, pre-styled bar chart.\n\n---\n",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "datasets",
+              "value": { "type": "{ data: number[] }[] | undefined" }
+            },
+            { "name": "labels", "value": { "type": "string[] | undefined" } },
+            {
+              "name": "enable-animations",
+              "value": { "type": "boolean | number", "default": "false" }
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              {
+                "name": "datasets",
+                "type": "{ data: number[] }[] | undefined"
+              },
+              { "name": "labels", "type": "string[] | undefined" },
+              { "name": "enableAnimations", "type": "boolean | number" }
+            ],
+            "events": []
+          }
+        },
+        {
+          "name": "zn-skeleton",
+          "description": "Skeleton loaders provide visual placeholders while content is loading, improving perceived performance and user experience.\n\n---\n",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "speed",
+              "description": "Animation speed for the shimmer effect. Default: \"3s\"",
+              "value": { "type": "string", "default": "'3s'" }
+            },
+            {
+              "name": "width",
+              "description": "Width of the skeleton element. Default: \"100%\"",
+              "value": { "type": "string", "default": "'100%'" }
+            },
+            {
+              "name": "height",
+              "description": "Height of the skeleton element. Default: \"20px\"",
+              "value": { "type": "string", "default": "'20px'" }
+            },
+            {
+              "name": "radius",
+              "description": "Border radius of the skeleton element. Default: \"4px\"",
+              "value": { "type": "string", "default": "'4px'" }
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              {
+                "name": "speed",
+                "description": "Animation speed for the shimmer effect. Default: \"3s\"",
+                "type": "string"
+              },
+              {
+                "name": "width",
+                "description": "Width of the skeleton element. Default: \"100%\"",
+                "type": "string"
+              },
+              {
+                "name": "height",
+                "description": "Height of the skeleton element. Default: \"20px\"",
+                "type": "string"
+              },
+              {
+                "name": "radius",
+                "description": "Border radius of the skeleton element. Default: \"4px\"",
+                "type": "string"
+              }
+            ],
+            "events": []
           }
         },
         {
@@ -10006,59 +10059,6 @@
                 "name": "disabled",
                 "description": "Listed, but not selectable.",
                 "type": "boolean"
-              }
-            ],
-            "events": []
-          }
-        },
-        {
-          "name": "zn-skeleton",
-          "description": "Skeleton loaders provide visual placeholders while content is loading, improving perceived performance and user experience.\n\n---\n",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "speed",
-              "description": "Animation speed for the shimmer effect. Default: \"3s\"",
-              "value": { "type": "string", "default": "'3s'" }
-            },
-            {
-              "name": "width",
-              "description": "Width of the skeleton element. Default: \"100%\"",
-              "value": { "type": "string", "default": "'100%'" }
-            },
-            {
-              "name": "height",
-              "description": "Height of the skeleton element. Default: \"20px\"",
-              "value": { "type": "string", "default": "'20px'" }
-            },
-            {
-              "name": "radius",
-              "description": "Border radius of the skeleton element. Default: \"4px\"",
-              "value": { "type": "string", "default": "'4px'" }
-            }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              {
-                "name": "speed",
-                "description": "Animation speed for the shimmer effect. Default: \"3s\"",
-                "type": "string"
-              },
-              {
-                "name": "width",
-                "description": "Width of the skeleton element. Default: \"100%\"",
-                "type": "string"
-              },
-              {
-                "name": "height",
-                "description": "Height of the skeleton element. Default: \"20px\"",
-                "type": "string"
-              },
-              {
-                "name": "radius",
-                "description": "Border radius of the skeleton element. Default: \"4px\"",
-                "type": "string"
               }
             ],
             "events": []
@@ -12668,6 +12668,86 @@
           }
         },
         {
+          "name": "zn-translation-grid",
+          "description": "Shows how far each language's translation has got, with a column per language to choose and enable it,\nand optionally a row per translated field.\n\n---\n\n\n### **Slots:**\n - _default_ - Help text under the legend.\n- **enable-{code}** - The control that enables the language with that code, such as a `zn-checkbox` in a form. The Enable row only shows when at least one is given.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "languages",
+              "description": "The languages, in column order, as a JSON array of `{code, label, status, href}`.",
+              "value": { "type": "TranslationGridLanguage[]", "default": "[]" }
+            },
+            {
+              "name": "fields",
+              "description": "A row per translated field, as a JSON array of `{key, label, cells}`; without it there is one Translation row.",
+              "value": { "type": "TranslationGridField[]", "default": "[]" }
+            },
+            {
+              "name": "selected",
+              "description": "The code of the language being edited.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "selected-field",
+              "description": "The key of the field being edited, when there are `fields`.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "link-target",
+              "description": "Where the language links open, as a console `data-target`; `self` replaces the content they sit in.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "source-label",
+              "description": "Names the source in the legend, such as \"English changed\".",
+              "value": { "type": "string", "default": "'English'" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "Help text under the legend." },
+            {
+              "name": "enable-{code}",
+              "description": "The control that enables the language with that code, such as a `zn-checkbox` in a form. The Enable row only shows when at least one is given."
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              {
+                "name": "languages",
+                "description": "The languages, in column order, as a JSON array of `{code, label, status, href}`.",
+                "type": "TranslationGridLanguage[]"
+              },
+              {
+                "name": "fields",
+                "description": "A row per translated field, as a JSON array of `{key, label, cells}`; without it there is one Translation row.",
+                "type": "TranslationGridField[]"
+              },
+              {
+                "name": "selected",
+                "description": "The code of the language being edited.",
+                "type": "string"
+              },
+              {
+                "name": "selectedField",
+                "description": "The key of the field being edited, when there are `fields`.",
+                "type": "string"
+              },
+              {
+                "name": "linkTarget",
+                "description": "Where the language links open, as a console `data-target`; `self` replaces the content they sit in.",
+                "type": "string"
+              },
+              {
+                "name": "sourceLabel",
+                "description": "Names the source in the legend, such as \"English changed\".",
+                "type": "string"
+              }
+            ],
+            "events": []
+          }
+        },
+        {
           "name": "zn-translation-group",
           "description": "Puts several zn-translations fields behind one language select, so a whole form's worth of copy is\ntranslated a language at a time.\n\n---\n\n\n### **Events:**\n - **zn-language-change** - Emitted when the active language changes. Detail: `{ language: string }`.\n\n### **Slots:**\n - _default_ - The `zn-translations` fields the select drives.\n- **actions** - Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on the right, as zinc's form action rows do; `align=\"start\"` moves one to the left. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.\n- **footer** - Content displayed in the grey panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n- **--zn-panel-header-padding** - Padding around the header row. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-footer-padding** - Padding around the footer row. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **form-group** - The form group holding the caption, the language select and the fields.\n- **actions** - The row of buttons at the bottom of the body.\n- **language-field** - The select that chooses the language every child is editing, in the group's chip slot.\n- **language-select** - The select itself.\n- **header** - The header region, when a caption or actions are given.\n- **header-content** - The padded row inside the header, forwarded from zn-header.\n- **footer** - The footer region, when the footer slot is filled.",
           "doc-url": "",
@@ -13068,86 +13148,6 @@
                 "description": "Emitted when a translation receives input."
               }
             ]
-          }
-        },
-        {
-          "name": "zn-translation-grid",
-          "description": "Shows how far each language's translation has got, with a column per language to choose and enable it,\nand optionally a row per translated field.\n\n---\n\n\n### **Slots:**\n - _default_ - Help text under the legend.\n- **enable-{code}** - The control that enables the language with that code, such as a `zn-checkbox` in a form. The Enable row only shows when at least one is given.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "languages",
-              "description": "The languages, in column order, as a JSON array of `{code, label, status, href}`.",
-              "value": { "type": "TranslationGridLanguage[]", "default": "[]" }
-            },
-            {
-              "name": "fields",
-              "description": "A row per translated field, as a JSON array of `{key, label, cells}`; without it there is one Translation row.",
-              "value": { "type": "TranslationGridField[]", "default": "[]" }
-            },
-            {
-              "name": "selected",
-              "description": "The code of the language being edited.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "selected-field",
-              "description": "The key of the field being edited, when there are `fields`.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "link-target",
-              "description": "Where the language links open, as a console `data-target`; `self` replaces the content they sit in.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "source-label",
-              "description": "Names the source in the legend, such as \"English changed\".",
-              "value": { "type": "string", "default": "'English'" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "Help text under the legend." },
-            {
-              "name": "enable-{code}",
-              "description": "The control that enables the language with that code, such as a `zn-checkbox` in a form. The Enable row only shows when at least one is given."
-            }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              {
-                "name": "languages",
-                "description": "The languages, in column order, as a JSON array of `{code, label, status, href}`.",
-                "type": "TranslationGridLanguage[]"
-              },
-              {
-                "name": "fields",
-                "description": "A row per translated field, as a JSON array of `{key, label, cells}`; without it there is one Translation row.",
-                "type": "TranslationGridField[]"
-              },
-              {
-                "name": "selected",
-                "description": "The code of the language being edited.",
-                "type": "string"
-              },
-              {
-                "name": "selectedField",
-                "description": "The key of the field being edited, when there are `fields`.",
-                "type": "string"
-              },
-              {
-                "name": "linkTarget",
-                "description": "Where the language links open, as a console `data-target`; `self` replaces the content they sit in.",
-                "type": "string"
-              },
-              {
-                "name": "sourceLabel",
-                "description": "Names the source in the legend, such as \"English changed\".",
-                "type": "string"
-              }
-            ],
-            "events": []
           }
         },
         {

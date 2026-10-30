@@ -6738,6 +6738,9 @@ declare module "components/editor/modules/dialog/dialog.component" {
         connectedCallback(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         private handleContentCloserClick;
+        /** Inserts the element named by the control's `editor-content-id`: a `<template>` as HTML, anything else as text.
+         * The control's form is submitted first, as inserting closes the dialog and detaches it. */
+        private insertContent;
         setContent(content: string): void;
         handleOpenChange(): void;
         private addOpenListeners;

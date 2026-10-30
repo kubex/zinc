@@ -10,9 +10,22 @@ export type TranslationStatus = 'source' | 'translated' | 'outdated' | 'missing'
 export interface TranslationGridLanguage {
   code: string;
   label: string;
-  status: TranslationStatus;
+  /** The language's status when there are no `fields`. */
+  status?: TranslationStatus;
   /** Where choosing the language goes, such as its translation form. */
   href?: string;
+}
+
+export interface TranslationGridCell {
+  status: TranslationStatus;
+  href?: string;
+}
+
+export interface TranslationGridField {
+  key: string;
+  label: string;
+  /** Each language's cell, keyed by language code. */
+  cells: Record<string, TranslationGridCell>;
 }
 
 const STATUS_LABELS: Record<TranslationStatus, string> = {
@@ -23,13 +36,15 @@ const STATUS_LABELS: Record<TranslationStatus, string> = {
 };
 
 /**
- * @summary Shows how far each language's translation has got, with a column per language to choose and enable it.
+ * @summary Shows how far each language's translation has got, with a column per language to choose and enable it,
+ * and optionally a row per translated field.
  * @documentation https://zinc.style/components/translation-grid
  * @status experimental
  * @since 1.0
  *
  * @slot - Help text under the legend.
  * @slot enable-{code} - The control that enables the language with that code, such as a `zn-checkbox` in a form.
+ *   The Enable row only shows when at least one is given.
  *
  * @csspart base - The component's base wrapper.
  */
@@ -39,8 +54,14 @@ export default class ZnTranslationGrid extends ZincElement {
   /** The languages, in column order, as a JSON array of `{code, label, status, href}`. */
   @property({type: Array}) languages: TranslationGridLanguage[] = [];
 
+  /** A row per translated field, as a JSON array of `{key, label, cells}`; without it there is one Translation row. */
+  @property({type: Array}) fields: TranslationGridField[] = [];
+
   /** The code of the language being edited. */
   @property({reflect: true}) selected = '';
+
+  /** The key of the field being edited, when there are `fields`. */
+  @property({attribute: 'selected-field', reflect: true}) selectedField = '';
 
   /** Where the language links open, as a console `data-target`; `self` replaces the content they sit in. */
   @property({attribute: 'link-target'}) linkTarget = '';
@@ -52,18 +73,43 @@ export default class ZnTranslationGrid extends ZincElement {
     return status === 'outdated' ? `${this.sourceLabel} changed` : STATUS_LABELS[status];
   }
 
-  private _link(language: TranslationGridLanguage, content: unknown, block: string, label: string, modifier = '') {
+  private _link(href: string | undefined, selected: boolean, content: unknown, block: string, label: string,
+                status?: TranslationStatus) {
     const classes = {
       [block]: true,
-      [`${block}--${modifier}`]: !!modifier,
-      [`${block}--selected`]: language.code === this.selected,
+      [`${block}--${status}`]: !!status,
+      [`${block}--selected`]: selected,
     };
-    if (!language.href || language.status === 'source') {
+    if (!href || status === 'source') {
       return html`<span class=${classMap(classes)} title=${label} aria-label=${label}>${content}</span>`;
     }
-    return html`<a class=${classMap(classes)} href=${language.href} title=${label} aria-label=${label}
+    return html`<a class=${classMap(classes)} href=${href} title=${label} aria-label=${label}
                    data-target=${this.linkTarget || nothing}
-                   aria-current=${language.code === this.selected ? 'true' : nothing}>${content}</a>`;
+                   aria-current=${selected ? 'true' : nothing}>${content}</a>`;
+  }
+
+  private _cell(language: TranslationGridLanguage, cell: TranslationGridCell | undefined, selected: boolean, row = '') {
+    const status = cell?.status ?? 'missing';
+    const name = row ? `${row}, ${language.label}` : language.label;
+    return html`<td>${this._link(cell?.href, selected, nothing, 'translation-grid__cell',
+      `${name}: ${this._statusLabel(status)}`, status)}</td>`;
+  }
+
+  private _rows() {
+    if (!this.fields.length) {
+      return html`
+        <tr>
+          <th scope="row">Translation</th>
+          ${this.languages.map(language => this._cell(language,
+            {status: language.status ?? 'missing', href: language.href}, language.code === this.selected))}
+        </tr>`;
+    }
+    return this.fields.map(field => html`
+      <tr>
+        <th scope="row">${field.label}</th>
+        ${this.languages.map(language => this._cell(language, field.cells[language.code],
+          field.key === this.selectedField && language.code === this.selected, field.label))}
+      </tr>`);
   }
 
   private _legend(status: TranslationStatus) {
@@ -83,24 +129,19 @@ export default class ZnTranslationGrid extends ZincElement {
               <th scope="col">Field</th>
               ${this.languages.map(language => html`
                 <th scope="col">
-                  ${this._link(language, language.code.toUpperCase(), 'translation-grid__code', language.label)}
+                  ${this._link(language.href, language.code === this.selected,
+                    language.code.toUpperCase(), 'translation-grid__code', language.label)}
                 </th>`)}
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <th scope="row">Enable</th>
-              ${this.languages.map(language => html`
-                <td><div class="translation-grid__slot"><slot name="enable-${language.code}"></slot></div></td>`)}
-            </tr>
-            <tr>
-              <th scope="row">Translation</th>
-              ${this.languages.map(language => html`
-                <td>
-                  ${this._link(language, nothing, 'translation-grid__cell',
-                    `${language.label}: ${this._statusLabel(language.status)}`, language.status)}
-                </td>`)}
-            </tr>
+            ${this.querySelector('[slot^="enable-"]') ? html`
+              <tr>
+                <th scope="row">Enable</th>
+                ${this.languages.map(language => html`
+                  <td><div class="translation-grid__slot"><slot name="enable-${language.code}"></slot></div></td>`)}
+              </tr>` : nothing}
+            ${this._rows()}
             </tbody>
           </table>
         </div>

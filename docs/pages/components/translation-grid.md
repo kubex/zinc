@@ -62,3 +62,25 @@ The legend calls an out-of-date translation "English changed". Set `source-label
   ]'>
 </zn-translation-grid>
 ```
+
+### A Row Per Field
+
+When a record has several translated fields, pass them as `fields`, a JSON array of `{key, label, cells}` where
+`cells` holds each language's `{status, href}` keyed by its code. Each field gets its own row, and `selected-field`
+with `selected` rings the cell being edited. Leave out the `enable-{code}` slots to drop the Enable row.
+
+```html:preview
+<zn-translation-grid
+  selected="de"
+  selected-field="content"
+  languages='[
+    {"code":"en","label":"English"},
+    {"code":"fr","label":"French","href":"#fr"},
+    {"code":"de","label":"German","href":"#de"}
+  ]'
+  fields='[
+    {"key":"name","label":"Display name","cells":{"en":{"status":"source"},"fr":{"status":"translated","href":"#name-fr"},"de":{"status":"missing","href":"#name-de"}}},
+    {"key":"content","label":"Content","cells":{"en":{"status":"source"},"fr":{"status":"outdated","href":"#content-fr"},"de":{"status":"missing","href":"#content-de"}}}
+  ]'>
+</zn-translation-grid>
+```

@@ -179,6 +179,8 @@
 }
 
 // A status item's icon takes the item's colour
+.menu-item--primary .menu-item__prefix::slotted(*),
+.menu-item--info .menu-item__prefix::slotted(*),
 .menu-item--error .menu-item__prefix::slotted(*),
 .menu-item--warning .menu-item__prefix::slotted(*),
 .menu-item--success .menu-item__prefix::slotted(*) {
@@ -320,8 +322,8 @@ zn-popup::part(popup) {
 // light accent such as velocity's neon lime).
 .menu-item--primary {
   --color: rgba(var(--zn-primary), 0.9);
-  --hover-color: rgb(var(--zn-color-on-primary, 255, 255, 255));
-  --hover-bg: rgba(var(--zn-primary), 0.9);
+  --hover-color: var(--zn-menu-item-primary-hover-color, rgb(var(--zn-color-on-primary, 255, 255, 255)));
+  --hover-bg: var(--zn-menu-item-primary-hover-background, rgba(var(--zn-primary), 0.9));
 }
 
 .menu-item--error {
@@ -332,8 +334,8 @@ zn-popup::part(popup) {
 
 .menu-item--info {
   --color: rgb(var(--zn-color-info));
-  --hover-color: rgb(var(--zn-color-on-info, 255, 255, 255));
-  --hover-bg: rgba(var(--zn-color-info), 0.9);
+  --hover-color: var(--zn-menu-item-info-hover-color, rgb(var(--zn-color-on-info, 255, 255, 255)));
+  --hover-bg: var(--zn-menu-item-info-hover-background, rgba(var(--zn-color-info), 0.9));
 }
 
 .menu-item--warning {

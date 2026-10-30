@@ -1,3 +1,4 @@
+import '../../events/zn-reposition';
 import {arrow, autoUpdate, computePosition, flip, offset, platform, shift, size} from '@floating-ui/dom';
 import {classMap} from 'lit/directives/class-map.js';
 import {html, unsafeCSS} from 'lit';

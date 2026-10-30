@@ -527,8 +527,12 @@ zn-style.zn-muted {
   pointer-events: none;
 }
 
-.table tr .table__head[draggable='true'] {
+.table tr .table__head--reorderable {
   cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
 }
 
 .table tr .table__head--dragging,

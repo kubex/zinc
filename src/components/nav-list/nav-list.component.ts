@@ -177,7 +177,6 @@ export default class ZnNavList extends ZincElement implements ZincFormControl {
     for (const item of this._items) {
       item.toggleAttribute('divide', this.divide);
       item.toggleAttribute('sortable', this.sortable);
-      item.draggable = this.sortable && !this.disabled && !this.reorderLocked(this._key(item));
       item.toggleAttribute('dragging', this._key(item) === dragged);
     }
   }
@@ -253,13 +252,9 @@ export default class ZnNavList extends ZincElement implements ZincFormControl {
     visible[next].focus();
   }
 
-  private _handleDragStart(e: DragEvent) {
+  private _handlePointerDown(e: PointerEvent) {
     const key = this._eventKey(e);
-    if (this.sortable && key !== null) this.reorderController.handleDragStart(e, key);
-  }
-
-  private _handleDragOver(e: DragEvent) {
-    this.reorderController.handleDragOver(e, this._eventKey(e));
+    if (this.sortable && key !== null) this.reorderController.handlePointerDown(e, key);
   }
 
   // --- Form control ---
@@ -308,10 +303,7 @@ export default class ZnNavList extends ZincElement implements ZincFormControl {
           role="tablist"
           aria-orientation="vertical"
           @keydown="${this._handleKeyDown}"
-          @dragstart="${this._handleDragStart}"
-          @dragover="${this._handleDragOver}"
-          @drop="${(e: DragEvent) => this.reorderController.handleDrop(e)}"
-          @dragend="${(e: DragEvent) => this.reorderController.handleDragEnd(e)}">
+          @pointerdown="${this._handlePointerDown}">
           <slot @slotchange="${this._handleSlotChange}"></slot>
           ${noMatches ? html`<p part="empty" class="nav-list__empty">${this.emptyLabel}</p>` : ''}
         </div>

@@ -535,8 +535,7 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
             })}
             role="listbox"
             aria-label=${this.label || 'Reorderable list'}
-            aria-orientation="vertical"
-            @dragover=${(e: DragEvent) => { if (e.target === e.currentTarget) this.reorderController.handleDragOver(e); }}>
+            aria-orientation="vertical">
             ${repeat(this._value, (key) => key, (key, index) => {
               const item = this._item(key);
               const locked = item?.hasAttribute('locked') ?? false;
@@ -556,11 +555,7 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
                 tabindex=${!this.disabled && key === tabStop ? '0' : '-1'}
                 aria-selected=${key === selectedKey ? 'true' : 'false'}
                 aria-label="${caption} - priority ${this.priorityStart + index}"
-                draggable=${this.disabled || locked ? 'false' : 'true'}
-                @dragstart=${(e: DragEvent) => this.reorderController.handleDragStart(e, key)}
-                @dragend=${(e: DragEvent) => this.reorderController.handleDragEnd(e)}
-                @dragover=${(e: DragEvent) => this.reorderController.handleDragOver(e, key)}
-                @drop=${(e: DragEvent) => this.reorderController.handleDrop(e)}
+                @pointerdown=${(e: PointerEvent) => this.reorderController.handlePointerDown(e, key)}
                 @focus=${() => { this._focusKey = key; }}
                 @click=${(e: MouseEvent) => this._handleItemClick(e, key)}
                 @keydown=${(e: KeyboardEvent) => this._handleKeyDown(e, key)}>

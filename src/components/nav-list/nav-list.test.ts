@@ -1,5 +1,6 @@
 import '../../../dist/zn.min.js';
 import {aTimeout, expect, fixture, html} from '@open-wc/testing';
+import {centre, drop, dragTo, startDrag} from '../../internal/test-drag';
 import type ZnNavItem from '../nav-item';
 import type ZnNavList from './nav-list.component';
 
@@ -130,17 +131,19 @@ describe('<zn-nav-list>', () => {
       const items = [...list.querySelectorAll<ZnNavItem>('zn-nav-item')];
       const placeholderRadius = () => getComputedStyle(items[1].shadowRoot!.querySelector('.nav-item')!).borderRadius;
 
-      items[1].dispatchEvent(new DragEvent('dragstart', {bubbles: true, composed: true, dataTransfer: new DataTransfer()}));
+      startDrag(items[1]);
       await aTimeout(50);
       expect(placeholderRadius()).to.equal('0px');
 
       const last = items[2].getBoundingClientRect();
-      items[2].dispatchEvent(new DragEvent('dragover', {bubbles: true, composed: true, cancelable: true, clientY: last.bottom - 1}));
+      dragTo(centre(items[2]).x, last.bottom - 1);
       await list.updateComplete;
       expect(placeholderRadius()).to.equal('0px 0px 12px 12px');
+      window.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape'}));
+      drop(0, 0);
     });
 
-    it('submits the order with the form and marks the items as draggable', async () => {
+    it('submits the order with the form and marks the items as sortable', async () => {
       const form = await fixture<HTMLFormElement>(html`
         <form>
           <zn-nav-list sortable name="order">
@@ -153,7 +156,7 @@ describe('<zn-nav-list>', () => {
       await list.updateComplete;
 
       const items = [...list.querySelectorAll<ZnNavItem>('zn-nav-item')];
-      expect(items.every(item => item.hasAttribute('sortable') && item.draggable)).to.be.true;
+      expect(items.every(item => item.hasAttribute('sortable'))).to.be.true;
       expect(order(form)).to.deep.equal(['a=1', 'b=2']);
       expect(list.querySelector('input')).to.not.exist;
     });
@@ -199,15 +202,15 @@ describe('<zn-nav-list>', () => {
 
       const [a, b] = [...list.querySelectorAll<ZnNavItem>('zn-nav-item')];
       const rect = b.getBoundingClientRect();
-      a.dispatchEvent(new DragEvent('dragstart', {bubbles: true, composed: true, dataTransfer: new DataTransfer()}));
-      b.dispatchEvent(new DragEvent('dragover', {bubbles: true, composed: true, cancelable: true, clientY: rect.bottom - 1}));
-      a.dispatchEvent(new DragEvent('dragend', {bubbles: true, composed: true}));
+      startDrag(a);
+      dragTo(centre(b).x, rect.bottom - 1);
+      drop(centre(b).x, rect.bottom - 1);
 
       expect([...list.querySelectorAll('zn-nav-item')].map(item => item.getAttribute('value'))).to.deep.equal(['b', 'a']);
       expect(reordered).to.equal(1);
     });
 
-    it('accepts a drop in the space between items, so letting go there keeps the new order', async () => {
+    it('restores the order when let go outside the list', async () => {
       const list = await fixture<ZnNavList>(html`
         <zn-nav-list sortable name="order">
           <zn-nav-item value="a">A</zn-nav-item>
@@ -215,13 +218,18 @@ describe('<zn-nav-list>', () => {
         </zn-nav-list>
       `);
       await list.updateComplete;
+      let reordered = 0;
+      list.addEventListener('zn-reorder', () => reordered++);
 
-      const a = list.querySelector<ZnNavItem>('zn-nav-item')!;
-      a.dispatchEvent(new DragEvent('dragstart', {bubbles: true, composed: true, dataTransfer: new DataTransfer()}));
-      const gap = new DragEvent('dragover', {bubbles: true, composed: true, cancelable: true});
-      list.shadowRoot!.querySelector('.nav-list__list')!.dispatchEvent(gap);
+      const [a, b] = [...list.querySelectorAll<ZnNavItem>('zn-nav-item')];
+      startDrag(a);
+      dragTo(centre(b).x, b.getBoundingClientRect().bottom - 1);
+      expect([...list.querySelectorAll('zn-nav-item')].map(item => item.getAttribute('value'))).to.deep.equal(['b', 'a']);
 
-      expect(gap.defaultPrevented).to.be.true;
+      const outside = list.getBoundingClientRect();
+      drop(outside.right + 50, outside.bottom + 50);
+      expect([...list.querySelectorAll('zn-nav-item')].map(item => item.getAttribute('value'))).to.deep.equal(['a', 'b']);
+      expect(reordered).to.equal(0);
     });
 
     it('leaves the order alone when not sortable', async () => {

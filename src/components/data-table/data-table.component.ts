@@ -548,29 +548,31 @@ export default class ZnDataTable extends ZincElement {
 
     const keys = this.reorderKeys();
     const heading = this.reorderRow(keys[Math.min(dropIndex, keys.length - 1)]);
+    const table = heading?.closest('table');
     const scroll = heading?.closest<HTMLElement>('.table__scroll');
-    if (!heading || !scroll) return nothing;
+    if (!heading || !table || !scroll) return nothing;
 
     const rect = heading.getBoundingClientRect();
-    const edge = dropIndex === keys.length ? rect.right : rect.left;
+    const bounds = table.getBoundingClientRect();
+    // Held inside the table: a line poking past its edge widens the scroller, which then scrolls under the drag
+    const half = 1; // half of .table__drop-line's width
+    const edge = Math.min(Math.max(dropIndex === keys.length ? rect.right : rect.left, bounds.left + half), bounds.right - half);
     const left = edge - scroll.getBoundingClientRect().left + scroll.scrollLeft;
     return html`<div class="table__drop-line" style=${styleMap({left: `${left}px`})}></div>`;
   }
 
-  private columnDragStart(e: DragEvent, header: HeaderConfig) {
-    // The browser's default ghost is the whole heading, which is unusable for a wide or wrapped one
-    if (e.dataTransfer) {
-      const ghost = document.createElement('div');
-      ghost.className = 'table__drag-ghost';
-      ghost.textContent = header.label ?? header.key;
-      // Safari only snapshots an element in the viewport; under the pointer it is covered by the ghost itself
-      ghost.style.left = `${e.clientX - 12}px`;
-      ghost.style.top = `${e.clientY - 16}px`;
-      this.shadowRoot!.append(ghost);
-      e.dataTransfer.setDragImage(ghost, 12, 16);
-      requestAnimationFrame(() => ghost.remove());
-    }
-    this.reorderController.handleDragStart(e, header.key);
+  /** @internal ReorderHost: a column lands anywhere over the table, not just its headings. */
+  reorderArea() {
+    return this.shadowRoot?.querySelector<HTMLElement>('.table__scroll table') ?? null;
+  }
+
+  /** @internal ReorderHost: the column's label, as a copy of the whole heading is unusable for a wide or wrapped one. */
+  reorderGhost(key: string) {
+    const header = (Object.values(this.headers) as HeaderConfig[]).find(h => h.key === key);
+    const ghost = document.createElement('div');
+    ghost.className = 'table__drag-ghost';
+    ghost.textContent = header?.label ?? key;
+    return ghost;
   }
 
   private columnCells(key: string) {
@@ -1168,9 +1170,7 @@ export default class ZnDataTable extends ZincElement {
         <table class="${classMap({
           'table': true,
           'with-hover': !this.unsortable && this.isSelectable(),
-        })}"
-          @dragover="${(e: DragEvent) => this.reorderController.handleDragOver(e, (e.target as Element).closest<HTMLElement>('[data-column]')?.dataset.column)}"
-          @drop="${(e: DragEvent) => this.reorderController.handleDrop(e)}">
+        })}">
           <thead ${ref(this.observeHead)}>
           <tr>
             ${showCheckboxes ? this.renderSelectAllCheckbox() : nothing}
@@ -1892,19 +1892,18 @@ export default class ZnDataTable extends ZincElement {
           'table__head--last': header.key === lastVisibleHeaderKey,
           'table__head--hidden': Object.values(this.hiddenHeaders).includes(header.key),
           'table__head--dragging': header.key === this.reorderController.draggedKey,
+          'table__head--reorderable': reorderable,
 
           [`table__head--${header.align}`]: !!header.align,
         })}"
         tabindex="${ifDefined(sortable || reorderable ? '0' : undefined)}"
-        draggable="${reorderable ? 'true' : 'false'}"
         aria-sort="${ifDefined(sortable ? this.sortState(header.key) : undefined)}"
         aria-description="${ifDefined(reorderable ? 'Alt + arrow keys to move column' : undefined)}"
         @click="${sortable ? this.updateSort(header.key) : undefined}"
         @keydown="${(e: KeyboardEvent) => {
           if (!this.reorderController.handleKeyDown(e, header.key) && sortable) sortKeyHandler(this.updateSort(header.key))(e);
         }}"
-        @dragstart="${(e: DragEvent) => this.columnDragStart(e, header)}"
-        @dragend="${(e: DragEvent) => this.reorderController.handleDragEnd(e)}">
+        @pointerdown="${reorderable ? (e: PointerEvent) => this.reorderController.handlePointerDown(e, header.key) : undefined}">
         <div>
           ${header.label}
           ${sortable ? renderSortIcon(this.sortState(header.key)) : nothing}

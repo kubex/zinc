@@ -1,5 +1,6 @@
 import '../../../dist/zn.min.js';
 import { expect, fixture, html, waitUntil } from '@open-wc/testing';
+import { centre, drop, dragTo, startDrag } from '../../internal/test-drag';
 import { render } from 'lit';
 import type ZnDataTable from './data-table.component';
 
@@ -138,14 +139,14 @@ describe('<zn-data-table>', () => {
     const cells = () => [...root.querySelectorAll('tbody tr.table__row--data td')].map(td => td.textContent!.trim());
     const line = () => root.querySelector('.table__drop-line')?.getBoundingClientRect();
     const dragOver = async (target: Element, x: number) => {
-      target.dispatchEvent(new DragEvent('dragover', {bubbles: true, cancelable: true, clientX: x}));
+      dragTo(x, centre(target).y);
       await el.updateComplete;
     };
     await waitUntil(() => order().length === 3);
     let reordered = 0;
     el.addEventListener('zn-reorder', () => reordered++);
 
-    heading('a').dispatchEvent(new DragEvent('dragstart', {dataTransfer: new DataTransfer()}));
+    startDrag(heading('a'));
     const b = heading('b').getBoundingClientRect();
     await dragOver(heading('b'), b.left + 10);
     expect(line(), 'the boundary the column already sits at').to.be.undefined;
@@ -153,17 +154,41 @@ describe('<zn-data-table>', () => {
     // Over a body cell, so the whole column is a drop target
     const c = heading('c').getBoundingClientRect();
     await dragOver(root.querySelector('td[data-column="c"]')!, c.right - 1);
-    expect(line()!.left + line()!.width / 2).to.be.closeTo(c.right, 1);
+    expect(line()!.left + line()!.width / 2).to.be.closeTo(c.right - 1, 1);
+    expect(line()!.right, 'held inside the table, so it never widens the scroller').to.be.at.most(c.right + 0.5);
     expect(line()!.height, 'down the heading and the body').to.be.greaterThan(c.height);
     expect(order(), 'nothing moves until the drop').to.deep.equal(['a', 'b', 'c']);
 
-    heading('c').dispatchEvent(new DragEvent('drop', {bubbles: true, cancelable: true}));
-    heading('a').dispatchEvent(new DragEvent('dragend'));
+    drop(c.right - 1, centre(heading('c')).y);
     await el.updateComplete;
     expect(order()).to.deep.equal(['b', 'c', 'a']);
     expect(cells()).to.deep.equal(['b1', 'c1', 'a1']);
     expect(line()).to.be.undefined;
     expect(reordered).to.equal(1);
+  });
+
+  it('shows a closed hand over the page while dragging, and drops without sorting', async () => {
+    const el = await fixture<ZnDataTable>(html`
+      <zn-data-table
+        headers='{"a": {"key": "a", "label": "A"}, "b": {"key": "b", "label": "B"}}'
+        .data=${[{id: '1', cells: [{text: 'a1', column: 'a'}, {text: 'b1', column: 'b'}]}]}>
+      </zn-data-table>`);
+    const root = el.shadowRoot!;
+    const heading = (key: string) => root.querySelector<HTMLElement>(`th[data-column="${key}"]`)!;
+    await waitUntil(() => heading('b'));
+
+    startDrag(heading('a'));
+    const b = heading('b').getBoundingClientRect();
+    dragTo(b.right - 1, centre(heading('b')).y);
+    const under = root.elementFromPoint(b.right - 1, centre(heading('b')).y)!;
+    expect(getComputedStyle(under).cursor).to.equal('grabbing');
+    expect(root.querySelector('.table__drag-ghost')!.textContent).to.equal('A');
+
+    drop(b.right - 1, centre(heading('b')).y);
+    heading('a').click();
+    await el.updateComplete;
+    expect(root.querySelector('.table__drag-ghost')).to.not.exist;
+    expect(heading('a').getAttribute('aria-sort'), 'the click that ends a drag does not sort').to.not.equal('ascending');
   });
 
   it('does not offer to drag a lone column', async () => {
@@ -172,7 +197,7 @@ describe('<zn-data-table>', () => {
       </zn-data-table>`);
     await waitUntil(() => el.shadowRoot!.querySelector('th[data-column="a"]'));
 
-    expect(el.shadowRoot!.querySelector('th[data-column="a"]')!.getAttribute('draggable')).to.equal('false');
+    expect(el.shadowRoot!.querySelector('th[data-column="a"]')!.classList.contains('table__head--reorderable')).to.be.false;
   });
 
   it('moves a column with Alt + arrow keys', async () => {

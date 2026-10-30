@@ -128,8 +128,7 @@
   flex: 1;
   min-width: 0;
   overflow: hidden;
-  // Prevent slotted content from capturing its own drag events,
-  // which would override the item-level draggable behaviour
+  // A press anywhere on the content grabs the row, not the content
   pointer-events: none;
 
   ::slotted(*) {

@@ -1,5 +1,6 @@
 import '../../../dist/zn.min.js';
 import {aTimeout, expect, fixture, html} from '@open-wc/testing';
+import {centre, drop, dragTo, startDrag} from '../../internal/test-drag';
 
 describe('<zn-priority-list>', () => {
   it('should render a component', async () => {
@@ -176,7 +177,10 @@ describe('<zn-priority-list>', () => {
 
     await el.updateComplete;
     const item = el.shadowRoot.querySelector('.priority-list__item');
-    expect(item.getAttribute('draggable')).to.equal('false');
+    startDrag(item);
+    await el.updateComplete;
+    expect(el.shadowRoot.querySelector('.priority-list__item--dragging')).to.not.exist;
+    drop(0, 0);
     expect(item.getAttribute('tabindex')).to.equal('-1');
   });
 
@@ -282,7 +286,10 @@ describe('<zn-priority-list>', () => {
     await el.updateComplete;
 
     expect(el.value).to.deep.equal(['a', 'b', 'c']);
-    expect(items[2].getAttribute('draggable')).to.equal('false');
+    startDrag(items[2]);
+    await el.updateComplete;
+    expect(el.shadowRoot.querySelector('.priority-list__item--dragging')).to.not.exist;
+    drop(0, 0);
   });
 
   it('keeps one tab stop and moves focus with plain arrows', async () => {
@@ -330,17 +337,9 @@ describe('<zn-priority-list>', () => {
   });
 
   describe('dragging', () => {
-    const drag = (target: HTMLElement, type: string, dataTransfer: DataTransfer, edge?: 'top' | 'bottom') => {
+    const over = (target: HTMLElement, edge: 'top' | 'bottom') => {
       const rect = target.getBoundingClientRect();
-      const clientY = edge === 'top' ? rect.top + 1 : rect.bottom - 1;
-      target.dispatchEvent(new DragEvent(type, {dataTransfer, clientY, bubbles: true, cancelable: true}));
-    };
-
-    // A constructed DataTransfer ignores writes to dropEffect, which the browser sets as a drag ends
-    const end = (target: HTMLElement, dropEffect: DataTransfer['dropEffect']) => {
-      const event = new DragEvent('dragend', {bubbles: true});
-      Object.defineProperty(event, 'dataTransfer', {value: {dropEffect}});
-      target.dispatchEvent(event);
+      dragTo(centre(target).x, edge === 'top' ? rect.top + 1 : rect.bottom - 1);
     };
 
     const setup = async () => {
@@ -360,32 +359,57 @@ describe('<zn-priority-list>', () => {
 
     it('swaps only once the pointer crosses the target midpoint', async () => {
       const {el, reorders, rows} = await setup();
-      const dt = new DataTransfer();
 
-      drag(rows()[0], 'dragstart', dt);
-      drag(rows()[1], 'dragover', dt, 'top');
+      startDrag(rows()[0]);
+      over(rows()[1], 'top');
       expect(el.value).to.deep.equal(['a', 'b', 'c']);
 
-      drag(rows()[1], 'dragover', dt, 'bottom');
+      over(rows()[1], 'bottom');
       expect(el.value).to.deep.equal(['b', 'a', 'c']);
       await el.updateComplete;
 
-      end(rows()[1], 'move');
+      const {x, y} = centre(rows()[1]);
+      drop(x, y);
       expect(reorders).to.deep.equal([['b', 'a', 'c']]);
     });
 
-    it('restores the order and stays silent when the drag is cancelled', async () => {
+    it('restores the order and stays silent when let go outside the list', async () => {
       const {el, reorders, rows} = await setup();
-      const dt = new DataTransfer();
 
-      drag(rows()[0], 'dragstart', dt);
-      drag(rows()[2], 'dragover', dt, 'bottom');
+      startDrag(rows()[0]);
+      over(rows()[2], 'bottom');
       expect(el.value).to.deep.equal(['b', 'c', 'a']);
       await el.updateComplete;
 
-      end(rows()[2], 'none');
+      const list = el.shadowRoot.querySelector('.priority-list').getBoundingClientRect();
+      drop(list.right + 50, list.bottom + 50);
       expect(el.value).to.deep.equal(['a', 'b', 'c']);
       expect(reorders).to.be.empty;
+    });
+
+    it('restores the order when Escape is pressed mid-drag', async () => {
+      const {el, reorders, rows} = await setup();
+
+      startDrag(rows()[0]);
+      over(rows()[1], 'bottom');
+      expect(el.value).to.deep.equal(['b', 'a', 'c']);
+      await el.updateComplete;
+
+      window.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape'}));
+      await el.updateComplete;
+      expect(el.value).to.deep.equal(['a', 'b', 'c']);
+      expect(el.shadowRoot.querySelector('.priority-list__item--dragging')).to.not.exist;
+      expect(reorders).to.be.empty;
+    });
+
+    it('treats a press without movement as a click', async () => {
+      const {el, rows} = await setup();
+      const {x, y} = centre(rows()[0]);
+      rows()[0].dispatchEvent(new PointerEvent('pointerdown', {pointerId: 1, button: 0, clientX: x, clientY: y, bubbles: true, composed: true}));
+      dragTo(x + 2, y);
+      await el.updateComplete;
+      expect(el.shadowRoot.querySelector('.priority-list__item--dragging')).to.not.exist;
+      drop(x + 2, y);
     });
   });
 
@@ -476,13 +500,15 @@ describe('<zn-priority-list>', () => {
     const rows = () => [...el.shadowRoot!.querySelectorAll<HTMLElement>('.priority-list__item')];
     const placeholderRadius = () => getComputedStyle(el.shadowRoot!.querySelector('.priority-list__item--dragging')!).borderRadius;
 
-    rows()[1].dispatchEvent(new DragEvent('dragstart', {bubbles: true, composed: true, dataTransfer: new DataTransfer()}));
+    startDrag(rows()[1]);
     await aTimeout(50);
     expect(placeholderRadius()).to.equal('0px');
 
     const top = rows()[0].getBoundingClientRect();
-    rows()[0].dispatchEvent(new DragEvent('dragover', {bubbles: true, composed: true, cancelable: true, clientY: top.top + 1}));
+    dragTo(centre(rows()[0]).x, top.top + 1);
     await el.updateComplete;
     expect(placeholderRadius()).to.equal('12px 12px 0px 0px');
+    window.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape'}));
+    drop(0, 0);
   });
 });

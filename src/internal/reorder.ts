@@ -19,6 +19,12 @@ export interface ReorderHost extends ReactiveControllerHost, HTMLElement {
   /** Whether an item is pinned where it is; nothing can move past it either. */
   reorderLocked?: (key: string) => boolean;
 
+  /** Where the pointer must be for a drag to land; letting go outside it cancels. Defaults to the rows' parent. */
+  reorderArea?: () => HTMLElement | null;
+
+  /** The element that follows the pointer while dragging. Defaults to a copy of the item's row. */
+  reorderGhost?: (key: string) => HTMLElement;
+
   /** Submits the form after each reorder when set: to this URL, or the form's own action when empty. */
   formAction?: string;
 
@@ -50,12 +56,28 @@ export interface ReorderOptions {
 
 type ReorderEvent = 'zn-change' | 'zn-reorder';
 
+interface Point {
+  x: number;
+  y: number;
+}
+
+// How far a mouse or pen moves before a press becomes a drag, so a click still clicks
+const DRAG_THRESHOLD = 4;
+// How long a touch holds still before it drags; moving sooner scrolls instead
+const TOUCH_HOLD = 300;
+// The band at a scroller's edge that scrolls it while dragging
+const SCROLL_EDGE = 40;
+const SCROLL_SPEED = 12;
+
 /**
- * Drag-and-drop and keyboard reordering for a keyed list, with the change announced through `zn-change` and
- * `zn-reorder` and, when the host has a `formaction`, submitted with its form.
+ * Pointer and keyboard reordering for a keyed list, with the change announced through `zn-change` and `zn-reorder`
+ * and, when the host has a `formaction`, submitted with its form.
+ *
+ * Dragging runs on pointer events rather than native drag and drop, which hands the cursor to the browser for the
+ * whole drag.
  */
 export class ReorderController implements ReactiveController {
-  /** The item being dragged, styled as its placeholder. Set a frame after the drag starts. */
+  /** The item being dragged, styled as its placeholder. */
   draggedKey: string | null = null;
 
   /** Whether a drag is under way, for transitions while items shift. */
@@ -70,6 +92,13 @@ export class ReorderController implements ReactiveController {
   private startOrder: string[] = [];
   private sliding = 0;
   private listOverflow = '';
+  private press: {key: string; pointerId: number; touch: boolean; origin: Point; hold?: number} | null = null;
+  private point: Point = {x: 0, y: 0};
+  private ghost: HTMLElement | null = null;
+  private ghostOffset: Point = {x: 0, y: 0};
+  private shield: HTMLElement | null = null;
+  private scroller: Element | null = null;
+  private scrollFrame = 0;
 
   constructor(host: ReorderHost, options: ReorderOptions = {}) {
     this.host = host;
@@ -78,7 +107,12 @@ export class ReorderController implements ReactiveController {
   }
 
   hostConnected() {
-    // Nothing to set up; the host wires the event handlers to its own rows.
+    // Nothing to set up; the host wires pointerdown to its own rows.
+  }
+
+  hostDisconnected() {
+    if (this.isDragging) this.endDrag(true);
+    this.release();
   }
 
   private get horizontal() {
@@ -154,42 +188,166 @@ export class ReorderController implements ReactiveController {
     return true;
   }
 
-  handleDragStart(event: DragEvent, key: string) {
-    if (this.host.disabled || this.isLocked(key)) {
-      event.preventDefault();
+  /** Starts tracking a press on an item; it becomes a drag once the pointer moves, or a touch holds still. */
+  handlePointerDown(event: PointerEvent, key: string) {
+    if (event.button !== 0 || this.press || this.isDragging) return;
+    if (this.host.disabled || this.isLocked(key) || !this.host.reorderRow(key)) return;
+    if (event.composedPath().some(el => el instanceof HTMLElement && el.matches('input, textarea, select, [contenteditable]'))) return;
+
+    const touch = event.pointerType === 'touch';
+    this.point = {x: event.clientX, y: event.clientY};
+    this.press = {key, pointerId: event.pointerId, touch, origin: this.point};
+    if (touch) this.press.hold = window.setTimeout(() => this.beginDrag(), TOUCH_HOLD);
+
+    window.addEventListener('pointermove', this.onPointerMove, true);
+    window.addEventListener('pointerup', this.onPointerUp, true);
+    window.addEventListener('pointercancel', this.onPointerCancel, true);
+    window.addEventListener('touchmove', this.onTouchMove, {capture: true, passive: false});
+    // A link or image in the row would otherwise start a native drag and take the pointer
+    window.addEventListener('dragstart', this.onNativeDragStart, true);
+  }
+
+  private onPointerMove = (event: PointerEvent) => {
+    if (event.pointerId !== this.press?.pointerId) return;
+    this.point = {x: event.clientX, y: event.clientY};
+
+    if (!this.isDragging) {
+      const {origin, touch} = this.press;
+      if (Math.hypot(this.point.x - origin.x, this.point.y - origin.y) < DRAG_THRESHOLD) return;
+      // A touch that moves before the hold is a scroll
+      if (touch) this.release();
+      else this.beginDrag();
       return;
     }
 
+    this.placeGhost();
+    this.dragOver();
+  };
+
+  private onPointerUp = (event: PointerEvent) => {
+    if (event.pointerId !== this.press?.pointerId) return;
+    this.point = {x: event.clientX, y: event.clientY};
+    if (this.isDragging) {
+      this.endDrag(!this.inArea());
+      // The release still clicks, which would sort a column or select an item
+      window.addEventListener('click', swallow, {capture: true, once: true});
+      setTimeout(() => window.removeEventListener('click', swallow, true));
+    }
+    this.release();
+  };
+
+  private onPointerCancel = (event: PointerEvent) => {
+    if (event.pointerId !== this.press?.pointerId) return;
+    if (this.isDragging) this.endDrag(true);
+    this.release();
+  };
+
+  private onTouchMove = (event: TouchEvent) => {
+    if (this.isDragging) event.preventDefault();
+  };
+
+  private onNativeDragStart = (event: DragEvent) => {
+    event.preventDefault();
+  };
+
+  private onKeyDown = (event: KeyboardEvent) => {
+    if (event.key !== 'Escape') return;
+    event.preventDefault();
+    event.stopPropagation();
+    this.endDrag(true);
+    this.release();
+  };
+
+  private beginDrag() {
+    const key = this.press?.key;
+    const row = key ? this.host.reorderRow(key) : null;
+    if (!key || !row) {
+      this.release();
+      return;
+    }
+    window.clearTimeout(this.press!.hold);
+
+    const rect = row.getBoundingClientRect();
+    const custom = this.host.reorderGhost?.(key);
+    const ghost = custom ?? snapshot(row);
+    this.ghostOffset = custom ? {x: 12, y: 16} : {x: this.point.x - rect.left, y: this.point.y - rect.top};
+    Object.assign(ghost.style, {
+      position: 'fixed',
+      left: '0',
+      top: '0',
+      margin: '0',
+      zIndex: '2147483647',
+      pointerEvents: 'none',
+    });
+    if (!custom) {
+      Object.assign(ghost.style, {
+        width: `${rect.width}px`,
+        height: `${rect.height}px`,
+        boxSizing: 'border-box',
+        background: 'rgb(var(--zn-panel, 255, 255, 255))',
+        boxShadow: 'var(--zn-shadow-large, 0 8px 24px rgba(13, 23, 56, 0.16))',
+        borderRadius: getComputedStyle(row).borderRadius,
+        opacity: '0.95',
+      });
+    }
+    ghost.inert = true;
+
+    // Covers the page while dragging, so the cursor stays a closed hand over everything and nothing else reacts
+    const shield = document.createElement('div');
+    Object.assign(shield.style, {position: 'fixed', inset: '0', zIndex: '2147483646', cursor: 'grabbing', touchAction: 'none'});
+
+    // Inside the row's own tree so its styles reach the copy, and a modal dialog around it doesn't make it inert
+    const root = row.getRootNode();
+    const container = root instanceof ShadowRoot ? root : document.body;
+    container.append(shield, ghost);
+    this.ghost = ghost;
+    this.shield = shield;
+    this.placeGhost();
+
+    getSelection()?.removeAllRanges();
     this.dragKey = key;
+    this.draggedKey = key;
     this.startOrder = this.keys();
     this.isDragging = true;
+    this.scroller = scrollerOf(this.area(), this.horizontal);
+    this.scrollFrame = requestAnimationFrame(this.autoScroll);
+    window.addEventListener('keydown', this.onKeyDown, true);
     this.host.requestUpdate();
-    // Styling the row as a placeholder before the browser snapshots it would fade the drag image too
-    requestAnimationFrame(() => {
-      if (this.isDragging) {
-        this.draggedKey = key;
-        this.host.requestUpdate();
-      }
-    });
+  }
 
-    if (event.dataTransfer) {
-      event.dataTransfer.effectAllowed = 'move';
-      event.dataTransfer.setData('text/plain', key);
-    }
+  private placeGhost() {
+    if (!this.ghost) return;
+    this.ghost.style.transform = `translate(${this.point.x - this.ghostOffset.x}px, ${this.point.y - this.ghostOffset.y}px)`;
+  }
+
+  private area() {
+    return this.host.reorderArea?.() ?? this.host.reorderRow(this.keys()[0])?.parentElement ?? null;
+  }
+
+  private inArea() {
+    const rect = this.area()?.getBoundingClientRect();
+    return !!rect && this.point.x >= rect.left && this.point.x <= rect.right && this.point.y >= rect.top && this.point.y <= rect.bottom;
+  }
+
+  // The item whose span along the axis holds the pointer; none in a gap between items or outside the list
+  private hoveredKey() {
+    if (!this.inArea()) return null;
+    const at = this.horizontal ? this.point.x : this.point.y;
+    return this.keys().find(key => {
+      const rect = this.host.reorderRow(key)?.getBoundingClientRect();
+      if (!rect) return false;
+      return this.horizontal ? at >= rect.left && at < rect.right : at >= rect.top && at < rect.bottom;
+    }) ?? null;
   }
 
   /**
-   * Moves the dragged item to the hovered one's place, once the pointer crosses that item's midpoint. Pass no key
-   * for the space between items: the drop is still accepted there, so letting go in a gap keeps the new order.
+   * Moves the dragged item to the hovered one's place, once the pointer crosses that item's midpoint. In a gap
+   * between items nothing moves, and letting go there keeps the order so far.
    */
-  handleDragOver(event: DragEvent, key?: string | null) {
-    if (!this.isDragging) return;
-    event.preventDefault();
-    if (event.dataTransfer) {
-      event.dataTransfer.dropEffect = 'move';
-    }
+  private dragOver() {
+    const key = this.hoveredKey();
     if (this.options.indicator) {
-      this.trackDropIndex(event, key);
+      this.trackDropIndex(key);
       return;
     }
     if (!key || !this.dragKey || this.dragKey === key) return;
@@ -197,51 +355,45 @@ export class ReorderController implements ReactiveController {
     const keys = this.keys();
     const fromIndex = keys.indexOf(this.dragKey);
     const toIndex = keys.indexOf(key);
-    const row = this.host.reorderRow(key);
-    if (fromIndex === -1 || toIndex === -1 || !row) return;
+    if (fromIndex === -1 || toIndex === -1) return;
 
     // Rows of different sizes would otherwise flip back and forth
-    const rect = row.getBoundingClientRect();
-    const pastMidpoint = this.horizontal
-      ? event.clientX > rect.left + rect.width / 2
-      : event.clientY > rect.top + rect.height / 2;
-    if (fromIndex < toIndex !== pastMidpoint) return;
+    if (fromIndex < toIndex !== this.pastMidpoint(key)) return;
     if (!this.canMove(fromIndex, toIndex)) return;
 
     this.reorder(moved(keys, fromIndex, toIndex));
   }
 
-  handleDrop(event: DragEvent) {
-    // Dragover has already moved the item into place, or with `indicator` it moves now; dragend announces the change
-    event.preventDefault();
-    if (this.dropIndex === null || !this.dragKey) return;
-
-    const fromIndex = this.keys().indexOf(this.dragKey);
-    this.reorder(moved(this.keys(), fromIndex, this.dropTarget(fromIndex, this.dropIndex)));
+  private pastMidpoint(key: string) {
+    const rect = this.host.reorderRow(key)!.getBoundingClientRect();
+    return this.horizontal
+      ? this.point.x > rect.left + rect.width / 2
+      : this.point.y > rect.top + rect.height / 2;
   }
 
-  // The nearest boundary of the hovered item; a gap between items keeps the last one
-  private trackDropIndex(event: DragEvent, key?: string | null) {
-    if (!key || !this.dragKey) return;
+  // The nearest boundary of the hovered item; a gap between items keeps the last one, and leaving the list clears it
+  private trackDropIndex(key: string | null) {
+    if (!this.dragKey) return;
+    if (!key) {
+      if (this.inArea()) return;
+      this.setDropIndex(null);
+      return;
+    }
 
     const keys = this.keys();
     const fromIndex = keys.indexOf(this.dragKey);
     const index = keys.indexOf(key);
-    const row = this.host.reorderRow(key);
-    if (fromIndex === -1 || index === -1 || !row) return;
+    if (fromIndex === -1 || index === -1) return;
 
-    const rect = row.getBoundingClientRect();
-    const pastMidpoint = this.horizontal
-      ? event.clientX > rect.left + rect.width / 2
-      : event.clientY > rect.top + rect.height / 2;
-    const boundary = index + (pastMidpoint ? 1 : 0);
+    const boundary = index + (this.pastMidpoint(key) ? 1 : 0);
     const toIndex = this.dropTarget(fromIndex, boundary);
-    const dropIndex = toIndex !== fromIndex && this.canMove(fromIndex, toIndex) ? boundary : null;
+    this.setDropIndex(toIndex !== fromIndex && this.canMove(fromIndex, toIndex) ? boundary : null);
+  }
 
-    if (dropIndex !== this.dropIndex) {
-      this.dropIndex = dropIndex;
-      this.host.requestUpdate();
-    }
+  private setDropIndex(dropIndex: number | null) {
+    if (dropIndex === this.dropIndex) return;
+    this.dropIndex = dropIndex;
+    this.host.requestUpdate();
   }
 
   // The index the item moves to once taken out from before the boundary
@@ -249,24 +401,69 @@ export class ReorderController implements ReactiveController {
     return boundary > fromIndex ? boundary - 1 : boundary;
   }
 
-  handleDragEnd(event: DragEvent) {
+  // Scrolls the list's scroller while the pointer sits in the band at either end of it
+  private autoScroll = () => {
     if (!this.isDragging) return;
+    this.scrollFrame = requestAnimationFrame(this.autoScroll);
+
+    const scroller = this.scroller;
+    if (!scroller) return;
+    const page = scroller === document.scrollingElement;
+    const rect = page
+      ? {left: 0, top: 0, right: innerWidth, bottom: innerHeight}
+      : scroller.getBoundingClientRect();
+    const [at, start, end] = this.horizontal
+      ? [this.point.x, rect.left, rect.right]
+      : [this.point.y, rect.top, rect.bottom];
+
+    const into = at < start + SCROLL_EDGE ? at - (start + SCROLL_EDGE) : at > end - SCROLL_EDGE ? at - (end - SCROLL_EDGE) : 0;
+    if (!into) return;
+    const by = Math.max(-1, Math.min(1, into / SCROLL_EDGE)) * SCROLL_SPEED;
+    const before = this.horizontal ? scroller.scrollLeft : scroller.scrollTop;
+    scroller.scrollBy(this.horizontal ? {left: by} : {top: by});
+    if ((this.horizontal ? scroller.scrollLeft : scroller.scrollTop) !== before) this.dragOver();
+  };
+
+  private endDrag(cancel: boolean) {
+    if (!this.isDragging) return;
+
+    if (!cancel && this.options.indicator && this.dropIndex !== null && this.dragKey) {
+      const fromIndex = this.keys().indexOf(this.dragKey);
+      this.reorder(moved(this.keys(), fromIndex, this.dropTarget(fromIndex, this.dropIndex)));
+    }
 
     const startOrder = this.startOrder;
     this.dragKey = null;
     this.draggedKey = null;
     this.dropIndex = null;
     this.isDragging = false;
+    cancelAnimationFrame(this.scrollFrame);
+    window.removeEventListener('keydown', this.onKeyDown, true);
+    this.ghost?.remove();
+    this.shield?.remove();
+    this.ghost = null;
+    this.shield = null;
+    this.scroller = null;
     this.host.requestUpdate();
 
-    // Escape, or a drop outside the list, cancels the drag
-    if (event.dataTransfer?.dropEffect === 'none') {
+    const changed = startOrder.join('\n') !== this.keys().join('\n');
+    if (!changed) return;
+    if (cancel) {
       this.reorder(startOrder);
       return;
     }
-    if (startOrder.join('\n') === this.keys().join('\n')) return;
-
     this.commit();
+  }
+
+  // Stops tracking the press, whether or not it became a drag
+  private release() {
+    if (this.press) window.clearTimeout(this.press.hold);
+    this.press = null;
+    window.removeEventListener('pointermove', this.onPointerMove, true);
+    window.removeEventListener('pointerup', this.onPointerUp, true);
+    window.removeEventListener('pointercancel', this.onPointerCancel, true);
+    window.removeEventListener('touchmove', this.onTouchMove, true);
+    window.removeEventListener('dragstart', this.onNativeDragStart, true);
   }
 
   /** Shows the new order, sliding each row from its old position. */
@@ -350,6 +547,32 @@ export class ReorderController implements ReactiveController {
     form.requestSubmit();
     form.remove();
   }
+}
+
+function swallow(event: Event) {
+  event.preventDefault();
+  event.stopPropagation();
+}
+
+/** A copy of a row to drag, with each slot replaced by what it shows, as a copy outside the slot's host shows nothing. */
+function snapshot(row: HTMLElement) {
+  const copy = row.cloneNode(true) as HTMLElement;
+  const slots = row.querySelectorAll('slot');
+  const copies = copy.querySelectorAll('slot');
+  slots.forEach((slot, i) => copies[i].replaceWith(...slot.assignedNodes({flatten: true}).map(node => node.cloneNode(true))));
+  copy.removeAttribute('id');
+  return copy;
+}
+
+/** The nearest element that scrolls along the axis, crossing shadow boundaries, or the page. */
+function scrollerOf(from: Element | null, horizontal: boolean): Element | null {
+  for (let el: Element | null = from; el; el = el.parentElement ?? ((el.getRootNode() as ShadowRoot).host ?? null)) {
+    const style = getComputedStyle(el);
+    const overflow = horizontal ? style.overflowX : style.overflowY;
+    const scrolls = horizontal ? el.scrollWidth > el.clientWidth : el.scrollHeight > el.clientHeight;
+    if (scrolls && (overflow === 'auto' || overflow === 'scroll')) return el;
+  }
+  return document.scrollingElement;
 }
 
 function moved(keys: string[], fromIndex: number, toIndex: number) {

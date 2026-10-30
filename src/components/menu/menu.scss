@@ -3,9 +3,9 @@
 .menu {
   display: block;
   position: relative;
-  padding: 1px;
+  padding: var(--zn-menu-padding, 1px);
   border: 1px solid rgb(var(--zn-border-color)) !important;
-  border-radius: var(--zn-border-radius);
+  border-radius: var(--zn-menu-border-radius, var(--zn-border-radius));
   width: fit-content;
   min-width: var(--zn-menu-min-width, var(--zn-size-spanel));
   // Unconstrained by default — a consumer that needs the menu to scroll inside a bounded
@@ -13,7 +13,7 @@
   max-height: var(--zn-menu-max-height, none);
   overflow: auto;
   overscroll-behavior: none;
-  box-shadow: 0 4px 8px -4px rgba(33, 33, 33, 0.1);
+  box-shadow: var(--zn-menu-shadow, 0 4px 8px -4px rgba(33, 33, 33, 0.1));
   // Same surface as the shell-header menus below, so every dropdown in the
   // product reads as one material rather than splitting into --zn-panel menus
   // and --zn-color-navigation ones depending on where it was mounted.
@@ -28,7 +28,7 @@
 
 // Set by the submenu controller while this submenu extends past its parent's bottom edge.
 :host([slot="submenu"][data-extends-below]) .menu {
-  border-end-start-radius: var(--zn-border-radius);
+  border-end-start-radius: var(--zn-menu-border-radius, var(--zn-border-radius));
 }
 
 // Set by the submenu controller on the parent menu while a submenu covers that corner.
@@ -73,7 +73,7 @@
   border: 1px solid rgb(var(--zn-border-color));
   border-radius: var(--zn-border-radius);
   min-width: var(--zn-menu-min-width, 245px);
-  max-width: min(320px, calc(100vw - 16px));
+  max-width: var(--zn-menu-max-width, min(320px, calc(100vw - 16px)));
   max-height: var(--zn-menu-max-height, none);
   overflow-x: hidden;
   overflow-y: auto;
@@ -84,6 +84,41 @@
 }
 
 
+// Width, style and colour are set apart so an unresolved colour token can't drop the line.
+.menu > hr {
+  height: 0;
+  margin: var(--zn-menu-divider-margin, 4px 0);
+  border: 0;
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: var(--zn-menu-divider-color, rgb(var(--zn-border-color)));
+}
+
+// !important because the page's own hr styles otherwise outrank ::slotted()
+::slotted(hr) {
+  height: 0 !important;
+  margin: var(--zn-menu-divider-margin, 4px 0) !important;
+  border: 0 !important;
+  border-top-width: 1px !important;
+  border-top-style: solid !important;
+  border-top-color: var(--zn-menu-divider-color, rgb(var(--zn-border-color))) !important;
+}
+
+// A zn-confirm only contributes its dialog, so it must not claim a slot (or a gap) in the item stack.
+zn-confirm, ::slotted(zn-confirm) {
+  display: contents;
+}
+
 ::slotted(zn-menu-item + zn-menu-item) {
-  border-top: 1px solid rgb(var(--zn-border-color));
+  border-top: var(--zn-menu-item-divider, 1px solid rgb(var(--zn-border-color)));
+}
+
+// A group divider, shown even when the theme drops the line between items
+::slotted(hr) {
+  flex: 0 0 auto;
+  margin: var(--zn-spacing-3x-small, 2px) 0;
+  border: none;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: rgb(var(--zn-border-color));
 }

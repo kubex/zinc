@@ -28,9 +28,27 @@ function loadLucideIcons(): Promise<void> {
   return lucidePromise;
 }
 
+// Country flags (3:2 SVGs keyed by ISO 3166 alpha-2 code) load lazily like lucide
+let flagIcons: Record<string, string> | undefined;
+let flagPromise: Promise<void> | undefined;
+
+function loadFlagIcons(): Promise<void> {
+  flagPromise ??= import('country-flag-icons/string/3x2').then(m => {
+    flagIcons = m as unknown as Record<string, string>;
+  }).catch((error: unknown) => {
+    flagPromise = undefined;
+    console.warn('<zn-icon> failed to load the flag icon chunk', error);
+  });
+  return flagPromise;
+}
+
 export type IconLibrary = "src" | "material" | "material-outlined" | "material-round" | "material-sharp" |
   "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line" |
-  "lucide";
+  "lucide" | "flag";
+
+export type AvatarPresence = 'online' | 'away' | 'busy' | 'meeting' | 'offline';
+
+const namedSizes: Record<string, number> = {sm: 22, md: 28, lg: 40, xl: 56};
 
 export type IconColor =
   "default"
@@ -77,7 +95,11 @@ export default class ZnIcon extends ZincElement {
 
   @property({reflect: true}) alt: string;
 
-  @property({type: Number, reflect: true}) size: number = 24;
+  /** Size in pixels, or one of the avatar sizes `sm` (22), `md` (28), `lg` (40) and `xl` (56). */
+  @property({
+    reflect: true,
+    converter: {fromAttribute: (value: string | null) => namedSizes[value ?? ''] ?? (value === null ? 24 : Number(value))}
+  }) size: number = 24;
 
   @property({type: Boolean, reflect: true}) round = false;
   @property({type: Boolean, reflect: true}) tile = false;
@@ -93,6 +115,12 @@ export default class ZnIcon extends ZincElement {
   @property({type: Boolean}) blink: boolean = false;
 
   @property({type: Boolean}) squared: boolean = false;
+
+  /** A live-status dot on an avatar: `online`, `away`, `busy`, `meeting` or `offline`. */
+  @property({reflect: true}) presence: AvatarPresence;
+
+  /** Draws an avatar as a solid circle even where the theme tints avatars. */
+  @property({type: Boolean, reflect: true}) solid = false;
 
   private static readonly presetColors = new Set([
     'default', 'primary', 'accent', 'info', 'warning', 'error', 'success',
@@ -148,6 +176,8 @@ export default class ZnIcon extends ZincElement {
       case "lucide":
       case "lu":
         return "lucide";
+      case "flag":
+        return "flag";
       case 'brand':
       case 'brands':
         return "brands";
@@ -187,6 +217,13 @@ export default class ZnIcon extends ZincElement {
     if (this.library === 'lucide' && !lucideIcons) {
       await loadLucideIcons();
       if (lucideIcons) {
+        this.requestUpdate();
+        await super.getUpdateComplete();
+      }
+    }
+    if (this.library === 'flag' && !flagIcons) {
+      await loadFlagIcons();
+      if (flagIcons) {
         this.requestUpdate();
         await super.getUpdateComplete();
       }
@@ -300,6 +337,9 @@ export default class ZnIcon extends ZincElement {
           'icon--pink': this.color === "pink",
           'icon--grey': this.color === "grey",
           'icon--avatar': this.library === "avatar",
+          'icon--avatar-solid': this.library === "avatar" && this.solid,
+          'icon--flag': this.library === "flag",
+          'icon--has-color': Boolean(this.color),
           'icon--padded': this.padded,
           'icon--blink': this.blink,
           'icon--squared': this.squared,
@@ -309,7 +349,7 @@ export default class ZnIcon extends ZincElement {
           '--icon-size': this.size + "px",
           '--icon-color': (this.color && !this.isPresetColor(this.color)) ? this.color : null,
           '--icon-fill': (this.fill && !this.isPresetColor(this.fill)) ? this.fill : null,
-          '--avatar-color': this.color ? null : (this.library === 'avatar' ? this.getColorForAvatar(this.getAvatarInitials(this.src)) : null)
+          '--avatar-color': this.color ? null : (this.library === 'avatar' ? this.getColorForAvatar(this.src) : null)
         })}">
           ${this.library && this.library !== "src" ? html`
             ${choose(this.library, [
@@ -321,12 +361,14 @@ export default class ZnIcon extends ZincElement {
               ["brands", () => html`<i part="icon" class="kb">${this.src}</i>`],
               ["line", () => html`<i part="icon" class="lni lni-${this.src}"></i>`],
               ["lucide", () => this.renderLucideIcon()],
+              ["flag", () => this.renderFlagIcon()],
               ["material-symbols-outlined", () => html`<i part="icon" class="mi mi--symbol-outlined">${this.src}</i>`],
               ["gravatar", () => html`<img part="icon" alt="${this.alt}"
                                            src="https://www.gravatar.com/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`],
               ["libravatar", () => html`<img part="icon" alt="${this.alt}"
                                              src="https://seccdn.libravatar.org/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`],
-              ["avatar", () => html`<span class="avatar__text">${this.getAvatarInitials(this.src)}</span>`]
+              ["avatar", () => html`<span class="avatar__text" role="img"
+                                          aria-label="${this.alt || this.src}">${this.getAvatarInitials(this.src)}</span>`]
             ], () => html`Library not supported: ${this.library}`)}` : ''}
 
           ${(!this.library || this.library === 'src') && this.src ? html`
@@ -336,7 +378,10 @@ export default class ZnIcon extends ZincElement {
           ${!this.library && !this.src ? html`
             <slot></slot>` : ''}
         </div>
-      </div>`;
+      </div>
+      ${this.presence ? html`
+        <span part="presence" class="presence presence--${this.presence}" role="img"
+              aria-label="${this.presence}"></span>` : ''}`;
   }
 
   private getAvatarInitials(avatar: string) {
@@ -374,6 +419,21 @@ export default class ZnIcon extends ZincElement {
     }
 
     return unsafeSVG(this.getLucideSvg(icon));
+  }
+
+  private renderFlagIcon() {
+    if (!flagIcons) {
+      void loadFlagIcons().then(() => {
+        if (flagIcons) {
+          this.requestUpdate();
+        }
+      });
+      return html``;
+    }
+
+    const code = (this.src ?? '').toUpperCase();
+    const svg = Object.prototype.hasOwnProperty.call(flagIcons, code) ? flagIcons[code] : undefined;
+    return svg ? html`<span part="icon" class="flag" role="img" aria-label="${this.alt || code}">${unsafeSVG(svg)}</span>` : html``;
   }
 
   private getLucideIcon(src = ''): IconNode | undefined {
@@ -438,17 +498,16 @@ export default class ZnIcon extends ZincElement {
   }
 
 
-  protected getColorForAvatar(avatarInitials: string) {
+  protected getColorForAvatar(name: string) {
     const colors = [
       '#00AA55', '#0882a8', '#ed55ed', '#5eae00',
       '#09389e', '#d17300', '#5e0be2', '#5b7a13',
       '#ddb100', '#d400c2', '#DC2A2A', '#a967ff',
     ];
 
-    // Generate a hash from the initials
-    const hash = Array.from(avatarInitials).reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    // Order-sensitive, so names sharing initials or letters still spread across the palette
+    const hash = Array.from(name.trim().toLowerCase()).reduce((acc, char) => (acc * 31 + char.charCodeAt(0)) >>> 0, 0);
 
-    // Use the hash to select a color
     return colors[hash % colors.length];
   }
 }

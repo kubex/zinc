@@ -58,7 +58,7 @@ export default class ZnDropdown extends ZincElement {
   @property({attribute: false}) containingElement?: HTMLElement;
 
   /** The distance in pixels from which to offset the panel away from the trigger */
-  @property({type: Number}) distance: number = 0;
+  @property({type: Number}) distance: number = 4;
 
   /** The distance in pixels from which to offset the panel away from the trigger */
   @property({type: Number}) skidding: number = 0;
@@ -122,10 +122,8 @@ export default class ZnDropdown extends ZincElement {
     } else {
       this.panel.addEventListener('keydown', this.handleKeyDown);
     }
-    document.addEventListener('keydown', this.handleDocumentKeyDown.bind(this));
-    document.addEventListener('mousedown', this.handleDocumentMouseDown.bind(this));
-
-    this.closeWatcher?.destroy();
+    document.addEventListener('keydown', this.handleDocumentKeyDown);
+    document.addEventListener('mousedown', this.handleDocumentMouseDown);
   }
 
   private removeOpenListeners() {
@@ -173,7 +171,7 @@ export default class ZnDropdown extends ZincElement {
     }
   }
 
-  handleKeyDown(event: KeyboardEvent) {
+  handleKeyDown = (event: KeyboardEvent) => {
     if (this.open && event.key === 'Escape') {
       event.stopPropagation();
       this.hide().then(r => r);
@@ -182,7 +180,10 @@ export default class ZnDropdown extends ZincElement {
   }
 
   private async handleTriggerKeyDown(event: KeyboardEvent) {
-    if ([' ', 'Enter'].includes(event.key)) {
+    const origin = event.composedPath()[0] as HTMLElement;
+    // A text-entry trigger needs Space/Enter for typing and form submission
+    const isTextEntry = origin.matches?.('input, textarea, [contenteditable]');
+    if ([' ', 'Enter'].includes(event.key) && !isTextEntry) {
       event.preventDefault();
       await this.handleTriggerClick();
       return;
@@ -234,7 +235,7 @@ export default class ZnDropdown extends ZincElement {
     this.updateAccessibleTrigger();
   }
 
-  private handleDocumentMouseDown(event: MouseEvent) {
+  private handleDocumentMouseDown = (event: MouseEvent) => {
     const path = event.composedPath();
 
     if (this.containingElement && !path.includes(this.containingElement)) {
@@ -242,7 +243,7 @@ export default class ZnDropdown extends ZincElement {
     }
   }
 
-  handleDocumentKeyDown(event: KeyboardEvent) {
+  handleDocumentKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Escape' && this.open && !this.closeWatcher) {
       event.stopPropagation();
       this.focusOnTrigger();
@@ -251,7 +252,8 @@ export default class ZnDropdown extends ZincElement {
     }
 
     if (event.key === 'Tab') {
-      if (this.open) {
+      // Non-menu panels follow the trigger in tab order, so Tab moves into them and closes only once focus leaves
+      if (this.open && this.getMenu()) {
         this.hide().then(r => r);
         // Tabbing out of the menu resumes from the trigger; from the trigger, Tab moves on as usual
         if (this.panel?.assignedElements({flatten: true}).some(el => el.matches(':focus-within'))) {

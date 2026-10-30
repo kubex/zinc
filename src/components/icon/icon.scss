@@ -30,6 +30,40 @@ $icon-colors: (
   --icon-color: inherit;
 }
 
+:host([presence]) {
+  position: relative;
+}
+
+// A live-status dot on the avatar's corner, ringed in the surface colour so it reads against the avatar.
+.presence {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 28%;
+  height: 28%;
+  min-width: 7px;
+  min-height: 7px;
+  border: 2px solid var(--zn-avatar-ring-color, rgb(var(--zn-panel)));
+  border-radius: 50%;
+  background: rgb(var(--zn-color-disabled));
+
+  &--online {
+    background: rgb(var(--zn-color-success));
+  }
+
+  &--away {
+    background: rgb(var(--zn-color-warning));
+  }
+
+  &--busy {
+    background: rgb(var(--zn-color-error));
+  }
+
+  &--meeting {
+    background: rgb(var(--zn-primary));
+  }
+}
+
 :host([split-pane-focus]) .icon-wrapper {
   cursor: pointer;
 }
@@ -60,6 +94,19 @@ $icon-colors: (
 
   i {
     font-size: var(--icon-size) !important;
+  }
+
+  &--flag {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .flag svg {
+    display: block;
+    width: var(--icon-size);
+    height: calc(var(--icon-size) * 2 / 3);
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.08);
   }
 
   // Colors
@@ -178,18 +225,36 @@ $icon-colors: (
     animation: blink-animation 1.5s steps(5, start) infinite;
   }
 
+  // Solid by default. A theme sets --zn-avatar-tint: 1 for a tinted circle with darker initials,
+  // and --zn-avatar-default-color to replace the per-name colour.
   &--avatar {
-    background-color: var(--avatar-color, var(--icon-color));
-    color: hsl(from var(--avatar-color, var(--icon-color)) h s 95);
+    --_avatar: var(--zn-avatar-default-color, var(--avatar-color));
+    --_tint: var(--zn-avatar-tint, 0);
+    --_solid-ink: hsl(from var(--_avatar) h s 95);
+    // Mixed towards the text colour so the initials stay readable in light and dark modes
+    --_tint-ink: color-mix(in srgb, var(--_avatar) 72%, rgb(var(--zn-text)));
+
+    // Mixed with the surface, not made translucent, so overlapping avatars in a group stay opaque
+    background-color: color-mix(in srgb, var(--_avatar) calc(100% - var(--_tint) * 86%), rgb(var(--zn-panel)));
+    color: color-mix(in srgb, var(--_tint-ink) calc(var(--_tint) * 100%), var(--_solid-ink));
     display: flex;
     justify-content: center;
     align-items: center;
 
     .avatar__text {
-      font-size: calc((var(--icon-size) / 2.4));
-      color: hsl(from var(--avatar-color, var(--icon-color)) h s 95);
-      font-weight: var(--zn-font-weight-semibold);
+      font-size: calc(var(--icon-size) * var(--zn-avatar-font-scale, 0.4167));
+      font-weight: var(--zn-avatar-font-weight, var(--zn-font-weight-semibold));
+      letter-spacing: .02em;
+      color: inherit;
     }
+  }
+
+  &--avatar.icon--has-color {
+    --_avatar: var(--icon-color);
+  }
+
+  &--avatar.icon--avatar-solid {
+    --_tint: 0;
   }
 
   &--padded {

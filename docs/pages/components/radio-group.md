@@ -166,7 +166,8 @@ Contained radios can also render as richer [selection cards](/components/radio#s
 description, and positioned indicator. The radio group continues to manage their single selection, validation,
 keyboard navigation, and submitted form value.
 
-Contained radios are rounded by default; add `square` to the group to square off every radio in it. With
+Contained radios are rounded by default; add `square` to the group to square off every radio in it. Add `centered`
+to centre each radio's text, which suits short answers laid out as a row. With
 `horizontal`, cards in a row are given equal height, and `--zn-radio-group-column-width` (default `152px`) sets the
 minimum column width used by the grid.
 
@@ -174,6 +175,37 @@ Add `wrap` to lay the radios out as a wrapping row instead of an equal-width gri
 `--zn-radio-group-column-width` and grows to fill its line, and setting that property to `auto` sizes every card from
 its own content.
 :::
+
+### Scale
+
+Add `scale` to lay the radios out as one row of segments, filling every segment up to the checked one. Use it for
+ordered answers such as a 1 to 10 rating. Unlike a range input, the group has no value until one is picked, so
+`required` still catches an unanswered scale. Arrow keys move along the scale.
+
+```html:preview
+<zn-radio-group name="tone" label="How well did the agent manage the customer's tone?" value="7" scale>
+  <zn-radio value="1">1</zn-radio>
+  <zn-radio value="2">2</zn-radio>
+  <zn-radio value="3">3</zn-radio>
+  <zn-radio value="4">4</zn-radio>
+  <zn-radio value="5">5</zn-radio>
+  <zn-radio value="6">6</zn-radio>
+  <zn-radio value="7">7</zn-radio>
+  <zn-radio value="8">8</zn-radio>
+  <zn-radio value="9">9</zn-radio>
+  <zn-radio value="10">10</zn-radio>
+</zn-radio-group>
+<br/>
+<zn-radio-group name="empathy" label="Empathy" help-text="Unanswered until a segment is picked" scale required>
+  <zn-radio value="1">1</zn-radio>
+  <zn-radio value="2">2</zn-radio>
+  <zn-radio value="3">3</zn-radio>
+  <zn-radio value="4">4</zn-radio>
+  <zn-radio value="5">5</zn-radio>
+</zn-radio-group>
+```
+
+Set `--zn-radio-scale-segment-height` and `--zn-radio-scale-segment-radius` on the radios to resize the segments.
 
 ### Disabling Options
 

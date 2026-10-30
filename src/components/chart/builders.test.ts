@@ -430,3 +430,37 @@ describe('buildSankeyOption', () => {
     expect((opt.tooltip as any).trigger).to.equal('item');
   });
 });
+
+describe('cartesian legends', () => {
+  it('hides the legend for a single series', () => {
+    const opt = buildLineOption({ ...baseProps, type: 'line' });
+    expect((opt.legend as any).show).to.equal(false);
+  });
+
+  it('shows the legend for several series, ignoring hidden ones', () => {
+    const two = buildLineOption({ ...baseProps, data: [{ name: 'A', data: [1] }, { name: 'B', data: [2] }] });
+    const oneVisible = buildLineOption({ ...baseProps, data: [{ name: 'A', data: [1] }, { name: '_base', data: [2] }] });
+    expect((two.legend as any).show).to.equal(true);
+    expect((oneVisible.legend as any).show).to.equal(false);
+  });
+
+  it('scrolls the legend on one line so it never wraps into the grid', () => {
+    const opt = buildLineOption({ ...baseProps, data: [{ name: 'A', data: [1] }, { name: 'B', data: [2] }] });
+    expect((opt.legend as any).type).to.equal('scroll');
+  });
+});
+
+describe('markLatest', () => {
+  it('hides every point but the last, which gets a hollow dot', () => {
+    const series = (buildAreaOption({ ...baseProps, type: 'area', markLatest: true }).series as any[])[0];
+    expect(series.symbol).to.equal('none');
+    expect(series.data.slice(0, 2)).to.deep.equal([10, 20]);
+    expect(series.data[2]).to.deep.equal({ value: 30, symbol: 'emptyCircle', symbolSize: 8 });
+  });
+
+  it('leaves the points alone by default', () => {
+    const series = (buildLineOption({ ...baseProps, type: 'line' }).series as any[])[0];
+    expect(series.symbol).to.equal(undefined);
+    expect(series.data).to.deep.equal([10, 20, 30]);
+  });
+});

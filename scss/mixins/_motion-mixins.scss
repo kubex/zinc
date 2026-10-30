@@ -1,0 +1,126 @@
+/// Wraps rules that should only apply when the user asked for less motion.
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+/// Gates hover-only motion so touch devices don't fire it on tap.
+@mixin hover-fine {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}
+
+/// Scale-down press feedback for any clickable surface. Sets `transition`, so it replaces any
+/// transition list already on the element.
+@mixin press($scale: 0.97) {
+  transition: transform 160ms var(--zn-ease-out);
+
+  &:active:not([disabled]) {
+    transform: scale($scale);
+  }
+}
+
+/// Pops a zn-popup in from its trigger on open; closing is instant. `$host` is the zn-popup's selector.
+@mixin popover-motion($host, $duration: var(--zn-dropdown-duration, 120ms)) {
+  #{$host}::part(popup) {
+    transform-origin: top;
+    transition: opacity $duration var(--zn-ease-out),
+                translate $duration var(--zn-ease-out),
+                scale $duration var(--zn-ease-out);
+
+    @starting-style {
+      opacity: 0;
+      translate: 0 -3px;
+      scale: .98;
+    }
+
+    @include reduced-motion {
+      transition: opacity $duration var(--zn-ease-out);
+    }
+  }
+
+  #{$host}[data-current-placement^="top"]::part(popup) {
+    transform-origin: bottom;
+
+    @starting-style {
+      translate: 0 3px;
+    }
+  }
+
+  @each $side, $origin-y in (bottom: top, top: bottom) {
+    @each $align, $origin-x in (start: left, end: right) {
+      #{$host}[data-current-placement="#{$side}-#{$align}"]::part(popup) {
+        transform-origin: $origin-x $origin-y;
+      }
+    }
+  }
+}
+
+/// Expands a control's `__selected-content-wrapper` while it is `--checked`. `$block` is the BEM block, e.g. `checkbox`.
+@mixin selected-content-reveal($block) {
+  .#{$block}__selected-content-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    // Hidden content stays out of the tab order once collapsed.
+    visibility: hidden;
+    transition: grid-template-rows 200ms var(--zn-ease-drawer),
+    opacity 120ms ease-out,
+    visibility 0s 200ms;
+  }
+
+  .#{$block}--checked .#{$block}__selected-content-wrapper {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    visibility: visible;
+    transition: grid-template-rows 200ms var(--zn-ease-drawer),
+    opacity 150ms ease-out 50ms,
+    visibility 0s;
+
+    .#{$block}__selected-content-inner {
+      // Unclips once expanded so focus rings and popups inside aren't cut off.
+      overflow: visible;
+      transition: overflow 0s 200ms allow-discrete;
+    }
+  }
+
+  .#{$block}__selected-content-inner {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  @include reduced-motion {
+    .#{$block}__selected-content-wrapper,
+    .#{$block}--checked .#{$block}__selected-content-wrapper {
+      transition: none;
+    }
+  }
+}
+
+/// Continuous rotation for loading spinners.
+@mixin spin($duration: 1s) {
+  animation: zn-spin $duration linear infinite;
+
+  @at-root {
+    @keyframes zn-spin {
+      to { rotate: 1turn; }
+    }
+  }
+}
+
+/// Indeterminate loader that slides the element across its (overflow: hidden) parent.
+/// Positions are percentages of the element's own width.
+@mixin sweep($duration, $from: -100%, $to: 100%, $easing: linear) {
+  animation: zn-sweep $duration $easing infinite;
+  --_sweep-from: #{$from};
+  --_sweep-to: #{$to};
+
+  @at-root {
+    @keyframes zn-sweep {
+      from { translate: var(--_sweep-from) 0; }
+      to { translate: var(--_sweep-to) 0; }
+    }
+  }
+}

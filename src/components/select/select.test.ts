@@ -233,7 +233,7 @@ describe('<zn-select>', () => {
   });
 
   describe('Escape key', () => {
-    it('blurs the display input when dropdown is closed and Escape is pressed', async () => {
+    it('keeps focus on the display input when the dropdown is closed and Escape is pressed', async () => {
       const el = await fixture<ZnSelect>(html`<zn-select></zn-select>`);
       await el.updateComplete;
 
@@ -251,7 +251,7 @@ describe('<zn-select>', () => {
       }));
       await el.updateComplete;
 
-      expect(el.shadowRoot!.activeElement, 'display input should be blurred').to.not.equal(displayInput);
+      expect(el.shadowRoot!.activeElement, 'display input should keep focus').to.equal(displayInput);
     });
 
   });

@@ -1,0 +1,54 @@
+@use "../../wc";
+
+:host {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.avatar-group {
+  display: inline-flex;
+  align-items: center;
+}
+
+::slotted(zn-icon),
+.avatar-group__overflow {
+  border-radius: 50%;
+  // A ring in the surface colour separates each avatar from the one it overlaps
+  box-shadow: 0 0 0 2px var(--zn-avatar-ring-color, rgb(var(--zn-panel)));
+}
+
+::slotted(zn-icon:not([slot="avatar-0"])),
+.avatar-group__overflow {
+  margin-inline-start: -0.4rem;
+}
+
+// Lifted over its neighbours so the whole avatar shows while its tooltip is open
+::slotted(zn-icon:hover) {
+  position: relative;
+  z-index: 1;
+}
+
+// Matches a solid zn-icon avatar in the text colour
+.avatar-group__overflow {
+  --avatar-size: 28px;
+
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  background-color: rgb(var(--zn-text));
+  color: rgb(var(--zn-panel));
+  font-size: calc(var(--avatar-size) * var(--zn-avatar-font-scale, 0.4167));
+  font-weight: var(--zn-avatar-font-weight, var(--zn-font-weight-semibold));
+  line-height: 1;
+  letter-spacing: .02em;
+  cursor: default;
+  user-select: none;
+
+  &:focus-visible {
+    outline: 2px solid rgb(var(--zn-primary));
+    outline-offset: 2px;
+  }
+}

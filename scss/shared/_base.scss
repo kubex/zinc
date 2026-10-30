@@ -40,6 +40,23 @@ html, body {
   height: 100%;
   width: 100%;
   max-width: 100%;
+
+  // Room to scroll the end clear of anything hung over the pane's bottom edge, such as pull tabs. As the last flex
+  // item it lands after content that overflows the container, where padding would sit underneath it. A scroll
+  // container inside leaves the room itself. Rubix's app-content holds its page in a shadow root, out of :has()'s
+  // sight, so it is left to whatever scrolls in there.
+  &:not(app-content, :has(zn-scroll-container)) {
+    &::after {
+      content: "";
+      flex: none;
+      height: var(--zn-pane-end-inset, 0px);
+    }
+
+    // Only the outermost app container leaves that room
+    > * {
+      --zn-pane-end-inset: 0px;
+    }
+  }
 }
 
 .inline-app-container, .app-container.inline-app-container, [inline-container] .app-container {
@@ -83,18 +100,21 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
+  font-family: var(--zn-text-h1-font-family, inherit);
   font-size: var(--zn-text-h1-font-size);
   line-height: var(--zn-text-h1-line-height);
   font-weight: var(--zn-text-h1-font-weight);
 }
 
 h2 {
+  font-family: var(--zn-text-h2-font-family, inherit);
   font-size: var(--zn-text-h2-font-size);
   line-height: var(--zn-text-h2-line-height);
   font-weight: var(--zn-text-h2-font-weight);
 }
 
 h3, h4, h5, h6 {
+  font-family: var(--zn-text-h3-font-family, inherit);
   font-size: var(--zn-text-h3-font-size);
   line-height: var(--zn-text-h3-line-height);
   font-weight: var(--zn-text-h3-font-weight);

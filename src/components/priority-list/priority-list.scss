@@ -33,11 +33,8 @@
   pointer-events: none;
 }
 
-// During an active drag, animate items shifting into new positions
-.priority-list--drag-active {
-  .priority-list__item {
-    transition: transform 200ms ease, opacity 200ms ease, box-shadow 200ms ease;
-  }
+.priority-list--drag-active .priority-list__item {
+  cursor: grabbing;
 }
 
 .priority-list__item {
@@ -52,20 +49,21 @@
   user-select: none;
   -webkit-user-drag: element;
   position: relative;
+  // Its own layer, or Chrome draws the drag image over a white box that shows at the rounded corners
+  transform: translate(0, 0);
 
   &:hover {
-    background: rgb(var(--zn-panel-hover, var(--zn-panel)));
-    border-color: rgb(var(--zn-color-primary-500));
+    border-color: rgb(var(--zn-primary));
 
     .priority-list__handle {
-      color: rgb(var(--zn-color-primary-500));
+      color: rgb(var(--zn-primary));
     }
   }
 
   &:focus-visible {
-    outline: 2px solid rgb(var(--zn-color-primary-500));
+    outline: 2px solid rgb(var(--zn-primary));
     outline-offset: -1px;
-    border-color: rgb(var(--zn-color-primary-500));
+    border-color: rgb(var(--zn-primary));
   }
 
   &:active {
@@ -73,13 +71,22 @@
   }
 }
 
-// The item currently being dragged — shown as a faded placeholder
+// The dragged row's slot. An inset outline, as hover and last-child rules reset the border and flush panels clip it.
+// The border is hidden so it doesn't show between the dashes or past the outline's rounded corners.
+.priority-list__item--dragging,
+.priority-list__item--dragging:hover {
+  border-color: transparent;
+}
+
 .priority-list__item--dragging {
-  opacity: 0.3;
-  border-style: dashed;
-  border-color: rgb(var(--zn-color-primary-400));
-  background: rgb(var(--zn-color-primary-50, var(--zn-panel)));
+  outline: 1px dashed var(--zn-color-primary-400);
+  outline-offset: -1px;
+  background: rgba(var(--zn-primary), 0.06);
   box-shadow: none;
+
+  > * {
+    opacity: 0;
+  }
 }
 
 .priority-list__item--disabled {
@@ -121,13 +128,43 @@
   flex: 1;
   min-width: 0;
   overflow: hidden;
-  // Prevent slotted content from capturing its own drag events,
-  // which would override the item-level draggable behaviour
+  // A press anywhere on the content grabs the row, not the content
   pointer-events: none;
 
   ::slotted(*) {
     pointer-events: none;
     -webkit-user-drag: none;
+  }
+}
+
+// Tiles fill the row; the row supplies the padding
+.priority-list__content ::slotted(zn-tile) {
+  --zn-tile-padding-inline: 0;
+  --zn-tile-padding-block: 0;
+  --zn-tile-min-height: 0;
+  --zn-tile-hover-background: transparent;
+  --zn-tile-hover-caption-color: rgb(var(--zn-primary));
+  --zn-tile-hover-caption-decoration: underline;
+}
+
+.priority-list__content ::slotted(zn-tile[href]),
+.priority-list__content ::slotted(zn-tile[data-uri]) {
+  pointer-events: auto;
+}
+
+.priority-list__item--locked {
+  cursor: default;
+
+  &:active {
+    cursor: default;
+  }
+
+  .priority-list__handle {
+    cursor: default;
+  }
+
+  &:hover .priority-list__handle {
+    color: var(--zn-priority-list-handle-color);
   }
 }
 
@@ -142,6 +179,65 @@
   ::slotted(*) {
     pointer-events: auto;
     -webkit-user-drag: none;
+  }
+}
+
+.priority-list__move {
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-3x-small);
+}
+
+.priority-list__item--selectable {
+  cursor: pointer;
+}
+
+.priority-list__item--selected,
+.priority-list__item--selected:hover {
+  background: var(--zn-priority-list-selected-background, rgba(var(--zn-primary), 0.08));
+  box-shadow: inset 3px 0 0 rgb(var(--zn-primary));
+}
+
+:host([hide-priority]) .priority-list__priority {
+  display: none;
+}
+
+:host([flush]) {
+  // The shared focus-ring margin would inset the rows from the panel edges.
+  --zn-form-control-input-margin: 0;
+
+  .form-control__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .priority-list {
+    gap: 0;
+  }
+
+  .priority-list__item {
+    padding-inline: var(--zn-panel-padding, var(--zn-spacing-medium));
+    border: 0;
+    border-bottom: 1px solid var(--zn-table-row-divider-color, rgb(var(--zn-border-color)));
+    border-radius: 0;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    &:hover {
+      border-color: var(--zn-table-row-divider-color, rgb(var(--zn-border-color)));
+    }
+  }
+
+  // Set while dragging to the radius of any panel corner the row sits in
+  .priority-list__item--dragging {
+    border-radius: var(--zn-priority-list-drag-radius, 0);
   }
 }
 

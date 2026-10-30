@@ -9,7 +9,7 @@ import {
   replaceHistoryTab,
   TAB_STORE_PREFIX
 } from './tabs-navigation';
-import {getScrolledAncestors, scrollToTop} from "../../internal/scroll";
+import {getScrolledAncestors, revealTop} from "../../internal/scroll";
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {md5} from "../../utilities/md5";
@@ -22,10 +22,10 @@ import ZincElement from '../../internal/zinc-element';
 import bootStyles from '../../../scss/boot.scss';
 import styles from './tabs.scss';
 
-// Every element that manages its own tabs (ZnTabs and its subclasses). Tab
-// registration must stop at these so an outer container never claims a nested
-// container's tabs.
-export const tabContainerSelector = 'zn-tabs, zn-page, zn-page-nav';
+// Every element that manages its own tabs (ZnTabs and its subclasses), plus a navbar
+// linked to a container elsewhere. Tab registration must stop at these so an outer
+// container never claims a nested or linked container's tabs.
+export const tabContainerSelector = 'zn-tabs, zn-page, zn-page-nav, zn-navbar[tabs]';
 
 /**
  * @summary Short summary of the component's intended use.
@@ -62,6 +62,14 @@ export default class ZnTabs extends ZincElement {
   @property({attribute: 'store-key'}) storeKey: string;
   @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
   @property({attribute: 'padded', type: Boolean, reflect: true}) padded = false;
+  /**
+   * With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just
+   * added, in place of the remembered tab.
+   */
+  @property({attribute: 'select-added', type: Boolean, reflect: true}) selectAdded = false;
+
+  /** Spaces a left or right slot from the content, for side navigation laid out as its own card. */
+  @property({type: Boolean, reflect: true}) gap = false;
   @property({attribute: 'fetch-style', type: String, reflect: true}) fetchStyle = "";
   @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth = false;
   @property({attribute: 'padded-right', type: Boolean, reflect: true}) paddedRight = false;
@@ -232,7 +240,41 @@ export default class ZnTabs extends ZincElement {
     }
 
     this._prepareTab(stored);
+    // The stored tab can be gone, say after deleting what it showed; fall back to the tab the container starts on.
+    // A tab still on screen keeps its selection even before its panel loads.
+    const gone = !this._panels.has(stored) && !this._tabs.some(tab => tab.getAttribute('tab') === stored);
+    if (gone && this._defaultTab !== '' && this._panels.has(this._defaultTab)) {
+      this.setActiveTab(this._defaultTab, true, false);
+      return;
+    }
     this.setActiveTab(stored, true, false);
+  }
+
+  /**
+   * The tabs present now that were not when the page was last shown, oldest first, remembering the current set for
+   * next time. Empty without `select-added`, or on the first showing.
+   */
+  private takeAddedTabs(): string[] {
+    const key = this.getTabStoreKey();
+    if (!this.selectAdded || key === null || !this._store) {
+      return [];
+    }
+
+    const storeKey = locationScopedKey(`${key}:tabs`);
+    const current = this._tabs.map(tab => tab.getAttribute('tab')).filter((id): id is string => id !== null);
+    const known = this._store.get(storeKey);
+    this._store.set(storeKey, JSON.stringify(current));
+    if (known === null) {
+      return [];
+    }
+
+    let knownIds: Set<string>;
+    try {
+      knownIds = new Set(JSON.parse(known) as string[]);
+    } catch {
+      return [];
+    }
+    return current.filter(id => !knownIds.has(id));
   }
 
   /** Activates the tab the container starts on, ignoring any stored selection. */
@@ -303,7 +345,39 @@ export default class ZnTabs extends ZincElement {
       tab.addEventListener('mouseover', this.fetchUriTab.bind(this, tab));
     }
     tab.addEventListener('click', this._handleClick.bind(this));
+
+    // Plain elements (usually <li>) are not focusable; custom elements and tabs wrapping a control manage their own
+    const focusable = 'a[href], button, input, select, textarea, [tabindex]';
+    if (!tab.localName.includes('-') && !tab.matches(focusable) && !tab.querySelector(focusable)) {
+      tab.tabIndex = 0;
+      tab.addEventListener('keydown', this._handleTabKeyDown);
+    }
   }
+
+  private readonly _handleTabKeyDown = (event: KeyboardEvent) => {
+    const tab = event.currentTarget as HTMLElement;
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      tab.click();
+      return;
+    }
+
+    const siblings = this._tabs.filter(t => t.parentElement === tab.parentElement && t.tabIndex >= 0);
+    const index = siblings.indexOf(tab);
+    const target = {
+      ArrowRight: index + 1,
+      ArrowDown: index + 1,
+      ArrowLeft: index - 1,
+      ArrowUp: index - 1,
+      Home: 0,
+      End: siblings.length - 1
+    }[event.key];
+    if (target === undefined) {
+      return;
+    }
+    event.preventDefault();
+    siblings[(target + siblings.length) % siblings.length].focus();
+  };
 
   reRegisterTabs = () => {
     this._registerTabs();
@@ -314,6 +388,16 @@ export default class ZnTabs extends ZincElement {
     setTimeout(() => {
       this._registerTabs();
       this._defaultTab = this._current || '';
+      // A linked navbar renders its items after this container can be ready
+      this._linkedNavbars().forEach(navbar => {
+        void (navbar as ZincElement).updateComplete?.then(this.reRegisterTabs);
+      });
+
+      const added = this.takeAddedTabs();
+      if (added.length > 0) {
+        this.setActiveTab(added[added.length - 1], true, false);
+        return;
+      }
 
       const storedValue = this.getStoredTab();
       if (storedValue !== null) {
@@ -361,7 +445,8 @@ export default class ZnTabs extends ZincElement {
       }
     }
 
-    for (const uriTab of deepQuerySelectorAll("[tab-uri]", this, tabContainerSelector)) {
+    const uriTabs = [this, ...this._linkedNavbars()].flatMap(root => deepQuerySelectorAll("[tab-uri]", root, tabContainerSelector));
+    for (const uriTab of uriTabs) {
       const uri: string = uriTab.getAttribute("tab-uri")!;
       const eleTabId = this._uriToId(uri);
       if (eleTabId === tabId) {
@@ -412,7 +497,8 @@ export default class ZnTabs extends ZincElement {
 
   _handleClick(event: PointerEvent) {
     // ts-ignore
-    const target = (event.relatedTarget ?? event.target) as HTMLElement;
+    // The listener is on the tab itself; event.target could be an icon or tooltip inside it
+    const target = (event.relatedTarget ?? event.currentTarget) as HTMLElement;
     if (!target) {
       return;
     }
@@ -559,7 +645,7 @@ export default class ZnTabs extends ZincElement {
 
     updateTabs();
 
-    scrollToTop(scrolled);
+    revealTop(scrolled, this);
 
     return true;
   }
@@ -608,26 +694,37 @@ export default class ZnTabs extends ZincElement {
     }
   }
 
+  /** Navbars elsewhere in this container's root that drive it through `tabs="<this id>"`. */
+  private _linkedNavbars(): Element[] {
+    if (!this.id) {
+      return [];
+    }
+    const root = this.getRootNode() as Document | ShadowRoot;
+    return Array.from(root.querySelectorAll(`zn-navbar[tabs="${CSS.escape(this.id)}"]`));
+  }
+
   _registerTabs = () => {
-    deepQuerySelectorAll('[tab]', this, tabContainerSelector).forEach(ele => {
-      this._addTab(ele as HTMLElement);
-    });
+    for (const root of [this, ...this._linkedNavbars()]) {
+      deepQuerySelectorAll('[tab]', root, tabContainerSelector).forEach(ele => {
+        this._addTab(ele as HTMLElement);
+      });
 
-    deepQuerySelectorAll('[tab-uri]', this, tabContainerSelector).forEach(ele => {
-      if (ele.getAttribute('tab-uri') === "") {
-        ele.setAttribute('tab', "");
-        ele.removeAttribute('tab-uri');
-      }
-      this._addTab(ele as HTMLElement);
-    });
+      deepQuerySelectorAll('[tab-uri]', root, tabContainerSelector).forEach(ele => {
+        if (ele.getAttribute('tab-uri') === "") {
+          ele.setAttribute('tab', "");
+          ele.removeAttribute('tab-uri');
+        }
+        this._addTab(ele as HTMLElement);
+      });
 
-    deepQuerySelectorAll('[ref-tab-uri]', this, tabContainerSelector).forEach(ele => {
-      if (!ele.hasAttribute('ref-tab')) {
-        ele.setAttribute('ref-tab', this._uriToId(ele.getAttribute('ref-tab-uri')!));
-        ele.removeAttribute('ref-tab-uri');
-        this._actions.push(ele as HTMLElement);
-      }
-    });
+      deepQuerySelectorAll('[ref-tab-uri]', root, tabContainerSelector).forEach(ele => {
+        if (!ele.hasAttribute('ref-tab')) {
+          ele.setAttribute('ref-tab', this._uriToId(ele.getAttribute('ref-tab-uri')!));
+          ele.removeAttribute('ref-tab-uri');
+          this._actions.push(ele as HTMLElement);
+        }
+      });
+    }
   }
 
   render() {

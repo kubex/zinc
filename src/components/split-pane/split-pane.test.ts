@@ -1,5 +1,5 @@
 import '../../../dist/zn.min.js';
-import { expect, fixture, html } from '@open-wc/testing';
+import { expect, fixture, html, waitUntil } from '@open-wc/testing';
 import type ZnSplitPane from './split-pane.component';
 
 describe('<zn-split-pane>', () => {
@@ -193,5 +193,19 @@ describe('<zn-split-pane>', () => {
 
     expect((el.shadowRoot?.querySelector('style')?.textContent ?? '')).to.contain('--min-secondary-panel-size: 125px');
     expect((el.shadowRoot?.querySelector('style')?.textContent ?? '')).to.contain('--initial-size: 275px');
+  });
+
+  it('keeps a preferred secondary pane at its pixel size when the container resizes', async () => {
+    const el = await fixture<ZnSplitPane>(html`
+      <zn-split-pane vertical secondary pixels min-size="50" initial-size="100" style="display: flex; height: 400px;">
+        <div slot="primary">Primary content</div>
+        <div slot="secondary">Secondary content</div>
+      </zn-split-pane>
+    `);
+    const secondaryHeight = () => el.shadowRoot!.querySelector('#secondary-pane')!.getBoundingClientRect().height;
+    await waitUntil(() => Math.abs(secondaryHeight() - 100) < 2);
+
+    el.style.height = '600px';
+    await waitUntil(() => Math.abs(secondaryHeight() - 100) < 2, 'secondary pane stays at 100px');
   });
 });

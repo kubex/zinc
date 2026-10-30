@@ -171,6 +171,8 @@ export default class ZnFlowBuilder extends ZincElement {
   @state() private _movingNodeId: string | null = null;
   /** The "+" picker popover target (an open output, or a wire to insert into), if open. */
   @state() private _picker: { x: number; y: number; target: PickerTarget } | null = null;
+  /** Where focus goes back to when the picker or branch editor closes. */
+  private _focusReturn: HTMLElement | null = null;
   /** The node type currently being dragged from the steps panel, for the canvas drop preview. */
   @state() private _draggingType: string | null = null;
 
@@ -338,11 +340,40 @@ export default class ZnFlowBuilder extends ZincElement {
 
   private _onKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Escape' && (this._movingNodeId || this._picker || this._selectedBranch)) {
+      const hadFocus = !!this.shadowRoot?.querySelector('.picker:focus-within, .inspector:focus-within');
       this._movingNodeId = null;
       this._picker = null;
       this._selectedBranch = null;
+      if (hadFocus) void this._returnFocus(this._focusReturn);
     }
   };
+
+  private static _deepActiveElement() {
+    let el = document.activeElement;
+    while (el?.shadowRoot?.activeElement) el = el.shadowRoot.activeElement;
+    return el as HTMLElement | null;
+  }
+
+  private _nodeCard(nodeId: string) {
+    const canvas = this.shadowRoot?.querySelector('zn-flow-canvas');
+    const node = [...(canvas?.shadowRoot?.querySelectorAll('zn-flow-node') ?? [])].find(n => n.node?.id === nodeId);
+    return node?.shadowRoot?.querySelector<HTMLElement>('.card');
+  }
+
+  private async _returnFocus(target: HTMLElement | null | undefined) {
+    await this.updateComplete;
+    if (target?.isConnected) target.focus();
+  }
+
+  private _closeInspector(nodeId: string) {
+    this._select(null);
+    void this._returnFocus(this._nodeCard(nodeId));
+  }
+
+  private _closeBranchEditor(nodeId: string) {
+    this._selectedBranch = null;
+    void this._returnFocus(this._focusReturn?.isConnected ? this._focusReturn : this._nodeCard(nodeId));
+  }
 
   protected willUpdate(changed: PropertyValues) {
     if (changed.has('nodeTypes') && this.nodeTypes?.length) {
@@ -974,6 +1005,7 @@ export default class ZnFlowBuilder extends ZincElement {
   }
 
   private _onBranchPick = (e: CustomEvent<{ nodeId: string; port: string }>) => {
+    this._focusReturn = ZnFlowBuilder._deepActiveElement();
     this._select(null);
     this._sideCollapsed = false;
     this._selectedBranch = {nodeId: e.detail.nodeId, port: e.detail.port};
@@ -1031,6 +1063,7 @@ export default class ZnFlowBuilder extends ZincElement {
   };
 
   private _onWirePick = (e: CustomEvent<{ connectionId: string; clientX: number; clientY: number }>) => {
+    this._focusReturn = ZnFlowBuilder._deepActiveElement();
     this._picker = {
       x: e.detail.clientX,
       y: e.detail.clientY,
@@ -1260,7 +1293,7 @@ export default class ZnFlowBuilder extends ZincElement {
             <div class="inspector-head__title">${node.label ?? type?.label ?? node.type}</div>
             <div class="inspector-head__type">${type?.label ?? node.type}</div>
           </div>
-          <button class="inspector-close" title="Close" @click="${() => this._select(null)}">
+          <button class="inspector-close" title="Close" @click="${() => this._closeInspector(node.id)}">
             <zn-icon src="x@lu" size="18"></zn-icon>
           </button>
         </div>
@@ -1337,7 +1370,7 @@ export default class ZnFlowBuilder extends ZincElement {
                 : `Branch of ${node.label ?? type?.label ?? node.type}`}
             </div>
           </div>
-          <button class="inspector-close" title="Close" @click="${() => (this._selectedBranch = null)}">
+          <button class="inspector-close" title="Close" @click="${() => this._closeBranchEditor(node.id)}">
             <zn-icon src="x@lu" size="18"></zn-icon>
           </button>
         </div>
@@ -1358,7 +1391,7 @@ export default class ZnFlowBuilder extends ZincElement {
                   .value="${branchConditions(port)}"
                   @flow-conditions-save="${(e: CustomEvent<{ conditions: FlowBranchConditions }>) =>
                     this._saveBranchConditions(node, port, e.detail.conditions)}"
-                  @flow-conditions-cancel="${() => (this._selectedBranch = null)}"
+                  @flow-conditions-cancel="${() => this._closeBranchEditor(node.id)}"
                 ></zn-flow-branch-conditions>`
               : html`<p class="inspector-hint">This step type has no branch conditions.</p>`}
         </div>

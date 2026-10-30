@@ -46,8 +46,8 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 /* Utils */
-html[t=dark] .only-light,
-html:not([t=dark]) .only-dark {
+html[m=dark] .only-light,
+html:not([m=dark]) .only-dark {
   display: none !important;
 }
 
@@ -1027,6 +1027,13 @@ html.sidebar-open #menu-toggle {
   border-bottom-left-radius: var(--docs-border-radius);
   border-bottom-right-radius: var(--docs-border-radius);
   padding: 0.125rem 0.25rem;
+  align-items: center;
+}
+
+/* Matches the plain icon links beside it, whatever button density the theme sets */
+#theme-selector zn-button {
+  --zn-button-height: 36px;
+  --zn-button-padding: 0 0.5rem;
 }
 
 #icon-toolbar button,

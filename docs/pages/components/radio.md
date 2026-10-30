@@ -101,7 +101,7 @@ Use the `label` attribute to add a form control label above the radio group. Use
 
 ### Contained Style
 
-Add the `contained` attribute to draw a card-like container around a radio. This style is useful for giving more emphasis to radio options.
+Add the `contained` attribute to draw a card-like container around a radio. This style is useful for giving more emphasis to radio options. The container shows the selected state, so the radio indicator is hidden; set `control-position` to place one in the card.
 
 ```html:preview
 <zn-radio name="payment" value="credit" description="Pay with Visa, Mastercard, or Amex" contained checked>Credit Card</zn-radio>

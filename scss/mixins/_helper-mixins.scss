@@ -27,11 +27,32 @@ $scrollbar-thumb-hover: rgba(var(--inverse-base), 0.6);
   }
 }
 
+// Chrome ignores ::-webkit-scrollbar wherever these are set, and scrollbar-color
+// inherits, so only browsers without the webkit pseudo-elements get them
+@mixin scrollbars-standard {
+  @supports not selector(::-webkit-scrollbar) {
+    scrollbar-width: thin;
+    scrollbar-color: $scrollbar-thumb transparent;
+  }
+}
+
+// Clips, leaving room outside the box for the focus ring of a control flush with its edge.
+// Safari lacks overflow-clip-margin, so there the box grows by padding cancelled by a negative
+// margin: only for boxes without padding, margins or percentage sizes of their own.
+@mixin clip-focus-room {
+  overflow: clip;
+  overflow-clip-margin: var(--zn-focus-ring-outset);
+
+  @supports not (overflow-clip-margin: 0px) {
+    padding: var(--zn-focus-ring-outset);
+    margin: calc(var(--zn-focus-ring-outset) * -1);
+  }
+}
+
 // `scrollbars` only reaches descendant scroll areas; this styles an element that
 // is itself the scroller
 @mixin scrollbars-self {
-  scrollbar-width: thin;
-  scrollbar-color: $scrollbar-thumb transparent;
+  @include scrollbars-standard;
 
   &::-webkit-scrollbar {
     width: $scrollbar-size;

@@ -1,20 +1,34 @@
+// Keep in sync with --zn-ease-* in scss/themes/_light.scss; WAAPI easing can't read var().
+export const EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)';
+export const EASE_DRAWER = 'cubic-bezier(0.32, 0.72, 0, 1)';
+
 /**
  * Animates an element using keyframes. Returns a promise that resolves after the animation completes or gets canceled.
  */
-export function animateTo(el: HTMLElement, keyframes: Keyframe[], options?: KeyframeAnimationOptions) {
+export function animateTo(el: Element, keyframes: Keyframe[], options?: KeyframeAnimationOptions) {
   return new Promise(resolve => {
     if (options?.duration === Infinity) {
       throw new Error('Promise-based animations must be finite.');
     }
 
-    const animation = el.animate(keyframes, {
-      ...options,
-      duration: prefersReducedMotion() ? 0 : options!.duration
-    });
+    let animation: Animation;
+    if (prefersReducedMotion()) {
+      const fade = reduceKeyframes(keyframes);
+      const fades = fade.some(keyframe => 'opacity' in keyframe);
+      animation = el.animate(fade, {...options, duration: fades ? Math.min(Number(options?.duration ?? 0), 150) : 0});
+    } else {
+      animation = el.animate(keyframes, options);
+    }
 
     animation.addEventListener('cancel', resolve, {once: true});
     animation.addEventListener('finish', resolve, {once: true});
   });
+}
+
+/** Keeps only the opacity of each keyframe: fades still aid comprehension under reduced motion, movement doesn't. */
+function reduceKeyframes(keyframes: Keyframe[]): Keyframe[] {
+  const kept = ['offset', 'easing', 'composite', 'opacity'];
+  return keyframes.map(keyframe => Object.fromEntries(Object.entries(keyframe).filter(([key]) => kept.includes(key))));
 }
 
 /** Parses a CSS duration and returns the number of milliseconds. */

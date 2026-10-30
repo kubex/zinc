@@ -1,3 +1,4 @@
+import {animateTo, EASE_OUT} from "../../internal/animate";
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {defaultValue} from "../../internal/default-value";
@@ -5,6 +6,7 @@ import {FormControlController} from "../../internal/form";
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {live} from "lit/directives/live.js";
+import {PointerIntentController} from "../../internal/pointer-intent";
 import {property, query, state} from 'lit/decorators.js';
 import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
@@ -71,8 +73,10 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
     setValue: (control: ZnCheckbox, checked: boolean) => (control.checked = checked)
   });
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'description', 'image');
+  private readonly pointerIntent = new PointerIntentController(this);
 
   @query('input[type="checkbox"]') input: HTMLInputElement;
+  @query('.checkbox__control') control: HTMLElement;
 
   @state() private hasFocus = false;
 
@@ -111,6 +115,9 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
   /** Squares off the corners of the container drawn by `contained`, which is rounded by default. */
   @property({type: Boolean, reflect: true}) square = false;
 
+  /** Centres the text of a contained checkbox that has no image or `card-title`. */
+  @property({type: Boolean, reflect: true}) centered = false;
+
   /** URL for the image shown in a contained checkbox. */
   @property() src = '';
 
@@ -121,8 +128,8 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
   @property({attribute: 'image-position', reflect: true}) imagePosition: SelectionCardImagePosition = 'left';
 
   /**
-   * Places the checkbox indicator within a contained card. Use `none` to hide the indicator so the card itself
-   * shows the selected state. Requires `contained`.
+   * Places the checkbox indicator within a contained card. A contained checkbox without an image or `card-title` hides it
+   * at `start`, as does `none`. Requires `contained`.
    */
   @property({attribute: 'control-position', reflect: true}) controlPosition: SelectionCardControlPosition = 'start';
 
@@ -158,7 +165,7 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
   /** The icon to show when the checkbox is checked. */
   @property({attribute: 'checked-icon'}) checkedIcon = '';
 
-  /** The icon to show when the checkbox is unchecked. */
+  /** The icon to show when the checkbox is unchecked. Defaults to a muted `checked-icon`. */
   @property({attribute: 'unchecked-icon'}) uncheckedIcon = '';
 
   /** The color of the checkbox. */
@@ -234,10 +241,35 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
   }
 
   @watch(['checked', 'indeterminate'], {waitUntilFirstUpdate: true})
-  handleStateChange() {
+  async handleStateChange() {
     this.input.checked = this.checked; // force a sync update
     this.input.indeterminate = this.indeterminate; // force a sync update
     this.formControlController.updateValidity();
+
+    const animate = this.pointerIntent.consume();
+    await this.updateComplete;
+    if (!animate) {
+      return;
+    }
+
+    animateTo(this.control, [{scale: '0.9'}, {scale: '1'}], {duration: 160, easing: EASE_OUT});
+
+    const tick = this.control.querySelector('.checkbox__checked-icon');
+    if (tick) {
+      animateTo(tick, [{strokeDashoffset: 12}, {strokeDashoffset: 0}], {duration: 180, delay: 40, easing: EASE_OUT, fill: 'backwards'});
+    }
+
+    if (this.uncheckedIcon && this.uncheckedIcon !== this.checkedIcon && !this.indeterminate) {
+      animateTo(this.control.querySelector('.checkbox__icon')!, [
+        {scale: '0.6', opacity: 0},
+        {scale: '1', opacity: 1}
+      ], {duration: 180, easing: EASE_OUT});
+    }
+
+    const bar = this.control.querySelector('.checkbox__indeterminate-icon');
+    if (bar) {
+      animateTo(bar, [{scale: '0 1'}, {scale: '1 1'}], {duration: 160, easing: EASE_OUT});
+    }
   }
 
   /** Simulates a click on the checkbox. */
@@ -290,6 +322,8 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
     const hasLabel = this.label || hasLabelSlot;
 
     // Determine the effective color
+    const hasCustomIcon = Boolean(this.checkedIcon || this.uncheckedIcon);
+    const customIconSize = {small: 16, medium: 20, large: 24}[this.size];
     const effectiveColor = (this.checked || this.indeterminate)
       ? (this.checkedColor || this.color)
       : (this.uncheckedColor || this.color);
@@ -336,6 +370,7 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
             'checkbox--focused': this.hasFocus,
             'checkbox--indeterminate': this.indeterminate,
             'checkbox--contained': this.contained,
+            'checkbox--custom-icon': hasCustomIcon,
             'checkbox--no-border': this.borderless,
             'checkbox--horizontal': this.horizontal,
             'checkbox--small': this.size === 'small',
@@ -384,34 +419,33 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
             ${this.checked && !this.indeterminate
               ? this.checkedIcon
                 ? html`
-                  <zn-icon part="checked-icon" class="checkbox__icon" src="${this.checkedIcon}"></zn-icon>`
+                  <zn-icon part="checked-icon" class="checkbox__icon" src="${this.checkedIcon}"
+                           size="${customIconSize}"></zn-icon>`
                 : html`
-                  <svg viewBox="0 0 24 24"
+                  <svg viewBox="0 0 16 16"
                        fill="none"
                        stroke="currentColor"
-                       stroke-width="4"
-                       stroke-linecap="round"
-                       stroke-linejoin="round"
+                       stroke-width="2"
                        class="svg-icon">
-                    <polyline class="checkbox__checked-icon" points="20 6 9 17 4 12"></polyline>
+                    <polyline class="checkbox__checked-icon" points="4 7.8 6.9 10.6 12 5.4"></polyline>
                   </svg>`
               : ''}
 
-            ${!this.checked && !this.indeterminate && this.uncheckedIcon
+            ${!this.checked && !this.indeterminate && hasCustomIcon
               ? html`
-                <zn-icon part="unchecked-icon" class="checkbox__icon" src="${this.uncheckedIcon}"></zn-icon>`
+                <zn-icon part="unchecked-icon" class="checkbox__icon" src="${this.uncheckedIcon || this.checkedIcon}"
+                         size="${customIconSize}"></zn-icon>`
               : ''}
 
             ${!this.checked && this.indeterminate
               ? html`
-                <svg viewBox="0 0 24 24"
+                <svg viewBox="0 0 16 16"
                      fill="none"
                      stroke="currentColor"
-                     stroke-width="4"
-                     stroke-linecap="round"
+                     stroke-width="2"
                      part="indeterminate-icon"
                      class="checkbox__indeterminate-icon">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <line x1="4" y1="8" x2="12" y2="8"></line>
                 </svg>`
               : ''}
           </span>
@@ -439,16 +473,15 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
               part="description">
               <slot name="description">${this.description}</slot>
             </div>
-            ${this.checked
-              ? html`
-                <zn-animation name="fadeIn" easing="ease" duration="300" iterations="1" play>
-                  <slot
-                    name="selected-content"
-                    part="selected-content"
-                    class="checkbox__selected-content"
-                    @click=${this.handleSelectedContentClick}></slot>
-                </zn-animation>`
-              : ''}
+            <div class="checkbox__selected-content-wrapper">
+              <div class="checkbox__selected-content-inner">
+                <slot
+                  name="selected-content"
+                  part="selected-content"
+                  class="checkbox__selected-content"
+                  @click=${this.handleSelectedContentClick}></slot>
+              </div>
+            </div>
           </div>
         </label>
       </div>

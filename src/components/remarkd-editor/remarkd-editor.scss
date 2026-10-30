@@ -187,6 +187,14 @@
   }
 }
 
+.remarkd-editor__rendered,
+.remarkd-editor__add {
+  &:focus-visible {
+    outline: var(--zn-focus-ring);
+    border-radius: var(--zn-border-radius);
+  }
+}
+
 // The shell keeps the block's rendered chrome while its source is edited —
 // remarkd hint classes (hint-note, hint-tip, …) apply their own styling here.
 .remarkd-editor__edit-shell {
@@ -248,10 +256,10 @@
 }
 
 .remarkd-editor__edit-shell--code {
-  background: var(--rmd-code-bg, #0f1626);
+  background: var(--rmd-code-bg, var(--zn-code-background, #0f1626));
 
   .remarkd-editor__input {
-    color: var(--rmd-code-text, #f5f8ff);
+    color: var(--rmd-code-text, var(--zn-code-color, #f5f8ff));
   }
 }
 
@@ -299,7 +307,7 @@
   align-items: center;
   gap: 4px;
   margin-bottom: var(--zn-spacing-x-small);
-  color: rgb(var(--zn-primary));
+  color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -328,7 +336,7 @@
   padding: 0 2px;
   border-radius: 3px;
   background: rgba(var(--zn-primary), 0.12);
-  color: rgb(var(--zn-primary));
+  color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 

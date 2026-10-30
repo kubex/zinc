@@ -61,7 +61,20 @@ Use the `color` attribute to set the button's color.
 <zn-button color="info">Info</zn-button>
 <zn-button color="warning">Warning</zn-button>
 <zn-button color="error">Error</zn-button>
+<zn-button color="ai" icon="auto_awesome">AI</zn-button>
 <zn-button color="transparent">Transparent</zn-button>
+```
+
+Reserve `color="ai"` for actions that invoke AI or act on AI-generated content.
+
+### Sizes
+
+Use the `size` attribute to pick a smaller or larger button. Heights follow the theme's density.
+
+```html:preview
+<zn-button size="small">Small</zn-button>
+<zn-button>Medium</zn-button>
+<zn-button size="large">Large</zn-button>
 ```
 
 ### Outline
@@ -189,7 +202,7 @@ Use the `square` attribute to create square-shaped buttons, useful for icon-only
 
 ### Pill Buttons
 
-Use the `pill` attribute for a label-like trigger rather than an action: fully rounded, sentence case and regular weight, so it reads as a value you can change rather than a command. Used for the filter chips in `zn-data-table-filter`.
+Use the `pill` attribute for a label-like trigger rather than an action: fully rounded, sentence case and regular weight, so it reads as a value you can change rather than a command.
 
 ```html:preview
 <zn-button pill panel-bg icon="chevron-down@lu" icon-position="right">Role</zn-button>
@@ -274,6 +287,33 @@ You can also override form attributes using `formaction`, `formmethod`, `formenc
   <zn-button type="submit">Default Submit</zn-button>
   <zn-button type="submit" formaction="/search" formmethod="get">Search</zn-button>
 </form>
+```
+
+### Long Press Menu
+
+Put a `<zn-menu>` in the `menu` slot to give a button advanced options, the way an app in the macOS Dock shows its menu when held. A click still runs the button's own action; holding it for `long-press-delay` milliseconds (500 by default) opens the menu instead. Keep holding and drag onto an item, then release, to choose it in one gesture.
+
+Right click, <kbd>Arrow Down</kbd>, <kbd>Shift</kbd>+<kbd>F10</kbd> and the context menu key also open the menu. Use `menu-placement` to change where it opens.
+
+Clicks on menu items bubble through the button, so a `click` listener on the button also hears them. Wire item actions through the menu's `zn-select` event, or check `event.target`.
+
+```html:preview
+<zn-button color="primary" class="long-press-example" long-press-delay="400">
+  Send
+  <zn-menu slot="menu">
+    <zn-menu-item value="schedule">Schedule send</zn-menu-item>
+    <zn-menu-item value="draft">Save as draft</zn-menu-item>
+    <zn-menu-item value="test">Send a test to myself</zn-menu-item>
+  </zn-menu>
+</zn-button>
+
+<script type="module">
+  const button = document.querySelector('.long-press-example');
+  button.addEventListener('click', e => {
+    if (e.target === button) alert('Send');
+  });
+  button.querySelector('zn-menu').addEventListener('zn-select', e => alert(e.detail.item.value));
+</script>
 ```
 
 ### Dropdown Closer

@@ -36,7 +36,12 @@
   overflow-y: auto;
   flex-grow: 1;
   margin: 0;
-  padding: 0 0 var(--zn-scroll-footer-height, 0px) 0;
+  padding: 0 0 calc(var(--zn-scroll-footer-height, 0px) + var(--zn-pane-end-inset, 0px)) 0;
+
+  // Only the outermost scroller leaves room for the pane's end
+  > * {
+    --zn-pane-end-inset: 0px;
+  }
 }
 
 .scroll-header {

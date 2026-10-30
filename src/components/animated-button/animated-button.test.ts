@@ -22,16 +22,17 @@ describe('<zn-animated-button>', () => {
     expect(button?.textContent?.trim()).to.equal('Buy Now');
   });
 
-  it('should be disabled when processing', async () => {
+  it('should be aria-disabled but focusable when processing', async () => {
     const el = await fixture<ZnAnimatedButton>(html`<zn-animated-button></zn-animated-button>`);
     const button = el.shadowRoot?.querySelector('button') as HTMLButtonElement;
 
-    expect(button.disabled).to.be.false;
+    expect(button.getAttribute('aria-disabled')).to.not.equal('true');
 
     button.click();
     await el.updateComplete;
 
-    expect(button.disabled).to.be.true;
+    expect(button.getAttribute('aria-disabled')).to.equal('true');
+    expect(button.disabled).to.be.false;
   });
 
   it('should emit zn-purchase event when clicked', async () => {

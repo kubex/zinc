@@ -4,7 +4,7 @@ import {FormControlController, validValidityState} from "../../internal/form";
 import {HasSlotController} from '../../internal/slot';
 import {html, literal} from 'lit/static-html.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {property, query, queryAll} from 'lit/decorators.js';
+import {property, query, queryAll, state} from 'lit/decorators.js';
 import {styleMap} from "lit/directives/style-map.js";
 import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
@@ -12,6 +12,7 @@ import ZnDropdown from "../dropdown";
 import ZnIcon from "../icon";
 import ZnTooltip from "../tooltip";
 import type {IconColor, IconLibrary} from "../icon";
+import type ZnMenu from "../menu";
 import type {ZincFormControl} from '../../internal/zinc-element';
 
 import sharedStyles from '../../../scss/shared/index.scss';
@@ -23,6 +24,7 @@ import styles from './button.scss';
  * @status stable
  * @since 2.0
  *
+ * @dependency zn-dropdown
  * @dependency zn-icon
  * @dependency zn-tooltip
  *
@@ -34,6 +36,7 @@ import styles from './button.scss';
  * @slot prefix - A presentational prefix icon or similar element.
  * @slot suffix - A presentational suffix icon or similar element.
  * @slot cancel - Slot for custom cancel button/content when autoClick is active.
+ * @slot menu - A `<zn-menu>` of advanced options, opened by a long press, a right click, or ArrowDown on the button.
  *
  * @csspart base - The component's base wrapper.
  * @csspart prefix - The container that wraps the prefix.
@@ -45,26 +48,43 @@ import styles from './button.scss';
 export default class ZnButton extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = [unsafeCSS(sharedStyles), unsafeCSS(styles)];
   static dependencies = {
+    'zn-dropdown': ZnDropdown,
     'zn-tooltip': ZnTooltip,
     'zn-icon': ZnIcon
   };
 
   private readonly formControlController = new FormControlController(this);
-  private readonly hasSlotController = new HasSlotController(this, '[default]');
+  private readonly hasSlotController = new HasSlotController(this, '[default]', 'menu');
   private _autoClickTimeout: number | undefined;
   private _loadingState = {
     countdown: null as number | null,
     interval: undefined as number | undefined,
   };
 
+  // Long press menu
+  private _longPressTimeout: number | undefined;
+  private _longPressOrigin: { x: number, y: number } | null = null;
+  /** The pointer that opened the menu is still down, so releasing it over an item selects that item. */
+  private _menuPointerHeld = false;
+  /** Swallows the click that ends a long press, so the button's own action does not run. */
+  private _suppressClick = false;
+  private _menuHadFocus = false;
+
+  @state() private menuOpen = false;
+
   @query('.button') button: HTMLButtonElement;
+  @query('.button__menu') menuDropdown: ZnDropdown;
   @queryAll('.loading-countdown') countdownContainer: HTMLElement[];
 
-  @property({}) color: 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |
+  /** `ai` is reserved for actions that invoke or act on AI-generated content. */
+  @property({}) color: 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'ai' |
     'transparent' | 'star' | (string & Record<never, never>) = 'default';
+  @property() size: 'small' | 'medium' | 'large' = 'medium';
   @property({attribute: 'hover-color'}) hoverColor: string;
   @property({type: Boolean}) text = false;
   @property({type: Boolean}) outline = false;
+  /** Keeps the filled look where a container forces `text`, such as a page header's action menu. */
+  @property({type: Boolean}) solid = false;
   @property({type: Boolean}) disabled = false;
   @property({type: Boolean}) grow = false;
   @property({type: Boolean}) square = false;
@@ -88,6 +108,13 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
    * weight. For label-like triggers such as filter chips. */
   @property({type: Boolean, reflect: true}) pill = false;
   @property({type: Boolean, attribute: 'panel-bg'}) panelBackground = false;
+
+  /** How long, in milliseconds, the button must be held to open the `menu` slot. */
+  @property({type: Number, attribute: 'long-press-delay'}) longPressDelay = 500;
+
+  /** Where the `menu` slot opens relative to the button. */
+  @property({attribute: 'menu-placement'}) menuPlacement: 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' |
+    'right-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end' = 'bottom-start';
 
   @property({attribute: 'dropdown-closer', type: Boolean}) dropdownCloser = false;
 
@@ -131,6 +158,12 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   /** Toggle state, forwarded to the inner button's `aria-pressed`. */
   @property({attribute: 'aria-pressed'}) pressed: 'true' | 'false' | 'mixed';
 
+  /** Popup state, forwarded to the inner button's `aria-expanded`. */
+  @property({attribute: 'aria-expanded'}) expanded: 'true' | 'false';
+
+  /** Popup type, forwarded to the inner button's `aria-haspopup`. */
+  @property({attribute: 'aria-haspopup'}) hasPopup: string;
+
   // Auto Click Specific
   @property({type: Boolean, attribute: 'auto-click'}) autoClick = false;
   @property({type: Number, attribute: 'auto-click-delay'}) autoClickDelay = 2000;
@@ -169,9 +202,16 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     }
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener('click', this.handleHostClickCapture, {capture: true});
+  }
+
   disconnectedCallback() {
     super.disconnectedCallback();
     this.teardownAutoClick();
+    this.cancelLongPress();
+    this.removeEventListener('click', this.handleHostClickCapture, {capture: true});
   }
 
   @watch('autoClick')
@@ -270,13 +310,180 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
       dropdown?.hide();
     }
 
+    // Passing the button through carries its name, value and formaction onto the submission.
     if (this.type === 'submit') {
-      this.formControlController.submit();
+      this.formControlController.submit(this);
     }
 
     if (this.type === 'reset') {
-      this.formControlController.reset();
+      this.formControlController.reset(this);
     }
+  }
+
+  private _hasMenu() {
+    return this.hasSlotController.test('menu');
+  }
+
+  private getMenu() {
+    return this.querySelector<ZnMenu>(':scope > zn-menu[slot="menu"], :scope > [slot="menu"] zn-menu');
+  }
+
+  /** Opens the advanced options in the `menu` slot. */
+  async showMenu() {
+    if (!this._hasMenu() || this.disabled || this.processing) return;
+    await this.updateComplete;
+    await this.menuDropdown?.show();
+  }
+
+  /** Closes the advanced options in the `menu` slot. */
+  async hideMenu() {
+    await this.menuDropdown?.hide();
+  }
+
+  // Runs before any click listener on the button, including the consumer's own
+  private handleHostClickCapture = (event: MouseEvent) => {
+    if (!this._suppressClick) return;
+
+    const menuSlot = this.shadowRoot?.querySelector('slot[name="menu"]');
+    const fromMenu = event.composedPath().some(el => (el as Element).assignedSlot === menuSlot);
+    if (fromMenu) return;
+
+    this._suppressClick = false;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
+
+  private handleMenuPointerDown = (event: PointerEvent) => {
+    if (!this._hasMenu() || this.disabled || this.processing || event.button !== 0) return;
+
+    // Pressing the button while its menu is open only closes the menu, which the dropdown does on mousedown
+    if (this.menuOpen) {
+      this._suppressClick = true;
+      document.addEventListener('pointerup', this.handleMenuPointerUp);
+      return;
+    }
+
+    this.cancelLongPress();
+    this._longPressOrigin = {x: event.clientX, y: event.clientY};
+    this._longPressTimeout = window.setTimeout(() => {
+      this._longPressTimeout = undefined;
+      this._suppressClick = true;
+      this._menuPointerHeld = true;
+      this.showMenu().then(r => r);
+    }, this.longPressDelay);
+
+    document.addEventListener('pointermove', this.handleMenuPointerMove);
+    document.addEventListener('pointerup', this.handleMenuPointerUp);
+    document.addEventListener('pointercancel', this.handleMenuPointerCancel);
+  }
+
+  private handleMenuPointerMove = (event: PointerEvent) => {
+    if (this._longPressTimeout === undefined || !this._longPressOrigin) return;
+
+    const moved = Math.hypot(event.clientX - this._longPressOrigin.x, event.clientY - this._longPressOrigin.y);
+    if (moved > 8) {
+      this.cancelLongPress();
+    }
+  }
+
+  private handleMenuPointerUp = (event: PointerEvent) => {
+    const held = this._menuPointerHeld;
+    this.cancelLongPress();
+
+    // Press, drag onto an item and release selects it, as in the macOS Dock
+    if (held) {
+      const item = document.elementFromPoint(event.clientX, event.clientY)?.closest('zn-menu-item');
+      if (item && this.contains(item) && !item.hasAttribute('disabled')) {
+        (item as HTMLElement).click();
+      }
+    }
+
+    // A long press on touch ends without a click, so the flag must not outlive this gesture
+    if (this._suppressClick) {
+      window.setTimeout(() => this._suppressClick = false, 300);
+    }
+  }
+
+  private handleMenuPointerCancel = () => {
+    this.cancelLongPress();
+    this._suppressClick = false;
+  }
+
+  private cancelLongPress() {
+    window.clearTimeout(this._longPressTimeout);
+    this._longPressTimeout = undefined;
+    this._longPressOrigin = null;
+    this._menuPointerHeld = false;
+    document.removeEventListener('pointermove', this.handleMenuPointerMove);
+    document.removeEventListener('pointerup', this.handleMenuPointerUp);
+    document.removeEventListener('pointercancel', this.handleMenuPointerCancel);
+  }
+
+  private handleMenuContextMenu = (event: MouseEvent) => {
+    if (!this._hasMenu()) return;
+
+    event.preventDefault();
+    // A touch long press also fires contextmenu, after the menu has already opened
+    if (!this.menuOpen) {
+      this.cancelLongPress();
+      this.showMenu().then(r => r);
+    }
+  }
+
+  private handleMenuKeyDown = async (event: KeyboardEvent) => {
+    if (!this._hasMenu()) return;
+
+    const opensMenu = event.key === 'ArrowDown' || event.key === 'ContextMenu' || (event.key === 'F10' && event.shiftKey);
+    if (!opensMenu) return;
+
+    event.preventDefault();
+    await this.showMenu();
+
+    const menu = this.getMenu();
+    const first = menu?.getAllItems()[0];
+    if (menu && first) {
+      menu.setCurrentItem(first);
+      first.focus();
+    }
+  }
+
+  private handleMenuShow = (event: Event) => {
+    if (event.target !== this.menuDropdown) return;
+    this.menuOpen = true;
+  }
+
+  private handleMenuHide = (event: Event) => {
+    if (event.target !== this.menuDropdown) return;
+    this.menuOpen = false;
+    this._menuHadFocus = !!this.getMenu()?.matches(':focus-within');
+  }
+
+  // The dropdown's anchor is not focusable, so focus returns to the button itself
+  private handleMenuAfterHide = (event: Event) => {
+    if (event.target !== this.menuDropdown) return;
+    if (this._menuHadFocus) {
+      this._menuHadFocus = false;
+      this.button?.focus();
+    }
+  }
+
+  private _renderMenu() {
+    if (!this._hasMenu()) {
+      // Kept in the tree so adding a menu later fires slotchange
+      return html`<slot name="menu" hidden></slot>`;
+    }
+
+    return html`
+      <zn-dropdown class="button__menu"
+                   placement=${this.menuPlacement}
+                   @zn-show=${this.handleMenuShow}
+                   @zn-hide=${this.handleMenuHide}
+                   @zn-after-hide=${this.handleMenuAfterHide}>
+        <span slot="trigger" class="button__menu-anchor"></span>
+        <div class="button__menu-panel">
+          <slot name="menu"></slot>
+        </div>
+      </zn-dropdown>`;
   }
 
   private _isLink() {
@@ -305,6 +512,8 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         return 'rgb(var(--zn-color-success))';
       case 'warning':
         return 'rgb(var(--zn-color-warning))';
+      case 'ai':
+        return 'var(--zn-color-ai-fg)';
       case 'transparent':
         return 'inherit';
       case 'star':
@@ -382,6 +591,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
 
   protected render(): unknown {
     const isLink = this._isLink();
+    const hasMenu = this._hasMenu();
     const showCancel = this.loading && this.autoClick;
     const resolvedIconSize = this.iconSize ? this.iconSize : 20;
     const icon = this.icon && !this.loading && !this.processing ? html`
@@ -417,10 +627,13 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--info': this.color === 'info',
           'button--success': this.color === 'success',
           'button--warning': this.color === 'warning',
+          'button--ai': this.color === 'ai',
+          'button--small': this.size === 'small',
+          'button--large': this.size === 'large',
           'button--transparent': this.color === 'transparent',
           'button--star': this.color === 'star',
           'button--outline': this.outline,
-          'button--text': (this.text && !this.outline),
+          'button--text': (this.text && !this.outline && !this.solid),
           'button--icon-button': !!this.iconButton,
           'button--plain': !!this.iconButton && this.plain,
           'button--pill': this.pill,
@@ -438,6 +651,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--muted-notification': this.mutedNotifications || notification === -2,
           'button--notification-dot': notification !== undefined && notification < 0,
           'button--processing': this.processing,
+          'button--has-menu': hasMenu,
         })}"
         type="${ifDefined(this.type)}"
         href="${ifDefined(this.href)}"
@@ -447,11 +661,17 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         gaid="${ifDefined(this.gaid)}"
         aria-label="${ifDefined(ariaLabel)}"
         aria-pressed="${ifDefined(isLink ? undefined : this.pressed)}"
+        aria-expanded="${ifDefined(this.expanded ?? (hasMenu ? String(this.menuOpen) : undefined))}"
+        aria-haspopup="${ifDefined(this.hasPopup ?? (hasMenu ? 'menu' : undefined))}"
+        draggable="${ifDefined(isLink && hasMenu ? 'false' : undefined)}"
         aria-busy="${this.processing ? 'true' : nothing}"
         data-notification="${ifDefined(notification)}"
         disabled="${this.disabled || nothing}"
         style=${styleMap(buttonStyles)}
-        @click="${this.handleClick}">
+        @click="${this.handleClick}"
+        @pointerdown="${this.handleMenuPointerDown}"
+        @contextmenu="${this.handleMenuContextMenu}"
+        @keydown="${this.handleMenuKeyDown}">
         ${this.iconPosition === 'left' ? icon : ''}
         ${this.processing ? html`<span part="spinner" class="button__spinner"></span>` : ''}
         ${this.processing && this.processingText ? html`<span class="button__processing-text">${this.processingText}</span>` : ''}
@@ -484,7 +704,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         </zn-tooltip>`;
     }
 
-    return content;
+    return html`${content}${this._renderMenu()}`;
   }
 
   private _getLoadingContainer() {

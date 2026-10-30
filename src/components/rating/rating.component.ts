@@ -154,6 +154,27 @@ export default class ZnRating extends ZincElement implements ZincFormControl {
   }
 
 
+  private _handleKeyDown(event: KeyboardEvent) {
+    if (this.disabled || this.readonly) {
+      return;
+    }
+
+    const step = {ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1}[event.key];
+    let value: number;
+    if (event.key === 'Home') {
+      value = 0;
+    } else if (event.key === 'End') {
+      value = this.max;
+    } else if (step !== undefined) {
+      value = Math.min(Math.max(this.value + step * this.precision, 0), this.max);
+    } else {
+      return;
+    }
+
+    event.preventDefault();
+    this.value = value;
+  }
+
   private _handleClick(event: MouseEvent) {
     if (this.readonly || this.disabled) {
       return;
@@ -231,6 +252,8 @@ export default class ZnRating extends ZincElement implements ZincFormControl {
           aria-valuenow="${this.value}"
           aria-valuemin="0"
           aria-valuemax="${this.max}"
+          tabindex="${this.disabled ? '-1' : '0'}"
+          @keydown="${this._handleKeyDown}"
         >
           <span
             class="rating__symbols"

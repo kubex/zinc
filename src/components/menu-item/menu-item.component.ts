@@ -28,6 +28,7 @@ import styles from './menu-item.scss';
  * @slot example - An example slot.
  *
  * @csspart base - The component's base wrapper.
+ * @csspart shortcut - The key cap showing the item's `shortcut`.
  *
  * @cssproperty --example - An example CSS custom property.
  */
@@ -100,6 +101,9 @@ export default class ZnMenuItem extends ZincElement {
   /** Marks the menu item as currently active/selected. */
   @property({type: Boolean, reflect: true}) active = false;
 
+  /** A keyboard shortcut shown as a key cap at the end of the item, such as `E` or `⌘K`. */
+  @property() shortcut: string;
+
   private readonly localize = new LocalizeController(this);
   private readonly hasSlotController = new HasSlotController(this, 'submenu');
   private submenuController: SubmenuController = new SubmenuController(this, this.hasSlotController, this.localize);
@@ -142,9 +146,13 @@ export default class ZnMenuItem extends ZincElement {
     if (!this.isSubmenu()) {
       const composedPath = event.composedPath();
       const closestMenu: Element | null = composedPath.find((el: Element) => el?.getAttribute?.('role') === 'menu') as Element;
-      if (this.confirm) return;
-
       const dropdown = closestMenu?.closest('zn-dropdown') as ZnDropdown | null;
+      if (this.confirm) {
+        // The confirm dialog lives inside the dropdown panel, so the dropdown can only close once the dialog does
+        dropdown?.addEventListener('zn-close', () => dropdown.hide(), {once: true});
+        return;
+      }
+
       if (!dropdown?.stayOpenOnSelect && !this.keepOpen) {
         dropdown?.hide();
       }
@@ -215,6 +223,7 @@ export default class ZnMenuItem extends ZincElement {
         part="base"
         data-path=${ifDefined(this.dataPath)}
         href=${ifDefined(this.href)}
+        tabindex=${ifDefined(isLink ? '-1' : undefined)}
         target=${ifDefined(isLink ? this.target : undefined)}
         data-target=${ifDefined(isLink ? this.dataTarget : undefined)}
         rel=${ifDefined(isLink ? this.rel : undefined)}
@@ -253,6 +262,8 @@ export default class ZnMenuItem extends ZincElement {
         <slot part="label" class="menu-item__label" @slotchange=${this.handleDefaultSlotChange}></slot>
 
         <slot name="suffix" part="suffix" class="menu-item__suffix"></slot>
+
+        ${this.shortcut ? html`<kbd part="shortcut" class="menu-item__shortcut">${this.shortcut}</kbd>` : ''}
 
         ${this.checkedPosition === 'right' ? html`
           <span part="checked-icon" class="menu-item__check">

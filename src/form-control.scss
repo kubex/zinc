@@ -1,5 +1,5 @@
 .form-control-input {
-  margin: var(--zn-spacing-2x-small) 3px 3px 0;
+  margin: var(--zn-form-control-input-margin, var(--zn-spacing-2x-small) 3px 3px 0);
 }
 
 .form-control-input--flush {
@@ -15,12 +15,13 @@
 }
 
 /* Label */
+// Inline-block sits in the inherited line box, which can be taller than the label; block sizes it to its own line.
 .form-control--has-label .form-control__label {
-  display: inline-block;
+  display: var(--zn-input-label-display, inline-block);
   color: var(--zn-input-label-color);
   font-weight: var(--zn-input-label-font-weight);
   line-height: var(--zn-input-label-line-height);
-  margin-bottom: var(--zn-spacing-x-small);
+  margin-bottom: var(--zn-input-label-spacing, var(--zn-spacing-x-small));
 }
 
 .form-control--has-label.form-control--medium .form-control__label {
@@ -35,6 +36,28 @@
   content: var(--zn-input-required-content);
   margin-inline-start: var(--zn-input-required-content-offset);
   color: var(--zn-input-required-content-color);
+}
+
+.form-control__label-note {
+  margin-inline-start: var(--zn-input-label-note-offset, var(--zn-spacing-2x-small));
+  color: var(--zn-input-help-text-color);
+  font-weight: var(--zn-font-weight-normal, 400);
+}
+
+.form-control--has-label-tooltip .form-control__label-note {
+  margin-inline-start: 0;
+}
+
+.form-control--small .form-control__label-note {
+  font-size: var(--zn-input-help-text-font-size-small);
+}
+
+.form-control--medium .form-control__label-note {
+  font-size: var(--zn-input-help-text-font-size-medium);
+}
+
+.form-control--large .form-control__label-note {
+  font-size: var(--zn-input-help-text-font-size-large);
 }
 
 .form-control--has-label.form-control--radio-group .form-control__label,
@@ -60,6 +83,11 @@
   zn-icon {
     --icon-color: var(--zn-color-neutral-700);
     --icon-size: var(--zn-font-size-small);
+
+    &:focus-visible {
+      outline: var(--zn-focus-ring);
+      border-radius: var(--zn-border-radius-small);
+    }
   }
 }
 
@@ -98,6 +126,11 @@
 .checkbox--has-selected-content .checkbox__selected-content {
   display: block;
   margin-top: var(--zn-spacing-small);
+}
+
+// Unset, the declaration is invalid at computed time and the line height inherits as before.
+.form-control--has-help-text .form-control__help-text {
+  line-height: var(--zn-input-help-text-line-height);
 }
 
 .form-control--has-help-text.form-control--small .form-control__help-text {

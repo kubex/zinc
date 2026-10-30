@@ -197,6 +197,13 @@ export default class ZnChannelTile extends ZincElement {
     this._accept();
   };
 
+  // A click, so listeners on the host see keyboard activation too
+  private _handleKeyDown = (e: KeyboardEvent) => {
+    if (e.target !== e.currentTarget || (e.key !== 'Enter' && e.key !== ' ')) return;
+    e.preventDefault();
+    (e.currentTarget as HTMLElement).click();
+  };
+
   protected render(): unknown {
     const title = this.title || (this.available ? 'Available' : '');
     const countdown = this._isCountingDown() ? this._countdownPercent() : null;
@@ -214,7 +221,8 @@ export default class ZnChannelTile extends ZincElement {
         })}
         role="button"
         tabindex="0"
-        @click=${this._handleClick}>
+        @click=${this._handleClick}
+        @keydown=${this._handleKeyDown}>
         <div class="channel-tile__header">${this.header ? html`<h3>${this.header}</h3>` : ''}</div>
         ${countdown !== null
           ? html`
@@ -261,14 +269,9 @@ export default class ZnChannelTile extends ZincElement {
       <slot name="leading">
         ${this.icon
           ? html`
-            <zn-button icon=${this.icon}
-                       icon-size="20"
-                       icon-button="round"
-                       color=${this.color}
-                       class="${classMap({
-                         [`channel-tile--${this.color}`]: true,
-                       })}"
-                       no-hover></zn-button>`
+            <span class="channel-tile__lead">
+              <zn-icon src=${this.icon} size="16"></zn-icon>
+            </span>`
           : ''}
       </slot>`;
   }
@@ -276,32 +279,36 @@ export default class ZnChannelTile extends ZincElement {
   private _renderAvailableAction() {
     if (this.incoming && this.rejectable) {
       return html`
-        <button class="channel-tile__reject" type="button" aria-label=${this.rejectLabel}
+        <button class="channel-tile__lead channel-tile__reject" type="button" aria-label=${this.rejectLabel}
                 @click=${this._handleReject}>
-          <zn-icon src=${this.rejectIcon} size="22"></zn-icon>
+          <zn-icon src=${this.rejectIcon} size="16"></zn-icon>
         </button>`;
     }
 
     if (this.acceptUri) {
       return html`
-        <zn-button href=${this.acceptUri}
-                   icon=${this.acceptIcon}
-                   icon-size="20"
-                   icon-button="round"
-                   gaid=${this.acceptGaid}
-                   loading-text="Accepting"
-                   no-hover>
-        </zn-button>`;
+        <span class="channel-tile__lead">
+          <zn-button href=${this.acceptUri}
+                     icon=${this.acceptIcon}
+                     icon-size="16"
+                     icon-button="round"
+                     gaid=${this.acceptGaid}
+                     loading-text="Accepting"
+                     plain>
+          </zn-button>
+        </span>`;
     }
 
     return html`
-      <slot name="action">
-        <zn-button icon=${this.acceptIcon}
-                   icon-size="20"
-                   icon-button="round"
-                   gaid=${this.acceptGaid}
-                   no-hover>
-        </zn-button>
-      </slot>`;
+      <span class="channel-tile__lead">
+        <slot name="action">
+          <zn-button icon=${this.acceptIcon}
+                     icon-size="16"
+                     icon-button="round"
+                     gaid=${this.acceptGaid}
+                     plain>
+          </zn-button>
+        </slot>
+      </span>`;
   }
 }

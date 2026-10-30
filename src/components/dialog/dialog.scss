@@ -2,9 +2,9 @@
 
 :host {
   --width: 30rem;
-  --header-spacing: var(--zn-spacing-large) var(--zn-spacing-large) var(--zn-spacing-medium);
-  --body-spacing: var(--zn-spacing-x-small) var(--zn-spacing-large);
-  --footer-spacing: var(--zn-spacing-large);
+  --header-spacing: var(--zn-dialog-header-spacing, var(--zn-spacing-large) var(--zn-spacing-large) var(--zn-spacing-medium));
+  --body-spacing: var(--zn-dialog-body-spacing, var(--zn-spacing-x-small) var(--zn-spacing-large));
+  --footer-spacing: var(--zn-dialog-footer-spacing, var(--zn-spacing-large));
   --icon-background-color: var(--zn-color-primary-200);
   --icon-color: var(--zn-color-primary-600);
   --caption-color: var(--zn-color-primary-600);
@@ -17,7 +17,7 @@
   flex: 1 1 auto;
   flex-direction: column;
   min-height: 0;
-  border-radius: var(--zn-border-radius);
+  border-radius: var(--zn-dialog-border-radius, var(--zn-border-radius));
   background-color: var(--zn-panel-background-color);
   margin: 2px;
   overflow: hidden;
@@ -35,13 +35,19 @@
   max-width: calc(100% - var(--zn-spacing-2x-large));
   max-height: calc(100% - 20vh);
   background-color: var(--zn-panel-background-color);
-  border-radius: var(--zn-border-radius);
+  border-radius: var(--zn-dialog-border-radius, var(--zn-border-radius));
   box-shadow: var(--zn-shadow-x-large);
   padding: 0;
   margin: 10vh auto;
 
   &[open] {
     display: flex;
+  }
+
+  // The fallback is the browser's own dialog backdrop.
+  &::backdrop {
+    background: var(--zn-dialog-backdrop, rgba(0, 0, 0, 0.1));
+    backdrop-filter: var(--zn-overlay-backdrop-filter, none);
   }
 
   &__header {
@@ -77,6 +83,16 @@
     }
   }
 
+  &__close::part(base) {
+    width: var(--zn-dialog-close-size, var(--zn-button-height, 36px));
+    min-width: var(--zn-dialog-close-size, var(--zn-button-height, 36px));
+    height: var(--zn-dialog-close-size, var(--zn-button-height, 36px));
+    min-height: var(--zn-dialog-close-size, var(--zn-button-height, 36px));
+    max-height: var(--zn-dialog-close-size, var(--zn-button-height, 36px));
+    padding: var(--zn-dialog-close-padding, 6px);
+    color: var(--zn-dialog-close-color, rgb(var(--zn-text)));
+  }
+
   &__label {
     overflow: hidden;
     word-break: break-word;
@@ -90,17 +106,19 @@
     padding: var(--body-spacing);
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-    color: var(--zn-color-text-default);
-    font-size: var(--zn-font-size-medium);
+    color: var(--zn-dialog-body-color, var(--zn-color-text-default));
+    font-size: var(--zn-dialog-body-font-size, var(--zn-font-size-medium));
     font-weight: var(--zn-font-weight-normal);
     letter-spacing: var(--zn-tracking-normal);
-    line-height: var(--zn-line-height-dense);
+    line-height: var(--zn-dialog-body-line-height, var(--zn-line-height-dense));
   }
 
   &__footer {
     flex: 0 0 auto;
     text-align: right;
     padding: var(--footer-spacing);
+    border-top: var(--zn-dialog-footer-divider, none);
+    background: var(--zn-dialog-footer-background, transparent);
 
     ::slotted(zn-button:not(:first-of-type)) {
       margin-inline-start: var(--zn-spacing-x-small);
@@ -111,10 +129,11 @@
   &--default &__title,
   &--warning &__title {
     color: rgb(var(--zn-text-panel-title));
-    font-size: var(--zn-font-size-x-large);
-    font-weight: var(--zn-font-weight-semibold);
+    font-family: var(--zn-dialog-title-font-family, inherit);
+    font-size: var(--zn-dialog-title-font-size, var(--zn-font-size-x-large));
+    font-weight: var(--zn-dialog-title-font-weight, var(--zn-font-weight-semibold));
     letter-spacing: var(--zn-letter-spacing-normal);
-    line-height: var(--zn-line-height-dense);
+    line-height: var(--zn-dialog-title-line-height, var(--zn-line-height-dense));
     padding: var(--header-spacing);
   }
 
@@ -124,11 +143,12 @@
     flex-direction: column;
     justify-content: center;
     align-content: center;
-    color: var(--caption-color);
-    font-size: var(--zn-font-size-x-large);
-    font-weight: var(--zn-font-weight-semibold);
+    color: var(--zn-dialog-announcement-title-color, var(--caption-color));
+    font-family: var(--zn-dialog-announcement-title-font-family, inherit);
+    font-size: var(--zn-dialog-announcement-title-font-size, var(--zn-font-size-x-large));
+    font-weight: var(--zn-dialog-announcement-title-font-weight, var(--zn-font-weight-semibold));
     letter-spacing: var(--zn-letter-spacing-normal);
-    line-height: var(--zn-line-height-dense);
+    line-height: var(--zn-dialog-announcement-title-line-height, var(--zn-line-height-dense));
     padding: var(--header-spacing);
     margin: 0;
   }
@@ -136,19 +156,20 @@
   &--default &__title ::slotted(zn-icon),
   &--warning &__title ::slotted(zn-icon) {
     border-radius: var(--zn-border-radius-pill);
-    padding: var(--zn-spacing-2x-small);
-    margin-right: var(--zn-spacing-small);
+    padding: var(--zn-dialog-icon-padding, var(--zn-spacing-2x-small));
+    margin-right: var(--zn-dialog-icon-gap, var(--zn-spacing-small));
   }
 
   &--announcement &__title ::slotted(zn-icon) {
-    --icon-size: var(--zn-font-size-3x-large);
-    border-radius: var(--zn-border-radius-pill);
-    padding: var(--zn-spacing-medium);
-    margin-bottom: var(--zn-spacing-medium);
+    --icon-size: var(--zn-dialog-announcement-icon-size, var(--zn-font-size-3x-large));
+    border-radius: var(--zn-dialog-announcement-icon-radius, var(--zn-border-radius-pill));
+    padding: var(--zn-dialog-announcement-icon-padding, var(--zn-spacing-medium));
+    margin-bottom: var(--zn-dialog-announcement-icon-gap, var(--zn-spacing-medium));
+    background-color: var(--icon-background-color);
   }
 
   &__title ::slotted(zn-icon) {
-    background-color: var(--icon-background-color);
+    background-color: var(--zn-dialog-icon-background, var(--icon-background-color));
     color: var(--icon-color);
   }
 
@@ -158,10 +179,12 @@
   }
 
   &--announcement &__title ::slotted([slot='announcement-intro']) {
-    color: var(--zn-color-neutral-800);
-    font-size: var(--zn-font-size-large);
+    color: var(--zn-dialog-announcement-intro-color, var(--zn-color-neutral-800));
+    font-size: var(--zn-dialog-announcement-intro-font-size, var(--zn-font-size-large));
     font-weight: var(--zn-font-weight-semibold);
-    padding: var(--zn-spacing-medium) 0;
+    letter-spacing: var(--zn-dialog-announcement-intro-letter-spacing, normal);
+    text-transform: var(--zn-dialog-announcement-intro-transform, none);
+    padding: var(--zn-dialog-announcement-intro-spacing, var(--zn-spacing-medium) 0);
   }
 
   &--announcement &__header-actions {
@@ -169,7 +192,7 @@
   }
 
   &--announcement &__body {
-    padding: var(--zn-spacing-x-small) var(--zn-spacing-2x-large);
+    padding: var(--zn-dialog-announcement-body-spacing, var(--zn-spacing-x-small) var(--zn-spacing-2x-large));
   }
 
   &--announcement &__title,
@@ -179,27 +202,28 @@
   }
 
   &--announcement &__footer ::slotted([slot='footer-text']) {
-    color: var(--zn-color-neutral-700);
-    font-size: var(--zn-font-size-small);
+    color: var(--zn-dialog-announcement-footer-text-color, var(--zn-color-neutral-700));
+    font-size: var(--zn-dialog-announcement-footer-text-font-size, var(--zn-font-size-small));
     font-weight: var(--zn-font-weight-normal);
+    padding: var(--zn-dialog-announcement-footer-text-spacing, var(--zn-spacing-large));
   }
 
   /** Sizes */
   &--small {
-    --width: 25rem;
+    --width: var(--zn-dialog-width-small, 25rem);
 
     .dialog__body {
-      color: rgb(var(--zn-text));
+      color: var(--zn-dialog-body-color, rgb(var(--zn-text)));
       padding: var(--body-spacing);
     }
   }
 
   &--medium {
-    --width: 30rem;
+    --width: var(--zn-dialog-width-medium, 30rem);
   }
 
   &--large {
-    --width: 37.5rem;
+    --width: var(--zn-dialog-width-large, 37.5rem);
   }
 
   /** Modifiers **/
@@ -207,10 +231,6 @@
   //&--has-header-icon:not(.dialog--announcement) &__body {
   //  padding: var(--zn-spacing-x-small) var(--zn-spacing-large) var(--zn-spacing-3x-large);
   //}
-
-  &--announcement &__footer ::slotted([slot='footer-text']) {
-    padding: var(--zn-spacing-large);
-  }
 
   &__footer ::slotted(zn-button:not(:first-of-type)) {
     margin-inline-start: var(--zn-spacing-x-small);

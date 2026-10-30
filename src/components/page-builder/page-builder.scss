@@ -533,7 +533,8 @@ zn-page-palette-item {
   }
 
   &:hover &__add,
-  &--active &__add {
+  &--active &__add,
+  &__add:focus-visible {
     opacity: 1;
   }
 }
@@ -581,6 +582,10 @@ zn-page-section-card.dragging,
     &:hover {
       border-color: rgb(var(--zn-color-border-active));
       color: rgba(var(--zn-text), 0.7);
+    }
+
+    &:focus-visible {
+      outline: var(--zn-focus-ring);
     }
   }
 

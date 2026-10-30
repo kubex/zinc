@@ -81,7 +81,7 @@
     width: 100%;
 
     ::slotted(a) {
-      color: rgb(var(--zn-primary)) !important;
+      color: var(--zn-color-primary-fg, rgb(var(--zn-primary))) !important;
     }
 
     ::slotted(zn-icon) {
@@ -156,13 +156,48 @@
     gap: var(--zn-spacing-2x-small);
   }
 
+  &--fact {
+    flex-direction: column;
+    align-items: baseline;
+    gap: var(--zn-spacing-3x-small);
+    padding: 0;
+    min-height: 0;
+
+    .item__headings {
+      width: auto;
+      max-width: none;
+    }
+
+    .item__caption {
+      font-size: var(--zn-font-size-small);
+      font-weight: 400;
+      line-height: var(--zn-line-height-dense);
+      color: var(--zn-text-color-muted);
+    }
+
+    .item__content {
+      max-width: 100%;
+      font-size: var(--zn-font-size-small);
+      font-weight: var(--zn-font-weight-medium);
+      line-height: var(--zn-line-height-dense);
+      overflow-wrap: anywhere;
+    }
+  }
+
+
   &--edit-on-hover {
     ::slotted(zn-inline-edit::part('actions')) {
       display: none;
     }
 
+    // Visually hidden rather than display: none, so keyboard users can still tab to them
     .item__actions {
-      display: none;
+      display: flex;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
     }
 
     &:hover {
@@ -171,7 +206,11 @@
       }
 
       .item__actions {
-        display: flex;
+        position: static;
+        width: auto;
+        height: auto;
+        overflow: visible;
+        clip-path: none;
       }
     }
   }
@@ -217,4 +256,13 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
   }
+}
+
+// Slotted actions take focus in the light DOM, which only the host's :focus-within sees
+:host(:focus-within) .item--edit-on-hover .item__actions {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip-path: none;
 }

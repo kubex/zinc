@@ -1,8 +1,6 @@
-import {animateTo, stopAnimations} from '../../internal/animate.js';
 import {classMap} from "lit/directives/class-map.js";
 import {ConditionalController} from "../../internal/conditional";
 import {FormControlController} from "../../internal/form";
-import {getAnimation, setDefaultAnimation} from "../../utilities/animation-registry";
 import {HasSlotController} from "../../internal/slot";
 import {html, nothing, unsafeCSS} from 'lit';
 import {LocalizeController} from "../../utilities/localize";
@@ -97,6 +95,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   private readonly hasSlotController = new HasSlotController(this, 'help-text', 'label');
   private readonly localize = new LocalizeController(this);
   private typeToSelectString = '';
+  private escapeSwallowed = false;
   private typeToSelectTimeout: number;
   private closeWatcher: CloseWatcher | null;
 
@@ -319,6 +318,9 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   /** The select's required attribute. */
   @property({type: Boolean, reflect: true}) required = false;
 
+  /** Short text shown next to the label, styled like the help text, e.g. `optional`. */
+  @property({attribute: 'label-note'}) labelNote = '';
+
   @property({attribute: 'cache-key'}) cacheKey: string = "";
 
   @property({type: Boolean, attribute: 'trigger-submit'}) triggerSubmit = false;
@@ -344,7 +346,11 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         ${option.getTextLabel()}
         ${(!this.nonRemovable) ? html`
           <zn-icon slot="action" src="close" size="16"
-                   @click=${(e: any) => this.handleTagRemove(e as ZnRemoveEvent, option)}></zn-icon>` : nothing}
+                   role="button"
+                   tabindex=${this.disabled ? '-1' : '0'}
+                   aria-label="Remove ${option.getTextLabel()}"
+                   @click=${(e: any) => this.handleTagRemove(e as ZnRemoveEvent, option)}
+                   @keydown=${(e: KeyboardEvent) => this.handleTagRemoveKeyDown(e, option)}></zn-icon>` : nothing}
       </zn-chip>
     `;
   };
@@ -513,13 +519,6 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       event.stopPropagation();
       this.hide().then();
       this.displayInput.focus({preventScroll: true});
-    }
-
-    // Blur the display input when Escape is pressed and the dropdown is closed,
-    // so a second Escape press can bubble (e.g. close a containing dialog).
-    if (event.key === 'Escape' && !this.open) {
-      event.stopPropagation();
-      this.displayInput.blur();
     }
 
     // Handle enter and space. When pressing space, we allow for type to select behaviors so if there's anything in the
@@ -723,6 +722,14 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   }
 
   private handleComboboxKeyDown(event: KeyboardEvent) {
+    // The first Escape on a closed select stays here; a repeat bubbles so it can dismiss a containing popup
+    if (event.key === 'Escape' && !this.open) {
+      if (this.escapeSwallowed) return;
+      this.escapeSwallowed = true;
+    } else {
+      this.escapeSwallowed = false;
+    }
+
     if (event.key === 'Tab') {
       return;
     }
@@ -1151,7 +1158,17 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     }
   }
 
-  private handleTagRemove(event: ZnRemoveEvent, option: ZnOption) {
+  private handleTagRemoveKeyDown(event: KeyboardEvent, option: ZnOption) {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+
+    const removeButtons = () => [...this.shadowRoot!.querySelectorAll<HTMLElement>('.select__tags zn-icon[slot="action"]')];
+    const index = removeButtons().indexOf(event.currentTarget as HTMLElement);
+    this.handleTagRemove(event, option);
+    this.updateComplete.then(() => (removeButtons()[index] ?? this.displayInput).focus());
+  }
+
+  private handleTagRemove(event: Event, option: ZnOption) {
     event.stopPropagation();
     event.stopImmediatePropagation();
 
@@ -1676,7 +1693,6 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       this.emit('zn-show');
       this.addOpenListeners();
 
-      await stopAnimations(this);
       this.listbox.hidden = false;
       this.popup.active = true;
 
@@ -1692,8 +1708,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         });
       }
 
-      const {keyframes, options} = getAnimation(this, 'select.show', {dir: this.localize.dir()});
-      await animateTo(this.popup.popup, keyframes, options);
+      await this.popup.updateComplete;
 
       // Make sure the current option is scrolled into view (required for Safari)
       if (this.currentOption) {
@@ -1719,9 +1734,6 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         this.displayInput.value = this.multiple ? '' : this.displayLabel;
       }
 
-      await stopAnimations(this);
-      const {keyframes, options} = getAnimation(this, 'select.hide', {dir: this.localize.dir()});
-      await animateTo(this.popup.popup, keyframes, options);
       this.listbox.hidden = true;
       this.popup.active = false;
 
@@ -1843,6 +1855,17 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     }
   }
 
+  // A theme picks the chevron through --zn-select-expand-icon and its size through
+  // --zn-select-expand-icon-size, as zn-icon sizes itself from its size attribute.
+  private expandIconSrc(): string {
+    const value = getComputedStyle(this).getPropertyValue('--zn-select-expand-icon').trim();
+    return value.replace(/^["']|["']$/g, '') || 'keyboard_arrow_down';
+  }
+
+  private expandIconSize(): string {
+    return String(parseInt(getComputedStyle(this).getPropertyValue('--zn-select-expand-icon-size')) || 24);
+  }
+
   render() {
     const hasLabelSlot = this.hasSlotController.test('label');
     const hasLabelTooltipSlot = this.hasSlotController.test('label-tooltip');
@@ -1886,6 +1909,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                 <zn-icon src="info"></zn-icon>
               </zn-tooltip>`
             : ''}
+          ${this.labelNote ? html`<span class="form-control__label-note">${this.labelNote}</span>` : ''}
         </label>
         ${hasContextNote
           ? html`
@@ -1979,8 +2003,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                     type="button"
                     aria-label=${this.localize.term('clearEntry')}
                     @mousedown=${this.handleClearMouseDown}
-                    @click=${this.handleClearClick}
-                    tabindex="-1">
+                    @click=${this.handleClearClick}>
                     <slot name="clear-icon">
                       <zn-icon src="circle-x@lu" size="20"></zn-icon>
                     </slot>
@@ -1995,7 +2018,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                     <zn-icon src="error" class="select__expand-icon select__fetch-error-icon"></zn-icon>`
                   : html`
                     <slot name="expand-icon" part="expand-icon" class="select__expand-icon">
-                      <zn-icon src="keyboard_arrow_down"></zn-icon>
+                      <zn-icon src="${this.expandIconSrc()}" size="${this.expandIconSize()}"></zn-icon>
                     </slot>`
               }
             </div>
@@ -2079,19 +2102,3 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     `;
   }
 }
-
-setDefaultAnimation('select.show', {
-  keyframes: [
-    {opacity: 0, scale: 0.9},
-    {opacity: 1, scale: 1}
-  ],
-  options: {duration: 100, easing: 'ease'}
-});
-
-setDefaultAnimation('select.hide', {
-  keyframes: [
-    {opacity: 1, scale: 1},
-    {opacity: 0, scale: 0.9}
-  ],
-  options: {duration: 100, easing: 'ease'}
-});

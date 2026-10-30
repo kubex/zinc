@@ -1,7 +1,7 @@
 ---
 meta:
   title: Data Table Filter
-  description: An inline filter bar for data tables. Each active filter is a pill whose dropdown sets its value, alongside an add-filter control and a clear.
+  description: The filter for data tables. A funnel opens a builder of field, operator and value rules, and the rules that apply show as removable chips.
 layout: component
 ---
 
@@ -12,59 +12,55 @@ layout: component
 </zn-data-table-filter>
 ```
 
-Filters render inline rather than in a slideout. Each active filter is a pill showing its name, and its value once set; the pill's dropdown lists the filter's `options` as checkable values, or a text input for a filter that declares none. Each pill carries an X that drops that filter. `+ Add filter` lists the filters that are not yet active, and `Clear` removes them all.
+The funnel opens a popover headed **Filters · Show records that match all of these**. Each row is a rule: pick a field, an operator and a value, or remove the row with its trash button. **+ Add filter** adds a row for a field not yet used, and **Clear all** removes every rule. Nothing reaches the table until **Apply**, which closes the popover and applies every rule that has a field, an operator and a value; while any row is still empty the heading says so. Closing the popover with Escape or a click outside it discards the edits.
 
-A filter starts on its **first declared operator**. Declare more than one and the pill offers a choice: a value editor gets a row of operator chips above it, an options menu lists the operators above its values, and the pill then reads `Age ≥ 18` rather than `Age: 18`. Switching operator keeps the value — a date is re-encoded for the new comparator.
+The rules that apply show as chips after the funnel, and the funnel's badge counts them. A chip's text opens the popover again, and its X removes that rule. Inside a [`zn-data-table`](/components/data-table#filtering) or [`zn-report-table`](/components/report-table) the funnel sits in the header and the chips get a row of their own under it.
 
-Declare `in` or `nin` to let a filter hold several values at once — the pill then counts them, e.g. `Role (2)`, and its dropdown stays open so you can pick more. Any other operator holds a single value: the dropdown closes on select, and picking the same value again clears it.
+A rule starts on its field's **first declared operator**, and the operator list offers the rest. Picking another field resets the operator and the value. The value control follows the field:
 
-Picking a filter from `+ Add filter` opens its pill straight away, with a text field focused, so naming a filter and giving it a value is one pass. A typed value is one value however many spaces it contains; only a comma starts another.
+- A field with `options`, or a `bool` field, gets a select. With `in` or `nin` it becomes a multi-select.
+- A `number` field gets a number input, and a `date` or `dateTime` field a date input.
+- Any other field gets a text input. With `in` or `nin`, separate values with commas.
 
-`default-filters` takes a comma-separated list of filter ids to show a pill for up front. Inside a `zn-data-table` the bar is hidden until the header's filter toggle is clicked, and `activeCount` reports how many filters currently hold a value.
+With more than eight fields, the field select is searchable: open it and type, and the placeholder reads `Search N fields...`.
+
+`default-filters` takes a comma-separated list of field ids. When the popover opens with nothing applied, it starts with an empty row for each of them, rather than one blank row.
 
 ```html:preview
 <zn-data-table-filter
   default-filters="status"
   filters='[
-    {"id":"status","name":"Status","options":{"open":"Open","closed":"Closed"},"operators":["eq"]},
-    {"id":"tag","name":"Tag","options":{"bug":"Bug","chore":"Chore","feature":"Feature"},"operators":["in"]},
-    {"id":"owner","name":"Owner","operators":["contains"]}
+    {"id":"status","name":"Status","options":{"open":"Open","closed":"Closed"},"operators":["eq","neq"]},
+    {"id":"tag","name":"Tag","options":{"bug":"Bug","chore":"Chore","feature":"Feature"},"operators":["in","nin"]},
+    {"id":"owner","name":"Owner","operators":["contains","eq"]}
   ]'>
 </zn-data-table-filter>
 ```
 
-The component emits `zn-filter-change` and exposes the query on `value`, encoded exactly as `zn-query-builder` encodes it — base64 of `[{key, comparator, value}]` — so a backend built against the query builder needs no changes.
+The component emits `zn-filter-change` and exposes the query on `value`, encoded as `zn-query-builder` encodes it: base64 of `[{key, comparator, value}]`, or `''` when no rule applies. It only emits when that value changes. A multi-select's values are joined with spaces, and `activeCount` reports how many rules apply.
 
-Setting `value` round-trips: assigning that same base64 string back — for example restoring it from a shared URL via `zn-data-table`'s [`sharable`](/components/data-table#shareable-url-state) sync — rebuilds the active pills, so the bar reopens in the state it was encoded in. Restoration needs the `filters` schema present to resolve each key, and it stands down once any filter already holds a value, so a shared filter still wins over an empty `default-filters` pill while a filter the user is mid-way through setting is never clobbered.
-
-One caveat: a restored **date** filter shows its raw encoded value on the pill (a timestamp, or a minutes-from-now offset) rather than a formatted date, because the human-readable label is not part of the encoded query. The filter still applies correctly; only the pill text differs until the value is re-picked.
-
-### Long Option Lists
-
-An option list caps its height at 320px and scrolls inside the panel rather than running off the
-screen, with the scrollbar drawn rather than left to the platform's overlay one. Past eight options
-the pill also gains a search field, merged into the top of the panel and pinned there, that narrows
-the list case-insensitively.
-
-```html:preview
-<zn-data-table-filter
-  default-filters="category"
-  filters='[
-    {"id":"category","name":"Category","operators":["eq","in"],"options":{
-      "how-to":"How To","linux":"Linux","beta":"Beta","router":"Router","tv":"TV","other":"Other",
-      "mac":"Mac Hotspot Shield","general":"General","android":"Android Hotspot Shield",
-      "educational":"Educational","windows":"Windows Hotspot Shield","ios":"iOS",
-      "getting-started":"Getting Started","payments":"Payments & Subscriptions",
-      "accounts":"Manage Account & Devices","troubleshoot":"Troubleshoot issues",
-      "releases":"Release Notes","archived":"Archived Articles","internal":"Internal Information",
-      "tutorials":"Tutorials"}}
-  ]'>
-</zn-data-table-filter>
-```
+Setting `value` from outside rebuilds the rules, so a filter restored from a shared URL through `zn-data-table`'s [`sharable`](/components/data-table#shareable-url-state) sync shows its chips straight away.
 
 ### Typeahead
 
-Inside a `zn-data-table` a text filter suggests values from the rows the table has already loaded, matched case-insensitively against what has been typed, keyed on the column whose name matches the filter's id. Set `suggestions` yourself — `{[filterId]: string[]}` — to offer something else.
+Inside a `zn-data-table`, a text field suggests values from the rows the table has already loaded, matched case-insensitively against what has been typed, keyed on the column whose name matches the field's id. Set `suggestions` yourself, as `{[fieldId]: string[]}`, to offer something else.
+
+### Showing the Chips Elsewhere
+
+Set another filter as a filter's `source` property and it shows only that filter's chips, while that filter stops showing its own. The tables use this to keep the funnel in their header and the chips in a row under it.
+
+```html:preview
+<div>
+  <zn-data-table-filter id="chips-source"
+    filters='[{"id":"status","name":"Status","options":{"open":"Open","closed":"Closed"},"operators":["eq"]}]'>
+  </zn-data-table-filter>
+  <zn-data-table-filter id="chips-row"></zn-data-table-filter>
+</div>
+
+<script>
+  document.getElementById('chips-row').source = document.getElementById('chips-source');
+</script>
+```
 
 ## Examples
 
@@ -81,8 +77,7 @@ Create simple text-based filters with equality and fuzzy search operators.
 
 ### Number Filters with Operators
 
-Use number type filters with comparison operators like equal, greater than, less than. The pill's
-editor shows a chip per operator; `>`, `≥`, `<` and `≤` keep their symbols, and the rest read as words.
+Use number fields with comparison operators: they read `is more than`, `is at least`, `is less than` and `is at most`.
 
 ```html:preview
 <zn-data-table-filter
@@ -93,10 +88,9 @@ editor shows a chip per operator; `>`, `≥`, `<` and `≤` keep their symbols, 
 
 ### Date Filters
 
-Filter by dates with before, after, and equal operators. A `date` pill opens a calendar and closes
-once a day is picked; a `dateTime` pill adds a time selector and stays open while it's set.
+Filter by dates with before, after and equal operators. A `date` field takes a date, and a `dateTime` field a date and a time.
 
-Values are encoded the way `zn-query-builder` encodes them, so `dateSubmitFormat` picks the wire
+Values are encoded the way `zn-query-builder` encodes them, and changing the operator re-encodes the date. `dateSubmitFormat` picks the wire
 format: `legacy` (the default — seconds for `eq`/`neq`, otherwise minutes from now, negated for
 `before`), `timestamp` (milliseconds) or `iso`.
 
@@ -115,17 +109,6 @@ Use predefined options for select-based filtering.
 <zn-data-table-filter
   filters="[{&quot;id&quot;:&quot;status&quot;,&quot;name&quot;:&quot;Status&quot;,&quot;options&quot;:{&quot;open&quot;:&quot;Open&quot;,&quot;in_progress&quot;:&quot;In Progress&quot;,&quot;closed&quot;:&quot;Closed&quot;},&quot;operators&quot;:[&quot;eq&quot;,&quot;in&quot;]},{&quot;id&quot;:&quot;priority&quot;,&quot;name&quot;:&quot;Priority&quot;,&quot;options&quot;:{&quot;low&quot;:&quot;Low&quot;,&quot;medium&quot;:&quot;Medium&quot;,&quot;high&quot;:&quot;High&quot;,&quot;critical&quot;:&quot;Critical&quot;},&quot;operators&quot;:[&quot;eq&quot;,&quot;in&quot;]}]"
   name="option-filters">
-</zn-data-table-filter>
-```
-
-### Limited Options Display
-
-Control how many options are initially visible using `maxOptionsVisible`.
-
-```html:preview
-<zn-data-table-filter
-  filters="[{&quot;id&quot;:&quot;category&quot;,&quot;name&quot;:&quot;Category&quot;,&quot;options&quot;:{&quot;cat1&quot;:&quot;Category 1&quot;,&quot;cat2&quot;:&quot;Category 2&quot;,&quot;cat3&quot;:&quot;Category 3&quot;,&quot;cat4&quot;:&quot;Category 4&quot;,&quot;cat5&quot;:&quot;Category 5&quot;,&quot;cat6&quot;:&quot;Category 6&quot;},&quot;maxOptionsVisible&quot;:3,&quot;operators&quot;:[&quot;eq&quot;,&quot;in&quot;]}]"
-  name="limited-options">
 </zn-data-table-filter>
 ```
 

@@ -34,7 +34,7 @@ describe('<zn-input>', () => {
   });
 
   describe('Escape key', () => {
-    it('blurs the inner input and stops propagation when focused', async () => {
+    it('keeps focus and swallows only the first Escape', async () => {
       const wrapper = await fixture<HTMLDivElement>(html`
         <div>
           <zn-input></zn-input>
@@ -52,16 +52,20 @@ describe('<zn-input>', () => {
       await el.updateComplete;
       expect(el.shadowRoot!.activeElement).to.equal(el.input);
 
-      el.input.dispatchEvent(new KeyboardEvent('keydown', {
+      const pressEscape = () => el.input.dispatchEvent(new KeyboardEvent('keydown', {
         key: 'Escape',
         bubbles: true,
         composed: true,
         cancelable: true
       }));
-      await el.updateComplete;
 
-      expect(el.shadowRoot!.activeElement, 'inner input should be blurred').to.not.equal(el.input);
+      pressEscape();
+      await el.updateComplete;
+      expect(el.shadowRoot!.activeElement, 'inner input should keep focus').to.equal(el.input);
       expect(wrapperEscapes, 'wrapper should not see Escape on press 1').to.equal(0);
+
+      pressEscape();
+      expect(wrapperEscapes, 'wrapper should see Escape on press 2').to.equal(1);
     });
   });
 
@@ -241,6 +245,68 @@ describe('<zn-input>', () => {
     });
   });
 
+  describe('type="color"', () => {
+    const typeInto = async (el: ZnInput, text: string) => {
+      const control = el.shadowRoot!.querySelector<HTMLInputElement>('.input__control')!;
+      control.focus();
+      control.value = text;
+      control.dispatchEvent(new Event('input', {bubbles: true, composed: true}));
+      control.dispatchEvent(new Event('change'));
+      control.blur();
+      await el.updateComplete;
+      await el.updateComplete;
+    };
+
+    it('writes the starting value in color-format', async () => {
+      const el = await fixture<ZnInput>(html`<zn-input type="color" color-format="rgb" value="#7557F5"></zn-input>`);
+      await el.updateComplete;
+
+      expect(el.value).to.equal('rgb(117, 87, 245)');
+    });
+
+    it('switches to the format that was typed and keeps a tidy value as written', async () => {
+      const el = await fixture<ZnInput>(html`<zn-input type="color" value="#085EFD"></zn-input>`);
+
+      await typeInto(el, 'oklch(70% 0.15 250)');
+
+      expect(el.colorFormat).to.equal('oklch');
+      expect(el.value).to.equal('oklch(70% 0.15 250)');
+    });
+
+    it('writes a name out in the current format', async () => {
+      const el = await fixture<ZnInput>(html`<zn-input type="color" value="#085EFD"></zn-input>`);
+
+      await typeInto(el, 'rebeccapurple');
+
+      expect(el.value).to.equal('#663399');
+    });
+
+    it('marks text that is not a colour as invalid', async () => {
+      const el = await fixture<ZnInput>(html`<zn-input type="color" value="#085EFD"></zn-input>`);
+
+      await typeInto(el, 'not a colour');
+
+      const control = el.shadowRoot!.querySelector('.input__control')!;
+      expect(control.getAttribute('aria-invalid')).to.equal('true');
+      expect(el.shadowRoot!.querySelector('[part="base"]')!.classList.contains('input--color-invalid')).to.be.true;
+    });
+
+    it('opens the colour panel from the swatch and closes it on Escape', async () => {
+      const el = await fixture<ZnInput>(html`<zn-input type="color" value="#085EFD"></zn-input>`);
+      const swatch = el.shadowRoot!.querySelector<HTMLButtonElement>('.input__color-swatch')!;
+
+      swatch.click();
+      await el.updateComplete;
+      expect(swatch.getAttribute('aria-expanded')).to.equal('true');
+      expect(el.shadowRoot!.querySelector('zn-color-picker')).to.exist;
+
+      document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape'}));
+      await el.updateComplete;
+      expect(swatch.getAttribute('aria-expanded')).to.equal('false');
+      expect(el.shadowRoot!.querySelector('zn-color-picker')).to.not.exist;
+    });
+  });
+
   describe('slash menu', () => {
     function slashMenuOf(el: ZnInput) {
       return el.shadowRoot!.querySelector<ZnSlashMenu>('zn-slash-menu');
@@ -350,5 +416,21 @@ describe('<zn-input>', () => {
       expect(menu.open, 'Escape should close the menu').to.be.false;
       expect(el.shadowRoot!.activeElement, 'the field should keep focus').to.equal(el.input);
     });
+  });
+
+  it('paints the invalid border once the user has submitted', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form @submit=${(e: Event) => e.preventDefault()}>
+        <zn-input required style="--zn-input-border-color-invalid: rgb(1, 2, 3)"></zn-input>
+      </form>`);
+    const el = form.querySelector<ZnInput>('zn-input')!;
+    const base = el.shadowRoot!.querySelector('.input')!;
+    expect(getComputedStyle(base).borderColor).to.not.equal('rgb(1, 2, 3)');
+
+    form.requestSubmit();
+    await el.updateComplete;
+
+    expect(el.hasAttribute('data-user-invalid')).to.be.true;
+    expect(getComputedStyle(base).borderColor).to.equal('rgb(1, 2, 3)');
   });
 });

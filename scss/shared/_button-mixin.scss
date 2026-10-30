@@ -5,7 +5,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--zn-base-px);// calc(var(--zn-base-px) + var(--zn-button-gutter));
+  padding: var(--zn-button-padding, var(--zn-base-px));
   margin: auto;
   width: fit-content;
   background-color: rgb(var(--zn-primary));
@@ -19,11 +19,13 @@
   border-color: transparent;
   white-space: nowrap;
 
-  max-height: 36px;
-  height: 36px;
-  min-height: 36px;
+  max-height: var(--zn-button-height, 36px);
+  height: var(--zn-button-height, 36px);
+  min-height: var(--zn-button-height, 36px);
 
+  // A theme darkens on hover by setting --zn-button-mix-color; the default
+  // (transparent) is the same as fading the fill to that alpha.
   &:hover:not([disabled]) {
-    background-color: rgba(var(--zn-primary), 0.8);
+    background-color: color-mix(in srgb, rgb(var(--zn-primary)) var(--zn-button-hover-mix, 80%), var(--zn-button-mix-color, transparent));
   }
 }

@@ -17,6 +17,7 @@ import styles from './page.scss';
 interface TabDefinition {
   id: string;
   caption: string;
+  icon: string | null;
   priority: number | null;
   sourceIndex: number;
   uri: string | null;
@@ -30,10 +31,16 @@ interface TabDefinition {
  * @status experimental
  * @since 1.0
  *
- * @slot - Page content. Use zn-tab for named tabs and header-action/header-actions for header actions.
+ * @slot - Page content. Use zn-tab for named tabs; without any, the content is shown as the page's only view. A zn-tab
+ *   holding zn-tabs shows them as a second tab set, drawn as pills. Use header-action/header-actions for header actions.
  *   Clicking an element in the content with `tab="<tab id>"` opens that tab.
+ * @slot caption-badges - Badges shown beside the caption, wrapping onto the next line as one group.
  * @slot description - Rich subtitle/description content. Falls back to the `summary` attribute when empty.
  * @slot bottom - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.
+ * @slot footer - Actions pinned below the content, such as a form's `zn-form-actions`. In a modal page it takes the
+ *   dialog footer's styling.
+ *
+ * @csspart footer - The footer wrapping the footer slot.
  */
 export default class ZnPage extends ZnTabs {
   static styles: CSSResultGroup = [ZnTabs.styles, unsafeCSS(styles)];
@@ -46,7 +53,7 @@ export default class ZnPage extends ZnTabs {
     'zn-tab': ZnTab
   };
 
-  private readonly pageSlotController = new HasSlotController(this, 'breadcrumb', 'actions', 'caption', 'description');
+  private readonly pageSlotController = new HasSlotController(this, 'breadcrumb', 'actions', 'bottom', 'caption', 'description', 'footer');
 
   @property() caption: string;
   @property({attribute: 'entity-id'}) entityId: string;
@@ -54,6 +61,11 @@ export default class ZnPage extends ZnTabs {
   @property({attribute: 'full-location'}) fullLocation: string;
   @property({type: Boolean, reflect: true}) modal = false;
   @property({type: Boolean, reflect: true}) nested = false;
+  /**
+   * The tab design: `tabs` (the default), `pills` for a second tab set below a main tab bar, shown without the page
+   * header, or `sidebar` when the tabs are shown outside the page, which hides the tab bar unless it has bottom content.
+   */
+  @property({attribute: 'navigation-style', reflect: true}) navigationStyle: 'tabs' | 'pills' | 'sidebar' | undefined;
   @property({type: Boolean, reflect: true}) primary = false; // margin
   @property({attribute: 'previous-path'}) previousPath: string;
   @property({attribute: 'previous-target'}) previousTarget: string;
@@ -108,7 +120,27 @@ export default class ZnPage extends ZnTabs {
     this.classList.toggle('alt-pressed', false);
   };
 
-  // Inject a real chevron icon between breadcrumb links (idempotent: only mutates when needed)
+  // A theme picks the separator through --zn-page-breadcrumb-separator-icon and its size through
+  // --zn-page-breadcrumb-separator-size, as zn-icon sizes itself from its size attribute.
+  private breadcrumbSeparatorIcon(): string {
+    const value = getComputedStyle(this).getPropertyValue('--zn-page-breadcrumb-separator-icon').trim();
+    return value.replace(/^["']|["']$/g, '') || 'arrow-right@lu';
+  }
+
+  private breadcrumbSeparatorSize(): string {
+    return String(parseInt(getComputedStyle(this).getPropertyValue('--zn-page-breadcrumb-separator-size')) || 16);
+  }
+
+  private syncBreadcrumbSeparators() {
+    const src = this.breadcrumbSeparatorIcon();
+    const size = this.breadcrumbSeparatorSize();
+    this.querySelectorAll(':scope > [data-breadcrumb-separator]').forEach(icon => {
+      if (icon.getAttribute('src') !== src) icon.setAttribute('src', src);
+      if (icon.getAttribute('size') !== size) icon.setAttribute('size', size);
+    });
+  }
+
+  // Inject a separator icon between breadcrumb links (idempotent: only mutates when needed)
   private handleBreadcrumbSlotChange = (e: Event) => {
     const slot = e.target as HTMLSlotElement;
     const assigned = slot.assignedElements();
@@ -129,8 +161,8 @@ export default class ZnPage extends ZnTabs {
       if (next?.hasAttribute('data-breadcrumb-separator')) return;
 
       const icon = document.createElement('zn-icon');
-      icon.setAttribute('src', 'arrow-right@lu');
-      icon.setAttribute('size', '16');
+      icon.setAttribute('src', this.breadcrumbSeparatorIcon());
+      icon.setAttribute('size', this.breadcrumbSeparatorSize());
       icon.setAttribute('slot', 'breadcrumb');
       icon.setAttribute('data-breadcrumb-separator', '');
       anchor.after(icon);
@@ -187,6 +219,7 @@ export default class ZnPage extends ZnTabs {
 
     tabElements.forEach((tab, index) => {
       const caption = tab.getAttribute('caption') || 'Tab';
+      const icon = tab.getAttribute('icon');
       const explicitId = tab.getAttribute('id');
       const id = this.uniqueId(explicitId !== null ? explicitId : this.captionToId(caption), usedIds);
       const priority = this.parsePriority(tab.getAttribute('priority'));
@@ -195,15 +228,36 @@ export default class ZnPage extends ZnTabs {
       const selected = tab.hasAttribute('selected');
 
       tab.id = id;
+      this.groupInnerTabs(tab);
 
       if (!uri) {
         tab.slot = slotName!;
       }
 
-      tabs.push({id, caption, priority, sourceIndex: index, uri, slotName, selected});
+      tabs.push({id, caption, icon, priority, sourceIndex: index, uri, slotName, selected});
     });
 
     this.tabDefinitions = tabs.sort((a, b) => this.compareTabs(a, b));
+  }
+
+  // shortcut: inner tabs added after the group is built stay plain content; move them into the group page to show them
+  private groupInnerTabs(tab: HTMLElement) {
+    const innerTabs = Array.from(tab.children).filter(child => child.tagName === 'ZN-TAB');
+    if (innerTabs.length === 0) {
+      return;
+    }
+
+    const group = document.createElement('zn-page');
+    // flush keeps it from padding the parent's content again when an app sidebar restyles it from pills
+    group.setAttribute('nested', '');
+    group.setAttribute('flush', '');
+    group.setAttribute('navigation-style', 'pills');
+    innerTabs[0].before(group);
+    group.append(...innerTabs);
+  }
+
+  private renderTabCaption(tab: TabDefinition) {
+    return tab.icon ? html`<zn-icon src="${tab.icon}" size="20"></zn-icon>${tab.caption}` : tab.caption;
   }
 
   private parsePriority(value: string | null): number | null {
@@ -225,7 +279,7 @@ export default class ZnPage extends ZnTabs {
     }
 
     if (a.priority !== null && b.priority !== null && a.priority !== b.priority) {
-      return a.priority - b.priority;
+      return b.priority - a.priority;
     }
 
     if (a.priority !== null && b.priority === null) {
@@ -275,6 +329,10 @@ export default class ZnPage extends ZnTabs {
   updated(changedProperties: PropertyValues) {
     super.updated(changedProperties);
 
+    if (changedProperties.has('t') || changedProperties.has('m')) {
+      this.syncBreadcrumbSeparators();
+    }
+
     if (changedProperties.has('tabDefinitions')) {
       this.registerPagePanels();
     }
@@ -285,12 +343,18 @@ export default class ZnPage extends ZnTabs {
   }
 
   // Only elements whose nearest tab container is this page count, so links inside a nested
-  // zn-tabs or zn-page drive that container instead.
+  // zn-tabs or zn-page drive that container instead. The container is found along the event path
+  // because uri tabs load into this page's shadow root, which closest() cannot climb out of.
   private handleContentTabClick = (event: MouseEvent) => {
-    const link = event.composedPath().find((node): node is HTMLElement =>
-      node instanceof HTMLElement && node.hasAttribute('tab') && node.closest(tabContainerSelector) === this
-    );
-    if (!link || link.hasAttribute('disabled')) {
+    const path = event.composedPath();
+    const index = path.findIndex(node => node instanceof HTMLElement && node.hasAttribute('tab'));
+    const link = path[index] as HTMLElement | undefined;
+    // The page's own navbar items select through zn-select.
+    if (!link || link.hasAttribute('disabled') || link.closest('zn-navbar')) {
+      return;
+    }
+    const container = path.slice(index + 1).find(node => node instanceof Element && node.matches(tabContainerSelector));
+    if (container !== this) {
       return;
     }
 
@@ -399,7 +463,7 @@ export default class ZnPage extends ZnTabs {
     }
 
     this.pageHistoryKey = pages
-      .map(page => page.id || page.getAttribute('caption') || 'page')
+      .map(page => page.id || page.getAttribute('caption') || page.parentElement?.getAttribute('caption') || 'page')
       .join('/');
     return this.pageHistoryKey;
   }
@@ -464,22 +528,29 @@ export default class ZnPage extends ZnTabs {
     const hasFullLocation = this.fullLocation;
     const hasPreviousPath = this.previousPath;
     const hasDescription = !!this.summary || this.pageSlotController.test('description');
+    const hasFooter = this.pageSlotController.test('footer');
+    const externalNavigation = this.navigationStyle === 'sidebar';
+    const hasHeader = this.navigationStyle !== 'pills' && Boolean(
+      this.caption || hasDescription || hasBreadcrumb || hasEntityId || hasFullLocation || hasPreviousPath ||
+      this.pageSlotController.test('caption') || this.pageSlotController.test('actions')
+    );
 
     return html`
       <div class="page" part="base" @scroll="${this.handlePageScroll}">
         <div class="${classMap({
           'page__header': true,
-          'page__header--scrolled-no-navigation': this.scrolled && !hasNavigation
+          'page__header--scrolled-no-navigation': this.scrolled && !hasNavigation,
+          'page__header--headless': !hasHeader && hasNavigation
         })}" part="header">
           <div class="${classMap({
             'header': true,
             'header--has-breadcrumb': hasBreadcrumb,
             'header--has-entity-id': hasEntityId,
             'header--has-full-location': hasFullLocation,
-            'header--has-navigation': hasNavigation,
+            'header--has-navigation': hasNavigation && !externalNavigation,
             'header--has-previous': hasPreviousPath,
             'header--has-description': hasDescription
-          })}">
+          })}" ?hidden="${!hasHeader}">
             ${hasFullLocation || hasEntityId ? html`
               <div class="${classMap({
                 'alt-overlay': true,
@@ -501,19 +572,24 @@ export default class ZnPage extends ZnTabs {
 
             <div class="content">
               ${hasPreviousPath ? html`
-                <a href="${this.previousPath}" class="caption__back"
-                   data-target="${this.previousTarget ? this.previousTarget : ''}">
-                  <zn-button icon="arrow-left@lu" icon-size="24" icon-button="small" plain></zn-button>
-                </a>` : null}
+                <zn-button href="${this.previousPath}" class="caption__back" label="Back"
+                   data-target="${this.previousTarget ? this.previousTarget : ''}"
+                   icon="arrow-left@lu" icon-size="24" icon-button="small" plain></zn-button>` : null}
 
               <div class="caption">
                 <div class="header__left">
                   <span class="header__caption">
                     ${hasBreadcrumb ? html`
-                      <slot name="breadcrumb" class="breadcrumb"
-                            @slotchange="${this.handleBreadcrumbSlotChange}"></slot>
-                      <zn-icon class="breadcrumb__separator" src="arrow-right@lu" size="16"></zn-icon>` : null}
-                    <slot name="caption">${this.caption}</slot>
+                      <span class="header__crumbs">
+                        <slot name="breadcrumb" class="breadcrumb"
+                              @slotchange="${this.handleBreadcrumbSlotChange}"></slot>
+                        <zn-icon class="breadcrumb__separator" src="${this.breadcrumbSeparatorIcon()}" size="${this.breadcrumbSeparatorSize()}"></zn-icon>
+                        ${this.caption ? html`<span class="breadcrumb__current">${this.caption}</span>` : null}
+                      </span>` : null}
+                    <span class="header__title">
+                      <slot name="caption">${this.caption}</slot>
+                      <slot name="caption-badges"></slot>
+                    </span>
                   </span>
                   <span class="header__description"><slot name="description">${this.summary}</slot></span>
                 </div>
@@ -526,11 +602,13 @@ export default class ZnPage extends ZnTabs {
           </div>
 
           ${hasNavigation ? html`
-            <zn-navbar hide-one @zn-select="${this.handleNavigationSelect}">
+            <zn-navbar class="page__navbar" hide-one ?pill="${this.navigationStyle === 'pills'}"
+                       ?hidden="${externalNavigation && !this.pageSlotController.test('bottom')}"
+                       @zn-select="${this.handleNavigationSelect}">
               ${this.tabDefinitions.map(tab => tab.uri ? html`
-                <li tab-uri="${tab.uri}">${tab.caption}</li>
+                <li tab-uri="${tab.uri}">${this.renderTabCaption(tab)}</li>
               ` : html`
-                <li tab="${tab.id}">${tab.caption}</li>
+                <li tab="${tab.id}">${this.renderTabCaption(tab)}</li>
               `)}
               <slot name="bottom" slot="bottom"></slot>
             </zn-navbar>
@@ -539,7 +617,10 @@ export default class ZnPage extends ZnTabs {
 
         <div class="page__tabs">
           <div id="content" class="page__content" part="content" @scroll="${this.handlePageScroll}">
-            ${this.tabDefinitions
+            ${this.tabDefinitions.length === 0 ? html`
+              <div class="page__default" selected>
+                <slot></slot>
+              </div>` : this.tabDefinitions
               .filter(tab => tab.slotName !== null)
               .map(tab => html`
                 <div id="${tab.id}" ?selected="${tab.selected}">
@@ -547,6 +628,10 @@ export default class ZnPage extends ZnTabs {
                 </div>
               `)}
           </div>
+        </div>
+
+        <div class="page__footer" part="footer" ?hidden="${!hasFooter}">
+          <slot name="footer"></slot>
         </div>
       </div>
     `;

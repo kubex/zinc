@@ -15,6 +15,7 @@
   }
 
   &__caption {
+    font-family: var(--zn-text-h1-font-family, inherit);
     font-weight: var(--zn-text-h1-font-weight);
     font-size: var(--zn-text-h1-font-size);
     text-transform: var(--zn-text-h1-transform, none);
@@ -84,7 +85,7 @@
     }
 
     zn-icon:hover {
-      color: rgb(var(--zn-primary));
+      color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
       cursor: pointer;
     }
   }
@@ -131,8 +132,7 @@
     flex-grow: 1;
     flex-shrink: 1;
     // Chrome ignores overflow-clip-margin unless both axes clip
-    overflow: clip;
-    overflow-clip-margin: var(--zn-focus-ring-outset);
+    @include wc.clip-focus-room;
     min-width: 20px;
   }
 
@@ -159,7 +159,7 @@
     }
 
     &::slotted(a:hover) {
-      color: rgb(var(--zn-primary));
+      color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
     }
 
     &::slotted(a)::after {
@@ -190,7 +190,7 @@
       cursor: pointer;
 
       &:hover {
-        color: rgb(var(--zn-primary));
+        color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
       }
     }
   }
@@ -232,6 +232,12 @@
     flex-wrap: nowrap;
   }
 
+  // Controls in the actions row line up with the buttons beside them, without
+  // the label/help-text spacing a form field otherwise carries.
+  slot[name="actions"]::slotted(*) {
+    --zn-form-control-input-margin: 0;
+  }
+
   slot[name="actions"]::slotted(zn-button-menu) {
     flex-grow: 1;
     flex-shrink: 1;
@@ -246,4 +252,40 @@
   .header {
     border-bottom: none !important;
   }
+}
+
+.header__left:has(.header__description) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-spacing-2x-small);
+}
+
+.header--inline-description .header__left:has(.header__description) {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: baseline;
+  gap: 0 var(--zn-spacing-x-small);
+}
+
+// Narrow headers drop the actions onto their own row instead of squeezing the caption
+.header .caption {
+  flex-wrap: wrap;
+  row-gap: var(--zn-spacing-small);
+}
+
+.header__caption {
+  flex-shrink: 0;
+  min-width: min-content;
+}
+
+.header__right {
+  min-width: min-content;
+}
+
+.header__description {
+  font-size: var(--zn-header-description-font-size, var(--zn-font-size-x-small));
+  font-weight: normal;
+  line-height: var(--zn-line-height-normal, 1.45);
+  color: var(--zn-header-description-color, var(--zn-text-color-muted));
 }

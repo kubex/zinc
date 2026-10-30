@@ -40,7 +40,7 @@ table, thead, tbody, tr, td, th {
 
 tr td {
   min-height: 40px;
-  height: 52px;
+  height: var(--zn-table-row-height, 52px);
 }
 
 tr.with-summary td {
@@ -49,27 +49,27 @@ tr.with-summary td {
 }
 
 .table-row.table-row--error {
-  color: rgb(var(--zn-color-error));
-  border-color: rgb(var(--zn-color-error));
-  background: rgba(var(--zn-color-error), .10);
+  color: var(--zn-color-danger-fg);
+  border-color: var(--zn-color-danger-solid);
+  background: var(--zn-color-danger-bg);
 }
 
 .table-row.table-row--info {
-  color: rgb(var(--zn-color-info));
-  border-color: rgb(var(--zn-color-info));
-  background: rgba(var(--zn-color-info), .10);
+  color: var(--zn-color-info-fg);
+  border-color: var(--zn-color-info-solid);
+  background: var(--zn-color-info-bg);
 }
 
 .table-row.table-row--warning {
-  color: rgb(var(--zn-color-warning));
-  border-color: rgb(var(--zn-color-warning));
-  background: rgba(var(--zn-color-warning), .10);
+  color: var(--zn-color-warning-fg);
+  border-color: var(--zn-color-warning-solid);
+  background: var(--zn-color-warning-bg);
 }
 
 .table-row.table-row--success {
-  color: rgb(var(--zn-color-success)) !important;
-  border-color: rgb(var(--zn-color-success));
-  background: rgba(var(--zn-color-success), .10);
+  color: var(--zn-color-success-fg) !important;
+  border-color: var(--zn-color-success-solid);
+  background: var(--zn-color-success-bg);
 }
 
 .table-row.table-row--nested td:first-of-type {

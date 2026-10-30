@@ -25,3 +25,17 @@
     opacity: 1;
   }
 }
+
+// A pull-tab navbar hangs over the bottom of the pane above it, so the scroller there can scroll its end clear of the
+// tabs. 37px is an icon-only pull-tab strip, the taller of the two kinds; hide-one hides a lone tab with an inline style.
+zn-split-pane[vertical]:has(> [slot="secondary"] zn-navbar[hover]:not([style*="display: none"])) > [slot="primary"] {
+  --zn-pane-end-inset: 37px;
+
+  // A tab's content can overflow its panel, so the room goes after the content; a scroll container or app container
+  // leaves its own
+  zn-tab:not(:has(zn-scroll-container, .app-container))::after {
+    content: "";
+    display: block;
+    height: var(--zn-pane-end-inset);
+  }
+}

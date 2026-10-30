@@ -1,7 +1,7 @@
+import '../../events/zn-reposition';
 import {arrow, autoUpdate, computePosition, flip, offset, platform, shift, size} from '@floating-ui/dom';
 import {classMap} from 'lit/directives/class-map.js';
 import {html, unsafeCSS} from 'lit';
-import {offsetParent} from 'composed-offset-position';
 import {property, query} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import type {CSSResultGroup} from 'lit';
@@ -65,7 +65,7 @@ export default class ZnPopup extends ZincElement {
 
   /**
    * The preferred placement of the popup. Note that the actual placement will vary as configured to keep the
-   * panel inside of the viewport.
+   * panel inside the viewport.
    */
   @property({reflect: true}) placement:
     | 'top'
@@ -206,7 +206,7 @@ export default class ZnPopup extends ZincElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.stop();
+    this.stop().then();
   }
 
   async updated(changedProps: Map<string, unknown>) {
@@ -214,12 +214,16 @@ export default class ZnPopup extends ZincElement {
 
     // Start or stop the positioner when active changes
     if (changedProps.has('active')) {
-      this.active ? this.start() : this.stop();
+      if (this.active) {
+        this.start();
+      } else {
+        this.stop().then();
+      }
     }
 
     // Update the anchor when anchor changes
     if (changedProps.has('anchor')) {
-      this.handleAnchorChange();
+      await this.handleAnchorChange();
     }
 
     // All other properties will trigger a reposition when active
@@ -254,6 +258,10 @@ export default class ZnPopup extends ZincElement {
     if (this.anchorEl && !this.active && this.anchorEl instanceof Element) {
       this.anchorEl.removeEventListener('mouseover', this.handleAnchorHover);
       this.anchorEl.addEventListener('mouseover', this.handleAnchorHover);
+    }
+
+    if (this.active) {
+      this.start();
     }
   }
 
@@ -306,7 +314,7 @@ export default class ZnPopup extends ZincElement {
     if (this.sync) {
       middleware.push(
         size({
-          apply: ({rects}: { rects: { reference: { width: number, height: number } } }) => {
+          apply: ({rects}: { rects: { reference: { width: number; height: number } } }) => {
             const syncWidth = this.sync === 'width' || this.sync === 'both';
             const syncHeight = this.sync === 'height' || this.sync === 'both';
 
@@ -350,7 +358,7 @@ export default class ZnPopup extends ZincElement {
         size({
           boundary: this.autoSizeBoundary,
           padding: this.autoSizePadding,
-          apply: ({availableWidth, availableHeight}: { availableWidth: number, availableHeight: number }) => {
+          apply: ({availableWidth, availableHeight}: { availableWidth: number; availableHeight: number }) => {
             if (this.autoSize === 'vertical' || this.autoSize === 'both') {
               this.style.setProperty('--auto-size-available-height', `${availableHeight}px`);
             } else {
@@ -381,11 +389,6 @@ export default class ZnPopup extends ZincElement {
       );
     }
 
-    const getOffsetParent =
-      this.strategy === 'absolute'
-        ? (element: Element) => platform.getOffsetParent(element, offsetParent)
-        : platform.getOffsetParent;
-
     // A closed popover has no size to measure, so it would first land on top of its anchor
     if (this.popup.isConnected && !this.popup.matches(':popover-open')) {
       this.popup.style.visibility = 'hidden';
@@ -396,9 +399,10 @@ export default class ZnPopup extends ZincElement {
       placement: this.placement,
       middleware,
       strategy: this.strategy,
+      // The popup is a popover in the top layer, so the page, not any ancestor, is what it is positioned within
       platform: {
         ...platform,
-        getOffsetParent
+        getOffsetParent: () => window
       }
     }).then(({x, y, middlewareData, placement}:
              { x: number; y: number; middlewareData: MiddlewareData; placement: string }) => {

@@ -40,6 +40,27 @@ describe('<zn-page>', () => {
     expect(navItems[3].getAttribute('tab-uri')).to.equal('/tab-three');
   });
 
+  it('shows the footer only when the footer slot has content', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title">
+        <zn-tab caption="Overview">Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const footer = el.shadowRoot!.querySelector<HTMLElement>('[part="footer"]')!;
+    expect(footer.hidden).to.equal(true);
+
+    const actions = document.createElement('zn-form-actions');
+    actions.slot = 'footer';
+    el.appendChild(actions);
+    await aTimeout(20);
+
+    const footerSlot = el.shadowRoot!.querySelector<HTMLSlotElement>('slot[name="footer"]')!;
+    expect(footer.hidden).to.equal(false);
+    expect(footerSlot.assignedElements()[0]).to.equal(actions);
+  });
+
   it('pushes nested expanding actions into the generated navbar', async () => {
     const el = await fixture<ZnPage>(html`
       <zn-page caption="Page Title">
@@ -378,6 +399,135 @@ describe('<zn-page>', () => {
     expect(activeItem?.getAttribute('tab')).to.equal('details');
   });
 
+  it('opens a tab from a tab attribute inside a uri tab, which loads into the page\'s shadow root', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Uri Tab Link">
+        <zn-tab caption="Details" id="details">Details Content</zn-tab>
+        <zn-tab caption="Publish" uri="/publish-tab"></zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(40);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    navbar.shadowRoot!.querySelector<HTMLElement>('li[tab-uri="/publish-tab"]')!.click();
+    await aTimeout(100);
+
+    const panel = el.shadowRoot!.querySelector<HTMLElement>('#content > div[data-self-uri="/publish-tab"]')!;
+    const link = document.createElement('span');
+    link.setAttribute('tab', 'details');
+    link.textContent = 'Edit in Details';
+    panel.replaceChildren(link);
+    expect(el.getAttribute('active')).to.not.equal('details');
+
+    link.click();
+    await aTimeout(40);
+    expect(el.getAttribute('active')).to.equal('details');
+  });
+
+  it('shows tabs inside a tab as a pill tab set without a header', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Outer Page">
+        <zn-tab caption="Overview">
+          <zn-tab caption="Invoices">Invoices Content</zn-tab>
+          <zn-tab caption="Payments" selected>Payments Content</zn-tab>
+        </zn-tab>
+        <zn-tab caption="Other">Other Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(50);
+
+    const group = el.querySelector<ZnPage>('zn-tab > zn-page')!;
+    expect(group.getAttribute('navigation-style')).to.equal('pills');
+    expect(group.querySelectorAll(':scope > zn-tab').length).to.equal(2);
+    expect(el.shadowRoot!.querySelector('zn-navbar')!.hasAttribute('pill')).to.be.false;
+
+    const navbar = group.shadowRoot!.querySelector('zn-navbar')!;
+    expect(navbar.hasAttribute('pill')).to.be.true;
+    expect(Array.from(navbar.querySelectorAll('li')).map(li => li.textContent?.trim())).to.deep.equal(['Invoices', 'Payments']);
+    expect(getComputedStyle(group.shadowRoot!.querySelector('.header')!).display).to.equal('none');
+    expect(group.getAttribute('active')).to.equal('payments');
+
+    // An app sidebar restyles the group, which must still sit inside the parent's padding without adding its own
+    group.setAttribute('navigation-style', 'sidebar');
+    await aTimeout(20);
+    expect(getComputedStyle(group.shadowRoot!.querySelector('#content')!).paddingLeft).to.equal('0px');
+  });
+
+  it('keeps a nested page\'s tab bar and header', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Outer Page">
+        <zn-tab caption="Overview">
+          <zn-page caption="Inner Page" nested>
+            <zn-tab caption="Overview">Inner Overview</zn-tab>
+            <zn-tab caption="Details">Inner Details</zn-tab>
+          </zn-page>
+        </zn-tab>
+        <zn-tab caption="Other">Other Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const inner = el.querySelector<ZnPage>('zn-page')!;
+    expect(inner.shadowRoot!.querySelector('zn-navbar')!.hasAttribute('pill')).to.be.false;
+    expect(getComputedStyle(inner.shadowRoot!.querySelector('.header')!).display).to.not.equal('none');
+  });
+
+  it('gives a nested page\'s header the card title style and a single inset', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Outer Page">
+        <zn-tab caption="Overview">
+          <zn-page caption="Inner Page" summary="Inner summary" nested>
+            <zn-tab caption="Overview">Inner Overview</zn-tab>
+            <zn-tab caption="Details">Inner Details</zn-tab>
+          </zn-page>
+        </zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const inner = el.querySelector<ZnPage>('zn-page')!;
+    inner.style.setProperty('--zn-text-h1-font-size', '14px');
+    inner.style.setProperty('--zn-base-gap', '16px');
+    const root = inner.shadowRoot!;
+    const header = getComputedStyle(root.querySelector('.header')!);
+    expect(header.paddingLeft).to.equal('16px');
+    expect(header.paddingRight).to.equal('16px');
+    expect(getComputedStyle(root.querySelector('.header .content')!).maxWidth).to.equal('100%');
+    expect(getComputedStyle(root.querySelector('.header__caption')!).fontSize).to.equal('14px');
+    expect(getComputedStyle(root.querySelector('.header__left')!).rowGap).to.equal('0px');
+  });
+
+  it('hides an empty header', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page>
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+        <zn-tab caption="Details">Details Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    expect(getComputedStyle(el.shadowRoot!.querySelector('.header')!).display).to.equal('none');
+  });
+
+  it('hides its navbar in the sidebar style unless it has bottom content', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title" navigation-style="sidebar">
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+        <zn-tab caption="Details">Details Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    expect(getComputedStyle(navbar).display).to.equal('none');
+
+    const chip = document.createElement('zn-chip');
+    chip.slot = 'bottom';
+    el.append(chip);
+    await aTimeout(20);
+    expect(getComputedStyle(navbar).display).to.not.equal('none');
+  });
+
   it('leaves content tab links inside a nested page to that page', async () => {
     const outerPage = await fixture<ZnPage>(html`
       <zn-page caption="Nested Content Tab Link">
@@ -492,9 +642,9 @@ describe('<zn-page>', () => {
     const el = await fixture<ZnPage>(html`
       <zn-page caption="Page Title">
         <zn-tab caption="Later">Later Content</zn-tab>
-        <zn-tab caption="Second" priority="20">Second Content</zn-tab>
+        <zn-tab caption="Second" priority="10">Second Content</zn-tab>
         <zn-tab caption="Overview">Overview Content</zn-tab>
-        <zn-tab caption="First" priority="10">First Content</zn-tab>
+        <zn-tab caption="First" priority="20">First Content</zn-tab>
         <zn-tab caption="Dynamic" priority="15" uri="/dynamic"></zn-tab>
       </zn-page>
     `);
@@ -512,6 +662,22 @@ describe('<zn-page>', () => {
     expect(navItems[0].getAttribute('tab')).to.equal('');
     expect(navItems[2].getAttribute('tab-uri')).to.equal('/dynamic');
     expect(el.querySelector<HTMLElement>('zn-tab[caption="Dynamic"]')!.getAttribute('id')).to.equal('dynamic');
+  });
+
+  it('shows a tab icon before its caption', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title">
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+        <zn-tab caption="History" icon="history" uri="/history"></zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    const historyItem = navbar.shadowRoot!.querySelector('li[tab-uri="/history"]')!;
+    expect(historyItem.querySelector('zn-icon')!.getAttribute('src')).to.equal('history');
+    expect(historyItem.textContent?.trim()).to.equal('History');
+    expect(navbar.shadowRoot!.querySelector('li[tab=""] zn-icon')).to.be.null;
   });
 
   it('preserves source order for tabs without priority', async () => {
@@ -703,7 +869,8 @@ describe('<zn-page>', () => {
     await aTimeout(120);
 
     expect(getComputedStyle(activeNavItem).backgroundColor).to.equal('rgb(1, 2, 3)');
-    expect(getComputedStyle(activeNavItem).transitionDuration).to.equal('0.1s');
+    expect(getComputedStyle(activeNavItem).transitionProperty).to.equal('background-color, color');
+    expect(getComputedStyle(activeNavItem).transitionDuration).to.equal('0.1s, 0.15s');
   });
 
   it('opens the tab flagged with the selected attribute instead of the first', async () => {
@@ -736,5 +903,28 @@ describe('<zn-page>', () => {
 
     expect(header.classList.contains('header--has-breadcrumb')).to.equal(false);
     expect(el.shadowRoot!.querySelector('slot[name="breadcrumb"]')).to.equal(null);
+  });
+
+  it('keeps breadcrumbs inline in the title by default', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Performance"><a href="#" slot="breadcrumb">Quality Assurance</a></zn-page>`);
+    const crumbs = el.shadowRoot!.querySelector('.header__crumbs')!;
+
+    expect(getComputedStyle(crumbs).display).to.equal('contents');
+    expect(getComputedStyle(el.shadowRoot!.querySelector('.breadcrumb__current')!).display).to.equal('none');
+  });
+
+  it('lifts breadcrumbs onto their own row when the theme asks', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Performance"
+               style="--zn-page-breadcrumb-display: flex; --zn-page-breadcrumb-current-display: inline; --zn-page-breadcrumb-separator-icon: 'chevron-right@lu'">
+        <a href="#" slot="breadcrumb">Quality Assurance</a>
+      </zn-page>`);
+    await el.updateComplete;
+    const root = el.shadowRoot!;
+
+    expect(getComputedStyle(root.querySelector('.header__crumbs')!).display).to.equal('flex');
+    expect(root.querySelector('.breadcrumb__current')!.textContent).to.equal('Performance');
+    expect(root.querySelector('.breadcrumb__separator')!.getAttribute('src')).to.contain('chevron-right');
   });
 });

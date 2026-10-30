@@ -17,6 +17,7 @@ import {
   type SeriesItem,
 } from './builders';
 import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
+import { classMap } from 'lit/directives/class-map.js';
 import { type EChartsModule, loadECharts } from './echarts-loader';
 import { LiveTransport, LiveWindow } from './live';
 import { property, state } from 'lit/decorators.js';
@@ -47,6 +48,7 @@ export default class ZnChart extends ZincElement {
   @property({ type: Boolean }) stacked = false;
 
   @property({ type: Boolean }) live = false;
+  /** JSON series polled with `live`; otherwise fetched once, as a series array or `{categories, data}`. */
   @property({ attribute: 'data-url' }) dataUrl = '';
   @property({ attribute: 'stream-url' }) streamUrl = '';
   @property({ attribute: 'live-renew-url' }) liveRenewUrl = '';
@@ -75,6 +77,8 @@ export default class ZnChart extends ZincElement {
   @property({ attribute: 'show-labels', type: Boolean }) showLabels?: boolean;
   @property({ attribute: 'min-value', type: Number }) minValue?: number;
   @property({ attribute: 'max-value', type: Number }) maxValue?: number;
+  /** On line and area charts, marks each series' latest point and hides the rest. */
+  @property({ attribute: 'mark-latest', type: Boolean }) markLatest = false;
   @property({
     converter: {
       fromAttribute: (value: string | null) => {
@@ -91,6 +95,11 @@ export default class ZnChart extends ZincElement {
   private initPromise?: Promise<void>;
   private liveTimer?: number;
   private pollAbort?: AbortController;
+  private loadedUrl = '';
+  /** Set while `data-url` loads; cartesian charts show a placeholder until the data arrives. */
+  @state() private loading = false;
+  @state() private loadingOut = false;
+  private riseIn = false;
   @state() private liveStatus = 'connecting';
   private liveWindow = new LiveWindow();
   private replaceLiveSeries = true;
@@ -133,6 +142,7 @@ export default class ZnChart extends ZincElement {
       option.animationThreshold = 10000;
       option.animationEasingUpdate = 'linear';
     }
+    if (this.riseIn) this.prepareRise(option);
     if (this.liveWindow.frame && this.live && !this.replaceLiveSeries) {
       // Keep the prediction's models and data in ECharts between snapshots.
       // Only measurements and the moving viewport change on deltas/heartbeats.
@@ -148,16 +158,50 @@ export default class ZnChart extends ZincElement {
         animationThreshold: 10000,
       });
     } else {
-      this.chart?.setOption(option, { replaceMerge: ['series', 'legend', 'xAxis'] });
+      this.chart?.setOption(option, { replaceMerge: ['series', 'legend', 'xAxis', 'yAxis'] });
     }
     this.replaceLiveSeries = false;
+  }
+
+  // Draws the loaded series flat on the baseline first, so ECharts animates them up to their values
+  private prepareRise(option: ReturnType<ZnChart['buildOption']>) {
+    this.riseIn = false;
+    if (!ZnChart.riseTypes.includes(this.type) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const series = (Array.isArray(option.series) ? option.series : option.series ? [option.series] : []) as Record<string, unknown>[];
+    const flat = (v: unknown): unknown => typeof v === 'number' ? 0
+      : Array.isArray(v) ? [v[0], 0, ...v.slice(2)]
+        : v && typeof v === 'object' && 'value' in v ? { ...v, value: flat((v as { value: unknown }).value) } : v;
+    this.chart?.setOption({
+      ...option,
+      animation: false,
+      series: series.map((item, idx) => ({
+        ...item, id: `rise-${idx}`, data: Array.isArray(item.data) ? item.data.map(flat) : item.data,
+      })),
+    }, { replaceMerge: ['series', 'legend', 'xAxis', 'yAxis'] });
+    option.animation = true;
+    option.animationDurationUpdate = 450;
+    option.animationEasingUpdate = 'cubicOut';
+    // Same ids as the flat pass, so ECharts updates those series rather than drawing new ones in
+    option.series = series.map((item, idx) => ({
+      ...item, id: `rise-${idx}`, animationDelayUpdate: idx * 40,
+    })) as typeof option.series;
+  }
+
+  private static readonly riseTypes: ChartType[] = ['line', 'area', 'bar'];
+  private static readonly viewOnly = ['liveStatus', 'loading', 'loadingOut'];
+
+  protected willUpdate(changed: PropertyValues) {
+    super.willUpdate(changed);
+    if ((changed.has('dataUrl') || changed.has('live')) && this.dataUrl && !this.live && this.dataUrl !== this.loadedUrl) {
+      this.loading = true;
+    }
   }
 
   protected updated(changed: PropertyValues) {
     super.updated(changed);
     if (!this.chart) return;
     if (['live', 'dataUrl', 'streamUrl', 'liveRenewUrl', 'liveInterval'].some(key => changed.has(key))) this.startLive();
-    if (changed.size !== 1 || !changed.has('liveStatus')) this.updateChart();
+    if ([...changed.keys()].some(key => !ZnChart.viewOnly.includes(key as string))) this.updateChart();
   }
 
   connectedCallback() {
@@ -193,10 +237,22 @@ export default class ZnChart extends ZincElement {
 
   private getTextColor(): string | undefined {
     const cs = getComputedStyle(this);
+    const themed = cs.getPropertyValue('--zn-chart-text-color').trim();
+    if (themed) return themed;
     const rgb = cs.getPropertyValue('--zn-text').trim();
     if (!rgb) return undefined;
     const opacity = cs.getPropertyValue('--zn-text-opacity').trim() || '1';
     return `rgba(${rgb}, ${opacity})`;
+  }
+
+  // A theme supplies a categorical palette as --zn-chart-color-1..6; without
+  // one, ECharts keeps its own default palette.
+  private getPalette(): string[] | undefined {
+    const cs = getComputedStyle(this);
+    const colors = [1, 2, 3, 4, 5, 6]
+      .map(i => cs.getPropertyValue(`--zn-chart-color-${i}`).trim())
+      .filter(Boolean);
+    return colors.length ? colors : undefined;
   }
 
   private getBorderColor(): string | undefined {
@@ -214,7 +270,7 @@ export default class ZnChart extends ZincElement {
       stacked: this.stacked,
       enableAnimations: this.enableAnimations,
       datapointSize: this.datapointSize,
-      colors: this.colors,
+      colors: this.colors ?? this.getPalette(),
       theme: this.getTheme(),
       smooth: this.smooth,
       scale: this.scale,
@@ -227,6 +283,7 @@ export default class ZnChart extends ZincElement {
       indicators: Array.isArray(this.indicators) ? this.indicators : [],
       minValue: this.minValue,
       maxValue: this.maxValue,
+      markLatest: this.markLatest,
     };
     switch (this.type) {
       case 'bar': return buildBarOption(props);
@@ -277,7 +334,8 @@ export default class ZnChart extends ZincElement {
 
   private startLive() {
     this.stopLive(); this.liveWindow = new LiveWindow(); this.replaceLiveSeries = true;
-    if (!this.live || !this.isConnected) return;
+    if (!this.isConnected) return;
+    if (!this.live) { void this.loadData(); return; }
     if (this.streamUrl || this.liveRenewUrl) {
       try { this.transport.start(this.streamUrl, this.liveRenewUrl); } catch { this.stopLive(); }
       return;
@@ -295,6 +353,34 @@ export default class ZnChart extends ZincElement {
       if (!controller.signal.aborted) this.liveTimer = window.setTimeout(() => void poll(), Math.max(250, this.liveInterval));
     };
     this.liveTimer = window.setTimeout(() => void poll(), Math.max(250, this.liveInterval));
+  }
+
+  private async loadData() {
+    if (!this.dataUrl || this.dataUrl === this.loadedUrl) return;
+    const controller = new AbortController(); this.pollAbort = controller;
+    try {
+      const res = await fetch(this.dataUrl, {
+        signal: controller.signal,
+        credentials: 'same-origin',
+        headers: { Accept: 'application/json', 'x-kx-fetch-style': 'raw-json' },
+      });
+      if (res.ok) {
+        const body = await res.json() as SeriesItem[] | { data?: SeriesItem[]; categories?: string[] };
+        if (controller.signal.aborted) return;
+        this.loadedUrl = this.dataUrl;
+        this.riseIn = true;
+        if (Array.isArray(body)) {
+          this.data = body;
+        } else {
+          this.categories = body.categories ?? this.categories;
+          this.data = body.data ?? [];
+        }
+      }
+    } catch { /* keep what the chart already shows */ }
+    if (controller.signal.aborted) return;
+    this.loading = false;
+    this.loadingOut = true;
+    window.setTimeout(() => { this.loadingOut = false; }, 400);
   }
 
   private reinit() {
@@ -335,8 +421,30 @@ export default class ZnChart extends ZincElement {
     this.chart = undefined;
   }
 
+  private renderLoading() {
+    if (!(this.loading || this.loadingOut) || !ZnChart.riseTypes.includes(this.type)) return null;
+    return html`
+      <div class="${classMap({ loading: true, 'loading--out': !this.loading })}" style="height: ${this.height}px"
+           role="status" aria-label="Loading chart">
+        <div class="loading__legend">
+          ${[48, 40, 52, 36].map(w => html`<span class="loading__pill" style="width: ${w}px"></span>`)}
+        </div>
+        <div class="loading__plot">
+          ${[0, 1, 2, 3, 4].map(i => html`
+            <span class="loading__row" style="animation-delay: ${i * 120}ms">
+              <span class="loading__pill loading__label"></span>
+            </span>`)}
+          <span class="loading__track"><span class="loading__pill loading__label"></span></span>
+          <span class="loading__x">
+            ${[0, 1, 2, 3, 4, 5].map(() => html`<span class="loading__pill"></span>`)}
+          </span>
+        </div>
+      </div>`;
+  }
+
   protected render(): unknown {
-    return html`<div class="chart"><div id="chart"></div>
+    return html`<div class="${classMap({ chart: true, 'chart--loading': this.loading })}"><div id="chart"></div>
+      ${this.renderLoading()}
       ${this.live && (this.streamUrl || this.liveRenewUrl) ? html`<div role="status" aria-live="polite">Live: ${this.liveStatus}${this.liveWindow.frame ? ` · ${this.liveWindow.frame.resolution_seconds}s intervals · Expected range: ${this.liveWindow.predictionStatus}` : ''}</div>` : ''}
     </div>`;
   }

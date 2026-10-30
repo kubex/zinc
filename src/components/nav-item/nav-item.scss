@@ -1,0 +1,128 @@
+@use "../../wc";
+
+:host {
+  display: block;
+  border-radius: var(--zn-border-radius-medium, var(--zn-border-radius));
+  cursor: pointer;
+  user-select: none;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+:host(:focus-visible) {
+  outline: 2px solid rgb(var(--zn-primary));
+  outline-offset: -2px;
+}
+
+.nav-item {
+  @include wc.text-style(menu-link);
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-x-small);
+  padding: var(--zn-nav-item-padding, 7px 10px);
+  border-radius: inherit;
+}
+
+:host(:hover) .nav-item {
+  background: var(--zn-color-neutral-50);
+}
+
+:host(.zn-tb-active) .nav-item {
+  background: rgba(var(--zn-primary), 0.08);
+  color: rgb(var(--zn-primary));
+  font-weight: var(--zn-font-weight-semibold);
+}
+
+.nav-item__text {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.nav-item__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-item__description {
+  font-size: var(--zn-font-size-small);
+  font-weight: var(--zn-font-weight-normal);
+  color: var(--zn-color-neutral-500);
+}
+
+.nav-item__count {
+  flex: 0 0 auto;
+  font-size: var(--zn-font-size-small);
+  color: var(--zn-color-neutral-500);
+}
+
+// Set by a zn-nav-list with divide
+:host([divide]) {
+  border-radius: 0;
+}
+
+:host([divide]) .nav-item {
+  gap: var(--zn-spacing-small);
+  padding: var(--zn-nav-item-padding, var(--zn-spacing-small) var(--zn-spacing-medium));
+}
+
+:host([divide]) .nav-item__label {
+  font-weight: var(--zn-font-weight-semibold);
+}
+
+:host([divide].zn-tb-active) .nav-item {
+  background: rgba(var(--zn-primary), 0.06);
+  box-shadow: inset 3px 0 0 rgb(var(--zn-primary));
+  color: inherit;
+}
+
+:host([divide]) .nav-item__count {
+  padding: 1px var(--zn-spacing-x-small);
+  border-radius: 999px;
+  background: var(--zn-color-neutral-100);
+  font-weight: var(--zn-font-weight-semibold);
+  color: var(--zn-color-neutral-700);
+}
+
+.nav-item__handle {
+  display: none;
+  flex: 0 0 auto;
+  margin-inline-start: -4px;
+  color: var(--zn-color-neutral-400);
+  cursor: grab;
+}
+
+// Set by a sortable zn-nav-list
+:host([sortable]) {
+  // Its own layer, or Chrome draws the drag image over a white box that shows at the rounded corners
+  transform: translate(0, 0);
+  // Opaque, or the drag image shows the page through the row
+  background: rgb(var(--zn-panel));
+  cursor: grab;
+}
+
+:host([sortable]) .nav-item__handle {
+  display: inline-flex;
+}
+
+// The dragged item's slot, matching a zn-priority-list placeholder
+:host([sortable][dragging]) .nav-item,
+:host([sortable][dragging]:hover) .nav-item {
+  outline: 1px dashed var(--zn-color-primary-400);
+  outline-offset: -1px;
+  background: rgba(var(--zn-primary), 0.06);
+  box-shadow: none;
+
+  > * {
+    opacity: 0;
+  }
+}
+
+// Set while dragging to the radius of any card corner the row sits in
+:host([divide][sortable][dragging]) .nav-item {
+  border-radius: var(--zn-nav-item-drag-radius, 0);
+}

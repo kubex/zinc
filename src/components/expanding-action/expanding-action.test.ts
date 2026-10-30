@@ -47,7 +47,8 @@ describe('<zn-expanding-action>', () => {
       await openPanel(el);
 
       const frame = el.shadowRoot!.querySelector<HTMLElement>('.expanding-action__frame')!;
-      expect(Math.round(frame.getBoundingClientRect().height)).to.equal(250);
+      // Layout height: the dropdown's open animation briefly scales the rendered box
+      expect(frame.offsetHeight).to.equal(250);
     });
   });
 });

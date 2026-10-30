@@ -9,7 +9,7 @@ layout: component
 
 ### Basic Search
 
-Use the `zn-data-table-search` component to provide search functionality for data tables. The component includes a search input with a trailing search icon and is clearable by default.
+Use the `zn-data-table-search` component to provide search functionality for data tables. The component includes a search input with a leading search icon and is clearable by default.
 
 ```html:preview
 <zn-data-table-search></zn-data-table-search>
@@ -30,7 +30,7 @@ Use the `placeholder` attribute to customize the input placeholder text.
 ### Help Text
 
 Use the `help-text` attribute to explain what can be searched. It shows an information icon inside the search field,
-before the search icon, and reads out as a tooltip on hover or focus.
+after the input text, and reads out as a tooltip on hover or focus.
 
 ```html:preview
 <zn-data-table-search
@@ -402,7 +402,7 @@ Use the `getFormData()` method to retrieve all form data from the search compone
 The component is built with accessibility in mind:
 
 - Uses semantic HTML with proper input type (`search`)
-- Includes a visible trailing search icon for visual recognition
+- Includes a visible leading search icon for visual recognition
 - Supports keyboard navigation and clearing via the clearable input
 - Integrates with form validation and submission
 - Explains what is searchable through the help-text attribute, shown from an information icon
@@ -449,4 +449,4 @@ The component is built with accessibility in mind:
 ## Dependencies
 
 - `zn-input` - Used for the search input field
-- `zn-icon` - Used for the trailing search icon
+- `zn-icon` - Used for the leading search icon

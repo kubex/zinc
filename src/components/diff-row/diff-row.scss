@@ -1,0 +1,70 @@
+@use "../../wc";
+
+:host {
+  display: block;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  border-bottom: var(--zn-diff-row-border, 1px solid rgb(var(--zn-border-color)));
+}
+
+.row--heading {
+  display: block;
+  padding: var(--zn-spacing-small) var(--zn-spacing-medium) var(--zn-spacing-x-small);
+  background: rgba(var(--zn-color-text), 0.02);
+  font-size: var(--zn-font-size-x-small);
+  font-weight: var(--zn-font-weight-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgb(var(--zn-color-muted-text));
+}
+
+.row__cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding: var(--zn-spacing-small) var(--zn-spacing-medium);
+  font-size: var(--zn-font-size-small);
+  line-height: 1.45;
+
+  & + & {
+    border-inline-start: 1px solid rgb(var(--zn-border-color));
+  }
+}
+
+.row__caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--zn-spacing-x-small);
+  font-weight: var(--zn-font-weight-semibold);
+  color: rgb(var(--zn-text-heading));
+}
+
+.row__details {
+  color: rgb(var(--zn-color-muted-text));
+  overflow-wrap: anywhere;
+}
+
+// The absent side of an added or removed item: hatched so it reads as empty rather than blank.
+.row__cell--absent {
+  justify-content: center;
+  background: repeating-linear-gradient(135deg, transparent 0 6px, rgba(var(--zn-border-color), 0.25) 6px 12px);
+  font-size: var(--zn-font-size-x-small);
+  color: rgb(var(--zn-color-muted-text));
+}
+
+:host([change="changed"]) .row__cell {
+  background-color: var(--zn-color-info-bg);
+}
+
+:host([change="added"]) .row__cell:not(.row__cell--absent) {
+  background-color: var(--zn-color-success-bg);
+}
+
+:host([change="removed"]) .row__cell:not(.row__cell--absent) {
+  background-color: var(--zn-color-danger-bg);
+}

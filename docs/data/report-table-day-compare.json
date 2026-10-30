@@ -1,0 +1,380 @@
+{
+  "dimension": {
+    "label": "Publisher"
+  },
+  "groups": [
+    {
+      "label": "Difference between 2026-10-19 and 2026-10-20",
+      "columns": [
+        {
+          "key": "revenue",
+          "label": "Revenue",
+          "format": "currency",
+          "style": "breakeven",
+          "formula": "{d2.total.revenue} - {d1.total.revenue}"
+        },
+        {
+          "key": "inbound",
+          "label": "Inbound Actions",
+          "format": "number",
+          "style": "breakeven",
+          "formula": "{d2.i.unique} - {d1.i.unique}"
+        },
+        {
+          "key": "leads",
+          "label": "Leads",
+          "format": "number",
+          "style": "breakeven",
+          "formula": "{d2.lead.total} - {d1.lead.total}"
+        },
+        {
+          "key": "acquisitions",
+          "label": "Acquisitions",
+          "format": "number",
+          "style": "breakeven",
+          "formula": "{d2.acquisition.total} - {d1.acquisition.total}"
+        },
+        {
+          "key": "ca",
+          "label": "Click / Acquisition",
+          "format": "percent",
+          "decimals": 2,
+          "style": "breakeven",
+          "formula": "({d2.acquisition.total} / {d2.i.unique}) - ({d1.acquisition.total} / {d1.i.unique})"
+        },
+        {
+          "key": "spend",
+          "label": "Spend Difference",
+          "format": "currency",
+          "style": "breakeven",
+          "formula": "{d2.total.commission} - {d1.total.commission}"
+        }
+      ]
+    },
+    {
+      "label": "2026-10-19",
+      "columns": [
+        {
+          "key": "d1Inbound",
+          "label": "Inbound Actions",
+          "format": "number",
+          "value": "d1.i.unique"
+        },
+        {
+          "key": "d1Leads",
+          "label": "Leads",
+          "format": "number",
+          "value": "d1.lead.total"
+        },
+        {
+          "key": "d1Acq",
+          "label": "Acquisitions",
+          "format": "number",
+          "value": "d1.acquisition.total"
+        },
+        {
+          "key": "d1Cl",
+          "label": "Click / Lead",
+          "format": "percent",
+          "decimals": 2,
+          "formula": "{d1.lead.total} / {d1.i.unique}"
+        },
+        {
+          "key": "d1Ca",
+          "label": "Click / Acquisition",
+          "format": "percent",
+          "decimals": 2,
+          "formula": "{d1.acquisition.total} / {d1.i.unique}"
+        },
+        {
+          "key": "d1La",
+          "label": "Lead / Acquisition",
+          "format": "percent",
+          "decimals": 2,
+          "formula": "{d1.acquisition.total} / {d1.lead.total}"
+        },
+        {
+          "key": "d1Spend",
+          "label": "Spend",
+          "format": "currency",
+          "value": "d1.total.commission"
+        }
+      ]
+    },
+    {
+      "label": "2026-10-20",
+      "columns": [
+        {
+          "key": "d2Inbound",
+          "label": "Inbound Actions",
+          "format": "number",
+          "value": "d2.i.unique"
+        },
+        {
+          "key": "d2Leads",
+          "label": "Leads",
+          "format": "number",
+          "value": "d2.lead.total"
+        },
+        {
+          "key": "d2Acq",
+          "label": "Acquisitions",
+          "format": "number",
+          "value": "d2.acquisition.total"
+        },
+        {
+          "key": "d2Cl",
+          "label": "Click / Lead",
+          "format": "percent",
+          "decimals": 2,
+          "formula": "{d2.lead.total} / {d2.i.unique}"
+        },
+        {
+          "key": "d2Ca",
+          "label": "Click / Acquisition",
+          "format": "percent",
+          "decimals": 2,
+          "formula": "{d2.acquisition.total} / {d2.i.unique}"
+        },
+        {
+          "key": "d2La",
+          "label": "Lead / Acquisition",
+          "format": "percent",
+          "decimals": 2,
+          "formula": "{d2.acquisition.total} / {d2.lead.total}"
+        },
+        {
+          "key": "d2Spend",
+          "label": "Spend",
+          "format": "currency",
+          "value": "d2.total.commission"
+        }
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "id": "AFF-1",
+      "label": "NovaBeyond - Push/Display - Jake",
+      "uri": "#publisher-1",
+      "values": {
+        "d1": {
+          "total": {
+            "revenue": 2097.41,
+            "commission": 1650.2
+          },
+          "i": {
+            "unique": 1298
+          },
+          "lead": {
+            "total": 592
+          },
+          "acquisition": {
+            "total": 29
+          }
+        },
+        "d2": {
+          "total": {
+            "revenue": 700.68,
+            "commission": 1004.34
+          },
+          "i": {
+            "unique": 9200
+          },
+          "lead": {
+            "total": 1252
+          },
+          "acquisition": {
+            "total": 31
+          }
+        }
+      }
+    },
+    {
+      "id": "AFF-2",
+      "label": "AdLion - Bigo/DSP - Priya",
+      "uri": "#publisher-2",
+      "values": {
+        "d1": {
+          "total": {
+            "revenue": 14820.66,
+            "commission": 12410.18
+          },
+          "i": {
+            "unique": 48211
+          },
+          "lead": {
+            "total": 15302
+          },
+          "acquisition": {
+            "total": 402
+          }
+        },
+        "d2": {
+          "total": {
+            "revenue": 7825.52,
+            "commission": 4624.87
+          },
+          "i": {
+            "unique": 16083
+          },
+          "lead": {
+            "total": 5776
+          },
+          "acquisition": {
+            "total": 334
+          }
+        }
+      }
+    },
+    {
+      "id": "AFF-3",
+      "label": "UPBeat - Monthly - Dev",
+      "uri": "#publisher-3",
+      "values": {
+        "d1": {
+          "total": {
+            "revenue": 8211.09,
+            "commission": 6120.55
+          },
+          "i": {
+            "unique": 20114
+          },
+          "lead": {
+            "total": 4980
+          },
+          "acquisition": {
+            "total": 171
+          }
+        },
+        "d2": {
+          "total": {
+            "revenue": 11211.48,
+            "commission": 7671.39
+          },
+          "i": {
+            "unique": 13031
+          },
+          "lead": {
+            "total": 3568
+          },
+          "acquisition": {
+            "total": 197
+          }
+        }
+      }
+    },
+    {
+      "id": "AFF-4",
+      "label": "MobPlus - Native - Billy",
+      "uri": "#publisher-4",
+      "values": {
+        "d1": {
+          "total": {
+            "revenue": 22904.18,
+            "commission": 19877.42
+          },
+          "i": {
+            "unique": 15871
+          },
+          "lead": {
+            "total": 6215
+          },
+          "acquisition": {
+            "total": 388
+          }
+        },
+        "d2": {
+          "total": {
+            "revenue": 42857.51,
+            "commission": 41658.05
+          },
+          "i": {
+            "unique": 26666
+          },
+          "lead": {
+            "total": 13255
+          },
+          "acquisition": {
+            "total": 706
+          }
+        }
+      }
+    },
+    {
+      "id": "AFF-5",
+      "label": "ClickHarbor - Search - Tom",
+      "uri": "#publisher-5",
+      "values": {
+        "d1": {
+          "total": {
+            "revenue": 4120.77,
+            "commission": 3399.01
+          },
+          "i": {
+            "unique": 6122
+          },
+          "lead": {
+            "total": 2080
+          },
+          "acquisition": {
+            "total": 98
+          }
+        },
+        "d2": {
+          "total": {
+            "revenue": 5153.2,
+            "commission": 4949.98
+          },
+          "i": {
+            "unique": 8169
+          },
+          "lead": {
+            "total": 2779
+          },
+          "acquisition": {
+            "total": 109
+          }
+        }
+      }
+    },
+    {
+      "id": "AFF-6",
+      "label": "Brightwave - Social - Maya",
+      "uri": "#publisher-6",
+      "values": {
+        "d1": {
+          "total": {
+            "revenue": 61402.35,
+            "commission": 55290.64
+          },
+          "i": {
+            "unique": 26131
+          },
+          "lead": {
+            "total": 11208
+          },
+          "acquisition": {
+            "total": 905
+          }
+        },
+        "d2": {
+          "total": {
+            "revenue": 20071.26,
+            "commission": 16785.52
+          },
+          "i": {
+            "unique": 11673
+          },
+          "lead": {
+            "total": 4661
+          },
+          "acquisition": {
+            "total": 485
+          }
+        }
+      }
+    }
+  ],
+  "currency": "USD"
+}

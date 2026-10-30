@@ -1181,10 +1181,18 @@ export default class ZnFlowCanvas extends ZincElement {
             <span
               class="branch-pill-port"
               title="Start a branch"
+              role="button"
+              tabindex="0"
+              aria-label="Start a branch"
               @pointerdown="${(e: PointerEvent) => e.button === 0 && e.stopPropagation()}"
               @click="${(e: Event) => {
                 e.stopPropagation();
                 this._onBranchPortClick(i.nodeId, i.portId);
+              }}"
+              @keydown="${(e: KeyboardEvent) => {
+                if (e.key !== 'Enter' && e.key !== ' ') return;
+                e.preventDefault();
+                (e.currentTarget as HTMLElement).click();
               }}"
             ></span>` : ''}
         </div>

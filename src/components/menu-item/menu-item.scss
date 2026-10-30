@@ -15,7 +15,7 @@
 // its colour), no separators between rows. Set by the parent zn-menu.
 :host([variant="dropdown"]) {
   --hover-color: var(--color);
-  --hover-bg: rgba(0, 0, 0, 0.06);
+  --hover-bg: var(--zn-menu-item-hover-background, rgba(0, 0, 0, 0.06));
 }
 
 // Shell — app-shell header dropdown look: dark text, primary hover. Set by the
@@ -51,8 +51,10 @@
 
 :host([variant="dropdown"]) .menu-item {
   align-items: center;
-  padding: var(--zn-spacing-small) var(--zn-spacing-large);
+  min-height: var(--zn-menu-item-min-height, auto);
+  padding: var(--zn-menu-item-padding, var(--zn-spacing-small) var(--zn-spacing-large));
   border-bottom-width: 0;
+  border-radius: var(--zn-menu-item-border-radius, 0);
 }
 
 :host([variant="shell"]) .menu-item {
@@ -67,6 +69,11 @@
 .menu-item__label::slotted(*) {
   text-decoration: none;
   color: inherit;
+}
+
+// A zn-confirm only contributes its dialog, so it must not take part in the label's layout.
+.menu-item__label::slotted(zn-confirm) {
+  display: contents;
 }
 
 .menu-item.menu-item--disabled {
@@ -167,7 +174,17 @@
 
 .menu-item .menu-item__prefix::slotted(*) {
   --icon-size: var(--zn-font-size-small);
-  margin-inline-end: var(--zn-spacing-small);
+  margin-inline-end: var(--zn-menu-item-icon-gap, var(--zn-spacing-small));
+  color: var(--zn-menu-item-icon-color, inherit);
+}
+
+// A status item's icon takes the item's colour
+.menu-item--primary .menu-item__prefix::slotted(*),
+.menu-item--info .menu-item__prefix::slotted(*),
+.menu-item--error .menu-item__prefix::slotted(*),
+.menu-item--warning .menu-item__prefix::slotted(*),
+.menu-item--success .menu-item__prefix::slotted(*) {
+  color: inherit;
 }
 
 // Shell items space the icon via the row gap instead
@@ -183,6 +200,29 @@
 
 .menu-item .menu-item__suffix::slotted(*) {
   margin-inline-start: var(--zn-spacing-x-small);
+}
+
+// A keyboard shortcut, drawn as a key cap at the end of the row
+.menu-item__shortcut {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  min-width: 20px;
+  height: 20px;
+  margin-inline-start: var(--zn-spacing-medium);
+  padding: 0 5px;
+  border: 1px solid rgb(var(--zn-border-color));
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: rgb(var(--zn-panel));
+  font-family: inherit;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: var(--zn-font-weight-medium);
+  line-height: 1;
+  color: var(--zn-color-neutral-500);
 }
 
 /* Safe triangle */
@@ -282,32 +322,32 @@ zn-popup::part(popup) {
 // light accent such as velocity's neon lime).
 .menu-item--primary {
   --color: rgba(var(--zn-primary), 0.9);
-  --hover-color: rgb(var(--zn-color-on-primary, 255, 255, 255));
-  --hover-bg: rgba(var(--zn-primary), 0.9);
+  --hover-color: var(--zn-menu-item-primary-hover-color, rgb(var(--zn-color-on-primary, 255, 255, 255)));
+  --hover-bg: var(--zn-menu-item-primary-hover-background, rgba(var(--zn-primary), 0.9));
 }
 
 .menu-item--error {
-  --color: rgb(var(--zn-color-error));
-  --hover-color: rgb(var(--zn-color-on-error, 255, 255, 255));
-  --hover-bg: rgba(var(--zn-color-error), 0.9);
+  --color: var(--zn-color-danger-fg);
+  --hover-color: var(--zn-menu-item-danger-hover-color, rgb(var(--zn-color-on-error, 255, 255, 255)));
+  --hover-bg: var(--zn-menu-item-danger-hover-background, rgba(var(--zn-color-error), 0.9));
 }
 
 .menu-item--info {
   --color: rgb(var(--zn-color-info));
-  --hover-color: rgb(var(--zn-color-on-info, 255, 255, 255));
-  --hover-bg: rgba(var(--zn-color-info), 0.9);
+  --hover-color: var(--zn-menu-item-info-hover-color, rgb(var(--zn-color-on-info, 255, 255, 255)));
+  --hover-bg: var(--zn-menu-item-info-hover-background, rgba(var(--zn-color-info), 0.9));
 }
 
 .menu-item--warning {
-  --color: rgb(var(--zn-color-warning));
-  --hover-color: rgb(var(--zn-color-on-warning, 255, 255, 255));
-  --hover-bg: rgba(var(--zn-color-warning), 0.9);
+  --color: var(--zn-color-warning-fg, rgb(var(--zn-color-warning)));
+  --hover-color: var(--zn-menu-item-warning-hover-color, rgb(var(--zn-color-on-warning, 255, 255, 255)));
+  --hover-bg: var(--zn-menu-item-warning-hover-background, rgba(var(--zn-color-warning), 0.9));
 }
 
 .menu-item--success {
-  --color: rgb(var(--zn-color-success));
-  --hover-color: rgb(var(--zn-color-on-success, 255, 255, 255));
-  --hover-bg: rgba(var(--zn-color-success), 0.9);
+  --color: var(--zn-color-success-fg, rgb(var(--zn-color-success)));
+  --hover-color: var(--zn-menu-item-success-hover-color, rgb(var(--zn-color-on-success, 255, 255, 255)));
+  --hover-bg: var(--zn-menu-item-success-hover-background, rgba(var(--zn-color-success), 0.9));
 }
 
 .menu-item--secondary {

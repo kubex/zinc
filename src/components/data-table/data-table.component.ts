@@ -4,18 +4,22 @@ import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property, state} from 'lit/decorators.js';
 import {ref} from "lit/directives/ref.js";
+import {styleMap} from "lit/directives/style-map.js";
+import {renderSortIcon, sortKeyHandler} from "../../internal/table-sort";
+import {ReorderController} from "../../internal/reorder";
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
+import {type TableTab, TabRowController} from "../../internal/table-tabs";
 import {Task} from "@lit/task";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import {type ZnFilterChangeEvent} from "../../events/zn-filter-change";
 import {type ZnSearchChangeEvent} from "../../events/zn-search-change";
 import ZincElement from '../../internal/zinc-element';
 import ZnAlert from "../alert";
+import ZnBadge from "../badge";
 import ZnButton from "../button";
-import ZnButtonGroup from "../button-group";
 import ZnChip from "../chip";
 import ZnConfirm from "../confirm";
-import ZnDataTableFilter from "../data-table-filter";
+import ZnDataTableFilter, {type FilterField} from "../data-table-filter";
 import ZnDataTableSearch from "../data-table-search";
 import ZnDropdown from "../dropdown";
 import ZnEmptyState from "../empty-state";
@@ -26,13 +30,17 @@ import ZnPanel from "../panel";
 import ZnSkeleton from "../skeleton";
 import ZnStyle from "../style";
 import type ZnDataSelect from "../data-select";
-import type ZnInput from "../input";
+import ZnIcon from "../icon";
+import ZnInput from "../input";
+import ZnOptGroup from "../opt-group";
+import ZnOption from "../option";
 import type ZnQueryBuilder from "../query-builder";
-import type ZnSelect from "../select";
+import ZnSelect from "../select";
 
 // Tables load in such a way that the global sheet has to be re-applied inside the shadow root.
 import bootStyles from '../../../scss/boot.scss';
 import styles from './data-table.scss';
+import tableControlsStyles from '../../../scss/table-controls.scss';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PER_PAGE = 10;
@@ -53,6 +61,8 @@ interface Cell {
   hoverContent?: string;
   hoverPlacement?: string;
   chipColor?: string;
+  badgeType?: string;
+  badgeDot?: boolean;
   gaid?: string;
   sortValue?: string;
   uri?: string;
@@ -125,6 +135,7 @@ interface HeaderConfig {
   hideColumn?: boolean;
   secondary?: boolean;
   type?: string;
+  align?: 'left' | 'right' | 'center';
   cellTemplate?: Cell;
   ifEmpty?: Cell;
 }
@@ -171,6 +182,7 @@ type AllowedInputElement =
  * @since 1.0
  *
  * @dependency zn-alert
+ * @dependency zn-badge
  * @dependency zn-button
  * @dependency zn-empty-state
  * @dependency zn-chip
@@ -179,7 +191,6 @@ type AllowedInputElement =
  * @dependency zn-menu
  * @dependency zn-menu-item
  * @dependency zn-panel
- * @dependency zn-button-group
  * @dependency zn-confirm
  * @dependency zn-skeleton
  * @dependency zn-data-table-search
@@ -202,9 +213,10 @@ type AllowedInputElement =
  * @cssproperty --example - An example CSS custom property.
  */
 export default class ZnDataTable extends ZincElement {
-  static styles: CSSResultGroup = [unsafeCSS(bootStyles), unsafeCSS(styles)];
+  static styles: CSSResultGroup = [unsafeCSS(bootStyles), unsafeCSS(styles), unsafeCSS(tableControlsStyles)];
   static dependencies = {
     'zn-alert': ZnAlert,
+    'zn-badge': ZnBadge,
     'zn-button': ZnButton,
     'zn-empty-state': ZnEmptyState,
     'zn-chip': ZnChip,
@@ -213,11 +225,16 @@ export default class ZnDataTable extends ZincElement {
     'zn-menu': ZnMenu,
     'zn-menu-item': ZnMenuItem,
     'zn-panel': ZnPanel,
-    'zn-button-group': ZnButtonGroup,
     'zn-confirm': ZnConfirm,
     'zn-skeleton': ZnSkeleton,
     'zn-style': ZnStyle,
+    'zn-icon': ZnIcon,
+    'zn-input': ZnInput,
+    'zn-opt-group': ZnOptGroup,
+    'zn-option': ZnOption,
+    'zn-select': ZnSelect,
     'zn-data-table-search': ZnDataTableSearch,
+    'zn-data-table-filter': ZnDataTableFilter,
   };
 
   @property({attribute: 'data-uri'}) dataUri: string;
@@ -263,6 +280,35 @@ export default class ZnDataTable extends ZincElement {
 
   @property({attribute: "empty-state-icon"}) emptyStateIcon: string = "data_alert";
 
+  /** Unit for the row total shown with the caption: "publishers" reads "16 publishers". */
+  @property({attribute: 'total-label'}) totalLabel = '';
+
+  /** Unit used when the total is exactly one: "publisher" reads "1 publisher". Falls back to `total-label`. */
+  @property({attribute: 'total-label-singular'}) totalLabelSingular = '';
+
+  /** Tabs rendered inside the table. The selected tab's value is sent as `tab-param` with every request. */
+  @property({type: Array}) tabs: TableTab[] = [];
+
+  @property({attribute: 'tab-param'}) tabParam = 'tab';
+
+  /** Draws the tabs as a segmented control: a grey track with a pill that slides to the selected tab. */
+  @property({attribute: 'pill-tabs', type: Boolean, reflect: true}) pillTabs = false;
+
+  /** The selected tab's value; the first tab when empty. */
+  // Not the `tab` attribute: on any element that marks a zn-tabs trigger, which is clickable and switches tabs
+  @property({attribute: 'active-tab', reflect: true}) tab = '';
+
+  /**
+   * Fields for the funnel's filter builder. When set, the table renders its own zn-data-table-filter in the
+   * header, in place of the `filter` slot, and the applied rules show as chips under the tabs. Rules are sent
+   * as `filter`.
+   */
+  @property({attribute: 'filter-fields', type: Array}) filterFields: FilterField[] = [];
+
+  private readonly _fieldsFilter = document.createElement('zn-data-table-filter');
+
+  private readonly _tabRow = new TabRowController(this, {onSelect: (value: string) => this.selectTab(value)});
+
   @property() filters: [] = [];
 
   @property() method: 'GET' | 'POST' = 'POST';
@@ -293,6 +339,7 @@ export default class ZnDataTable extends ZincElement {
   private _hasLoadedData = false;
   private _lastLoadHadRows = false;
   private _lastTableContent: TemplateResult = html``;
+  private _headObserver: ResizeObserver | null = null;
 
   // Sharable (URL <-> state) sync
   private _sharableInitialised = false;
@@ -332,6 +379,7 @@ export default class ZnDataTable extends ZincElement {
     ActionSlots.filter.valueOf(),
     ActionSlots.sort.valueOf(),
     ActionSlots.inputs.valueOf(),
+    'toolbar',
     'empty-state',
     'no-results'
   );
@@ -377,6 +425,11 @@ export default class ZnDataTable extends ZincElement {
           }
         });
         Object.assign(requestData, params);
+      }
+
+      Object.assign(requestData, this.toolbarParams());
+      if (this.tabs.length > 0) {
+        Object.assign(requestData, {[this.tabParam]: this.activeTab()});
       }
 
       // Add any extra request params
@@ -425,7 +478,15 @@ export default class ZnDataTable extends ZincElement {
   private _hiddenCells: Map<string, Cell[]> = new Map();
   private _secondaryHeaders: HeaderConfig[];
   @state() private _deselectedColumns: Set<string> = new Set();
-  @state() private _filtersOpen = false;
+  // Header keys in the order the user has dragged them into; keys not listed keep their configured order after these
+  @state() private _columnOrder: string[] = [];
+  private readonly reorderController = new ReorderController(this, {
+    axis: 'horizontal',
+    indicator: true,
+    // Plain arrows are left for scrolling the table
+    modifier: 'alt',
+    focus: key => this.columnCells(key)[0]?.focus(),
+  });
   private _columnDefaultsApplied = false;
   private _formatTemplates: Record<string, DisplayTemplate> = defaultTemplates;
 
@@ -444,11 +505,78 @@ export default class ZnDataTable extends ZincElement {
 
   // Headers the column select can toggle - everything but the permanently hidden and secondary ones
   private selectableHeaders(): HeaderConfig[] {
-    return (Object.values(this.headers) as HeaderConfig[]).filter((header: HeaderConfig) => {
+    const headers = (Object.values(this.headers) as HeaderConfig[]).filter((header: HeaderConfig) => {
       if (header.hideHeader || header.hideColumn || header.secondary) return false;
 
       return !Object.values(this.hiddenColumns).includes(header.key);
     });
+
+    const rank = new Map(this._columnOrder.map((key, i) => [key, i]));
+    return headers.sort((a, b) => (rank.get(a.key) ?? headers.length) - (rank.get(b.key) ?? headers.length));
+  }
+
+  /** @internal ReorderHost: the visible columns' keys in order. */
+  reorderKeys() {
+    return this.visibleHeaders().map(h => h.key);
+  }
+
+  /** @internal ReorderHost: puts the visible columns in a new order, leaving deselected ones in their slots. */
+  applyReorder(keys: string[]) {
+    const visible = new Set(keys);
+    let i = 0;
+    this._columnOrder = this.selectableHeaders().map(h => visible.has(h.key) ? keys[i++] : h.key);
+  }
+
+  /** @internal ReorderHost: the heading drawn for a column. */
+  reorderRow(key: string) {
+    return this.columnCells(key)[0] ?? null;
+  }
+
+  /** @internal ReorderHost: the heading and every cell of a column. */
+  reorderSlides(key: string) {
+    return this.columnCells(key);
+  }
+
+  private reorderable() {
+    return this.visibleHeaders().length > 1;
+  }
+
+  // One line over the whole table, as per-cell borders break where the heading meets the body
+  private renderDropLine() {
+    const dropIndex = this.reorderController.dropIndex;
+    if (dropIndex === null) return nothing;
+
+    const keys = this.reorderKeys();
+    const heading = this.reorderRow(keys[Math.min(dropIndex, keys.length - 1)]);
+    const table = heading?.closest('table');
+    const scroll = heading?.closest<HTMLElement>('.table__scroll');
+    if (!heading || !table || !scroll) return nothing;
+
+    const rect = heading.getBoundingClientRect();
+    const bounds = table.getBoundingClientRect();
+    // Held inside the table: a line poking past its edge widens the scroller, which then scrolls under the drag
+    const half = 1; // half of .table__drop-line's width
+    const edge = Math.min(Math.max(dropIndex === keys.length ? rect.right : rect.left, bounds.left + half), bounds.right - half);
+    const left = edge - scroll.getBoundingClientRect().left + scroll.scrollLeft;
+    return html`<div class="table__drop-line" style=${styleMap({left: `${left}px`})}></div>`;
+  }
+
+  /** @internal ReorderHost: a column lands anywhere over the table, not just its headings. */
+  reorderArea() {
+    return this.shadowRoot?.querySelector<HTMLElement>('.table__scroll table') ?? null;
+  }
+
+  /** @internal ReorderHost: the column's label, as a copy of the whole heading is unusable for a wide or wrapped one. */
+  reorderGhost(key: string) {
+    const header = (Object.values(this.headers) as HeaderConfig[]).find(h => h.key === key);
+    const ghost = document.createElement('div');
+    ghost.className = 'table__drag-ghost';
+    ghost.textContent = header?.label ?? key;
+    return ghost;
+  }
+
+  private columnCells(key: string) {
+    return [...this.shadowRoot?.querySelectorAll<HTMLElement>(`[data-column="${CSS.escape(key)}"]`) ?? []];
   }
 
   private isColumnVisible(header: HeaderConfig): boolean {
@@ -716,7 +844,9 @@ export default class ZnDataTable extends ZincElement {
       || this.hasSlotController.test(ActionSlots.actions.valueOf())
       || this.hasSlotController.test(ActionSlots.create.valueOf())
       || this.hasSlotController.test(ActionSlots.sort.valueOf())
-      || this.hasSlotController.test(ActionSlots.search.valueOf());
+      || this.hasSlotController.test(ActionSlots.search.valueOf())
+      || this.hasSlotController.test(ActionSlots.filter.valueOf())
+      || this.filterFields.length > 0;
 
     const hasInputs = this.hasSlotController.test(ActionSlots.inputs.valueOf());
     const hasControls = hasActions || this.hasColumnSelect() || this.hasRefresh();
@@ -724,14 +854,6 @@ export default class ZnDataTable extends ZincElement {
     // An empty state with no header has nothing to hang off the panel, and consumers
     // often bring their own panel for it, so let it stand on its own
     const bareEmptyState = emptyBody && !hasControls && !this.caption;
-
-    // The filter bar is inline, so it gets its own row rather than a slot in the header
-    const filters = this.hasSlotController.test(ActionSlots.filter.valueOf())
-      ? html`
-        <div class="table__filters" ?hidden="${!this._filtersOpen}">
-          <slot name="${ActionSlots.filter.valueOf()}"></slot>
-        </div>`
-      : nothing;
 
     // Headers do not need to be re-rendered with new data
     return html`
@@ -741,29 +863,42 @@ export default class ZnDataTable extends ZincElement {
         <slot name="${ActionSlots.filter_top.valueOf()}"></slot>
         ${this.standalone && !bareEmptyState
           ? html`
-            <zn-panel caption="${ifDefined(this.caption || undefined)}" flush>
+            <zn-panel caption="${ifDefined(this.caption || undefined)}"
+                      description="${ifDefined(this.totalText())}"
+                      ?inline-description="${!!this.totalLabel}"
+                      flush>
               ${hasControls ? html`
                 <div slot="actions" class="table__header__right">
                   ${this.getActions()}
                   ${this.getHeaderControls()}
                 </div>` : nothing}
-              ${filters}
+              ${this.renderTabs()}
+              ${this.renderFilterChips()}
+              ${this.renderToolbar()}
               ${tableBody}
               ${this.getTableFooter('footer')}
             </zn-panel>`
           : html`
             ${hasControls || this.caption ? this.getTableHeader() : nothing}
-            ${filters}
+            ${this.renderTabs()}
+            ${this.renderFilterChips()}
+            ${this.renderToolbar()}
             ${tableBody}
             ${this.getTableFooter()}`}
       </div>
     `;
   }
 
+  protected willUpdate(changed: PropertyValues) {
+    super.willUpdate(changed);
+    this._fieldsFilter.filters = this.filterFields;
+    this._fieldsFilter.value = this.filter;
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('zn-filter-change', this.filterChangeListener);
-    this.addEventListener('zn-clear', this.filterClearListener);
+    this._fieldsFilter.addEventListener('zn-filter-change', this.fieldsFilterChange);
     this.addEventListener('zn-search-change', this.searchChangeListener);
     // Capture defaults before reading the URL so URL values are treated as deltas, then seed state.
     this._captureSharableDefaults();
@@ -816,15 +951,10 @@ export default class ZnDataTable extends ZincElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('zn-filter-change', this.filterChangeListener);
-    this.removeEventListener('zn-clear', this.filterClearListener);
+    this._fieldsFilter.removeEventListener('zn-filter-change', this.fieldsFilterChange);
     this.removeEventListener('zn-search-change', this.searchChangeListener);
-  }
-
-  // Clearing the filters leaves an empty row behind, so fold it away
-  filterClearListener = (e: Event) => {
-    if (e.target instanceof ZnDataTableFilter) {
-      this._filtersOpen = false;
-    }
+    this._headObserver?.disconnect();
+    this._headObserver = null;
   }
 
   filterChangeListener = (e: ZnFilterChangeEvent) => {
@@ -873,7 +1003,7 @@ export default class ZnDataTable extends ZincElement {
   emptyState() {
     if (this.isNarrowed || (this.noInitialLoad && !this._initialLoad)) {
       return html`
-        <div class="table--empty">
+        <div class="table--empty table__enter">
           <slot name="no-results">
             <zn-empty-state caption="No Results Found" icon="search">
               <p>Nothing matched your search. Try adjusting your filters.</p>
@@ -883,7 +1013,7 @@ export default class ZnDataTable extends ZincElement {
     }
 
     return html`
-      <div class="table--empty">
+      <div class="table--empty table__enter">
         <slot name="empty-state">
           <zn-empty-state
             caption="${this.emptyStateCaption ? this.emptyStateCaption : (this.caption ? "No " + this.caption.toLowerCase() + " found" : "No data found")}"
@@ -1036,12 +1166,12 @@ export default class ZnDataTable extends ZincElement {
     const colCount = filteredHeaders.length + (this.rowHasActions ? 1 : 0) + (anyHidden ? 1 : 0) + (showCheckboxes ? 1 : 0);
 
     return html`
-      <div class="table__scroll">
+      <div class="table__scroll table__enter">
         <table class="${classMap({
           'table': true,
           'with-hover': !this.unsortable && this.isSelectable(),
         })}">
-          <thead>
+          <thead ${ref(this.observeHead)}>
           <tr>
             ${showCheckboxes ? this.renderSelectAllCheckbox() : nothing}
             ${anyHidden ? html`
@@ -1073,6 +1203,7 @@ export default class ZnDataTable extends ZincElement {
           `)}
           </tbody>
         </table>
+        ${this.renderDropLine()}
       </div>
     `;
   }
@@ -1080,8 +1211,24 @@ export default class ZnDataTable extends ZincElement {
   // Pending and loaded states share this template so Lit keeps the table's DOM (and focus) across loads
   private tableContent(content: TemplateResult, pending: boolean) {
     return html`
-      <div class="${classMap({'reduced-opacity': pending})}">${content}</div>`;
+      <div class="${classMap({'table__frame': true, 'reduced-opacity': pending})}">
+        ${pending ? html`<div class="table__loader" aria-hidden="true"></div>` : nothing}
+        ${content}
+      </div>`;
   }
+
+  private observeHead = (el: Element | undefined) => {
+    this._headObserver?.disconnect();
+    this._headObserver = null;
+    if (!el) return;
+    this._headObserver = new ResizeObserver(([entry]) => {
+      const height = `${Math.round(entry.borderBoxSize[0].blockSize)}px`;
+      if (this.style.getPropertyValue('--_head-height') !== height) {
+        this.style.setProperty('--_head-height', height);
+      }
+    });
+    this._headObserver.observe(el);
+  };
 
   getTableHeader() {
     return html`
@@ -1089,6 +1236,8 @@ export default class ZnDataTable extends ZincElement {
         <div class="table__header__actions">
           ${this.caption ? html`
             <h3 class="table__header__caption">${this.caption}</h3>` : nothing}
+          ${this.totalText() ? html`
+            <span class="table__header__count">${this.totalText()}</span>` : nothing}
         </div>
         <div class="table__header__right">
           ${this.getActions()}
@@ -1098,13 +1247,73 @@ export default class ZnDataTable extends ZincElement {
     `;
   }
 
+  private totalText(): string | undefined {
+    if (!this.totalLabel || !this._hasLoadedData) return undefined;
+    // Narrowed by a search or filter: read as a share of the selected tab, e.g. "1 of 16"
+    const tabCount = this.tabs.find(tab => tab.value === this.activeTab())?.count;
+    if (this.isNarrowed && tabCount !== undefined && tabCount !== null && tabCount !== '') {
+      return `${this._totalRows.toLocaleString()} of ${tabCount}`;
+    }
+    const label = this._totalRows === 1 && this.totalLabelSingular ? this.totalLabelSingular : this.totalLabel;
+    return `${this._totalRows.toLocaleString()} ${label}`;
+  }
+
+  private activeTab(): string {
+    return this.tab || this.tabs[0]?.value || '';
+  }
+
+  private renderTabs() {
+    return this._tabRow.render(this.tabs, this.activeTab(), this.pillTabs);
+  }
+
+  private selectTab(value: string) {
+    if (value === this.activeTab()) return;
+    this.tab = value;
+    this.page = 1;
+    this._dataTask.run().then(r => r);
+  }
+
+  private renderToolbar() {
+    if (!this.hasSlotController.test('toolbar')) return nothing;
+
+    return html`
+      <div class="table__toolbar" @zn-change="${this.toolbarChanged}" @change="${this.toolbarChanged}">
+        <slot name="toolbar"></slot>
+      </div>`;
+  }
+
+  // zn-select and native fields can both announce one edit, so coalesce them into a single reload
+  private _toolbarQueued = false;
+  private toolbarChanged = () => {
+    if (this._toolbarQueued) return;
+    this._toolbarQueued = true;
+    queueMicrotask(() => {
+      this._toolbarQueued = false;
+      this.page = 1;
+      this._dataTask.run().then(r => r);
+    });
+  }
+
+  private toolbarParams(): Record<string, unknown> {
+    const params: Record<string, unknown> = {};
+    this.querySelectorAll('[slot="toolbar"]').forEach((slotted) => {
+      [slotted, ...Array.from(slotted.querySelectorAll('[name]'))].forEach((field) => {
+        const name = (field as AllowedInputElement).name || field.getAttribute('name');
+        if (name && 'value' in field) {
+          params[name] = (field as AllowedInputElement).value;
+        }
+      });
+    });
+    return params;
+  }
+
   private getHeaderControls() {
     return html`
+      <slot name="${ActionSlots.search.valueOf()}"></slot>
+      ${this.getFilter()}
       ${this.getColumnSelect()}
-      ${this.getFilterToggle()}
       ${this.getRefreshButton()}
       <slot name="${ActionSlots.sort.valueOf()}"></slot>
-      <slot name="${ActionSlots.search.valueOf()}"></slot>
       <slot name="${ActionSlots.create.valueOf()}"></slot>`;
   }
 
@@ -1113,39 +1322,30 @@ export default class ZnDataTable extends ZincElement {
     return this._hasLoadedData && this._lastLoadHadRows;
   }
 
-  private getFilterToggle() {
+  private getFilter() {
+    if (this.filterFields.length > 0) return this._fieldsFilter;
     if (!this.hasSlotController.test(ActionSlots.filter.valueOf())) return nothing;
-
-    const applied = this.appliedFilterCount();
-
-    return html`
-      <zn-button icon-button="small"
-                 icon="funnel@lu"
-                 icon-size="18"
-                 tooltip="Filter"
-                 aria-label="Filter"
-                 muted-notifications
-                 notification="${applied || nothing}"
-                 aria-pressed="${this._filtersOpen}"
-                 class="${classMap({'table__header__toggle--active': applied > 0})}"
-                 @click="${this.toggleFilters}">
-      </zn-button>`;
+    return html`<slot name="${ActionSlots.filter.valueOf()}"></slot>`;
   }
 
-  private toggleFilters = () => {
-    this._filtersOpen = !this._filtersOpen;
+  private filterSource(): ZnDataTableFilter | null {
+    if (this.filterFields.length > 0) return this._fieldsFilter;
+    return this.querySelector<ZnDataTableFilter>(':scope > zn-data-table-filter[slot="filter"]');
   }
 
-  private appliedFilterCount(): number {
-    if (!this.filter) return 0;
-
-    try {
-      const applied: unknown = JSON.parse(atob(this.filter));
-      return Array.isArray(applied) ? applied.length : 0;
-    } catch {
-      return 0;
-    }
+  // The funnel sits in the header, so its chips get a filter of their own in a row under the tabs
+  private renderFilterChips() {
+    const source = this.filterSource();
+    if (!source) return nothing;
+    return html`<zn-data-table-filter class="table__chips" .source="${source}"></zn-data-table-filter>`;
   }
+
+  private fieldsFilterChange = (e: Event) => {
+    e.stopPropagation();
+    this.filter = this._fieldsFilter.value;
+    this.page = 1;
+    this._dataTask.run().then(r => r);
+  };
 
   private hasColumnSelect(): boolean {
     return !this.hideColumnSelect && this.hasRows() && this.selectableHeaders().length > 1;
@@ -1208,18 +1408,21 @@ export default class ZnDataTable extends ZincElement {
 
     if (rowSelected === null && pagination === null && rowsPerPage === null) return null;
 
+    const first = (this.page - 1) * this.itemsPerPage + 1;
+    const last = Math.min(this.page * this.itemsPerPage, this._totalRows);
+
     return html`
       <div class="${classMap({
         'table__footer': true,
         'table__footer--panel': !!slot,
       })}" slot="${ifDefined(slot)}">
         <div class="table__footer__left">
-          ${pagination}
+          ${this._totalRows > 0 ? html`
+            <span>${first.toLocaleString()}–${last.toLocaleString()} of ${this._totalRows.toLocaleString()}</span>` : nothing}
           ${rowSelected}
         </div>
-        <div class="table__footer__right">
-          ${rowsPerPage}
-        </div>
+        ${pagination}
+        ${rowsPerPage}
       </div>`;
   }
 
@@ -1227,13 +1430,13 @@ export default class ZnDataTable extends ZincElement {
     if (this.selectedRows.length <= 0) return null;
 
     return html`
-      <p>${this.numberOfRowsSelected} of ${this._rows.length} rows selected</p>`
+      <span>${this.numberOfRowsSelected} of ${this._rows.length} rows selected</span>`
   }
 
   getRowsPerPage() {
     if (this.hidePagination) return null;
 
-    const optionsRowsPerPage = [10, 20, 30, 40, 50];
+    const optionsRowsPerPage = [10, 25, 50, 100];
 
     // Keyed to the dataset, not the current page size - raising the size past the total
     // must not hide the only control that can lower it again
@@ -1241,7 +1444,7 @@ export default class ZnDataTable extends ZincElement {
 
     return html`
       <div class="table__footer__rows-per-page">
-        <p>Rows</p>
+        <span>Rows</span>
         <zn-select name="rowPerPage"
                    size="small"
                    value="${this.itemsPerPage}"
@@ -1255,57 +1458,59 @@ export default class ZnDataTable extends ZincElement {
       </div>`;
   }
 
-  // A window of PAGE_WINDOW pages that slides with the current page and stays inside the page
-  // count; the first/last buttons cover jumping to either end
-  private getPageRange(): number[] {
+  // A window of PAGE_WINDOW pages around the current one, plus the first and last pages;
+  // null marks a gap, except a gap of one page, which shows that page instead
+  private getPageRange(): (number | null)[] {
     const size = Math.min(PAGE_WINDOW, this.totalPages);
     const start = Math.min(
       Math.max(1, this.page - Math.floor(size / 2)),
       this.totalPages - size + 1
     );
+    const pages = [...new Set([1, ...Array.from({length: size}, (_, i) => start + i), this.totalPages])];
 
-    return Array.from({length: size}, (_, i) => start + i);
+    return pages.flatMap((p, i) => {
+      const gap = i > 0 ? p - pages[i - 1] : 1;
+      if (gap === 2) return [p - 1, p];
+      return gap > 2 ? [null, p] : [p];
+    });
   }
 
   getPagination() {
     if (this.hidePagination || this.totalPages <= 1) return null;
 
     return html`
-      <zn-button-group>
-        <zn-button @click="${this.page !== 1 ? this.goToFirstPage : undefined}"
-                   ?disabled="${this.page === 1}"
-                   icon="chevrons-left@lu"
-                   icon-button="small"
-                   label="First page">
-        </zn-button>
-        <zn-button @click="${this.page !== 1 ? this.goToPreviousPage : undefined}"
-                   ?disabled="${this.page === 1}"
+      <div class="table__footer__pages">
+        <zn-button class="table__footer__page"
+                   color="transparent"
+                   size="small"
                    icon="chevron-left@lu"
-                   icon-button="small"
-                   label="Previous page">
+                   icon-size="16"
+                   ?disabled="${this.page === 1}"
+                   aria-label="Previous page"
+                   @click="${this.goToPreviousPage}">
         </zn-button>
-        ${this.getPageRange().map((p: number) => html`
-          <zn-button @click="${p !== this.page ? () => this.goToPage(p) : undefined}"
-                     class="${classMap({
-                       'table__footer__pagination-page': true,
-                       'table__footer__pagination-page--active': p === this.page,
-                     })}"
-                     icon-button="small"
-                     aria-current="${ifDefined(p === this.page ? 'page' : undefined)}">${p}
-          </zn-button>`)}
-        <zn-button @click="${this.page !== this.totalPages ? this.goToNextPage : undefined}"
-                   ?disabled="${this.page === this.totalPages}"
+        ${this.getPageRange().map((p) => p === null
+          ? html`<span class="table__footer__gap">…</span>`
+          : html`
+            <zn-button class="${classMap({
+                         'table__footer__page': true,
+                         'table__footer__page--active': p === this.page,
+                       })}"
+                       color="transparent"
+                       size="small"
+                       aria-current="${ifDefined(p === this.page ? 'page' : undefined)}"
+                       @click="${p !== this.page ? () => this.goToPage(p) : undefined}">${p}
+            </zn-button>`)}
+        <zn-button class="table__footer__page"
+                   color="transparent"
+                   size="small"
                    icon="chevron-right@lu"
-                   icon-button="small"
-                   label="Next page">
-        </zn-button>
-        <zn-button @click="${this.page !== this.totalPages ? this.goToLastPage : undefined}"
+                   icon-size="16"
                    ?disabled="${this.page === this.totalPages}"
-                   icon="chevrons-right@lu"
-                   icon-button="small"
-                   label="Last page">
+                   aria-label="Next page"
+                   @click="${this.goToNextPage}">
         </zn-button>
-      </zn-button-group>`;
+      </div>`;
   }
 
   getActions() {
@@ -1360,8 +1565,15 @@ export default class ZnDataTable extends ZincElement {
         </zn-menu>
       </zn-dropdown>
       <div class="table__actions-source">
-        <slot name="${ActionSlots.actions.valueOf()}"></slot>
+        <slot name="${ActionSlots.actions.valueOf()}" @slotchange="${this.hideActionSources}"></slot>
       </div>`;
+  }
+
+  // Inert per item rather than on the wrapper: an inert ancestor would also make a zn-confirm's modal dialog inert
+  private hideActionSources = (event: Event) => {
+    (event.target as HTMLSlotElement).assignedElements().forEach(el => {
+      if (!(el instanceof ZnConfirm)) (el as HTMLElement).inert = true;
+    });
   }
 
   private actionTrigger(item: HTMLElement): HTMLElement | null {
@@ -1390,12 +1602,24 @@ export default class ZnDataTable extends ZincElement {
   }
 
   goToPage(page: number) {
+    const focused = this.shadowRoot?.activeElement;
     this.page = page;
     this.selectedRows = [];
     this.numberOfRowsSelected = 0;
     this._dataTask.run().then(r => r);
 
     this.resizeObserver.observe(this);
+
+    if (focused instanceof ZnButton && focused.classList.contains('table__footer__page')) {
+      this.keepPagerFocus(focused);
+    }
+  }
+
+  private async keepPagerFocus(button: ZnButton) {
+    await this.updateComplete;
+    if (button.disabled || !button.isConnected) {
+      this.shadowRoot?.querySelector<ZnButton>('.table__footer__page--active')?.button?.focus();
+    }
   }
 
   goToFirstPage() {
@@ -1571,6 +1795,11 @@ export default class ZnDataTable extends ZincElement {
         <zn-chip type="${data.chipColor}" title="${ifDefined(data.title)}">${content}</zn-chip>`;
     }
 
+    if (data.badgeType) {
+      content = html`
+        <zn-badge type="${data.badgeType}" ?dot="${data.badgeDot}" title="${ifDefined(data.title)}">${content}</zn-badge>`;
+    }
+
 
     if (data.iconSrc) {
       const src = data.iconSrc;
@@ -1648,47 +1877,36 @@ export default class ZnDataTable extends ZincElement {
     }
   }
 
-  private getTableSortIcon(key: any) {
-    if (this.sortColumn !== key) {
-      return html`
-        <div class="table__head__sort">
-          <zn-icon src="chevrons_up_down@lu" size="14"></zn-icon>
-        </div>`;
-    }
-
-    if (this.sortDirection === 'asc') {
-      return html`
-        <div class="table__head__sort table__head__sort--active">
-          <zn-icon src="chevron_down@lu" size="16"></zn-icon>
-        </div>`;
-    }
-
-    return html`
-      <div class="table__head__sort table__head__sort--active">
-        <zn-icon src="chevron_up@lu" size="16"></zn-icon>
-      </div>`;
-  }
-
   private renderCellHeader(header: HeaderConfig) {
     const sortable = !Object.values(this.unsortableHeaders).includes(header.key) && !Object.values(this.hiddenHeaders).includes(header.key) && !this.unsortable && header.sortable !== false;
 
     const lastVisibleHeaderKey = this.visibleHeaders().slice(-1)[0]?.key;
+    const reorderable = this.reorderable();
 
     return html`
       <th
+        data-column="${header.key}"
         class="${classMap({
           'table__head': true,
           'table__head--wide': header.key === this.wideColumn,
           'table__head--last': header.key === lastVisibleHeaderKey,
           'table__head--hidden': Object.values(this.hiddenHeaders).includes(header.key),
+          'table__head--dragging': header.key === this.reorderController.draggedKey,
+          'table__head--reorderable': reorderable,
+
+          [`table__head--${header.align}`]: !!header.align,
         })}"
-        tabindex="${ifDefined(sortable ? '0' : undefined)}"
+        tabindex="${ifDefined(sortable || reorderable ? '0' : undefined)}"
         aria-sort="${ifDefined(sortable ? this.sortState(header.key) : undefined)}"
+        aria-description="${ifDefined(reorderable ? 'Alt + arrow keys to move column' : undefined)}"
         @click="${sortable ? this.updateSort(header.key) : undefined}"
-        @keydown="${sortable ? (e: KeyboardEvent) => this.handleSortKeyDown(e, header.key) : undefined}">
+        @keydown="${(e: KeyboardEvent) => {
+          if (!this.reorderController.handleKeyDown(e, header.key) && sortable) sortKeyHandler(this.updateSort(header.key))(e);
+        }}"
+        @pointerdown="${reorderable ? (e: PointerEvent) => this.reorderController.handlePointerDown(e, header.key) : undefined}">
         <div>
           ${header.label}
-          ${sortable ? this.getTableSortIcon(header.key) : nothing}
+          ${sortable ? renderSortIcon(this.sortState(header.key)) : nothing}
         </div>
       </th>
     `;
@@ -1699,12 +1917,6 @@ export default class ZnDataTable extends ZincElement {
     return this.sortDirection === 'asc' ? 'ascending' : 'descending';
   }
 
-  private handleSortKeyDown(e: KeyboardEvent, key: string) {
-    if (e.key !== 'Enter' && e.key !== ' ') return;
-    e.preventDefault();
-    this.updateSort(key)();
-  }
-
   private renderCellBody(index: number, value: Cell, row: Row) {
     const filteredHeaders = this.visibleHeaders();
     const header: HeaderConfig | undefined = filteredHeaders[index];
@@ -1712,11 +1924,15 @@ export default class ZnDataTable extends ZincElement {
 
     return html`
       <td
+        data-column="${ifDefined(headerKey)}"
         @click="${this.isSelectable() ? this.selectRow : undefined}"
         class="${classMap({
           'table__cell': true,
+          'table__cell--dragging': !!headerKey && headerKey === this.reorderController.draggedKey,
+
           'table__cell--wide': headerKey === this.wideColumn,
           'table__cell--last': index === filteredHeaders.length - 1,
+          [`table__cell--${header?.align}`]: !!header?.align,
         })}">
         <div>${this.renderCell(value, row, header)}</div>
       </td>`;
@@ -1801,8 +2017,9 @@ export default class ZnDataTable extends ZincElement {
     if (changed) this.updateKeys();
   }
 
+  /** Rows are selectable when an action works on the selection; creating does not. */
   private isSelectable(): boolean {
-    return [ActionSlots.delete, ActionSlots.modify, ActionSlots.actions, ActionSlots.create]
+    return [ActionSlots.delete, ActionSlots.modify, ActionSlots.actions]
       .some(slot => this.hasSlotController.test(slot.valueOf()));
   }
 
@@ -1926,7 +2143,7 @@ export default class ZnDataTable extends ZincElement {
 
   private loadingTable() {
     return html`
-      <div class="table__scroll">
+      <div class="table__scroll table__enter">
         <table class="table">
           <thead>
           <tr>

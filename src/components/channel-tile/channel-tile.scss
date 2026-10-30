@@ -16,23 +16,24 @@
   overflow: hidden;
   cursor: pointer;
   border-right: 1px solid rgb(var(--zn-border-color));
-  background-color: rgb(var(--zn-body));
+  background-color: rgb(var(--zn-color-tab));
   transition: background-color 0.15s ease;
   user-select: none;
 
   &:focus-visible {
-    outline: 2px solid rgb(var(--zn-primary));
-    outline-offset: -2px;
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--zn-input-focus-ring-color, rgba(var(--zn-primary), 0.35));
   }
 }
 
 :host(.active) .channel-tile {
   background-color: rgb(var(--zn-panel));
+  box-shadow: inset 0 -2px 0 rgb(var(--zn-primary));
   cursor: default;
 }
 
-:host(:not(.active)) .channel-tile--active:hover {
-  background-color: rgb(var(--zn-panel));
+:host(:not(.active)) .channel-tile:not(.channel-tile--incoming):hover {
+  background-color: rgb(var(--zn-body));
 }
 
 .channel-tile--incoming {
@@ -52,15 +53,17 @@
   align-items: center;
   flex-shrink: 0;
   height: 24px;
-  padding: 0 var(--zn-spacing-small);
-  background-color: rgb(var(--zn-color-tab));
+  padding: 0 12px;
+  background-color: var(--zn-color-neutral-100);
 
   h3 {
     margin: 0;
-    font-size: var(--zn-text-h3-font-size);
-    line-height: var(--zn-text-h3-line-height);
-    font-weight: var(--zn-text-h3-font-weight);
-    color: rgb(var(--zn-text-heading));
+    font-size: 10px;
+    line-height: 24px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgb(var(--zn-color-muted-text));
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -84,18 +87,62 @@
   flex: 1;
   display: flex;
   align-items: center;
-  gap: var(--zn-spacing-small);
-  padding: var(--zn-spacing-x-small) var(--zn-spacing-small);
+  gap: 10px;
+  padding: 0 12px;
   width: 100%;
+  min-height: 52px;
+  box-sizing: border-box;
   overflow: hidden;
   z-index: 1;
+}
+
+// The 32px leading circle, shared by the active icon, the accept button and the reject control
+.channel-tile__lead {
+  --zn-button-height: 30px; // inside the 1px border
+  --zn-button-plain-hover-background: transparent;
+
+  position: relative;
+  flex: none;
+  display: grid;
+  place-content: center;
+  width: 32px;
+  height: 32px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 1px solid rgb(var(--zn-border-color));
+  background-color: rgb(var(--zn-panel));
+  color: rgb(var(--zn-color-muted-text));
+  transition: color 0.15s ease, border-color 0.15s ease;
+
+  zn-icon {
+    --icon-color: currentColor;
+
+    color: inherit;
+  }
+}
+
+.channel-tile--available .channel-tile__lead {
+  border-style: dashed;
+  background-color: transparent;
+}
+
+.channel-tile:not(.channel-tile--default) .channel-tile__lead {
+  color: rgb(var(--channel-tile-color));
+  border-color: rgb(var(--channel-tile-color));
+}
+
+:host(.active) .channel-tile--default .channel-tile__lead {
+  color: rgb(var(--zn-primary));
+  border-color: rgb(var(--zn-primary));
 }
 
 .channel-tile__content {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   flex-grow: 1;
-  gap: 4px;
+  gap: 2px;
+  min-height: 32px;
   overflow: hidden;
 
   @container (max-width: 200px) {
@@ -105,11 +152,10 @@
 
 .channel-tile__title {
   margin: 0;
-  font-size: var(--zn-text-heading-section-font-size);
-  line-height: var(--zn-text-heading-section-line-height);
-  font-weight: var(--zn-text-heading-section-font-weight);
-  color: var(--zn-text-heading-section-color);
-  text-transform: var(--zn-text-heading-section-transform);
+  font-size: 13px;
+  line-height: 15px;
+  font-weight: 600;
+  color: rgb(var(--zn-text-heading));
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -117,11 +163,10 @@
 
 .channel-tile__subtitle {
   margin: 0;
-  font-size: var(--zn-text-subheading-small-font-size);
-  line-height: var(--zn-text-subheading-small-line-height);
-  font-weight: var(--zn-text-subheading-small-font-weight);
-  color: var(--zn-text-subheading-small-color);
-  text-transform: var(--zn-text-subheading-small-transform);
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: 400;
+  color: rgb(var(--zn-color-muted-text));
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -134,25 +179,18 @@
   gap: var(--zn-spacing-small);
 }
 
-.channel-tile__reject {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: none;
+.channel-tile--available .channel-tile__reject {
   padding: 0;
   margin: 0;
-  background-color: rgba(var(--zn-color-panel));
+  border-style: solid;
+  background-color: rgb(var(--zn-panel));
   color: rgb(var(--zn-color-error));
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 
   &:hover {
-    background-color: rgba(var(--zn-color-error));
-    color: rgb(var(--zn-color-panel));
+    background-color: rgb(var(--zn-color-error));
+    border-color: rgb(var(--zn-color-error));
+    color: rgb(var(--zn-panel));
   }
 }
 
@@ -161,8 +199,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background-color: rgba(var(--zn-shadow), 0.2);
+  height: 2px;
   overflow: hidden;
   z-index: 1;
 
@@ -195,8 +232,4 @@
 
 .channel-tile--disabled {
   --channel-tile-color: var(--zn-color-disabled, 204, 204, 204);
-}
-
-.channel-tile--incoming .channel-tile__body zn-button {
-  --zn-color-tab: var(--zn-color-panel);
 }

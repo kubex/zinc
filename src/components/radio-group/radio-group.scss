@@ -54,6 +54,23 @@
   height: auto;
 }
 
+/* A scale is one row of equal segments, however many radios it has. */
+:host([scale]) .form-control-input {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  // Wider than the checked segment's ring and its offset, so the ring never touches a neighbour.
+  gap: var(--zn-spacing-x-small);
+}
+
+:host([scale]) .form-control--has-label .form-control-input {
+  margin-top: var(--zn-spacing-small);
+}
+
+:host([scale]) ::slotted(zn-radio) {
+  margin-top: 0;
+}
+
 .form-control {
   position: relative;
   border: none;

@@ -116,4 +116,71 @@ describe('<zn-chart>', () => {
     await new Promise((r) => setTimeout(r, 50));
     expect(a.chart?.group).to.equal('g1');
   });
+
+  it('uses the theme palette when no colors are given', async () => {
+    const el: any = await fixture(html`
+      <zn-chart style="--zn-chart-color-1: #010203; --zn-chart-color-2: #040506"
+                categories='["a"]' data='[{"name":"s","data":[1]}]'></zn-chart>`);
+
+    expect(el.getPalette()).to.deep.equal(['#010203', '#040506']);
+  });
+
+  it('prefers explicit colors over the theme palette', async () => {
+    const el: any = await fixture(html`<zn-chart style="--zn-chart-color-1: #010203"></zn-chart>`);
+    el.colors = ['#ffffff'];
+
+    expect(el.buildOption().color).to.deep.equal(['#ffffff']);
+  });
+
+  it('fetches data-url once without live, taking categories and data from the response', async () => {
+    const original = window.fetch;
+    const calls: RequestInit[] = [];
+    window.fetch = ((_url: string, init: RequestInit) => {
+      calls.push(init);
+      return Promise.resolve(new Response(JSON.stringify({categories: ['a', 'b'], data: [{name: 'Sent', data: [1, 2]}]})));
+    }) as any;
+
+    try {
+      const el: any = await fixture(html`<zn-chart type="line" data-url="/metrics/chart"></zn-chart>`);
+      await el.initPromise;
+      await new Promise(r => setTimeout(r, 50));
+      await el.updateComplete;
+
+      expect(calls.length).to.equal(1);
+      expect((calls[0].headers as Record<string, string>)['x-kx-fetch-style']).to.equal('raw-json');
+      expect(el.categories).to.deep.equal(['a', 'b']);
+      expect(el.chart.getOption().series[0].data).to.deep.equal([1, 2]);
+      expect(el.chart.getOption().yAxis[0].max).to.not.equal(6);
+
+      await new Promise(r => setTimeout(r, 1200));
+      expect(calls.length).to.equal(1);
+    } finally {
+      window.fetch = original;
+    }
+  });
+
+  it('shows a placeholder until data-url loads', async () => {
+    const original = window.fetch;
+    let resolve!: (r: Response) => void;
+    window.fetch = (() => new Promise<Response>(r => { resolve = r; })) as any;
+
+    try {
+      const el: any = await fixture(html`<zn-chart type="line" data-url="/metrics/chart"></zn-chart>`);
+      await el.initPromise;
+      expect(el.shadowRoot.querySelector('.loading')).to.exist;
+      expect(el.shadowRoot.querySelector('.chart--loading')).to.exist;
+
+      resolve(new Response(JSON.stringify([{name: 'Sent', data: [1, 2]}])));
+      await new Promise(r => setTimeout(r, 50));
+      await el.updateComplete;
+      expect(el.shadowRoot.querySelector('.chart--loading')).to.not.exist;
+      expect(el.chart.getOption().series[0].data).to.deep.equal([1, 2]);
+
+      await new Promise(r => setTimeout(r, 450));
+      await el.updateComplete;
+      expect(el.shadowRoot.querySelector('.loading')).to.not.exist;
+    } finally {
+      window.fetch = original;
+    }
+  });
 });

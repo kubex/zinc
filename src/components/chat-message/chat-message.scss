@@ -104,11 +104,11 @@
     }
 
     pre {
-      background-color: #23241f;
+      background-color: var(--zn-code-background, #23241f);
       border-radius: 3px;
       margin-block: 5px;
       padding: 5px 10px;
-      color: #f8f8f2;
+      color: var(--zn-code-color, #f8f8f2);
       overflow: auto;
     }
 
@@ -165,6 +165,17 @@
 
   &__meta {
     @include wc.text-style(subheading-small);
+  }
+
+  &__footer {
+    display: none;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--zn-spacing-x-small);
+
+    &--visible {
+      display: flex;
+    }
   }
 
   &__actions {

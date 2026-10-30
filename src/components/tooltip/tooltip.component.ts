@@ -62,6 +62,7 @@ export default class ZnTooltip extends ZincElement {
   }
 
   disconnectedCallback() {
+    super.disconnectedCallback();
     this.closeWatcher?.destroy();
     document.removeEventListener('keydown', this.handleDocumentKeyDown);
   }
@@ -149,6 +150,8 @@ export default class ZnTooltip extends ZincElement {
       this.emit('zn-after-show');
     } else {
       topLayerManager.unregisterTooltip(this);
+      this.closeWatcher?.destroy();
+      document.removeEventListener('keydown', this.handleDocumentKeyDown);
 
       this.emit('zn-hide');
       this.popup.active = false;

@@ -8,7 +8,7 @@
 
   ul.navbar {
     padding: 0;
-    margin-inline: var(--zn-spacing-small);
+    margin-inline: var(--zn-navbar-inset, var(--zn-spacing-small));
 
     &--color-body {
       background-color: rgb(var(--zn-color-body));
@@ -54,6 +54,50 @@
   }
 }
 
+// Pull tabs are folder tabs on the panel's top edge, so they keep that shape whatever a theme does to the tab strip
+:host([hover]:not([stacked])) {
+  --zn-navbar-tab-border-width: 1px;
+  --zn-navbar-tab-radius: 8px;
+  --zn-navbar-tab-background: rgb(var(--zn-color-tab));
+  --zn-navbar-tab-hover-background: rgba(var(--zn-color-tab), 0.6);
+  --zn-navbar-tab-hover-backdrop: transparent;
+  --zn-navbar-tab-hover-indicator-color: transparent;
+  --zn-navbar-tab-active-background: rgb(var(--zn-panel));
+  // Panel-coloured, so the active tab covers the strip's bottom border and joins the panel below
+  --zn-navbar-tab-indicator-color: rgb(var(--zn-panel));
+  --zn-navbar-tab-indicator-height: 1px;
+  --zn-navbar-tab-indicator-slide: 0;
+  --zn-text-tab-link-color: rgb(var(--zn-color-muted-text));
+  --zn-text-tab-link-active-color: rgb(var(--zn-text));
+  --zn-navbar-tab-hover-color: rgb(var(--zn-text));
+
+  ul.navbar {
+    gap: 0;
+
+    > li {
+      border-left-width: var(--zn-navbar-tab-border-width);
+      border-color: transparent;
+      border-radius: var(--zn-navbar-tab-radius) var(--zn-navbar-tab-radius) 0 0;
+
+      &.active, &.zn-tb-active {
+        border-color: rgb(var(--zn-border-color));
+      }
+    }
+
+    // Centred because the icon's box keeps the size its `size` attribute gives it
+    zn-icon::part(icon) {
+      position: relative;
+      top: 50%;
+      left: 50%;
+      translate: -50% -50%;
+      width: 16px;
+      height: 16px;
+      font-size: 16px;
+      stroke-width: 1.75;
+    }
+  }
+}
+
 :host([icon-only]) {
   ul.navbar {
     li {
@@ -64,11 +108,18 @@
 
       // Hover is the plain tab tint — without the body-coloured ::after
       // backdrop the generic hover paints, which reads as white
-      &:hover:not(.active):not(.zn-tb-active):not(.more)::after {
+      &:hover:not(.active):not(.zn-tb-active)::after {
         display: none;
       }
     }
   }
+}
+
+// Without block padding, a tooltip-wrapped icon fills the whole tab
+:host([hover][icon-only]:not([stacked])) ul.navbar > li {
+  width: 44px;
+  min-width: 44px;
+  padding-block: 0;
 }
 
 .navbar__container {
@@ -76,6 +127,25 @@
   flex-direction: row;
   position: relative;
   justify-content: space-between;
+}
+
+// One indicator shared by every tab, so switching tabs slides it instead of
+// swapping per-tab lines. Themes opt in with --zn-navbar-tab-indicator-slide: 1.
+.navbar__indicator {
+  // Placed by left and width, and slid with transform alone so the move stays smooth while the page is busy.
+  position: absolute;
+  left: 0;
+  width: 0;
+  transform-origin: left center;
+  bottom: 0;
+  height: var(--zn-navbar-tab-indicator-height, 1px);
+  background-color: var(--zn-navbar-tab-indicator-color, rgb(var(--navbar-active-colour)));
+  opacity: 0;
+  pointer-events: none;
+
+  &--shown {
+    opacity: var(--zn-navbar-tab-indicator-slide, 0);
+  }
 }
 
 .navbar {
@@ -109,11 +179,18 @@ ul.navbar {
 
 // Inactive tab surface for the tab navbar rendered inside zn-page. Driven by
 // custom properties (defaulting to no-op) so a theme can opt in to a translucent
-// "glass" treatment — Aura sets these to a frosted white; :host-context(zn-page)
+// "glass" treatment; :host-context(zn-page)
 // keeps it scoped to the page tab bar and off every other navbar usage.
 :host-context(zn-page) ul.navbar li:not(.active):not(.zn-tb-active) {
   background: var(--navbar-page-inactive-tab-background, transparent);
   backdrop-filter: var(--navbar-page-inactive-tab-filter, none);
+}
+
+// Space between a tab's label and the indicator under it. Set on the navbar
+// because zn-page passes its tabs as light-DOM <li>s, which carry no part.
+:host(:not([stacked]):not([icon-bar])) ul.navbar > li {
+  padding-bottom: var(--zn-navbar-tab-padding-bottom, 0);
+  padding-top: var(--zn-spacing-x-small, 0);
 }
 
 :host([baseless]) {
@@ -209,11 +286,11 @@ ul.navbar {
 
       &.active, &.zn-tb-active {
         background: rgba(0, 0, 0, 0.03);
-        color: rgb(var(--zn-primary));
+        color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
       }
 
       &:hover {
-        color: rgb(var(--zn-primary));
+        color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
       }
     }
   }
@@ -243,16 +320,122 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 
 
 :host(:not([stacked]):not([icon-bar])) {
-  ul.navbar {
-    height: 40px;
+  // Tabs that don't fit scroll sideways under a floating arrow at each edge that has more
+  .navbar__strip {
+    --navbar-scroll-size: 56px; // keep in sync with NAVBAR_SCROLL_EDGE in navbar.component.ts
+    --navbar-scroll-button-size: calc(var(--zn-density-control-height, 36px) - 6px);
+    --navbar-scroll-fade: rgb(var(--navbar-active-colour));
+    // Fully faded by the button's inner edge
+    --navbar-scroll-fade-size: calc(16px + var(--navbar-scroll-size) - var(--navbar-scroll-button-size));
+
+    position: relative;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    // The tab lines and indicator overlap the border below by a pixel; this keeps that pixel inside the scrollport
+    padding-bottom: 1px;
+    margin-bottom: -1px;
     align-self: end;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  ul.navbar {
+    flex: none;
+    height: var(--zn-navbar-tab-strip-height, var(--zn-navbar-height, 40px));
+  }
+
+  .navbar__scroll {
+    position: sticky;
+    z-index: 2;
+    flex: none;
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    width: var(--navbar-scroll-size);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--zn-transition-fast, 150ms) ease;
+
+    // Tabs passing under the arrow soften and fade into the surface behind it
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      // Down over the border row too, redrawing the border so the active tab's line doesn't run under the arrow
+      bottom: -1px;
+      border-bottom: 1px solid rgb(var(--zn-border-color));
+      background: var(--navbar-scroll-fade);
+      backdrop-filter: blur(1px);
+    }
+
+    &--start {
+      left: var(--navbar-scroll-inset-start, 0px);
+      margin-inline-end: calc(-1 * var(--navbar-scroll-size));
+      justify-content: flex-start;
+
+      // Also covers the inset behind the arrow, so tabs scrolled past it don't show at the strip's edge
+      &::before {
+        left: calc(-1 * var(--navbar-scroll-inset-start, 0px));
+        right: -16px;
+        mask-image: linear-gradient(to left, transparent, #000 var(--navbar-scroll-fade-size));
+      }
+    }
+
+    &--end {
+      right: var(--navbar-scroll-inset-end, 0px);
+      // Ends inset-end short of the tabs so the ::before reaching over the inset stays within them; past them it is scrollable overflow
+      margin-inline: calc(-1 * (var(--navbar-scroll-size) + var(--navbar-scroll-inset-end, 0px))) var(--navbar-scroll-inset-end, 0px);
+      justify-content: flex-end;
+
+      &::before {
+        left: -16px;
+        right: calc(-1 * var(--navbar-scroll-inset-end, 0px));
+        mask-image: linear-gradient(to right, transparent, #000 var(--navbar-scroll-fade-size));
+      }
+    }
+  }
+
+  .navbar__scroll-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--navbar-scroll-button-size);
+    height: var(--navbar-scroll-button-size);
+    margin: 0;
+    padding: 0;
+    border: 1px solid rgb(var(--zn-border-color));
+    border-radius: var(--zn-border-radius, 8px);
+    background: rgb(var(--zn-panel));
+    box-shadow: var(--zn-shadow-small, 0 1px 3px rgba(13, 23, 56, 0.08), 0 1px 2px rgba(13, 23, 56, 0.04));
+    color: rgb(var(--zn-text));
+    cursor: pointer;
+    transition: background-color var(--zn-transition-fast, 150ms) ease;
+
+    &:hover {
+      background: linear-gradient(rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.03)), rgb(var(--zn-panel));
+    }
+
+    &:focus-visible {
+      outline: 2px solid rgb(var(--zn-primary));
+      outline-offset: 1px;
+    }
+  }
+
+  .navbar__strip--scroll-start .navbar__scroll--start,
+  .navbar__strip--scroll-end .navbar__scroll--end {
+    opacity: 1;
+    pointer-events: auto;
   }
 }
 
-:host(:not([stacked]):not([icon-bar]):not([icon-only])) {
-  ul.navbar {
-    min-width: 200px;
-  }
+:host(:not([stacked]):not([icon-bar]):not([icon-only])) .navbar__strip {
+  min-width: 200px;
 }
 
 :host([icon-only]:not([stacked]):not([icon-bar])) {
@@ -271,16 +454,16 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 :host(:not([stacked])) {
   ul.navbar {
     > li {
-      border-right-width: 1px;
-      border-top-width: 1px;
+      border-right-width: var(--zn-navbar-tab-border-width, 1px);
+      border-top-width: var(--zn-navbar-tab-border-width, 1px);
 
       &:first-of-type {
-        border-left-width: 1px;
-        border-top-left-radius: 6px;
+        border-left-width: var(--zn-navbar-tab-border-width, 1px);
+        border-top-left-radius: var(--zn-navbar-tab-radius, 6px);
       }
 
       &:last-of-type {
-        border-top-right-radius: 6px;
+        border-top-right-radius: var(--zn-navbar-tab-radius, 6px);
       }
 
       &.active, &.zn-tb-active {
@@ -288,17 +471,8 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       }
     }
 
-    &:not(.has-hidden) > li.last-visible {
-      border-top-right-radius: 6px;
-    }
-
-    &.has-hidden > li.more {
-      border-top-right-radius: 6px;
-    }
-
-    &.more-only > li.more {
-      border-left-width: 1px;
-      border-top-left-radius: 6px;
+    > li.last-visible {
+      border-top-right-radius: var(--zn-navbar-tab-radius, 6px);
     }
   }
 }
@@ -328,45 +502,33 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
     gap: 0;
     list-style: none;
 
-    li.more {
-      display: none;
-    }
-
-    &.has-hidden {
-      li.more {
-        display: flex;
-      }
-    }
-
     li {
-      &.hidden {
-        visibility: hidden;
-        position: absolute;
-        pointer-events: none;
-      }
-
       .closer {
         display: none;
       }
 
       user-select: none;
       font-weight: var(--zn-text-tab-link-font-weight);
-      padding: 0 calc(var(--zn-base-px, 8px) * 2);
-      background: rgb(var(--zn-color-tab));
-      transition: background-color 100ms ease-in-out;
+      padding: 0 var(--zn-navbar-tab-padding-inline, calc(var(--zn-base-px, 8px) * 2));
+      background: var(--zn-navbar-tab-background, rgb(var(--zn-color-tab)));
+      transition: background-color 100ms ease-in-out, color 150ms ease;
       position: relative;
 
       &:hover {
-        background: rgba(var(--zn-color-tab), 0.5);
+        background: var(--zn-navbar-tab-hover-background, rgba(var(--zn-color-tab), 0.5));
 
         &::after {
           content: "";
           position: absolute;
           inset: 0;
           border-radius: inherit;
-          background: rgb(var(--navbar-active-colour));
+          background: var(--zn-navbar-tab-hover-backdrop, rgb(var(--navbar-active-colour)));
           z-index: -1;
         }
+      }
+
+      &:hover:not(.active):not(.zn-tb-active) {
+        color: var(--zn-navbar-tab-hover-color, var(--zn-text-tab-link-color));
       }
 
       display: flex;
@@ -376,8 +538,18 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 
       cursor: pointer;
 
-      zn-icon, zn-tooltip {
+      zn-icon {
         pointer-events: none;
+      }
+
+      // A tooltip hears the pointer, and is placed, through what it wraps, so its icon fills the tab
+      zn-tooltip zn-icon {
+        pointer-events: auto;
+        flex: 1;
+        align-self: stretch;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       &#dropdown-item {
@@ -394,25 +566,24 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
         }
       }
 
+      // Joins the tab to the content below it; a theme can turn it into an
+      // underline indicator via the indicator tokens.
       &::before {
         content: '';
-        left: 50%;
-        right: 50%;
+        left: 0;
+        right: 0;
         bottom: -1px;
         position: absolute;
-        background-color: rgb(var(--navbar-active-colour));
-        transition: all 300ms ease-in-out;
-        height: 1px;
-      }
-
-      &:hover:before:not(#dropdown-item) {
-        // TODO Hover Before colors
-        left: -2px;
-        right: -2px;
+        background-color: var(--zn-navbar-tab-hover-indicator-color, rgb(var(--navbar-active-colour)));
+        scale: 0 1;
+        transition: scale var(--zn-transition-medium) var(--zn-ease-out),
+                    background-color var(--zn-transition-medium) ease;
+        height: var(--zn-navbar-tab-indicator-height, 1px);
+        opacity: calc(1 - var(--zn-navbar-tab-indicator-slide, 0));
       }
 
       &.active, &.zn-tb-active {
-        background: rgb(var(--navbar-active-colour));
+        background: var(--zn-navbar-tab-active-background, rgb(var(--navbar-active-colour)));
         font-size: var(--zn-text-tab-link-active-font-size);
         line-height: var(--zn-text-tab-link-active-line-height);
         font-weight: var(--zn-text-tab-link-active-font-weight);
@@ -420,8 +591,8 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       }
 
       &.active::before, &.zn-tb-active::before {
-        left: 0;
-        right: 0;
+        scale: 1 1;
+        background-color: var(--zn-navbar-tab-indicator-color, rgb(var(--navbar-active-colour)));
       }
     }
 
@@ -555,109 +726,113 @@ button[popovertarget] {
 }
 
 
-:host {
+// Segmented tabs: a grey track with a raised pill that slides, stretches and settles on the active tab.
+// Matches the tab strip's own :not([stacked]):not([icon-bar]) specificity so its height and padding give way.
+:host([pill]:not([stacked]):not([icon-bar])) {
+  --zn-navbar-tab-indicator-slide: 1;
+  --zn-navbar-tab-background: transparent;
+  --zn-navbar-tab-hover-background: transparent;
+  --zn-navbar-tab-hover-backdrop: transparent;
+  --zn-navbar-tab-active-background: transparent;
+  --zn-text-tab-link-active-color: rgb(var(--zn-text));
+  @include wc.pill-tab-indicator-motion;
+
+  .navbar__container {
+    border-bottom: 0;
+  }
+
+  .navbar__strip {
+    width: fit-content;
+    min-width: 0;
+    // In line with the panel's caption and contents rather than the tab strip's inset
+    margin-inline: var(--zn-panel-padding, var(--zn-spacing-medium));
+    margin-bottom: var(--zn-spacing-small);
+    padding: 2px;
+    border-radius: 8px;
+    background: var(--zn-color-neutral-100);
+  }
+
   ul.navbar {
-    li.more {
-      // Let the trigger fill the whole cell so clicking anywhere in the
-      // "more" item opens the dropdown, not just the icon itself.
-      padding: 0;
-      width: 40px;
-      min-width: 40px;
+    height: auto;
+    margin: 0;
+    gap: 2px;
 
-      zn-dropdown,
-      zn-button[slot="trigger"] {
-        height: 100%;
-        width: 100%;
-      }
+    > li {
+      z-index: 1;
+      // Less the track's padding, so the track stands as tall as a button
+      height: calc(var(--zn-button-height, var(--zn-density-control-height, 36px)) - 4px);
+      min-height: 0;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      font-size: 12px;
+      font-weight: var(--zn-font-weight-semibold);
 
-      zn-button[slot="trigger"] zn-icon {
-        transition: transform 200ms ease-in-out;
-        --icon-color: var(--zn-text-tab-link-color);
-      }
-
-      zn-dropdown[open] zn-button[slot="trigger"] zn-icon {
-        transform: rotate(90deg);
-        --icon-color: var(--zn-text-tab-link-active-color);
-      }
-
-      &:has(zn-dropdown[open]) {
-        background: rgb(var(--zn-panel));
-
-        &::after {
-          content: '';
-          position: absolute;
-          inset: auto 0 -1px 0;
-          height: 1px;
-          border-radius: 0;
-          background: rgb(var(--zn-panel));
-          z-index: 1;
-        }
-      }
-
-      zn-button::part(base) {
-        height: 100%;
-        padding-left: 0;
-        padding-right: 0;
-        outline: none;
-
-        &:hover {
-          background-color: transparent;
-        }
-      }
-
-      ul#extended-menu {
-        --navbar-more-trigger-width: 40px;
-
-        box-shadow: 0 4px 8px -4px rgba(33, 33, 33, 0.1);
-        border: 1px solid rgb(var(--zn-border-color));
-        border-top: 0;
-        border-radius: 0 0 var(--zn-border-radius) var(--zn-border-radius);
-        overflow: hidden;
-        position: relative;
-        inset-inline-end: -1px;
-
-        &::before {
-          content: '';
-          position: absolute;
-          inset: 0 calc(var(--navbar-more-trigger-width) - 2px) auto 0;
-          height: 1px;
-          background: rgb(var(--zn-border-color));
-          z-index: 2;
-        }
-
-        background: rgb(var(--zn-panel));
+      // A link item is clickable across the whole segment, not just its label
+      > a {
         display: flex;
-        flex-direction: column;
-        height: auto;
-        width: fit-content;
-        min-width: var(--zn-size-spanel);
-        margin: -1px 0 0;
-        padding: 1px;
-
-        li {
-          justify-content: left;
-          background: rgb(var(--zn-panel));
-          font-size: var(--zn-text-menu-link-font-size);
-          line-height: var(--zn-text-menu-link-line-height);
-          font-weight: var(--zn-text-menu-link-font-weight);
-          color: var(--zn-text-menu-link-color);
-          padding: var(--zn-spacing-small) var(--zn-spacing-medium);
-
-          &:hover {
-            background: linear-gradient(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06)), rgb(var(--zn-panel));
-          }
-
-          &.active, &.zn-tb-active {
-            font-weight: var(--zn-text-tab-link-font-weight);
-            color: var(--zn-text-tab-link-color);
-          }
-
-          &.active::before, &.zn-tb-active::before {
-            left: 0;
-            right: 0;
-          }
-        }
+        align-items: center;
+        align-self: stretch;
+        margin-inline: -12px;
+        padding-inline: 12px;
       }
     }
+  }
+
+  // Sticky edges sit inside the track's padding, so the arrows reach over it to cover tabs scrolling past
+  .navbar__strip {
+    --navbar-scroll-button-size: calc(var(--zn-button-height, var(--zn-density-control-height, 36px)) - 4px);
+    --navbar-scroll-fade: var(--zn-color-neutral-100);
+  }
+
+  .navbar__scroll--start {
+    left: -2px;
+    padding-left: 2px;
+  }
+
+  .navbar__scroll--end {
+    right: -2px;
+    padding-right: 2px;
+  }
+
+  .navbar__scroll::before {
+    bottom: 0;
+    border-bottom: 0;
+  }
+
+  .navbar__scroll-button {
+    border-radius: 6px;
+  }
+
+  .navbar__indicator {
+    z-index: 0;
+    top: var(--zn-navbar-indicator-top);
+    bottom: auto;
+    height: var(--zn-navbar-indicator-height);
+    border-radius: 6px;
+    background: rgb(var(--zn-panel));
+    box-shadow: var(--zn-shadow-small, 0 1px 3px rgba(13, 23, 56, 0.08), 0 1px 2px rgba(13, 23, 56, 0.04));
+  }
+}
+
+// Track 26px, pill 22px
+:host([pill][size="small"]) {
+  --zn-button-height: 26px;
+}
+
+// A flush pill sits where it is placed, such as above a form field, without the panel inset
+:host([pill][flush]:not([stacked]):not([icon-bar])) .navbar__strip {
+  margin: 0 0 calc(var(--zn-spacing-unit, 8px) * 1.5);
+}
+
+// Beside page header actions, or ahead of a button menu's buttons, the pill keeps to its own width and drops the
+// panel inset and the gap it keeps above content
+:host([pill]:is([slot="actions"], [slot="prefix"]):not([stacked]):not([icon-bar])) {
+  flex: none;
+  width: max-content;
+
+  .navbar__strip {
+    margin: 0;
   }
 }

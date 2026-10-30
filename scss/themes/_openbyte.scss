@@ -1,0 +1,926 @@
+@use "sass:map";
+@use "sass:math";
+
+// OpenByte — blue brand on blue-tinted neutrals, Plus Jakarta Sans headings and
+// comfortable density (compact on request). The light block is mode-agnostic, so every colour it sets must
+// also be set in the dark block below or the light value leaks into dark mode.
+//
+// The default theme, layered over the base light/dark primitives. Selectors are `html:root` (0,1,1) so they outrank
+// the `:root` blocks in _root.scss that load after them, and root-qualified because ZincElement reflects `t`/`m`
+// onto every component (see _modes.scss).
+//
+// Zinc's primary ramp is anchored on 600 (the brand step); OpenByte's on 500.
+// The ramps below are shifted one step so brand blue lands on 600.
+
+$text-roles: (
+  "page-title": ("size": 25px, "line": 30px, "weight": bold, "family": heading, "letter-spacing": -0.015em),
+  "h1": ("size": 14px, "line": 17px, "weight": bold, "family": heading),
+  "h2": ("size": 20px, "line": 24px, "weight": bold, "family": heading, "letter-spacing": -0.01em),
+  "h3": ("size": 11px, "line": 13px, "weight": semibold, "transform": uppercase, "letter-spacing": 0.06em),
+  "heading-section": ("size": 14px, "line": 17px, "weight": bold, "family": heading),
+  "paragraph": ("size": 13px, "line": 20px),
+  "table-content": ("size": 13px, "line": 16px),
+  "subheading": ("size": 13px, "line": 18px),
+  "subheading-small": ("size": 12px, "line": 16px),
+  "input-placeholder": ("size": 13px, "line": 20px),
+  "input-content": ("size": 13px, "line": 20px),
+  "input-label": ("size": 12px, "line": 16px, "weight": semibold),
+  "chart-minor": ("size": 12px, "line": 16px, "weight": semibold),
+  "chart-major": ("size": 25px, "line": 28px, "weight": bold, "family": heading, "letter-spacing": -0.02em),
+  "button-label": ("size": 13px, "line": 16px, "weight": semibold, "transform": none),
+  "chip": ("size": 12px, "line": 16px, "weight": medium, "transform": none),
+  "navbar-link": ("size": 13px, "line": 16px, "weight": semibold),
+  "tab-link": ("size": 13px, "line": 16px, "weight": semibold),
+  "tab-link-active": ("size": 13px, "line": 16px, "weight": semibold),
+  "menu-link": ("size": 13px, "line": 16px, "weight": medium),
+);
+
+@mixin text-roles {
+  @each $role, $style in $text-roles {
+    --zn-text-#{$role}-font-size: #{map.get($style, "size")};
+    --zn-text-#{$role}-line-height: #{map.get($style, "line")};
+    @if map.has-key($style, "weight") {
+      --zn-text-#{$role}-font-weight: var(--zn-font-weight-#{map.get($style, "weight")});
+    }
+    @if map.get($style, "family") == heading {
+      --zn-text-#{$role}-font-family: var(--zn-font-heading);
+    }
+    @if map.has-key($style, "transform") {
+      --zn-text-#{$role}-transform: #{map.get($style, "transform")};
+    }
+    @if map.has-key($style, "letter-spacing") {
+      --zn-text-#{$role}-letter-spacing: #{map.get($style, "letter-spacing")};
+    }
+  }
+  --zn-text-menu-link-color: var(--zn-text-color);
+}
+
+$compact: (
+  "control-height-sm": 24px,
+  "control-height": 28px,
+  "control-height-lg": 32px,
+  "row-height": 32px,
+  "cell-padding-x": 16px,
+  "card-padding": 14px,
+  "gap": 12px,
+  "stack": 8px,
+  "page-padding": 16px,
+  "input-height-x-small": 20px,
+  "head-gap": 12px,
+  "head-inner": 6px,
+);
+
+$comfortable: (
+  "control-height-sm": 28px,
+  "control-height": 36px,
+  "control-height-lg": 40px,
+  "row-height": 44px,
+  "cell-padding-x": 20px,
+  "card-padding": 20px,
+  "gap": 20px,
+  "stack": 12px,
+  "page-padding": 24px,
+  "input-height-x-small": 24px,
+  "head-gap": 16px,
+  "head-inner": 8px,
+);
+
+// Aliases are re-declared alongside the density tokens: a var() alias resolves
+// where it is declared, so a nested [data-density] would not move it otherwise.
+@mixin density($d) {
+  --zn-density-control-height-sm: #{map.get($d, "control-height-sm")};
+  --zn-density-control-height: #{map.get($d, "control-height")};
+  --zn-density-control-height-lg: #{map.get($d, "control-height-lg")};
+  --zn-density-row-height: #{map.get($d, "row-height")};
+  --zn-density-cell-padding-x: #{map.get($d, "cell-padding-x")};
+  --zn-density-card-padding: #{map.get($d, "card-padding")};
+  --zn-density-gap: #{map.get($d, "gap")};
+  --zn-density-stack: #{map.get($d, "stack")};
+  --zn-density-page-padding: #{map.get($d, "page-padding")};
+
+  --zn-input-height-x-small: #{map.get($d, "input-height-x-small")};
+  --zn-input-height-small: #{map.get($d, "control-height-sm")};
+  --zn-input-height-medium: #{map.get($d, "control-height")};
+  --zn-input-height-large: #{map.get($d, "control-height-lg")};
+
+  --zn-button-height-small: #{map.get($d, "control-height-sm")};
+  --zn-button-height: #{map.get($d, "control-height")};
+  --zn-button-height-large: #{map.get($d, "control-height-lg")};
+  --zn-button-icon-width: #{map.get($d, "control-height")};
+  --zn-button-pill-height: #{map.get($d, "control-height-sm")};
+  --zn-chip-height: #{map.get($d, "control-height-sm")};
+  --zn-select-tag-height: #{map.get($d, "input-height-x-small")};
+
+  $pad: map.get($d, "card-padding");
+  --zn-panel-padding: #{$pad};
+  --zn-panel-header-padding: #{math.round($pad * 0.6)} #{$pad};
+  --zn-panel-footer-padding: #{math.round($pad * 0.8)} #{$pad};
+  --zn-tile-min-height: #{map.get($d, "row-height") + 8px};
+  --zn-tile-padding-inline: #{$pad};
+  --zn-tile-padding-block: #{math.round($pad * 0.6)};
+
+  --zn-table-row-height: #{map.get($d, "row-height")};
+  --zn-table-header-height: #{map.get($d, "row-height") - 4px};
+  // Rows get their height from --zn-table-row-height; the block padding only keeps multi-line cells off the dividers.
+  --zn-table-cell-padding: 4px #{map.get($d, "cell-padding-x")};
+  --zn-table-edge-padding: #{$pad};
+
+  --zn-navbar-height: #{map.get($d, "control-height") + 4px};
+  --zn-menu-item-min-height: #{map.get($d, "control-height")};
+  // Tab label text lines up with the card padding.
+  --zn-navbar-inset: #{$pad - 12px};
+  --zn-page-header-padding-block: 20px;
+  // With no page gutter this is the whole inset from the page edge to its content.
+  --zn-base-gap: #{map.get($d, "page-padding")};
+  --zn-page-breadcrumb-gap: #{map.get($d, "head-gap")};
+  --zn-page-title-gap: #{map.get($d, "head-inner")};
+}
+
+html:root {
+  color-scheme: light;
+
+  /**************************************************************
+   * RGB triplets (legacy layer, scss/_root.scss)
+   *************************************************************/
+
+  --zn-backdrop-color: rgba(13, 23, 56, 0.45);
+
+  --zn-color-text: 6, 27, 49;
+  --zn-color-muted-text: 80, 97, 122;
+
+  --zn-color-base: 255, 255, 255;
+  --zn-color-body: 247, 250, 255;
+  --zn-color-navigation: var(--zn-color-base);
+  --zn-color-navigation-hightlight: 247, 250, 255;
+  --zn-color-border: 214, 224, 235;
+  --zn-color-border-active: 186, 200, 217;
+  --zn-color-tab: 240, 245, 251;
+  --zn-color-panel: 255, 255, 255;
+
+  --zn-color-primary: 8, 94, 253;
+  --zn-color-info: 8, 94, 253;
+  --zn-color-success: 18, 160, 106;
+  --zn-color-warning: 240, 160, 32;
+  --zn-color-error: 217, 46, 75;
+  --zn-color-disabled: 141, 156, 178;
+  --zn-color-ai: 117, 87, 245;
+
+  // White on amber is ~2.2:1.
+  --zn-color-on-primary: 255, 255, 255;
+  --zn-color-on-warning: 6, 27, 49;
+
+  --zn-panel-opacity: 1;
+  --zn-shadow: 229, 237, 245;
+  --zn-panel-secondary: 240 245 251;
+  --zn-panel-highlight: 247, 250, 255;
+  --zn-panel-highlight-opacity: 1;
+  --zn-input-bg-accent: 240, 245, 251;
+  --zn-bright-bg: 255, 255, 255;
+  --zn-light-text: 102, 118, 142;
+  --zn-dark-text: 6, 27, 49;
+  --zn-purple-text: 5, 60, 163;
+  --zn-accent: 15, 163, 177;
+
+  --zn-table-header-background-color: 240, 245, 251;
+
+  /**************************************************************
+   * Ramps
+   *************************************************************/
+
+  --zn-color-primary-50: #F5F8FF;
+  --zn-color-primary-100: #EEF4FF;
+  --zn-color-primary-200: #DBE7FF;
+  --zn-color-primary-300: #B8D0FF;
+  --zn-color-primary-400: #86AFFE;
+  --zn-color-primary-500: #4B88FD;
+  --zn-color-primary-600: #085EFD;
+  --zn-color-primary-700: #064DD0;
+  --zn-color-primary-800: #053CA3;
+  --zn-color-primary-900: #0B2E7A;
+
+  // Stopgap until checkbox, radio and data-table stop reading purple directly.
+  --zn-color-purple-50: #EEF4FF;
+  --zn-color-purple-100: #DBE7FF;
+  --zn-color-purple-200: #B8D0FF;
+  --zn-color-purple-600: #085EFD;
+
+  --zn-color-gray-50: #F0F5FB;
+  --zn-color-gray-100: #E5EDF5;
+  --zn-color-gray-200: #D6E0EB;
+  --zn-color-gray-300: #BAC8D9;
+  --zn-color-gray-400: #8D9CB2;
+  --zn-color-gray-500: #66768E;
+  --zn-color-gray-600: #50617A;
+  --zn-color-gray-700: #34445C;
+  --zn-color-gray-800: #1B2B44;
+  --zn-color-gray-900: #061B31;
+
+  --zn-color-neutral-0: #FFFFFF;
+  --zn-color-neutral-50: #F0F5FB;
+  --zn-color-neutral-100: #E5EDF5;
+  --zn-color-neutral-200: #D6E0EB;
+  --zn-color-neutral-300: #BAC8D9;
+  --zn-color-neutral-400: #8D9CB2;
+  --zn-color-neutral-500: #66768E;
+  --zn-color-neutral-600: #50617A;
+  --zn-color-neutral-700: #34445C;
+  --zn-color-neutral-800: #1B2B44;
+  --zn-color-neutral-900: #061B31;
+
+  --zn-color-success-50: #E3F6EC;
+  --zn-color-success-200: #B5E2CB;
+  --zn-color-success-300: #B5E2CB;
+  --zn-color-success-400: #12A06A;
+  --zn-color-success-500: #12A06A;
+  --zn-color-success-600: #12A06A;
+  --zn-color-success-700: #0B7A4F;
+
+  --zn-color-warning-50: #FFF3DA;
+  --zn-color-warning-400: #F0A020;
+  --zn-color-warning-500: #F0A020;
+  --zn-color-warning-600: #F0A020;
+
+  --zn-color-danger-50: #FDECEF;
+  --zn-color-danger-100: #FDECEF;
+  --zn-color-danger-200: #F5C2CB;
+  --zn-color-danger-300: #F5C2CB;
+  --zn-color-danger-500: #D92E4B;
+  --zn-color-danger-600: #D92E4B;
+  --zn-color-danger-700: #B91C3A;
+  --zn-color-danger-800: #B91C3A;
+
+  /**************************************************************
+   * Status roles
+   *************************************************************/
+
+  --zn-color-success-fg: #0B7A4F;
+  --zn-color-success-bg: #E3F6EC;
+  --zn-color-success-line: #B5E2CB;
+  --zn-color-success-solid: #12A06A;
+  --zn-color-warning-fg: #8A5200;
+  --zn-color-warning-bg: #FFF3DA;
+  --zn-color-warning-line: #F4D79B;
+  --zn-color-warning-solid: #F0A020;
+  --zn-color-danger-fg: #B91C3A;
+  --zn-color-danger-bg: #FDECEF;
+  --zn-color-danger-line: #F5C2CB;
+  --zn-color-danger-solid: #D92E4B;
+  --zn-color-info-fg: #053CA3;
+  --zn-color-info-bg: #EEF4FF;
+  --zn-color-info-line: #B8D0FF;
+  --zn-color-info-solid: #085EFD;
+  --zn-color-ai-fg: #5A3DD1;
+  --zn-color-ai-bg: #F0ECFF;
+  --zn-color-ai-line: #D4C9FF;
+  --zn-color-ai-solid: #7557F5;
+
+  /**************************************************************
+   * Shape, elevation, focus
+   *************************************************************/
+
+  --zn-border-radius: 6px;
+  --zn-border-radius-small: 4px;
+  --zn-border-radius-medium: 8px;
+  --zn-border-radius-large: 12px;
+  --zn-panel-border-radius: 12px;
+  --zn-dialog-border-radius: 16px;
+  --zn-chip-border-radius: 999px;
+  --zn-select-tag-border-radius: 6px;
+
+  --zn-shadow-x-small: 0 1px 2px rgba(13, 23, 56, 0.05);
+  --zn-shadow-small: 0 1px 3px rgba(13, 23, 56, 0.08), 0 1px 2px rgba(13, 23, 56, 0.04);
+  --zn-shadow-medium: 0 4px 14px rgba(13, 23, 56, 0.10), 0 1px 3px rgba(13, 23, 56, 0.05);
+  --zn-shadow-large: 0 14px 40px rgba(13, 23, 56, 0.18), 0 2px 8px rgba(13, 23, 56, 0.06);
+  --zn-shadow-x-large: 0 14px 40px rgba(13, 23, 56, 0.18), 0 2px 8px rgba(13, 23, 56, 0.06);
+
+  --zn-focus-ring-color: var(--zn-color-primary-600);
+  --zn-input-focus-ring-color: rgba(8, 94, 253, 0.35);
+
+  // Links and other primary text use the guide's link blue, a step deeper than the fill.
+  --zn-color-primary-fg: #064DD0;
+
+  --zn-overlay-background-color: rgba(13, 23, 56, 0.45);
+
+  /**************************************************************
+   * Typography
+   *************************************************************/
+
+  --zn-font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --zn-font-family-sans: var(--zn-font-sans);
+  --zn-font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+  --zn-font-family-mono: var(--zn-font-mono);
+  --zn-font-heading: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+
+  // px, not rem: some hosts run a 14px root.
+  --zn-font-size-2x-small: 11px;
+  --zn-font-size-x-small: 12px;
+  --zn-font-size-small: 13px;
+  --zn-font-size-medium: 14px;
+  --zn-font-size-large: 16px;
+  --zn-font-size-x-large: 20px;
+  --zn-font-size-2x-large: 25px;
+  --zn-font-size-3x-large: 33px;
+  --zn-font-size-4x-large: 44px;
+
+  @include text-roles;
+
+  /**************************************************************
+   * Forms, panels, tooltips
+   *************************************************************/
+
+  --zn-input-background-color: #FFFFFF;
+  --zn-input-background-color-hover: #FFFFFF;
+  --zn-input-background-color-focus: #FFFFFF;
+  --zn-input-background-color-disabled: #F0F5FB;
+  --zn-input-border-color: #BAC8D9;
+  --zn-input-border-color-hover: #8D9CB2;
+  --zn-input-border-color-focus: var(--zn-color-primary-600);
+  --zn-input-border-color-disabled: #D6E0EB;
+  --zn-checkbox-border-color: #8D9CB2;
+  --zn-input-placeholder-color: #66768E;
+  --zn-input-help-text-color: #66768E;
+  --zn-input-required-content-color: rgb(var(--zn-color-error));
+  --zn-input-required-content-offset: 4px;
+  --zn-input-label-spacing: 4.8px;
+  --zn-input-label-line-height: 15.6px;
+  --zn-input-label-display: block;
+  --zn-input-help-text-line-height: 18px;
+  --zn-form-actions-gap: 8px;
+  --zn-form-control-input-margin: 0;
+  --zn-form-row-gap: 20px;
+  --zn-select-expand-icon: "chevron-down@lu";
+  --zn-select-expand-icon-size: 16px;
+  --zn-select-expand-icon-spacing: 8px;
+  --zn-select-expand-icon-color: #66768E;
+  --zn-input-shadow: var(--zn-shadow-x-small);
+  --zn-input-padding-inline: 12px;
+  --zn-input-spacing-small: 12px;
+  --zn-input-spacing-medium: 12px;
+  --zn-input-spacing-large: 16px;
+  --zn-input-help-text-font-size-small: 11px;
+  --zn-input-help-text-font-size-medium: 12px;
+  --zn-input-help-text-font-size-large: 13px;
+
+  --zn-checkbox-border-width: 1.5px;
+  --zn-toggle-size-small: 14px;
+  --zn-toggle-size-medium: 16px;
+  --zn-toggle-size-large: 20px;
+
+  --zn-selection-card-hover-background: var(--zn-color-primary-50);
+  --zn-selection-card-checked-background: var(--zn-color-primary-100);
+  --zn-selection-card-checked-color: var(--zn-color-primary-600);
+
+  --zn-toggle-track-width: 34px;
+  --zn-toggle-track-height: 20px;
+  --zn-toggle-knob-size: 16px;
+  --zn-toggle-track-width-small: 30px;
+  --zn-toggle-track-height-small: 17px;
+  --zn-toggle-knob-size-small: 13px;
+  --zn-toggle-knob-inset: 2px;
+  --zn-toggle-track-border-width: 0px;
+  --zn-toggle-track-background: var(--zn-color-neutral-300);
+  --zn-toggle-knob-shadow: var(--zn-shadow-small);
+
+  --zn-panel-border-color: #D6E0EB;
+  --zn-panel-shadow: var(--zn-shadow-x-small);
+  --zn-panel-shadow-raised: var(--zn-shadow-large);
+  --zn-panel-header-divider-color: var(--zn-color-neutral-100);
+  --zn-panel-footer-divider: 1px solid var(--zn-color-neutral-100);
+  --zn-tile-hover-background: rgb(var(--zn-color-body));
+  --zn-stat-numeric: tabular-nums;
+  --zn-well-border-radius: 8px;
+  --zn-well-background: var(--zn-color-neutral-50);
+
+  --zn-table-header-font-size: 12px;
+  --zn-table-header-color: var(--zn-text-color-muted);
+  --zn-table-header-transform: none;
+  --zn-table-row-divider-color: var(--zn-color-neutral-100);
+  --zn-table-row-hover-background: var(--zn-color-neutral-50);
+  --zn-table-numeric: tabular-nums;
+  --zn-table-page-active-background: var(--zn-color-info-bg);
+  --zn-table-page-active-color: var(--zn-color-info-fg);
+
+  /**************************************************************
+   * Tabs
+   *************************************************************/
+
+  --zn-navbar-tab-padding-inline: 12px;
+  // Underline tabs size to their label; the padding spaces the label off the indicator.
+  --zn-navbar-tab-strip-height: auto;
+  --zn-navbar-tab-padding-bottom: var(--zn-spacing-x-small);
+  // Page tab labels line up with the page title.
+  --zn-page-navbar-offset: calc(-1 * var(--zn-navbar-tab-padding-inline));
+  --zn-navbar-tab-border-width: 0px;
+  --zn-navbar-tab-radius: 0px;
+  --zn-navbar-tab-background: transparent;
+  --zn-navbar-tab-hover-background: transparent;
+  --zn-navbar-tab-hover-backdrop: transparent;
+  --zn-navbar-tab-active-background: transparent;
+  --zn-navbar-tab-hover-color: var(--zn-text-color);
+  --zn-navbar-tab-hover-indicator-color: transparent;
+  --zn-navbar-tab-indicator-color: rgb(var(--zn-primary));
+  --zn-navbar-tab-indicator-height: 2px;
+  --zn-navbar-tab-indicator-slide: 1;
+  --zn-text-tab-link-active-color: var(--zn-color-primary-fg, var(--zn-color-info-fg));
+
+  /**************************************************************
+   * Avatars
+   *************************************************************/
+
+  // Initials on a tinted circle in the per-name colour
+  --zn-avatar-tint: 1;
+  --zn-avatar-font-scale: 0.38;
+  --zn-avatar-font-weight: 700;
+
+  /**************************************************************
+   * Chips and status
+   *************************************************************/
+
+  --zn-chip-padding-inline: 12px;
+  --zn-chip-gap: 4.8px;
+  --zn-chip-icon-padding-start: 8px;
+  --zn-chip-letter-spacing: normal;
+  --zn-chip-border-width: 1px;
+  --zn-chip-neutral-fg: rgb(var(--zn-text));
+  --zn-chip-neutral-bg: var(--zn-input-background-color);
+  --zn-chip-neutral-line: var(--zn-input-border-color);
+  --zn-chip-primary-fg: var(--zn-color-info-fg);
+  --zn-chip-primary-bg: var(--zn-color-info-bg);
+  --zn-chip-primary-line: var(--zn-color-primary-400);
+  --zn-chip-action-color: var(--zn-color-neutral-500);
+  --zn-chip-action-hover-color: rgb(var(--zn-text));
+  --zn-chip-action-hover-background: var(--zn-color-neutral-100);
+
+  --zn-status-indicator-size: 8px;
+  --zn-status-indicator-fill-alpha: 1;
+  --zn-indicator-info: 8, 94, 253;
+  --zn-indicator-warning: 240, 160, 32;
+  --zn-indicator-error: 217, 46, 75;
+  --zn-indicator-success: 18, 160, 106;
+  --zn-indicator-disabled: 141, 156, 178;
+
+  --zn-tooltip-background-color: #0D1738;
+  --zn-tooltip-color: #FFFFFF;
+  --zn-tooltip-font-size: 12px;
+  --zn-tooltip-font-weight: var(--zn-font-weight-medium);
+  --zn-tooltip-line-height: 17px;
+  --zn-tooltip-padding: 6px 10px;
+  --zn-tooltip-shadow: var(--zn-shadow-medium);
+
+  /**************************************************************
+   * Menus
+   *************************************************************/
+
+  --zn-menu-padding: 4px;
+  --zn-menu-border-radius: 8px;
+  --zn-menu-shadow: var(--zn-shadow-large);
+  --zn-menu-item-divider: none;
+  --zn-menu-item-padding: 0 10px;
+  --zn-menu-item-border-radius: 6px;
+  --zn-menu-item-hover-background: var(--zn-color-neutral-50);
+  --zn-menu-item-primary-hover-background: var(--zn-color-primary-100);
+  --zn-menu-item-primary-hover-color: var(--zn-color-primary-fg);
+  --zn-menu-item-info-hover-background: var(--zn-color-info-bg);
+  --zn-menu-item-info-hover-color: var(--zn-color-info-fg);
+  --zn-menu-item-danger-hover-background: var(--zn-color-danger-bg);
+  --zn-menu-item-danger-hover-color: var(--zn-color-danger-fg);
+  --zn-menu-item-warning-hover-background: var(--zn-color-warning-bg);
+  --zn-menu-item-warning-hover-color: var(--zn-color-warning-fg);
+  --zn-menu-item-success-hover-background: var(--zn-color-success-bg);
+  --zn-menu-item-success-hover-color: var(--zn-color-success-fg);
+  --zn-menu-min-width: 192px;
+  --zn-menu-label-padding: 6px 10px 3px;
+  --zn-menu-item-icon-gap: 10px;
+  --zn-menu-item-icon-color: var(--zn-color-neutral-500);
+  --zn-menu-divider-color: var(--zn-color-neutral-100);
+
+  /**************************************************************
+   * Feedback
+   *************************************************************/
+
+  --zn-alert-border-radius: 8px;
+  --zn-alert-background: rgb(var(--zn-color-panel));
+  --zn-alert-border-alpha: 0.35;
+  --zn-alert-tint-alpha: 0.1;
+  --zn-alert-title-color: rgb(var(--zn-color-text));
+  --zn-alert-body-color: rgb(var(--zn-color-muted-text));
+  --zn-alert-note-border-color: var(--zn-color-neutral-200);
+
+  --zn-progress-track-color: var(--zn-color-neutral-100);
+  --zn-skeleton-border-radius: 6px;
+  --zn-skeleton-background: var(--zn-color-neutral-100);
+  --zn-skeleton-shimmer: var(--zn-color-neutral-50);
+
+  --zn-empty-state-caption-font-family: var(--zn-font-heading);
+  --zn-empty-state-caption-font-weight: var(--zn-font-weight-bold);
+  --zn-empty-state-description-color: rgb(var(--zn-color-muted-text));
+  --zn-empty-state-description-max-width: 28rem;
+  --zn-empty-state-description-line-height: 1.5;
+
+  --zn-form-group-label-font-family: var(--zn-font-heading);
+
+  /**************************************************************
+   * Overlays
+   *************************************************************/
+
+  --zn-dialog-backdrop: var(--zn-overlay-background-color);
+  --zn-overlay-backdrop-filter: blur(2px);
+  --zn-dialog-title-font-family: var(--zn-font-heading);
+  --zn-dialog-title-font-size: 16px;
+  --zn-dialog-title-font-weight: var(--zn-font-weight-bold);
+  --zn-dialog-header-spacing: 20px 20px 12px;
+  --zn-dialog-body-spacing: 4px 20px 20px;
+  --zn-dialog-footer-spacing: 12px 20px;
+  --zn-dialog-footer-divider: 1px solid var(--zn-color-neutral-100);
+  --zn-dialog-footer-background: rgb(var(--zn-color-body));
+  --zn-dialog-body-color: rgb(var(--zn-color-muted-text));
+  --zn-dialog-title-line-height: 20px;
+  --zn-dialog-body-font-size: 13px;
+  --zn-dialog-body-line-height: 1.45;
+  --zn-dialog-width-small: 384px;
+  --zn-dialog-width-medium: 512px;
+  --zn-dialog-width-large: 704px;
+  --zn-dialog-icon-background: transparent;
+  --zn-dialog-icon-padding: 0;
+  --zn-dialog-icon-gap: 12px;
+  --zn-dialog-close-size: var(--zn-density-control-height-sm);
+  --zn-dialog-close-padding: 2px;
+  --zn-dialog-close-color: rgb(var(--zn-color-muted-text));
+  --zn-dialog-close-icon-size: 16px;
+  // No announcement in the design: built from its tinted icon tile, eyebrow and heading roles
+  --zn-dialog-announcement-icon-size: 24px;
+  --zn-dialog-announcement-icon-padding: 12px;
+  --zn-dialog-announcement-icon-radius: var(--zn-border-radius-large);
+  --zn-dialog-announcement-icon-gap: 16px;
+  --zn-dialog-announcement-intro-color: rgb(var(--zn-primary));
+  --zn-dialog-announcement-intro-font-size: 11px;
+  --zn-dialog-announcement-intro-letter-spacing: 0.06em;
+  --zn-dialog-announcement-intro-transform: uppercase;
+  --zn-dialog-announcement-intro-spacing: 0 0 6px;
+  --zn-dialog-announcement-title-color: rgb(var(--zn-text-panel-title));
+  --zn-dialog-announcement-title-font-family: var(--zn-font-heading);
+  --zn-dialog-announcement-title-font-size: 20px;
+  --zn-dialog-announcement-title-font-weight: var(--zn-font-weight-bold);
+  --zn-dialog-announcement-title-line-height: 24px;
+  --zn-dialog-announcement-body-spacing: 4px 32px 24px;
+  --zn-dialog-announcement-footer-text-color: rgb(var(--zn-color-muted-text));
+  --zn-dialog-announcement-footer-text-font-size: 12px;
+  --zn-dialog-announcement-footer-text-spacing: 12px 0 0;
+  --zn-slideout-header-spacing: 16px 20px;
+  --zn-slideout-body-spacing: 20px;
+  --zn-slideout-footer-spacing: 12px 20px;
+  --zn-slideout-shadow: var(--zn-shadow-large);
+
+  /**************************************************************
+   * Steppers
+   *************************************************************/
+
+  --zn-stepper-track-color: var(--zn-color-neutral-100);
+  --zn-vertical-stepper-marker-size: 26px;
+  --zn-vertical-stepper-marker-background: var(--zn-color-neutral-50);
+  --zn-vertical-stepper-line-width: 1px;
+  --zn-vertical-stepper-line-color: rgb(var(--zn-border-color));
+  --zn-vertical-stepper-caption-font-size: 13px;
+  --zn-vertical-stepper-description-font-weight: var(--zn-font-weight-normal);
+
+  /**************************************************************
+   * Shell
+   *************************************************************/
+
+  --zn-container: 1792px;
+  --zn-page-gutter: 0px;
+  --zn-gutter: 0px;
+  --zn-page-title-line-height: 30px;
+  --zn-page-modal-caption-font-size: 16px;
+  --zn-page-modal-caption-line-height: 20px;
+  --zn-page-modal-gap: 20px;
+  --zn-page-modal-header-padding-top: 20px;
+  --zn-page-modal-header-padding-bottom: 0px;
+  --zn-page-modal-header-gap: 12px;
+  --zn-page-closer-size: 32px;
+  --zn-page-closer-gap: 12px;
+  --zn-page-modal-description-font-size: 12px;
+  --zn-page-modal-description-line-height: 18px;
+  --zn-page-modal-description-color: #66768E;
+  --zn-page-caption-wrap: wrap;
+  --zn-page-breadcrumb-display: flex;
+  --zn-page-breadcrumb-current-display: inline;
+  --zn-page-breadcrumb-separator-icon: "chevron-right@lu";
+  --zn-page-breadcrumb-separator-size: 12px;
+  --zn-page-breadcrumb-separator-color: var(--zn-color-neutral-400);
+  --zn-page-breadcrumb-font-family: var(--zn-font-sans);
+  --zn-page-breadcrumb-font-size: 12px;
+  --zn-page-breadcrumb-font-weight: var(--zn-font-weight-normal);
+  --zn-page-breadcrumb-letter-spacing: normal;
+  --zn-page-breadcrumb-line-height: 16px;
+  --zn-page-breadcrumb-color: rgb(var(--zn-color-muted-text));
+  --zn-split-pane-handle-hover: rgb(var(--zn-primary));
+  --zn-split-pane-secondary-background: rgb(var(--zn-color-panel));
+
+  /**************************************************************
+   * Content, code, charts
+   *************************************************************/
+
+  --zn-code-background: #0D1738;
+  --zn-code-color: #D7E3FF;
+  --zn-code-inline-background: var(--zn-color-neutral-100);
+  --zn-content-block-meta-color: rgb(var(--zn-color-muted-text));
+
+  --zn-flow-note-background: var(--zn-color-warning-bg);
+  --zn-flow-note-border: var(--zn-color-warning-line);
+  --zn-flow-note-fold: var(--zn-color-warning-solid);
+  --zn-flow-note-meta-color: var(--zn-color-warning-fg);
+  --zn-flow-note-color: var(--zn-color-warning-fg);
+
+  --zn-chart-text-color: var(--zn-color-neutral-500);
+
+  // Settings rows: the label leads and the switch sits at the far edge.
+  --zn-toggle-side-label-direction: row;
+  --zn-toggle-side-label-justify: space-between;
+  --zn-chart-color-1: #085EFD;
+  --zn-chart-color-2: #12A06A;
+  --zn-chart-color-3: #7557F5;
+  --zn-chart-color-4: #F0A020;
+  --zn-chart-color-5: #E0324F;
+  --zn-chart-color-6: #0FA3B1;
+
+  /**************************************************************
+   * Buttons
+   *************************************************************/
+
+  --zn-button-padding: 0 12px;
+  --zn-button-font-size-small: 12px;
+  --zn-button-shadow: var(--zn-shadow-x-small);
+  --zn-button-mix-color: black;
+  --zn-button-hover-mix: 85%;
+  --zn-button-active-mix: 72%;
+
+  --zn-button-secondary-background: rgb(var(--zn-color-panel));
+  // A neutral of its own: hosts re-point --zn-color-border-active at their accent.
+  --zn-button-secondary-border: var(--zn-color-neutral-300);
+  --zn-button-secondary-color: rgb(var(--zn-color-text));
+  --zn-button-secondary-hover-background: var(--zn-color-neutral-50);
+  --zn-button-secondary-active-background: var(--zn-color-neutral-100);
+
+  // Bordered icon buttons sit beside secondary buttons, so they share its edge.
+  --zn-button-icon-border: var(--zn-button-secondary-border);
+  --zn-button-icon-shadow: var(--zn-button-shadow);
+  --zn-button-plain-hover-background: var(--zn-color-neutral-100);
+
+  --zn-button-ghost-color: rgb(var(--zn-color-muted-text));
+  --zn-button-ghost-hover-background: var(--zn-color-neutral-100);
+  --zn-button-ghost-hover-color: rgb(var(--zn-color-text));
+
+  --zn-button-outline-border-alpha: 0.35;
+  --zn-button-outline-hover-alpha: 0.08;
+  --zn-button-outline-hover-ink-mix: 0%;
+
+  @include density($comfortable);
+
+  .zn-primary {
+    color: rgb(var(--zn-color-primary));
+  }
+}
+
+html[data-density="compact"], html [data-density="compact"] {
+  @include density($compact);
+}
+
+html [data-density="comfortable"] {
+  @include density($comfortable);
+}
+
+// Derived dark: the guide is light-only. A near-neutral graphite canvas with the
+// brand and status hues desaturated so they don't glare on it; ramps inverted
+// (50 darkest) the way themes/_dark.scss inverts the base ramps.
+// (0,2,1) outranks the base dark block's :root[m="dark"] (0,2,0).
+html:root[m="dark"], html:root[t="dark"], html:root.theme-dark {
+  color-scheme: dark;
+
+  --zn-backdrop-color: rgba(5, 6, 8, 0.6);
+
+  --zn-color-text: 236, 234, 228;
+  --zn-color-muted-text: 156, 158, 168;
+
+  --zn-color-base: 37, 38, 45;
+  --zn-color-body: 24, 25, 30;
+  --zn-color-navigation: var(--zn-color-base);
+  --zn-color-navigation-hightlight: 44, 46, 54;
+  --zn-color-border: 50, 52, 61;
+  --zn-color-border-active: 65, 68, 78;
+  --zn-color-tab: 44, 46, 54;
+  --zn-color-panel: 31, 32, 38;
+
+  --zn-color-primary: 92, 133, 214;
+  // themes/_dark.scss pins --zn-primary to the base dark accent. Fills use the
+  // deeper blue: the lighter text blue under white ink is ~3.5:1.
+  --zn-primary: 53, 106, 212;
+  --zn-color-info: 49, 152, 196;
+  --zn-color-success: 56, 148, 110;
+  --zn-color-warning: 244, 167, 52;
+  --zn-color-error: 198, 57, 76;
+  --zn-color-disabled: 117, 120, 132;
+  --zn-color-ai: 119, 100, 216;
+
+  --zn-color-on-primary: 255, 255, 255;
+  --zn-color-on-warning: 24, 25, 30;
+
+  --zn-panel-opacity: 1;
+  --zn-shadow: 5, 6, 8;
+  --zn-panel-secondary: 37 38 45;
+  --zn-panel-highlight: 44, 46, 54;
+  --zn-panel-highlight-opacity: 1;
+  --zn-input-bg-accent: 37, 38, 45;
+  --zn-bright-bg: 50, 52, 61;
+  --zn-light-text: 156, 158, 168;
+  --zn-dark-text: 236, 234, 228;
+  --zn-purple-text: 146, 174, 232;
+  --zn-accent: 78, 170, 180;
+
+  --zn-table-header-background-color: 37, 38, 45;
+
+  --zn-color-primary-50: #18264A;
+  --zn-color-primary-100: #1E3566;
+  --zn-color-primary-200: #26478C;
+  --zn-color-primary-300: #2C57B0;
+  --zn-color-primary-400: #356AD4;
+  --zn-color-primary-500: #4877D8;
+  --zn-color-primary-600: #5C85D6;
+  --zn-color-primary-700: #92AEE8;
+  --zn-color-primary-800: #BDCDEF;
+  --zn-color-primary-900: #DCE4F5;
+
+  --zn-color-purple-50: #18264A;
+  --zn-color-purple-100: #1E3566;
+  --zn-color-purple-200: #26478C;
+  --zn-color-purple-600: #5C85D6;
+
+  --zn-color-gray-50: #25262D;
+  --zn-color-gray-100: #2C2E36;
+  --zn-color-gray-200: #32343D;
+  --zn-color-gray-300: #41444E;
+  --zn-color-gray-400: #565965;
+  --zn-color-gray-500: #757884;
+  --zn-color-gray-600: #9C9EA8;
+  --zn-color-gray-700: #C9C7C1;
+  --zn-color-gray-800: #DAD8D2;
+  --zn-color-gray-900: #ECEAE4;
+
+  --zn-color-neutral-0: #18191E;
+  --zn-color-neutral-50: #25262D;
+  --zn-color-neutral-100: #2C2E36;
+  --zn-color-neutral-200: #32343D;
+  --zn-color-neutral-300: #41444E;
+  --zn-color-neutral-400: #565965;
+  --zn-color-neutral-500: #757884;
+  --zn-color-neutral-600: #9C9EA8;
+  --zn-color-neutral-700: #C9C7C1;
+  --zn-color-neutral-800: #DAD8D2;
+  --zn-color-neutral-900: #ECEAE4;
+
+  --zn-color-success-50: rgba(56, 148, 110, 0.15);
+  --zn-color-success-200: rgba(56, 148, 110, 0.4);
+  --zn-color-success-300: rgba(56, 148, 110, 0.4);
+  --zn-color-success-400: #38946E;
+  --zn-color-success-500: #38946E;
+  --zn-color-success-600: #38946E;
+  --zn-color-success-700: #79D2AD;
+
+  --zn-color-warning-50: rgba(244, 167, 52, 0.1);
+  --zn-color-warning-400: #F4A734;
+  --zn-color-warning-500: #F4A734;
+  --zn-color-warning-600: #F4A734;
+
+  --zn-color-danger-50: rgba(198, 57, 76, 0.15);
+  --zn-color-danger-100: rgba(198, 57, 76, 0.15);
+  --zn-color-danger-200: rgba(198, 57, 76, 0.4);
+  --zn-color-danger-300: rgba(198, 57, 76, 0.4);
+  --zn-color-danger-500: #C6394C;
+  --zn-color-danger-600: #C6394C;
+  --zn-color-danger-700: #EA8693;
+  --zn-color-danger-800: #EA8693;
+
+  --zn-color-success-fg: #79D2AD;
+  --zn-color-success-bg: rgba(56, 148, 110, 0.15);
+  --zn-color-success-line: rgba(56, 148, 110, 0.4);
+  --zn-color-success-solid: #38946E;
+  --zn-color-warning-fg: #FBCE74;
+  --zn-color-warning-bg: rgba(244, 167, 52, 0.1);
+  --zn-color-warning-line: rgba(244, 167, 52, 0.4);
+  --zn-color-warning-solid: #F4A734;
+  --zn-color-danger-fg: #EA8693;
+  --zn-color-danger-bg: rgba(198, 57, 76, 0.15);
+  --zn-color-danger-line: rgba(198, 57, 76, 0.4);
+  --zn-color-danger-solid: #C6394C;
+  --zn-color-info-fg: #89CFE6;
+  --zn-color-info-bg: rgba(49, 152, 196, 0.15);
+  --zn-color-info-line: rgba(49, 152, 196, 0.4);
+  --zn-color-info-solid: #3198C4;
+  --zn-color-ai-fg: #B8ADEB;
+  --zn-color-ai-bg: rgba(119, 100, 216, 0.18);
+  --zn-color-ai-line: rgba(119, 100, 216, 0.4);
+  --zn-color-ai-solid: #7764D8;
+
+  --zn-shadow-x-small: 0 1px 2px rgba(0, 0, 0, 0.30);
+  --zn-shadow-small: 0 1px 3px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.20);
+  --zn-shadow-medium: 0 4px 14px rgba(0, 0, 0, 0.40), 0 1px 3px rgba(0, 0, 0, 0.25);
+  --zn-shadow-large: 0 14px 40px rgba(0, 0, 0, 0.50), 0 2px 8px rgba(0, 0, 0, 0.30);
+  --zn-shadow-x-large: 0 14px 40px rgba(0, 0, 0, 0.50), 0 2px 8px rgba(0, 0, 0, 0.30);
+
+  --zn-focus-ring-color: var(--zn-color-primary-700);
+  --zn-input-focus-ring-color: rgba(92, 133, 214, 0.45);
+
+  --zn-overlay-background-color: rgba(5, 6, 8, 0.6);
+
+  --zn-input-background-color: #1F2026;
+  --zn-input-background-color-hover: #1F2026;
+  --zn-input-background-color-focus: #25262D;
+  --zn-input-background-color-disabled: #1B1C21;
+  --zn-input-border-color: #41444E;
+  --zn-input-border-color-hover: #565965;
+  --zn-input-border-color-focus: var(--zn-color-primary-600);
+  --zn-input-border-color-disabled: #32343D;
+  --zn-checkbox-border-color: #565965;
+  --zn-input-placeholder-color: #757884;
+  --zn-input-help-text-color: #9C9EA8;
+
+  --zn-panel-border-color: #32343D;
+
+  --zn-tooltip-background-color: #34363F;
+  --zn-tooltip-color: #FFFFFF;
+
+  --zn-selection-card-checked-color: var(--zn-color-primary-700);
+  --zn-panel-footer-background: #25262D;
+  --zn-menu-item-hover-background: var(--zn-color-neutral-200);
+  --zn-alert-tint-alpha: 0.15;
+  --zn-dialog-footer-background: #25262D;
+  --zn-skeleton-shimmer: rgba(255, 255, 255, 0.06);
+  --zn-color-primary-fg: #92AEE8;
+
+  // Info is sky in dark mode so it doesn't read as primary; the places that
+  // borrow info for primary pin the primary blue instead.
+  --zn-chip-primary-fg: #92AEE8;
+  --zn-chip-primary-bg: rgba(53, 106, 212, 0.18);
+  --zn-chip-primary-line: rgba(92, 133, 214, 0.4);
+  --zn-table-page-active-background: rgba(53, 106, 212, 0.18);
+
+  --zn-indicator-info: 49, 152, 196;
+  --zn-indicator-warning: 244, 167, 52;
+  --zn-indicator-error: 198, 57, 76;
+  --zn-indicator-success: 56, 148, 110;
+
+  --zn-chart-color-1: #5C85D6;
+  --zn-chart-color-2: #38946E;
+  --zn-chart-color-3: #7764D8;
+  --zn-chart-color-4: #F4A734;
+  --zn-chart-color-5: #C6394C;
+  --zn-chart-color-6: #3A9EA8;
+
+  // !important to beat #{modes.$dark}'s `.zn-primary { ... !important }`.
+  .zn-primary {
+    color: rgb(var(--zn-color-primary)) !important;
+  }
+}
+
+// Toasts are always drawn on the inverse (navy) surface, with the status
+// colours switched to their on-dark tones.
+html .zn-toast-stack zn-alert {
+  --zn-alert-background: #0D1738;
+  --zn-alert-solid-background: #0D1738;
+  --zn-alert-align-items: flex-start;
+  // 12px 16px inside the alert's 1px border
+  --zn-alert-padding: 11px 15px;
+  --zn-alert-gap: 12px;
+  --zn-alert-content-padding: 0;
+  --zn-alert-icon-padding: 0;
+  --zn-alert-icon-offset: 1.6px;
+  --zn-alert-icon-stroke-width: 1.75;
+  --zn-alert-body-font-size: 12px;
+  line-height: 1.5;
+  --zn-alert-tint-alpha: 0;
+  --zn-alert-border-alpha: 0;
+  --zn-alert-title-color: #FFFFFF;
+  --zn-alert-body-color: rgba(255, 255, 255, 0.72);
+  --zn-color-success-fg: #3DDC97;
+  --zn-color-danger-fg: #FF7A90;
+  --zn-color-warning-fg: #FFC857;
+  --zn-color-info-fg: #86AFFE;
+  --zn-color-ai-fg: #B4A3FF;
+  color: #FFFFFF;
+}
+
+html:is([m="dark"], [t="dark"], .theme-dark) .zn-toast-stack zn-alert {
+  --zn-alert-background: #34363F;
+  --zn-alert-solid-background: #34363F;
+  --zn-color-success-fg: #79D2AD;
+  --zn-color-danger-fg: #EA8693;
+  --zn-color-warning-fg: #FBCE74;
+  --zn-color-info-fg: #89CFE6;
+  --zn-color-ai-fg: #B8ADEB;
+}
+
+// Stacks a dialog's content, as its body is a block that can hold inline content too. A page rule, as the page's
+// reset of paragraph and heading margins out-ranks a shadow root's ::slotted() rules.
+html zn-dialog > :not([slot]) + :not([slot]) {
+  margin-block-start: var(--zn-density-stack);
+}

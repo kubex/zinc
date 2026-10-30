@@ -86,9 +86,36 @@ export function getScrolledAncestors(element: Element | null | undefined): Eleme
   return scrolled;
 }
 
-/** Returns containers to the top. */
-export function scrollToTop(containers: Iterable<Element>, behavior: ScrollBehavior = 'auto') {
+// A display: contents host has no box of its own, so it starts where its first rendered part does.
+function topOf(host: HTMLElement): number {
+  const rect = host.getBoundingClientRect();
+  if (rect.height > 0) {
+    return rect.top;
+  }
+
+  const parts = Array.from(host.shadowRoot?.children ?? []).flatMap(child =>
+    child instanceof HTMLSlotElement ? child.assignedElements() : [child]
+  );
+  const tops = parts.map(part => part.getBoundingClientRect()).filter(box => box.height > 0).map(box => box.top);
+  return tops.length ? Math.min(...tops) : Infinity;
+}
+
+/**
+ * Shows a newly selected tab from its start. Scrollers inside `host` return to their top; scrollers around it only
+ * scroll back far enough to show the top of `host`, leaving the reader's place alone while the tabs are in view.
+ */
+export function revealTop(containers: Iterable<Element>, host: HTMLElement) {
   for (const container of containers) {
-    container.scrollTo({ top: 0, behavior });
+    if (host.shadowRoot?.contains(container)) {
+      container.scrollTo({ top: 0 });
+      continue;
+    }
+
+    // Measured per scroller, as scrolling an inner one moves the tabs
+    const top = topOf(host);
+    const viewTop = container === document.scrollingElement ? 0 : container.getBoundingClientRect().top;
+    if (top < viewTop) {
+      container.scrollBy({ top: top - viewTop });
+    }
   }
 }

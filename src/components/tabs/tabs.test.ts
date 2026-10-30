@@ -112,6 +112,47 @@ describe('<zn-tabs>', () => {
 
       expect(wrapper.scrollTop).to.equal(0);
     });
+
+    it('scrolls nested enclosing scrollers only as far as the tabs need', async () => {
+      const outer = await fixture<HTMLElement>(html`
+        <div style="height: 300px; overflow: auto;">
+          <div style="height: 2000px;">Above the inner scroller</div>
+          <div style="height: 300px; overflow: auto;">
+            <zn-tabs active="first">${panels}</zn-tabs>
+          </div>
+          <div style="height: 2000px;">Below the inner scroller</div>
+        </div>
+      `);
+      const inner = outer.children[1] as HTMLElement;
+      const el = inner.querySelector<ZnTabs>('zn-tabs')!;
+      await aTimeout(40);
+
+      inner.scrollTop = 500;
+      outer.scrollTop = 2100;
+
+      await openSecondTab(el);
+
+      expect(inner.scrollTop).to.equal(0);
+      expect(outer.scrollTop).to.equal(2000);
+    });
+
+    it('leaves an enclosing scroller alone while the tabs are still in view', async () => {
+      const wrapper = await fixture<HTMLElement>(html`
+        <div style="height: 200px; overflow: auto;">
+          <div style="height: 100px;">Above the tabs</div>
+          <zn-tabs active="first">${panels}</zn-tabs>
+        </div>
+      `);
+      const el = wrapper.querySelector<ZnTabs>('zn-tabs')!;
+      await aTimeout(40);
+
+      wrapper.scrollTop = 60;
+      expect(wrapper.scrollTop, 'the enclosing scroller never scrolled').to.equal(60);
+
+      await openSecondTab(el);
+
+      expect(wrapper.scrollTop).to.equal(60);
+    });
   });
 
   describe('selection persistence', () => {
@@ -156,6 +197,61 @@ describe('<zn-tabs>', () => {
       await aTimeout(40);
 
       expect(restored.getAttribute('active')).to.equal('second');
+    });
+
+    it('opens a tab added since the page was last shown, with select-added', async () => {
+      const render = (withThird: boolean) => fixture<ZnTabs>(html`
+        <zn-tabs store-key=${storeKey} active="first" select-added>
+          <zn-navbar slot="top">
+            <li tab="first">First</li>
+            <li tab="second">Second</li>
+            ${withThird ? html`<li tab="third">Third</li>` : null}
+          </zn-navbar>
+          <div id="first">First panel</div>
+          <div id="second">Second panel</div>
+          ${withThird ? html`<div id="third">Third panel</div>` : null}
+        </zn-tabs>
+      `);
+
+      const el = await render(false);
+      await aTimeout(40);
+      el.querySelector('zn-navbar')!.querySelectorAll<HTMLElement>('li')[1].click();
+      await aTimeout(40);
+      el.remove();
+
+      returnWithHistory();
+      const same = await render(false);
+      await aTimeout(40);
+      expect(same.getAttribute('active')).to.equal('second');
+      same.remove();
+
+      returnWithHistory();
+      const added = await render(true);
+      await aTimeout(40);
+      expect(added.getAttribute('active')).to.equal('third');
+      expect(added.querySelector('#third')!.hasAttribute('selected')).to.equal(true);
+    });
+
+    it('starts from the default tab when the restored tab no longer exists', async () => {
+      const el = await renderTabs();
+      await aTimeout(40);
+      el.querySelector('zn-navbar')!.querySelectorAll<HTMLElement>('li')[1].click();
+      await aTimeout(40);
+      el.remove();
+
+      returnWithHistory();
+      const restored = await fixture<ZnTabs>(html`
+        <zn-tabs store-key=${storeKey} active="first">
+          <zn-navbar slot="top">
+            <li tab="first">First</li>
+          </zn-navbar>
+          <div id="first">First panel</div>
+        </zn-tabs>
+      `);
+      await aTimeout(40);
+
+      expect(restored.getAttribute('active')).to.equal('first');
+      expect(restored.querySelector('#first')!.hasAttribute('selected')).to.equal(true);
     });
 
     it('starts from the default tab when navigating to the location', async () => {

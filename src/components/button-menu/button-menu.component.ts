@@ -23,6 +23,8 @@ interface CustomButtonWidths {
  * @since 1.0
  *
  * @slot - The default slot.
+ * @slot prefix - Controls shown just before the inline buttons, such as a segmented toggle. Their width is kept
+ *   free when working out which buttons fit.
  *
  */
 export default class ZnButtonMenu extends ZincElement {
@@ -40,7 +42,7 @@ export default class ZnButtonMenu extends ZincElement {
   @property({type: Number, attribute: 'max-level'})
   public maxLevel: number = 2; // primary = 1, secondary = 2, transparent = 3
 
-  @property({type: Number, attribute: 'icon-size', reflect: true}) iconSize: number = 20;
+  @property({type: Number, attribute: 'icon-size', reflect: true}) iconSize: number = 16;
 
   @property({type: Boolean, attribute: 'no-gap'}) public noGap: boolean;
 
@@ -110,6 +112,7 @@ export default class ZnButtonMenu extends ZincElement {
 
   calculateVisibleButtons() {
     const containerWidth = this.containerWidth;
+    const focused = this.shadowRoot?.activeElement as ZnButton | null;
 
     let primaryButtons = 0;
     let secondaryButtons = 0;
@@ -119,6 +122,7 @@ export default class ZnButtonMenu extends ZincElement {
     let remainingWidth = containerWidth;
     this._buttons = [...this._originalButtons];
     remainingWidth -= 50; // Allow for more-vert button
+    remainingWidth -= this.getPrefixWidth();
 
     // Sort the buttons
     this._buttons.sort((a, b) => {
@@ -167,18 +171,18 @@ export default class ZnButtonMenu extends ZincElement {
       menu.innerHTML = '';
     }
 
-    // Add colors to the buttons depending on type
     this._buttons.forEach((button: CustomButtonWidths, index: number) => {
       if (index < visibleButtons) {
         this.shadowRoot?.querySelector('.button-menu__container')?.appendChild(button.button);
-
-        if (button.button.hasAttribute('primary') || button.button.hasAttribute('secondary')) {
-          button.button.setAttribute('text', "");
-        }
       }
     });
 
     this.calculateMenuButtons(totalButtons, visibleButtons, this._buttons);
+
+    if (focused && this.shadowRoot?.activeElement !== focused) {
+      const target = focused.isConnected ? focused : this.shadowRoot?.querySelector<ZnButton>('zn-button[slot="trigger"]');
+      target?.button?.focus();
+    }
   }
 
   calculateMenuButtons(totalButtons: number, visibleButtons: number, buttons: CustomButtonWidths[]) {
@@ -216,7 +220,7 @@ export default class ZnButtonMenu extends ZincElement {
               if (iconLibrary) {
                 iconElement.setAttribute('library', iconLibrary);
               }
-              iconElement.setAttribute('size', '18');
+              iconElement.setAttribute('size', '16');
               iconElement.setAttribute('slot', 'prefix');
               menuItem.appendChild(iconElement);
             }
@@ -268,6 +272,12 @@ export default class ZnButtonMenu extends ZincElement {
     })
   }
 
+  private getPrefixWidth(): number {
+    const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="prefix"]');
+    const gap = parseFloat(getComputedStyle(this).getPropertyValue('--menu-gap')) || 0;
+    return (slot?.assignedElements() ?? []).reduce((width, el) => width + (el as HTMLElement).offsetWidth + gap, 0);
+  }
+
   private getButtonLabel(button: ZnButton) {
     const labelSlot = button.shadowRoot?.querySelector<HTMLSlotElement>('slot[part="label"]');
     const slottedLabel = labelSlot ? [...labelSlot.assignedNodes({flatten: true})]
@@ -297,13 +307,16 @@ export default class ZnButtonMenu extends ZincElement {
         'button-menu--no-padding': this.noPadding,
         'button-menu--no-gap': this.noGap,
       })}">
+        <slot name="prefix" @slotchange="${() => this.calculateVisibleButtons()}"></slot>
         <div class="button-menu__container"></div>
         <zn-dropdown placement="bottom-end">
           <zn-button slot="trigger"
                      icon="ellipsis"
                      icon-library="lucide"
                      icon-size="${this.iconSize}"
-                     icon-button="small"></zn-button>
+                     icon-button="small"
+                     plain
+                     label="More actions"></zn-button>
           <zn-menu></zn-menu>
         </zn-dropdown>
         <slot></slot>

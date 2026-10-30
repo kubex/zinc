@@ -248,6 +248,11 @@
       transform: translate(-50%, 50%) scale(1.35);
       box-shadow: 0 0 0 4px color-mix(in srgb, rgb(var(--zn-color-primary)) 20%, transparent);
     }
+
+    &:focus-visible {
+      outline: var(--zn-focus-ring);
+      outline-offset: 2px;
+    }
   }
 
   // Slides out from behind the pill on hover; deletes the branch and its wire.
@@ -372,8 +377,8 @@
   position: absolute;
   display: flex;
   flex-direction: column;
-  background: #fef9c3;
-  border: 1px solid #fde68a;
+  background: var(--zn-flow-note-background, #fef9c3);
+  border: 1px solid var(--zn-flow-note-border, #fde68a);
   border-radius: 4px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 
@@ -385,7 +390,7 @@
     height: 16px;
     cursor: nwse-resize;
     // Visual corner grip.
-    background: linear-gradient(135deg, transparent 0 50%, #d9c64a 50% 60%, transparent 60% 70%, #d9c64a 70% 80%, transparent 80%);
+    background: linear-gradient(135deg, transparent 0 50%, var(--zn-flow-note-fold, #d9c64a) 50% 60%, transparent 60% 70%, var(--zn-flow-note-fold, #d9c64a) 70% 80%, transparent 80%);
   }
 
   &__bar {
@@ -401,7 +406,7 @@
     padding: 0;
     font-size: 14px;
     line-height: 1;
-    color: #92400e;
+    color: var(--zn-flow-note-meta-color, #92400e);
     background: transparent;
     cursor: pointer;
   }
@@ -416,6 +421,6 @@
     background: transparent;
     font: inherit;
     font-size: 0.8125rem;
-    color: #713f12;
+    color: var(--zn-flow-note-color, #713f12);
   }
 }

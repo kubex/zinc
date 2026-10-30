@@ -40,6 +40,11 @@ export default class ZnHeader extends ZincElement {
   @property({type: Boolean}) transparent: boolean = false;
 
   @property() caption: string;
+  /** A line of muted text under the caption. */
+  @property() description: string;
+
+  /** Sets the description beside the caption rather than under it, e.g. a row count. */
+  @property({attribute: 'inline-description', type: Boolean}) inlineDescription = false;
   @property() icon: string;
 
   @property({type: Array}) navigation = [];
@@ -114,6 +119,7 @@ export default class ZnHeader extends ZincElement {
       <div class="${classMap({
         'header': true,
         'header--transparent': this.transparent,
+        'header--inline-description': this.inlineDescription,
         'header--full-width': this.fullWidth,
         'header--has-nav': hasNavigation,
         'header--has-breadcrumb': hasBreadcrumb,
@@ -139,10 +145,9 @@ export default class ZnHeader extends ZincElement {
 
         <div class="content" part="content">
           ${hasPreviousPath ? html`
-            <a href="${this.previousPath}" class="caption__back"
-               data-target="${this.previousTarget ? this.previousTarget : ''}">
-              <zn-button icon="arrow-left@lu" icon-size="20" icon-button="small" plain></zn-button>
-            </a>` : null}
+            <zn-button href="${this.previousPath}" class="caption__back" label="Back"
+               data-target="${this.previousTarget ? this.previousTarget : ''}"
+               icon="arrow-left@lu" icon-size="20" icon-button="small" plain></zn-button>` : null}
 
           ${hasDefaultSlot ? html`
             <div class="actions">
@@ -158,6 +163,8 @@ export default class ZnHeader extends ZincElement {
                   <slot name="breadcrumb" class="breadcrumb"></slot>` : null}
                 <slot name="caption">${this.caption}</slot>
                 </span>
+              ${this.description ? html`
+                <span class="header__description" part="description">${this.description}</span>` : null}
             </div>
 
             <div part="header-right" class="header__right">

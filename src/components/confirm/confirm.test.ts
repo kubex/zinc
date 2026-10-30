@@ -61,6 +61,15 @@ describe('<zn-confirm-modal>', () => {
     expect(confirm.shadowRoot!.textContent).to.contain('Loading');
   });
 
+  it('keeps the confirm button focusable while loading', async () => {
+    const {confirm} = await submittedConfirm();
+
+    const buttons = confirm.shadowRoot!.querySelectorAll('zn-button[slot="footer"]');
+    expect(buttons[0].hasAttribute('disabled')).to.be.true;
+    expect(buttons[1].hasAttribute('disabled')).to.be.false;
+    expect(buttons[1].hasAttribute('processing')).to.be.true;
+  });
+
   it('reports failure when the response carries a danger alert', async () => {
     const {confirm, form, dialog} = await submittedConfirm();
 
@@ -85,6 +94,7 @@ describe('<zn-confirm-modal>', () => {
     expect(buttons.length).to.equal(1);
     expect(buttons[0].textContent!.trim()).to.equal('Close');
     expect(buttons[0].hasAttribute('dialog-closer')).to.be.true;
+    expect(confirm.shadowRoot!.activeElement).to.equal(buttons[0]);
   });
 
   it('reports failure when the request errors', async () => {
@@ -116,5 +126,37 @@ describe('<zn-confirm-modal>', () => {
     await (confirm as never as {updateComplete: Promise<void>}).updateComplete;
 
     expect(confirm.shadowRoot!.textContent).to.not.contain('Failed');
+  });
+  it('submits to its current action after the action changes', async () => {
+    const confirm = await fixture<HTMLElement & {action: string; updateComplete: Promise<void>; show: () => void}>(
+      html`<zn-confirm caption="Delete" action="/items/1/delete"></zn-confirm>`);
+    const posted: string[] = [];
+    document.addEventListener('submit', e => {
+      e.preventDefault();
+      posted.push(new URL((e.target as HTMLFormElement).action).pathname);
+    });
+    const submit = async () => {
+      confirm.show();
+      await confirm.updateComplete;
+      click(confirm.shadowRoot!.querySelectorAll('zn-button[slot="footer"]')[1]);
+    };
+
+    await submit();
+    confirm.action = '/items/2/delete';
+    await confirm.updateComplete;
+    await submit();
+
+    expect(posted).to.deep.equal(['/items/1/delete', '/items/2/delete']);
+  });
+
+  it('labels its buttons from the dashed text attributes', async () => {
+    const confirm = await fixture<HTMLElement & {updateComplete: Promise<void>}>(html`
+      <zn-confirm confirm-text="Archive" cancel-text="Keep"></zn-confirm>
+    `);
+    await confirm.updateComplete;
+
+    const buttons = confirm.shadowRoot!.querySelectorAll('zn-button[slot="footer"]');
+    expect(buttons[0].textContent!.trim()).to.equal('Keep');
+    expect(buttons[1].textContent!.trim()).to.equal('Archive');
   });
 });

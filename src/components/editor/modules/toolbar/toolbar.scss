@@ -84,3 +84,27 @@
     gap: 2px;
   }
 }
+
+// The pickers are wider than a menu's usual cap
+zn-menu.toolbar__submenu--picker {
+  --zn-menu-max-width: none;
+}
+
+// The picker can cover the menu it opens from, which would show through the shell menu's translucent panel
+zn-menu.toolbar__submenu--picker::part(base) {
+  background-color: rgb(var(--zn-color-navigation, 255, 255, 255));
+  backdrop-filter: none;
+}
+
+// In the overflow menu a picker sits in the submenu's panel, which already draws the frame
+.toolbar__submenu-content {
+  em-emoji-picker {
+    --border-radius: 0;
+    --shadow: none;
+  }
+
+  .air-datepicker.-inline- {
+    border: 0;
+    border-radius: 0;
+  }
+}

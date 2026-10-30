@@ -182,4 +182,21 @@ describe('<zn-cols>', () => {
       expect(ruleOf('#d')).to.equal('none');
     });
   });
+
+  it('sizes columns from the basis attribute', async () => {
+    const el = await cols(`
+      <zn-cols layout="1,2" basis="140">
+        <div id="one"></div>
+        <div id="two"></div>
+      </zn-cols>`);
+
+    expect(getComputedStyle(el.querySelector('#one')!).flexBasis).to.equal('140px');
+    expect(getComputedStyle(el.querySelector('#two')!).flexBasis).to.equal('280px');
+  });
+
+  it('keeps the default basis without the attribute', async () => {
+    const el = await cols(`<zn-cols layout="1"><div id="one"></div></zn-cols>`);
+
+    expect(getComputedStyle(el.querySelector('#one')!).flexBasis).to.equal('250px');
+  });
 });

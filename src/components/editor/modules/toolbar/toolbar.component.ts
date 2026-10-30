@@ -389,6 +389,7 @@ export default class ToolbarComponent extends ZincElement {
             return !isTrigger && !isMenu;
           });
 
+          submenu.classList.add('toolbar__submenu--picker');
           const wrapper = document.createElement('div');
           wrapper.className = 'toolbar__submenu-content';
           contentCandidates.forEach((element: HTMLElement) => this.moveContentTo(element, wrapper));

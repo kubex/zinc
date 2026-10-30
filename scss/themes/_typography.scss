@@ -14,14 +14,16 @@
  *   --zn-text-<role>-transform
  *   --zn-text-<role>-letter-spacing
  *
- * All roles use the sans family (--zn-font-sans). Apply a role
- * in a component with the text-style() mixin from scss/mixins.
+ * Roles use the sans family (--zn-font-sans) unless a theme sets
+ * --zn-text-<role>-font-family. Apply a role in a component with
+ * the text-style() mixin from scss/mixins.
  *************************************************************/
 
 $text-styles: (
   "paragraph": ("size": 14px, "line": 21px, "spacing": 21px, "weight": normal, "color": default, "transform": none),
   "table-content": ("size": 14px, "line": 16px, "spacing": 15px, "weight": normal, "color": default, "transform": none),
   "chat": ("size": 16px, "line": 24px, "spacing": 15px, "weight": normal, "color": default, "transform": none),
+  "page-title": ("size": 16px, "line": 16px, "spacing": 18px, "weight": semibold, "color": default, "transform": none),
   "h1": ("size": 16px, "line": 16px, "spacing": 18px, "weight": semibold, "color": default, "transform": none),
   "h2": ("size": 14px, "line": 16px, "spacing": 15px, "weight": semibold, "color": default, "transform": none),
   "h3": ("size": 11px, "line": 16px, "spacing": 15px, "weight": semibold, "color": default, "transform": none),

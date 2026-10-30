@@ -5,9 +5,10 @@
   display: contents;
 }
 
-//::slotted(zn-sp) {
-//  --zn-sp-padding: 0 !important
-//}
+// Content loaded from a tab's uri sits inline in the tab: the tabs' own padding already spaces it
+#content > [data-self-uri] > zn-sp {
+  --zn-sp-padding: 0;
+}
 
 #mid, #content {
   flex: 1;
@@ -26,8 +27,12 @@
   max-height: 100%;
   width: 100%;
 
-  zn-header::part(base) {
-    //border-bottom-width: 0 !important;
+  zn-header {
+    padding: var(--zn-panel-header-padding, var(--zn-base-gap));
+  }
+
+  zn-header::part(content) {
+    padding: 0;
   }
 }
 
@@ -41,6 +46,30 @@ h1, h2 {
 #mid {
   container-type: inline-size;
   flex-direction: row;
+}
+
+:host([gap]) #mid {
+  gap: var(--zn-gap, var(--zn-spacing-medium));
+  align-items: flex-start;
+
+  // The side card keeps its own width; the content takes the rest.
+  > ::slotted([slot="left"]),
+  > ::slotted([slot="right"]) {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+}
+
+// #mid can't query its own width, so .tabs is the container that stacks the side cards
+.tabs {
+  container: zn-tabs / inline-size;
+}
+
+@container zn-tabs (max-width: 900px) {
+  :host([gap]) #mid {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 #content {
@@ -60,8 +89,19 @@ h1, h2 {
 }
 
 :host([no-scroll]) {
+  // Clipped rather than hidden so focus rings on fields flush with the edge still show
+  .tabs, #mid, #content {
+    overflow: clip;
+    overflow-clip-margin: var(--zn-focus-ring-outset);
+  }
+
+  // Unlike hidden, clip keeps a flex item's minimum size at its content's, so #mid would grow past the tabs
+  #mid {
+    min-height: 0;
+    min-width: 0;
+  }
+
   #content {
-    overflow: hidden;
 
     > div {
       max-height: 100%;
@@ -132,6 +172,7 @@ h1, h2 {
   }
 
   h2 {
+    font-family: var(--zn-text-h1-font-family, inherit);
     font-weight: var(--zn-font-weight-bold);
     flex-grow: 1;
     font-size: var(--zn-font-size-medium);

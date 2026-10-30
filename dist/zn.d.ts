@@ -6842,9 +6842,10 @@ declare module "components/editor/modules/attachment/attachment" {
             url: any;
             filename: any;
         }>;
-        onFileUploaded?: (node: HTMLElement, { url }: {
+        onFileUploaded?: (node: HTMLElement | null, { url }: {
             url: string;
         }) => void;
+        onFileUploadFailed?: (error: Error) => void;
         attachmentInput?: HTMLInputElement;
     }
     export default class Attachment {
@@ -6858,6 +6859,8 @@ declare module "components/editor/modules/attachment/attachment" {
         private _attachmentContainer;
         private _createAttachmentContainer;
         private _insertAttachment;
+        private _markAttachmentFailed;
+        private _revokeObjectUrl;
         private _updateAttachment;
         private _createAttachment;
         /** Clear every staged attachment preview and reset the backing form input. */
@@ -7387,6 +7390,7 @@ declare module "components/editor/editor.component" {
         private quillElement;
         private _content;
         private _selectionRange;
+        private _pendingUploads;
         get validity(): ValidityState;
         get validationMessage(): string;
         checkValidity(): boolean;
@@ -7398,6 +7402,7 @@ declare module "components/editor/editor.component" {
         private _handleTextChange;
         private _isEmpty;
         private _cacheContent;
+        private _settleUpload;
         private _clearCachedContent;
         private _getQuillKeyboardBindings;
         private _handleEditorChange;

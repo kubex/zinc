@@ -1,10 +1,10 @@
 import {signal, SignalWatcher} from '@lit-labs/signals';
 
-// Theming has two independent dimensions:
-//   `t` — the theme family (base, aura, ...), carrying the identity/palette.
-//   `m` — the rendered mode ('light' | 'dark') the family is currently drawn in.
+// Theming is driven by two attributes:
+//   `t` — a legacy theme name; OpenByte is the only theme and applies without it.
+//   `m` — the rendered mode ('light' | 'dark').
 // The host shell owns both attributes on <html>; components mirror them so CSS
-// selectors like `[m="dark"]` and `:host-context([t="aura"])` keep working.
+// selectors like `[m="dark"]` keep working.
 
 function readRootAttribute(name: string, fallback: string): string {
   if (typeof document === 'undefined') return fallback;

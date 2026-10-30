@@ -5,10 +5,9 @@
 // comfortable density (compact on request). The light block is mode-agnostic, so every colour it sets must
 // also be set in the dark block below or the light value leaks into dark mode.
 //
-// Selectors stay root-qualified for the reason given at the top of _aura.scss.
-// Derived tokens (--zn-border-color, --zn-panel, --zn-text ...) follow only on
-// <html>: a consumer that sets `t` on <body> alone gets the source tokens but
-// keeps <html>'s derived ones.
+// The default theme, layered over the base light/dark primitives. Selectors are `html:root` (0,1,1) so they outrank
+// the `:root` blocks in _root.scss that load after them, and root-qualified because ZincElement reflects `t`/`m`
+// onto every component (see _modes.scss).
 //
 // Zinc's primary ramp is anchored on 600 (the brand step); OpenByte's on 500.
 // The ramps below are shifted one step so brand blue lands on 600.
@@ -137,7 +136,7 @@ $comfortable: (
   --zn-page-title-gap: #{map.get($d, "head-inner")};
 }
 
-html[t="openbyte"], body[t="openbyte"], html.theme-openbyte, body.theme-openbyte {
+html:root {
   color-scheme: light;
 
   /**************************************************************
@@ -683,21 +682,19 @@ html[t="openbyte"], body[t="openbyte"], html.theme-openbyte, body.theme-openbyte
   }
 }
 
-html[t="openbyte"][data-density="compact"], body[t="openbyte"][data-density="compact"],
-html[t="openbyte"] [data-density="compact"], body[t="openbyte"] [data-density="compact"] {
+html[data-density="compact"], html [data-density="compact"] {
   @include density($compact);
 }
 
-html[t="openbyte"] [data-density="comfortable"], body[t="openbyte"] [data-density="comfortable"] {
+html [data-density="comfortable"] {
   @include density($comfortable);
 }
 
 // Derived dark: the guide is light-only. A near-neutral graphite canvas with the
 // brand and status hues desaturated so they don't glare on it; ramps inverted
 // (50 darkest) the way themes/_dark.scss inverts the base ramps.
-// (0,2,1) outranks :root[m="dark"] (0,2,0); see the specificity note in _root.scss.
-html[t="openbyte"][m="dark"], body[t="openbyte"][m="dark"],
-html.theme-openbyte.theme-dark, body.theme-openbyte.theme-dark {
+// (0,2,1) outranks the base dark block's :root[m="dark"] (0,2,0).
+html:root[m="dark"], html:root[t="dark"], html:root.theme-dark {
   color-scheme: dark;
 
   --zn-backdrop-color: rgba(5, 6, 8, 0.6);
@@ -887,7 +884,7 @@ html.theme-openbyte.theme-dark, body.theme-openbyte.theme-dark {
 
 // Toasts are always drawn on the inverse (navy) surface, with the status
 // colours switched to their on-dark tones.
-html[t="openbyte"] .zn-toast-stack zn-alert, body[t="openbyte"] .zn-toast-stack zn-alert {
+html .zn-toast-stack zn-alert {
   --zn-alert-background: #0D1738;
   --zn-alert-solid-background: #0D1738;
   --zn-alert-align-items: flex-start;
@@ -912,7 +909,7 @@ html[t="openbyte"] .zn-toast-stack zn-alert, body[t="openbyte"] .zn-toast-stack 
   color: #FFFFFF;
 }
 
-html[t="openbyte"][m="dark"] .zn-toast-stack zn-alert, body[t="openbyte"][m="dark"] .zn-toast-stack zn-alert {
+html:is([m="dark"], [t="dark"], .theme-dark) .zn-toast-stack zn-alert {
   --zn-alert-background: #34363F;
   --zn-alert-solid-background: #34363F;
   --zn-color-success-fg: #79D2AD;
@@ -924,6 +921,6 @@ html[t="openbyte"][m="dark"] .zn-toast-stack zn-alert, body[t="openbyte"][m="dar
 
 // Stacks a dialog's content, as its body is a block that can hold inline content too. A page rule, as the page's
 // reset of paragraph and heading margins out-ranks a shadow root's ::slotted() rules.
-html[t="openbyte"] zn-dialog > :not([slot]) + :not([slot]), body[t="openbyte"] zn-dialog > :not([slot]) + :not([slot]) {
+html zn-dialog > :not([slot]) + :not([slot]) {
   margin-block-start: var(--zn-density-stack);
 }

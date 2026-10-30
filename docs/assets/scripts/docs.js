@@ -103,11 +103,9 @@
 {
   function getTheme()
   {
-    return localStorage.getItem('theme') || 'light';
+    return localStorage.getItem('theme') || 'auto';
   }
 
-  // Density only applies to themes that define it (openbyte).
-  let family = localStorage.getItem('theme-family') || 'base';
   let density = localStorage.getItem('theme-density') || 'comfortable';
 
   function isDark()
@@ -129,11 +127,10 @@
 
     const root = document.documentElement;
     const mode = isDark() ? 'dark' : 'light';
-    const t = family === 'base' ? mode : family;
-    root.setAttribute('t', t);
+    root.setAttribute('t', 'openbyte');
     root.setAttribute('m', mode);
     root.setAttribute('data-density', density);
-    window.dispatchEvent(new CustomEvent('theme-change', {detail: {theme: t, mode}}));
+    window.dispatchEvent(new CustomEvent('theme-change', {detail: {theme: 'openbyte', mode}}));
   }
 
   function updateSelection()
@@ -143,7 +140,7 @@
     {
       return;
     }
-    const selected = [theme, `family:${family}`, `density:${density}`];
+    const selected = [theme, `density:${density}`];
     [...menu.querySelectorAll('zn-menu-item')].map(item => (item.checked = selected.includes(item.getAttribute('value'))));
   }
 
@@ -169,13 +166,7 @@
       return;
     }
     const value = event.detail.element.value;
-    if(value.startsWith('family:'))
-    {
-      family = value.slice(7);
-      localStorage.setItem('theme-family', family);
-      setTheme(theme);
-    }
-    else if(value.startsWith('density:'))
+    if(value.startsWith('density:'))
     {
       density = value.slice(8);
       localStorage.setItem('theme-density', density);

@@ -5,14 +5,14 @@ const root = document.documentElement;
 // The minifier strips the spaces inside RGB triplets.
 const token = (el: Element, name: string) => getComputedStyle(el).getPropertyValue(name).replace(/\s+/g, '');
 
-function setTheme(t: string, m = 'light', density?: string) {
-  root.setAttribute('t', t);
+function setTheme(m = 'light', density?: string) {
+  root.removeAttribute('t');
   root.setAttribute('m', m);
   if (density) root.setAttribute('data-density', density);
   else root.removeAttribute('data-density');
 }
 
-describe('openbyte theme tokens', () => {
+describe('openbyte theme tokens (default)', () => {
   before(async () => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
@@ -22,10 +22,10 @@ describe('openbyte theme tokens', () => {
     await loaded;
   });
 
-  afterEach(() => setTheme('light'));
+  afterEach(() => setTheme());
 
   it('re-points the brand and derived tokens in light mode', () => {
-    setTheme('openbyte');
+    setTheme();
     expect(token(root, '--zn-color-primary')).to.equal('8,94,253');
     expect(token(root, '--zn-primary')).to.equal('8,94,253');
     expect(token(root, '--zn-border-color')).to.equal('214,224,235');
@@ -33,25 +33,25 @@ describe('openbyte theme tokens', () => {
   });
 
   it('pins --zn-primary in dark mode over the base dark accent', () => {
-    setTheme('openbyte', 'dark');
+    setTheme('dark');
     expect(token(root, '--zn-primary')).to.equal('53,106,212');
     expect(token(root, '--zn-color-body')).to.equal('24,25,30');
   });
 
   it('applies comfortable density by default and compact on a nested container', async () => {
-    setTheme('openbyte');
+    setTheme();
     const el = await fixture(html`<div data-density="compact"><span></span></div>`);
     expect(token(root, '--zn-input-height-medium')).to.equal('36px');
     expect(token(el.firstElementChild!, '--zn-input-height-medium')).to.equal('28px');
   });
 
   it('switches the whole page to compact from the root', () => {
-    setTheme('openbyte', 'light', 'compact');
+    setTheme('light', 'compact');
     expect(token(root, '--zn-input-height-medium')).to.equal('28px');
   });
 
   it('sizes plain table rows to the density row height', async () => {
-    setTheme('openbyte');
+    setTheme();
     const table = await fixture(html`<table><tbody><tr><td>One</td></tr></tbody></table>`);
     const cell = table.querySelector('td')!;
     expect(cell.getBoundingClientRect().height).to.equal(44);
@@ -59,7 +59,7 @@ describe('openbyte theme tokens', () => {
   });
 
   it('sets a table cell meta line below its main text in muted small type', async () => {
-    setTheme('openbyte');
+    setTheme();
     const table = await fixture(html`<table><tbody><tr><td><a href="#">Name</a><span class="zn-table-meta">Meta</span></td></tr></tbody></table>`);
     const meta = getComputedStyle(table.querySelector('.zn-table-meta')!);
     expect(meta.display).to.equal('block');
@@ -68,18 +68,18 @@ describe('openbyte theme tokens', () => {
   });
 
   it('gives chart labels the subtle text colour', () => {
-    setTheme('openbyte');
+    setTheme();
     expect(getComputedStyle(root).getPropertyValue('--zn-chart-text-color').trim().toLowerCase()).to.equal('#66768e');
   });
 
   it('puts a toggle\'s side label first with the switch at the far edge', () => {
-    setTheme('openbyte');
+    setTheme();
     expect(token(root, '--zn-toggle-side-label-direction')).to.equal('row');
     expect(token(root, '--zn-toggle-side-label-justify')).to.equal('space-between');
   });
 
   it('keeps the secondary button border neutral when a host re-points the active border', async () => {
-    setTheme('openbyte');
+    setTheme();
     root.style.setProperty('--zn-color-border-active', '8, 94, 253');
     try {
       const button = await fixture(html`<zn-button color="secondary">Add</zn-button>`);
@@ -92,7 +92,7 @@ describe('openbyte theme tokens', () => {
   });
 
   it('gives a bordered icon button the secondary button edge', async () => {
-    setTheme('openbyte');
+    setTheme();
     const secondary = await fixture(html`<zn-button color="secondary">Add</zn-button>`);
     const icon = await fixture(html`<zn-button icon="ellipsis" icon-button="small"></zn-button>`);
     await (secondary as unknown as {updateComplete: Promise<unknown>}).updateComplete;
@@ -104,17 +104,23 @@ describe('openbyte theme tokens', () => {
   });
 
   it('sizes a modal page title as a dialog heading', async () => {
-    setTheme('openbyte');
+    setTheme();
     const page = await fixture<HTMLElement>(html`<zn-page modal caption="Add section"></zn-page>`);
     await (page as unknown as {updateComplete: Promise<unknown>}).updateComplete;
     const caption = page.shadowRoot!.querySelector('.header__caption')!;
     expect(getComputedStyle(caption).fontSize).to.equal('16px');
   });
 
-  it('leaves the base theme untouched', () => {
-    setTheme('light');
-    expect(token(root, '--zn-color-primary')).to.equal('105,54,245');
-    expect(token(root, '--zn-input-height-medium')).to.equal('36px');
-    expect(token(root, '--zn-text-h1-font-family')).to.equal('');
+  it('draws the openbyte dark palette for a host that sets only the legacy t="dark"', () => {
+    root.removeAttribute('m');
+    root.setAttribute('t', 'dark');
+    expect(token(root, '--zn-primary')).to.equal('53,106,212');
+  });
+
+  it('keeps openbyte tokens on a component that reflects a legacy t', async () => {
+    root.setAttribute('t', 'light');
+    const button = await fixture(html`<zn-button>Add</zn-button>`);
+    expect(button.getAttribute('t')).to.equal('light');
+    expect(token(button, '--zn-color-primary')).to.equal('8,94,253');
   });
 });

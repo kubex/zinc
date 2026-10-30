@@ -54,6 +54,50 @@
   }
 }
 
+// Pull tabs are folder tabs on the panel's top edge, so they keep that shape whatever a theme does to the tab strip
+:host([hover]:not([stacked])) {
+  --zn-navbar-tab-border-width: 1px;
+  --zn-navbar-tab-radius: 8px;
+  --zn-navbar-tab-background: rgb(var(--zn-color-tab));
+  --zn-navbar-tab-hover-background: rgba(var(--zn-color-tab), 0.6);
+  --zn-navbar-tab-hover-backdrop: transparent;
+  --zn-navbar-tab-hover-indicator-color: transparent;
+  --zn-navbar-tab-active-background: rgb(var(--zn-panel));
+  // Panel-coloured, so the active tab covers the strip's bottom border and joins the panel below
+  --zn-navbar-tab-indicator-color: rgb(var(--zn-panel));
+  --zn-navbar-tab-indicator-height: 1px;
+  --zn-navbar-tab-indicator-slide: 0;
+  --zn-text-tab-link-color: rgb(var(--zn-color-muted-text));
+  --zn-text-tab-link-active-color: rgb(var(--zn-text));
+  --zn-navbar-tab-hover-color: rgb(var(--zn-text));
+
+  ul.navbar {
+    gap: 0;
+
+    > li {
+      border-left-width: var(--zn-navbar-tab-border-width);
+      border-color: transparent;
+      border-radius: var(--zn-navbar-tab-radius) var(--zn-navbar-tab-radius) 0 0;
+
+      &.active, &.zn-tb-active {
+        border-color: rgb(var(--zn-border-color));
+      }
+    }
+
+    // Centred because the icon's box keeps the size its `size` attribute gives it
+    zn-icon::part(icon) {
+      position: relative;
+      top: 50%;
+      left: 50%;
+      translate: -50% -50%;
+      width: 16px;
+      height: 16px;
+      font-size: 16px;
+      stroke-width: 1.75;
+    }
+  }
+}
+
 :host([icon-only]) {
   ul.navbar {
     li {
@@ -69,6 +113,13 @@
       }
     }
   }
+}
+
+// Without block padding, a tooltip-wrapped icon fills the whole tab
+:host([hover][icon-only]:not([stacked])) ul.navbar > li {
+  width: 44px;
+  min-width: 44px;
+  padding-block: 0;
 }
 
 .navbar__container {
@@ -487,8 +538,18 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 
       cursor: pointer;
 
-      zn-icon, zn-tooltip {
+      zn-icon {
         pointer-events: none;
+      }
+
+      // A tooltip hears the pointer, and is placed, through what it wraps, so its icon fills the tab
+      zn-tooltip zn-icon {
+        pointer-events: auto;
+        flex: 1;
+        align-self: stretch;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       &#dropdown-item {

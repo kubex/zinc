@@ -497,7 +497,8 @@ export default class ZnTabs extends ZincElement {
 
   _handleClick(event: PointerEvent) {
     // ts-ignore
-    const target = (event.relatedTarget ?? event.target) as HTMLElement;
+    // The listener is on the tab itself; event.target could be an icon or tooltip inside it
+    const target = (event.relatedTarget ?? event.currentTarget) as HTMLElement;
     if (!target) {
       return;
     }

@@ -6708,6 +6708,7 @@ declare module "components/editor/modules/toolbar/toolbar.component" {
         private populateOverflowMenu;
         render(): import("lit-html").TemplateResult<1>;
         private _textOptions;
+        private _compactToolbar;
         private _formatOptions;
         private _commonFormatOptions;
         private _historyOptions;
@@ -7027,6 +7028,30 @@ declare module "components/editor/modules/image-resize/image-resize" {
     }
     export default ImageResize;
 }
+declare module "components/editor/modules/merge-field/merge-field" {
+    import Embed from "quill/blots/embed";
+    import Quill from "quill";
+    export interface MergeFieldValue {
+        token: string;
+        label: string;
+    }
+    /** A `{{token}}` replacement shown as a labelled chip, saved back out as the raw token. */
+    export class MergeFieldBlot extends Embed {
+        static blotName: string;
+        static tagName: string;
+        static className: string;
+        static create(value: MergeFieldValue): HTMLElement;
+        static value(node: HTMLElement): MergeFieldValue;
+        html(): string;
+    }
+    export const normaliseToken: (token: string) => string;
+    class MergeField {
+        constructor(quill: Quill, options: {
+            labels?: Record<string, string>;
+        });
+    }
+    export default MergeField;
+}
 declare module "components/editor/modules/ai/panel/ai-panel.component" {
     import ZincElement from "internal/zinc-element";
     import type { CSSResultGroup } from "lit";
@@ -7336,6 +7361,7 @@ declare module "components/editor/editor.component" {
         datesEnabled?: boolean;
         emojisEnabled?: boolean;
         codeEnabled?: boolean;
+        compact?: boolean;
     }
     /**
      * @summary Short summary of the component's intended use.
@@ -7349,6 +7375,7 @@ declare module "components/editor/editor.component" {
      *
      * @slot - The default slot.
      * @slot example - An example slot.
+     * @slot help-text - Text under the editor. Alternatively, use the `help-text` attribute.
      *
      * @csspart base - The component's base wrapper.
      *
@@ -7357,12 +7384,25 @@ declare module "components/editor/editor.component" {
     export default class ZnEditor extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
         private formControlController;
+        private readonly hasSlotController;
         private editor;
         private editorHtml;
         private toolbar;
         id: string;
         name: string;
         value: string;
+        placeholder: string;
+        /** Draws the editor as a form field: a bordered, resizable box under a small toolbar of bold, italic, link and lists. */
+        compact: boolean;
+        /** Adds a Source button that switches to editing the raw HTML, which is submitted as written. */
+        sourceEnabled: boolean;
+        /** Shows only the content, without a toolbar or box, such as the source beside a translation. */
+        readonly: boolean;
+        /** With `compact`, a short label inside the box ahead of the content, such as a language code. */
+        prefix: string;
+        private _sourceMode;
+        /** Text under the editor that describes how to use it. If you need to display HTML, use the `help-text` slot instead. */
+        helpText: string;
         interactionType: 'ticket' | 'chat';
         uploadAttachmentUrl: string;
         codeBlocksEnabled: boolean;
@@ -7375,6 +7415,11 @@ declare module "components/editor/editor.component" {
         emojisEnabled: boolean;
         codeEnabled: boolean;
         aiEnabled: boolean;
+        /**
+         * Shows `{{token}}` replacements as highlighted chips, labelled from the matching `context-items`
+         * quick action. The value still holds the raw tokens.
+         */
+        mergeFieldsEnabled: boolean;
         aiPath: string;
         /**
          * Caches unsent content while typing and restores it when the editor next loads,
@@ -7399,6 +7444,9 @@ declare module "components/editor/editor.component" {
         setCustomValidity(message: string): void;
         connectedCallback(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
+        private _toggleSource;
+        private _handleSourceInput;
+        private _mergeFieldLabels;
         private _handleTextChange;
         private _isEmpty;
         private _cacheContent;
@@ -10333,6 +10381,146 @@ declare module "components/translation-group/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-translation-group': ZnTranslationGroup;
+        }
+    }
+}
+declare module "components/translation-grid/translation-grid.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    export type TranslationStatus = 'source' | 'translated' | 'outdated' | 'missing';
+    export interface TranslationGridLanguage {
+        code: string;
+        label: string;
+        /** The language's status when there are no `fields`. */
+        status?: TranslationStatus;
+        /** Where choosing the language goes, such as its translation form. */
+        href?: string;
+    }
+    export interface TranslationGridCell {
+        status: TranslationStatus;
+        href?: string;
+    }
+    export interface TranslationGridField {
+        key: string;
+        label: string;
+        /** Each language's cell, keyed by language code. */
+        cells: Record<string, TranslationGridCell>;
+    }
+    /**
+     * @summary Shows how far each language's translation has got, with a column per language to choose and enable it,
+     * and optionally a row per translated field.
+     * @documentation https://zinc.style/components/translation-grid
+     * @status experimental
+     * @since 1.0
+     *
+     * @slot - Help text under the legend.
+     * @slot enable-{code} - The control that enables the language with that code, such as a `zn-checkbox` in a form.
+     *   The Enable row only shows when at least one is given.
+     *
+     * @csspart base - The component's base wrapper.
+     */
+    export default class ZnTranslationGrid extends ZincElement {
+        static styles: CSSResultGroup;
+        /** The languages, in column order, as a JSON array of `{code, label, status, href}`. */
+        languages: TranslationGridLanguage[];
+        /** A row per translated field, as a JSON array of `{key, label, cells}`; without it there is one Translation row. */
+        fields: TranslationGridField[];
+        /** The code of the language being edited. */
+        selected: string;
+        /** The key of the field being edited, when there are `fields`. */
+        selectedField: string;
+        /** Where the language links open, as a console `data-target`; `self` replaces the content they sit in. */
+        linkTarget: string;
+        /** Names the source in the legend, such as "English changed". */
+        sourceLabel: string;
+        private _statusLabel;
+        private _link;
+        private _cell;
+        private _rows;
+        private _legend;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/translation-grid/index" {
+    import ZnTranslationGrid from "components/translation-grid/translation-grid.component";
+    export * from "components/translation-grid/translation-grid.component";
+    export default ZnTranslationGrid;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-translation-grid': ZnTranslationGrid;
+        }
+    }
+}
+declare module "components/translation-field/translation-field.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary A field's source text beside the control that translates it.
+     * @documentation https://zinc.style/components/translation-field
+     * @status experimental
+     * @since 1.0
+     *
+     * @slot - The control the translation is written in, such as a `zn-input` with the language code as its prefix.
+     * @slot source - The source text, shown read-only.
+     * @slot actions - Actions beside the label.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart source - The box holding the source.
+     */
+    export default class ZnTranslationField extends ZincElement {
+        static styles: CSSResultGroup;
+        label: string;
+        /** The source's language code, shown beside it. */
+        sourceCode: string;
+        /** For source text that runs over several lines, such as a message body. */
+        multiline: boolean;
+        /** Lines the source up with a control that has a toolbar above it, such as a compact `zn-editor`. */
+        offset: boolean;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/translation-field/index" {
+    import ZnTranslationField from "components/translation-field/translation-field.component";
+    export * from "components/translation-field/translation-field.component";
+    export default ZnTranslationField;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-translation-field': ZnTranslationField;
+        }
+    }
+}
+declare module "components/translation-fields/translation-fields.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    export type TranslationFieldsLayout = 'split' | 'stacked';
+    /**
+     * @summary Lays out `zn-translation-field`s with their source beside or above the translation, chosen by the viewer.
+     * @documentation https://zinc.style/components/translation-fields
+     * @status experimental
+     * @since 1.0
+     *
+     * @slot - The `zn-translation-field`s.
+     * @slot actions - Actions level with the layout switch.
+     *
+     * @csspart base - The component's base wrapper.
+     */
+    export default class ZnTranslationFields extends ZincElement {
+        static styles: CSSResultGroup;
+        layout: TranslationFieldsLayout;
+        /** Remembers the viewer's layout under this key in `localStorage`; leave empty to forget it. */
+        storeKey: string;
+        connectedCallback(): void;
+        private _choose;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/translation-fields/index" {
+    import ZnTranslationFields from "components/translation-fields/translation-fields.component";
+    export * from "components/translation-fields/translation-fields.component";
+    export default ZnTranslationFields;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-translation-fields': ZnTranslationFields;
         }
     }
 }
@@ -13686,6 +13874,9 @@ declare module "zinc" {
     export { default as KeyContainer } from "components/key-container/index";
     export { default as AnimatedButton } from "components/animated-button/index";
     export { default as TranslationGroup } from "components/translation-group/index";
+    export { default as TranslationGrid } from "components/translation-grid/index";
+    export { default as TranslationField } from "components/translation-field/index";
+    export { default as TranslationFields } from "components/translation-fields/index";
     export { default as OptGroup } from "components/opt-group/index";
     export { default as PriorityList } from "components/priority-list/index";
     export { default as MarkdownEditor } from "components/markdown-editor/index";

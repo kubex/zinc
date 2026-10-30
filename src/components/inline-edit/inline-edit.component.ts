@@ -34,6 +34,7 @@ import styles from './inline-edit.scss';
  *
  * @cssproperty --zn-inline-edit-hover-background - The fill behind a field while hovered or focused.
  * @cssproperty --zn-inline-edit-bleed - How far the hover fill extends past the left edge of the value.
+ * @cssproperty --zn-inline-edit-underline-color - The dotted underline marking an editable value at rest.
  */
 export default class ZnInlineEdit extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = [unsafeCSS(formElementStyles), unsafeCSS(styles)];

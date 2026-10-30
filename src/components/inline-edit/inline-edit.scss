@@ -28,8 +28,23 @@
     padding-inline-start: 0;
   }
 
-  &:not(.ai--editing):not(.ai--disabled):is(:hover, :focus-within) {
-    background-color: var(--zn-inline-edit-hover-background, var(--zn-color-primary-50));
+  &:not(.ai--editing):not(.ai--disabled) {
+    --underline-color: var(--zn-inline-edit-underline-color, var(--zn-color-neutral-300));
+
+    // Marks the value as editable at rest, without hovering
+    .ai__input::part(input),
+    .ai__input::part(display-input),
+    .ai__reveal::part(base) {
+      text-decoration: underline dotted var(--underline-color);
+      text-decoration-thickness: 1.5px;
+      text-underline-offset: 4px;
+      transition: text-decoration-color var(--zn-transition-fast) ease;
+    }
+
+    &:is(:hover, :focus-within) {
+      --underline-color: rgb(var(--zn-primary));
+      background-color: var(--zn-inline-edit-hover-background, var(--zn-color-primary-50));
+    }
   }
 
   &:not(.ai--editing) {

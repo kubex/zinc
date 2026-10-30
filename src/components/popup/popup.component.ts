@@ -259,6 +259,10 @@ export default class ZnPopup extends ZincElement {
       this.anchorEl.removeEventListener('mouseover', this.handleAnchorHover);
       this.anchorEl.addEventListener('mouseover', this.handleAnchorHover);
     }
+
+    if (this.active) {
+      this.start();
+    }
   }
 
   public handleAnchorHover = () => {

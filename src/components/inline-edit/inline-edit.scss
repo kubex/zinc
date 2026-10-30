@@ -7,10 +7,30 @@
 }
 
 .ai {
+  --bleed: var(--zn-inline-edit-bleed, 10px);
   display: flex;
   width: 100%;
   flex-direction: row;
   gap: 10px;
+  border-radius: var(--zn-border-radius-medium);
+  transition: background-color var(--zn-transition-fast) ease;
+
+  // The hover fill hangs out past the value's left edge, so the text stays aligned with the column
+  &:not(.ai--padded) {
+    box-sizing: border-box;
+    width: calc(100% + var(--bleed));
+    margin-inline-start: calc(-1 * var(--bleed));
+    padding-inline-start: var(--bleed);
+  }
+
+  // The input's own padding takes over from the bleed, keeping its text roughly where the value was
+  &--editing:not(.ai--padded) {
+    padding-inline-start: 0;
+  }
+
+  &:not(.ai--editing):not(.ai--disabled):is(:hover, :focus-within) {
+    background-color: var(--zn-inline-edit-hover-background, var(--zn-color-primary-50));
+  }
 
   &:not(.ai--editing) {
     .ai__input::part(base), .ai__input::part(combobox), .ai__input::part(textarea) {
@@ -32,16 +52,11 @@
     .ai__input::part(input), .ai__input::part(combobox), .ai__input::part(textarea) {
       padding: 0;
       color: rgb(var(--zn-text));
-      text-decoration: underline;
-      text-decoration-style: dashed;
-      text-decoration-color: rgb(var(--zn-primary), 0.5);
-      text-underline-offset: 3px;
     }
 
     .ai__input::part(textarea) {
       padding-top: 8px;
       box-shadow: none;
-      text-decoration:none;
     }
 
     .ai__input::part(expand-icon) {
@@ -53,11 +68,8 @@
     }
 
     &:hover .button--edit,
-    .button--edit:focus-within {
-      position: static;
-      width: auto;
-      height: auto;
-      clip-path: none;
+    &:focus-within .button--edit {
+      opacity: 1;
     }
   }
 
@@ -121,8 +133,78 @@
   }
 
   &--editing {
+    --action-size: 28px;
+    --action-inset: 4px;
+    --action-room: calc(var(--action-size) * 2 + 2px + var(--action-inset) * 2);
+    --fade-floor: rgb(0 0 0 / 0.25);
+    position: relative;
+
+    // Save and cancel sit inside the field's right end, so the row never grows or clips
     .ai__right {
       display: flex !important;
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-end: var(--action-inset);
+      height: var(--zn-input-height-medium);
+      gap: 2px;
+    }
+
+    .ai__input::part(input),
+    .ai__input::part(combobox),
+    .ai__input::part(textarea) {
+      // Matches the resting bleed so the text doesn't shift when editing starts
+      padding-inline-start: var(--bleed);
+      padding-inline-end: var(--action-room);
+      text-overflow: clip;
+    }
+
+    // Fades overflowing text toward the actions so it reads as continuing beneath them. Stops short of fully
+    // transparent: a caret at the end of overflowing text sits right at the fade's edge.
+    .ai__input::part(input),
+    .ai__input::part(textarea) {
+      mask-image: linear-gradient(to left, var(--fade-floor) var(--action-room), #000 calc(var(--action-room) + 24px));
+    }
+
+    &.ai--text-end .ai__input::part(input),
+    &.ai--text-end .ai__input::part(textarea) {
+      mask-image: none;
+    }
+
+    // A select's combobox part is the bordered box itself, so only its text is faded
+    .ai__input::part(display-input) {
+      text-overflow: clip;
+      mask-image: linear-gradient(to left, var(--fade-floor), #000 24px);
+    }
+
+    .ai__right zn-button {
+      --zn-button-height: var(--action-size);
+      --zn-button-icon-width: var(--action-size);
+      // Same duration and curve as the input's border, so the edit state arrives as one change
+      transition: opacity var(--zn-transition-fast) ease, color var(--zn-transition-fast) ease;
+
+      @starting-style {
+        opacity: 0;
+      }
+    }
+
+    .button--save {
+      color: rgb(var(--zn-primary));
+
+      &::part(base) {
+        background-color: var(--zn-color-primary-100);
+      }
+    }
+
+    .button--cancel {
+      color: rgb(var(--zn-color-muted-text, var(--zn-text)));
+
+      &:hover {
+        color: var(--zn-menu-item-danger-hover-color, rgb(var(--zn-color-error)));
+
+        &::part(base) {
+          background-color: var(--zn-menu-item-danger-hover-background, rgba(var(--zn-color-error), 0.1));
+        }
+      }
     }
   }
 
@@ -147,10 +229,6 @@
     // Fill the row so hovering anywhere over the field reveals the value
     &::part(base) {
       width: 100%;
-      text-decoration: underline;
-      text-decoration-style: dashed;
-      text-decoration-color: rgb(var(--zn-primary), 0.5);
-      text-underline-offset: 3px;
     }
   }
 
@@ -173,29 +251,36 @@
     font-weight: 500;
     cursor: pointer;
     flex-direction: row;
-    gap: 10px;
+    gap: 6px;
     align-items: center;
     justify-content: flex-end;
 
-    // Visually hidden rather than display: none, so keyboard users can still tab to it
+    zn-button {
+      --zn-border-radius: var(--zn-border-radius-medium);
+    }
+
+    // Transparent rather than removed, so hover doesn't reflow the row and keyboard users can still tab to it
     .button--edit {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip-path: inset(50%);
+      opacity: 0;
+      color: rgb(var(--zn-primary));
+      transition: opacity var(--zn-transition-fast) ease;
+
+      // Remounts when an edit ends; without this a still-hovered row snaps the pencil back in
+      @starting-style {
+        opacity: 0;
+      }
+
+      // The field's hover fill already covers it
+      &::part(base) {
+        background-color: transparent;
+      }
     }
   }
 
   &--disabled:not(.ai--editing) {
     .ai__input::part(input), .ai__input::part(combobox), .ai__input::part(textarea) {
-      text-decoration: none;
       caret-color: transparent;
       border-radius: 0;
-    }
-
-    .ai__reveal::part(base) {
-      text-decoration: none;
     }
 
     .ai__input::part(display-input) {

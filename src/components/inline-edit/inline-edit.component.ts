@@ -32,7 +32,8 @@ import styles from './inline-edit.scss';
  *
  * @csspart base - The component's base wrapper.
  *
- * @cssproperty --example - An example CSS custom property.
+ * @cssproperty --zn-inline-edit-hover-background - The fill behind a field while hovered or focused.
+ * @cssproperty --zn-inline-edit-bleed - How far the hover fill extends past the left edge of the value.
  */
 export default class ZnInlineEdit extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = [unsafeCSS(formElementStyles), unsafeCSS(styles)];
@@ -181,6 +182,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   @state() private isEditing: boolean;
 
+  @state() private textScrolledToEnd = false;
+
   private _valueBeforeEdit: string | string[];
   private _editStartValue: string | string[];
 
@@ -258,8 +261,23 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     if (this.input instanceof ZnSelect && !this.isEditing) {
       await this.input.hide();
     }
+    if (this.isEditing) {
+      this.textControl?.addEventListener('scroll', this.updateTextScrolledToEnd);
+      this.updateTextScrolledToEnd();
+    }
     this.conditionalController.check();
   }
+
+  private get textControl(): HTMLInputElement | HTMLTextAreaElement | undefined {
+    const control: unknown = (this.input as Partial<ZnInput> | undefined)?.input;
+    return control instanceof HTMLInputElement || control instanceof HTMLTextAreaElement ? control : undefined;
+  }
+
+  // The fade under the actions signals text continuing beneath them, so it goes once the end is in view
+  updateTextScrolledToEnd = () => {
+    const control = this.textControl;
+    this.textScrolledToEnd = !!control && control.scrollLeft + control.clientWidth >= control.scrollWidth - 1;
+  };
 
   mouseEventHandler = (e: MouseEvent) => {
     if (this.isEditing && !this.contains(e.target as Node)) {
@@ -352,6 +370,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
     this.value = (e.target as (HTMLInputElement | HTMLSelectElement)).value;
     this.emit('zn-input');
+    requestAnimationFrame(this.updateTextScrolledToEnd);
   };
 
   private moveSlottedOptionsToSelect() {
@@ -412,6 +431,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
       <div class="${classMap({
         'ai': true,
         'ai--editing': this.isEditing,
+        'ai--text-end': this.textScrolledToEnd,
         'ai--focused': this.hasFocus,
         'ai--disabled': this.disabled,
         'ai--inline': this.inline,
@@ -439,13 +459,15 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                 <zn-button @click="${this.disabled ? undefined : this.handleEditClick}"
                            class="button--edit"
                            icon="edit"
-                           icon-size="20"
-                           color="secondary"></zn-button>`}` :
+                           icon-size="16"
+                           color="transparent"
+                           icon-button="small"
+                           plain></zn-button>`}` :
             html`
-              <zn-button type="submit" @click="${this.handleSubmitClick}" icon="check" icon-size="20"
-                         color="secondary"></zn-button>
-              <zn-button type="button" @click="${this.handleCancelClick}" icon="close" icon-size="20"
-                         color="secondary"></zn-button>`}
+              <zn-button type="submit" class="button--save" @click="${this.handleSubmitClick}" icon="check"
+                         icon-size="16" color="transparent" icon-button="small" plain label="Save"></zn-button>
+              <zn-button type="button" class="button--cancel" @click="${this.handleCancelClick}" icon="close"
+                         icon-size="16" color="transparent" icon-button="small" plain label="Cancel"></zn-button>`}
         </div>
       </div>
 

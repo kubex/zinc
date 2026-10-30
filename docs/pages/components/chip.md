@@ -54,6 +54,17 @@ Use the `icon` attribute to add an icon to the chip. Icons appear on the left si
 <zn-chip icon="error" type="error">Error</zn-chip>
 ```
 
+### Caption
+
+Use the `caption` attribute to prepend a label, giving the chip a "Key: Value" style.
+
+```html:preview
+<zn-chip caption="Router">Sandbanx-Connector</zn-chip>
+<zn-chip caption="Status" type="success">Active</zn-chip>
+<zn-chip caption="Region" type="info">EU-West</zn-chip>
+<zn-chip caption="Priority" type="warning" icon="flag">High</zn-chip>
+```
+
 ### Icon Size
 
 Use the `icon-size` attribute to control the size of the icon within the chip.
@@ -100,15 +111,15 @@ Chips can include an action button, typically used for removing or closing the c
 ```html:preview
 <zn-chip icon="tag" type="info">
   Removable Tag
-  <zn-button icon="close" slot="action" size="content" icon-size="12" color="transparent"></zn-button>
+  <zn-button icon="close" slot="action" icon-size="12" color="transparent"></zn-button>
 </zn-chip>
 <zn-chip icon="label" type="success">
   Another Tag
-  <zn-button icon="close" slot="action" size="content" icon-size="12" color="transparent"></zn-button>
+  <zn-button icon="close" slot="action" icon-size="12" color="transparent"></zn-button>
 </zn-chip>
 <zn-chip icon="bookmark" type="warning">
   Bookmark
-  <zn-button icon="close" slot="action" size="content" icon-size="12" color="transparent"></zn-button>
+  <zn-button icon="close" slot="action" icon-size="12" color="transparent"></zn-button>
 </zn-chip>
 ```
 
@@ -119,11 +130,11 @@ The `action` slot can be used for any interactive element, not just close button
 ```html:preview
 <zn-chip icon="notifications" type="primary">
   Notifications
-  <zn-button icon="settings" slot="action" size="content" icon-size="14" color="transparent"></zn-button>
+  <zn-button icon="settings" slot="action" icon-size="14" color="transparent"></zn-button>
 </zn-chip>
 <zn-chip icon="download" type="info">
   Download
-  <zn-button icon="arrow_drop_down" slot="action" size="content" icon-size="16" color="transparent"></zn-button>
+  <zn-button icon="arrow_drop_down" slot="action" icon-size="16" color="transparent"></zn-button>
 </zn-chip>
 ```
 
@@ -178,19 +189,19 @@ Chips work well when grouped together to represent multiple tags or categories.
 <div style="display: flex; gap: 8px; flex-wrap: wrap;">
   <zn-chip icon="tag" type="info">
     Frontend
-    <zn-button icon="close" slot="action" size="content" icon-size="12" color="transparent"></zn-button>
+    <zn-button icon="close" slot="action" icon-size="12" color="transparent"></zn-button>
   </zn-chip>
   <zn-chip icon="tag" type="info">
     Backend
-    <zn-button icon="close" slot="action" size="content" icon-size="12" color="transparent"></zn-button>
+    <zn-button icon="close" slot="action" icon-size="12" color="transparent"></zn-button>
   </zn-chip>
   <zn-chip icon="tag" type="info">
     Database
-    <zn-button icon="close" slot="action" size="content" icon-size="12" color="transparent"></zn-button>
+    <zn-button icon="close" slot="action" icon-size="12" color="transparent"></zn-button>
   </zn-chip>
   <zn-chip icon="tag" type="info">
     DevOps
-    <zn-button icon="close" slot="action" size="content" icon-size="12" color="transparent"></zn-button>
+    <zn-button icon="close" slot="action" icon-size="12" color="transparent"></zn-button>
   </zn-chip>
 </div>
 ```
@@ -220,7 +231,7 @@ Chips can be used to display user information or assignments.
   <zn-chip icon="person" type="primary">Bob Johnson</zn-chip>
   <zn-chip icon="person" type="primary">
     Alice Williams
-    <zn-button icon="close" slot="action" size="content" icon-size="12" color="transparent"></zn-button>
+    <zn-button icon="close" slot="action" icon-size="12" color="transparent"></zn-button>
   </zn-chip>
 </div>
 ```
@@ -233,19 +244,19 @@ Here's a complete example demonstrating removable chips with JavaScript interact
 <div id="chip-container" style="display: flex; gap: 8px; flex-wrap: wrap;">
   <zn-chip icon="tag" type="info">
     Design
-    <zn-button icon="close" slot="action" size="content" icon-size="12" color="transparent"></zn-button>
+    <zn-button icon="close" slot="action" icon-size="12" color="transparent"></zn-button>
   </zn-chip>
   <zn-chip icon="tag" type="info">
     Development
-    <zn-button icon="close" slot="action" size="content" icon-size="12" color="transparent"></zn-button>
+    <zn-button icon="close" slot="action" icon-size="12" color="transparent"></zn-button>
   </zn-chip>
   <zn-chip icon="tag" type="info">
     Testing
-    <zn-button icon="close" slot="action" size="content" icon-size="12" color="transparent"></zn-button>
+    <zn-button icon="close" slot="action" icon-size="12" color="transparent"></zn-button>
   </zn-chip>
   <zn-chip icon="tag" type="info">
     Documentation
-    <zn-button icon="close" slot="action" size="content" icon-size="12" color="transparent"></zn-button>
+    <zn-button icon="close" slot="action" icon-size="12" color="transparent"></zn-button>
   </zn-chip>
 </div>
 

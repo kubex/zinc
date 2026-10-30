@@ -174,10 +174,10 @@ Control the audio select programmatically by setting the `value` property or man
 </zn-audio-select>
 
 <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-  <zn-button id="select-first" size="small">Select First</zn-button>
-  <zn-button id="select-second" size="small">Select Second</zn-button>
-  <zn-button id="clear-selection" size="small">Clear</zn-button>
-  <zn-button id="add-file" size="small">Add File</zn-button>
+  <zn-button id="select-first">Select First</zn-button>
+  <zn-button id="select-second">Select Second</zn-button>
+  <zn-button id="clear-selection">Clear</zn-button>
+  <zn-button id="add-file">Add File</zn-button>
 </div>
 
 <script type="module">

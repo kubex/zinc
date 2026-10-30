@@ -3,8 +3,13 @@
 @use "../../../node_modules/quill/dist/quill.snow.css" as snow;
 @use "../../wc";
 
+@include wc.gutter;
+
 :host, zn-editor {
+  --editor-gutter: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
+
   width: 100%;
+  padding-inline: var(--editor-gutter);
 }
 
 :host {
@@ -13,6 +18,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 170px;
+  container-type: inline-size;
 
   display: flex;
   flex-direction: column;
@@ -62,7 +68,7 @@
     color: rgb(var(--zn-text));
     background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
     font-size: 15px;
-    padding: 0 var(--zn-spacing-medium);
+    padding-inline: var(--editor-gutter);
 
     img {
       height: auto;
@@ -70,8 +76,8 @@
   }
 
   .ql-editor.ql-blank:before {
-    right: var(--zn-spacing-medium);
-    left: var(--zn-spacing-medium);
+    right: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
+    left: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
     color: rgb(var(--zn-text));
   }
 
@@ -84,6 +90,7 @@
   #toolbar-container, #action-container {
     justify-content: space-between;
     align-items: center;
+    padding-inline: var(--editor-gutter);
 
     .wrap {
       flex-grow: 1;
@@ -146,6 +153,220 @@
   opacity: 1;
 }
 
+:host .ql-editor .ql-merge-field {
+  padding: 0 6px;
+  border-radius: var(--zn-input-border-radius-medium);
+  background-color: rgba(var(--zn-primary), 0.08);
+  color: rgb(var(--zn-primary));
+  font-weight: var(--zn-font-weight-semibold);
+  white-space: nowrap;
+}
+
+.editor__bar {
+  display: flex;
+  align-items: center;
+  padding-inline: var(--editor-gutter);
+
+  #toolbar {
+    flex: 1;
+    padding-inline: 0;
+
+    // Keeps its space so switching to the source doesn't move the box
+    &[data-source] {
+      visibility: hidden;
+    }
+  }
+
+  .editor__source-toggle {
+    margin-left: auto;
+  }
+}
+
+.editor__box {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.editor__prefix {
+  position: absolute;
+  z-index: 1;
+  top: var(--zn-spacing-x-small);
+  left: calc(var(--zn-spacing-unit, 8px) * 1.5);
+  color: rgb(var(--zn-text));
+  font-size: 12px;
+  font-weight: 700;
+  line-height: calc(var(--zn-input-font-size-medium) * 1.5);
+  pointer-events: none;
+}
+
+.editor__source {
+  display: block;
+  width: 100%;
+  padding: var(--zn-spacing-x-small) var(--zn-spacing-small);
+  border: none;
+  outline: none;
+  resize: vertical;
+  font-family: var(--zn-font-mono);
+  font-size: var(--zn-font-size-small);
+  color: rgb(var(--zn-text));
+  background-color: var(--zn-input-background-color);
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+:host([compact]) {
+  min-height: 0;
+  max-height: none;
+  flex: none;
+  overflow: visible;
+  gap: calc(var(--zn-spacing-unit, 8px) * 1.5);
+  background-color: transparent;
+
+  .editor__bar {
+    --zn-button-height-small: 24px;
+    --zn-button-font-size-small: 12px;
+    padding-inline: 0;
+
+    #toolbar {
+      padding: 0;
+    }
+
+    .editor__source-toggle::part(base) {
+      color: rgb(var(--zn-color-muted-text));
+    }
+  }
+
+  #editor,
+  .editor__source {
+    box-sizing: border-box;
+    flex: none;
+    height: var(--editor-height, 224px);
+    min-height: 6rem;
+    overflow: auto;
+    resize: vertical;
+    border: solid var(--zn-input-border-width) var(--zn-input-border-color);
+    border-radius: var(--zn-input-border-radius-medium);
+    background-color: var(--zn-input-background-color);
+    transition: var(--zn-transition-fast) border, var(--zn-transition-fast) box-shadow;
+
+    &:hover {
+      border-color: var(--zn-input-border-color-hover);
+    }
+
+    &:focus-within,
+    &:focus {
+      border-color: var(--zn-input-border-color-focus);
+      box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color);
+    }
+  }
+
+  #editor[hidden] {
+    display: none;
+  }
+
+  .ql-container {
+    padding: 0;
+  }
+
+  .editor__box {
+    display: block;
+    flex: none;
+  }
+
+  .ql-editor {
+    padding: var(--zn-spacing-x-small) calc(var(--zn-spacing-unit, 8px) * 1.5);
+    font-size: var(--zn-input-font-size-medium);
+    line-height: 1.5;
+    background-color: transparent;
+
+    > * + * {
+      margin-top: var(--zn-spacing-x-small);
+    }
+  }
+
+  .ql-editor.ql-blank:before {
+    left: calc(var(--zn-spacing-unit, 8px) * 1.5);
+    right: calc(var(--zn-spacing-unit, 8px) * 1.5);
+    font-style: normal;
+    color: var(--zn-input-placeholder-color);
+  }
+
+  // No box of its own, so an empty actions row adds no gap
+  #action-container {
+    display: contents;
+  }
+
+  .form-control__help-text {
+    margin-top: 0;
+  }
+}
+
+// The prefix's gutter: its width, and the space either side of it
+:host([compact]) .editor__box--prefixed {
+  .ql-editor,
+  .editor__source {
+    padding-left: calc(var(--zn-spacing-unit, 8px) * 3 + 32px);
+  }
+
+  .ql-editor.ql-blank:before {
+    left: calc(var(--zn-spacing-unit, 8px) * 3 + 32px);
+  }
+}
+
+.form-control[hidden] {
+  display: none;
+}
+
+// Content only, such as a translation's source shown beside it
+:host([readonly]) {
+  min-height: 0;
+  max-height: none;
+  flex: none;
+  overflow: visible;
+  background-color: transparent;
+
+  .editor__bar,
+  #action-container {
+    display: none;
+  }
+
+  .editor__box {
+    display: block;
+  }
+
+  #editor {
+    flex: none;
+    height: auto;
+    border: 0;
+    background-color: transparent;
+    box-shadow: none;
+    resize: none;
+  }
+
+  .ql-container {
+    padding: 0;
+  }
+
+  .ql-editor {
+    height: auto;
+    padding: 0;
+    overflow: visible;
+    line-height: 1.5;
+    color: inherit;
+    font-size: inherit;
+    background-color: transparent;
+
+    > * + * {
+      margin-top: var(--zn-spacing-x-small);
+    }
+  }
+}
+
 #toolbar {
-  padding: 4px;
+  padding-inline: var(--editor-gutter);
 }

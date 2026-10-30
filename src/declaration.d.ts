@@ -37,3 +37,25 @@ declare interface Window {
 }
 
 /* eslint-enable */
+
+/* eslint-disable */
+interface ScrollTimelineOptions {
+  source?: Element | null;
+  axis?: 'block' | 'inline' | 'x' | 'y';
+}
+
+interface ScrollTimeline extends AnimationTimeline {
+  readonly source: Element | null;
+  readonly axis: string;
+}
+
+declare const ScrollTimeline: {
+  prototype: ScrollTimeline;
+  new(options?: ScrollTimelineOptions): ScrollTimeline;
+};
+
+declare interface Window {
+  ScrollTimeline?: typeof ScrollTimeline;
+}
+
+/* eslint-enable */

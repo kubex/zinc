@@ -1,4 +1,5 @@
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
 import {property, query} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
@@ -12,8 +13,9 @@ interface linkedSelectOption {
   [key: string]: string;
 }
 
+// Each group is a flat value -> label map, keyed on the linked select's value.
 interface linkedSelectOptions {
-  [key: string]: linkedSelectOption[];
+  [key: string]: linkedSelectOption;
 }
 
 /**
@@ -37,7 +39,10 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property() name: string = "";
-  @property() value: string;
+  @property() value: string | string[] = '';
+
+  /** The default value of the form control. Primarily used for resetting the form control. */
+  @defaultValue() defaultValue: string | string[] = '';
 
   @property({type: Boolean, reflect: true}) checked = false;
   @property({type: Array}) options: linkedSelectOptions;
@@ -45,6 +50,17 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
 
   @property({attribute: 'cache-key'}) cacheKey: string = "";
   @property() label: string = "";
+
+  /** Automatically select the first option of the linked group when no value is set. */
+  @property({attribute: 'select-first', type: Boolean}) selectFirst = false;
+
+  /** Allows more than one option of the linked group to be selected. */
+  @property({type: Boolean, reflect: true}) multiple = false;
+
+  @property() placeholder = '';
+  @property({type: Boolean}) clearable = false;
+  @property({type: Boolean}) search = false;
+  @property({attribute: 'help-text'}) helpText = '';
 
   @query('zn-select') input: ZnSelect;
 
@@ -92,6 +108,15 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
     }
   }
 
+  protected willUpdate(_changedProperties: PropertyValues) {
+    super.willUpdate(_changedProperties);
+    // An unset value is the empty string, which the inner select would read as a
+    // single selection of "".
+    if (this.multiple && !Array.isArray(this.value)) {
+      this.value = this.value ? this.value.split(' ') : [];
+    }
+  }
+
   protected firstUpdated(_changedProperties: PropertyValues) {
     this.linkedSelectElement?.addEventListener('zn-change', this.handleLinkedSelectChange);
     this.input.addEventListener('zn-change', this.handleChange);
@@ -123,10 +148,28 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
   }
 
   public handleLinkedSelectChange = () => {
-    this.value = "";
+    const previous = this.serialisedValue();
+    // The inner select only auto-selects on slotchange, which lit skips when it
+    // can reuse the option elements of the outgoing group, so the first option of
+    // the new group is resolved here rather than left to the select.
+    const keys = Object.keys(this.currentOptions());
+    if (this.multiple) {
+      this.value = keys.length === 1 ? keys : [];
+    } else {
+      this.value = keys[0] ?? "";
+    }
     this.requestUpdate();
     this.formControlController.updateValidity();
+    // A host reading the value off change events would otherwise keep the
+    // selection made against the previous group.
+    if (previous !== this.serialisedValue()) {
+      this.emit('zn-change');
+    }
   };
+
+  private serialisedValue(): string {
+    return Array.isArray(this.value) ? this.value.join(' ') : this.value;
+  }
 
   public handleChange(e: Event) {
     this.value = (e.target as HTMLSelectElement).value;
@@ -134,23 +177,39 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
   }
 
   handleSelectChange = (e: ZnSelectEvent) => {
-    this.value = (e.target as ZnSelect).value as string;
+    this.value = (e.target as ZnSelect).value;
   }
 
-  render() {
+  /** The options of the group the linked select currently points at. */
+  private currentOptions(): linkedSelectOption {
+    if (!this.options) {
+      return {};
+    }
+
     let selected = this.linkedSelectElement?.value as string;
-    if (!selected && this.options) {
+    if (!selected) {
       selected = Object.keys(this.options)[0];
     }
 
-    const options: linkedSelectOption[] = selected ? this.options[selected] : [];
+    return (selected ? this.options[selected] : {}) ?? {};
+  }
+
+  render() {
+    const options = this.currentOptions();
+    const placeholder = Object.keys(options).length ? this.placeholder : 'No options available';
     return html`
       <zn-select part="select"
                  class="linked-select"
                  name="${this.name}"
                  id="main-input"
                  cache-key="${this.cacheKey}"
-                 value="${this.value}"
+                 ?select-first="${this.selectFirst}"
+                 ?multiple="${this.multiple}"
+                 ?clearable="${this.clearable}"
+                 ?search="${this.search}"
+                 placeholder="${placeholder}"
+                 help-text="${this.helpText}"
+                 .value="${this.value}"
                  @zn-change=${this.handleSelectChange}
                  label="${this.label}">
         ${options && Object.entries(options).map(([key, value]) => html`

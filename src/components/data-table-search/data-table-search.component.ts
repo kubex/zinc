@@ -1,8 +1,9 @@
-import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController, validValidityState} from "../../internal/form";
 import {property} from 'lit/decorators.js';
 import ZincElement, {type ZincFormControl} from '../../internal/zinc-element';
 import ZnInput from "../input";
+import ZnTooltip from "../tooltip";
 import type ZnDataSelect from "../data-select";
 import type ZnQueryBuilder from "../query-builder";
 import type ZnSelect from "../select";
@@ -25,6 +26,7 @@ type AllowedInputElement =
  * @since 1.0
  *
  * @dependency zn-input
+ * @dependency zn-tooltip
  *
  * @event zn-search-change - Emitted when the search value changes (debounced).
  *
@@ -35,14 +37,15 @@ type AllowedInputElement =
  * @property {string} name - The name of the search input field (default: "search").
  * @property {string} value - The current search value.
  * @property {string} placeholder - The placeholder text for the search input (default: "Search...").
- * @property {string} helpText - Help text displayed below the search input.
+ * @property {string} helpText - Help text, shown from an information icon inside the search input.
  * @property {string} searchUri - Optional URI to use for search operations.
- * @property {number} debounceDelay - The delay in milliseconds before triggering a search (default: 500).
+ * @property {number} debounceDelay - The delay in milliseconds before triggering a search (default: 350).
  */
 export default class ZnDataTableSearch extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
   static dependencies = {
     'zn-input': ZnInput,
+    'zn-tooltip': ZnTooltip,
   };
 
   private _formController: FormControlController = new FormControlController(this, {});
@@ -94,21 +97,36 @@ export default class ZnDataTableSearch extends ZincElement implements ZincFormCo
    */
   getFormData(): Record<string, any> {
     const params: Record<string, any> = {};
-    const slot = this.shadowRoot?.querySelector('slot');
-    if (!slot) return params;
+    const allowedInputs = [
+      'zn-input',
+      'zn-select',
+      'zn-query-builder',
+      'zn-multiselect',
+      'zn-params-select',
+      'zn-datepicker',
+      'input',
+      'select',
+      'textarea',
+      'zn-cols',
+      'zn-input-group',
+    ];
 
-    const elements = slot.assignedElements({flatten: true});
-    const allowedInputs = ['zn-input', 'zn-select', 'zn-query-builder', 'zn-multiselect', 'zn-params-select', 'zn-datepicker', 'input', 'select', 'textarea'];
-
-    elements.forEach((element) => {
-      if (allowedInputs.includes(element.tagName.toLowerCase())) {
-        const input = element as AllowedInputElement;
-        const value = input.value as string || element.getAttribute('value');
-        const name = input.name || element.getAttribute('name');
-        if (name) {
-          params[name] = value;
-        }
+    const collect = (element: Element): void => {
+      if (!allowedInputs.includes(element.tagName.toLowerCase())) return;
+      const input = element as AllowedInputElement;
+      const value: unknown = typeof input.value === 'string' ? input.value.trim() : input.value;
+      const name = input.name || element.getAttribute('name');
+      if (name) {
+        params[name] = value;
       }
+    };
+
+    const slots = this.shadowRoot?.querySelectorAll('slot');
+    slots?.forEach((slot) => {
+      slot.assignedElements({flatten: true}).forEach((element) => {
+        collect(element);
+        element.querySelectorAll(allowedInputs.join(',')).forEach((descendant) => collect(descendant));
+      });
     });
 
     return params;
@@ -156,7 +174,7 @@ export default class ZnDataTableSearch extends ZincElement implements ZincFormCo
     const formData = this.getFormData();
     this.emit('zn-search-change', {
       detail: {
-        value: this.value,
+        value: this.value.trim(),
         formData: formData,
         searchUri: this.searchUri
       }
@@ -175,7 +193,11 @@ export default class ZnDataTableSearch extends ZincElement implements ZincFormCo
           clearable
           @zn-input="${this.handleInput}"
           @zn-clear="${this.handleClear}">
-          <zn-icon slot="prefix" src="search" size="20"></zn-icon>
+          ${this.helpText ? html`
+            <zn-tooltip slot="suffix" class="data-table-search__tooltip" content="${this.helpText}">
+              <zn-icon src="info@lu" size="20"></zn-icon>
+            </zn-tooltip>` : nothing}
+          <zn-icon slot="suffix" src="search@lu" size="20"></zn-icon>
         </zn-input>
         <slot style="display: none"></slot>
       </div>

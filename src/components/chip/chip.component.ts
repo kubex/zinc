@@ -21,19 +21,18 @@ import styles from './chip.scss';
  *
  * @csspart base - The component's base wrapper.
  *
- * @cssproperty --example - An example CSS custom property.
+ * @cssproperty --chip-color-override - The text, icon and tinted background colour of a `custom` chip.
  */
 export default class ZnChip extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property() icon: string = '';
+  @property() caption: string = '';
 
   @property({attribute: 'icon-size', type: Number}) iconSize: number = 18;
 
   @property() type: 'info' | 'success' | 'warning' | 'error' | 'primary' |
     'transparent' | 'custom' | 'neutral' = 'neutral';
-
-  @property() size: 'small' | 'medium' | 'large'; // Defaults to base chip styling
 
   @property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
   @property({attribute: 'flush-x', type: Boolean, reflect: true}) flushX: boolean = false;
@@ -44,7 +43,7 @@ export default class ZnChip extends ZincElement {
   render() {
     const hasContent = this.hasSlotController.test('[default]')
     return html`
-      <div class="${classMap({
+      <div part="base" class="${classMap({
         'chip': true,
         'chip--with-content': hasContent,
         'chip--no-content': !hasContent,
@@ -60,14 +59,13 @@ export default class ZnChip extends ZincElement {
         'chip--transparent': this.type === 'transparent',
         'chip--custom': this.type === 'custom',
         'chip--neutral': this.type === 'neutral',
-        'chip--small': this.size === 'small',
-        'chip--medium': this.size === 'medium',
-        'chip--large': this.size === 'large',
       })}">
         ${this.icon ? html`
           <zn-icon src="${this.icon}" size="${this.iconSize}"></zn-icon>` : ''}
+        ${this.caption ? html`
+          <span class="chip__caption">${this.caption}</span>` : ''}
         ${hasContent ? html`
-          <slot></slot>` : ''}
+          <span class="chip__value"><slot></slot></span>` : ''}
         ${this.hasSlotController.test('action') ? html`
           <slot name="action" class="chip__action"></slot>` : ''}
       </div>

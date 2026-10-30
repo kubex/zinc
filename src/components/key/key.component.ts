@@ -5,7 +5,7 @@ import ZincElement from '../../internal/zinc-element';
 import styles from './key.scss';
 
 /**
- * @summary A key item used within a key container to filter content.
+ * @summary A legend key item, typically used alongside charts to label and toggle visibility of data series by category.
  * @documentation https://zinc.style/components/key
  * @status experimental
  * @since 1.0

@@ -6,9 +6,12 @@ import {
   type DataProviderOption,
   emptyDataProvider,
   type LocalDataProvider,
+  usStateDataProvider,
 } from "./providers/provider";
 import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
+import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
+import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property, query} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
@@ -70,8 +73,11 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
     }
   }) value: string | string[] = '';
 
+  /** The default value of the form control. Primarily used for resetting the form control. */
+  @defaultValue() defaultValue: string | string[] = '';
+
   /** The provider of the select. */
-  @property() provider: 'color' | 'currency' | 'country' | 'phone';
+  @property() provider: 'color' | 'currency' | 'country' | 'phone' | 'us-state';
 
   /** The position of the icon. */
   @property({attribute: 'icon-position'}) iconPosition: 'start' | 'end' | 'none' = 'none';
@@ -125,13 +131,25 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
 
   @property({type: Boolean}) multiple = false;
 
+  @property({attribute: "select-first", type: Boolean}) selectFirst = false;
+
   @property() distinct = "";
 
   @property() conditional = "";
 
+  /**
+   * Ids or names of controls that must have a value before this one becomes
+   * usable, comma separated. Forwarded to the underlying select.
+   */
+  @property() requires = "";
+
   protected readonly formControlController = new FormControlController(this);
 
-  private selectObserver?: MutationObserver;
+  private readonly selectObserver = new MutationController(this, {
+    target: null,
+    config: {attributes: true, attributeFilter: ['disabled']},
+    callback: () => this._syncDisabledState(),
+  });
 
   get validationMessage() {
     return this.select.validationMessage;
@@ -156,7 +174,6 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
   disconnectedCallback() {
     super.disconnectedCallback();
     window.removeEventListener('keydown', this.closeOnTab);
-    this.selectObserver?.disconnect();
   }
 
   protected async firstUpdated(_changedProperties: PropertyValues) {
@@ -241,6 +258,8 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
         return countryDataProvider;
       case 'phone':
         return countryDialPrefixDataProvider;
+      case 'us-state':
+        return usStateDataProvider;
       default:
         return emptyDataProvider;
     }
@@ -257,16 +276,34 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
 
     if (filterKeys.length) {
       const normalizedFilterKeys = filterKeys.map(key => key.toUpperCase());
-      data = localProvider.getData.filter(item => normalizedFilterKeys.includes(item.key.toUpperCase()));
+      data = localProvider.getData.reduce<DataProviderOption[]>((acc, item) => {
+        const key = item.key.toUpperCase();
+        if (key.includes(',')) {
+          const parts = key.split(',').map(p => p.trim());
+          const matchingParts = parts.filter(part => normalizedFilterKeys.includes(part));
+          if (matchingParts.length > 1) {
+            acc.push({
+              ...item,
+              key: matchingParts.join(','),
+              value: `Common - ${matchingParts.join(', ')}`
+            });
+          }
+        } else if (normalizedFilterKeys.includes(key)) {
+          acc.push(item);
+        }
+        return acc;
+      }, []);
     }
 
     if (this.provider !== 'color' && this.allowAll) {
-      const label = {
+      const label: Record<string, string> = {
         currency: 'All Currencies',
         country: 'All Countries',
-        phone: 'All Phones'
-      }[this.provider] || 'All';
-      const allOption: DataProviderOption = {key: '', value: label, prefix: ''};
+        phone: 'All Phones',
+        'us-state': 'All States'
+      };
+      const allLabel = label[this.provider] || 'All';
+      const allOption: DataProviderOption = {key: '', value: allLabel, prefix: ''};
       data = [allOption, ...data.filter(item => item.key !== allOption.key)];
     }
 
@@ -282,7 +319,10 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
                  placement=${this.placement}
                  name="${this.name}"
                  distinct="${this.distinct}"
+                 ?disabled="${this.disabled}"
+                 ?select-first="${this.selectFirst}"
                  conditional="${this.conditional}"
+                 requires="${this.requires}"
                  @zn-input="${this.handleInput}"
                  @zn-clear="${this.handleClear}"
                  @blur=${this.blur}
@@ -373,15 +413,7 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
     if (!this.select) return;
 
     this._syncDisabledState();
-
-    this.selectObserver = new MutationObserver(() => {
-      this._syncDisabledState();
-    });
-
-    this.selectObserver.observe(this.select, {
-      attributes: true,
-      attributeFilter: ['disabled']
-    });
+    this.selectObserver.observe(this.select);
   }
 
   private _syncDisabledState() {

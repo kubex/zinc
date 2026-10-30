@@ -14,6 +14,7 @@ import styles from './well.scss';
  * @since 1.0
  *
  * @slot - The default slot.
+ * @slot action - Content displayed on the right hand side of the well.
  */
 export default class ZnWell extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -21,9 +22,21 @@ export default class ZnWell extends ZincElement {
   @property() icon: string = '';
   @property({attribute: 'inline', type: Boolean, reflect: true}) inline: boolean;
 
+  /** Renders the default slot inside a `pre` element, preserving whitespace using a monospace font. */
+  @property({attribute: 'pre', type: Boolean, reflect: true}) pre: boolean;
+
+  /** Breaks long unbroken words, so they wrap instead of forcing the well wider. */
+  @property({attribute: 'break-long', type: Boolean, reflect: true}) breakLong: boolean;
+
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'action');
 
   render() {
+    const contentClasses = classMap({
+      'well__content': true,
+      'well__content--pre': this.pre,
+      'well__content--break-long': this.breakLong,
+    });
+
     return html`
       <div class="${classMap({
         'well': true,
@@ -31,10 +44,15 @@ export default class ZnWell extends ZincElement {
       })}">
         ${this.icon ? html`
           <zn-icon src="${this.icon}" size="18"></zn-icon>` : ''}
-        ${this.hasSlotController.test('[default]') ? html`
-          <div>
-            <slot></slot>
-          </div>` : ''}
+        ${this.hasSlotController.test('[default]')
+          ? (this.pre
+            ? html`
+              <pre class="${contentClasses}"><slot></slot></pre>`
+            : html`
+              <div class="${contentClasses}">
+                <slot></slot>
+              </div>`)
+          : ''}
         ${this.hasSlotController.test('action') ? html`
           <slot name="action" class="well__action"></slot>` : ''}
       </div>

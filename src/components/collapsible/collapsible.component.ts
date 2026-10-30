@@ -1,13 +1,14 @@
 import { classMap } from "lit/directives/class-map.js";
-import { type CSSResultGroup, html, unsafeCSS } from 'lit';
+import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
 import { HasSlotController } from "../../internal/slot";
+import { MutationController } from '@lit-labs/observers/mutation-controller.js';
 import { property, state } from 'lit/decorators.js';
 import { Store } from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
+import type { ZnInputEvent } from "../../events/zn-input";
+import type ZnToggle from "../toggle";
 
 import styles from './collapsible.scss';
-import { ZnInputEvent } from "../../events/zn-input";
-import ZnToggle from "../toggle";
 
 /**
  * @summary Toggles between showing and hiding content when clicked
@@ -19,6 +20,9 @@ import ZnToggle from "../toggle";
  *
  * @slot header - Clicking will toggle the show state of the data
  *
+ * @csspart header - The header row (toggle).
+ * @csspart caption - The caption text.
+ * @csspart content - The expandable content wrapper.
  */
 export default class ZnCollapsible extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -48,11 +52,19 @@ export default class ZnCollapsible extends ZincElement {
 
   @state() numberOfItems: number = 0;
 
+  @state() private animating: boolean = false;
+
+  private animatingTimer?: ReturnType<typeof setTimeout>;
+
   protected _store: Store;
 
-  private readonly hasSlotController = new HasSlotController(this, '[default]', 'header', 'caption', 'label');
+  private readonly hasSlotController = new HasSlotController(this, '[default]', 'header', 'caption', 'label', 'description');
 
-  private observer: MutationObserver;
+  private readonly observer = new MutationController(this, {
+    target: null,
+    config: { childList: true, subtree: true },
+    callback: () => this.recalculateNumberOfItems(),
+  });
 
   private showArrow: boolean = true;
 
@@ -69,12 +81,7 @@ export default class ZnCollapsible extends ZincElement {
     }
 
     if (this.showNumber) {
-      // add a mutation observer to the default slot to recalculate the number of items when it changes
-      const slot = this as HTMLElement;
-      this.observer = new MutationObserver(() => {
-        this.recalculateNumberOfItems();
-      });
-      this.observer.observe(slot, { childList: true, subtree: true });
+      this.observer.observe(this);
     }
 
     await this.updateComplete;
@@ -91,6 +98,11 @@ export default class ZnCollapsible extends ZincElement {
     }
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    clearTimeout(this.animatingTimer);
+  }
+
   // this is for handling global toggles
   public handleCaptionToggle = (e: ZnInputEvent) => {
     const toggle = e.target as ZnToggle;
@@ -99,10 +111,40 @@ export default class ZnCollapsible extends ZincElement {
     }
   }
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    if (this.observer) {
-      this.observer.disconnect();
+  protected updated(changedProperties: PropertyValues) {
+    super.updated(changedProperties);
+    if (changedProperties.has('expanded')) {
+      if (changedProperties.get('expanded') !== undefined) {
+        this.startAnimating();
+      }
+
+      if (this.storeKey) {
+        this._store.set(this.storeKey, this.expanded.toString());
+      }
+    }
+  }
+
+  // Content is only clipped while the height transition runs, so expanded
+  // content can overflow the host. The timer covers a transitionend that never
+  // arrives (reduced motion, hidden host).
+  private startAnimating() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+
+    this.animating = true;
+    clearTimeout(this.animatingTimer);
+    this.animatingTimer = setTimeout(() => (this.animating = false), 600);
+  }
+
+  private stopAnimating() {
+    clearTimeout(this.animatingTimer);
+    this.animating = false;
+  }
+
+  private handleTransitionEnd = (e: TransitionEvent) => {
+    if (e.target === e.currentTarget && e.propertyName === 'grid-template-rows') {
+      this.stopAnimating();
     }
   }
 
@@ -137,28 +179,34 @@ export default class ZnCollapsible extends ZincElement {
 
     return html`
       <div @click="${() => (!this.expanded ? (this.expanded = true) : '')}">
-        <slot name="header" class="header" @click="${this.handleCollapse}">
+        <slot name="header" part="header" class="header" @click="${this.handleCollapse}">
           <div class="header__left">
-            <p class="caption">
+            <p part="caption" class="caption">
               <slot name="caption">${this.caption}</slot>
             </p>
-            <p class="description">
-              <slot name="description">${this.description}</slot>
-            </p>
+            ${this.description || this.hasSlotController.test('description')
+              ? html`
+                <p class="description">
+                  <slot name="description">${this.description}</slot>
+                </p>`
+              : ''}
           </div>
           <div class="header__right">
             <slot name="label"><p class="label">${this.label}</p></slot>
             ${this.showNumber && !this.expanded ? html`
               <zn-chip size="small" type="primary">${this.numberOfItems}</zn-chip>` : ''}
-            ${this.showArrow  ? html`
+            ${this.showArrow ? html`
               <zn-icon library="material-outlined" src="expand_more" class="expand"></zn-icon>` : ''}
           </div>
         </slot>
-        <div class="${classMap({
+        <div class=${classMap({
           'content': true,
           'content--flush': this.flush,
-        })}">
-          <slot @slotchange="${this.requestUpdate}"></slot>
+          'content--animating': this.animating,
+        })} part="content" @transitionend="${this.handleTransitionEnd}">
+          <div class="content__inner">
+            <slot @slotchange="${this.requestUpdate}"></slot>
+          </div>
         </div>
       </div>`;
   }

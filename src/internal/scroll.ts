@@ -67,3 +67,28 @@ export function scrollIntoView(
     }
   }
 }
+
+/**
+ * Every ancestor of `element`, itself included, that is scrolled away from the top. Shadow
+ * boundaries are crossed, so a host's own scroller and the app's outer one are both found.
+ */
+export function getScrolledAncestors(element: Element | null | undefined): Element[] {
+  const scrolled: Element[] = [];
+  let node: Node | null | undefined = element;
+
+  while (node) {
+    if (node instanceof Element && node.scrollTop > 0) {
+      scrolled.push(node);
+    }
+    node = node.parentNode instanceof ShadowRoot ? node.parentNode.host : node.parentNode;
+  }
+
+  return scrolled;
+}
+
+/** Returns containers to the top. */
+export function scrollToTop(containers: Iterable<Element>, behavior: ScrollBehavior = 'auto') {
+  for (const container of containers) {
+    container.scrollTo({ top: 0, behavior });
+  }
+}

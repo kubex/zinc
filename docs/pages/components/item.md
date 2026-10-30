@@ -37,6 +37,18 @@ layout: component
 </zn-item>
 ```
 
+### Right Aligned Content
+
+Use `align-end` to right align the content value.
+
+```html:preview
+<zn-sp divide no-gap>
+  <zn-item caption="Subtotal" align-end>$120.00</zn-item>
+  <zn-item caption="Tax" align-end>$24.00</zn-item>
+  <zn-item caption="Total" align-end>$144.00</zn-item>
+</zn-sp>
+```
+
 ### Icons
 
 ```html:preview
@@ -52,6 +64,24 @@ layout: component
   </zn-item>
   <zn-item inline icon="person">This is the content</zn-item>
 </zn-cols>
+```
+
+### Help Tooltip
+
+Use the `help-tooltip` attribute to display an info icon with a tooltip next to the caption.
+
+```html:preview
+<zn-sp divide no-gap>
+  <zn-item caption="Account ID" help-tooltip="The unique identifier for this account">
+    ACC-12345
+  </zn-item>
+  <zn-item caption="MRR" help-tooltip="Monthly Recurring Revenue, calculated from active subscriptions">
+    $1,250.00
+  </zn-item>
+  <zn-item caption="Status">
+    Active
+  </zn-item>
+</zn-sp>
 ```
 
 ### Multiple Actions
@@ -70,9 +100,8 @@ Example of multiple actions in a description item.
   <div><strong>Postal Code</strong> Example here </div>
   <div><strong>Country</strong> Example here </div>
   
-  <zn-button id="address-modal" slot="actions" size="x-small" color="secondary" modal>Edit</zn-button>
-  <zn-button id="address-modal" slot="actions" size="x-small" color="secondary" modal>Edit</zn-button>
+  <zn-button id="address-modal" slot="actions" color="secondary" modal>Edit</zn-button>
+  <zn-button id="address-modal" slot="actions" color="secondary" modal>Edit</zn-button>
   
 </zn-item>
 ```
-

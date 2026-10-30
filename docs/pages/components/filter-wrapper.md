@@ -98,6 +98,26 @@ Provide your own submit button by adding the `submit` attribute to a button.
 </zn-filter-wrapper>
 ```
 
+### Submit on Enter
+
+Add the `submit-on-enter` attribute to submit the filters when Enter is pressed in a text field.
+
+```html:preview
+<zn-filter-wrapper submit-on-enter>
+  <zn-input name="email" label="Email" placeholder="Press Enter to search"></zn-input>
+</zn-filter-wrapper>
+```
+
+### Loading Text
+
+While results load, the submit button shows a spinner and "Searching...". Change the text with `loading-text`.
+
+```html:preview
+<zn-filter-wrapper loading-text="Filtering...">
+  <zn-input name="search" label="Search"></zn-input>
+</zn-filter-wrapper>
+```
+
 ### Omit Empty Values
 
 Use the `omit-empty` attribute on inputs to exclude them from the filter when empty.

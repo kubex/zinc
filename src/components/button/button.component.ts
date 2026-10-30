@@ -5,14 +5,16 @@ import {HasSlotController} from '../../internal/slot';
 import {html, literal} from 'lit/static-html.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {property, query, queryAll} from 'lit/decorators.js';
+import {styleMap} from "lit/directives/style-map.js";
 import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
 import ZnDropdown from "../dropdown";
 import ZnIcon from "../icon";
 import ZnTooltip from "../tooltip";
-import type {IconColor} from "../icon";
+import type {IconColor, IconLibrary} from "../icon";
 import type {ZincFormControl} from '../../internal/zinc-element';
 
+import sharedStyles from '../../../scss/shared/index.scss';
 import styles from './button.scss';
 
 /**
@@ -41,7 +43,7 @@ import styles from './button.scss';
  * @csspart spinner - The spinner that shows when the button is in the loading state.
  */
 export default class ZnButton extends ZincElement implements ZincFormControl {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(sharedStyles), unsafeCSS(styles)];
   static dependencies = {
     'zn-tooltip': ZnTooltip,
     'zn-icon': ZnIcon
@@ -58,14 +60,34 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @query('.button') button: HTMLButtonElement;
   @queryAll('.loading-countdown') countdownContainer: HTMLElement[];
 
-  @property({}) color: 'default' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |
-    'transparent' | 'star' = 'default';
-  @property({}) size: 'content' | 'x-small' | 'small' | 'medium' | 'large' = 'medium';
+  @property({}) color: 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |
+    'transparent' | 'star' | (string & Record<never, never>) = 'default';
+  @property({attribute: 'hover-color'}) hoverColor: string;
   @property({type: Boolean}) text = false;
   @property({type: Boolean}) outline = false;
   @property({type: Boolean}) disabled = false;
   @property({type: Boolean}) grow = false;
   @property({type: Boolean}) square = false;
+  /** Renders the button as an icon button (40x36). Pass `small` for the
+   * 36x36 variant or `round` for a 36x36 circle: `icon-button`,
+   * `icon-button="small"` or `icon-button="round"`. */
+  @property({
+    attribute: 'icon-button',
+    converter: {
+      fromAttribute: (value: string | null) => (value === 'small' || value === 'round') ? value : value !== null,
+      toAttribute: (value: boolean | 'small' | 'round') =>
+        (value === 'small' || value === 'round') ? value : (value ? '' : null)
+    }
+  }) iconButton: boolean | 'small' | 'round' = false;
+  /** With `icon-button`, removes the white background and border while
+   * keeping the button's size. */
+  @property({type: Boolean}) plain = false;
+  /** Disables the hover background, for contexts where the tint doesn't fit. */
+  @property({type: Boolean, attribute: 'no-hover'}) noHover = false;
+  /** Renders the button as a pill: fully rounded, sentence case and regular
+   * weight. For label-like triggers such as filter chips. */
+  @property({type: Boolean, reflect: true}) pill = false;
+  @property({type: Boolean, attribute: 'panel-bg'}) panelBackground = false;
 
   @property({attribute: 'dropdown-closer', type: Boolean}) dropdownCloser = false;
 
@@ -80,6 +102,8 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @property({attribute: "icon-position"}) iconPosition: 'left' | 'right' = 'left';
   @property({attribute: "icon-size"}) iconSize: string;
   @property({attribute: "icon-color"}) iconColor: IconColor;
+  @property({attribute: "icon-fill"}) iconFill: IconColor;
+  @property({attribute: "icon-library"}) iconLibrary: IconLibrary;
   @property() type: 'button' | 'submit' | 'reset';
 
   @property() name: string;
@@ -101,6 +125,12 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   // Tooltip Specific
   @property() tooltip: string;
 
+  /** Accessible name for the button. Icon-only buttons fall back to `tooltip`. */
+  @property() label: string;
+
+  /** Toggle state, forwarded to the inner button's `aria-pressed`. */
+  @property({attribute: 'aria-pressed'}) pressed: 'true' | 'false' | 'mixed';
+
   // Auto Click Specific
   @property({type: Boolean, attribute: 'auto-click'}) autoClick = false;
   @property({type: Number, attribute: 'auto-click-delay'}) autoClickDelay = 2000;
@@ -110,6 +140,12 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     attribute: 'loading-text-position'
   }) loadingTextPosition: 'left' | 'right' | 'center' | string = 'center';
   @property({type: Boolean}) loading = false;
+
+  /** Shows a spinner and ignores clicks, e.g. while a request is in flight. */
+  @property({type: Boolean, reflect: true}) processing = false;
+
+  /** Replaces the label while processing. */
+  @property({attribute: 'processing-text'}) processingText = '';
 
   get validity() {
     if (this._isButton() && this.button) {
@@ -212,7 +248,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   }
 
   handleClick = () => {
-    if (this.disabled) {
+    if (this.disabled || this.processing) {
       return;
     }
 
@@ -237,6 +273,10 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     if (this.type === 'submit') {
       this.formControlController.submit();
     }
+
+    if (this.type === 'reset') {
+      this.formControlController.reset();
+    }
   }
 
   private _isLink() {
@@ -245,6 +285,33 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
 
   private _isButton() {
     return !this._isLink();
+  }
+
+  private getIconButtonColor(color: string | undefined) {
+    switch (color) {
+      case undefined:
+      case '':
+      case 'default':
+        return 'rgb(var(--zn-text))';
+      case 'primary':
+        return 'rgb(var(--zn-primary))';
+      case 'secondary':
+        return 'rgb(var(--zn-text))';
+      case 'error':
+        return 'rgb(var(--zn-color-error))';
+      case 'info':
+        return 'rgb(var(--zn-color-info))';
+      case 'success':
+        return 'rgb(var(--zn-color-success))';
+      case 'warning':
+        return 'rgb(var(--zn-color-warning))';
+      case 'transparent':
+        return 'inherit';
+      case 'star':
+        return 'rgb(var(--zn-orange))';
+      default:
+        return color;
+    }
   }
 
   setupAutoClick() {
@@ -316,11 +383,27 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   protected render(): unknown {
     const isLink = this._isLink();
     const showCancel = this.loading && this.autoClick;
-    const icon = this.icon && !this.loading ? html`
-        <zn-icon part="icon" src="${this.icon}" id="xy2" size="${this.iconSize ? this.iconSize : 16}"
-                 color="${this.iconColor ? this.iconColor : null}"></zn-icon>`
+    const resolvedIconSize = this.iconSize ? this.iconSize : 20;
+    const icon = this.icon && !this.loading && !this.processing ? html`
+        <zn-icon part="icon" src="${this.icon}" id="xy2" size="${resolvedIconSize}"
+                 color="${ifDefined(this.iconColor)}" fill="${ifDefined(this.iconFill)}"
+                 library="${ifDefined(this.iconLibrary)}"></zn-icon>`
       : '';
     const tag = isLink ? literal`a` : literal`button`;
+    // An icon-only button has no text to name it, so the tooltip doubles as the
+    // accessible name. Buttons with content keep their text as the name.
+    const hasContent = this.hasSlotController.test('[default]') || !!this.content;
+    const ariaLabel = this.label || (hasContent ? undefined : this.tooltip);
+    const buttonStyles = {
+      ...(this.iconButton ? {
+        '--icon-button-color': this.getIconButtonColor(this.color),
+        '--icon-button-hover-color': this.getIconButtonColor(this.hoverColor || 'primary')
+      } : {}),
+      ...(this.icon ? {'--button-icon-size': `${resolvedIconSize}px`} : {}),
+    };
+
+    // A removed `notification` attribute lands here as null, not undefined
+    const notification = this.notification ?? undefined;
 
     const buttonContent = html`
       <${tag}
@@ -329,19 +412,21 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button': true,
           'button--default': this.color === 'default',
           'button--secondary': this.color === 'secondary',
+          'button--panel-bg': this.panelBackground,
           'button--error': this.color === 'error',
           'button--info': this.color === 'info',
           'button--success': this.color === 'success',
           'button--warning': this.color === 'warning',
           'button--transparent': this.color === 'transparent',
           'button--star': this.color === 'star',
-          'button--content': this.size === 'content',
-          'button--x-small': this.size === 'x-small',
-          'button--small': this.size === 'small',
-          'button--medium': this.size === 'medium',
-          'button--large': this.size === 'large',
           'button--outline': this.outline,
           'button--text': (this.text && !this.outline),
+          'button--icon-button': !!this.iconButton,
+          'button--plain': !!this.iconButton && this.plain,
+          'button--pill': this.pill,
+          'button--no-hover': this.noHover,
+          'button--icon-button-small': this.iconButton === 'small',
+          'button--icon-button-round': this.iconButton === 'round',
           'button--grow': this.grow,
           'button--standard': !this.outline && !this.text,
           'button--with-icon': this.icon,
@@ -349,9 +434,10 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--icon-right': this.iconPosition === 'right',
           'button--with-content': this.hasSlotController.test('[default]') || this.content,
           'button--square': this.square,
-          'button--has-notification': this.notification !== undefined && this.notification !== 0,
-          'button--muted-notification': this.mutedNotifications || (this.notification !== undefined && this.notification === -2),
-          'button--notification-dot': this.notification !== undefined && this.notification < 0,
+          'button--has-notification': notification !== undefined && notification !== 0,
+          'button--muted-notification': this.mutedNotifications || notification === -2,
+          'button--notification-dot': notification !== undefined && notification < 0,
+          'button--processing': this.processing,
         })}"
         type="${ifDefined(this.type)}"
         href="${ifDefined(this.href)}"
@@ -359,14 +445,21 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         data-target="${ifDefined(isLink ? this.dataTarget : undefined)}"
         rel="${ifDefined(isLink ? this.rel : undefined)}"
         gaid="${ifDefined(this.gaid)}"
-        data-notification="${ifDefined(this.notification)}"
-        disabled=${this.disabled || nothing}
+        aria-label="${ifDefined(ariaLabel)}"
+        aria-pressed="${ifDefined(isLink ? undefined : this.pressed)}"
+        aria-busy="${this.processing ? 'true' : nothing}"
+        data-notification="${ifDefined(notification)}"
+        disabled="${this.disabled || nothing}"
+        style=${styleMap(buttonStyles)}
         @click="${this.handleClick}">
         ${this.iconPosition === 'left' ? icon : ''}
+        ${this.processing ? html`<span part="spinner" class="button__spinner"></span>` : ''}
+        ${this.processing && this.processingText ? html`<span class="button__processing-text">${this.processingText}</span>` : ''}
         <slot part="label"
               class="${classMap({
                 'button__label': true,
-                'button__label--hidden': this.loading
+                'button__label--hidden': this.loading,
+                'button__label--replaced': this.processing && !!this.processingText
               })}"
               style="--loading-duration: ${this.autoClickDelay / 1000}s">
           ${this.content}

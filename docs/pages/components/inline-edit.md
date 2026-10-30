@@ -5,7 +5,9 @@ meta:
 layout: component
 ---
 
-Inline edit components provide a seamless way for users to edit content without leaving the current context or navigating to a separate form. They display content normally and reveal input controls when the user clicks an edit button or the content area itself.
+Inline edit components provide a seamless way for users to edit content without leaving the current context or
+navigating to a separate form. They display content normally and reveal input controls when the user clicks an edit
+button or the content area itself.
 
 ```html:preview
 <div class="form-spacing">
@@ -22,7 +24,8 @@ Inline edit components provide a seamless way for users to edit content without 
 ```
 
 :::tip
-This component works with standard `<form>` elements. Please refer to the section on [form controls](/getting-started/form-controls) to learn more about form submission and client-side validation.
+This component works with standard `<form>` elements. Please refer to the section
+on [form controls](/getting-started/form-controls) to learn more about form submission and client-side validation.
 :::
 
 ## Examples
@@ -51,6 +54,47 @@ Use the `edit-text` attribute to customize the edit button text instead of showi
 </div>
 ```
 
+### Masked Values
+
+Use the `display-value` attribute to mask sensitive data at rest. The masked value is shown in place of the input and
+the real value is revealed on hover (via [`zn-reveal`](/components/reveal)). Clicking the field or the edit button
+switches to the normal inline edit flow, and the real `value` — never the mask — is what gets edited and submitted.
+
+```html:preview
+<div class="form-spacing">
+  <zn-inline-edit name="email"
+                  value="john.doe@example.com"
+                  display-value="j***@example.com">
+  </zn-inline-edit>
+
+  <zn-inline-edit name="phone"
+                  value="555-123-1234"
+                  display-value="•••-•••-1234">
+  </zn-inline-edit>
+</div>
+```
+
+:::tip
+Show enough context in the mask (e.g. the email domain or last 4 digits) so users know what they're looking at before
+revealing. The component doesn't re-mask automatically after a save — update `display-value` in your `zn-submit`
+handler once the server confirms the change.
+:::
+
+### Clear on Edit
+
+Add the `clear-on-edit` attribute to start editing with an empty input instead of the current value — useful for
+secrets where the real value shouldn't be pre-filled. Cancelling (or clicking outside without typing) restores the
+original value.
+
+```html:preview
+<zn-inline-edit name="api-key"
+                value="sk_live_1234567890abcdef"
+                display-value="sk_live_••••••••••••••••"
+                clear-on-edit
+                style="font-family: monospace;">
+</zn-inline-edit>
+```
+
 ### Textarea Input Type
 
 Use `input-type="textarea"` for multi-line text content.
@@ -72,6 +116,28 @@ Use `input-type="textarea"` for multi-line text content.
   </zn-inline-edit>
 </div>
 ```
+
+#### Slash Menu Quick Insertions
+
+{% raw %}
+
+`slash-items`, `slash-preset`, `slash-trigger` and `slash-heading` are forwarded to the inner
+[`zn-textarea`](/components/textarea#slash-menu-quick-insertions) or
+[`zn-input`](/components/input#slash-menu-quick-insertions), so typing `/` offers replacement strings at the caret on
+both. The menu claims `Enter` and `Escape` while it is open, so choosing an item neither submits nor cancels the edit.
+
+```html:preview
+<zn-inline-edit
+  name="terms"
+  input-type="textarea"
+  textarea-rows="4"
+  value="This agreement is between you and "
+  slash-heading="Replacement strings"
+  slash-items="Brand name={{BRAND_NAME}}, Legal entity={{LEGAL_ENTITY}}, Jurisdiction={{JURISDICTION}}">
+</zn-inline-edit>
+```
+
+{% endraw %}
 
 ### Number Input Type
 
@@ -112,6 +178,58 @@ Provide an `options` object to automatically create a select input. The object u
     value="medium"
     edit-text="Change"
     options='{"low": "Low Priority", "medium": "Medium Priority", "high": "High Priority", "urgent": "Urgent"}'>
+  </zn-inline-edit>
+</div>
+```
+
+### Searchable Select
+
+Add the `search` attribute to enable filtering on select inputs. Users can type to narrow down the list of options.
+
+```html:preview
+<div class="form-spacing">
+  <zn-inline-edit
+    name="country"
+    value="us"
+    input-type="select"
+    search>
+    <zn-option value="au">Australia</zn-option>
+    <zn-option value="br">Brazil</zn-option>
+    <zn-option value="ca">Canada</zn-option>
+    <zn-option value="fr">France</zn-option>
+    <zn-option value="de">Germany</zn-option>
+    <zn-option value="in">India</zn-option>
+    <zn-option value="jp">Japan</zn-option>
+    <zn-option value="mx">Mexico</zn-option>
+    <zn-option value="uk">United Kingdom</zn-option>
+    <zn-option value="us">United States</zn-option>
+  </zn-inline-edit>
+
+  <zn-inline-edit
+    name="department"
+    value="engineering"
+    search
+    options='{"engineering": "Engineering", "design": "Design", "marketing": "Marketing", "sales": "Sales", "finance": "Finance", "hr": "Human Resources", "legal": "Legal", "operations": "Operations"}'>
+  </zn-inline-edit>
+</div>
+```
+
+### Free Text Select
+
+Add the `free-text` attribute to let users enter values that aren't in the options list (see [`zn-select`](/components/select#free-text-entry)). `free-text` implies a select input, so you don't need `input-type="select"`. Combine it with `multiple` for a tag-style editor.
+
+```html:preview
+<div class="form-spacing">
+  <zn-inline-edit name="status" value="active" free-text>
+    <zn-option value="active">Active</zn-option>
+    <zn-option value="inactive">Inactive</zn-option>
+    <zn-option value="pending">Pending</zn-option>
+  </zn-inline-edit>
+
+  <zn-inline-edit name="tags" free-text multiple value="urgent backend">
+    <zn-option value="urgent">Urgent</zn-option>
+    <zn-option value="backend">Backend</zn-option>
+    <zn-option value="frontend">Frontend</zn-option>
   </zn-inline-edit>
 </div>
 ```
@@ -168,7 +286,8 @@ When using a data select provider, you can control the icon position with the `i
 
 ### Help Text
 
-Add descriptive help text to guide users with the `help-text` attribute. The help text appears below the input when in edit mode.
+Add descriptive help text to guide users with the `help-text` attribute. The help text appears below the input when in
+edit mode.
 
 ```html:preview
 <div class="form-spacing">
@@ -740,10 +859,10 @@ You can control the inline edit component programmatically using its methods:
   </zn-inline-edit>
 
   <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-    <zn-button id="check-validity-btn" size="small">Check Validity</zn-button>
-    <zn-button id="set-value-btn" size="small">Set Value</zn-button>
-    <zn-button id="focus-btn" size="small">Focus</zn-button>
-    <zn-button id="get-value-btn" size="small">Get Value</zn-button>
+    <zn-button id="check-validity-btn">Check Validity</zn-button>
+    <zn-button id="set-value-btn">Set Value</zn-button>
+    <zn-button id="focus-btn">Focus</zn-button>
+    <zn-button id="get-value-btn">Get Value</zn-button>
   </div>
 </div>
 

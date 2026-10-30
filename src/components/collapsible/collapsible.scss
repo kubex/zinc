@@ -8,13 +8,17 @@
   transform: rotate(180deg);
 }
 
+:host-context(.app-navigation) .header {
+  padding: var(--zn-base-px);
+}
+
 .header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   cursor: pointer;
   overflow: hidden;
-  padding: var(--zn-spacing-small) var(--zn-spacing-medium);
+  padding: var(--zn-base-gap);
   justify-items: center;
 
   .caption {
@@ -72,29 +76,59 @@
   }
 }
 
-:host(:not([flush])).content {
-  @include wc.padding();
-}
-
+// Height animates via grid-template-rows 0fr -> 1fr; the inline padding is
+// constant so the content never reflows (and re-wraps) mid-transition.
 .content {
-  transition: .1s all ease-out;
-}
+  // Padding counts toward a grid item's minimum contribution, so a 0fr track
+  // cannot collapse below it and a closed panel would keep the padding's
+  // height. Held at zero here and transitioned in with the row.
+  --content-block-padding: 0px;
 
-:host([expanded]) .content {
-  margin: 0 var(--zn-spacing-medium);
-  padding-bottom: var(--zn-spacing-medium);
+  display: grid;
+  // minmax(0, 1fr), not the implicit auto track: auto floors the column at the
+  // content's min-content width, so nowrap children overflow the host.
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows var(--zn-transition-medium) cubic-bezier(0.32, 0.72, 0, 1),
+  opacity var(--zn-transition-fast) ease-out;
 
-  &--flush {
-    margin: 0;
+  &__inner {
+    min-height: 0;
+    padding: 0 var(--zn-spacing-medium) var(--content-block-padding);
+    transform: translateY(-4px);
+    transition: transform var(--zn-transition-medium) cubic-bezier(0.32, 0.72, 0, 1),
+    padding-bottom var(--zn-transition-medium) cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  &--flush &__inner {
     padding: 0;
   }
 }
 
-:host(:not([expanded])) .content {
-  max-height: 0;
-  opacity: 0;
+// Clipped while collapsed or mid-transition only, so expanded content can still
+// overflow the host (dropdowns, tooltips).
+:host(:not([expanded])) .content,
+.content--animating {
   overflow: hidden;
-  padding: 0;
+}
+
+:host([expanded]) .content {
+  --content-block-padding: var(--zn-spacing-medium);
+
+  grid-template-rows: 1fr;
+  opacity: 1;
+
+  .content__inner {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content,
+  .content__inner {
+    transition-duration: 0s;
+  }
 }
 
 .expand {

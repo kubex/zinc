@@ -3,7 +3,7 @@ import Quill from "quill";
 import QuillToolbar from "quill/modules/toolbar";
 import type {EditorFeatureConfig} from "../../editor.component";
 import type Attachment from "../attachment/attachment";
-import type DialogComponent from "../dialog/dialog.component";
+import type Dialog from "../dialog/dialog";
 import type Emoji from "../emoji/emoji";
 import type ToolbarComponent from "./toolbar.component";
 import type ZnDropdown from "../../../dropdown";
@@ -12,7 +12,6 @@ import type ZnMenuItem from "../../../menu-item";
 class Toolbar extends QuillToolbar {
   private readonly _quill: Quill;
   private readonly _component: ToolbarComponent;
-  private _lastDialogUri?: string;
   private _formatters: Element[] = [];
 
   constructor(quill: Quill, options: {
@@ -87,7 +86,10 @@ class Toolbar extends QuillToolbar {
     const range = this._quill.getSelection();
     const formats: Record<string, unknown> = range ? this._quill.getFormat(range) : {};
     const current = formats[key];
-    const next: boolean | string | number = value !== undefined ? value as boolean | string | number : !(current as boolean);
+    let next: boolean | string | number = value !== undefined ? value as boolean | string | number : !(current as boolean);
+    if (key === 'list' && current === value) {
+      next = false;
+    }
     this._quill.format(key, next);
   }
 
@@ -99,8 +101,20 @@ class Toolbar extends QuillToolbar {
       formatter => formatter.getAttribute('data-toolbar-key') === key && formatter.tagName === 'ZN-BUTTON'
     );
 
-    const tool = (matches?.length ? (matches[0] as HTMLElement) : null);
+    // _formatters is collected once at init, before slotted zn-editor-tool
+    // elements have necessarily rendered their shadow roots — resolve slotted
+    // tools again at trigger time so context-menu activation finds them.
+    const tool = (matches?.length ? (matches[0] as HTMLElement) : null)
+      ?? this._slottedToolButton(key);
     if (tool) {
+      // Tool buttons live in the tool's own shadow root; a synthetic click
+      // doesn't propagate across the slot boundary to the toolbar's click
+      // listener, so invoke the format directly.
+      const format = tool.getAttribute('data-format');
+      if (format) {
+        this.callFormat(format, tool.getAttribute('data-format-type') ?? undefined);
+        return;
+      }
       tool.click();
       return;
     }
@@ -114,6 +128,18 @@ class Toolbar extends QuillToolbar {
         this.callFormat(format, type);
       }
     }
+  }
+
+  private _slottedToolButton(key: string): HTMLElement | null {
+    const slot = this._component.shadowRoot?.querySelector('slot');
+    const assigned = slot ? slot.assignedElements({flatten: true}) : [];
+    for (const element of assigned) {
+      const button = element.shadowRoot?.querySelector(`[data-toolbar-key="${key}"]`);
+      if (button instanceof HTMLElement) {
+        return button;
+      }
+    }
+    return null;
   }
 
   private _attachToolbarHandlers() {
@@ -168,17 +194,19 @@ class Toolbar extends QuillToolbar {
     const formats: Record<string, any> = this._quill.getFormat(range);
     if (!formats) return;
 
-    this._syncButtonState('format_bold', !!formats.bold);
-    this._syncButtonState('format_italic', !!formats.italic);
-    this._syncButtonState('format_underlined', !!formats.underline);
+    this._syncButtonState('bold@lu', !!formats.bold);
+    this._syncButtonState('italic@lu', !!formats.italic);
+    this._syncButtonState('underline@lu', !!formats.underline);
+    this._syncButtonState('list@lu', formats.list === 'bullet');
+    this._syncButtonState('list-ordered@lu', formats.list === 'ordered');
 
     this._updateHeadingFormatMenu(formats);
     this._updateListFormatMenu(formats);
     this._updateTextFormatMenu(formats);
     this._updateColorFormatMenu(formats);
 
-    this._updateDropdownTrigger('zn-dropdown.toolbar__header-dropdown', 'match_case');
-    this._updateDropdownTrigger('zn-dropdown.toolbar__list-dropdown', 'lists');
+    this._updateDropdownTrigger('zn-dropdown.toolbar__header-dropdown', 'case-sensitive@lu');
+    this._updateDropdownTrigger('zn-dropdown.toolbar__list-dropdown', 'list-plus@lu');
   }
 
   private _updateHeadingFormatMenu(formats: Record<string, any>) {
@@ -248,19 +276,25 @@ class Toolbar extends QuillToolbar {
     const items = menu?.querySelectorAll('zn-menu-item') as NodeListOf<ZnMenuItem> | undefined;
 
     let iconSrc = defaultIconSrc;
+    let iconLibrary = '';
     let iconColor = 'default';
     if (items?.length) {
       items.forEach((item: ZnMenuItem) => {
         const checked = item.checked ?? (item.hasAttribute('checked'));
         if (checked) {
           const icon = item.querySelector('zn-icon')!;
+          // zn-icon strips the `@library` suffix off `src` and stores it on the
+          // reflected `library` attribute, so carry both across — otherwise the
+          // rebuilt trigger loses the library and falls back to material.
           iconSrc = icon?.getAttribute('src') ?? iconSrc;
+          iconLibrary = icon?.getAttribute('library') ?? '';
           iconColor = 'primary';
         }
       });
     }
 
-    trigger.innerHTML = `<zn-icon src="${iconSrc}" color="${iconColor}" size="18"></zn-icon>`;
+    const libraryAttr = iconLibrary ? ` library="${iconLibrary}"` : '';
+    trigger.innerHTML = `<zn-icon src="${iconSrc}"${libraryAttr} color="${iconColor}" size="18"></zn-icon>`;
   }
 
   private _syncButtonState(icon: string, active: boolean) {
@@ -302,7 +336,10 @@ class Toolbar extends QuillToolbar {
     const isVisible = (el: HTMLElement | null) => (el?.offsetParent !== null);
 
     if (isVisible(button)) {
-      button!.click();
+      // zn-button overrides click() without dispatching a DOM event, so the
+      // dropdown's trigger listener never hears it — open the dropdown directly
+      const dateDropdown = shadow.querySelector('zn-dropdown.toolbar__date-dropdown') as ZnDropdown | null;
+      dateDropdown?.show().then();
       return;
     }
 
@@ -322,18 +359,11 @@ class Toolbar extends QuillToolbar {
   }
 
   private _openDialog(uri: string) {
-    if (this._lastDialogUri === uri) {
-      const dialog = document.querySelector(`zn-editor-dialog`) as DialogComponent | null;
-      if (!dialog) return;
-
-      dialog.dialogEl.showModal();
-    }
-
-    const dialog = document.querySelector(`zn-editor-dialog`) as DialogComponent | null;
+    const dialog = (this._quill.getModule('dialog') as Dialog | undefined)?.component;
     if (!dialog) return;
 
     dialog.dialogEl.showModal();
-    dialog.setContent(`<app-space id="app-editor-modal" allow-scripts auto-load uri="${uri}"></app-space>`);
+    dialog.setContent(`<app-space id="app-editor-modal" fetch-style="app-space-inline" allow-scripts auto-load loading-text="Loading, please wait..." uri="${uri}"></app-space>`);
   }
 
   private _handleOverflowUpdate = () => {

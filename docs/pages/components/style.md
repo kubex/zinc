@@ -104,3 +104,49 @@ layout: component
 <div class="style-abg"><zn-style border a-margin=a>ALL Margin</zn-style></div>
 ```
 
+### Border
+
+Accepts any combination of `t`, `b`, `l`, `r` to render specific sides. Use `a` (or the equivalent `tblr`) as a shortcut for all four sides. The bare `border` attribute (no value) is equivalent to `border="a"` and is kept for backward compatibility.
+
+```html:preview
+<zn-style border="t" pad=a>Top only</zn-style>
+<zn-style border="b" pad=a>Bottom only</zn-style>
+<zn-style border="l" pad=a>Left only</zn-style>
+<zn-style border="r" pad=a>Right only</zn-style>
+<zn-style border="tb" pad=a>Top + Bottom</zn-style>
+<zn-style border="lr" pad=a>Left + Right</zn-style>
+<zn-style border="tl" pad=a>Top + Left</zn-style>
+<zn-style border="a"  pad=a>All sides (a)</zn-style>
+<zn-style border      pad=a>All sides (bare attribute)</zn-style>
+```
+
+### Size
+
+Adjusts font size in five steps mapped to the zinc font-size tokens. `m` is the default and applies no class.
+
+| value | token                       |
+| ----- | --------------------------- |
+| `xs`  | `--zn-font-size-x-small`    |
+| `s`   | `--zn-font-size-small`      |
+| `m`   | inherits (no class applied) |
+| `l`   | `--zn-font-size-large`      |
+| `xl`  | `--zn-font-size-x-large`    |
+
+```html:preview
+<zn-style size="xs">Extra small</zn-style>
+<zn-style size="s">Small</zn-style>
+<zn-style size="m">Medium (default)</zn-style>
+<zn-style size="l">Large</zn-style>
+<zn-style size="xl">Extra large</zn-style>
+```
+
+### Muted
+
+Dims the content with reduced opacity. Useful for placeholder-like values, em-dashes for empty cells, or any text you want visually de-emphasized without changing its colour.
+
+```html:preview
+<zn-style>Regular text</zn-style>
+<zn-style muted>Muted text</zn-style>
+<zn-style muted>&mdash;</zn-style>
+```
+

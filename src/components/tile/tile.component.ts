@@ -28,7 +28,7 @@ import styles from './tile.scss';
 export default class ZnTile extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  private readonly hasSlotController = new HasSlotController(this, '[default]', 'properties', 'actions', 'image');
+  private readonly hasSlotController = new HasSlotController(this, '[default]', 'caption', 'description', 'properties', 'actions', 'image');
 
   @property({attribute: 'caption'}) caption: string;
 
@@ -50,31 +50,56 @@ export default class ZnTile extends ZincElement {
 
   @property({type: Boolean}) inline: boolean;
 
+  /** Renders the caption in the normal table-content weight instead of bold. */
+  @property({type: Boolean}) plain: boolean;
+
+  /** Moves the actions under the caption and description when the tile is narrower than 600px. */
+  @property({attribute: 'stack-actions', type: Boolean, reflect: true}) stackActions: boolean;
+
+  /** Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row. */
+  @property({type: Boolean, reflect: true}) grouped: boolean;
+
   private _isLink() {
     return this.href || this.dataUri;
+  }
+
+  private _handleActionsClick(e: MouseEvent) {
+    if (!this._isLink()) return;
+
+    // Let Rubix's delegated pagelet handler see an action's own link. For controls without
+    // navigation metadata, stop before the handler can walk up to the tile host's href.
+    for (const target of e.composedPath()) {
+      if (target === this) break;
+      if (!(target instanceof Element)) continue;
+
+      const href = target.getAttribute('href');
+      if (target.hasAttribute('data-uri') || (href !== null && href !== '' && !href.startsWith('#'))) {
+        return;
+      }
+    }
+
+    e.stopPropagation();
   }
 
   render() {
     const isLink = this._isLink();
     const tag = isLink ? literal`a` : literal`div`;
-    const hasCaption = this.caption && this.caption.length > 0;
-    const hasDescription = this.description && this.description.length > 0;
+    const hasCaption = (this.caption && this.caption.length > 0) || this.hasSlotController.test('caption');
+    const hasDescriptionAttr = this.description && this.description.length > 0;
+    const hasDescription = hasDescriptionAttr || this.hasSlotController.test('description');
     const hasProperties = this.hasSlotController.test('properties');
     const hasActions = this.hasSlotController.test('actions');
     const hasImage = this.hasSlotController.test('image');
 
     return html`
-      <${tag}
-        href="${ifDefined(this.href)}"
-        data-uri="${ifDefined(this.dataUri)}"
-        gaid="${ifDefined(this.gaid)}"
-        data-target="${ifDefined(this.dataTarget)}"
+      <div
         class="${classMap({
           tile: true,
           'tile--flush': this.flush,
           'tile--flush-x': this.flushX,
           'tile--flush-y': this.flushY,
           'tile--inline': this.inline,
+          'tile--plain': this.plain,
           'tile--has-href': isLink,
           'tile--has-caption': hasCaption,
           'tile--has-description': hasDescription,
@@ -82,28 +107,38 @@ export default class ZnTile extends ZincElement {
           'tile--has-actions': hasActions,
           'tile--has-image': hasImage,
         })}">
-        ${!hasCaption && !hasDescription && !hasProperties && !hasActions ? html`
-          <slot></slot>
-        ` : html`
-          <div
-            class="tile__link">
+        <${tag}
+          href="${ifDefined(this.href)}"
+          data-uri="${ifDefined(this.dataUri)}"
+          gaid="${ifDefined(this.gaid)}"
+          data-target="${ifDefined(this.dataTarget)}"
+          class="tile__link">
+          ${!hasCaption && !hasDescription && !hasProperties && !hasActions ? html`
+            <slot></slot>
+          ` : html`
             <div class="tile__left">
-              <slot name="image" part="image" class="tile__image"></slot>
+              ${hasImage ? html`
+                <slot name="image" part="image" class="tile__image"></slot>` : html``}
               <div class="tile__content">
                 <p part="caption" class="tile__caption">
                   <slot name="caption">${this.caption}</slot>
                 </p>
-                <p part="description" class="tile__description">${this.description}</p>
+                ${hasDescriptionAttr ? html`
+                  <p part="description" class="tile__description">
+                    ${this.description}</p>` : html`<slot name="description" class="tile__description"></slot>`}
               </div>
             </div>
-          </div>
-
-          <div class="tile__right">
             ${hasProperties ? html`
               <slot name="properties" part="properties" class="tile__properties"></slot>` : ''}
-            ${hasActions ? html`
-              <slot name="actions" part="actions" class="tile__actions"></slot>` : ''}
-          </div>`}
-      </${tag}>`;
+          `}
+        </${tag}>
+
+        ${hasActions ? html`
+          <div class="tile__right">
+            <!-- Kept outside the link so slotted controls retain their default behaviour. -->
+              <slot name="actions" part="actions" class="tile__actions"
+                    @click=${this._handleActionsClick}></slot>
+          </div>` : ''}
+      </div>`;
   }
 }

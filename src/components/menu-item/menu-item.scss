@@ -1,11 +1,29 @@
 @use "../../wc";
 
 :host {
-  --submenu-offset: -2px;
-  --color: rgba(var(--zn-text), var(--zn-text-opacity));
+  // Overlaps the parent menu's padding so the submenu's border lands on the parent's.
+  --submenu-offset: 1px;
+  // Baseline — standalone items (e.g. app/sidebar navigation): primary hover
+  --color: var(--zn-text-menu-link-color);
   --hover-color: rgb(var(--zn-primary));
-  --hover-bg: rgba(var(--zn-panel-highlight), var(--zn-panel-highlight-opacity));
+  --hover-bg: rgba(var(--zn-color-navigation-highlight), var(--zn-panel-highlight-opacity));
+  --active-color: rgb(var(--zn-primary));
   display: block;
+}
+
+// Dropdown — items inside a default zn-menu panel: muted hover (the text keeps
+// its colour), no separators between rows. Set by the parent zn-menu.
+:host([variant="dropdown"]) {
+  --hover-color: var(--color);
+  --hover-bg: rgba(0, 0, 0, 0.06);
+}
+
+// Shell — app-shell header dropdown look: dark text, primary hover. Set by the
+// parent zn-menu's `variant="shell"`.
+:host([variant="shell"]) {
+  --color: rgb(var(--zn-text));
+  --hover-color: rgb(var(--zn-primary));
+  --hover-bg: rgba(var(--zn-primary), 0.05);
 }
 
 :host([inert]) {
@@ -23,9 +41,27 @@
   white-space: nowrap;
   cursor: pointer;
   border-bottom-width: 1px;
-
+  width: 100%;
   text-decoration: none;
+  font-size: var(--zn-text-menu-link-font-size);
+  line-height: var(--zn-text-menu-link-line-height);
+  font-weight: var(--zn-text-menu-link-font-weight);
   color: var(--color);
+}
+
+:host([variant="dropdown"]) .menu-item {
+  align-items: center;
+  padding: var(--zn-spacing-small) var(--zn-spacing-large);
+  border-bottom-width: 0;
+}
+
+:host([variant="shell"]) .menu-item {
+  align-items: center;
+  gap: var(--zn-spacing-x-small);
+  padding: var(--zn-spacing-x-small);
+  border-bottom-width: 0;
+  border-radius: var(--zn-border-radius);
+  line-height: 25px;
 }
 
 .menu-item__label::slotted(*) {
@@ -72,12 +108,12 @@
   top: 0;
   bottom: 0;
   width: 3px;
-  background-color: var(--hover-color);
+  background-color: var(--active-color);
 }
 
 .menu-item.menu-item--active .menu-item__label {
   font-weight: 700;
-  color: var(--hover-color);
+  color: var(--active-color);
 }
 
 .menu-item--rtl.menu-item--active::before {
@@ -119,7 +155,7 @@
   color: var(--color);
 }
 
-.menu-item:hover .menu-item__label {
+.menu-item:hover:not(.menu-item--disabled) .menu-item__label {
   color: var(--hover-color);
 }
 
@@ -132,6 +168,11 @@
 .menu-item .menu-item__prefix::slotted(*) {
   --icon-size: var(--zn-font-size-small);
   margin-inline-end: var(--zn-spacing-small);
+}
+
+// Shell items space the icon via the row gap instead
+:host([variant="shell"]) .menu-item .menu-item__prefix::slotted(*) {
+  margin-inline-end: 0;
 }
 
 .menu-item .menu-item__suffix {
@@ -165,10 +206,14 @@
 }
 
 :host(:hover:not([aria-disabled='true'], :focus-visible)) .menu-item,
-.menu-item--submenu-expanded,
-.menu-item--active {
+.menu-item--submenu-expanded {
   background-color: var(--hover-bg);
   color: var(--hover-color);
+}
+
+.menu-item--active {
+  background-color: var(--hover-bg);
+  color: var(--active-color);
 }
 
 :host(:focus-visible) .menu-item {
@@ -195,6 +240,8 @@
 
 .menu-item--has-submenu .menu-item__chevron {
   display: flex;
+  height: auto;
+  margin-inline-start: var(--zn-spacing-x-small);
 }
 
 :host(:not([role="menuitemcheckbox"])) .menu-item .menu-item__check {
@@ -207,9 +254,7 @@
   display: flex;
 }
 
-/* Add elevation and z-index to submenus */
 zn-popup::part(popup) {
-  box-shadow: var(--zn-shadow-large);
   z-index: 100;
   margin-left: var(--submenu-offset);
 }
@@ -232,33 +277,36 @@ zn-popup::part(popup) {
 }
 
 
+// Colour variants fill the row on hover, so the label switches to the matching
+// --zn-color-on-* ink rather than a hardcoded white (which disappears on a
+// light accent such as velocity's neon lime).
 .menu-item--primary {
   --color: rgba(var(--zn-primary), 0.9);
-  --hover-color: #ffffff;
+  --hover-color: rgb(var(--zn-color-on-primary, 255, 255, 255));
   --hover-bg: rgba(var(--zn-primary), 0.9);
 }
 
 .menu-item--error {
   --color: rgb(var(--zn-color-error));
-  --hover-color: #ffffff;
+  --hover-color: rgb(var(--zn-color-on-error, 255, 255, 255));
   --hover-bg: rgba(var(--zn-color-error), 0.9);
 }
 
 .menu-item--info {
   --color: rgb(var(--zn-color-info));
-  --hover-color: #ffffff;
+  --hover-color: rgb(var(--zn-color-on-info, 255, 255, 255));
   --hover-bg: rgba(var(--zn-color-info), 0.9);
 }
 
 .menu-item--warning {
   --color: rgb(var(--zn-color-warning));
-  --hover-color: #ffffff;
+  --hover-color: rgb(var(--zn-color-on-warning, 255, 255, 255));
   --hover-bg: rgba(var(--zn-color-warning), 0.9);
 }
 
 .menu-item--success {
   --color: rgb(var(--zn-color-success));
-  --hover-color: #ffffff;
+  --hover-color: rgb(var(--zn-color-on-success, 255, 255, 255));
   --hover-bg: rgba(var(--zn-color-success), 0.9);
 }
 

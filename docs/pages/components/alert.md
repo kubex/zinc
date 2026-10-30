@@ -76,14 +76,14 @@ Use the `actions` slot to add buttons or other interactive elements to the alert
 ```html:preview
 <zn-alert caption="New updates available" icon="system_update" level="info">
   A new version of the app is ready to install.
-  <zn-button slot="actions" color="info" size="small">Update Now</zn-button>
-  <zn-button slot="actions" color="transparent" size="small">Later</zn-button>
+  <zn-button slot="actions" color="info">Update Now</zn-button>
+  <zn-button slot="actions" color="transparent">Later</zn-button>
 </zn-alert>
 <br />
 <zn-alert caption="Confirm deletion" icon="delete" level="error">
   Are you sure you want to delete this item? This action cannot be undone.
-  <zn-button slot="actions" color="error" size="small">Delete</zn-button>
-  <zn-button slot="actions" color="secondary" size="small">Cancel</zn-button>
+  <zn-button slot="actions" color="error">Delete</zn-button>
+  <zn-button slot="actions" color="secondary">Cancel</zn-button>
 </zn-alert>
 ```
 
@@ -113,6 +113,14 @@ Use the `size` attribute to control the alert's size. Available sizes are `small
 <zn-alert caption="Large Alert" size="large" level="warning">This is a large-sized alert.</zn-alert>
 ```
 
+### Centered Text
+
+Use the `center` attribute to center the alert's text content.
+
+```html:preview
+<zn-alert level="warning" center>This alert's text is centered.</zn-alert>
+```
+
 ### Complex Content
 
 Alerts can contain rich HTML content including lists, links, and formatted text.
@@ -126,7 +134,7 @@ Alerts can contain rich HTML content including lists, links, and formatted text.
     <li>You have a stable internet connection</li>
   </ul>
   <p>Need help? <a href="#">Contact support</a></p>
-  <zn-button slot="actions" color="info" size="small">Continue</zn-button>
+  <zn-button slot="actions" color="info">Continue</zn-button>
 </zn-alert>
 ```
 

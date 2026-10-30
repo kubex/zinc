@@ -56,7 +56,7 @@ describe('<zn-animated-button>', () => {
     await el.updateComplete;
 
     const button = el.shadowRoot?.querySelector('button') as HTMLButtonElement;
-    expect(button.classList.contains('purchase-button--success')).to.be.true;
+    expect(button.classList.contains('animated-button--success')).to.be.true;
   });
 
   it('should transition to failure state when setFailure is called', async () => {
@@ -66,7 +66,7 @@ describe('<zn-animated-button>', () => {
     await el.updateComplete;
 
     const button = el.shadowRoot?.querySelector('button') as HTMLButtonElement;
-    expect(button.classList.contains('purchase-button--failure')).to.be.true;
+    expect(button.classList.contains('animated-button--failure')).to.be.true;
     expect(button.textContent).to.include('Payment failed');
   });
 
@@ -79,18 +79,18 @@ describe('<zn-animated-button>', () => {
     await el.updateComplete;
 
     let button = el.shadowRoot?.querySelector('button') as HTMLButtonElement;
-    expect(button.classList.contains('purchase-button--failure')).to.be.true;
+    expect(button.classList.contains('animated-button--failure')).to.be.true;
 
     await waitUntil(
       () => {
         button = el.shadowRoot?.querySelector('button') as HTMLButtonElement;
-        return button.classList.contains('purchase-button--idle');
+        return button.classList.contains('animated-button--idle');
       },
       '',
       { timeout: 500 }
     );
 
-    expect(button.classList.contains('purchase-button--idle')).to.be.true;
+    expect(button.classList.contains('animated-button--idle')).to.be.true;
   });
 
   it('should show spinner icon in processing state', async () => {
@@ -100,7 +100,7 @@ describe('<zn-animated-button>', () => {
     button.click();
     await el.updateComplete;
 
-    const spinner = el.shadowRoot?.querySelector('.purchase-button__spinner');
+    const spinner = el.shadowRoot?.querySelector('.animated-button__spinner');
     expect(spinner).to.exist;
   });
 
@@ -110,7 +110,7 @@ describe('<zn-animated-button>', () => {
     el.setSuccess();
     await el.updateComplete;
 
-    const successIcon = el.shadowRoot?.querySelector('.purchase-button__icon--success');
+    const successIcon = el.shadowRoot?.querySelector('.animated-button__icon--success');
     expect(successIcon).to.exist;
   });
 
@@ -120,7 +120,7 @@ describe('<zn-animated-button>', () => {
     el.setFailure();
     await el.updateComplete;
 
-    const failureIcon = el.shadowRoot?.querySelector('.purchase-button__icon--failure');
+    const failureIcon = el.shadowRoot?.querySelector('.animated-button__icon--failure');
     expect(failureIcon).to.exist;
   });
 

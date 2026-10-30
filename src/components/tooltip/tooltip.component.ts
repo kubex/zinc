@@ -83,7 +83,7 @@ export default class ZnTooltip extends ZincElement {
   }
 
   private handleBlur = () => {
-    if (this.hasTrigger('focus') && !topLayerManager.isDropdownOpen()) {
+    if (this.hasTrigger('focus')) {
       this.hide();
     }
   };
@@ -118,7 +118,7 @@ export default class ZnTooltip extends ZincElement {
   }
 
   private handleMouseOut() {
-    if (this.hasTrigger('hover') && !topLayerManager.isDropdownOpen()) {
+    if (this.hasTrigger('hover')) {
       clearTimeout(this.hoverTimeout);
       this.hoverTimeout = window.setTimeout(() => this.hide(), 0);
     }
@@ -191,6 +191,14 @@ export default class ZnTooltip extends ZincElement {
     waitForEvent(this, 'zn-after-hide');
   }
 
+  // The bubble renders inside its anchor's host (e.g. zn-button), so its clicks would reach the host's
+  // listeners. Anchor clicks target the slotted element, so only bubble clicks target the popup.
+  private handlePopupClick = (event: MouseEvent) => {
+    if (event.target === event.currentTarget) {
+      event.stopPropagation();
+    }
+  };
+
   render() {
     return html`
       <zn-popup
@@ -207,7 +215,8 @@ export default class ZnTooltip extends ZincElement {
         flip
         shift
         arrow
-        hover-bridge>
+        hover-bridge
+        @click="${this.handlePopupClick}">
         <slot slot="anchor"></slot>
         <div part="body" id="tooltip" class="tooltip__body"
              role="tooltip"

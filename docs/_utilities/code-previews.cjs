@@ -89,18 +89,22 @@ module.exports = function (doc, options)
   });
 
   // Wrap code preview scripts in anonymous helpers so they don't run in the global scope
+  const jsTypes = new Set(['', 'text/javascript', 'application/javascript', 'application/ecmascript', 'text/ecmascript']);
   doc.querySelectorAll('.code-preview__preview script').forEach(script =>
   {
-    if(script.type === 'module')
+    const type = (script.getAttribute('type') || '').toLowerCase();
+    if(type === 'module')
     {
       // Modules are already scoped
       script.textContent = script.innerHTML;
     }
-    else
+    else if(jsTypes.has(type))
     {
       // Wrap non-modules in an anonymous function so they don't run in the global scope
       script.textContent = `(() => { ${script.innerHTML} })();`;
     }
+    // Otherwise leave alone: data blocks (e.g. type="application/json", type="zn-templates")
+    // are inert by spec and components read their original textContent directly.
   });
 
   return doc;

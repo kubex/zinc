@@ -1,11 +1,17 @@
 ---
 meta:
   title: Translations
-  description: A component for managing multi-language text input with a tabbed interface.
+  description: A component for managing multi-language text input behind a language select.
 layout: component
 ---
 
-The Translations component provides a user-friendly interface for managing multi-language text input. It features a tabbed navigation bar for switching between languages and supports inline editing of translations.
+The Translations component provides a user-friendly interface for managing multi-language text input. A select above
+the field chooses the language being edited, and each language it offers carries a chip saying whether it has a
+translation of its own or falls back to English; closed, it carries how many languages are done as a `1/5` chip.
+The field itself is a plain input, or a textarea with `input-type="textarea"`.
+
+Several fields that should share one language picker belong in a
+[`zn-translation-group`](/components/translation-group) instead.
 
 ```html:preview
 <zn-translations
@@ -48,56 +54,23 @@ Use the `label` slot for rich HTML content in the label.
 </zn-translations>
 ```
 
-### Custom Languages
+### Setting Values
 
-Provide a custom list of available languages via the `languages` property. Languages are displayed as tabs with their full names.
-
-```html:preview
-<zn-translations
-  label="Multi-Language Content"
-  languages='{"en":"English","fr":"French","de":"German","es":"Spanish","it":"Italian","pt":"Portuguese"}'
-></zn-translations>
-```
-
-### Pre-filled Values
-
-Set initial translations using the `values` property.
+`values` takes an object keyed by language code. `value` is the same thing as a JSON string, for setting it from
+markup or from a server-rendered template — set one or the other, not both.
 
 ```html:preview
 <zn-translations
-  label="Welcome Message"
+  label="Set with values"
   languages='{"en":"English","fr":"French","es":"Spanish"}'
   values='{"en":"Hello World","fr":"Bonjour le monde","es":"Hola Mundo"}'
 ></zn-translations>
-```
-
-### JSON Value Attribute
-
-Alternatively, use the `value` attribute with a JSON string.
-
-```html:preview
+<br />
 <zn-translations
-  label="Description"
+  label="Set with value"
   languages='{"en":"English","fr":"French"}'
   value='{"en":"This is a product description","fr":"Ceci est une description de produit"}'
 ></zn-translations>
-```
-
-### Required Field
-
-Mark the translations as required for form validation.
-
-```html:preview
-<form>
-  <zn-translations
-    name="description"
-    label="Product Description"
-    required
-    languages='{"en":"English","fr":"French"}'
-  ></zn-translations>
-  <br />
-  <zn-button type="submit" color="success">Submit</zn-button>
-</form>
 ```
 
 ### Disabled State
@@ -125,29 +98,58 @@ Remove padding for a more compact appearance.
 ></zn-translations>
 ```
 
-### With Custom Action Button
+### Textarea
 
-Use the `expand` slot to add custom buttons or actions.
+Use `input-type="textarea"` for longer copy, and `textarea-rows` to set its height.
 
 ```html:preview
 <zn-translations
-  label="Description"
-  languages='{"en":"English","fr":"French","de":"German"}'>
-  <zn-button slot="expand" size="x-small" color="transparent" icon="translate">
-    Auto-Translate
-  </zn-button>
-</zn-translations>
+  label="Confirmation Message"
+  input-type="textarea"
+  textarea-rows="3"
+  languages='{"en":"English","de":"German"}'
+  values='{"en":"Thanks — your order is on its way.","de":"Danke — Ihre Bestellung ist unterwegs."}'
+></zn-translations>
+```
+
+### Inline Editing
+
+Add `inline-edit` to read the translation as text until it is clicked, through
+[`zn-inline-edit`](/components/inline-edit), rather than showing an input outright.
+
+```html:preview
+<zn-translations
+  inline-edit
+  label="Welcome Message"
+  languages='{"en":"English","fr":"French"}'
+  values='{"en":"Hello World","fr":"Bonjour le monde"}'
+></zn-translations>
 ```
 
 ### Many Languages
 
-The component handles many languages gracefully with scrollable tabs.
+Each language becomes an option labelled with its configured name — or its code, where `languages` does not name it.
+The select takes any number of them, and its listbox scrolls once the list is longer than the space below it. Type to
+filter the list: matching runs over the code as well as the name, so `de` finds German.
 
 ```html:preview
 <zn-translations
   label="International Content"
   languages='{"en":"English","fr":"French","de":"German","es":"Spanish","it":"Italian","pt":"Portuguese","ru":"Russian","zh":"Chinese","ja":"Japanese","ar":"Arabic","hi":"Hindi","ko":"Korean"}'
   values='{"en":"Hello","fr":"Bonjour","de":"Hallo","es":"Hola","it":"Ciao","pt":"Olá","ru":"Привет","zh":"你好","ja":"こんにちは","ar":"مرحبا","hi":"नमस्ते","ko":"안녕하세요"}'
+></zn-translations>
+```
+
+### Blank Languages Fall Back to English
+
+A language you have not translated yet is marked `English` in the select rather than hidden, and its field shows the
+English text as a placeholder. Leave it blank and the English text is what gets used.
+
+```html:preview
+<zn-translations
+  label="Product Name"
+  languages='{"en":"English","fr":"French","de":"German","pl":"Polish"}'
+  values='{"en":"Premium Wireless Headphones","de":"Premium kabellose Kopfhörer"}'
 ></zn-translations>
 ```
 
@@ -193,7 +195,8 @@ The component emits `zn-change` events when translation values change.
 
 ### Form Integration
 
-Use with standard HTML forms for submission.
+The component submits its translations as a JSON object under `name`. `required` marks the label, though validity is
+not enforced per language.
 
 ```html:preview
 <form class="translations-form">
@@ -233,9 +236,9 @@ Access and modify translation values via JavaScript.
 ></zn-translations>
 
 <div style="margin-top: 1rem;">
-  <zn-button id="set-values-btn" size="small">Set Sample Values</zn-button>
-  <zn-button id="get-values-btn" size="small" color="info">Get Values</zn-button>
-  <zn-button id="clear-values-btn" size="small" color="secondary">Clear All</zn-button>
+  <zn-button id="set-values-btn">Set Sample Values</zn-button>
+  <zn-button id="get-values-btn" color="info">Get Values</zn-button>
+  <zn-button id="clear-values-btn" color="secondary">Clear All</zn-button>
 </div>
 
 <script type="module">
@@ -259,53 +262,51 @@ Access and modify translation values via JavaScript.
 </script>
 ```
 
-### Real-World Use Case: Content Management
+### Help Text
 
-A complete example showing product content management with translations.
+Use the `help-text` attribute to describe how the field should be filled in. It sits below the field and applies to
+every language, so it is the place to explain a convention the translator needs to follow. For help text containing
+HTML, use the `help-text` slot instead.
 
 ```html:preview
-<div style="max-width: 800px;">
-  <zn-panel caption="Product Details" icon="inventory_2">
-    <div style="display: flex; flex-direction: column; gap: 1rem;">
-      <zn-input
-        label="Product SKU"
-        value="PROD-12345"
-        readonly
-      ></zn-input>
-
-      <zn-translations
-        name="name"
-        label="Product Name"
-        required
-        languages='{"en":"English","fr":"French","de":"German","es":"Spanish"}'
-        values='{"en":"Premium Wireless Headphones","fr":"Écouteurs sans fil premium","de":"Premium kabellose Kopfhörer","es":"Auriculares inalámbricos premium"}'
-      ></zn-translations>
-
-      <zn-translations
-        name="description"
-        label="Product Description"
-        languages='{"en":"English","fr":"French","de":"German","es":"Spanish"}'
-        values='{"en":"High-quality wireless headphones with active noise cancellation","fr":"Écouteurs sans fil de haute qualité avec suppression active du bruit","de":"Hochwertige kabellose Kopfhörer mit aktiver Geräuschunterdrückung","es":"Auriculares inalámbricos de alta calidad con cancelación activa de ruido"}'
-      >
-        <zn-button slot="expand" size="x-small" color="transparent" icon="smart_toy">
-          AI Translate
-        </zn-button>
-      </zn-translations>
-
-      <zn-input
-        label="Price"
-        type="currency"
-        value="299.99"
-      ></zn-input>
-    </div>
-
-    <div slot="footer" style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-      <zn-button color="secondary">Cancel</zn-button>
-      <zn-button color="success">Save Product</zn-button>
-    </div>
-  </zn-panel>
-</div>
+<zn-translations
+  label="Confirmation headline"
+  help-text="Keep this under 60 characters so it does not wrap on mobile."></zn-translations>
+<br />
+<zn-translations label="Footer">
+  <div slot="help-text">Shown on <strong>every</strong> page of the checkout.</div>
+</zn-translations>
 ```
+
+### Slash Menu Quick Insertions
+
+{% raw %}
+
+Copy that carries replacement strings — `{{BRAND_NAME}}` and the like — needs the same tokens in every language. Set
+`slash-items` and typing `/` offers them at the caret, in whichever language is being edited. This works on both the
+single-line default and `input-type="textarea"`. The attribute takes the same shorthand and JSON that
+[`zn-textarea`](/components/textarea#slash-menu-quick-insertions) accepts, and `slash-preset`, `slash-trigger` and
+`slash-heading` are forwarded too.
+
+```html:preview
+<zn-translations
+  label="Confirmation message"
+  input-type="textarea"
+  textarea-rows="4"
+  languages='{"en": "EN", "fr": "FR", "de": "DE"}'
+  values='{"en": "Look for /"}'
+  slash-heading="Replacement strings"
+  slash-items='[
+    {"label": "Brand name", "value": "{{BRAND_NAME}}", "description": "The product / company name", "icon": "sell"},
+    {"label": "Customer email", "value": "{{CUSTOMER_EMAIL}}", "description": "The customer&#39;s email address", "icon": "mail"},
+    {"label": "Renewal price", "value": "{{RENEWAL_PRICE}}", "description": "The renewal price amount", "icon": "payments"}
+  ]'></zn-translations>
+```
+
+The menu claims `↑`, `↓`, `Enter`, `Tab` and `Escape` while it is open, so choosing an item never submits the form the
+way `Enter` otherwise would.
+
+{% endraw %}
 
 ## Properties
 
@@ -314,11 +315,20 @@ A complete example showing product content management with translations.
 | `name`      | `string`                    | `''`            | Form field name for submission                                       |
 | `value`     | `string`                    | `'{"en":""}'`   | JSON string of translations                                          |
 | `label`     | `string`                    | `''`            | Label displayed above the component                                  |
+| `help-text` | `string`                    | `''`            | Text shown below the field, describing how to fill it in             |
 | `disabled`  | `boolean`                   | `false`         | Disables editing of all translations                                 |
 | `required`  | `boolean`                   | `false`         | Makes the field required for form validation                         |
 | `flush`     | `boolean`                   | `false`         | Removes padding for compact layout                                   |
 | `languages` | `Record<string, string>`    | `{en: "EN"}`    | Object mapping language codes to display names                       |
 | `values`    | `Record<string, string>`    | `{}`            | Object mapping language codes to translation text                    |
+| `grouped`   | `boolean`                   | `false`         | Hides the language select; a parent `zn-translation-group` drives it |
+| `input-type`    | `'text' \| 'number' \| 'textarea'` | `'text'` | The control each translation is edited through                |
+| `textarea-rows` | `number`                | —               | Rows of the textarea, when `input-type` is `textarea`                |
+| `inline-edit`   | `boolean`               | `false`         | Edits through `zn-inline-edit` instead of a plain input or textarea   |
+| `slash-items`   | `SlashMenuItem[]`       | `[]`            | Quick insertions offered by the slash menu                           |
+| `slash-preset`  | `string`                | `''`            | Registered item sets to offer, comma separated                       |
+| `slash-trigger` | `string`                | `'/'`           | The characters that open the slash menu                              |
+| `slash-heading` | `string`                | `'Insert'`      | Heading shown above the slash menu's items                           |
 
 ## Events
 
@@ -329,10 +339,10 @@ A complete example showing product content management with translations.
 
 ## Slots
 
-| Slot      | Description                                                      |
-|-----------|------------------------------------------------------------------|
-| `label`   | Alternative to the `label` attribute for rich HTML content       |
-| `expand`  | Action button displayed in the navbar (e.g., translate button)   |
+| Slot        | Description                                                      |
+|-------------|------------------------------------------------------------------|
+| `label`     | Alternative to the `label` attribute for rich HTML content       |
+| `help-text` | Alternative to the `help-text` attribute for rich HTML content   |
 
 ## Methods
 
@@ -345,10 +355,19 @@ A complete example showing product content management with translations.
 
 ## CSS Parts
 
-The component uses `zn-navbar` and `zn-inline-edit` internally, which expose their own CSS parts for advanced styling.
+| Part                 | Description                                       |
+|----------------------|---------------------------------------------------|
+| `form-control`       | The component's base wrapper                      |
+| `form-control-label` | The label's wrapper                               |
+| `form-control-input` | The wrapper around the field being edited         |
+| `language-select`    | The select that chooses the language being edited |
+
+The component uses `zn-select` for the language and `zn-input`, `zn-textarea` or `zn-inline-edit` for the field, each
+of which exposes its own CSS parts for advanced styling.
 
 ## Accessibility
 
 - The component automatically detects RTL languages (Arabic, Hebrew) and applies proper text direction
-- Keyboard navigation is supported within the inline edit fields
-- Form integration ensures proper submission behavior with the Enter key
+- The language select is a standard combobox: it opens on `Enter` or `Space` and moves through the languages with the
+  arrow keys
+- `Enter` submits the form from a single-line field, and inserts a newline in a textarea

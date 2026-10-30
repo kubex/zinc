@@ -1,6 +1,6 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
-import {deepQuerySelectorAll} from "../../utilities/query";
+import {deepQuerySelectorAll, idSelector} from "../../utilities/query";
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property, query, state} from 'lit/decorators.js';
@@ -8,6 +8,17 @@ import ZincElement from "../../internal/zinc-element";
 import ZnDialog from "../dialog";
 
 import styles from './confirm.scss';
+
+interface PageletAlert {
+  action?: string;
+  style?: string;
+  title?: string;
+}
+
+interface PageletResponse {
+  status?: number;
+  actions?: PageletAlert[];
+}
 
 /**
  * @summary Short summary of the component's intended use.
@@ -59,6 +70,8 @@ export default class ZnConfirm extends ZincElement {
 
   @property() cancelText: string = "Cancel";
 
+  @property() closeText: string = "Close";
+
   @property({type: Boolean, attribute: 'hide-icon'}) hideIcon: boolean = false;
 
   /**
@@ -83,6 +96,12 @@ export default class ZnConfirm extends ZincElement {
   /** Internal loading state used when showLoading is enabled */
   @state() private loading: boolean = false;
 
+  @state() private failed: boolean = false;
+
+  @state() private failure: string = '';
+
+  private submitted: HTMLFormElement | null = null;
+
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
     if (this.open) {
@@ -97,7 +116,7 @@ export default class ZnConfirm extends ZincElement {
       const trigger = this.hasSlotController.getSlot('trigger');
       trigger?.addEventListener('click', this.show);
     } else if (this.trigger) {
-      const triggers = deepQuerySelectorAll('#' + this.trigger, this.parentElement as Element, '');
+      const triggers = deepQuerySelectorAll(idSelector(this.trigger), this.parentElement as Element, '');
       triggers.forEach((el: HTMLButtonElement) => {
         el.addEventListener('click', this.show);
       });
@@ -105,7 +124,7 @@ export default class ZnConfirm extends ZincElement {
   }
 
   updateTriggers() {
-    const triggers = deepQuerySelectorAll('#' + this.trigger, this.parentElement as Element, '');
+    const triggers = deepQuerySelectorAll(idSelector(this.trigger), this.parentElement as Element, '');
     triggers.forEach((el: HTMLButtonElement) => {
       // if already has a click listener, remove it
       el.removeEventListener('click', this.show);
@@ -116,13 +135,64 @@ export default class ZnConfirm extends ZincElement {
   show = (event: Event | undefined = undefined) => {
     const trigger = event?.target as HTMLButtonElement
     if (trigger?.disabled) return;
-    this.loading = false;
+    this.reset();
     this.dialog.show();
   }
 
   hide() {
-    this.loading = false;
+    this.reset();
     this.dialog.hide();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.stopWatching();
+  }
+
+  private reset() {
+    this.stopWatching();
+    this.loading = false;
+    this.failed = false;
+    this.failure = '';
+    if (this.dialog?.closer) {
+      this.dialog.closer.disabled = false;
+    }
+  }
+
+  private stopWatching() {
+    this.submitted?.removeEventListener('complete', this.settle);
+    this.submitted?.removeEventListener('error', this.settle);
+    this.submitted = null;
+  }
+
+  /**
+   * The console dispatches the pagelet lifecycle on the form it submitted. Without it the loading
+   * state only ends when a response happens to reload the page, so every failure hangs the dialog.
+   */
+  private settle = (event: Event) => {
+    const response = (event as CustomEvent<{ response?: PageletResponse }>).detail?.response;
+    this.stopWatching();
+    if (event.type === 'error' || this.responseFailed(response)) {
+      this.loading = false;
+      this.failed = true;
+      this.failure = this.alertTitle(response);
+      if (this.dialog?.closer) {
+        this.dialog.closer.disabled = false;
+      }
+      return;
+    }
+    this.hide();
+  }
+
+  private responseFailed(response?: PageletResponse): boolean {
+    if (!response) return true;
+    if ((response.status ?? 0) >= 400) return true;
+    return (response.actions ?? []).some(action => action.action === 'alert' && action.style === 'error');
+  }
+
+  private alertTitle(response?: PageletResponse): string {
+    const alert = (response?.actions ?? []).find(action => action.action === 'alert' && action.style === 'error');
+    return alert?.title ?? '';
   }
 
 
@@ -153,18 +223,23 @@ export default class ZnConfirm extends ZincElement {
           : ''}
 
         <div class="confirm-dialog__content">
-          ${!this.loading ? html`
+          ${this.loading ? html`Loading...` : this.failed ? html`
+            <strong>Failed</strong>
+            ${this.failure ? html`<p>${this.failure}</p>` : ''}` : html`
             ${this.content ? html`${this.content}` : ''}
-            <slot></slot>` : html`
-            Loading...`}
+            <slot></slot>`}
         </div>
 
-        <zn-button outline color="${this.type}" slot="footer" dialog-closer disabled=${this.loading || nothing}>
-          ${this.cancelText}
-        </zn-button>
-        <zn-button color="${this.type}" slot="footer" @click="${this.submitDialog}" disabled=${this.loading || nothing}>
-          ${this.confirmText}
-        </zn-button>
+        ${this.failed ? html`
+          <zn-button color="${this.type}" slot="footer" dialog-closer>
+            ${this.closeText}
+          </zn-button>` : html`
+          <zn-button outline color="${this.type}" slot="footer" dialog-closer disabled=${this.loading || nothing}>
+            ${this.cancelText}
+          </zn-button>
+          <zn-button color="${this.type}" slot="footer" @click="${this.submitDialog}" disabled=${this.loading || nothing}>
+            ${this.confirmText}
+          </zn-button>`}
 
         <slot name="footer-text" slot="footer-text">${this.footerText}</slot>
       </zn-dialog>`;
@@ -178,6 +253,13 @@ export default class ZnConfirm extends ZincElement {
       form.action = this.action;
       form.method = 'POST';
 
+      // copy data-attributes from the confirm element to the form
+      Array.from(this.attributes).forEach(attr => {
+        if (attr.name.startsWith('data-')) {
+          form?.setAttribute(attr.name, attr.value);
+        }
+      });
+
       this.querySelectorAll('input').forEach((el: HTMLInputElement) => {
         form?.appendChild(el.cloneNode() as Node);
       })
@@ -189,12 +271,18 @@ export default class ZnConfirm extends ZincElement {
       document.dispatchEvent(new CustomEvent('zn-register-element', {
         detail: {element: form}
       }))
+      if (this.showLoading) {
+        this.failed = false;
+        this.failure = '';
+        this.loading = true;
+        this.dialog.closer.disabled = true;
+        this.submitted = form;
+        form.addEventListener('complete', this.settle);
+        form.addEventListener('error', this.settle);
+      }
       form.requestSubmit();
       if (!this.showLoading) {
         this.hide();
-      } else {
-        this.loading = true;
-        this.dialog.closer.disabled = true;
       }
     }
   }

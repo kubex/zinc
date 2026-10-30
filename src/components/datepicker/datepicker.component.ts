@@ -13,6 +13,8 @@ import ZnIcon from "../icon";
 import ZnTooltip from "../tooltip";
 import type {ZincFormControl} from '../../internal/zinc-element';
 
+import airDatepickerStyles from '../../../scss/air-datapicker.scss';
+import formControlStyles from '../../form-control.scss';
 import styles from './datepicker.scss';
 
 /**
@@ -51,9 +53,10 @@ import styles from './datepicker.scss';
  *   - yyyy/MM/dd (2024/12/31)
  *
  * @cssproperty --zn-input-* - Inherited input component CSS custom properties.
+ * @cssproperty --zn-datepicker-inline-border-color - Border colour of the calendar in `inline` mode.
  */
 export default class ZnDatepicker extends ZincElement implements ZincFormControl {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
 
   static dependencies = {
     'zn-icon': ZnIcon,
@@ -118,8 +121,14 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
 
   @property({type: Boolean, reflect: true}) flush = false;
 
+  /** Renders the calendar in place instead of a popup, hiding the text input. */
+  @property({type: Boolean, reflect: true}) inline = false;
+
   /** Makes the input a required field. */
   @property({type: Boolean, reflect: true}) required = false;
+
+  /** Adds a clear button to the calendar for removing a selected date. **/
+  @property({type: Boolean}) clearable = false;
 
   /** Makes the input a range picker. **/
   @property({type: Boolean}) range = false;
@@ -150,8 +159,42 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
    */
   @property() format: string = 'MM/dd/yyyy';
 
+  /** Display time selector. **/
+  @property({attribute: 'time-picker',type: Boolean, reflect: true}) timePicker?: boolean = false;
+
+  /** Display only time selector, without date. **/
+  @property({attribute: 'only-time'}) onlyTimepicker?: boolean = false;
+
+  /**
+   * Time format for display and input selector. Uses AirDatepicker format tokens.
+   * Default : hh:mm AA
+   *
+   * Possible symbols:
+   * h — hours in 12-hour mode
+   * hh — hours in 12-hour mode with leading zero
+   * H — hours in 24-hour mode
+   * HH — hours in 24-hour mode with leading zero
+   * m — minutes
+   * mm — minutes with leading zero
+   * aa — day period lower case
+   * AA — day period upper case
+   */
+  @property({attribute: 'format-time'}) timeFormat?: string = "hh:mm AA";
+
+  /**
+   * Overrides where the calendar popup is mounted. By default it renders at the document level
+   * (or inside the containing dialog/popover) so it can't be clipped by ancestor shadow roots
+   * or overflow containers — you rarely need to set this.
+   */
+  @property({attribute: 'container'}) container?: string | HTMLElement;
+
   private _instance: AirDatepicker<HTMLInputElement>;
 
+
+  get timestamp(): number {
+    const timestamp = (this.input.parentElement!.querySelector("#date-picker-timestamp")! as HTMLInputElement).value  ?? '';
+    return Number(timestamp);
+  }
 
   /** Gets the validity state object */
   get validity() {
@@ -185,11 +228,15 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
     }
   }
 
+  @watch('clearable', {waitUntilFirstUpdate: true})
   @watch('format', {waitUntilFirstUpdate: true})
   @watch('range', {waitUntilFirstUpdate: true})
   @watch('minDate', {waitUntilFirstUpdate: true})
   @watch('maxDate', {waitUntilFirstUpdate: true})
   @watch('disablePastDates', {waitUntilFirstUpdate: true})
+  @watch('timePicker', {waitUntilFirstUpdate: true})
+  @watch('timeFormat', {waitUntilFirstUpdate: true})
+  @watch('inline', {waitUntilFirstUpdate: true})
   handleDatepickerOptionsChange() {
     this.init();
   }
@@ -237,24 +284,49 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
       }
     }
 
-    const inputElement = this.shadowRoot?.querySelector('input') as HTMLInputElement;
+    const inputElement = this.shadowRoot!.querySelector('input')! as HTMLInputElement;
     if (inputElement) {
+      const timestampField = this.shadowRoot!.querySelector("#date-picker-timestamp")! as  HTMLElement;
+
       const options: AirDatepickerOptions = {
         locale: enLocale,
+        inline: this.inline,
         dateFormat: this.format,
         range: this.range,
         toggleSelected: false,
+        timepicker: this.timePicker,
+        onlyTimepicker: this.onlyTimepicker,
+        timeFormat: this.timeFormat,
+        container: this.container ?? this.getCalendarContainer(),
+        altField: timestampField,
         onSelect: ({date}) => {
-          this.handleChange();
-          // Blur the input after selection to prevent invisible keyboard navigation
-          if (date && !this.range) {
-            // For single date selection, blur immediately
-            this.input.blur();
-          } else if (date && this.range && Array.isArray(date) && date.length === 2) {
-            // For range selection, blur only after both dates are selected
-            this.input.blur();
+        // Blur the input after selection to prevent invisible keyboard navigation
+        if (this.timePicker || this.onlyTimepicker){
+          // An inline calendar never hides, so there's no later event to report the time on
+          if (this.inline) {
+            this.handleChange();
           }
+          return
         }
+        if (date && !this.range) {
+          // For single date selection, blur immediately
+          this.input.blur();
+          this.handleChange();
+        } else if (date && this.range && Array.isArray(date) && date.length === 2) {
+           // For range selection, blur only after both dates are selected
+           this.input.blur();
+           this.handleChange();
+        }
+        },
+        onHide:(isAnimationComplete) => {
+          if (!isAnimationComplete) {
+            return
+          }
+
+          if (this.timePicker || this.onlyTimepicker){
+            this.handleChange();
+          }
+        },
       };
 
       if (this.minDate) {
@@ -267,8 +339,66 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
         options.maxDate = typeof this.maxDate === 'string' ? new Date(this.maxDate) : this.maxDate;
       }
 
+      if (this.clearable) {
+        options.buttons = ['clear'];
+      }
+
+      if (this.inline) {
+        this.adoptCalendarStyles(this.shadowRoot!);
+      }
+
       this._instance = new AirDatepicker(inputElement, options);
     }
+  }
+
+  /**
+   * Resolves where the calendar should be mounted. By default AirDatepicker mounts it in a global
+   * container on `document.body`, so ancestor shadow roots and overflow containers can't clip it.
+   * However, when the datepicker is inside a top-layer element (a modal `<dialog>` or a popover),
+   * a document-level calendar would render behind it and be inert, so we mount inside that element.
+   */
+  private getCalendarContainer(): HTMLElement | undefined {
+    const topLayer = this.findTopLayerAncestor();
+    if (!topLayer) {
+      return undefined;
+    }
+
+    let container = topLayer.querySelector<HTMLElement>(':scope > .zn-datepicker-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'air-datepicker-global-container zn-datepicker-container';
+      // Fixed positioning escapes the top-layer element's overflow clipping; AirDatepicker
+      // positions the calendar relative to this container's actual rect, so the math holds
+      container.style.cssText = 'position: fixed; top: 0; left: 0;';
+      topLayer.appendChild(container);
+    }
+
+    // Document-level calendar styles can't pierce a shadow root, so adopt them where needed
+    const root = container.getRootNode();
+    if (root instanceof ShadowRoot) {
+      this.adoptCalendarStyles(root);
+    }
+
+    return container;
+  }
+
+  private adoptCalendarStyles(root: ShadowRoot) {
+    const sheet = getAirDatepickerSheet();
+    if (!root.adoptedStyleSheets.includes(sheet)) {
+      root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
+    }
+  }
+
+  /** Finds the closest `<dialog>` or popover ancestor, crossing shadow DOM boundaries. */
+  private findTopLayerAncestor(): HTMLElement | null {
+    let node: Node | null = this.assignedSlot ?? this.parentNode;
+    while (node) {
+      if (node instanceof HTMLElement && (node.tagName === 'DIALOG' || node.hasAttribute('popover'))) {
+        return node;
+      }
+      node = (node as Element).assignedSlot ?? (node instanceof ShadowRoot ? node.host : node.parentNode);
+    }
+    return null;
   }
 
   private handleInput(event?: InputEvent) {
@@ -310,6 +440,12 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
 
   private handleKeyDown(event: KeyboardEvent) {
     if (this._instance && this._instance.visible) {
+      return;
+    }
+
+    if (event.key === 'Escape') {
+      this.input.blur();
+      event.stopPropagation();
       return;
     }
 
@@ -518,8 +654,11 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
     return formatted;
   }
 
-  protected updated(_changedProperties: PropertyValues) {
+  updated(_changedProperties: PropertyValues) {
     super.updated(_changedProperties);
+  }
+
+  firstUpdated(){
     this.init();
   }
 
@@ -603,13 +742,12 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
                    ?autofocus=${this.autofocus}
                    spellcheck=${this.spellcheck}
                    aria-describedby="help-text"
-                   @change=${this.handleChange}
                    @input=${this.handleInput}
                    @invalid=${this.handleInvalid}
                    @keydown=${this.handleKeyDown}
                    @paste=${this.handlePaste}
                    @blur=${this.handleBlur}>
-
+            <input id="date-picker-timestamp" type="hidden">
             <span part="suffix" class="input__suffix">
               <slot name="suffix"></slot>
             </span>
@@ -625,6 +763,16 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
         </div>
       </div>`
   }
+}
+
+let airDatepickerSheet: CSSStyleSheet | undefined;
+
+function getAirDatepickerSheet(): CSSStyleSheet {
+  if (!airDatepickerSheet) {
+    airDatepickerSheet = new CSSStyleSheet();
+    airDatepickerSheet.replaceSync(String(airDatepickerStyles));
+  }
+  return airDatepickerSheet;
 }
 
 const enLocale: Partial<AirDatepickerLocale> = {

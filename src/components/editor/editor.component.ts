@@ -1,9 +1,10 @@
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
-import {deepQuerySelectorAll} from "../../utilities/query";
+import {deepQuerySelectorAll, idSelector} from "../../utilities/query";
 import {FormControlController} from '../../internal/form';
+import {HasSlotController} from "../../internal/slot";
 import {on} from "../../utilities/on";
-import {property, query} from 'lit/decorators.js';
-import {trim} from "lodash";
+import {property, query, state} from 'lit/decorators.js';
+import {Store} from "../../internal/storage";
 import Attachment from "./modules/attachment/attachment";
 import ContextMenu from "./modules/context-menu/context-menu";
 import DatePicker from "./modules/date-picker/date-picker";
@@ -12,6 +13,7 @@ import DragAndDrop from "./modules/drag-drop/drag-drop";
 import Emoji from "./modules/emoji/emoji";
 import HeadlessEmoji from "./modules/emoji/headless/headless-emoji";
 import ImageResize from "./modules/image-resize/image-resize";
+import MergeField, {MergeFieldBlot, normaliseToken} from "./modules/merge-field/merge-field";
 import Quill from "quill";
 import QuillAI from "./modules/ai";
 import TimeTracking from "./modules/time-tracking/time-tracking";
@@ -21,8 +23,11 @@ import ZnTextarea from "../textarea";
 import type {OnEvent} from "../../utilities/on";
 import type {Range} from "quill";
 import type {ZincFormControl} from '../../internal/zinc-element';
+import type {ZnEditorInsertEvent} from "./modules/events/zn-editor-insert";
 import type ToolbarComponent from "./modules/toolbar/toolbar.component";
+import type ZnEditorQuickAction from "./modules/context-menu/quick-action";
 
+import formControlStyles from '../../form-control.scss';
 import styles from './editor.scss';
 
 export interface EditorFeatureConfig {
@@ -35,6 +40,7 @@ export interface EditorFeatureConfig {
   datesEnabled?: boolean;
   emojisEnabled?: boolean;
   codeEnabled?: boolean;
+  compact?: boolean;
 }
 
 /**
@@ -49,15 +55,17 @@ export interface EditorFeatureConfig {
  *
  * @slot - The default slot.
  * @slot example - An example slot.
+ * @slot help-text - Text under the editor. Alternatively, use the `help-text` attribute.
  *
  * @csspart base - The component's base wrapper.
  *
  * @cssproperty --example - An example CSS custom property.
  */
 export default class ZnEditor extends ZincElement implements ZincFormControl {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
 
   private formControlController = new FormControlController(this, {});
+  private readonly hasSlotController = new HasSlotController(this, 'help-text');
 
   @query('#editor')
   private editor: HTMLElement;
@@ -71,6 +79,25 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   @property({reflect: true}) id: string;
   @property() name: string;
   @property() value: string;
+
+  @property() placeholder = 'Compose your reply...';
+
+  /** Draws the editor as a form field: a bordered, resizable box under a small toolbar of bold, italic, link and lists. */
+  @property({type: Boolean, reflect: true}) compact = false;
+
+  /** Adds a Source button that switches to editing the raw HTML, which is submitted as written. */
+  @property({attribute: 'source', type: Boolean}) sourceEnabled = false;
+
+  /** Shows only the content, without a toolbar or box, such as the source beside a translation. */
+  @property({type: Boolean, reflect: true}) readonly = false;
+
+  /** With `compact`, a short label inside the box ahead of the content, such as a language code. */
+  @property() prefix = '';
+
+  @state() private _sourceMode = false;
+
+  /** Text under the editor that describes how to use it. If you need to display HTML, use the `help-text` slot instead. */
+  @property({attribute: 'help-text'}) helpText = '';
 
   @property({attribute: 'interaction-type', type: String})
   interactionType: 'ticket' | 'chat' = 'chat';
@@ -89,11 +116,34 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   @property({attribute: 'emojis', type: Boolean}) emojisEnabled: boolean = false;
   @property({attribute: 'code', type: Boolean}) codeEnabled: boolean = false;
   @property({attribute: 'ai', type: Boolean}) aiEnabled: boolean = false;
+
+  /**
+   * Shows `{{token}}` replacements as highlighted chips, labelled from the matching `context-items`
+   * quick action. The value still holds the raw tokens.
+   */
+  @property({attribute: 'merge-fields', type: Boolean}) mergeFieldsEnabled: boolean = false;
   @property({attribute: 'ai-path'}) aiPath: string = '';
+
+  /**
+   * Caches unsent content while typing and restores it when the editor next loads,
+   * so agent replies in tickets/chats survive reloads and navigation. Use a key
+   * unique to the conversation (e.g. the ticket ID). The cache is cleared on submit.
+   */
+  @property({attribute: 'store-key', reflect: true}) storeKey: string = "";
+
+  /** Cached-content expiry in seconds. Defaults to 1 day. */
+  @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 86400;
+
+  /** Cache to localStorage instead of sessionStorage, persisting across tabs and browser restarts. */
+  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
+
+  protected _store: Store;
 
   private quillElement: Quill;
   private _content: string = '';
   private _selectionRange: Range = {index: 0, length: 0};
+  // in-flight attachment uploads; the leave-page prompt stays while any is running
+  private _pendingUploads = 0;
 
   get validity(): ValidityState {
     return this.editorHtml.validity;
@@ -118,6 +168,11 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   setCustomValidity(message: string): void {
     this.editorHtml.setCustomValidity(message);
     this.formControlController.updateValidity();
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "zned:", this.storeTtl);
   }
 
   protected firstUpdated(_changedProperties: PropertyValues) {
@@ -149,6 +204,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     Quill.register({'modules/imageResize': ImageResize}, true);
     Quill.register({'modules/contextMenu': ContextMenu}, true);
     Quill.register({'modules/dialog': Dialog}, true);
+    if (this.mergeFieldsEnabled) {
+      Quill.register({'formats/mergeField': MergeFieldBlot, 'modules/mergeField': MergeField}, true);
+    }
 
     /* AI Modules */
     if (this.aiEnabled) {
@@ -187,6 +245,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       datesEnabled: this.datesEnabled,
       emojisEnabled: this.emojisEnabled,
       codeEnabled: this.codeEnabled,
+      compact: this.compact,
     };
 
     const quill = new Quill(this.editor, {
@@ -201,6 +260,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         keyboard: {
           bindings: bindings
         },
+        ...(this.mergeFieldsEnabled && {
+          mergeField: {labels: this._mergeFieldLabels()}
+        }),
         dialog: {
           editorId: this.id
         },
@@ -223,43 +285,54 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         ...(this.attachmentsEnabled && {
           attachment: {
             attachmentInput: this.getForm()?.querySelector('input[name="attachments"]'),
-            onFileUploaded: () => {
-              window.onbeforeunload = () => null;
-            },
-            upload: (file: File) => {
+            onFileUploaded: () => this._settleUpload(),
+            onFileUploadFailed: () => this._settleUpload(),
+            upload: async (file: File) => {
+              this._pendingUploads++;
               window.onbeforeunload = () => 'You have unsaved changes. Are you sure you want to leave?';
-              return new Promise((resolve) => {
-                const fd = new FormData();
-                fd.append('filename', file.name);
-                fd.append('size', file.size.toString());
-                fd.append('mimeType', file.type);
 
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', this.uploadAttachmentUrl, true);
-                xhr.onload = () => {
-                  if (xhr.status === 200) {
-                    const response = JSON.parse(xhr.responseText) as {
-                      uploadPath: string;
-                      uploadUrl: string;
-                      originalFilename: string;
-                    };
-                    resolve({path: response.uploadPath, url: response.uploadUrl, filename: response.originalFilename});
-                  }
-                };
-                xhr.send(fd);
-              });
+              const fd = new FormData();
+              fd.append('filename', file.name);
+              fd.append('size', file.size.toString());
+              fd.append('mimeType', file.type);
+
+              const res = await fetch(this.uploadAttachmentUrl, {method: 'POST', body: fd});
+              if (!res.ok) throw new Error(`Upload request failed: ${res.status}`);
+              const response = await res.json() as {
+                uploadPath: string;
+                uploadUrl: string;
+                originalFilename: string;
+              };
+
+              // resolve relative upload targets against the attachment url so both keep
+              // the same base path when the host page rewrites upload-attachment-url (e.g. the
+              // kubex console proxying apps under an app base); absolute urls pass through
+              const url = new URL(response.uploadUrl, new URL(this.uploadAttachmentUrl, window.location.href)).toString();
+              return {path: response.uploadPath, url, filename: response.originalFilename};
             },
           },
         }),
         imageResize: {},
         history: {}
       },
-      placeholder: 'Compose your reply...',
+      placeholder: this.placeholder,
+      readOnly: this.readonly,
       theme: 'snow',
       bounds: this.editor,
     });
 
     this.quillElement = quill;
+
+    const dialogModule = quill.getModule('dialog') as Dialog | undefined;
+    dialogModule?.component?.addEventListener('zn-editor-insert', this._handleEditorInsert);
+
+    this.getForm()?.addEventListener('submit', () => {
+      this._clearCachedContent();
+      setTimeout(() => {
+        const attachmentModule = this.quillElement.getModule('attachment') as Attachment;
+        attachmentModule?.reset();
+      }, 0);
+    });
 
     // @ts-expect-error getSelection is available it lies.
     const hasShadowRootSelection = !!(document.createElement('div').attachShadow({mode: 'open'}).getSelection);
@@ -366,6 +439,14 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       this._selectionRange = range ?? oldRange;
     });
 
+    if (this.storeKey && this._isEmpty(this.value ?? '')) {
+      const cached = this._store.get(this.storeKey);
+      if (cached) {
+        this.value = cached;
+        this.editorHtml.value = cached;
+      }
+    }
+
     const delta = quill.clipboard.convert({html: this.value});
     quill.setContents(delta, Quill.sources.SILENT);
 
@@ -373,18 +454,70 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     super.firstUpdated(_changedProperties);
   }
 
-  private _handleTextChange() {
-    this.value = this.quillElement.getSemanticHTML();
+  private _toggleSource() {
+    const source = this.renderRoot.querySelector<HTMLTextAreaElement>('.editor__source')!;
+    if (!this._sourceMode) {
+      source.value = this.value ?? '';
+    } else {
+      // Back in the editor the HTML is reduced to what it can show
+      const delta = this.quillElement.clipboard.convert({html: source.value});
+      this.quillElement.setContents(delta, Quill.sources.USER);
+    }
+    this._sourceMode = !this._sourceMode;
+  }
+
+  private _handleSourceInput(e: Event) {
+    this.value = (e.target as HTMLTextAreaElement).value;
     this.editorHtml.value = this.value;
+    this._cacheContent();
     this.emit('zn-change');
   }
 
-  private _getQuillKeyboardBindings() {
-    const empty = (value: string) => {
-      const match = value.match(/[^<pbr\s>/]/);
-      return match === null;
-    };
+  private _mergeFieldLabels(): Record<string, string> {
+    const labels: Record<string, string> = {};
+    this.querySelectorAll<ZnEditorQuickAction>('zn-editor-quick-action[slot="context-items"]').forEach(action => {
+      if (action.content && action.label) {
+        labels[normaliseToken(action.content)] = action.label;
+      }
+    });
+    return labels;
+  }
 
+  private _handleTextChange() {
+    // Quill writes every space as &nbsp;, which stops text wrapping; only runs of spaces need it
+    this.value = this.quillElement.getSemanticHTML().replace(/&nbsp;(?!&nbsp;)/g, ' ');
+    this.editorHtml.value = this.value;
+    this._cacheContent();
+    this.emit('zn-change');
+  }
+
+  private _isEmpty(value: string) {
+    return value.match(/[^<pbr\s>/]/) === null;
+  }
+
+  private _cacheContent() {
+    if (!this.storeKey || !this._store) return;
+    if (this._isEmpty(this.value)) {
+      this._store.remove(this.storeKey);
+    } else {
+      this._store.set(this.storeKey, this.value);
+    }
+  }
+
+  private _settleUpload() {
+    this._pendingUploads--;
+    if (this._pendingUploads === 0) {
+      window.onbeforeunload = () => null;
+    }
+  }
+
+  private _clearCachedContent() {
+    if (this.storeKey && this._store) {
+      this._store.remove(this.storeKey);
+    }
+  }
+
+  private _getQuillKeyboardBindings() {
     // Always add an Enter binding to support emoji selection in all interaction types
     return {
       'enter': {
@@ -400,7 +533,10 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
           if (this.interactionType === 'chat') {
             const form = this.closest('form');
-            if (form && this.value && this.value.trim().length > 0 && !empty(this.value)) {
+            const hasText = !!this.value && this.value.trim().length > 0 && !this._isEmpty(this.value);
+            const attachmentInput = form?.querySelector('input[name="attachments"]') as HTMLInputElement | null;
+            const hasAttachments = !!attachmentInput?.value && attachmentInput.value !== '[]';
+            if (form && (hasText || hasAttachments)) {
               this.emit('zn-submit', {detail: {value: this.value, element: this}});
               form.requestSubmit();
               this.quillElement.setText('');
@@ -423,19 +559,22 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     if (!target.hasAttribute('editor-mode')) return;
 
     const editorMode = target.getAttribute('editor-mode');
-    if (!editorMode) return;
+    if (editorMode !== 'replace' && editorMode !== 'insert') return;
+
+    e.preventDefault();
 
     const contentContainer = target.getAttribute('editor-content-id');
     if (!contentContainer) return;
 
     // Find which element contains the content to insert
     // Priority: currentTarget > selectedTarget > target > composedPath > querySelector
+    const contentSelector = idSelector(contentContainer);
     const contentElement: Element | null =
-      (e.currentTarget instanceof Element && e.currentTarget.closest('#' + contentContainer)) ||
-      (e.selectedTarget instanceof Element && e.selectedTarget.closest('#' + contentContainer)) ||
-      (e.target instanceof Element && e.target.closest('#' + contentContainer)) ||
-      ((e.composedPath()[0] as Element)?.closest('#' + contentContainer)) ||
-      deepQuerySelectorAll(`#${contentContainer}`, document.documentElement, '')[0];
+      (e.currentTarget instanceof Element && e.currentTarget.closest(contentSelector)) ||
+      (e.selectedTarget instanceof Element && e.selectedTarget.closest(contentSelector)) ||
+      (e.target instanceof Element && e.target.closest(contentSelector)) ||
+      ((e.composedPath()[0] as Element)?.closest(contentSelector)) ||
+      deepQuerySelectorAll(contentSelector, document.documentElement, '')[0];
     if (!contentElement) return;
 
     let content = contentElement.textContent;
@@ -444,13 +583,59 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     }
     if (!content || content === '') return;
 
-    this._content = trim(content);
+    this._content = content.trim();
 
     if (editorMode === 'replace') {
       this._replaceTextAtSelection();
     } else if (editorMode === 'insert') {
       this._insertTextAtSelection();
     }
+  }
+
+  private _handleEditorInsert = (e: ZnEditorInsertEvent) => {
+    const detail: Partial<ZnEditorInsertEvent['detail']> = e.detail ?? {};
+    const mode = detail.mode;
+    if (mode !== 'insert' && mode !== 'replace') return;
+
+    e.stopPropagation();
+
+    if (detail.html) {
+      this._insertHtml(mode, detail.html);
+      return;
+    }
+
+    if (detail.text) {
+      this._content = detail.text.trim();
+      if (mode === 'replace') {
+        this._replaceTextAtSelection();
+      } else {
+        this._insertTextAtSelection();
+      }
+    }
+  };
+
+  private _insertHtml(mode: 'insert' | 'replace', content: string) {
+    const quill = this.quillElement;
+    const range = quill.getSelection();
+
+    let index: number;
+    if (mode === 'replace') {
+      if (range && range.length > 0) {
+        quill.deleteText(range.index, range.length);
+        index = range.index;
+      } else {
+        quill.setText('');
+        index = 0;
+      }
+    } else {
+      index = range ? range.index : this._selectionRange.index;
+    }
+
+    const lengthBefore = quill.getLength();
+    quill.clipboard.dangerouslyPasteHTML(index, content, Quill.sources.USER);
+    quill.setSelection(index + Math.max(0, quill.getLength() - lengthBefore), 0);
+
+    this._closePopups();
   }
 
   private _replaceTextAtSelection() {
@@ -502,14 +687,32 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
   render() {
     return html`
-      <zn-toolbar id="toolbar">
-        <slot name="tools"></slot>
-      </zn-toolbar>
+      <div class="editor__bar">
+        <zn-toolbar id="toolbar" ?data-source=${this._sourceMode}>
+          <slot name="tools"></slot>
+        </zn-toolbar>
+        ${this.sourceEnabled && !this.readonly ? html`
+          <zn-button class="editor__source-toggle" color="transparent" size="small"
+                     icon="${this._sourceMode ? 'pencil@lu' : 'code@lu'}" icon-size="16"
+                     @click=${this._toggleSource}>${this._sourceMode ? 'Editor' : 'Source'}</zn-button>` : ''}
+      </div>
       <slot name="context-items" style="display: none;"></slot>
-      <div id="editor" x-editor-id="${this.id}"></div>
+      <div class="editor__box ${this.prefix ? 'editor__box--prefixed' : ''}">
+        ${this.prefix ? html`<span class="editor__prefix">${this.prefix}</span>` : ''}
+        <div id="editor" x-editor-id="${this.id}" ?hidden=${this._sourceMode}></div>
+        ${this.sourceEnabled ? html`
+          <textarea class="editor__source" spellcheck="false" ?hidden=${!this._sourceMode}
+                    @input=${this._handleSourceInput}></textarea>` : ''}
+      </div>
       <input type="text" id="editorHtml" name="${this.name}" value="${this.value}" style="display: none;">
       <div id="action-container" class="ql-toolbar ql-snow">
         <slot name="actions"></slot>
+      </div>
+      <div class="form-control form-control--medium form-control--has-help-text"
+           ?hidden=${!this.helpText && !this.hasSlotController.test('help-text')}>
+        <div part="form-control-help-text" class="form-control__help-text">
+          <slot name="help-text">${this.helpText}</slot>
+        </div>
       </div>
     `;
   }

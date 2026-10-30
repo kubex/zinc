@@ -81,7 +81,6 @@ export default class ZnNote extends ZincElement {
         ${!showExpandableButton ? '' : html`
           <div class="note__toggle">
             <zn-button color="transparent"
-                       size="content"
                        class="note__toggle__btn"
                        @click="${this._toggleExpand}"
                        aria-expanded="${String(this.expanded)}">

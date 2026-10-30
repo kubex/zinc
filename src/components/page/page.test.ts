@@ -1,0 +1,740 @@
+import '../../../dist/zn.min.js';
+import {aTimeout, expect, fixture, html} from '@open-wc/testing';
+import type ZnPage from './page.component';
+
+describe('<zn-page>', () => {
+  it('renders header actions and generated tabs', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title" summary="Page Summary">
+        <zn-button slot="actions" type="primary" href="/ui">UI Examples</zn-button>
+
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+        <zn-tab caption="Tab One">Tab One Content</zn-tab>
+        <zn-tab caption="Tab Two" id="tab-2">Tab Two Content</zn-tab>
+        <zn-tab caption="Dynamic Tab" uri="/tab-three"></zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const header = el.shadowRoot!.querySelector('[part="header"]')!;
+    const caption = el.shadowRoot!.querySelector('.header__caption')!;
+    const description = el.shadowRoot!.querySelector('.header__description')!;
+    const headerRight = el.shadowRoot!.querySelector('.header__right')!;
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    const navItems = navbar.shadowRoot!.querySelectorAll('li:not(.more)');
+    const actionsSlot = el.shadowRoot!.querySelector<HTMLSlotElement>('slot[name="actions"]')!;
+    const overviewTab = el.querySelector('zn-tab[caption="Overview"]')!;
+    const overviewSlot = el.shadowRoot!.querySelector<HTMLSlotElement>('slot[name="page-tab-0"]')!;
+
+    expect(header).to.exist;
+    expect(headerRight).to.exist;
+    expect(caption.textContent?.trim()).to.equal('Page Title');
+    expect(description.textContent?.trim()).to.equal('Page Summary');
+    expect(actionsSlot.assignedElements()[0].tagName).to.equal('ZN-BUTTON');
+    expect(overviewTab.parentElement).to.equal(el);
+    expect(overviewSlot.assignedElements()[0]).to.equal(overviewTab);
+    expect(navbar.hasAttribute('hide-one')).to.equal(true);
+    expect(navItems[0].getAttribute('tab')).to.equal('');
+    expect(navItems[1].getAttribute('tab')).to.equal('tab-one');
+    expect(navItems[2].getAttribute('tab')).to.equal('tab-2');
+    expect(navItems[3].getAttribute('tab-uri')).to.equal('/tab-three');
+  });
+
+  it('pushes nested expanding actions into the generated navbar', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title">
+        <zn-tab caption="Overview">
+          <div>
+            <zn-expanding-action icon="notifications" method="drop">
+              <p>Notification content</p>
+            </zn-expanding-action>
+          </div>
+        </zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(40);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    const expandingAction = navbar.shadowRoot!.querySelector('zn-expanding-action')!;
+
+    expect(navbar).to.exist;
+    expect(expandingAction).to.exist;
+    expect(getComputedStyle(navbar).display).to.not.equal('none');
+  });
+
+  it('selects page tab panels when navigation items are clicked', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title">
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+        <zn-tab caption="Details">Details Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(40);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    const navItems = Array.from(navbar.shadowRoot!.querySelectorAll<HTMLElement>('li:not(.more)'));
+
+    navItems[1].click();
+    await aTimeout(40);
+
+    const selectedPanel = el.shadowRoot!.querySelector<HTMLElement>('#content > div[selected]')!;
+    const selectedSlot = selectedPanel.querySelector<HTMLSlotElement>('slot')!;
+    const selectedTab = selectedSlot.assignedElements()[0] as HTMLElement;
+    expect(selectedPanel.id).to.equal('details');
+    expect(selectedTab.textContent?.trim()).to.equal('Details Content');
+    expect(getComputedStyle(selectedTab).display).to.not.equal('none');
+  });
+
+  describe('tab persistence', () => {
+    const originalHref = window.location.href;
+    let locationCount = 0;
+
+    const renderPage = () => fixture<ZnPage>(html`
+      <zn-page caption="Persisted Page">
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+        <zn-tab caption="Billing">Billing Content</zn-tab>
+        <zn-tab caption="Notes">Notes Content</zn-tab>
+      </zn-page>
+    `);
+
+    const clickTab = async (page: ZnPage, index: number) => {
+      const navbar = page.shadowRoot!.querySelector('zn-navbar')!;
+      navbar.shadowRoot!.querySelectorAll<HTMLElement>('li:not(.more)')[index].click();
+      await aTimeout(40);
+    };
+
+    const clickBilling = (page: ZnPage) => clickTab(page, 1);
+
+    const goBack = async () => {
+      await new Promise<void>(resolve => {
+        window.addEventListener('popstate', () => resolve(), {once: true});
+        window.history.back();
+      });
+      await aTimeout(40);
+    };
+
+    beforeEach(() => {
+      locationCount += 1;
+      window.history.pushState({}, '', `?page-test=case-${locationCount}`);
+    });
+
+    afterEach(() => window.history.replaceState({}, '', originalHref));
+
+    it('restores the active tab when the page is reloaded or returned to', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+      await clickBilling(page);
+      expect(page.getAttribute('active')).to.equal('billing');
+      page.remove();
+
+      // A reload replaces the document; the shell may also replace the history
+      // entry's state, so restoring must not depend on that state surviving.
+      window.history.replaceState({uri: window.location.pathname}, '');
+      window.dispatchEvent(new PopStateEvent('popstate'));
+
+      const restoredPage = await renderPage();
+      await aTimeout(40);
+      expect(restoredPage.getAttribute('active')).to.equal('billing');
+    });
+
+    it('uses the default tab when navigating to the page', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+      await clickBilling(page);
+      page.remove();
+
+      const stored = window.location.search;
+      window.history.pushState({}, '', '?page-test=elsewhere');
+      window.history.pushState({}, '', stored);
+
+      const freshPage = await renderPage();
+      await aTimeout(40);
+      expect(freshPage.getAttribute('active')).to.equal('');
+    });
+
+    it('restores a tab cycled without the navigation', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+
+      // Keyboard shortcuts cycle tabs directly, bypassing the navbar.
+      page.nextTab();
+      await aTimeout(40);
+      expect(page.getAttribute('active')).to.equal('billing');
+      page.remove();
+
+      window.dispatchEvent(new PopStateEvent('popstate'));
+      const restoredPage = await renderPage();
+      await aTimeout(40);
+      expect(restoredPage.getAttribute('active')).to.equal('billing');
+    });
+
+    it('steps back through each tab that was opened', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+
+      await clickTab(page, 1);
+      expect(page.getAttribute('active')).to.equal('billing');
+      await clickTab(page, 2);
+      expect(page.getAttribute('active')).to.equal('notes');
+
+      await goBack();
+      expect(page.getAttribute('active')).to.equal('billing');
+
+      await goBack();
+      expect(page.getAttribute('active')).to.equal('');
+    });
+
+    it('keeps the open tab when stepping back onto an entry that records no tab', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+
+      // The shell pushes an entry of its own for every document load, recording
+      // no tab of the page already on screen.
+      window.history.pushState({uri: window.location.pathname}, '', window.location.href);
+
+      await clickTab(page, 2);
+      expect(page.getAttribute('active')).to.equal('notes');
+
+      // Stepping onto the shell's entry says nothing about the tab, so the open
+      // one stays rather than the page dropping back to its first tab.
+      await goBack();
+      expect(page.getAttribute('active')).to.equal('notes');
+    });
+
+    it('keeps the tab history when the page is reloaded', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+      await clickTab(page, 1);
+      await clickTab(page, 2);
+      expect(page.getAttribute('active')).to.equal('notes');
+      page.remove();
+
+      // A reload replaces the document, and the shell pushes a fresh entry for it.
+      window.history.pushState({uri: window.location.pathname}, '', window.location.href);
+      window.dispatchEvent(new PopStateEvent('popstate'));
+
+      const reloadedPage = await renderPage();
+      await aTimeout(40);
+      expect(reloadedPage.getAttribute('active')).to.equal('notes');
+
+      await goBack();
+      expect(reloadedPage.getAttribute('active')).to.equal('notes');
+
+      await goBack();
+      expect(reloadedPage.getAttribute('active')).to.equal('billing');
+    });
+
+    it('steps straight back to the previous tab when the reloaded entry is kept', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+      await clickTab(page, 1);
+      await clickTab(page, 2);
+      expect(page.getAttribute('active')).to.equal('notes');
+      page.remove();
+
+      // The shell records the uri on the entry the document loaded on, rather
+      // than pushing a second entry for the same page.
+      const state = window.history.state as Record<string, unknown> | null;
+      window.history.replaceState({...state, uri: window.location.pathname}, '', window.location.href);
+      window.dispatchEvent(new PopStateEvent('popstate'));
+
+      const reloadedPage = await renderPage();
+      await aTimeout(40);
+      expect(reloadedPage.getAttribute('active')).to.equal('notes');
+
+      await goBack();
+      expect(reloadedPage.getAttribute('active')).to.equal('billing');
+
+      await goBack();
+      expect(reloadedPage.getAttribute('active')).to.equal('');
+    });
+
+    it('keeps the tab when the page is re-rendered at the same location', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+      await clickBilling(page);
+      page.remove();
+
+      const rerenderedPage = await renderPage();
+      await aTimeout(40);
+      expect(rerenderedPage.getAttribute('active')).to.equal('billing');
+    });
+
+    it('forgets the tab and its history once the page is navigated away from', async () => {
+      const page = await renderPage();
+      await aTimeout(40);
+      await clickBilling(page);
+      const pageLocation = window.location.search;
+      page.remove();
+
+      window.history.pushState({}, '', '?page-test=departed');
+      await aTimeout(40);
+
+      await goBack();
+      expect(window.location.search).to.equal(pageLocation);
+
+      const returnedPage = await renderPage();
+      await aTimeout(40);
+      expect(returnedPage.getAttribute('active')).to.equal('');
+    });
+
+    it('adds one history entry per tab, and none for the tab it opens on', async () => {
+      const lengthBeforeRender = window.history.length;
+      const page = await renderPage();
+      await aTimeout(40);
+      expect(window.history.length).to.equal(lengthBeforeRender);
+
+      await clickTab(page, 1);
+      expect(window.history.length).to.equal(lengthBeforeRender + 1);
+
+      // Reselecting the open tab is not a new step.
+      await clickTab(page, 1);
+      expect(window.history.length).to.equal(lengthBeforeRender + 1);
+    });
+  });
+
+  it('creates uri tab panels from page navigation items', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title">
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+        <zn-tab caption="Dynamic Tab" uri="/tab-three"></zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(40);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    const dynamicItem = navbar.shadowRoot!.querySelector<HTMLElement>('li[tab-uri="/tab-three"]')!;
+
+    dynamicItem.click();
+    await aTimeout(40);
+
+    const dynamicPanel = el.shadowRoot!.querySelector<HTMLElement>('#content > div[data-self-uri="/tab-three"]')!;
+    expect(dynamicPanel).to.exist;
+    expect(dynamicPanel.hasAttribute('selected')).to.equal(true);
+  });
+
+  it('loads uri tabs into the innermost page when pages are nested three layers deep', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Outer Page">
+        <zn-tab caption="Outer One">
+          <zn-page caption="Middle Page" nested>
+            <zn-tab caption="Middle One">
+              <zn-page caption="Inner Page" nested>
+                <zn-tab caption="Inner Static">Inner Static Content</zn-tab>
+                <zn-tab caption="Inner Dynamic" uri="/inner-dynamic"></zn-tab>
+              </zn-page>
+            </zn-tab>
+            <zn-tab caption="Middle Two">Middle Two Content</zn-tab>
+          </zn-page>
+        </zn-tab>
+        <zn-tab caption="Outer Two">Outer Two Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(80);
+
+    const middlePage = el.querySelector<ZnPage>('zn-page')!;
+    const innerPage = middlePage.querySelector<ZnPage>('zn-page')!;
+    const innerNavbar = innerPage.shadowRoot!.querySelector('zn-navbar')!;
+    const innerDynamicItem = innerNavbar.shadowRoot!.querySelector<HTMLElement>('li[tab-uri="/inner-dynamic"]')!;
+
+    innerDynamicItem.click();
+    await aTimeout(60);
+
+    const outerDynamicPanel = el.shadowRoot!.querySelector('#content > div[data-self-uri="/inner-dynamic"]');
+    const middleDynamicPanel = middlePage.shadowRoot!.querySelector('#content > div[data-self-uri="/inner-dynamic"]');
+    const innerDynamicPanel = innerPage.shadowRoot!.querySelector<HTMLElement>('#content > div[data-self-uri="/inner-dynamic"]')!;
+
+    expect(outerDynamicPanel).to.equal(null);
+    expect(middleDynamicPanel).to.equal(null);
+    expect(innerDynamicPanel).to.exist;
+    expect(innerDynamicPanel.hasAttribute('selected')).to.equal(true);
+  });
+
+  it('opens a tab when an element in the content with a tab attribute is clicked', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Content Tab Link">
+        <zn-tab caption="Overview" id="overview">
+          <zn-button tab="details">Open details</zn-button>
+          <zn-button tab="details" disabled>Disabled link</zn-button>
+        </zn-tab>
+        <zn-tab caption="Details" id="details">Details Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(40);
+
+    // zn-button.click() skips event dispatch, so click the rendered button as a user would.
+    const [link, disabledLink] = Array.from(el.querySelectorAll('zn-button'))
+      .map(button => button.shadowRoot!.querySelector<HTMLElement>('button')!);
+
+    disabledLink.click();
+    await aTimeout(40);
+    expect(el.getAttribute('active')).to.equal('overview');
+
+    link.click();
+    await aTimeout(40);
+    expect(el.getAttribute('active')).to.equal('details');
+    expect(el.shadowRoot!.querySelector('#details')!.hasAttribute('selected')).to.equal(true);
+    const activeItem = el.shadowRoot!.querySelector<HTMLElement>('zn-navbar li.active');
+    expect(activeItem?.getAttribute('tab')).to.equal('details');
+  });
+
+  it('leaves content tab links inside a nested page to that page', async () => {
+    const outerPage = await fixture<ZnPage>(html`
+      <zn-page caption="Nested Content Tab Link">
+        <zn-tab caption="Outer One" id="outer-one">
+          <zn-page caption="Nested Content Tab Link Inner" nested>
+            <zn-tab caption="Inner One" id="inner-one">
+              <zn-button tab="inner-two">Inner link</zn-button>
+            </zn-tab>
+            <zn-tab caption="Inner Two" id="inner-two">Inner Two Content</zn-tab>
+          </zn-page>
+        </zn-tab>
+        <zn-tab caption="Outer Two" id="inner-two">Outer Two Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(80);
+
+    const innerPage = outerPage.querySelector<ZnPage>('zn-page')!;
+    innerPage.querySelector('zn-button')!.shadowRoot!.querySelector<HTMLElement>('button')!.click();
+    await aTimeout(40);
+
+    expect(innerPage.getAttribute('active')).to.equal('inner-two');
+    expect(outerPage.getAttribute('active')).to.equal('outer-one');
+  });
+
+  it('keeps nested page tab selections scoped to the nested page', async () => {
+    const outerPage = await fixture<ZnPage>(html`
+      <zn-page caption="Outer Page">
+        <zn-tab caption="Outer One">
+          <zn-page caption="Inner Page" nested>
+            <zn-tab caption="Inner One">Inner One Content</zn-tab>
+            <zn-tab caption="Inner Two">Inner Two Content</zn-tab>
+          </zn-page>
+        </zn-tab>
+        <zn-tab caption="Outer Two">Outer Two Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(80);
+
+    const innerPage = outerPage.querySelector<ZnPage>('zn-page')!;
+    const outerNavbar = outerPage.shadowRoot!.querySelector('zn-navbar')!;
+    const innerNavbar = innerPage.shadowRoot!.querySelector('zn-navbar')!;
+    const innerSecondItem = innerNavbar.shadowRoot!.querySelectorAll<HTMLElement>('li:not(.more)')[1];
+
+    innerSecondItem.click();
+    await aTimeout(40);
+
+    expect(innerPage.getAttribute('active')).to.equal('inner-two');
+    expect(outerPage.getAttribute('active')).to.equal('outer-one');
+    expect(outerPage.shadowRoot!.querySelector('#outer-one')!.hasAttribute('selected')).to.equal(true);
+    expect(outerPage.shadowRoot!.querySelector('#outer-two')!.hasAttribute('selected')).to.equal(false);
+
+    // Even if a composed selection is delivered to an ancestor navbar, the
+    // ancestor page must ignore an item owned by the nested page.
+    outerNavbar.dispatchEvent(new CustomEvent('zn-select', {
+      bubbles: true,
+      composed: true,
+      detail: {item: innerSecondItem}
+    }));
+    await aTimeout(20);
+
+    expect(outerPage.getAttribute('active')).to.equal('outer-one');
+  });
+
+  it('uses an explicit zn-tab for overview content', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title">
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+        <zn-tab caption="Details">Details Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    const navItems = navbar.shadowRoot!.querySelectorAll('li:not(.more)');
+    const overview = el.querySelector('zn-tab')!;
+
+    expect(navItems[0].textContent?.trim()).to.equal('Overview');
+    expect(navItems[0].getAttribute('tab')).to.equal('');
+    expect(overview.getAttribute('id')).to.equal('');
+    expect(overview.getAttribute('slot')).to.equal('page-tab-0');
+    expect(overview.textContent?.trim()).to.equal('Overview Content');
+  });
+
+  it('supports zn-header location, entity, and previous path attributes', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page
+        caption="Page Title"
+        full-location="/full/path"
+        entity-id="entity-123"
+        entity-id-show
+        previous-path="/previous"
+        previous-target="main">
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const overlay = el.shadowRoot!.querySelector<HTMLElement>('.alt-overlay')!;
+    const fullLocationLink = overlay.querySelector<HTMLAnchorElement>('a')!;
+    const copyButtons = overlay.querySelectorAll('zn-copy-button');
+    const previousLink = el.shadowRoot!.querySelector<HTMLAnchorElement>('.caption__back')!;
+
+    expect(overlay.classList.contains('alt-overlay--visible')).to.equal(true);
+    expect(fullLocationLink.getAttribute('href')).to.equal('/full/path');
+    expect(copyButtons[0].getAttribute('value')).to.equal('entity-123');
+    expect(copyButtons[1].getAttribute('value')).to.equal('/full/path');
+    expect(previousLink.getAttribute('href')).to.equal('/previous');
+    expect(previousLink.getAttribute('data-target')).to.equal('main');
+  });
+
+  it('orders the empty tab id first and then by priority', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title">
+        <zn-tab caption="Later">Later Content</zn-tab>
+        <zn-tab caption="Second" priority="20">Second Content</zn-tab>
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+        <zn-tab caption="First" priority="10">First Content</zn-tab>
+        <zn-tab caption="Dynamic" priority="15" uri="/dynamic"></zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    const navItems = Array.from(navbar.shadowRoot!.querySelectorAll('li:not(.more)'));
+    expect(navItems.map(item => item.textContent?.trim())).to.deep.equal([
+      'Overview',
+      'First',
+      'Dynamic',
+      'Second',
+      'Later'
+    ]);
+    expect(navItems[0].getAttribute('tab')).to.equal('');
+    expect(navItems[2].getAttribute('tab-uri')).to.equal('/dynamic');
+    expect(el.querySelector<HTMLElement>('zn-tab[caption="Dynamic"]')!.getAttribute('id')).to.equal('dynamic');
+  });
+
+  it('preserves source order for tabs without priority', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title">
+        <zn-tab caption="Zoo">Zoo Content</zn-tab>
+        <zn-tab caption="Accounts">Accounts Content</zn-tab>
+        <zn-tab caption="Billing">Billing Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    const navItems = Array.from(navbar.shadowRoot!.querySelectorAll('li:not(.more)'));
+
+    expect(navItems.map(item => item.textContent?.trim())).to.deep.equal([
+      'Zoo',
+      'Accounts',
+      'Billing'
+    ]);
+    expect(el.querySelector<HTMLElement>('zn-tab[caption="Accounts"]')!.getAttribute('id')).to.equal('accounts');
+  });
+
+  it('preserves explicit empty tab ids', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title">
+        <zn-tab caption="Custom Overview" id="">Overview Content</zn-tab>
+        <zn-tab caption="Details">Details Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    const navItems = navbar.shadowRoot!.querySelectorAll('li:not(.more)');
+
+    expect(navItems[0].textContent?.trim()).to.equal('Custom Overview');
+    expect(navItems[0].getAttribute('tab')).to.equal('');
+  });
+
+  it('opens the next tab at the top of the content', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title" style="height: 200px;">
+        <zn-tab caption="Overview">
+          <div style="height: 2000px;">Overview Content</div>
+        </zn-tab>
+        <zn-tab caption="Details">
+          <div style="height: 2000px;">Details Content</div>
+        </zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(60);
+
+    const content = el.shadowRoot!.querySelector<HTMLElement>('#content')!;
+    content.scrollTop = 600;
+    expect(content.scrollTop, 'the content never scrolled').to.be.greaterThan(0);
+
+    // The page's first tab is registered under an empty id, so leaving it is the
+    // case a "did the tab change?" test on the id alone gets wrong.
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    navbar.shadowRoot!.querySelectorAll<HTMLElement>('li:not(.more)')[1].click();
+    await aTimeout(80);
+
+    expect(el.getAttribute('active')).to.equal('details');
+    expect(content.scrollTop).to.equal(0);
+  });
+
+  it('shows a header border when scrolled without visible navigation', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title" style="height: 120px;">
+        <zn-tab caption="Overview">
+          <div style="height: 400px;">Overview Content</div>
+        </zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const content = el.shadowRoot!.querySelector<HTMLElement>('#content')!;
+    const header = el.shadowRoot!.querySelector<HTMLElement>('.page__header')!;
+
+    expect(header.classList.contains('page__header--scrolled-no-navigation')).to.equal(false);
+
+    content.scrollTop = 10;
+    content.dispatchEvent(new Event('scroll'));
+    await el.updateComplete;
+
+    expect(header.classList.contains('page__header--scrolled-no-navigation')).to.equal(false);
+
+    content.scrollTop = 25;
+    content.dispatchEvent(new Event('scroll'));
+    await el.updateComplete;
+
+    expect(header.classList.contains('page__header--scrolled-no-navigation')).to.equal(true);
+
+    content.scrollTop = 0;
+    content.dispatchEvent(new Event('scroll'));
+    await el.updateComplete;
+
+    expect(header.classList.contains('page__header--scrolled-no-navigation')).to.equal(false);
+  });
+
+  it('does not show a header border when navigation is visible', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title" style="height: 120px;">
+        <zn-tab caption="Overview">
+          <div style="height: 400px;">Overview Content</div>
+        </zn-tab>
+        <zn-tab caption="Details">Details Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const page = el.shadowRoot!.querySelector<HTMLElement>('.page')!;
+    const header = el.shadowRoot!.querySelector<HTMLElement>('.page__header')!;
+
+    page.scrollTop = 25;
+    page.dispatchEvent(new Event('scroll'));
+    await el.updateComplete;
+
+    expect(header.classList.contains('page__header--scrolled-no-navigation')).to.equal(false);
+  });
+
+  it('reflects nested and modal modes', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title" nested modal>
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    expect(el.hasAttribute('nested')).to.equal(true);
+    expect(el.hasAttribute('modal')).to.equal(true);
+  });
+
+  it('uses the page background for the sticky header surface', async () => {
+    const el = await fixture<ZnPage>(html`
+      <div style="--zn-body: 12, 34, 56; --zn-panel: 1, 2, 3;">
+        <zn-page caption="Page Title" modal>
+          <zn-tab caption="Overview">Overview Content</zn-tab>
+        </zn-page>
+      </div>
+    `);
+    await aTimeout(20);
+
+    const page = el.querySelector<ZnPage>('zn-page')!;
+    const content = page.shadowRoot!.querySelector<HTMLElement>('.page__tabs')!;
+    const header = page.shadowRoot!.querySelector<HTMLElement>('.page__header')!;
+
+    expect(getComputedStyle(content).backgroundColor).to.equal('rgb(12, 34, 56)');
+    expect(getComputedStyle(header).backgroundColor).to.equal('rgba(12, 34, 56, 0.95)');
+  });
+
+  it('uses the panel background for a page flagged as sitting in a panel', async () => {
+    const el = await fixture<HTMLElement>(html`
+      <div style="--zn-body: 12, 34, 56; --zn-panel: 1, 2, 3;">
+        <zn-panel flush>
+          <zn-page caption="Page Title" modal panel panel-head>
+            <zn-tab caption="Overview">Overview Content</zn-tab>
+          </zn-page>
+        </zn-panel>
+      </div>
+    `);
+    await aTimeout(20);
+
+    const page = el.querySelector<ZnPage>('zn-page')!;
+    const content = page.shadowRoot!.querySelector<HTMLElement>('.page__tabs')!;
+    const header = page.shadowRoot!.querySelector<HTMLElement>('.page__header')!;
+
+    expect(getComputedStyle(content).backgroundColor).to.equal('rgb(1, 2, 3)');
+    expect(getComputedStyle(header).backgroundColor).to.equal('rgba(1, 2, 3, 0.95)');
+  });
+
+  it('uses the page surface background for active navigation items', async () => {
+    const el = await fixture<HTMLElement>(html`
+      <div style="--zn-body: 12, 34, 56; --zn-panel: 1, 2, 3;">
+        <zn-panel flush>
+          <zn-page caption="Page Title">
+            <zn-tab caption="Overview">Overview Content</zn-tab>
+            <zn-tab caption="Details">Details Content</zn-tab>
+          </zn-page>
+        </zn-panel>
+      </div>
+    `);
+    await aTimeout(40);
+
+    const page = el.querySelector<ZnPage>('zn-page')!;
+    const navbar = page.shadowRoot!.querySelector('zn-navbar')!;
+    const activeNavItem = navbar.shadowRoot!.querySelector<HTMLElement>('li.zn-tb-active')!;
+
+    await aTimeout(120);
+
+    expect(getComputedStyle(activeNavItem).backgroundColor).to.equal('rgb(1, 2, 3)');
+    expect(getComputedStyle(activeNavItem).transitionDuration).to.equal('0.1s');
+  });
+
+  it('opens the tab flagged with the selected attribute instead of the first', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title">
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+        <zn-tab caption="Dynamic Tab" uri="/tab-three" selected></zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(60);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    const uriItem = navbar.querySelector<HTMLElement>('li[tab-uri="/tab-three"]')!;
+    const overviewItem = navbar.querySelector<HTMLElement>('li[tab=""]')!;
+
+    expect(uriItem.classList.contains('active')).to.equal(true);
+    expect(overviewItem.classList.contains('active')).to.equal(false);
+  });
+
+  it('disables breadcrumbs in modal mode', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title" modal>
+        <a slot="breadcrumb" href="/parent">Parent</a>
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const header = el.shadowRoot!.querySelector<HTMLElement>('.header')!;
+
+    expect(header.classList.contains('header--has-breadcrumb')).to.equal(false);
+    expect(el.shadowRoot!.querySelector('slot[name="breadcrumb"]')).to.equal(null);
+  });
+});

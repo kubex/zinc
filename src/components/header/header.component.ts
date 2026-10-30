@@ -22,6 +22,7 @@ import styles from './header.scss';
  * @slot example - An example slot.
  *
  * @csspart base - The component's base wrapper.
+ * @csspart header-right - The container that wraps the actions slot.
  *
  * @cssproperty --example - An example CSS custom property.
  */
@@ -41,8 +42,6 @@ export default class ZnHeader extends ZincElement {
   @property() caption: string;
   @property() icon: string;
 
-  @property() description: string;
-
   @property({type: Array}) navigation = [];
 
   @property({attribute: 'full-width', type: Boolean}) fullWidth: boolean;
@@ -50,6 +49,8 @@ export default class ZnHeader extends ZincElement {
   @property({attribute: 'previous-path'}) previousPath: string;
 
   @property({attribute: 'previous-target'}) previousTarget: string;
+
+  @property({attribute: 'hide-breadcrumb', type: Boolean}) hideBreadcrumb: boolean = false;
 
   private navbar: ZnNavbar;
 
@@ -106,7 +107,7 @@ export default class ZnHeader extends ZincElement {
     const hasPreviousPath = this.previousPath;
     const hasEntityId = this.entityId;
     const hasFullLocation = this.fullLocation;
-    const hasBreadcrumb = this.hasSlotController.test('breadcrumb');
+    const hasBreadcrumb = !this.hideBreadcrumb && this.hasSlotController.test('breadcrumb');
 
     // Do not add formatting within breadcrumb or navigation - css:empty in use
     const header = html`
@@ -137,13 +138,10 @@ export default class ZnHeader extends ZincElement {
 
 
         <div class="content" part="content">
-          ${hasBreadcrumb ? html`
-            <slot name="breadcrumb" class="breadcrumb"></slot>` : null}
-
           ${hasPreviousPath ? html`
             <a href="${this.previousPath}" class="caption__back"
                data-target="${this.previousTarget ? this.previousTarget : ''}">
-              <zn-button size="content" icon="arrow_back" icon-size="24" color="transparent"></zn-button>
+              <zn-button icon="arrow-left@lu" icon-size="20" icon-button="small" plain></zn-button>
             </a>` : null}
 
           ${hasDefaultSlot ? html`
@@ -155,16 +153,14 @@ export default class ZnHeader extends ZincElement {
             <div part="header-left" class="header__left">
               <span class="header__caption" part="header-caption">
                 ${this.icon ? html`
-                  <zn-icon class="header__icon" src="${this.icon}"></zn-icon>` : null}
+                  <zn-icon class="header__icon" size=20 src="${this.icon}"></zn-icon>` : null}
+                ${hasBreadcrumb ? html`
+                  <slot name="breadcrumb" class="breadcrumb"></slot>` : null}
                 <slot name="caption">${this.caption}</slot>
                 </span>
-              ${this.description ? html`
-                  <span class="header__description"
-                        part="header-description">${this.description}</span>`
-                : ''}
             </div>
 
-            <div class="header__right">
+            <div part="header-right" class="header__right">
               <slot name="actions"></slot>
             </div>
           </div>

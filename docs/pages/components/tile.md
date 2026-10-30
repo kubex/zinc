@@ -5,24 +5,82 @@ meta:
 layout: component
 ---
 
-Tiles are versatile components designed for building lists of structured content. They provide a consistent, responsive layout for displaying items with associated metadata, images, properties, and actions. Tiles can be clickable links or static containers, making them ideal for user lists, product catalogs, file browsers, and more.
+Tiles are compact, single-line rows (48px tall) that inherit table content typography, making them ideal for building structured lists: a leading value, optional inline values, and an optional chip or action on the right. The same flexible component covers everything from a plain phone number to a multi-value transaction row.
 
 ```html:preview
 <zn-sp divide no-gap>
-  <zn-tile caption="Leslie Alexander" description="leslie.alexander@example.com" href="https://google.com">
-    <zn-icon slot="image" size="40" src="https://i.pravatar.cc/60?img=70" round></zn-icon>
-    <zn-tile-property slot="properties" caption="Co-Founder / CEO">Last seen 2h ago</zn-tile-property>
+  <zn-tile caption="Total VPN">
+    <span slot="properties">Professional</span>
+    <span slot="properties">$9.95/mo</span>
+    <zn-chip slot="actions" type="success">Active</zn-chip>
   </zn-tile>
 
-  <zn-tile caption="Michael Foster" description="michael.foster@example.com" href="https://google.com">
-    <zn-icon slot="image" size="40" src="https://i.pravatar.cc/60?img=51" round></zn-icon>
-    <zn-tile-property slot="properties" caption="Engineering Lead">Active now</zn-tile-property>
-    <div slot="actions"><zn-button size="small">Contact</zn-button></div>
+  <zn-tile caption="Galaxy 16 Plus Pro">
+    <span slot="properties">Android</span>
+    <zn-chip slot="actions" type="success">In Use</zn-chip>
   </zn-tile>
 
-  <zn-tile caption="Emma Davis" description="emma.davis@example.com">
-    <zn-icon slot="image" size="40" src="https://i.pravatar.cc/60?img=47" round></zn-icon>
-    <zn-tile-property slot="properties" caption="Product Manager">Last seen 1d ago</zn-tile-property>
+  <zn-tile caption="customer.name@example.com"></zn-tile>
+</zn-sp>
+```
+
+## Tile Row Variants
+
+A single tile adapts to a wide range of content. The leading `caption` is bold by default; add the `plain` attribute for the normal table-content weight. Values placed in the `properties` slot align to the right, and a chip or button in the `actions` slot pins to the far right.
+
+```html:preview
+<zn-sp divide no-gap>
+  <zn-tile caption="This is a Tile Row Value" plain>
+    <span slot="properties">Row value</span>
+    <span slot="properties">Row value</span>
+    <span slot="properties">Row value</span>
+    <zn-chip slot="actions">Chip</zn-chip>
+  </zn-tile>
+
+  <zn-tile caption="Total VPN" plain>
+    <span slot="properties">Professional</span>
+    <span slot="properties">$9.95/mo</span>
+    <zn-chip slot="actions" type="success">Active</zn-chip>
+  </zn-tile>
+
+  <zn-tile caption="+1 (541) 555-0198" plain></zn-tile>
+
+  <zn-tile caption="customer.name@example.com" plain></zn-tile>
+
+  <zn-tile caption="742 Evergreen Terrace, Apt 4B, Building C, Springfield, Oregon, 94777-1246" plain></zn-tile>
+
+  <zn-tile caption="14th August 2025" plain>
+    <span slot="properties">$9.95/mo</span>
+    <span slot="properties">Capture Auth [paypal-connector]</span>
+    <span slot="properties">Completed</span>
+    <zn-chip slot="actions" type="success">Capture Auth</zn-chip>
+  </zn-tile>
+
+  <zn-tile caption="Brand">
+    <span slot="properties">BrightCloud</span>
+  </zn-tile>
+
+  <zn-tile caption="Galaxy 16 Plus Pro" plain>
+    <span slot="properties">Android</span>
+    <zn-chip slot="actions" type="success">In Use</zn-chip>
+  </zn-tile>
+
+  <zn-tile caption="14th August 2026" description="Event Name"></zn-tile>
+</zn-sp>
+```
+
+### Emphasised Caption
+
+The leading caption renders bold by default to lead the row. Add `plain` when the first value should match the regular table-content weight (most data rows).
+
+```html:preview
+<zn-sp divide no-gap>
+  <zn-tile caption="Brand">
+    <span slot="properties">BrightCloud</span>
+  </zn-tile>
+
+  <zn-tile caption="Region" plain>
+    <span slot="properties">BrightCloud</span>
   </zn-tile>
 </zn-sp>
 ```
@@ -107,16 +165,32 @@ Use the `actions` slot to add buttons or other interactive elements to the right
   <zn-tile caption="Database Backup" description="Last backup: 2 hours ago">
     <zn-icon slot="image" size="32" src="storage" color="info"></zn-icon>
     <div slot="actions">
-      <zn-button size="small" color="primary">Run Now</zn-button>
+      <zn-button color="primary">Run Now</zn-button>
     </div>
   </zn-tile>
 
   <zn-tile caption="Email Notification" description="Receive daily summaries">
     <zn-icon slot="image" size="32" src="mail" color="secondary"></zn-icon>
     <div slot="actions">
-      <zn-button size="small" color="transparent" icon="edit" square></zn-button>
-      <zn-button size="small" color="transparent" icon="delete" square></zn-button>
+      <zn-button color="transparent" icon="edit" square></zn-button>
+      <zn-button color="transparent" icon="delete" square></zn-button>
     </div>
+  </zn-tile>
+</zn-sp>
+```
+
+### Stacked Actions
+
+Use `stack-actions` when a tile carries several actions, such as a row of chips. Once the tile is narrower than 600px the actions move under the caption and description and wrap, rather than squeezing the text.
+
+```html:preview
+<zn-sp divide no-gap>
+  <zn-tile stack-actions caption="Refund not received" description="Support scorecard · scored 13 Oct 2026 13:22">
+    <zn-icon slot="image" size="24" src="at-sign@lu"></zn-icon>
+    <zn-chip slot="actions" size="small" type="info" icon="messages-square@lu">Coached</zn-chip>
+    <zn-chip slot="actions" size="small" type="error" icon="circle-x@lu">Auto fail</zn-chip>
+    <zn-chip slot="actions" size="small" type="error" icon="shield-alert@lu">Compliance</zn-chip>
+    <zn-chip slot="actions" size="small" type="error">0%</zn-chip>
   </zn-tile>
 </zn-sp>
 ```
@@ -132,7 +206,7 @@ Combine both properties and actions for comprehensive tile layouts.
     <zn-tile-property slot="properties" caption="Department">Marketing</zn-tile-property>
     <zn-tile-property slot="properties" caption="Role">Manager</zn-tile-property>
     <div slot="actions">
-      <zn-button size="small">Message</zn-button>
+      <zn-button>Message</zn-button>
     </div>
   </zn-tile>
 
@@ -141,7 +215,7 @@ Combine both properties and actions for comprehensive tile layouts.
     <zn-tile-property slot="properties" caption="Department">Engineering</zn-tile-property>
     <zn-tile-property slot="properties" caption="Role">Senior Dev</zn-tile-property>
     <div slot="actions">
-      <zn-button size="small">Message</zn-button>
+      <zn-button>Message</zn-button>
     </div>
   </zn-tile>
 </zn-sp>
@@ -195,8 +269,8 @@ Example showing how to use tiles for a file browser interface.
     <zn-icon slot="image" size="36" src="description" color="error"></zn-icon>
     <zn-tile-property slot="properties" caption="Modified">2 days ago</zn-tile-property>
     <div slot="actions">
-      <zn-button size="small" color="transparent" icon="download" square></zn-button>
-      <zn-button size="small" color="transparent" icon="more_vert" square></zn-button>
+      <zn-button color="transparent" icon="download" square></zn-button>
+      <zn-button color="transparent" icon="more_vert" square></zn-button>
     </div>
   </zn-tile>
 
@@ -204,8 +278,8 @@ Example showing how to use tiles for a file browser interface.
     <zn-icon slot="image" size="36" src="description" color="success"></zn-icon>
     <zn-tile-property slot="properties" caption="Modified">Last week</zn-tile-property>
     <div slot="actions">
-      <zn-button size="small" color="transparent" icon="download" square></zn-button>
-      <zn-button size="small" color="transparent" icon="more_vert" square></zn-button>
+      <zn-button color="transparent" icon="download" square></zn-button>
+      <zn-button color="transparent" icon="more_vert" square></zn-button>
     </div>
   </zn-tile>
 </zn-sp>
@@ -262,7 +336,7 @@ Example showing tiles used for a product catalog with images and pricing.
     <zn-tile-property slot="properties" caption="Price">$299</zn-tile-property>
     <zn-tile-property slot="properties" caption="Stock">In Stock</zn-tile-property>
     <div slot="actions">
-      <zn-button size="small" color="primary">Add to Cart</zn-button>
+      <zn-button color="primary">Add to Cart</zn-button>
     </div>
   </zn-tile>
 
@@ -271,7 +345,7 @@ Example showing tiles used for a product catalog with images and pricing.
     <zn-tile-property slot="properties" caption="Price">$399</zn-tile-property>
     <zn-tile-property slot="properties" caption="Stock">Low Stock</zn-tile-property>
     <div slot="actions">
-      <zn-button size="small" color="primary">Add to Cart</zn-button>
+      <zn-button color="primary">Add to Cart</zn-button>
     </div>
   </zn-tile>
 
@@ -280,7 +354,7 @@ Example showing tiles used for a product catalog with images and pricing.
     <zn-tile-property slot="properties" caption="Price">$79</zn-tile-property>
     <zn-tile-property slot="properties" caption="Stock">In Stock</zn-tile-property>
     <div slot="actions">
-      <zn-button size="small" color="primary">Add to Cart</zn-button>
+      <zn-button color="primary">Add to Cart</zn-button>
     </div>
   </zn-tile>
 </zn-sp>
@@ -339,10 +413,10 @@ Tiles are responsive and adapt to different screen sizes. On smaller screens (be
 ### Layout Structure
 
 When using structured content (caption, description, properties, or actions), the tile automatically:
-- Applies padding (`var(--zn-spacing-large)`)
-- Creates a horizontal layout with left and right sections
-- The left section contains the image and content (max-width: 400px on desktop, 320px on tablet)
-- The right section contains properties and actions (50% width, grows to fill space)
+- Renders as a single-line row with a minimum height of `48px`, vertically centred
+- Inherits the table content typography (`--zn-text-table-content-*`)
+- Applies horizontal padding (`var(--zn-base-gap)`)
+- Creates a horizontal layout: the leading image, caption and description sit on the left; properties and actions align to the right
 
 ### Hover Effects
 
@@ -361,9 +435,8 @@ The tile uses different rendering logic based on slot usage:
 ### Content Overflow
 
 Text content in tiles uses ellipsis overflow handling:
-- Captions and descriptions are truncated with ellipsis if too long
-- Properties have a max-width of 150px and use ellipsis overflow
-- The properties container has horizontal scrolling on overflow
+- Captions and descriptions are kept on a single line and truncated with ellipsis if too long
+- The properties container hides its overflow to keep the row on a single line
 
 ## Tile Property Component
 
@@ -400,11 +473,9 @@ The following CSS parts are available for styling:
 
 Tiles use the following CSS custom properties from the Zinc design system:
 
-- `--zn-spacing-large` - Padding around tile content
-- `--zn-spacing-medium` - Gap between image and content
-- `--zn-spacing-small` - Gap between action buttons
-- `--zn-spacing-2x-small` - Margin above description text
+- `--zn-text-table-content-*` - Row typography (font-size, line-height, weight, color)
+- `--zn-base-gap` - Horizontal padding around tile content
+- `--zn-spacing-large` - Gap between properties and between left/right sections
+- `--zn-spacing-small` - Gap between action buttons and image/content
 - `--zn-color-neutral-100` - Hover background color
-- `--zn-text-heading` - Caption text color
-- `--zn-text-color` - Description text color
-- `--zn-font-size-medium` - Description font size
+- `--zn-text-heading` - Bold caption text color

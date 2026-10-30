@@ -1,10 +1,592 @@
 import '../../../dist/zn.min.js';
-import { expect, fixture, html } from '@open-wc/testing';
+import { expect, fixture, html, waitUntil } from '@open-wc/testing';
+import type ZnInlineEdit from './inline-edit.component';
+import type ZnSelect from '../select/select.component';
+import type ZnSlashMenu from '../slash-menu/slash-menu.component';
+import type ZnTextarea from '../textarea/textarea.component';
+
+// The auto-resizing textarea's ResizeObserver can emit a benign "loop completed with undelivered
+// notifications" warning while the slash menu is positioned. It's not a real error — ignore it so the
+// test runner doesn't treat it as an uncaught exception (capture phase runs before the runner's).
+window.addEventListener('error', (e: ErrorEvent) => {
+  if (typeof e.message === 'string' && e.message.includes('ResizeObserver loop')) {
+    e.stopImmediatePropagation();
+    e.preventDefault();
+  }
+}, true);
 
 describe('<zn-inline-edit>', () => {
   it('should render a component', async () => {
     const el = await fixture(html` <zn-inline-edit></zn-inline-edit> `);
-
     expect(el).to.exist;
+  });
+
+  // -- Text input (default) --
+
+  it('should render a text input by default', async () => {
+    const el = await fixture<ZnInlineEdit>(
+      html`<zn-inline-edit value="hello"></zn-inline-edit>`
+    );
+    await el.updateComplete;
+
+    const input = el.shadowRoot?.querySelector('zn-input');
+    expect(input).to.exist;
+    expect(el.value).to.equal('hello');
+  });
+
+  it('should update value on text input', async () => {
+    const el = await fixture<ZnInlineEdit>(
+      html`<zn-inline-edit value="hello"></zn-inline-edit>`
+    );
+    await el.updateComplete;
+
+    el.value = 'world';
+    await el.updateComplete;
+
+    expect(el.value).to.equal('world');
+  });
+
+  // -- Number input --
+
+  it('should render a number input when input-type is number', async () => {
+    const el = await fixture<ZnInlineEdit>(
+      html`<zn-inline-edit input-type="number" value="42"></zn-inline-edit>`
+    );
+    await el.updateComplete;
+
+    const input = el.shadowRoot?.querySelector('zn-input');
+    expect(input).to.exist;
+    expect(el.value).to.equal('42');
+  });
+
+  // -- Textarea --
+
+  it('should render a textarea when input-type is textarea', async () => {
+    const el = await fixture<ZnInlineEdit>(
+      html`<zn-inline-edit input-type="textarea" value="long text"></zn-inline-edit>`
+    );
+    await el.updateComplete;
+
+    const textarea = el.shadowRoot?.querySelector('zn-textarea');
+    expect(textarea).to.exist;
+    expect(el.value).to.equal('long text');
+  });
+
+  // -- Single select --
+
+  it('should render a select when input-type is select', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit input-type="select" value="a">
+        <zn-option value="a">Option A</zn-option>
+        <zn-option value="b">Option B</zn-option>
+      </zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    const select = el.shadowRoot?.querySelector('zn-select') as ZnSelect;
+    expect(select).to.exist;
+    expect(el.value).to.equal('a');
+  });
+
+  it('should render a select from options property', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit value="x" .options=${{ x: 'X Label', y: 'Y Label' }}></zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    const select = el.shadowRoot?.querySelector('zn-select') as ZnSelect;
+    expect(select).to.exist;
+    expect(el.value).to.equal('x');
+  });
+
+  // -- Multiple select --
+
+  it('should accept a space-delimited value attribute for multi-select', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit input-type="select" value="a b" multiple>
+        <zn-option value="a">A</zn-option>
+        <zn-option value="b">B</zn-option>
+        <zn-option value="c">C</zn-option>
+      </zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    expect(el.value).to.deep.equal(['a', 'b']);
+  });
+
+  it('should accept an array value programmatically for multi-select', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit input-type="select" multiple>
+        <zn-option value="a">A</zn-option>
+        <zn-option value="b">B</zn-option>
+        <zn-option value="c">C</zn-option>
+      </zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    el.value = ['a', 'c'];
+    await el.updateComplete;
+
+    expect(el.value).to.deep.equal(['a', 'c']);
+  });
+
+  it('should convert string value to array when multiple is set', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit input-type="select" multiple>
+        <zn-option value="a">A</zn-option>
+        <zn-option value="b">B</zn-option>
+      </zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    el.value = 'a b';
+    await el.updateComplete;
+
+    expect(el.value).to.deep.equal(['a', 'b']);
+  });
+
+  it('should pass multiple attribute to inner zn-select', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit input-type="select" multiple>
+        <zn-option value="a">A</zn-option>
+        <zn-option value="b">B</zn-option>
+      </zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    const select = el.shadowRoot?.querySelector('zn-select') as ZnSelect;
+    expect(select).to.exist;
+    expect(select.multiple).to.be.true;
+  });
+
+  it('should keep value as string when multiple is not set', async () => {
+    const el = await fixture<ZnInlineEdit>(
+      html`<zn-inline-edit value="hello"></zn-inline-edit>`
+    );
+    await el.updateComplete;
+
+    expect(el.value).to.be.a('string');
+    expect(el.value).to.equal('hello');
+  });
+
+  it('should parse multiple space-delimited IDs and pass them to the inner select', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit
+        name="exit_offers"
+        input-type="select"
+        multiple
+        value="1VGpJhp7pI62wSY04a6 6Yxa9ap7pI62wSAFFYf 8cwLe7p7pI62wSptw6C"
+        size="medium">
+        <zn-option value="1VGpJhp7pI62wSY04a6">Offer A</zn-option>
+        <zn-option value="6Yxa9ap7pI62wSAFFYf">Offer B</zn-option>
+        <zn-option value="8cwLe7p7pI62wSptw6C">Offer C</zn-option>
+        <zn-option value="otherValue">Offer D</zn-option>
+      </zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    // Value should be an array of the 3 IDs
+    expect(el.value).to.deep.equal([
+      '1VGpJhp7pI62wSY04a6',
+      '6Yxa9ap7pI62wSAFFYf',
+      '8cwLe7p7pI62wSptw6C'
+    ]);
+
+    // Inner select should exist with multiple enabled
+    const select = el.shadowRoot?.querySelector('zn-select') as ZnSelect;
+    expect(select).to.exist;
+    expect(select.multiple).to.be.true;
+
+    // Inner select value should match
+    await select.updateComplete;
+    const selectValue = Array.isArray(select.value) ? select.value : [select.value];
+    expect(selectValue).to.deep.equal([
+      '1VGpJhp7pI62wSY04a6',
+      '6Yxa9ap7pI62wSAFFYf',
+      '8cwLe7p7pI62wSptw6C'
+    ]);
+
+    // The 3 matching options should be selected, the 4th should not
+    const selectedOptions = select.selectedOptions;
+    expect(selectedOptions.length).to.equal(3);
+    expect(selectedOptions.map((o: any) => o.value)).to.deep.equal([
+      '1VGpJhp7pI62wSY04a6',
+      '6Yxa9ap7pI62wSAFFYf',
+      '8cwLe7p7pI62wSptw6C'
+    ]);
+  });
+
+  it('should select correct options when options are added after value is set (async load)', async () => {
+    // Simulates data-uri behavior: value is set before options exist
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit
+        name="offers"
+        input-type="select"
+        multiple
+        value="1VGpJhp7pI62wSY04a6 6Yxa9ap7pI62wSAFFYf 8cwLe7p7pI62wSptw6C"
+        size="medium">
+      </zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    // Inline-edit value should be preserved as array even with no options yet
+    expect(el.value).to.deep.equal([
+      '1VGpJhp7pI62wSY04a6',
+      '6Yxa9ap7pI62wSAFFYf',
+      '8cwLe7p7pI62wSptw6C'
+    ]);
+
+    // Now simulate async option load by adding options to the inner select
+    const select = el.shadowRoot?.querySelector('zn-select') as ZnSelect;
+    expect(select).to.exist;
+
+    const ids = ['1VGpJhp7pI62wSY04a6', '6Yxa9ap7pI62wSAFFYf', '8cwLe7p7pI62wSptw6C', 'otherValue'];
+    const labels = ['40% Off', 'Ultimate Discount', '100% off', '30% Off'];
+    ids.forEach((id, i) => {
+      const opt = document.createElement('zn-option');
+      opt.setAttribute('value', id);
+      opt.textContent = labels[i];
+      select.appendChild(opt);
+    });
+
+    // Trigger the select to re-process options and re-apply the value
+    select.value = el.value;
+    await select.updateComplete;
+
+    // The 3 matching options should now be selected
+    const selectValue = Array.isArray(select.value) ? select.value : [select.value];
+    expect(selectValue).to.deep.equal([
+      '1VGpJhp7pI62wSY04a6',
+      '6Yxa9ap7pI62wSAFFYf',
+      '8cwLe7p7pI62wSptw6C'
+    ]);
+  });
+
+  // -- Empty value form data submission --
+
+  it('should include empty select value in form data', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <zn-inline-edit name="myfield" input-type="select" value="">
+          <zn-option value="a">Option A</zn-option>
+          <zn-option value="b">Option B</zn-option>
+        </zn-inline-edit>
+      </form>
+    `);
+    await form.querySelector<ZnInlineEdit>('zn-inline-edit')!.updateComplete;
+
+    // new FormData(form) fires the formdata event, triggering FormControlController injection
+    const formData = new FormData(form);
+
+    expect(formData.has('myfield')).to.be.true;
+    expect(formData.get('myfield')).to.equal('');
+  });
+
+  it('should include empty select value in form data after clearing', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <zn-inline-edit name="myfield" input-type="select" value="a">
+          <zn-option value="a">Option A</zn-option>
+          <zn-option value="b">Option B</zn-option>
+        </zn-inline-edit>
+      </form>
+    `);
+    const el = form.querySelector<ZnInlineEdit>('zn-inline-edit')!;
+    await el.updateComplete;
+
+    el.value = '';
+    await el.updateComplete;
+
+    const formData = new FormData(form);
+
+    expect(formData.has('myfield')).to.be.true;
+    expect(formData.get('myfield')).to.equal('');
+  });
+
+  it('should include empty multiple select value in form data', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <zn-inline-edit name="tags" input-type="select" multiple value="">
+          <zn-option value="a">A</zn-option>
+          <zn-option value="b">B</zn-option>
+        </zn-inline-edit>
+      </form>
+    `);
+    const el = form.querySelector<ZnInlineEdit>('zn-inline-edit')!;
+    await el.updateComplete;
+
+    const formData = new FormData(form);
+
+    expect(formData.has('tags')).to.be.true;
+    expect(formData.get('tags')).to.equal('');
+  });
+
+  // -- Free text --
+
+  it('should pass free-text to the inner select', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit input-type="select" free-text>
+        <zn-option value="a">A</zn-option>
+      </zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    const select = el.shadowRoot?.querySelector('zn-select') as ZnSelect;
+    expect(select).to.exist;
+    expect(select.freeText).to.be.true;
+  });
+
+  it('should render a free-text select when free-text is set without an input-type', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit free-text></zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    const select = el.shadowRoot?.querySelector('zn-select') as ZnSelect;
+    expect(select, 'free-text should imply a select input').to.exist;
+    expect(select.freeText).to.be.true;
+  });
+
+  it('should make inner select tags removable only while editing', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit free-text multiple value="a">
+        <zn-option value="a">A</zn-option>
+      </zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    const select = el.shadowRoot?.querySelector('zn-select') as ZnSelect;
+    expect(select).to.exist;
+
+    // Display mode: tags are not removable (no X)
+    expect(select.nonRemovable).to.be.true;
+
+    // Enter edit mode
+    const editBtn = el.shadowRoot!.querySelector<HTMLElement>('.button--edit')!;
+    editBtn.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+    await el.updateComplete;
+    await select.updateComplete;
+
+    // Editing: tags become removable (X shows)
+    expect(select.nonRemovable).to.be.false;
+  });
+
+  it('should flatten array to string when multiple is not set', async () => {
+    const el = await fixture<ZnInlineEdit>(
+      html`<zn-inline-edit value="hello"></zn-inline-edit>`
+    );
+    await el.updateComplete;
+
+    el.value = ['a', 'b'] as any;
+    await el.updateComplete;
+
+    expect(el.value).to.equal('a b');
+  });
+
+  // -- Masked display value --
+
+  it('should render a zn-reveal with the masked and real values when display-value is set', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit value="real@example.com" display-value="*****@example.com"></zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    const reveal = el.shadowRoot!.querySelector('zn-reveal')!;
+    expect(reveal).to.exist;
+    expect(reveal.getAttribute('initial')).to.equal('*****@example.com');
+    expect(reveal.getAttribute('revealed')).to.equal('real@example.com');
+  });
+
+  it('should not render a zn-reveal when display-value is not set', async () => {
+    const el = await fixture<ZnInlineEdit>(
+      html`<zn-inline-edit value="hello"></zn-inline-edit>`
+    );
+    await el.updateComplete;
+
+    expect(el.shadowRoot!.querySelector('zn-reveal')).to.not.exist;
+  });
+
+  it('should enter edit mode and hide the zn-reveal when the masked display is clicked', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit value="real@example.com" display-value="*****@example.com"></zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    const reveal = el.shadowRoot!.querySelector('zn-reveal')!;
+    reveal.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+    await el.updateComplete;
+
+    expect(el.shadowRoot!.querySelector('.ai--editing')).to.exist;
+    expect(el.shadowRoot!.querySelector('zn-reveal')).to.not.exist;
+  });
+
+  it('should not enter edit mode from the masked display when disabled', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit value="real@example.com" display-value="*****@example.com" disabled></zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    const reveal = el.shadowRoot!.querySelector('zn-reveal')!;
+    reveal.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+    await el.updateComplete;
+
+    expect(el.shadowRoot!.querySelector('.ai--editing')).to.not.exist;
+  });
+
+  it('should submit the real value, not the display-value, in form data', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <zn-inline-edit name="email" value="real@example.com" display-value="*****@example.com"></zn-inline-edit>
+      </form>
+    `);
+    const el = form.querySelector<ZnInlineEdit>('zn-inline-edit')!;
+    await el.updateComplete;
+
+    const formData = new FormData(form);
+    expect(formData.get('email')).to.equal('real@example.com');
+  });
+
+  // -- clear-on-edit --
+
+  it('should start with an empty input when clear-on-edit is set', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit value="real@example.com" clear-on-edit></zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    const editBtn = el.shadowRoot!.querySelector<HTMLElement>('.button--edit')!;
+    editBtn.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+    await el.updateComplete;
+
+    expect(el.value).to.equal('');
+  });
+
+  it('should restore the original value on cancel when clear-on-edit is set', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit value="real@example.com" clear-on-edit></zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    const editBtn = el.shadowRoot!.querySelector<HTMLElement>('.button--edit')!;
+    editBtn.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+    await el.updateComplete;
+
+    const cancelBtn = el.shadowRoot!.querySelector<HTMLElement>('zn-button[icon="close"]')!;
+    cancelBtn.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+    await el.updateComplete;
+
+    expect(el.shadowRoot!.querySelector('.ai--editing')).to.not.exist;
+    expect(el.value).to.equal('real@example.com');
+  });
+
+  it('should auto-cancel and restore the value on outside click when clear-on-edit is set and nothing was typed', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit value="real@example.com" clear-on-edit></zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    const editBtn = el.shadowRoot!.querySelector<HTMLElement>('.button--edit')!;
+    editBtn.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+    await el.updateComplete;
+
+    document.dispatchEvent(new MouseEvent('click', {bubbles: true}));
+    await el.updateComplete;
+
+    expect(el.shadowRoot!.querySelector('.ai--editing')).to.not.exist;
+    expect(el.value).to.equal('real@example.com');
+  });
+
+  // -- Slash menu --
+
+  describe('slash menu', () => {
+    async function openSlashMenu(el: ZnInlineEdit) {
+      await el.updateComplete;
+
+      el.shadowRoot!.querySelector<HTMLElement>('.ai__left')!
+        .dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+      await el.updateComplete;
+
+      const textarea = el.shadowRoot!.querySelector<ZnTextarea>('zn-textarea')!;
+      await textarea.updateComplete;
+
+      textarea.focus();
+      textarea.input.value = '/';
+      textarea.input.setSelectionRange(1, 1);
+      textarea.input.dispatchEvent(new InputEvent('input', {bubbles: true, composed: true}));
+
+      const menuOf = () => textarea.shadowRoot!.querySelector<ZnSlashMenu>('zn-slash-menu');
+      await waitUntil(() => menuOf()?.open, 'the slash menu never opened');
+
+      return {textarea, menu: menuOf()!};
+    }
+
+    it('offers its slash items on the inner textarea', async () => {
+      const el = await fixture<ZnInlineEdit>(html`
+        <zn-inline-edit input-type="textarea"
+                        slash-items="Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}"></zn-inline-edit>`);
+      const {menu} = await openSlashMenu(el);
+
+      expect(menu.items.map(item => item.label)).to.deep.equal(['Brand name', 'Support email']);
+    });
+
+    it('forwards a custom trigger', async () => {
+      const el = await fixture<ZnInlineEdit>(html`
+        <zn-inline-edit input-type="textarea" slash-trigger="{{"
+                        slash-items="Brand name={{BRAND_NAME}}"></zn-inline-edit>`);
+      await el.updateComplete;
+
+      const textarea = el.shadowRoot!.querySelector<ZnTextarea>('zn-textarea')!;
+      expect(textarea.slashTrigger).to.equal('{{');
+    });
+
+    it('does not submit the form when Enter chooses an item', async () => {
+      const form = await fixture<HTMLFormElement>(html`
+        <form>
+          <zn-inline-edit input-type="textarea" slash-items="Brand name={{BRAND_NAME}}"></zn-inline-edit>
+        </form>`);
+      const el = form.querySelector<ZnInlineEdit>('zn-inline-edit')!;
+
+      let submits = 0;
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        submits++;
+      });
+
+      const {textarea} = await openSlashMenu(el);
+      textarea.input.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'Enter',
+        bubbles: true,
+        composed: true,
+        cancelable: true
+      }));
+      await el.updateComplete;
+
+      expect(el.value, 'the token should have replaced the trigger').to.equal('{{BRAND_NAME}}');
+      expect(submits, 'Enter belongs to the open menu, not the form').to.equal(0);
+    });
+  });
+
+  // The theme stylesheet isn't loaded in tests, so the sizing tokens the reveal and the input both
+  // key off have to be supplied for the comparison to mean anything.
+  it('should keep the same height whether it shows a reveal or the input it replaces', async () => {
+    const tokens = 'display: contents; --zn-input-height-medium: 36px; --zn-line-height-looser: 3;';
+    const plain = await fixture<HTMLDivElement>(html`
+      <div style="${tokens}">
+        <zn-inline-edit name="email" value="alan.jones@example.com"></zn-inline-edit>
+      </div>
+    `);
+    const masked = await fixture<HTMLDivElement>(html`
+      <div style="${tokens}">
+        <zn-inline-edit name="email" value="alan.jones@example.com"
+                        display-value="\u2022\u2022\u2022\u2022\u2022@example.com"></zn-inline-edit>
+      </div>
+    `);
+    const [plainEdit, maskedEdit] = [plain, masked].map(el => el.querySelector<ZnInlineEdit>('zn-inline-edit')!);
+    await Promise.all([plainEdit.updateComplete, maskedEdit.updateComplete]);
+
+    const height = (el: ZnInlineEdit) =>
+      el.shadowRoot!.querySelector<HTMLElement>('.ai')!.getBoundingClientRect().height;
+
+    expect(height(maskedEdit)).to.equal(height(plainEdit));
   });
 });

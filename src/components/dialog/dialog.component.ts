@@ -1,6 +1,7 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
+import {idSelector} from "../../utilities/query";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property, query} from 'lit/decorators.js';
 import {unlockBodyScrolling} from "../../internal/scroll";
@@ -63,7 +64,7 @@ export default class ZnDialog extends ZincElement {
   @property({reflect: true}) variant: 'default' | 'warning' | 'announcement' = 'default';
 
   /** The dialog's size. */
-  @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
+  @property({reflect: true}) size: 'small' | 'medium' | 'large' | 'custom' = 'medium';
 
   /**
    * Indicated whether of not the dialog is open. You can toggle this attribute to show and hide the dialog, or you can
@@ -105,7 +106,7 @@ export default class ZnDialog extends ZincElement {
     this.shadowRoot?.addEventListener('click', this.closeClickHandler);
 
     if (this.trigger) {
-      const trigger = this.parentNode?.querySelector('#' + this.trigger);
+      const trigger = this.parentNode?.querySelector(idSelector(this.trigger));
       if (trigger) {
         trigger.addEventListener('click', () => this.show());
       }
@@ -132,7 +133,7 @@ export default class ZnDialog extends ZincElement {
     this.removeEventListener('click', this.closeClickHandler);
 
     if (this.trigger) {
-      const trigger = this.parentElement?.querySelector('#' + this.trigger);
+      const trigger = this.parentElement?.querySelector(idSelector(this.trigger));
       if (trigger) {
         trigger.removeEventListener('click', () => this.show());
       }
@@ -183,6 +184,20 @@ export default class ZnDialog extends ZincElement {
   private closeClickHandler = (event: MouseEvent) => {
     if (event.target instanceof HTMLElement && event.target.hasAttribute('dialog-closer')) {
       this.hide();
+      return;
+    }
+
+    // `modal-closer` works from nested shadow roots (e.g. zn-form-actions' cancel button),
+    // where retargeting hides the source from event.target. Walk outward from the click:
+    // hitting another modal first means the closer belongs to it, not this dialog.
+    for (const el of event.composedPath()) {
+      if (el === this) return;
+      if (!(el instanceof HTMLElement)) continue;
+      if (el.hasAttribute('modal-closer')) {
+        this.hide();
+        return;
+      }
+      if (el.localName === 'zn-dialog' || el.localName === 'zn-slideout') return;
     }
   }
 
@@ -220,7 +235,8 @@ export default class ZnDialog extends ZincElement {
               <h2 part="title" class="dialog__title" id="title">
                 <slot name="header-icon"></slot>
                 <slot name="announcement-intro"></slot>
-                <slot name="label"> ${this.label && this.label.length > 0 ? this.label : String.fromCharCode(65279)}
+                <slot name="label" class="dialog__label">
+                  ${this.label && this.label.length > 0 ? this.label : String.fromCharCode(65279)}
                 </slot>
               </h2>
               <div part="header-actions" class="dialog__header-actions">
@@ -229,11 +245,10 @@ export default class ZnDialog extends ZincElement {
                   part="close-button"
                   exportparts="base:close-button__base"
                   class="dialog__close"
-                  icon="close"
+                  icon="x@lu"
                   icon-size="24"
-                  type="button"
-                  color="transparent"
-                  size="content"
+                  icon-button="small"
+                  plain
                   @click="${() => this.requestClose('close-button')}"
                 ></zn-button>
               </div>

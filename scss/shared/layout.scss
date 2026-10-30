@@ -48,6 +48,11 @@
   justify-content: space-between;
 }
 
+.flex-end {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .flex-bottom {
   display: flex;
   align-items: flex-end;
@@ -70,59 +75,59 @@
 }
 
 .zn-pad-y, .zn-py {
-  padding-top: #{mixins.spacing(md)};
-  padding-bottom: #{mixins.spacing(md)};
+  padding-top: #{mixins.spacing(sm)};
+  padding-bottom: #{mixins.spacing(sm)};
 }
 
 .zn-pad-x, .zn-px {
-  padding-left: #{mixins.spacing(md)};
-  padding-right: #{mixins.spacing(md)};
+  padding-left: #{mixins.spacing(sm)};
+  padding-right: #{mixins.spacing(sm)};
 }
 
 .zn-pr {
-  padding-right: #{mixins.spacing(md)};
+  padding-right: #{mixins.spacing(sm)};
 }
 
 .zn-pl {
-  padding-left: #{mixins.spacing(md)};
+  padding-left: #{mixins.spacing(sm)};
 }
 
 .zn-pt {
-  padding-top: #{mixins.spacing(md)};
+  padding-top: #{mixins.spacing(sm)};
 }
 
 .zn-pb {
-  padding-bottom: #{mixins.spacing(md)};
+  padding-bottom: #{mixins.spacing(sm)};
 }
 
 .zn-margin {
-  margin: #{mixins.spacing(md)};
+  margin: #{mixins.spacing(sm)};
 }
 
 .zn-mx {
-  margin-left: #{mixins.spacing(md)};
-  margin-right: #{mixins.spacing(md)};
+  margin-left: #{mixins.spacing(sm)};
+  margin-right: #{mixins.spacing(sm)};
 }
 
 .zn-my {
-  margin-top: #{mixins.spacing(md)};
-  margin-bottom: #{mixins.spacing(md)};
+  margin-top: #{mixins.spacing(sm)};
+  margin-bottom: #{mixins.spacing(sm)};
 }
 
 .zn-mt {
-  margin-top: #{mixins.spacing(md)};
+  margin-top: #{mixins.spacing(sm)};
 }
 
 .zn-mb {
-  margin-bottom: #{mixins.spacing(md)};
+  margin-bottom: #{mixins.spacing(sm)};
 }
 
 .zn-ml {
-  margin-left: #{mixins.spacing(md)};
+  margin-left: #{mixins.spacing(sm)};
 }
 
 .zn-mr {
-  margin-right: #{mixins.spacing(md)};
+  margin-right: #{mixins.spacing(sm)};
 }
 
 
@@ -200,7 +205,15 @@
 }
 
 .zn-panel-bg {
+  --zn-page-surface-background: var(--zn-panel);
   background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
+}
+
+.zn-panel {
+  background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: var(--zn-border-radius);
+  --zn-page-surface-background: var(--zn-panel);
 }
 
 .zn-container {
@@ -241,27 +254,27 @@
 
 .zn-border {
   border-style: solid;
-  border-width: 1px !important;
+  border-width: 1px;
 }
 
 .zn-bt {
   border-top-style: solid;
-  border-top-width: 1px !important;
+  border-top-width: 1px;
 }
 
 .zn-bb {
   border-bottom-style: solid;
-  border-bottom-width: 1px !important;
+  border-bottom-width: 1px;
 }
 
 .zn-bl {
   border-left-style: solid;
-  border-left-width: 1px !important;
+  border-left-width: 1px;
 }
 
 .zn-br {
   border-right-style: solid;
-  border-right-width: 1px !important;
+  border-right-width: 1px;
 }
 
 .unifi-action {
@@ -274,17 +287,31 @@
 .zn-panel-bar {
   border-bottom: 1px solid rgb(var(--zn-border-color));
   background-color: rgba(var(--zn-panel), 0.9);
-  padding: 3px;
-  gap: 3px;
+  padding: var(--zn-base-px);
+  gap: var(--zn-base-px);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   z-index: 1;
 }
 
+.zn-panel-bar--pill {
+  border-radius: var(--zn-border-radius);
+  border: 1px solid rgb(var(--zn-border-color));
+}
+
 .zn-panel-bar--large {
-  padding: 6px;
-  gap: 6px;
+  padding: var(--zn-base-px) calc(var(--zn-base-gap) + var(--zn-gutter));
+  gap: var(--zn-base-px);
+  height: 50px;
+
+  // The height is fixed, so a second row would spill over the bar — scroll
+  // sideways instead of wrapping
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  @include mixins.scrollbars-self;
 }
 
 .scroll-container {

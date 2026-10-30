@@ -1,5 +1,4 @@
 @use "../../wc";
-@use "../../form-control";
 
 :host {
   display: block;
@@ -12,7 +11,6 @@
   justify-content: start;
   position: relative;
   width: 100%;
-  box-shadow: var(--zn-shadow-x-small);
   font-family: var(--zn-input-font-family), sans-serif;
   font-weight: var(--zn-input-font-weight);
   letter-spacing: var(--zn-input-letter-spacing);
@@ -91,6 +89,7 @@
   margin: 0;
   cursor: inherit;
   -webkit-appearance: none;
+  line-height: var(--zn-input-line-height);
 }
 
 /* Color input text should use monospace font */
@@ -127,6 +126,11 @@ input[type='text'].input__control[data-color-input] {
 
 .input__control:focus {
   outline: none;
+}
+
+.input__prefix {
+  // Holds the text at the same start for prefixes of differing widths, such as language codes
+  min-width: var(--zn-input-prefix-min-width, 0);
 }
 
 .input__prefix,
@@ -166,7 +170,7 @@ input[type='text'].input__control[data-color-input] {
 
 .input--x-small .input__control {
   height: calc(var(--zn-input-height-x-small) - var(--zn-input-border-width) * 2);
-  padding: 0 var(--zn-input-spacing-small);
+  padding: 0 var(--zn-input-spacing-small) 0 var(--zn-spacing-small);
 }
 
 .input--x-small .input__clear,
@@ -176,7 +180,7 @@ input[type='text'].input__control[data-color-input] {
 
 .input--x-small .input__prefix ::slotted(*),
 .input__prefix-default {
-  margin-inline-start: var(--zn-input-spacing-x-small);
+  margin-inline-start: var(--zn-spacing-x-small);
 }
 
 .input--x-small .input__suffix ::slotted(*),
@@ -200,7 +204,7 @@ input[type='text'].input__control[data-color-input] {
 
 .input--small .input__control {
   height: calc(var(--zn-input-height-small) - var(--zn-input-border-width) * 2);
-  padding: 0 var(--zn-input-spacing-small);
+  padding: 0 var(--zn-input-spacing-small) 0 var(--zn-spacing-small);
 }
 
 .input--small .input__clear,
@@ -234,7 +238,7 @@ input[type='text'].input__control[data-color-input] {
 
 .input--medium .input__control {
   height: calc(var(--zn-input-height-medium) - var(--zn-input-border-width) * 2);
-  padding: 0 var(--zn-input-spacing-small);
+  padding: 0 var(--zn-input-spacing-small) 0 var(--zn-spacing-small);
 }
 
 .input--medium .input__clear,
@@ -244,12 +248,12 @@ input[type='text'].input__control[data-color-input] {
 
 .input--medium .input__prefix ::slotted(*),
 .input__prefix-default {
-  margin-inline-start: var(--zn-input-spacing-medium);
+  margin-inline-start: var(--zn-spacing-small);
 }
 
 .input--medium .input__suffix ::slotted(*),
 .input__suffix-default {
-  margin-inline-end: var(--zn-input-spacing-medium);
+  margin-inline-end: var(--zn-spacing-small);
 }
 
 .input--medium .input__suffix ::slotted(zn-button),
@@ -260,6 +264,20 @@ input[type='text'].input__control[data-color-input] {
   margin-inline-start: 0;
 }
 
+.input__suffix ::slotted(zn-button),
+.input__prefix ::slotted(zn-button) {
+  --zn-button-border-color: rgb(var(--zn-color-border));
+  --zn-button-border-width: 0;
+}
+
+.input__suffix ::slotted(zn-button) {
+  --zn-button-border-left-width: 1px;
+}
+
+.input__prefix ::slotted(zn-button) {
+  --zn-button-border-right-width: 1px;
+}
+
 .input--large {
   border-radius: var(--zn-input-border-radius-large);
   font-size: var(--zn-input-font-size-large);
@@ -268,7 +286,7 @@ input[type='text'].input__control[data-color-input] {
 
 .input--large .input__control {
   height: calc(var(--zn-input-height-large) - var(--zn-input-border-width) * 2);
-  padding: 0 var(--zn-input-spacing-medium);
+  padding: 0 var(--zn-input-spacing-medium) 0 var(--zn-spacing-small);
 }
 
 .input--large .input__clear,
@@ -369,51 +387,163 @@ input[type='date']::-webkit-calendar-picker-indicator {
   background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="14" width="12.25" viewBox="0 0 448 512"><path fill="%236d7176" d="M128 0c13.3 0 24 10.7 24 24V64H296V24c0-13.3 10.7-24 24-24s24 10.7 24 24V64h40c35.3 0 64 28.7 64 64v16 48V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V192 144 128C0 92.7 28.7 64 64 64h40V24c0-13.3 10.7-24 24-24zM400 192H48V448c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V192zM112 256h96c8.8 0 16 7.2 16 16v96c0 8.8-7.2 16-16 16H112c-8.8 0-16-7.2-16-16V272c0-8.8 7.2-16 16-16z"/></svg>');
 }
 
-/* Color input styling */
+/* Color input styling — the preview fills the trailing edge of the field */
 .input__color-swatch {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.75rem;
-  height: 1.75rem;
-  border-radius: var(--zn-border-radius-medium);
-  border: solid 1px rgba(0, 0, 0, 0.15);
+  align-self: stretch;
+  border: none;
+  border-inline-start: solid var(--zn-input-border-width) var(--zn-input-border-color);
+  border-radius: 0;
   background-color: var(--zn-color-neutral-0);
   cursor: pointer;
-  transition: var(--zn-transition-fast) border-color, var(--zn-transition-fast) box-shadow;
   overflow: hidden;
   position: relative;
   flex-shrink: 0;
-  margin-inline-start: var(--zn-input-spacing-small);
+  margin: 0;
 
-  &:hover {
-    border-color: rgba(0, 0, 0, 0.25);
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+  &:hover .input__color-swatch-inner {
+    filter: brightness(0.95);
   }
-}
-
-/* Size-specific spacing adjustments for color swatch */
-.input--x-small .input__color-swatch {
-  margin-inline-start: var(--zn-input-spacing-x-small);
-}
-
-.input--small .input__color-swatch {
-  margin-inline-start: var(--zn-input-spacing-small);
-}
-
-.input--medium .input__color-swatch {
-  margin-inline-start: var(--zn-input-spacing-medium);
-}
-
-.input--large .input__color-swatch {
-  margin-inline-start: var(--zn-input-spacing-medium);
 }
 
 .input__color-swatch-inner {
   width: 100%;
   height: 100%;
-  border-radius: calc(var(--zn-border-radius-medium) - 2px);
   background-color: var(--color-value, #000000);
+  transition: var(--zn-transition-fast) filter;
+}
+
+/* Size adjustments for color inputs — .input clips the trailing corners */
+.input--x-small .input__color-swatch {
+  width: calc(var(--zn-input-height-x-small) * 1.2);
+}
+
+.input--small .input__color-swatch {
+  width: calc(var(--zn-input-height-small) * 1.2);
+}
+
+.input--medium .input__color-swatch {
+  width: calc(var(--zn-input-height-medium) * 1.2);
+}
+
+.input--large .input__color-swatch {
+  width: calc(var(--zn-input-height-large) * 1.2);
+}
+
+/* Range inputs render as a bare track, with the value shown in the context note above */
+/* The thumb already leaves clear space above the track, so drop the label/field gap */
+:host([type='range']) .form-control--has-label .form-control__label,
+:host([type='range']) .form-control__label-context-note {
+  margin-bottom: 0;
+}
+
+:host([type='range']) .form-control-input {
+  margin-top: 0;
+}
+
+.input--standard.input--range {
+  --zn-range-track-height: 6px;
+  --zn-range-track-color: var(--zn-color-neutral-200);
+  --zn-range-thumb-size: 18px;
+  --zn-range-thumb-color: var(--zn-color-primary-600);
+  --zn-range-thumb-ring-width: 4px;
+
+  align-items: center;
+  height: var(--zn-range-thumb-size);
+  padding: 0;
+  overflow: visible;
+  cursor: pointer;
+}
+
+/* Matches the specificity of the hover/focus/disabled chrome rules above so the track stays bare */
+.input--standard.input--range,
+.input--standard.input--range:hover,
+.input--standard.input--range.input--focused,
+.input--standard.input--range.input--disabled {
+  border: none;
+  background: none;
+  box-shadow: none;
+}
+
+.input--standard.input--range.input--x-small {
+  --zn-range-track-height: 4px;
+  --zn-range-thumb-size: 14px;
+  --zn-range-thumb-ring-width: 3px;
+}
+
+.input--standard.input--range.input--small {
+  --zn-range-track-height: 5px;
+  --zn-range-thumb-size: 16px;
+  --zn-range-thumb-ring-width: 3px;
+}
+
+.input--standard.input--range.input--large {
+  --zn-range-track-height: 7px;
+  --zn-range-thumb-size: 20px;
+}
+
+.input--range .input__control {
+  -webkit-appearance: none;
+  appearance: none;
+  height: var(--zn-range-thumb-size);
+  padding: 0;
+  margin: 0;
+  background: none;
+  cursor: inherit;
+}
+
+.input--range .input__control::-webkit-slider-runnable-track {
+  height: var(--zn-range-track-height);
+  border-radius: calc(var(--zn-range-track-height) / 2);
+  background-color: var(--zn-range-track-color);
+}
+
+.input--range .input__control::-moz-range-track {
+  height: var(--zn-range-track-height);
+  border-radius: calc(var(--zn-range-track-height) / 2);
+  background-color: var(--zn-range-track-color);
+}
+
+.input--range .input__control::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: var(--zn-range-thumb-size);
+  height: var(--zn-range-thumb-size);
+  margin-top: calc((var(--zn-range-track-height) - var(--zn-range-thumb-size)) / 2);
+  border: var(--zn-range-thumb-ring-width) solid var(--zn-color-neutral-0);
+  border-radius: 50%;
+  background-color: var(--zn-range-thumb-color);
+  box-shadow: 0 0 0 1px var(--zn-input-border-color);
+  transition: var(--zn-transition-fast) box-shadow, var(--zn-transition-fast) background-color;
+}
+
+.input--range .input__control::-moz-range-thumb {
+  width: var(--zn-range-thumb-size);
+  height: var(--zn-range-thumb-size);
+  box-sizing: border-box;
+  border: var(--zn-range-thumb-ring-width) solid var(--zn-color-neutral-0);
+  border-radius: 50%;
+  background-color: var(--zn-range-thumb-color);
+  box-shadow: 0 0 0 1px var(--zn-input-border-color);
+  transition: var(--zn-transition-fast) box-shadow, var(--zn-transition-fast) background-color;
+}
+
+.input--range:hover:not(.input--disabled) .input__control::-webkit-slider-thumb {
+  background-color: var(--zn-color-primary-500);
+  box-shadow: 0 0 0 1px var(--zn-input-border-color-hover);
+}
+
+.input--range:hover:not(.input--disabled) .input__control::-moz-range-thumb {
+  background-color: var(--zn-color-primary-500);
+  box-shadow: 0 0 0 1px var(--zn-input-border-color-hover);
+}
+
+.input--range .input__control:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color);
+}
+
+.input--range .input__control:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color);
 }
 
 /* Hide the native color input but keep it functional */
@@ -429,23 +559,3 @@ input[type='date']::-webkit-calendar-picker-indicator {
   visibility: hidden;
 }
 
-/* Size adjustments for color inputs */
-.input--x-small .input__color-swatch {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
-.input--small .input__color-swatch {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
-.input--medium .input__color-swatch {
-  width: 1.75rem;
-  height: 1.75rem;
-}
-
-.input--large .input__color-swatch {
-  width: 2rem;
-  height: 2rem;
-}

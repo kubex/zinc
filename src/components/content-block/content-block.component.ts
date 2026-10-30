@@ -1,18 +1,38 @@
 import {classMap} from "lit/directives/class-map.js";
 import {deepQuerySelectorAll} from "../../utilities/query";
 import {HasSlotController} from "../../internal/slot";
-import type {PropertyValues} from 'lit';
-import {html, nothing, unsafeCSS} from 'lit';
-import {property, queryAssignedNodes, queryAsync} from 'lit/decorators.js';
-import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
+import {html, unsafeCSS} from 'lit';
+import {htmlToText, looksLikeHtml} from './html-text';
+import {MutationController} from '@lit-labs/observers/mutation-controller.js';
+import {property, queryAssignedNodes, queryAsync, state} from 'lit/decorators.js';
+import {sanitizeHtml} from '../../utilities/sanitize-html';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import ZincElement from "../../internal/zinc-element";
+import type {PropertyValues} from 'lit';
 import type ZnTile from "../tile";
 
 import styles from './content-block.scss';
 
+// What the editor (Quill) can produce beyond the sanitizer's defaults
+const EDITOR_TAGS = ['s', 'code', 'pre', 'blockquote', 'hr', 'span'];
+
+// The iframe can't see the shadow styles, so editor formatting is restyled to match the text view
+const IFRAME_STYLES = 'html,body{background-color:#fff;margin:0}img{max-width:100%;max-height:500px}'
+  + 'p{margin:0}ul,ol{margin:0;padding-left:1.5em}'
+  + 'blockquote{border-left:4px solid #ddd;margin:5px 0;padding-left:16px}'
+  + 'code{background-color:#f0f0f0;border-radius:3px;font-size:85%;padding:2px 4px}'
+  + 'pre{background-color:#23241f;border-radius:3px;margin:5px 0;padding:5px 10px;color:#f8f8f2;overflow:auto}'
+  + 'pre code{background:none;padding:0}'
+  + 'hr{border:none;border-top:1px solid #ddd;margin:8px 0}'
+  + 'li[data-list=checked],li[data-list=unchecked]{list-style:none}'
+  + 'li[data-list=checked]::before{content:"☑";color:#777;margin:0 .3em 0 -1.5em}'
+  + 'li[data-list=unchecked]::before{content:"☐";color:#777;margin:0 .3em 0 -1.5em}';
+
 interface TextRow {
   lines: string[];
   type: 'reply' | 'text';
+  /** `lines` holds a single sanitized HTML string. */
+  html?: boolean;
 }
 
 /**
@@ -20,6 +40,12 @@ interface TextRow {
  * @documentation https://zinc.style/components/content-block
  * @status experimental
  * @since 1.0
+ *
+ * @slot attachments - Attachments displayed at the bottom of the content when the block is
+ * expanded. Use `zn-chat-message-attachment`, which auto-assigns itself to this slot.
+ *
+ * @csspart attachments - The attachments row at the bottom of the content.
+ * @csspart header-attachments - The attachment count indicator in the header.
  */
 export default class ContentBlock extends ZincElement {
   static styles = unsafeCSS(styles);
@@ -42,9 +68,15 @@ export default class ContentBlock extends ZincElement {
 
   private readonly hasSlotController = new HasSlotController(this, 'text', 'html');
 
+  @state() private attachmentCount = 0;
+
   private _textRows: TextRow[] = [];
 
-  private _footerObserver?: MutationObserver;
+  private readonly _footerObserver = new MutationController(this, {
+    target: null,
+    config: {subtree: true, childList: true, attributes: true, attributeFilter: ['href', 'download', 'caption']},
+    callback: () => this._debouncedReplace(),
+  });
   private _replaceDebounce: number = 0;
 
   connectedCallback() {
@@ -53,14 +85,13 @@ export default class ContentBlock extends ZincElement {
       if (iframe.contentDocument) {
         const div = this.htmlNodes[0] as HTMLDivElement;
         if (div) {
-          let convertedHtml = div?.innerHTML ?? '';
-          convertedHtml = convertedHtml.replace(/&nbsp;/g, ' ');
-          convertedHtml = convertedHtml.replace(/&lt;/g, '<');
-          convertedHtml = convertedHtml.replace(/&gt;/g, '>');
+          // Escaped source has no element children; textContent decodes it once, including &amp;nbsp;
+          let convertedHtml = div.children.length ? div.innerHTML : div.textContent ?? '';
           convertedHtml = convertedHtml.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
 
-          const baseStyles = "<style>body,html{background-color: #ffffff}img{max-width:100%; max-height: 500px;}</style>";
-          iframe.srcdoc = baseStyles + convertedHtml;
+          const {fontFamily, fontSize, lineHeight, color} = getComputedStyle(this.shadowRoot?.querySelector('.text-section') ?? this);
+          iframe.srcdoc = `<style>body{font-family:${fontFamily};font-size:${fontSize};line-height:${lineHeight};color:${color}}${IFRAME_STYLES}</style>`
+            + convertedHtml;
         }
       }
 
@@ -71,43 +102,35 @@ export default class ContentBlock extends ZincElement {
   }
 
   disconnectedCallback() {
-    try {
-      if (this._footerObserver) {
-        this._footerObserver.disconnect();
-        this._footerObserver = undefined;
-      }
-      if (this._replaceDebounce) {
-        clearTimeout(this._replaceDebounce);
-        this._replaceDebounce = 0;
-      }
-    } finally {
-      // Ensure base class cleanup
-      // @ts-ignore - base may or may not implement disconnectedCallback
-      super.disconnectedCallback?.();
+    if (this._replaceDebounce) {
+      clearTimeout(this._replaceDebounce);
+      this._replaceDebounce = 0;
     }
+    super.disconnectedCallback();
   }
 
   private _collapseContent(e: Event) {
     if (this.noCollapse) {
       return;
     }
-    const target = e.target as HTMLElement;
-    const headerClick = target.classList.contains('content-block-header') ||
-      target.parentElement?.classList.contains('content-block-header');
 
-    if (headerClick && target.slot !== 'nav') {
-      this.short = !this.short;
-      this.requestUpdate();
-      this.updateComplete.then(() => {
-        if (!this.short) {
-          this.iframe.then((iframe) => {
-            if (iframe && !iframe.classList.contains('hidden')) {
-              this._resizeIframe(iframe);
-            }
-          });
-        }
-      });
+    const fromActions = e.composedPath().some((el) =>
+      el instanceof HTMLElement && el.classList.contains('content-block-header__actions'));
+    if (fromActions) {
+      return;
     }
+
+    this.short = !this.short;
+    this.requestUpdate();
+    this.updateComplete.then(() => {
+      if (!this.short) {
+        this.iframe.then((iframe) => {
+          if (iframe && !iframe.classList.contains('hidden')) {
+            this._resizeIframe(iframe);
+          }
+        });
+      }
+    });
   }
 
   private _toggleText() {
@@ -166,8 +189,20 @@ export default class ContentBlock extends ZincElement {
     }
   }
 
+  private handleAttachmentsSlotChange() {
+    this.syncAttachmentCount();
+  }
+
+  private syncAttachmentCount() {
+    const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="attachments"]');
+    this.attachmentCount = slot?.assignedElements().length ?? 0;
+  }
+
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
+
+    this.syncAttachmentCount();
+    Promise.resolve().then(() => this.syncAttachmentCount());
 
     const textContent = this.shadowRoot?.querySelectorAll('.text-section');
     if (textContent && textContent.length > 0) {
@@ -188,33 +223,39 @@ export default class ContentBlock extends ZincElement {
     const initialShowHtml = hasHtmlSlot && (!hasTextSlot || this.defaultDisplay === 'html');
 
     return html`
-      <zn-panel flush
-                tabbed
-                flush-footer="${hasFooter || nothing}"
-                class="${classMap({
-                  'content-block--outbound': this.outbound,
-                  'content-block--short': this.short,
-                  'content-block--collapsible': !this.noCollapse
-                })}">
+      <div class="${classMap({
+        'content-block': true,
+        'content-block--outbound': this.outbound,
+        'content-block--short': this.short,
+        'content-block--collapsible': !this.noCollapse
+      })}">
 
-        <zn-header class="content-block-header"
-                   description="${this.truncateText()}"
-                   @click="${this._collapseContent}">
+        <div class="content-block-header" @click="${this._collapseContent}">
+          <div class="content-block-header__icon">
+            <slot name="icon">
+              <zn-icon src="${this.avatar}"
+                       library="avatar"
+                       size="36"
+                       round></zn-icon>
+            </slot>
+          </div>
 
-          <slot name="icon">
-            <zn-icon src="${this.avatar}"
-                     library="avatar"
-                     round></zn-icon>
-          </slot>
+          <div class="content-block-header__main">
+            <span class="content-block-header__caption">
+              <slot name="caption">${this.sender}</slot>
+            </span>
+            <span class="content-block-header__description">${this.truncateText()}</span>
+            ${this.attachmentCount > 0 ? html`
+              <span class="content-block-header__attachments" part="header-attachments">
+                <zn-icon src="paperclip@lu" size="14"></zn-icon>${this.attachmentCount}
+              </span>` : ''}
+          </div>
 
-          <slot name="caption" slot="caption">${this.sender}</slot>
-
-          <div slot="actions">
+          <div class="content-block-header__actions">
             <slot name="actions"><small>${this.time}</small></slot>
             ${showActions ? html`
               <zn-dropdown>
-                <zn-button slot="trigger" icon="more_vert" icon-size="24" color="transparent"
-                           size="content"></zn-button>
+                <zn-button slot="trigger" icon="ellipsis@lu" icon-size="20" icon-button="small" plain></zn-button>
                 <zn-menu>
                   <zn-menu-item @click="${this._toggleHtml}">
                     Show HTML
@@ -226,10 +267,9 @@ export default class ContentBlock extends ZincElement {
               </zn-dropdown>
             ` : ''}
           </div>
+        </div>
 
-        </zn-header>
-
-        <zn-sp no-gap>
+        <zn-sp no-gap flush-x flush-t>
           <iframe class="${classMap({'hidden': !initialShowHtml})}" title="Content block HTML preview"></iframe>
           <slot class="html-content" name="html" style="display: none;"></slot>
           <slot name="text" style="display: none;"></slot>
@@ -243,22 +283,31 @@ export default class ContentBlock extends ZincElement {
                 'text-section--text': section.type === 'text',
                 'hidden': section.type === 'reply'
               })}>
-                ${section.lines.map((line) => html`${unsafeHTML(line)}<br>`)}
+                ${section.html
+                  ? unsafeHTML(section.lines[0])
+                  : section.lines.map((line) => html`${line}<br>`)}
               </div>
             `)}
           </div>
         </zn-sp>
 
+        <slot
+          name="attachments"
+          part="attachments"
+          class="content-block__attachments ${this.attachmentCount > 0 ? 'content-block__attachments--visible' : ''}"
+          @slotchange=${this.handleAttachmentsSlotChange}
+        ></slot>
+
         ${hasFooter ? html`
           <slot slot="footer" name="footer" @slotchange="${this._handleSlotChange}"></slot>` : ''}
-      </zn-panel>
+      </div>
     `;
   }
 
   protected truncateText() {
     const textContent = this.querySelector('[slot="text"]') as HTMLDivElement | null;
     if (!textContent) return '';
-    const trimmed = textContent.innerText.replace(/<[^>]*>/g, '').trim();
+    const trimmed = htmlToText(textContent.innerText);
     return trimmed.length > 32 ? trimmed.substring(0, 32) + '...' : trimmed;
   }
 
@@ -267,25 +316,7 @@ export default class ContentBlock extends ZincElement {
     const assignedEls: Element[] = slot.assignedElements({flatten: true});
     if (!assignedEls || assignedEls.length === 0) return;
 
-    // Reset and attach a new observer to watch for dynamic content inside the footer subtree
-    if (this._footerObserver) {
-      this._footerObserver.disconnect();
-      this._footerObserver = undefined;
-    }
-
-    const obs = new MutationObserver(() => {
-      this._debouncedReplace();
-    });
-    this._footerObserver = obs;
-
-    assignedEls.forEach(el => {
-      obs.observe(el, {
-        subtree: true,
-        childList: true,
-        attributes: true,
-        attributeFilter: ['href', 'download', 'caption']
-      });
-    });
+    assignedEls.forEach(el => this._footerObserver.observe(el));
 
     // Run now and again shortly after to catch async rendering
     this._replaceImagePlaceholders();
@@ -348,8 +379,13 @@ export default class ContentBlock extends ZincElement {
     const textContent = this.querySelector('[slot="text"]') as HTMLDivElement | null;
     const textRows: TextRow[] = [];
 
+    if (textContent && looksLikeHtml(textContent.innerText)) {
+      this._textRows = [{lines: [sanitizeHtml(textContent.innerText, EDITOR_TAGS, true)], type: 'text', html: true}];
+      return this._textRows;
+    }
+
     if (textContent) {
-      const text = textContent.innerText;
+      const text = textContent.innerText.replace(/<br\s*\/?>/gi, '\n');
       const rows = text.split('\n');
       let previousType: TextRow['type'] | null = null;
       let forceReply = false;

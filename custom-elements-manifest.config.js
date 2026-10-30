@@ -1,9 +1,7 @@
 import * as path from 'path';
 import {customElementJetBrainsPlugin} from 'custom-element-jet-brains-integration';
 import {customElementVsCodePlugin} from 'custom-element-vs-code-integration';
-import {customElementVuejsPlugin} from 'custom-element-vuejs-integration';
 import {parse} from 'comment-parser';
-import {pascalCase} from 'pascal-case';
 import commandLineArgs from 'command-line-args';
 import fs from 'fs';
 
@@ -33,8 +31,8 @@ function replace(string, terms)
 
 export default {
   globs:   ['src/components/**/*.component.ts'],
-  // Exclude the components specifically for the editor
-  exclude: ['**/*.scss', '**/*.test.ts', 'src/components/editor/modules/**/*'],
+  // Exclude the internal subcomponents of the editor, flow-builder and page-builder
+  exclude: ['**/*.scss', '**/*.test.ts', 'src/components/editor/modules/**/*', 'src/components/flow-builder/modules/**/*', 'src/components/page-builder/modules/**/*'],
   plugins: [
     // Append package data
     {

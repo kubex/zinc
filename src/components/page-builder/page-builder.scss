@@ -1,0 +1,714 @@
+@use "../../wc";
+
+:host {
+  @include wc.scrollbars;
+  // Canonical canvas card/container width, inherited by the section-card
+  // component's shadow styles (whose 560px var() fallback only applies when
+  // the card is used outside a builder).
+  --pb-card-width: 1024px;
+
+  display: block;
+  position: relative; // anchors the drag ghost
+  width: 100%;
+  height: 100%;
+  min-height: 480px;
+  color: rgb(var(--zn-text));
+  // Panels adapt to the builder's own width, not the viewport's.
+  container-type: inline-size;
+}
+
+.builder {
+  --palette-col: 343px;
+  --inspector-col: 343px;
+
+  display: grid;
+  grid-template-columns: var(--palette-col) minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  width: 100%;
+  height: 100%;
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 8px;
+  overflow: hidden;
+
+  &--inspecting {
+    grid-template-columns: var(--palette-col) minmax(0, 1fr) var(--inspector-col);
+  }
+
+  transition: grid-template-columns 0.2s ease;
+
+  // Side panels tuck away via the canvas-edge chevrons (flow-builder pattern).
+  // Their border would floor the width above zero, so it collapses too.
+  // A section whose settings are mostly a remarkd editor needs a writing
+  // measure, not a form column. Declared before the collapsed rules so tucking
+  // the panel away still wins.
+  &--inspector-wide {
+    --inspector-col: 520px;
+  }
+
+  &--palette-collapsed {
+    --palette-col: 0px;
+
+    .palette {
+      border-right: none;
+    }
+  }
+
+  &--inspector-collapsed {
+    --inspector-col: 0px;
+
+    .inspector {
+      border-left: none;
+    }
+  }
+}
+
+// :not() keeps these from out-cascading the collapsed modifiers' zero-width state.
+// 768 must match NARROW_WIDTH in page-builder.component.ts (palette auto-collapse).
+@container (max-width: 768px) {
+  .builder:not(.builder--palette-collapsed) {
+    --palette-col: 240px;
+  }
+
+  // 300, not 280: below that the inspector's toggle rows wrap their switch
+  // under the label and the field rhythm breaks down.
+  .builder:not(.builder--inspector-collapsed) {
+    --inspector-col: 300px;
+  }
+}
+
+// Chevrons straddling the canvas edges — tuck a side panel away / bring it
+// back (copied from flow-builder).
+.panel-toggle {
+  position: absolute;
+  top: 50%;
+  z-index: 6;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border-radius: 50%;
+  color: rgb(var(--zn-color-muted-text));
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  box-shadow: 0 1px 3px rgba(var(--zn-shadow), 0.4);
+  cursor: pointer;
+  transition: left 0.2s ease, right 0.2s ease, color 0.12s ease, border-color 0.12s ease;
+
+  &:hover {
+    color: rgb(var(--zn-text));
+    border-color: rgb(var(--zn-color-border-active));
+  }
+
+  &--left {
+    left: -12px;
+
+    // With the panel tucked away, sit fully inside the canvas.
+    &.panel-toggle--tucked {
+      left: 8px;
+    }
+  }
+
+  &--right {
+    right: -12px;
+
+    &.panel-toggle--tucked {
+      right: 8px;
+    }
+  }
+}
+
+.header {
+  grid-row: 1;
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgb(var(--zn-border-color));
+
+  &[hidden] {
+    display: none;
+  }
+
+  &__group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+// The hidden header leaves the grid entirely, so pin the panels to row 2
+// explicitly or auto-placement collapses the builder to content height.
+.palette,
+.canvas-cell,
+.inspector {
+  grid-row: 2;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+// Non-scrolling wrapper: anchors the edge chevrons, save status and restore
+// banner so they don't scroll with (or get clipped by) the canvas.
+.canvas-cell {
+  position: relative;
+  overflow: visible; // the edge chevrons straddle the panel borders
+}
+
+// Left column — anatomy and metrics copied from flow-builder's steps panel
+// (title block, search, full-bleed categories with dividers); no tabs.
+.palette {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgb(var(--zn-border-color));
+
+  &__title {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 16px;
+    border-bottom: 1px solid rgb(var(--zn-border-color));
+  }
+
+  &__text {
+    min-width: 0;
+  }
+
+  &__heading {
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+
+  &__subheading {
+    margin-top: 2px;
+    font-size: 0.75rem;
+    color: rgb(var(--zn-color-muted-text));
+  }
+
+  &__search {
+    padding: 12px 12px 8px;
+
+    // Placeholder-only look (as flow-builder), but the label stays in the
+    // accessibility tree — visually hidden, not display:none.
+    &::part(form-control-label) {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+
+  &__scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-bottom: 16px;
+  }
+
+  // Divider above every category; header/caption styling copied from
+  // flow-builder's flow-step-group.
+  &__category {
+    display: block;
+    border-top: 1px solid rgb(var(--zn-border-color));
+
+    // 16px block padding on the header. The !important beats the collapsible's
+    // internal `.header` class specificity. align-items centres the caption
+    // with the chevron regardless of the header's internal column layout.
+    &::part(header) {
+      align-items: center !important;
+      padding-block: calc(var(--zn-base-px) * 2) !important;
+    }
+
+    // Caption type: Inter SemiBold 14 / 16 (Primary text).
+    &::part(caption) {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 16px;
+      color: rgb(var(--zn-text));
+    }
+  }
+
+  &__uncategorized {
+    padding: 8px var(--zn-base-gap);
+  }
+}
+
+zn-page-palette-item {
+  margin-bottom: 6px;
+}
+
+.canvas {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 24px;
+  overflow-y: auto;
+  background:
+    radial-gradient(circle, rgba(var(--zn-text), 0.08) 1px, transparent 1px) 0 0 / 20px 20px,
+    rgb(var(--zn-body));
+}
+
+// Right column — anatomy shared with flow-builder's inspector (icon tile +
+// title/type head over a scrolling body), so the two builders read alike.
+.inspector {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid rgb(var(--zn-border-color));
+  overflow: hidden; // the body scrolls, not the panel — the head stays put
+  animation: inspector-in 0.18s ease;
+
+  &-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 0 0 auto;
+    padding: 16px;
+    border-bottom: 1px solid rgb(var(--zn-border-color));
+
+    &__icon {
+      --section-accent: rgb(var(--zn-color-primary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      color: var(--section-accent);
+      background: color-mix(in srgb, var(--section-accent) 15%, transparent);
+    }
+
+    // Long section names truncate rather than pushing the close button out.
+    &__text {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    &__title {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    &__type {
+      font-size: 0.75rem;
+      color: rgb(var(--zn-color-muted-text));
+    }
+
+    &__title,
+    &__type {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  // Field typography and rhythm for the stamped config form. Host themes size
+  // form labels for full-width forms, which reads oversized in a ~343px panel —
+  // the --zn-input-* tokens inherit into every zinc control's shadow root, so
+  // retuning them here needs no per-control ::part() list.
+  &-body {
+    --pb-field-label-size: 0.8125rem;
+    --pb-field-note-size: 0.75rem;
+    --pb-field-gap: 22px;
+    --pb-label-gap: 6px;
+    --pb-note-gap: 5px;
+    --zn-input-label-font-size-medium: var(--pb-field-label-size);
+    --zn-input-label-font-weight: 600;
+    --zn-input-label-line-height: 1.3;
+    --zn-input-label-color: rgb(var(--zn-text));
+    --zn-input-help-text-font-size-medium: var(--pb-field-note-size);
+    --zn-input-help-text-color: rgb(var(--zn-color-muted-text));
+    --zn-toggle-margin: 0;
+
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    // Fields inside a narrow panel have to answer to its width, not the whole
+    // builder's — the host is the only container otherwise, and a form group
+    // would lay out as if it had the canvas to spread into.
+    container-type: inline-size;
+    // Extra bottom padding so the last field isn't flush against the scroll end.
+    padding: 18px 16px 24px;
+    gap: var(--pb-field-gap);
+
+    // A field's own internal spacing comes from --zn-spacing-* tokens, which
+    // zinc leaves to the host theme — undefined here, so those declarations
+    // drop out and every field collapses onto the flex gap alone. Set the
+    // rhythm explicitly instead: tight inside a field, wide between them, so
+    // a label reads as belonging to the control below it rather than floating
+    // between two.
+    ::part(form-control-label) {
+      margin-bottom: var(--pb-label-gap);
+    }
+
+    ::part(form-control-input) {
+      margin: 0;
+    }
+
+    ::part(form-control-help-text) {
+      margin-top: var(--pb-note-gap);
+    }
+
+    // zn-toggle sizes its own label and description from a fixed type scale
+    // rather than the --zn-input-label-* tokens, so bring it into line through
+    // its parts — otherwise a toggle row outweighs every field around it.
+    zn-toggle::part(label) {
+      font-size: var(--pb-field-label-size);
+      font-weight: 600;
+    }
+
+    zn-toggle::part(description) {
+      font-size: var(--pb-field-note-size);
+      margin-top: var(--pb-note-gap);
+    }
+
+    // The icon picker's trigger is a content-width button, which reads as a
+    // stranded chip in a column of full-width fields. Fill the row (the clear
+    // button, when there is a value, still takes its space beside it).
+    zn-icon-picker::part(trigger) {
+      flex: 1 1 auto;
+    }
+
+    > *,
+    .inspector__form > * {
+      margin-block: 0;
+    }
+
+    // The stamped wrapper is a layout box, not a field — it carries the same
+    // rhythm as the body so the host's controls space identically.
+    > .inspector__form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--pb-field-gap);
+    }
+  }
+
+  &-hint {
+    margin: 0;
+    font-size: 0.75rem;
+    color: rgb(var(--zn-color-muted-text));
+  }
+}
+
+// Straddles the inspector's left border so the grab area is wider than the 1px
+// line it appears to be.
+.inspector-resize {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -3px;
+  z-index: 5;
+  width: 7px;
+  cursor: col-resize;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0 3px;
+    background: transparent;
+    transition: background 0.15s ease;
+  }
+
+  &:hover::after,
+  &:focus-visible::after {
+    background: rgb(var(--zn-color-primary));
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+.inspector-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  color: rgb(var(--zn-color-muted-text));
+  background: transparent;
+  cursor: pointer;
+
+  &:hover {
+    color: rgb(var(--zn-text));
+    background: rgb(var(--zn-color-tab));
+  }
+}
+
+// The panel slides in from the right as a section is selected (as flow-builder).
+@keyframes inspector-in {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.declarations {
+  display: none;
+}
+
+.canvas__empty {
+  margin: auto auto 8px;
+  font-size: 13px;
+  opacity: 0.6;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.drop {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: var(--pb-card-width);
+  margin: 0 auto;
+  min-height: 28px;
+  transition: min-height 0.12s ease;
+
+  // Drop placeholder: an outlined box the size of a card, so the insertion
+  // point reads clearly between two existing sections.
+  &--active {
+    min-height: 72px;
+  }
+
+  // The empty canvas's only drop zone sits just below the centred hint text;
+  // once a drag is over the canvas the hint hides and the placeholder box
+  // takes the centre itself.
+  &--solo {
+    margin: 0 auto auto;
+  }
+
+  &--solo#{&}--active {
+    margin: auto;
+    min-height: 96px;
+  }
+
+  &--active::before {
+    content: '';
+    position: absolute;
+    inset: 6px 0;
+    border: 2px dashed rgb(var(--zn-color-primary));
+    border-radius: 8px;
+    background: rgba(var(--zn-color-primary), 0.06);
+  }
+
+  &__add {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border: 1px solid rgb(var(--zn-border-color));
+    border-radius: 50%;
+    background: rgb(var(--zn-panel));
+    color: rgb(var(--zn-text));
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.12s ease;
+  }
+
+  &:hover &__add,
+  &--active &__add {
+    opacity: 1;
+  }
+}
+
+// Out of the flow while its drag ghost stands in: the canvas would otherwise
+// hold the card's height *and* the expanded drop placeholder, growing the page
+// by a placeholder's worth for the length of every drag.
+zn-page-section-card.dragging,
+.container--dragging {
+  display: none;
+}
+
+// A container section: its card spans the row with a grid of child slots below.
+.container {
+  width: 100%;
+  max-width: var(--pb-card-width);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.slots {
+  display: grid;
+  // minmax(0) lets cells shrink below their content's min width — otherwise a
+  // child card's text forces the tracks wider than the parent tile.
+  grid-template-columns: repeat(var(--pb-slot-columns, 3), minmax(0, 1fr));
+  gap: 8px;
+}
+
+.slot {
+  position: relative;
+  min-height: 64px;
+
+  &--empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed rgb(var(--zn-border-color));
+    border-radius: 8px;
+    color: rgba(var(--zn-text), 0.4);
+    cursor: pointer;
+    transition: border-color 0.12s ease, background 0.12s ease;
+
+    &:hover {
+      border-color: rgb(var(--zn-color-border-active));
+      color: rgba(var(--zn-text), 0.7);
+    }
+  }
+
+  &--active {
+    border-color: rgb(var(--zn-color-primary));
+    border-style: dashed;
+    background: rgba(var(--zn-color-primary), 0.06);
+  }
+}
+
+.picker {
+  position: absolute;
+  top: calc(100% - 2px);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  min-width: 220px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 6px;
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(var(--zn-shadow), 0.4);
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 8px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: rgb(var(--zn-text));
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(var(--zn-text), 0.08);
+    }
+  }
+}
+
+// Bottom-left status pill: flashes green as a save lands, then keeps a quiet
+// "last saved Xm ago" (copied from flow-builder).
+.save-status {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  color: rgb(var(--zn-color-muted-text));
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(var(--zn-shadow), 0.4);
+  pointer-events: none;
+  transition: color 0.15s ease, border-color 0.15s ease;
+
+  &--saved {
+    color: rgb(var(--zn-color-success));
+    border-color: color-mix(in srgb, rgb(var(--zn-color-success)) 45%, transparent);
+  }
+}
+
+// Offered when a loaded page differs from a fresh auto-saved draft.
+.restore-banner {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: calc(100% - 32px);
+  padding: 8px 12px;
+  font-size: 0.8125rem;
+  color: rgb(var(--zn-text));
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(var(--zn-shadow), 0.5);
+
+  button {
+    flex: 0 0 auto;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  &__restore {
+    color: rgb(var(--zn-panel));
+    background: rgb(var(--zn-color-primary));
+    border: none;
+
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+
+  &__dismiss {
+    color: rgb(var(--zn-color-muted-text));
+    background: transparent;
+    border: none;
+
+    &:hover {
+      background: rgb(var(--zn-color-tab));
+    }
+  }
+}
+
+// The builder's own drag image, moved by hand against the host. It sits outside
+// .builder so that panel's overflow clip can't cut it, and draws its shadow with
+// a filter so the falloff follows the card's rounded corners rather than its box.
+.drag-ghost {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  opacity: 0.9;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 16px rgba(var(--zn-shadow), 0.35));
+}

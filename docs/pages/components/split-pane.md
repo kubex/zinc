@@ -67,15 +67,15 @@ Use the `pixels` attribute to switch from percentage-based sizing to pixel-based
 
 ### Min and Max Size
 
-Use `min-size` and `max-size` to constrain how much users can resize the primary pane. These values match the unit type (percentage or pixels).
+Use `min-size` and `max-size` to constrain how much users can resize the primary pane. Use `min-secondary-size` to keep the secondary pane above a minimum size. These values match the unit type (percentage or pixels).
 
 ```html:preview
-<zn-split-pane min-size="20" max-size="80" style="height: 300px;">
+<zn-split-pane min-size="20" max-size="80" min-secondary-size="30" style="height: 300px;">
   <div slot="primary" style="padding: 20px; background: #f5f5f5;">
-    <p>Primary pane can be resized between 20% and 80%</p>
+    <p>Primary pane can be resized between 20% and 70%</p>
   </div>
   <div slot="secondary" style="padding: 20px;">
-    <p>Secondary pane adjusts accordingly</p>
+    <p>Secondary pane stays at least 30%</p>
   </div>
 </zn-split-pane>
 ```
@@ -83,12 +83,12 @@ Use `min-size` and `max-size` to constrain how much users can resize the primary
 With pixel sizing:
 
 ```html:preview
-<zn-split-pane pixels min-size="150" max-size="400" initial-size="250" style="height: 300px;">
+<zn-split-pane pixels min-size="150" max-size="400" min-secondary-size="200" initial-size="250" style="height: 300px;">
   <div slot="primary" style="padding: 20px; background: #f5f5f5;">
     <p>Primary pane can be resized between 150px and 400px</p>
   </div>
   <div slot="secondary" style="padding: 20px;">
-    <p>Secondary pane fills remaining space</p>
+    <p>Secondary pane stays at least 200px wide</p>
   </div>
 </zn-split-pane>
 ```
@@ -458,4 +458,3 @@ The split pane exposes CSS variables for advanced customization.
   </div>
 </zn-split-pane>
 ```
-

@@ -2,6 +2,7 @@ import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {deepQuerySelectorAll} from "../../utilities/query";
 import {property} from 'lit/decorators.js';
+import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
 import type ZnButton from "../button";
@@ -39,9 +40,7 @@ export default class ZnButtonMenu extends ZincElement {
   @property({type: Number, attribute: 'max-level'})
   public maxLevel: number = 2; // primary = 1, secondary = 2, transparent = 3
 
-  @property({}) size: 'content' | 'x-small' | 'small' | 'medium' | 'large' = 'medium';
-
-  @property({type: Number, attribute: 'icon-size', reflect: true}) iconSize: number = 24;
+  @property({type: Number, attribute: 'icon-size', reflect: true}) iconSize: number = 20;
 
   @property({type: Boolean, attribute: 'no-gap'}) public noGap: boolean;
 
@@ -51,7 +50,18 @@ export default class ZnButtonMenu extends ZincElement {
 
   private _originalButtons: CustomButtonWidths[] = [];
 
-  private resizeObserver: ResizeObserver | null = null;
+  private _resizeRafId = 0;
+
+  private readonly resizeObserver = new ResizeController(this, {
+    target: null,
+    callback: () => {
+      if (this._resizeRafId) return;
+      this._resizeRafId = requestAnimationFrame(() => {
+        this._resizeRafId = 0;
+        this.containerWidth = this.offsetWidth;
+      });
+    },
+  });
 
   protected async firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
@@ -93,21 +103,9 @@ export default class ZnButtonMenu extends ZincElement {
     super.connectedCallback();
     this.containerWidth = this.offsetWidth;
 
-    this.resizeObserver = new ResizeObserver(this.handleResize.bind(this));
-    this.resizeObserver.observe(this.parentNode as HTMLElement); // Observe the parent node
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-
-    if (this.resizeObserver) {
-      this.resizeObserver.disconnect();
-      this.resizeObserver = null;
+    if (this.parentNode) {
+      this.resizeObserver.observe(this.parentNode as HTMLElement);
     }
-  }
-
-  handleResize = () => {
-    this.containerWidth = this.offsetWidth;
   }
 
   calculateVisibleButtons() {
@@ -169,18 +167,14 @@ export default class ZnButtonMenu extends ZincElement {
       menu.innerHTML = '';
     }
 
-    // Add colors to the buttons depending on type and set button size
+    // Add colors to the buttons depending on type
     this._buttons.forEach((button: CustomButtonWidths, index: number) => {
       if (index < visibleButtons) {
         this.shadowRoot?.querySelector('.button-menu__container')?.appendChild(button.button);
 
-        if (!button.button.hasAttribute('color')) {
-          button.button.setAttribute('color', button.button.hasAttribute('primary') ? 'primary' : button.button.hasAttribute('secondary') ? 'secondary' : 'transparent');
-        }
         if (button.button.hasAttribute('primary') || button.button.hasAttribute('secondary')) {
           button.button.setAttribute('text', "");
         }
-        button.button.setAttribute('size', this.size);
       }
     });
 
@@ -203,13 +197,12 @@ export default class ZnButtonMenu extends ZincElement {
         buttons.forEach((button: CustomButtonWidths, index: number) => {
           if (index >= visibleButtons) {
             const menuItem = document.createElement('zn-menu-item');
-            menuItem.innerText = button.button.innerText;
+            menuItem.textContent = this.getButtonLabel(button.button);
             menuItem.setAttribute('id', button.button.id || `zn-button-menu-item-${index}`);
             menuItem.setAttribute('role', 'menuitem');
             const attr = button.button.attributes;
             // Copy all attributes from the button to the menu item
-            for (let i = 0; i < attr.length; i++) {
-              const attribute = attr[i];
+            for (const attribute of Array.from(attr)) {
               if (attribute.name !== 'icon' && attribute.name !== 'category') {
                 menuItem.setAttribute(attribute.name, attribute.value);
               }
@@ -219,6 +212,10 @@ export default class ZnButtonMenu extends ZincElement {
             if (icon) {
               const iconElement = document.createElement('zn-icon');
               iconElement.setAttribute('src', icon);
+              const iconLibrary = button.button.getAttribute('icon-library');
+              if (iconLibrary) {
+                iconElement.setAttribute('library', iconLibrary);
+              }
               iconElement.setAttribute('size', '18');
               iconElement.setAttribute('slot', 'prefix');
               menuItem.appendChild(iconElement);
@@ -240,7 +237,7 @@ export default class ZnButtonMenu extends ZincElement {
             menuItems[category].forEach((item: Element) => {
               menu.appendChild(item);
             });
-            // if only 1 catefory item
+            // if only 1 category item
           } else if (menuItems[category].length === 1) {
             const menuItem = menuItems[category][0] as ZnMenuItem;
             menu.appendChild(menuItem);
@@ -250,6 +247,7 @@ export default class ZnButtonMenu extends ZincElement {
             menuItem.innerText = category.charAt(0).toUpperCase() + category.slice(1);
             const submenu = document.createElement('zn-menu');
             submenu.setAttribute('slot', 'submenu');
+            submenu.setAttribute('variant', menu.variant);
 
             menuItems[category].forEach((item: Element) => {
               submenu.appendChild(item);
@@ -270,16 +268,42 @@ export default class ZnButtonMenu extends ZincElement {
     })
   }
 
+  private getButtonLabel(button: ZnButton) {
+    const labelSlot = button.shadowRoot?.querySelector<HTMLSlotElement>('slot[part="label"]');
+    const slottedLabel = labelSlot ? [...labelSlot.assignedNodes({flatten: true})]
+      .map(node => node.textContent ?? '')
+      .join('')
+      .trim() : '';
+
+    const label = slottedLabel ||
+      button.content ||
+      button.getAttribute('content') ||
+      (button as ZnButton & { caption?: string }).caption ||
+      button.getAttribute('caption') ||
+      button.tooltip ||
+      button.getAttribute('tooltip') ||
+      button.getAttribute('aria-label') ||
+      button.button?.innerText ||
+      button.textContent ||
+      '';
+
+    return label.trim();
+  }
+
   render() {
     return html`
-      <div class=${classMap({
+      <div class="${classMap({
         'button-menu': true,
         'button-menu--no-padding': this.noPadding,
         'button-menu--no-gap': this.noGap,
-      })}>
+      })}">
         <div class="button-menu__container"></div>
         <zn-dropdown placement="bottom-end">
-          <zn-button slot="trigger" icon="more_vert" icon-size="${this.iconSize}" color="transparent" size="${this.size}"></zn-button>
+          <zn-button slot="trigger"
+                     icon="ellipsis"
+                     icon-library="lucide"
+                     icon-size="${this.iconSize}"
+                     icon-button="small"></zn-button>
           <zn-menu></zn-menu>
         </zn-dropdown>
         <slot></slot>

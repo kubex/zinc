@@ -1,0 +1,2170 @@
+import {ACTION_GROUPS, EDITOR_ACTIONS, matchesShortcut, shortcutLabel, slashItems} from './actions';
+import {classMap} from "lit/directives/class-map.js";
+import {continueList, indentList, isEmptyListItem} from './list-continuation';
+import {type CSSResultGroup, html, type PropertyValues, type TemplateResult, unsafeCSS} from 'lit';
+import {defaultValue} from "../../internal/default-value";
+import {FormControlController} from "../../internal/form";
+import {pastedRemarkd} from './paste';
+import {property, query, state} from 'lit/decorators.js';
+import {parse as remarkdParse} from "remarkd-js";
+import {ToolbarOverflowController} from '../../internal/toolbar-overflow';
+import {unsafeHTML} from "lit/directives/unsafe-html.js";
+import {watch} from "../../internal/watch";
+import ZincElement from '../../internal/zinc-element';
+import ZnDropdown from "../dropdown";
+import ZnMenu from "../menu";
+import ZnMenuItem from "../menu-item";
+import ZnSlashMenu, {SlashMenuController, type SlashMenuItem} from "../slash-menu";
+import type {EditorAction, InlineMark} from './actions';
+import type {RangeEdit} from './list-continuation';
+import type {ZincFormControl} from '../../internal/zinc-element';
+import type ZnFile from "../file";
+
+import styles from './remarkd-editor.scss';
+
+interface UploadResponse {
+  uploadPath: string;
+  uploadUrl: string;
+  originalFilename: string;
+}
+
+interface ImageBlockData {
+  caption: string;
+  align: '' | 'center' | 'right';
+  src: string;
+  alt: string;
+  width: string;
+  height: string;
+}
+
+interface IncludeBlockData {
+  target: string;
+  label: string;
+}
+
+interface IncludeOption {
+  id: string;
+  title: string;
+  description?: string;
+  scope?: string;
+  keywords?: string[];
+  languages?: string;
+  url?: string;
+}
+
+interface LinkOption {
+  ref: string;
+  kind: string;
+  title: string;
+  context?: string;
+  status?: string;
+}
+
+/** remarkd's include directive on a line of its own: `include::<target>[<label>]`. */
+const INCLUDE_LINE = /^include::([^[]+)\[(.*)]\s*$/;
+
+/** The reference a content link carries: `kb:<kind>/<id>`. */
+const CONTENT_LINK_PATTERN = 'kb:(?:document|category|page)\\/[A-Za-z0-9_-]+';
+const CONTENT_LINK_HREF = new RegExp(`^${CONTENT_LINK_PATTERN}$`);
+const CONTENT_LINK_REFS = new RegExp(CONTENT_LINK_PATTERN, 'g');
+
+/** A document attribute definition: `:name: value`, `:flag:`, or `:flag!:` to unset. */
+const ATTRIBUTE_LINE = /^:([A-Za-z0-9_-]+)(!)?:\s*(.*)$/;
+
+/** A title line decorating whatever follows it: `.Title text`. `..` escapes a literal leading dot. */
+const TITLE_LINE = /^\.([^.\s].*)$/;
+
+/** A bracketed attribute/parameter line: `[.lead]`, `[%hardbreaks]`, `[verse]`, `[striped=true]`. */
+const BRACKET_LINE = /^\[.+]$/;
+
+/** A metadata line that renders empty on its own — an attribute, a title, or a bracket line. */
+type MetaLine =
+  | { kind: 'attribute'; name: string; value: string; unset: boolean }
+  | { kind: 'title'; text: string }
+  | { kind: 'bracket'; text: string };
+
+function parseMetaLine(line: string): MetaLine | null {
+  const attribute = ATTRIBUTE_LINE.exec(line);
+  if (attribute) return {kind: 'attribute', name: attribute[1], value: attribute[3], unset: !!attribute[2]};
+  const title = TITLE_LINE.exec(line);
+  if (title) return {kind: 'title', text: title[1]};
+  if (BRACKET_LINE.test(line)) return {kind: 'bracket', text: line};
+  return null;
+}
+
+/**
+ * A block that is nothing but metadata lines parses to an empty section — e.g. a lone
+ * `.Title` or `:name: value`. Mixed content (a title immediately followed by its body, no
+ * blank line) parses correctly on its own and must not be caught here.
+ */
+function parseMetaBlock(block: string): MetaLine[] | null {
+  const lines = block.split('\n').map(line => line.trim()).filter(line => line !== '');
+  if (!lines.length) return null;
+  const parsed: MetaLine[] = [];
+  for (const line of lines) {
+    const meta = parseMetaLine(line);
+    if (!meta) return null;
+    parsed.push(meta);
+  }
+  return parsed;
+}
+
+/** A remarkd table delimiter. Rows are separated by blank lines, so the whole table is one block. */
+const TABLE_FENCE = '|===';
+const TABLE_FENCE_LINE = /^\|={3,}$/;
+
+/**
+ * Block-form conditionals: empty brackets open a range closed by `endif::[]`.
+ * The inline forms (`iftrue::flag[text]`) carry their text in the brackets and stay single lines.
+ */
+const CONDITIONAL_OPEN = /^(?:ifdef|ifndef)::[^[]*\[]$/;
+const IFEVAL_OPEN = /^ifeval::\[[^\]]*]$/;
+const CONDITIONAL_END = /^endif::\[]$/;
+
+/**
+ * Single-line conditional forms carry their content inside non-empty brackets and evaluate
+ * immediately if handed to the parser verbatim: iftrue/iffalse/ifnempty match no parser rule
+ * (rendering an empty section) and ifempty is genuinely evaluated. Marked the same way as the
+ * block forms instead — never evaluated.
+ */
+const CONDITIONAL_INLINE = /^(ifdef|ifndef|iftrue|iffalse|ifempty|ifnempty)::([^[]+)\[([^\]]+)]\s*$/;
+
+/**
+ * The marker a document body carries for an embed. Mirrors app-kb's
+ * `model.IncludeEmbedMarker`: brackets and newlines in the title would break the
+ * directive, so they are replaced rather than escaped.
+ */
+function includeMarker(id: string, title: string): string {
+  // Collapses a run of newlines to one space, unlike contentLinkMarkup below —
+  // that one replaces char-for-char to stay byte-for-byte with app-kb's
+  // model.ContentLinkMarkup; don't merge the two formatters.
+  const label = title.replace(/[\r\n]+/g, ' ').replace(/\[/g, '(').replace(/]/g, ')').trim();
+  return `include::${id}[${label}]`;
+}
+
+/**
+ * The markup a body carries for a link to other knowledge-base content.
+ * Mirrors app-kb's `model.ContentLinkMarkup`: brackets and newlines in the
+ * label would end the link early, so they are replaced rather than escaped.
+ */
+function contentLinkMarkup(ref: string, label: string): string {
+  const text = label.replace(/[\r\n]/g, ' ').replace(/\[/g, '(').replace(/]/g, ')').trim();
+  return `[${text}](${ref})`;
+}
+
+const SLASH_ITEMS = slashItems(EDITOR_ACTIONS);
+
+/** Keystrokes settle before the link endpoint is asked again. */
+const LINK_SEARCH_DEBOUNCE = 200;
+
+/**
+ * For an asymmetric mark whose closer embeds a variable payload in parentheses — Link's
+ * `](https://)`, Tooltip's `}(Explanation)` — matches the closer by its fixed prefix rather
+ * than the placeholder text, so a real URL or explanation of a different length still counts
+ * as "already wrapped". Returns null for a mark with no such payload (Keyboard, Footnote,
+ * Cross reference, …), which keeps comparing `after` literally.
+ */
+function closerPattern(after: string): RegExp | null {
+  const paren = after.indexOf('(');
+  if (paren === -1 || !after.endsWith(')')) return null;
+  const fixed = after.slice(0, paren).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(`^${fixed}\\([^)]*\\)`);
+}
+
+/** The parser throws on some incomplete input — `t::partial::` with no path raises EISDIR. */
+function safeParse(source: string): string {
+  try {
+    return remarkdParse(source);
+  } catch {
+    // Show the source as-is rather than losing the block while it is being typed.
+    return `<pre class="remarkd-editor__unparsed">${source.replace(/[&<>]/g,
+      ch => ({'&': '&amp;', '<': '&lt;', '>': '&gt;'}[ch]!))}</pre>`;
+  }
+}
+
+/** A conditional's interior, split so no directive line ever reaches the parser (see below). */
+type ConditionalPart =
+  | { kind: 'content'; lines: string[] }
+  | { kind: 'nested'; label: string; parts: ConditionalPart[] };
+
+/**
+ * Depth-aware search for the `endif::[]` that closes the range opened at `lines[from - 1]`,
+ * mirroring the block splitter's own depth tracking above. Returns -1 for an unclosed range
+ * (which still must show its content, so callers treat that as "to the end").
+ */
+function findConditionalEnd(lines: string[], from: number): number {
+  let depth = 1;
+  for (let i = from; i < lines.length; i++) {
+    const trimmed = lines[i].trimEnd();
+    if (CONDITIONAL_OPEN.test(trimmed) || IFEVAL_OPEN.test(trimmed)) depth++;
+    else if (CONDITIONAL_END.test(trimmed) && --depth === 0) return i;
+  }
+  return -1;
+}
+
+/**
+ * Wording for what shows a conditional's content, keyed by directive — shared by the
+ * block-range label below and the single-line form's label.
+ */
+const CONDITIONAL_VERB: Record<string, string> = {
+  ifdef: 'is defined',
+  ifndef: 'is not defined',
+  iftrue: 'is true',
+  iffalse: 'is false',
+  ifempty: 'is empty',
+  ifnempty: 'is not empty',
+};
+
+/** The label describing when a conditional's content would apply, given its opening line. */
+function conditionalLabel(open: string): string {
+  if (IFEVAL_OPEN.test(open)) return `shown when ${open.slice('ifeval::['.length, -1)}`;
+  const directive = open.slice(0, open.indexOf('::'));
+  const expression = open.slice(open.indexOf('::') + 2, open.indexOf('['));
+  return `shown when ${expression} ${CONDITIONAL_VERB[directive] ?? 'is defined'}`;
+}
+
+/** The label for a single-line conditional, in the same wording as the block forms. */
+function inlineConditionalLabel(directive: string, flag: string): string {
+  return `shown when ${flag} ${CONDITIONAL_VERB[directive] ?? 'is defined'}`;
+}
+
+/**
+ * Splits a conditional's interior into plain-content runs and nested conditional ranges.
+ * `parse()` evaluates any directive line it sees, so a nested `ifdef`/`endif` pair handed to
+ * it verbatim renders empty — this walk keeps every directive line out of what gets parsed,
+ * however deep the nesting, so content is never lost to an unintentional evaluation.
+ */
+function splitConditionalParts(lines: string[]): ConditionalPart[] {
+  const parts: ConditionalPart[] = [];
+  let buffer: string[] = [];
+  const flush = () => {
+    if (buffer.length) parts.push({kind: 'content', lines: buffer});
+    buffer = [];
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    const trimmed = lines[i].trimEnd();
+    if (CONDITIONAL_OPEN.test(trimmed) || IFEVAL_OPEN.test(trimmed)) {
+      flush();
+      const end = findConditionalEnd(lines, i + 1);
+      const nestedInterior = lines.slice(i + 1, end === -1 ? undefined : end);
+      parts.push({kind: 'nested', label: conditionalLabel(trimmed), parts: splitConditionalParts(nestedInterior)});
+      i = end === -1 ? lines.length : end;
+      continue;
+    }
+    buffer.push(lines[i]);
+  }
+  flush();
+  return parts;
+}
+
+/**
+ * Renders a conditional's parts. A lone content run (the common case) keeps a single body
+ * div carrying the `remarkd-editor__rendered--parsed` marker directly — its content is pure
+ * parser output with no Lit bindings inside, so `markVariables` can safely mutate its text
+ * nodes. Once there is more than one part, or any nesting, the body becomes a plain
+ * container instead and the marker moves onto each content-run div individually: a nested
+ * wrapper's label is a Lit string binding, and the marker must never sit on an element whose
+ * subtree contains one, or a repeat render corrupts it the way Task 8 fixed.
+ */
+function renderConditionalParts(parts: ConditionalPart[]): TemplateResult {
+  const lone = parts.length === 1 && parts[0].kind === 'content' ? parts[0] : undefined;
+  if (parts.length === 0 || lone) {
+    const text = lone?.lines.join('\n').trim() ?? '';
+    return html`
+      <div class="remarkd-editor__conditional-body remarkd-rendered remarkd-editor__rendered--parsed">
+        ${text ? unsafeHTML(safeParse(text)) : ''}
+      </div>`;
+  }
+
+  return html`
+    <div class="remarkd-editor__conditional-body remarkd-rendered">
+      ${parts.map(part => {
+        if (part.kind === 'nested') return renderConditionalWrapper(part.label, part.parts);
+        const text = part.lines.join('\n').trim();
+        return text ? html`
+          <div class="remarkd-editor__rendered--parsed">${unsafeHTML(safeParse(text))}</div>` : '';
+      })}
+    </div>`;
+}
+
+function renderConditionalWrapper(label: string, parts: ConditionalPart[]): TemplateResult {
+  return html`
+    <div part="conditional" class="remarkd-editor__conditional">
+      <span class="remarkd-editor__conditional-label">
+        <zn-icon src="git-branch@lu" size="14"></zn-icon>${label}
+      </span>
+      ${renderConditionalParts(parts)}
+    </div>`;
+}
+
+/**
+ * A single-line conditional (`iftrue::flag[Shown]`) as the same labelled wrapper the block
+ * forms use. Handed to the parser verbatim it either renders an empty section (iftrue,
+ * iffalse, ifnempty match no parser rule) or is genuinely evaluated (ifempty) — so the
+ * bracket text is parsed on its own and marked, never evaluated, exactly like the block forms.
+ */
+function renderInlineConditional(block: string): TemplateResult | null {
+  const trimmed = block.trim();
+  if (trimmed.includes('\n')) return null;
+  const match = CONDITIONAL_INLINE.exec(trimmed);
+  if (!match) return null;
+  const [, directive, flag, text] = match;
+  return renderConditionalWrapper(inlineConditionalLabel(directive, flag), [{kind: 'content', lines: [text]}]);
+}
+
+/**
+ * @summary A Notion-style block editor for remarkd content. Blocks render inline; click one to edit its source.
+ * @documentation https://zinc.style/components/remarkd-editor
+ * @status experimental
+ * @since 1.0
+ *
+ * @dependency zn-button
+ * @dependency zn-button-group
+ * @dependency zn-dropdown
+ * @dependency zn-icon
+ * @dependency zn-file
+ * @dependency zn-menu
+ * @dependency zn-menu-item
+ * @dependency zn-slash-menu
+ *
+ * @event zn-input - Emitted on each keystroke while editing a block.
+ * @event zn-change - Emitted when a block edit is committed and the value changes.
+ *
+ * @csspart base - The component's base wrapper.
+ * @csspart toolbar - The always-visible block-insert and inline-formatting toolbar.
+ * @csspart raw-toggle - The button that switches between the block view and the raw source view.
+ * @csspart block - A rendered block wrapper.
+ * @csspart rendered - The rendered remarkd output of a block.
+ * @csspart conditional - A labelled wrapper for an ifdef/ifndef/ifeval/iftrue/iffalse/ifempty/ifnempty range.
+ * @csspart variable - A chip rendered for a document attribute, title, or bracket line.
+ * @csspart input - The textarea shown while editing a block.
+ * @csspart raw - The full-document textarea shown in raw source mode.
+ * @csspart slash-menu - The `zn-slash-menu` opened by typing "/" in an empty block.
+ * @csspart image-controls - The caption / alignment / size panel shown when an image block is clicked.
+ * @csspart include - The chip rendered in place of an `include::` directive.
+ * @csspart include-picker - The inline Include picker opened from the toolbar or "/include".
+ *
+ * @cssproperty --remarkd-editor-max-height - The tallest the editor grows before its body scrolls. Defaults to `100dvh`.
+ * @cssproperty --remarkd-editor-min-height - The shortest the body renders while empty. Defaults to `10rem`.
+ */
+export default class ZnRemarkdEditor extends ZincElement implements ZincFormControl {
+  static styles: CSSResultGroup = unsafeCSS(styles);
+  static dependencies = {
+    'zn-dropdown': ZnDropdown,
+    'zn-menu': ZnMenu,
+    'zn-menu-item': ZnMenuItem,
+    'zn-slash-menu': ZnSlashMenu
+  };
+
+  private readonly formControlController = new FormControlController(this, {
+    assumeInteractionOn: ['zn-input', 'zn-change'],
+  });
+
+  private readonly slashController = new SlashMenuController(this, {
+    menu: () => this.mountSlashMenu(),
+    // The menu only belongs in a block that is nothing but the slash command — a
+    // block prefix like "## " is not valid remarkd part-way through a line.
+    items: () => this.isSlashBlock() ? SLASH_ITEMS.filter(item => this.slashItemAvailable(item)) : [],
+    onSelect: item => this.handleSlashSelect(item)
+  });
+
+  private readonly toolbarOverflow = new ToolbarOverflowController(this, {
+    groups: () => [...(this.shadowRoot?.querySelectorAll<HTMLElement>('.toolbar__group') ?? [])],
+    container: () => this.shadowRoot?.querySelector<HTMLElement>('.remarkd-editor__toolbar'),
+  });
+
+  private editingDraft = '';
+  private includeRequest: Promise<IncludeOption[]> | null = null;
+  private rawEntryValue = '';
+  private suppressValueSync = false;
+  private suppressBlurCommit = false;
+
+  @query('.remarkd-editor__validation') private validationInput: HTMLTextAreaElement;
+  @query('zn-slash-menu') private slashMenuElement: ZnSlashMenu | null;
+
+  @state() private blocks: string[] = [];
+  @state() private editingIndex: number | null = null;
+  /**
+   * Lists the blocks most recently inserted here above the rest of the slash menu, remembered in
+   * `localStorage` under this key. Leave unset to offer no recently used section.
+   */
+  @property({attribute: 'slash-recent-key'}) slashRecentKey = '';
+
+  /** Renders the slash menu only once it has been needed. */
+  @state() private hasSlashMenu = false;
+  @state() private imagePickerIndex: number | null = null;
+  @state() private imageEdit: ImageBlockData | null = null;
+  @state() private dropIndicator: number | null = null;
+  @state() private dragIndex: number | null = null;
+  @state() private editShell = '';
+  @state() private rawMode = false;
+  @state() private includeOptions: IncludeOption[] | null = null;
+  @state() private includeLoadFailed = false;
+  @state() private includePickerIndex: number | null = null;
+  @state() private includeQuery = '';
+  @state() private linkPickerOpen = false;
+  @state() private linkQuery = '';
+  @state() private linkResults: LinkOption[] | null = null;
+  @state() private linkSearchFailed = false;
+  private linkSelection: [number, number] | null = null;
+  private linkSearchTimer?: ReturnType<typeof setTimeout>;
+  private linkSearchToken = 0;
+
+  /** Resolved link targets by reference; a null value is one the app does not know. */
+  private linkRefs = new Map<string, LinkOption | null>();
+  private linkRefsPending = false;
+
+  private pendingDragHandle: HTMLElement | null = null;
+  private dragStartX = 0;
+  private dragStartY = 0;
+  private dragGhost: HTMLElement | null = null;
+  private dragPointerY = 0;
+  private autoScrollFrame: number | null = null;
+
+  /** The name of the control, submitted as part of form data. */
+  @property() name = '';
+
+  /** The current remarkd source. */
+  @property() value = '';
+
+  /** The default value — used when resetting the form. */
+  @defaultValue() defaultValue = '';
+
+  /** Placeholder shown when the document is empty. */
+  @property() placeholder = 'Type something…';
+
+  /**
+   * Endpoint for image uploads — required for image support. Posting the file
+   * metadata here must return `{uploadPath, uploadUrl}`; the file is then PUT
+   * to `uploadUrl` and the returned `uploadPath` is embedded as the image URL.
+   */
+  @property({attribute: 'attachment-url'}) attachmentUrl = '';
+
+  /**
+   * Endpoint listing the Includes this document may embed, as
+   * `{"items":[{id,title,description,scope,keywords,languages,url}]}`. Labels the
+   * chips rendered for `include::` directives and feeds the include picker.
+   */
+  @property({attribute: 'include-url'}) includeUrl = '';
+
+  /**
+   * Endpoint the article link picker searches, as
+   * `{"items":[{ref,kind,title,context,status}]}`. Queried with `?q=<term>` as
+   * the author types and with `?refs=a,b` to resolve the references a body
+   * already carries.
+   */
+  @property({attribute: 'link-url'}) linkUrl = '';
+
+  /** Adds a toolbar toggle that swaps the block view for the full remarkd source. */
+  @property({type: Boolean, attribute: 'allow-raw', reflect: true}) allowRaw = false;
+
+  /** Makes the editor required for form submission. */
+  @property({type: Boolean, reflect: true}) required = false;
+
+  /** Makes the editor read-only. */
+  @property({type: Boolean, reflect: true}) readonly = false;
+
+  /** Disables the editor. */
+  @property({type: Boolean, reflect: true}) disabled = false;
+
+  get validity(): ValidityState {
+    return this.validationInput?.validity;
+  }
+
+  get validationMessage(): string {
+    return this.validationInput?.validationMessage ?? '';
+  }
+
+  checkValidity(): boolean {
+    return this.validationInput?.checkValidity() ?? true;
+  }
+
+  getForm(): HTMLFormElement | null {
+    return this.formControlController.getForm();
+  }
+
+  reportValidity(): boolean {
+    return this.validationInput?.reportValidity() ?? true;
+  }
+
+  setCustomValidity(message: string): void {
+    this.validationInput?.setCustomValidity(message);
+    this.formControlController.updateValidity();
+  }
+
+  /** Starts editing the first block, or a new block if the document is empty. */
+  focus() {
+    if (this.rawMode) {
+      this.shadowRoot?.querySelector<HTMLTextAreaElement>('.remarkd-editor__raw')?.focus();
+      return;
+    }
+    if (this.blocks.length) {
+      this.startEdit(0);
+    } else {
+      this.insertDraftBlock(0);
+    }
+  }
+
+  /** Commits any in-progress block or raw edit. */
+  blur() {
+    const selector = this.rawMode ? '.remarkd-editor__raw' : '.remarkd-editor__input';
+    this.shadowRoot?.querySelector<HTMLTextAreaElement>(selector)?.blur();
+  }
+
+  protected firstUpdated(_changedProperties: PropertyValues) {
+    super.firstUpdated(_changedProperties);
+    this.formControlController.updateValidity();
+    if (this.hasIncludeBlock()) void this.loadIncludeOptions();
+    this.resolveContentLinks();
+  }
+
+  protected updated(changedProperties: PropertyValues<this>) {
+    super.updated(changedProperties);
+    // Scoped to the parser-rendered branch only — see the class comment on the rendered div.
+    this.shadowRoot?.querySelectorAll('.remarkd-editor__rendered--parsed')
+      .forEach(rendered => this.markVariables(rendered));
+    this.shadowRoot?.querySelectorAll('.remarkd-editor__rendered--parsed')
+      .forEach(rendered => this.markContentLinks(rendered));
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.cancelDrag();
+  }
+
+  @watch('value')
+  handleValueChange() {
+    if (this.suppressValueSync) {
+      this.suppressValueSync = false;
+      return;
+    }
+    this.blocks = this.splitBlocks(this.value || '');
+    if (this.hasUpdated && this.hasIncludeBlock()) void this.loadIncludeOptions();
+    if (this.hasUpdated) this.resolveContentLinks();
+  }
+
+  @watch('includeUrl', {waitUntilFirstUpdate: true})
+  handleIncludeUrlChange() {
+    this.includeRequest = null;
+    this.includeOptions = null;
+    this.includeLoadFailed = false;
+    if (this.hasIncludeBlock()) void this.loadIncludeOptions();
+  }
+
+  @watch('linkUrl', {waitUntilFirstUpdate: true})
+  handleLinkUrlChange() {
+    this.linkRefs.clear();
+    this.linkRefsPending = false;
+    this.resolveContentLinks();
+  }
+
+  /**
+   * Splits remarkd source into blocks on blank lines, keeping fenced /
+   * delimited containers (``` ==== !!!! .... ---- ____ **** ////) as single blocks.
+   */
+  private splitBlocks(source: string): string[] {
+    return this.scanBlocks(source).blocks;
+  }
+
+  /** `splitBlocks`, plus whether the source ends inside an unclosed container, where a blank line does not split. */
+  private scanBlocks(source: string): { blocks: string[]; open: boolean } {
+    const lines = source.replace(/\r\n/g, '\n').split('\n');
+    const blocks: string[] = [];
+    let current: string[] = [];
+    let fence: string | null = null;
+    let depth = 0;
+
+    const push = () => {
+      const text = current.join('\n').trim();
+      if (text) blocks.push(text);
+      current = [];
+    };
+
+    for (const line of lines) {
+      const trimmed = line.trimEnd();
+      if (fence) {
+        current.push(line);
+        if (this.closesFence(trimmed, fence)) fence = null;
+        continue;
+      }
+      const marker = this.fenceMarker(trimmed);
+      if (marker) {
+        current.push(line);
+        fence = marker;
+        continue;
+      }
+      if (depth > 0) {
+        current.push(line);
+        if (CONDITIONAL_OPEN.test(trimmed) || IFEVAL_OPEN.test(trimmed)) depth++;
+        else if (CONDITIONAL_END.test(trimmed) && --depth === 0) push();
+        continue;
+      }
+      if (CONDITIONAL_OPEN.test(trimmed) || IFEVAL_OPEN.test(trimmed)) {
+        push();
+        current.push(line);
+        depth = 1;
+        continue;
+      }
+      if (INCLUDE_LINE.test(trimmed)) {
+        push();
+        current.push(line);
+        push();
+        continue;
+      }
+      if (trimmed === '') {
+        push();
+        continue;
+      }
+      current.push(line);
+    }
+    push();
+    return {blocks, open: fence !== null || depth > 0};
+  }
+
+  private fenceMarker(line: string): string | null {
+    if (TABLE_FENCE_LINE.test(line)) return TABLE_FENCE;
+    const backticks = /^`{3,}/.exec(line);
+    if (backticks) return backticks[0];
+    // `_{4,}`/`*{4,}`/`/{4,}` are Quote/Verse/Sidebar/Comment's delimiters — none collide with
+    // the 3-character Underline mark (`___`) or Divider (`---`), both below this floor.
+    if (/^(={4,}|\.{4,}|-{4,}|!{4,}|_{4,}|\*{4,}|\/{4,})$/.test(line)) return line;
+    if (/^!!\S+!!$/.test(line)) return '!!!!';
+    return null;
+  }
+
+  private closesFence(line: string, fence: string): boolean {
+    if (fence === TABLE_FENCE) return TABLE_FENCE_LINE.test(line);
+    const char = fence[0];
+    let count = 0;
+    while (count < line.length && line[count] === char) count++;
+    return count === line.length && count >= fence.length;
+  }
+
+  private updateBlocks(blocks: string[]) {
+    this.blocks = blocks;
+    const joined = blocks.join('\n\n');
+    if (joined !== this.value) {
+      this.suppressValueSync = true;
+      this.value = joined;
+      this.formControlController.updateValidity();
+      this.emit('zn-change');
+    }
+  }
+
+  private handleRenderedClick(e: MouseEvent, index: number) {
+    const checkbox = (e.target as HTMLElement).closest<HTMLInputElement>('input[type="checkbox"]');
+    if (checkbox) {
+      // Toggle the task in the source rather than opening the editor.
+      e.preventDefault();
+      this.toggleCheckbox(index, checkbox);
+      return;
+    }
+
+    // Image blocks get a controls panel instead of source editing.
+    const image = this.parseImageBlock(this.blocks[index]);
+    if (image) {
+      this.editingIndex = index;
+      this.imageEdit = image;
+      this.slashController.close();
+      return;
+    }
+
+    this.startEdit(index);
+  }
+
+  /** Parses a block that is purely an image (with optional caption/align lines). */
+  private parseImageBlock(block: string): ImageBlockData | null {
+    const data: ImageBlockData = {caption: '', align: '', src: '', alt: '', width: '', height: ''};
+    let found = false;
+    for (const raw of (block ?? '').split('\n')) {
+      const line = raw.trim();
+      if (!line) continue;
+      const macro = /^image::([^[]+)\[([^\]]*)]$/.exec(line);
+      const markdown = /^!\[([^\]]*)]\(([^)\s]+)\s*(?:"[^"]*")?\)$/.exec(line);
+      const align = /^\[\.align-(center|right)]$/.exec(line);
+      if (macro || markdown) {
+        if (found) return null;
+        found = true;
+        if (macro) {
+          data.src = macro[1].trim();
+          const parts = macro[2].split(',').map(part => part.trim());
+          data.alt = parts[0] ?? '';
+          data.width = parts[1] ?? '';
+          data.height = parts[2] ?? '';
+        } else if (markdown) {
+          data.alt = markdown[1];
+          data.src = markdown[2];
+        }
+      } else if (align) {
+        data.align = align[1] as ImageBlockData['align'];
+      } else if (line.startsWith('.') && !line.startsWith('..')) {
+        data.caption = line.slice(1);
+      } else {
+        return null;
+      }
+    }
+    return found ? data : null;
+  }
+
+  /** Parses a block that is nothing but an include directive. */
+  private parseIncludeBlock(block: string): IncludeBlockData | null {
+    const match = INCLUDE_LINE.exec((block ?? '').trim());
+    if (!match) return null;
+    return {target: match[1].trim(), label: match[2].trim()};
+  }
+
+  private serializeImageBlock(data: ImageBlockData): string {
+    const lines: string[] = [];
+    if (data.caption.trim()) lines.push(`.${data.caption.trim()}`);
+    if (data.align) lines.push(`[.align-${data.align}]`);
+    const attrs = [data.alt, data.width, data.height].map(attr => attr.trim());
+    while (attrs.length && !attrs[attrs.length - 1]) attrs.pop();
+    lines.push(`image::${data.src}[${attrs.join(',')}]`);
+    return lines.join('\n');
+  }
+
+  private toggleCheckbox(index: number, checkbox: HTMLInputElement) {
+    const rendered = checkbox.closest('.remarkd-editor__rendered');
+    const ordinal = Array.from(rendered?.querySelectorAll('input[type="checkbox"]') ?? []).indexOf(checkbox);
+    if (ordinal < 0) return;
+
+    let seen = -1;
+    const updated = this.blocks[index].replace(
+      /^(\s*(?:[-*+]|\d+\.)\s+)\[( |x|X)\]/gm,
+      (match, prefix: string, mark: string) => {
+        seen++;
+        if (seen !== ordinal) return match;
+        return `${prefix}[${mark === ' ' ? 'x' : ' '}]`;
+      });
+    if (updated === this.blocks[index]) return;
+
+    const blocks = [...this.blocks];
+    blocks[index] = updated;
+    this.updateBlocks(blocks);
+  }
+
+  private startEdit(index: number, draft?: string, align: 'nearest' | 'center' = 'nearest', caretOffset?: number) {
+    if (this.disabled || this.readonly) return;
+    this.editingDraft = draft ?? this.blocks[index] ?? '';
+    this.editingIndex = index;
+    this.imageEdit = null;
+    this.linkPickerOpen = false;
+    this.linkSelection = null;
+    this.editShell = this.computeEditShell(this.editingDraft);
+    this.slashController.close();
+    void this.focusInput(align, caretOffset);
+  }
+
+  private updateImageEdit(patch: Partial<ImageBlockData>) {
+    if (this.imageEdit) this.imageEdit = {...this.imageEdit, ...patch};
+  }
+
+  private saveImageEdit = () => {
+    if (this.editingIndex === null || !this.imageEdit) return;
+    const blocks = [...this.blocks];
+    blocks[this.editingIndex] = this.serializeImageBlock(this.imageEdit);
+    this.closeImageEdit();
+    this.updateBlocks(blocks);
+  };
+
+  private closeImageEdit = () => {
+    this.editingIndex = null;
+    this.imageEdit = null;
+  };
+
+  private deleteImageBlock = () => {
+    if (this.editingIndex === null) return;
+    const blocks = [...this.blocks];
+    blocks.splice(this.editingIndex, 1);
+    this.closeImageEdit();
+    this.updateBlocks(blocks);
+  };
+
+  private editImageSource = () => {
+    if (this.editingIndex === null) return;
+    const index = this.editingIndex;
+    this.imageEdit = null;
+    this.startEdit(index);
+  };
+
+  private handleImageControlsKeydown = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      this.closeImageEdit();
+    } else if (e.key === 'Enter' && (e.target as HTMLElement).tagName === 'INPUT') {
+      e.preventDefault();
+      this.saveImageEdit();
+    }
+  };
+
+  /**
+   * The remarkd chrome the editing block should keep, derived from its first
+   * line — so a NOTE still looks like a note while its source is edited.
+   */
+  private computeEditShell(draft: string): string {
+    const first = (draft.split('\n', 1)[0] ?? '').trimStart();
+    const hint = /^(NOTE|TIP|WARNING|IMPORTANT|CAUTION|DANGER|SUCCESS|NOTICE):\s/.exec(first);
+    if (hint) return `hint-${hint[1].toLowerCase()}`;
+    if (first.startsWith('### ')) return 'remarkd-editor__edit-shell--h3';
+    if (first.startsWith('## ')) return 'remarkd-editor__edit-shell--h2';
+    if (first.startsWith('# ')) return 'remarkd-editor__edit-shell--h1';
+    if (first.startsWith('```')) return 'remarkd-editor__edit-shell--code';
+    return '';
+  }
+
+  private async focusInput(align: 'nearest' | 'center' = 'nearest', caretOffset?: number) {
+    await this.updateComplete;
+    const input = this.shadowRoot?.querySelector<HTMLTextAreaElement>('.remarkd-editor__input');
+    if (input) {
+      // Each edit renders its own textarea, so the slash menu is re-pointed at it.
+      this.slashController.attach(input);
+      this.autosize(input);
+      // preventScroll because the browser's own focus scroll walks every scrollable
+      // ancestor — including the surrounding page panel. reveal() stays in the editor.
+      input.focus({preventScroll: true});
+      // Mirrors the slash menu's own clamp (slash-menu-controller's replace()) so a toolbar
+      // insert lands the caret in the same place a "/" insert of the same action would.
+      const caret = caretOffset === undefined
+        ? input.value.length
+        : Math.min(Math.max(caretOffset, 0), input.value.length);
+      input.setSelectionRange(caret, caret);
+      this.reveal(input, align);
+    }
+    this.suppressBlurCommit = false;
+  }
+
+  /**
+   * Scrolls the editor's own body to bring `el` into view. Never `scrollIntoView()` and
+   * never `focus()` without preventScroll: both walk every scrollable ancestor, and an
+   * `overflow: hidden`/`auto` panel around the editor is scrollable too — that shifts a
+   * container the user never asked to move.
+   */
+  private reveal(el: Element | null | undefined, align: 'nearest' | 'center' = 'nearest') {
+    const body = this.shadowRoot?.querySelector('.remarkd-editor__body');
+    if (!el || !body) return;
+
+    const target = el.getBoundingClientRect();
+    const view = body.getBoundingClientRect();
+
+    // scrollTop clamps itself, so an overshoot at either end lands at the limit.
+    if (align === 'center') {
+      // Taller than the view — a large image, say — can't be centred without hiding its
+      // top, so anchor the top and let the rest run off the bottom.
+      body.scrollTop += target.height > view.height
+        ? target.top - view.top
+        : (target.top + target.height / 2) - (view.top + view.height / 2);
+    } else if (target.top < view.top) {
+      body.scrollTop += target.top - view.top;
+    } else if (target.bottom > view.bottom) {
+      body.scrollTop += target.bottom - view.bottom;
+    }
+  }
+
+  private async revealAfterUpdate(selector: string, align: 'nearest' | 'center' = 'nearest') {
+    await this.updateComplete;
+    this.reveal(this.shadowRoot?.querySelector(selector), align);
+  }
+
+  /**
+   * Centres a block added without opening an editor. An image has no height until it
+   * loads, so the first pass scrolls against a layout that is still short — the second
+   * pass corrects it once the real dimensions are in.
+   */
+  private async revealBlock(index: number) {
+    await this.updateComplete;
+    const blockAt = () => this.shadowRoot?.querySelectorAll('.remarkd-editor__block')[index];
+    const block = blockAt();
+    if (!block) return;
+    this.reveal(block, 'center');
+
+    const loading = [...block.querySelectorAll('img')].filter(img => !img.complete);
+    if (!loading.length) return;
+
+    await Promise.all(loading.map(img => new Promise<void>(resolve => {
+      img.addEventListener('load', () => resolve(), {once: true});
+      img.addEventListener('error', () => resolve(), {once: true});
+    })));
+    await new Promise(requestAnimationFrame);
+    this.reveal(blockAt(), 'center');
+  }
+
+  private addBlockAt(index: number, content: string) {
+    if (this.disabled || this.readonly) return;
+    const blocks = [...this.blocks];
+    blocks.splice(index, 0, content);
+    this.updateBlocks(blocks);
+    void this.revealBlock(index);
+  }
+
+  private deleteBlock(index: number) {
+    if (this.disabled || this.readonly) return;
+    const blocks = [...this.blocks];
+    blocks.splice(index, 1);
+    this.updateBlocks(blocks);
+  }
+
+  /** Inserts a draft block — committed (or dropped, if left empty) on blur. */
+  private insertDraftBlock(index: number, prefill = '', caretOffset?: number) {
+    if (this.disabled || this.readonly) return;
+    const blocks = [...this.blocks];
+    blocks.splice(index, 0, '');
+    this.blocks = blocks;
+    this.startEdit(index, prefill, 'center', caretOffset);
+  }
+
+  /**
+   * Blur handler for the editing textarea. Re-renders that replace the
+   * focused textarea (e.g. Shift+Enter committing and opening the next
+   * block) fire blur mid-transition — `suppressBlurCommit` masks those.
+   */
+  private handleEditBlur = () => {
+    if (this.suppressBlurCommit) return;
+    this.commitEdit();
+  };
+
+  /** Commits the in-progress edit; returns the index after the committed parts. */
+  private commitEdit = (): number => {
+    if (this.imageEdit) {
+      // The image panel saves explicitly — just close it.
+      const index = this.editingIndex ?? this.blocks.length;
+      this.closeImageEdit();
+      return index + 1;
+    }
+    this.slashController.close();
+    if (this.editingIndex === null) return this.blocks.length;
+    const index = this.editingIndex;
+    const parts = this.splitBlocks(this.editingDraft);
+    const blocks = [...this.blocks];
+    blocks.splice(index, 1, ...parts);
+    this.editingIndex = null;
+    this.updateBlocks(blocks);
+    return index + parts.length;
+  };
+
+  private handleDraftInput = (e: Event) => {
+    const input = e.target as HTMLTextAreaElement;
+    this.editingDraft = input.value;
+    this.autosize(input);
+
+    const shell = this.computeEditShell(input.value);
+    if (shell !== this.editShell) {
+      this.editShell = shell;
+      void this.updateComplete.then(() => this.autosize(input));
+    }
+
+    this.emit('zn-input');
+  };
+
+  private handleEditKeydown = (e: KeyboardEvent) => {
+    const input = e.target as HTMLTextAreaElement;
+
+    // The slash menu claims navigation, Enter and Escape in the capture phase.
+    if (this.slashController.open) return;
+
+    const shortcutAction = EDITOR_ACTIONS.find(action =>
+      action.shortcut && matchesShortcut(e, action.shortcut) && this.actionAvailable(action));
+    if (shortcutAction) {
+      e.preventDefault();
+      this.activateAction(shortcutAction);
+    } else if (this.isPlainEnter(e)) {
+      const finished = this.finishedDraft(input.value, input.selectionStart, input.selectionEnd);
+      if (finished !== null) {
+        e.preventDefault();
+        this.editingDraft = finished;
+        this.suppressBlurCommit = true;
+        this.insertDraftBlock(this.commitEdit());
+        return;
+      }
+      const edit = continueList(input.value, input.selectionStart, input.selectionEnd);
+      if (!edit) return;
+      e.preventDefault();
+      this.applyDraftEdit(input, edit.value, edit.caret, edit.caret);
+    } else if (this.isListTab(e)) {
+      const edit = indentList(input.value, input.selectionStart, input.selectionEnd, e.shiftKey);
+      if (!edit) return;
+      e.preventDefault();
+      this.applyDraftEdit(input, edit.value, edit.start, edit.end);
+    } else if (e.key === 'Enter' && e.shiftKey) {
+      e.preventDefault();
+      this.suppressBlurCommit = true;
+      const next = this.commitEdit();
+      this.insertDraftBlock(next);
+    } else if (e.key === 'Escape' || (e.key === 'Enter' && (e.metaKey || e.ctrlKey))) {
+      e.preventDefault();
+      input.blur();
+    } else if (e.key === 'Backspace' && input.value === '') {
+      e.preventDefault();
+      input.blur();
+    }
+  };
+
+  /**
+   * The draft to commit when Enter should finish the block — pressed on a trailing blank line or
+   * empty list item, outside any container — with that line dropped. Null otherwise.
+   */
+  private finishedDraft(value: string, start: number, end: number): string | null {
+    if (start !== end || value.slice(start).trim() !== '') return null;
+    const lineStart = value.lastIndexOf('\n', start - 1) + 1;
+    const line = value.slice(lineStart);
+    if (line.trim() !== '' && !isEmptyListItem(line)) return null;
+    const before = value.slice(0, lineStart);
+    if (before.trim() === '' || this.scanBlocks(before).open) return null;
+    return before.trimEnd();
+  }
+
+  private isPlainEnter(e: KeyboardEvent): boolean {
+    return e.key === 'Enter' && !e.isComposing && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey;
+  }
+
+  private isListTab(e: KeyboardEvent): boolean {
+    return e.key === 'Tab' && !e.isComposing && !e.metaKey && !e.ctrlKey && !e.altKey;
+  }
+
+  private handleRawKeydown = (e: KeyboardEvent) => {
+    const input = e.target as HTMLTextAreaElement;
+    let edit: RangeEdit | null = null;
+    if (this.isPlainEnter(e)) {
+      const next = continueList(input.value, input.selectionStart, input.selectionEnd);
+      edit = next && {value: next.value, start: next.caret, end: next.caret};
+    } else if (this.isListTab(e)) {
+      edit = indentList(input.value, input.selectionStart, input.selectionEnd, e.shiftKey);
+    }
+    if (!edit) return;
+    e.preventDefault();
+    input.value = edit.value;
+    input.setSelectionRange(edit.start, edit.end);
+    this.handleRawInput(e);
+  };
+
+  /** Whether the block being edited is nothing but the slash command. */
+  private isSlashBlock(): boolean {
+    const value = this.shadowRoot?.querySelector<HTMLTextAreaElement>('.remarkd-editor__input')?.value ?? '';
+    return value.startsWith('/') && !value.includes('\n');
+  }
+
+  private async mountSlashMenu(): Promise<ZnSlashMenu | null> {
+    if (!this.hasSlashMenu) {
+      this.hasSlashMenu = true;
+      await this.updateComplete;
+    }
+    return this.slashMenuElement;
+  }
+
+  /** Returns false for items the controller should not insert text for. */
+  private handleSlashSelect(item: SlashMenuItem): boolean {
+    if (item.action === 'link') {
+      // The controller strips the "/…" text first, leaving the caret where the
+      // command was — which is where the link belongs.
+      void this.updateComplete.then(() => this.pickLink());
+      return false;
+    }
+    if (item.action !== 'image' && item.action !== 'include') return true;
+
+    const index = this.editingIndex ?? this.blocks.length;
+    // Let the controller strip the "/…" text first, then drop the empty draft
+    // block and run the picker in its place.
+    void this.updateComplete.then(() => {
+      this.blur();
+      if (item.action === 'image') {
+        this.pickImage(index);
+      } else {
+        this.pickInclude(index);
+      }
+    });
+    return false;
+  }
+
+  private handleEditPaste = (e: ClipboardEvent) => {
+    const file = Array.from(e.clipboardData?.files ?? []).find(f => f.type.startsWith('image/'));
+    if (!file) {
+      this.pasteFormatted(e);
+      return;
+    }
+    e.preventDefault();
+    const index = this.editingIndex ?? this.blocks.length;
+    void this.insertImage(file, index + 1);
+  };
+
+  /** Pastes rich clipboard content as remarkd source, keeping its lists and formatting. */
+  private pasteFormatted = (e: ClipboardEvent) => {
+    const source = pastedRemarkd(e.clipboardData);
+    if (source === null) return;
+    e.preventDefault();
+    const input = e.target as HTMLTextAreaElement;
+    // insertText keeps the paste on the native undo stack; it fires `input` like a typed paste.
+    if (!document.execCommand('insertText', false, source)) {
+      input.setRangeText(source, input.selectionStart, input.selectionEnd, 'end');
+      input.dispatchEvent(new Event('input', {bubbles: true, composed: true}));
+    }
+  };
+
+  private handleDragOver = (e: DragEvent) => {
+    if (this.rawMode) return;
+    if (e.dataTransfer?.types.includes('Files')) e.preventDefault();
+  };
+
+  private handleDrop = (e: DragEvent) => {
+    if (this.rawMode) return;
+    const file = Array.from(e.dataTransfer?.files ?? []).find(f => f.type.startsWith('image/'));
+    if (!file) return;
+    e.preventDefault();
+    void this.insertImage(file, this.blocks.length);
+  };
+
+  /** The insertion index a drop at `y` maps to, from the rendered block positions. */
+  private insertionIndexFromY(y: number): number {
+    const els = Array.from(this.shadowRoot?.querySelectorAll<HTMLElement>('.remarkd-editor__block') ?? []);
+    for (let i = 0; i < els.length; i++) {
+      const rect = els[i].getBoundingClientRect();
+      if (y < rect.top + rect.height / 2) return i;
+    }
+    return els.length;
+  }
+
+  /*
+   * Block dragging uses pointer events rather than native HTML5 drag & drop:
+   * the browser owns the cursor during a native drag (CSS can't show a
+   * grabbing hand), and WebKit's dnd support inside shadow DOM is patchy.
+   */
+
+  private handleHandlePointerDown = (e: PointerEvent) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    if (this.editingIndex !== null) this.commitEdit();
+    this.pendingDragHandle = e.currentTarget as HTMLElement;
+    this.dragStartX = e.clientX;
+    this.dragStartY = e.clientY;
+    // Document-level listeners for the whole drag — element-level capture is
+    // lost if a re-render replaces the handle, stranding the ghost.
+    document.addEventListener('pointermove', this.handleDragPointerMove);
+    document.addEventListener('pointerup', this.handleDragPointerUp);
+    document.addEventListener('pointercancel', this.cancelDrag);
+  };
+
+  private handleDragPointerMove = (e: PointerEvent) => {
+    if (!this.pendingDragHandle) return;
+
+    if (e.buttons % 2 === 0) {
+      // The primary button is no longer held — the pointerup was missed. Abort.
+      this.cancelDrag();
+      return;
+    }
+
+    if (this.dragIndex === null) {
+      const moved = Math.abs(e.clientX - this.dragStartX) + Math.abs(e.clientY - this.dragStartY);
+      if (moved < 4) return;
+      // Resolve the index from the DOM at drag start, after any edit commit.
+      const block = this.pendingDragHandle.closest('.remarkd-editor__block');
+      const blocks = Array.from(this.shadowRoot?.querySelectorAll('.remarkd-editor__block') ?? []);
+      const index = block ? blocks.indexOf(block) : -1;
+      if (index < 0) {
+        this.cancelDrag();
+        return;
+      }
+      this.dragIndex = index;
+      this.createDragGhost(index);
+      document.body.style.cursor = 'grabbing';
+    }
+
+    this.dragPointerY = e.clientY;
+    this.moveDragGhost(e.clientX, e.clientY);
+    this.dropIndicator = this.insertionIndexFromY(e.clientY);
+    this.autoScrollFrame ??= requestAnimationFrame(this.stepAutoScroll);
+  };
+
+  /**
+   * Holding the pointer near a scroll edge keeps the content moving, so a block can
+   * be dragged past the visible slice of a long document. Runs per frame rather than
+   * per pointermove — a pointer parked at the edge stops emitting moves.
+   */
+  private stepAutoScroll = () => {
+    this.autoScrollFrame = null;
+    if (this.dragIndex === null || !this.autoScroll()) return;
+    // The content moved under a possibly stationary pointer, so the drop target shifts.
+    this.dropIndicator = this.insertionIndexFromY(this.dragPointerY);
+    this.autoScrollFrame = requestAnimationFrame(this.stepAutoScroll);
+  };
+
+  /** Scrolls the editor body, falling through to the page once the body is at its limit. */
+  private autoScroll(): boolean {
+    const body = this.shadowRoot?.querySelector('.remarkd-editor__body');
+    if (body) {
+      const {top, bottom} = body.getBoundingClientRect();
+      const delta = this.edgeScrollDelta(top, bottom);
+      const before = body.scrollTop;
+      if (delta) {
+        body.scrollTop += delta;
+        if (body.scrollTop !== before) return true;
+      }
+    }
+
+    const pageDelta = this.edgeScrollDelta(0, window.innerHeight);
+    if (!pageDelta) return false;
+    const before = window.scrollY;
+    window.scrollBy(0, pageDelta);
+    return window.scrollY !== before;
+  }
+
+  /** Scroll step for this frame: nothing until the pointer is within `edge` of a boundary. */
+  private edgeScrollDelta(top: number, bottom: number): number {
+    const edge = 56;
+    const max = 18;
+    const ramp = (depth: number) => Math.ceil((Math.min(depth, edge) / edge) * max);
+
+    if (this.dragPointerY < top + edge) return -ramp(top + edge - this.dragPointerY);
+    if (this.dragPointerY > bottom - edge) return ramp(this.dragPointerY - (bottom - edge));
+    return 0;
+  }
+
+  private handleDragPointerUp = (e: PointerEvent) => {
+    const from = this.dragIndex;
+    let to = from !== null ? (this.dropIndicator ?? this.insertionIndexFromY(e.clientY)) : null;
+    this.cancelDrag();
+    if (from === null || to === null || to === from || to === from + 1) return;
+    const blocks = [...this.blocks];
+    const [moved] = blocks.splice(from, 1);
+    if (to > from) to--;
+    blocks.splice(to, 0, moved);
+    this.updateBlocks(blocks);
+  };
+
+  private cancelDrag = () => {
+    this.pendingDragHandle = null;
+    if (this.autoScrollFrame !== null) cancelAnimationFrame(this.autoScrollFrame);
+    this.autoScrollFrame = null;
+    document.removeEventListener('pointermove', this.handleDragPointerMove);
+    document.removeEventListener('pointerup', this.handleDragPointerUp);
+    document.removeEventListener('pointercancel', this.cancelDrag);
+    this.dragIndex = null;
+    this.dropIndicator = null;
+    this.dragGhost?.remove();
+    this.dragGhost = null;
+    document.body.style.cursor = '';
+  };
+
+  private createDragGhost(index: number) {
+    const blocks = this.shadowRoot?.querySelectorAll<HTMLElement>('.remarkd-editor__block');
+    const rendered = blocks?.[index]?.querySelector<HTMLElement>('.remarkd-editor__rendered');
+    if (!rendered) return;
+    const ghost = rendered.cloneNode(true) as HTMLElement;
+    ghost.classList.add('remarkd-editor__ghost');
+    ghost.style.width = `${rendered.offsetWidth}px`;
+    this.shadowRoot?.querySelector('.remarkd-editor')?.appendChild(ghost);
+    this.dragGhost = ghost;
+  }
+
+  private moveDragGhost(x: number, y: number) {
+    if (this.dragGhost) this.dragGhost.style.transform = `translate(${x + 10}px, ${y + 10}px)`;
+  }
+
+  private pickImage(index: number) {
+    if (this.disabled || this.readonly) return;
+    this.includePickerIndex = null;
+    this.imagePickerIndex = index;
+    void this.revealAfterUpdate('.remarkd-editor__image-picker', 'center');
+  }
+
+  private pickInclude(index: number) {
+    if (this.disabled || this.readonly || !this.includeUrl) return;
+    this.imagePickerIndex = null;
+    this.includeQuery = '';
+    this.includePickerIndex = index;
+    void this.loadIncludeOptions();
+    void this.revealAfterUpdate('.remarkd-editor__include-picker', 'center');
+  }
+
+  /**
+   * Opens the picker over the block being edited. The caret range is captured
+   * now: the picker's own filter takes focus, so the textarea's selection is
+   * gone by the time an option is chosen.
+   */
+  private pickLink() {
+    if (this.disabled || this.readonly || !this.linkUrl || this.editingIndex === null) return;
+    const input = this.shadowRoot?.querySelector<HTMLTextAreaElement>('.remarkd-editor__input');
+    if (!input) return;
+    this.linkSelection = [input.selectionStart, input.selectionEnd];
+    this.linkQuery = input.value.slice(input.selectionStart, input.selectionEnd).trim();
+    this.linkResults = null;
+    this.linkSearchFailed = false;
+    this.linkPickerOpen = true;
+    // The picker renders inside the editing block and its filter takes focus,
+    // so the textarea's blur must not commit the edit — that would unmount the
+    // picker mid-interaction.
+    this.suppressBlurCommit = true;
+    this.searchLinks(this.linkQuery);
+    void this.updateComplete.then(() => {
+      this.shadowRoot?.querySelector<HTMLInputElement>('.remarkd-editor__link-filter')?.focus();
+    });
+  }
+
+  private closeLinkPicker = () => {
+    this.linkPickerOpen = false;
+    this.linkSelection = null;
+    this.suppressBlurCommit = false;
+    clearTimeout(this.linkSearchTimer);
+    void this.updateComplete.then(() => {
+      this.shadowRoot?.querySelector<HTMLTextAreaElement>('.remarkd-editor__input')
+        ?.focus({preventScroll: true});
+    });
+  };
+
+  /** Debounced; only the newest response is kept. */
+  private searchLinks(term: string) {
+    clearTimeout(this.linkSearchTimer);
+    const token = ++this.linkSearchToken;
+    this.linkSearchTimer = setTimeout(() => {
+      const url = `${this.linkUrl}${this.linkUrl.includes('?') ? '&' : '?'}q=${encodeURIComponent(term.trim())}`;
+      fetch(url, {headers: {Accept: 'application/json'}})
+        .then(res => {
+          if (!res.ok) throw new Error(`link search failed: ${res.status}`);
+          return res.json() as Promise<{ items?: LinkOption[] }>;
+        })
+        .then(data => {
+          if (token !== this.linkSearchToken) return;
+          this.linkResults = data.items ?? [];
+          this.linkSearchFailed = false;
+        })
+        .catch(error => {
+          console.error('[zn-remarkd-editor] link search failed', error);
+          if (token !== this.linkSearchToken) return;
+          this.linkResults = null;
+          this.linkSearchFailed = true;
+        });
+    }, LINK_SEARCH_DEBOUNCE);
+  }
+
+  private closeIncludePicker = () => {
+    this.includePickerIndex = null;
+  };
+
+  private insertInclude(item: IncludeOption) {
+    const index = this.includePickerIndex ?? this.blocks.length;
+    this.includePickerIndex = null;
+    this.addBlockAt(index, includeMarker(item.id, item.title));
+  }
+
+  private closeImagePicker = () => {
+    this.imagePickerIndex = null;
+  };
+
+  private handleImagePicked = (e: Event) => {
+    const file = (e.target as ZnFile).files?.[0];
+    if (!file) return;
+    const index = this.imagePickerIndex ?? this.blocks.length;
+    this.imagePickerIndex = null;
+    void this.insertImage(file, index);
+  };
+
+  private async insertImage(file: File, index: number) {
+    try {
+      const path = await this.uploadImage(file);
+      const alt = file.name.replace(/[[\],]/g, '');
+      this.addBlockAt(index, `image::${path}[${alt}]`);
+    } catch (error) {
+      console.error('[zn-remarkd-editor] image upload failed', error);
+    }
+  }
+
+  private async uploadImage(file: File): Promise<string> {
+    if (!this.attachmentUrl) throw new Error('No attachment-url configured');
+    const fd = new FormData();
+    fd.append('filename', file.name);
+    fd.append('size', file.size.toString());
+    fd.append('mimeType', file.type);
+
+    const res = await fetch(this.attachmentUrl, {method: 'POST', body: fd});
+    if (!res.ok) throw new Error(`Upload request failed: ${res.status}`);
+    const data = await res.json() as UploadResponse;
+
+    // resolve relative upload targets against the attachment url so both keep
+    // the same base path when the host page rewrites attachment-url (e.g. the
+    // kubex console proxying apps under an app base); absolute urls pass through
+    const target = new URL(data.uploadUrl, new URL(this.attachmentUrl, window.location.href)).toString();
+    const put = await fetch(target, {
+      method: 'PUT',
+      headers: {'Content-Type': file.type},
+      body: file,
+    });
+    if (!put.ok) throw new Error(`Upload failed: ${put.status}`);
+    return data.uploadPath;
+  }
+
+  /**
+   * Resolves an app-relative path the way the console's pagelet handler does:
+   * an app fragment's URLs sit under the app base, and the console puts the app's
+   * `gaid` on the host element. Links rendered here live in the shadow root,
+   * where a click retargets to the host, so that handler never sees them — the
+   * href has to carry the base itself.
+   */
+  private appPath(path: string): string {
+    const gaid = this.getAttribute('gaid') ?? '';
+    const trimmed = path.replace(/^\/+/, '');
+    if (!gaid || trimmed.startsWith(gaid)) return path;
+    return `/${gaid}/${trimmed}`;
+  }
+
+  private hasIncludeBlock(): boolean {
+    return this.blocks.some(block => this.parseIncludeBlock(block) !== null);
+  }
+
+  /** Fetches the include list once; every later caller shares the same promise. */
+  private loadIncludeOptions(): Promise<IncludeOption[]> {
+    if (!this.includeUrl) return Promise.resolve([]);
+    if (!this.includeRequest) {
+      this.includeRequest = fetch(this.includeUrl, {headers: {Accept: 'application/json'}})
+        .then(res => {
+          if (!res.ok) throw new Error(`include list request failed: ${res.status}`);
+          return res.json() as Promise<{ items?: IncludeOption[] }>;
+        })
+        .then(data => {
+          const items = data.items ?? [];
+          this.includeOptions = items;
+          this.includeLoadFailed = false;
+          return items;
+        })
+        .catch(error => {
+          // A list that never arrived is not evidence an embed is broken: leave
+          // the options unresolved so chips keep their marker labels, and let
+          // the next picker open try again.
+          console.error('[zn-remarkd-editor] include list failed', error);
+          this.includeOptions = null;
+          this.includeLoadFailed = true;
+          this.includeRequest = null;
+          return [] as IncludeOption[];
+        });
+    }
+    return this.includeRequest;
+  }
+
+  /**
+   * Resolves the references in the body that have not been resolved yet, so a
+   * link whose target is gone can be marked. A failed request records nothing:
+   * an unanswered reference is not a broken one.
+   */
+  private resolveContentLinks() {
+    if (!this.linkUrl || this.linkRefsPending) return;
+    const refs = [...new Set((this.value || '').match(CONTENT_LINK_REFS) ?? [])]
+      .filter(ref => !this.linkRefs.has(ref));
+    if (!refs.length) return;
+
+    this.linkRefsPending = true;
+    const url = `${this.linkUrl}${this.linkUrl.includes('?') ? '&' : '?'}refs=${encodeURIComponent(refs.join(','))}`;
+    fetch(url, {headers: {Accept: 'application/json'}})
+      .then(res => {
+        if (!res.ok) throw new Error(`link resolve failed: ${res.status}`);
+        return res.json() as Promise<{ items?: LinkOption[] }>;
+      })
+      .then(data => {
+        const known = new Map((data.items ?? []).map(item => [item.ref, item]));
+        for (const ref of refs) this.linkRefs.set(ref, known.get(ref) ?? null);
+        this.requestUpdate();
+      })
+      .catch(error => {
+        console.error('[zn-remarkd-editor] link resolve failed', error);
+      })
+      .finally(() => {
+        // Don't retry a failed request here: these refs are still absent from
+        // linkRefs, so the next value change calls this again — retrying in
+        // finally instead would loop forever on a persistent failure.
+        this.linkRefsPending = false;
+      });
+  }
+
+  private markContentLinks(root: Element) {
+    root.querySelectorAll<HTMLAnchorElement>('a[href^="kb:"]').forEach(anchor => {
+      const match = CONTENT_LINK_HREF.exec(anchor.getAttribute('href') ?? '');
+      const missing = !!match && this.linkRefs.get(match[0]) === null;
+      anchor.classList.toggle('remarkd-editor__link--missing', missing);
+      if (missing) anchor.title = 'This article is no longer available';
+      else anchor.removeAttribute('title');
+    });
+  }
+
+  private autosize(input: HTMLTextAreaElement) {
+    input.style.height = 'auto';
+    input.style.height = `${input.scrollHeight}px`;
+  }
+
+  /**
+   * Applies an inline mark to the open block's textarea: wraps the selection, toggles the
+   * mark off when it is already wrapped, or inserts a selected placeholder when there is
+   * no selection.
+   */
+  private applyInline(mark: InlineMark) {
+    const input = this.shadowRoot?.querySelector<HTMLTextAreaElement>('.remarkd-editor__input');
+    if (!input) return;
+
+    const after = mark.after ?? mark.before;
+    const {selectionStart: start, selectionEnd: end, value} = input;
+    const selected = value.slice(start, end);
+
+    // A repeated-character mark nests inside its longer sibling (`~` within `~~`), so an
+    // exact run is required — a prefix match would strip one character from each side. Gated
+    // on symmetric marks only: asymmetric marks like Link (`[` … `](https://)`) share a
+    // trailing `)` that would otherwise misfire this guard on unrelated marks.
+    const symmetric = after === mark.before;
+    const repeated = symmetric && mark.before.length > 0
+      && mark.before === mark.before[0].repeat(mark.before.length);
+    const beforeMatches = value.slice(start - mark.before.length, start) === mark.before;
+
+    // Link/Tooltip's closer carries a real URL or explanation, not the placeholder text, so
+    // it is matched by pattern; its length is whatever the pattern actually consumed, not
+    // `after.length`, since a real payload is rarely the same length as the placeholder.
+    const closer = symmetric ? null : closerPattern(after);
+    const closerMatch = closer?.exec(value.slice(end)) ?? null;
+    const afterLength = closerMatch ? closerMatch[0].length : after.length;
+    const afterMatches = closer ? !!closerMatch : value.slice(end, end + after.length) === after;
+
+    const outerBefore = value[start - mark.before.length - 1];
+    const outerAfter = value[end + afterLength];
+    const wrapped = beforeMatches && afterMatches
+      && !(repeated && (outerBefore === mark.before[0] || outerAfter === after[after.length - 1]));
+
+    let next: string;
+    let caret: [number, number];
+    if (wrapped) {
+      next = value.slice(0, start - mark.before.length) + selected + value.slice(end + afterLength);
+      caret = [start - mark.before.length, start - mark.before.length + selected.length];
+    } else if (closer && beforeMatches) {
+      // A real opener with no matching closer pattern after it — decline to wrap rather than
+      // nesting a second opener in front of what may already be one.
+      return;
+    } else {
+      const body = selected || mark.placeholder || '';
+      next = value.slice(0, start) + mark.before + body + after + value.slice(end);
+      caret = [start + mark.before.length, start + mark.before.length + body.length];
+    }
+
+    this.applyDraftEdit(input, next, caret[0], caret[1]);
+  }
+
+  /** Writes a programmatic edit to the open block's textarea. Goes through `editingDraft` so `zn-input` still fires. */
+  private applyDraftEdit(input: HTMLTextAreaElement, value: string, selectionStart: number, selectionEnd: number) {
+    this.editingDraft = value;
+    input.value = value;
+    input.setSelectionRange(selectionStart, selectionEnd);
+    this.editShell = this.computeEditShell(value);
+    this.autosize(input);
+    input.focus({preventScroll: true});
+    this.emit('zn-input');
+  }
+
+  private toggleRawMode = () => {
+    if (this.rawMode) {
+      this.commitRaw();
+      this.rawMode = false;
+      return;
+    }
+    if (this.editingIndex !== null) this.commitEdit();
+    // The per-block textarea the menu watches is about to be replaced.
+    this.slashController.detach();
+    this.rawEntryValue = this.value;
+    this.rawMode = true;
+    void this.focusRaw();
+  };
+
+  private async focusRaw() {
+    await this.updateComplete;
+    const raw = this.shadowRoot?.querySelector<HTMLTextAreaElement>('.remarkd-editor__raw');
+    if (!raw) return;
+    raw.focus();
+    raw.setSelectionRange(raw.value.length, raw.value.length);
+  }
+
+  /**
+   * Raw mode keeps the whole document in one textarea, so the textarea — not
+   * the block list — is authoritative while it is open: re-splitting on every
+   * keystroke would normalise blank lines out from under the cursor.
+   */
+  private handleRawInput = (e: Event) => {
+    const input = e.target as HTMLTextAreaElement;
+    if (input.value === this.value) return;
+    this.suppressValueSync = true;
+    this.value = input.value;
+    this.formControlController.updateValidity();
+    this.emit('zn-input');
+  };
+
+  /**
+   * Re-splits the raw source into blocks. Not `updateBlocks` — that only
+   * reports a change when the re-join differs from the value, and raw edits
+   * have already written straight to the value.
+   */
+  private commitRaw = () => {
+    const blocks = this.splitBlocks(this.value || '');
+    const joined = blocks.join('\n\n');
+    this.blocks = blocks;
+    if (joined !== this.value) {
+      this.suppressValueSync = true;
+      this.value = joined;
+    }
+    if (this.value === this.rawEntryValue) return;
+    this.rawEntryValue = this.value;
+    this.formControlController.updateValidity();
+    this.emit('zn-change');
+  };
+
+  private handleToolbarInsert(action: EditorAction) {
+    if (this.editingIndex !== null) this.suppressBlurCommit = true;
+    const index = this.editingIndex !== null ? this.commitEdit() : this.blocks.length;
+    if (action.opens === 'image') {
+      this.pickImage(index);
+    } else if (action.opens === 'include') {
+      this.pickInclude(index);
+    } else if (!action.opens) {
+      this.insertDraftBlock(index, action.prefix ?? '', action.caretOffset);
+    }
+  }
+
+  private renderImageControls() {
+    const data = this.imageEdit;
+    if (!data) return '';
+    const aligns: { value: ImageBlockData['align']; icon: string; label: string }[] = [
+      {value: '', icon: 'align-left@lu', label: 'Align left'},
+      {value: 'center', icon: 'align-center@lu', label: 'Align center'},
+      {value: 'right', icon: 'align-right@lu', label: 'Align right'},
+    ];
+    return html`
+      <div part="image-controls" class="remarkd-editor__image-controls"
+           @keydown=${this.handleImageControlsKeydown}>
+        ${data.src ? html`
+          <div class=${classMap({
+            'remarkd-editor__image-controls-preview': true,
+            [`remarkd-editor__image-controls-preview--${data.align}`]: !!data.align,
+          })}>
+            <img src=${data.src}
+                 alt=${data.alt}
+                 width=${data.width || ''}
+                 height=${data.height || ''}>
+          </div>` : ''}
+        <label class="remarkd-editor__image-field">
+          <span>Caption</span>
+          <input .value=${data.caption}
+                 placeholder="Optional caption"
+                 @input=${(e: Event) => this.updateImageEdit({caption: (e.target as HTMLInputElement).value})}>
+        </label>
+        <div class="remarkd-editor__image-row">
+          <div class="remarkd-editor__image-field">
+            <span>Alignment</span>
+            <zn-button-group>
+              ${aligns.map(align => html`
+                <zn-button icon-button="small"
+                           icon=${align.icon}
+                           ?plain=${data.align !== align.value}
+                           tooltip=${align.label}
+                           @click=${() => this.updateImageEdit({align: align.value})}></zn-button>`)}
+            </zn-button-group>
+          </div>
+          <label class="remarkd-editor__image-field">
+            <span>Width</span>
+            <input .value=${data.width} placeholder="auto" size="6"
+                   @input=${(e: Event) => this.updateImageEdit({width: (e.target as HTMLInputElement).value})}>
+          </label>
+          <label class="remarkd-editor__image-field">
+            <span>Height</span>
+            <input .value=${data.height} placeholder="auto" size="6"
+                   @input=${(e: Event) => this.updateImageEdit({height: (e.target as HTMLInputElement).value})}>
+          </label>
+          <label class="remarkd-editor__image-field">
+            <span>Alt text</span>
+            <input .value=${data.alt}
+                   @input=${(e: Event) => this.updateImageEdit({alt: (e.target as HTMLInputElement).value})}>
+          </label>
+        </div>
+        <div class="remarkd-editor__image-buttons">
+          <zn-button color="primary" size="small" @click=${this.saveImageEdit}>Save</zn-button>
+          <zn-button color="secondary" size="small" @click=${this.closeImageEdit}>Cancel</zn-button>
+          <span class="remarkd-editor__image-buttons-spacer"></span>
+          <zn-button icon-button="small"
+                     plain
+                     icon="code@lu"
+                     tooltip="Edit source"
+                     @click=${this.editImageSource}></zn-button>
+          <zn-button icon-button="small" plain icon="trash-2@lu" color="error"
+                     tooltip="Delete image" @click=${this.deleteImageBlock}></zn-button>
+        </div>
+      </div>`;
+  }
+
+  private renderIncludeChip(data: IncludeBlockData) {
+    const option = this.includeOptions?.find(item => item.id === data.target);
+    // A path-like target is remarkd's file include, which this editor cannot
+    // resolve and must not call broken.
+    const filePath = /[/.]/.test(data.target);
+    const pending = !this.includeUrl || this.includeOptions === null;
+    const missing = !option && !pending && !filePath;
+    return html`
+      <div part="include"
+           class=${classMap({
+             'remarkd-editor__include': true,
+             'remarkd-editor__include--missing': missing,
+           })}>
+        <zn-icon src=${missing ? 'triangle-alert@lu' : 'blocks@lu'} size="16"></zn-icon>
+        <span class="remarkd-editor__include-title">${option?.title || data.label || data.target}</span>
+        ${option?.scope ? html`
+          <span class="remarkd-editor__include-scope">${option.scope}</span>` : ''}
+        <span class="remarkd-editor__include-meta">${missing
+          ? `Include not found · ${data.target}`
+          : !option && filePath ? 'File include' : 'Included content'}</span>
+        ${option?.url ? html`
+          <a class="remarkd-editor__include-link" href=${this.appPath(option.url)}
+             target="_blank" rel="noreferrer"
+             @click=${(e: MouseEvent) => e.stopPropagation()}>Open</a>` : ''}
+      </div>`;
+  }
+
+  /** A metadata-only block parses to nothing, so show each of its lines as a chip instead. */
+  private renderMetaChips(lines: MetaLine[]) {
+    return html`
+      <div class="remarkd-editor__meta">
+        ${lines.map(line => this.renderMetaChip(line))}
+      </div>`;
+  }
+
+  /**
+   * One shared chip treatment for every metadata line kind — each kind just supplies an
+   * icon, a name, and an optional value/state, display-only in all three cases.
+   */
+  private renderMetaChip(line: MetaLine) {
+    const icon = line.kind === 'title' ? 'captions@lu' : line.kind === 'bracket' ? 'brackets@lu' : 'braces@lu';
+    // Names are the code-like part (an attribute's key, a bracket line's raw text); a title
+    // has none, its text is the value — so it renders in plain prose type, not monospace.
+    const name = line.kind === 'attribute' ? line.name : line.kind === 'bracket' ? line.text : '';
+    const value = line.kind === 'attribute' ? line.value : line.kind === 'title' ? line.text : '';
+    const attrState = line.kind === 'attribute' ? (line.unset ? 'unset' : (value ? '' : 'set')) : '';
+    return html`
+      <div part="variable" class="remarkd-editor__variable">
+        <zn-icon src=${icon} size="16"></zn-icon>
+        ${name ? html`<span class="remarkd-editor__variable-name">${name}</span>` : ''}
+        ${attrState
+          ? html`<span class="remarkd-editor__variable-state">${attrState}</span>`
+          : value
+            ? html`<span class="remarkd-editor__variable-value">${value}</span>`
+            : ''}
+      </div>`;
+  }
+
+  /**
+   * Wraps `{name}` references so they read as variables rather than literal text. Walks text
+   * nodes and skips code, so a brace in a sample stays a brace, and no regex touches markup.
+   */
+  private markVariables(root: Element) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const targets: Text[] = [];
+    while (walker.nextNode()) {
+      const node = walker.currentNode as Text;
+      if (node.parentElement?.closest('code, pre')) continue;
+      // Lit's unsafeHTML part only touches the DOM when the parsed string changes, so
+      // updated() can re-run over spans this pass already produced — skip them, or a
+      // repeat render nests another wrapper inside the last one.
+      if (node.parentElement?.classList.contains('remarkd-editor__var')) continue;
+      if (/\{[A-Za-z0-9_-]+}/.test(node.data)) targets.push(node);
+    }
+
+    for (const node of targets) {
+      const fragment = document.createDocumentFragment();
+      let index = 0;
+      for (const match of node.data.matchAll(/\{([A-Za-z0-9_-]+)}/g)) {
+        const at = match.index;
+        if (at > index) fragment.append(node.data.slice(index, at));
+        const token = document.createElement('span');
+        token.className = 'remarkd-editor__var';
+        token.textContent = match[0];
+        fragment.append(token);
+        index = at + match[0].length;
+      }
+      if (index < node.data.length) fragment.append(node.data.slice(index));
+      node.replaceWith(fragment);
+    }
+  }
+
+  /**
+   * A conditional range as a labelled wrapper. The inner content is parsed without the
+   * directive lines: evaluating instead would blank the block whenever the flag is not
+   * defined in this same block, hiding the author's content while they edit it. It also
+   * keeps both halves of an if/else idiom visible — with evaluation you could never see
+   * the `ifndef` branch while the `ifdef` condition held. Nesting is handled by
+   * `splitConditionalParts`/`renderConditionalWrapper` below, recursively.
+   */
+  private renderConditional(block: string): TemplateResult | null {
+    const lines = block.split('\n');
+    const open = lines[0]?.trimEnd() ?? '';
+    if (!CONDITIONAL_OPEN.test(open) && !IFEVAL_OPEN.test(open)) return null;
+
+    const end = findConditionalEnd(lines, 1);
+    const interior = lines.slice(1, end === -1 ? undefined : end);
+    return renderConditionalWrapper(conditionalLabel(open), splitConditionalParts(interior));
+  }
+
+  private renderBlock(block: string, index: number) {
+    if (this.editingIndex === index) {
+      if (this.imageEdit) {
+        return this.renderImageControls();
+      }
+      return html`
+        <div class="remarkd-editor__edit-wrap remarkd-rendered">
+          <div class=${classMap({
+            'remarkd-editor__edit-shell': true,
+            [this.editShell]: !!this.editShell,
+          })}>
+            <textarea part="input"
+                      class="remarkd-editor__input"
+                      rows="1"
+                      .value=${this.editingDraft}
+                      @input=${this.handleDraftInput}
+                      @keydown=${this.handleEditKeydown}
+                      @paste=${this.handleEditPaste}
+                      @blur=${this.handleEditBlur}></textarea>
+          </div>
+          ${this.linkPickerOpen ? this.renderLinkPicker() : ''}
+        </div>`;
+    }
+
+    const include = this.parseIncludeBlock(block);
+    const conditional = include ? null : (this.renderConditional(block) ?? renderInlineConditional(block));
+    const meta = include || conditional ? null : parseMetaBlock(block.trim());
+    return html`
+      <div part="block"
+           class=${classMap({
+             'remarkd-editor__block': true,
+             'remarkd-editor__block--dragging': this.dragIndex === index,
+             'remarkd-editor__block--drop-before': this.dropIndicator === index,
+             'remarkd-editor__block--drop-after': this.dropIndicator === index + 1 && index === this.blocks.length - 1,
+           })}>
+        ${this.disabled || this.readonly ? '' : html`
+          <div class="remarkd-editor__actions">
+            <span class="remarkd-editor__drag-handle"
+                  title="Drag to move"
+                  @pointerdown=${this.handleHandlePointerDown}>
+              <zn-icon src="grip-vertical@lu" size="16"></zn-icon>
+            </span>
+            <zn-button icon-button="small"
+                       plain
+                       icon="plus@lu"
+                       icon-size="16"
+                       tooltip="Add block below"
+                       @click=${() => this.insertDraftBlock(index + 1)}></zn-button>
+          </div>
+          <zn-button class="remarkd-editor__delete"
+                     icon-button="small"
+                     plain
+                     icon="x@lu"
+                     icon-size="16"
+                     color="error"
+                     tooltip="Delete block"
+                     @click=${() => this.deleteBlock(index)}></zn-button>`}
+        <div part="rendered"
+             class=${classMap({
+               'remarkd-editor__rendered': true,
+               'remarkd-rendered': true,
+               // Only the parser-rendered branch is safe for markVariables to mutate — the
+               // include/meta branches are plain Lit templates whose ChildPart bindings assume
+               // their next sibling stays a Text node, so it must not touch those. The
+               // conditional branch is also a Lit template (its label is a string binding) —
+               // its own inner body div carries the marker instead, see renderConditional.
+               'remarkd-editor__rendered--parsed': !include && !conditional && !meta,
+             })}
+             @click=${(e: MouseEvent) => this.handleRenderedClick(e, index)}>${
+          include ? this.renderIncludeChip(include)
+            : conditional ? conditional
+              : meta ? this.renderMetaChips(meta)
+                : unsafeHTML(safeParse(block))}
+        </div>
+      </div>`;
+  }
+
+  /** Inline marks and the article link both apply into an open block, not a new one. */
+  private isActionDisabled(action: EditorAction): boolean {
+    return (!!action.inline || action.opens === 'link') && this.editingIndex === null;
+  }
+
+  /** A picker action with no endpoint configured is not offered at all. */
+  private actionAvailable(action: EditorAction): boolean {
+    if (action.opens === 'image') return !!this.attachmentUrl;
+    if (action.opens === 'include') return !!this.includeUrl;
+    if (action.opens === 'link') return !!this.linkUrl;
+    return true;
+  }
+
+  private slashItemAvailable(item: SlashMenuItem): boolean {
+    if (item.action === 'image') return !!this.attachmentUrl;
+    if (item.action === 'include') return !!this.includeUrl;
+    if (item.action === 'link') return !!this.linkUrl;
+    return true;
+  }
+
+  /** Routes a toolbar/menu action to the inline or block insert path — the one place both
+   * `renderAction` and `renderMenuAction` call, so the bar and the overflow menu cannot
+   * drift out of sync on what a given action actually does. */
+  private activateAction(action: EditorAction) {
+    if (action.opens === 'link') {
+      this.pickLink();
+    } else if (action.inline) {
+      this.applyInline(action.inline);
+    } else {
+      this.handleToolbarInsert(action);
+    }
+  }
+
+  /** A single toolbar action button, shared by the toolbar bar and the overflow menu. */
+  private renderAction(action: EditorAction) {
+    return html`
+      <zn-button icon-button="small"
+                 plain
+                 icon=${action.icon}
+                 icon-size="18"
+                 label=${action.label}
+                 tooltip=${action.shortcut ? `${action.label} (${shortcutLabel(action.shortcut)})` : action.label}
+                 ?disabled=${this.isActionDisabled(action)}
+                 @mousedown=${(e: MouseEvent) => e.preventDefault()}
+                 @click=${() => this.activateAction(action)}></zn-button>`;
+  }
+
+  /** The same action, rendered as a menu item for the overflow menu. */
+  private renderMenuAction(action: EditorAction) {
+    return html`
+      <zn-menu-item
+        ?disabled=${this.isActionDisabled(action)}
+        @click=${() => this.activateAction(action)}>
+        <zn-icon slot="prefix" src=${action.icon} size="18"></zn-icon>
+        ${action.label}
+        ${action.shortcut ? html`
+          <span slot="suffix" class="remarkd-editor__shortcut">${shortcutLabel(action.shortcut)}</span>` : ''}
+      </zn-menu-item>`;
+  }
+
+  render() {
+    const editable = !this.disabled && !this.readonly;
+    return html`
+      <div part="base"
+           class=${classMap({
+             'remarkd-editor': true,
+             'remarkd-editor--disabled': this.disabled,
+             'remarkd-editor--readonly': this.readonly,
+           })}
+           @dragover=${this.handleDragOver}
+           @drop=${this.handleDrop}>
+        ${editable ? html`
+          <div part="toolbar" class="remarkd-editor__toolbar">
+            ${this.rawMode ? '' : (() => {
+              const groups = ACTION_GROUPS
+                .map(group => ({
+                  group,
+                  actions: EDITOR_ACTIONS.filter(action => action.group === group.id
+                    && this.actionAvailable(action)),
+                }))
+                .filter(entry => entry.actions.length);
+              const visible = this.toolbarOverflow.visibleCount;
+              const overflowed = groups.slice(visible);
+
+              return html`
+                ${groups.map(entry => html`
+                  <div class="toolbar__group" data-group=${entry.group.id}>
+                    ${entry.actions.map(action => this.renderAction(action))}
+                  </div>`)}
+                ${overflowed.length ? html`
+                  <zn-dropdown class="remarkd-editor__toolbar-more" placement="bottom-end"
+                               @zn-show=${(e: Event) => {
+                                 if (e.target !== e.currentTarget) return;
+                                 this.suppressBlurCommit = true;
+                               }}
+                               @zn-hide=${(e: Event) => {
+                                 if (e.target !== e.currentTarget) return;
+                                 // Choosing "Insert link" from this menu opens the link picker,
+                                 // which sets suppressBlurCommit itself; clearing it here
+                                 // unconditionally would race the picker's own flag and blur
+                                 // the textarea out from under it.
+                                 if (!this.linkPickerOpen) this.suppressBlurCommit = false;
+                               }}>
+                    <zn-button slot="trigger"
+                               icon-button="small"
+                               plain
+                               icon="ellipsis@lu"
+                               icon-size="18"
+                               tooltip="More"
+                               @mousedown=${(e: MouseEvent) => e.preventDefault()}></zn-button>
+                    <zn-menu>
+                      ${overflowed.map(entry => html`
+                        <zn-menu-item>
+                          <zn-icon slot="prefix" src=${entry.actions[0].icon} size="18"></zn-icon>
+                          ${entry.group.label}
+                          <zn-menu slot="submenu">
+                            ${entry.actions.map(action => this.renderMenuAction(action))}
+                          </zn-menu>
+                        </zn-menu-item>`)}
+                    </zn-menu>
+                  </zn-dropdown>` : ''}`;
+            })()}
+            ${this.allowRaw ? html`
+              <zn-button part="raw-toggle"
+                         class="remarkd-editor__raw-toggle"
+                         icon-button="small"
+                         icon="code-xml@lu"
+                         icon-size="18"
+                         ?plain=${!this.rawMode}
+                         tooltip=${this.rawMode ? 'Show blocks' : 'Show raw source'}
+                         @click=${this.toggleRawMode}></zn-button>` : ''}
+          </div>` : ''}
+        <div class=${classMap({
+          'remarkd-editor__body': true,
+          'remarkd-editor__body--raw': this.rawMode,
+        })}>
+          ${this.rawMode ? this.renderRaw() : html`
+            ${this.renderBody()}
+            <div class="remarkd-editor__add" @click=${() => this.insertDraftBlock(this.blocks.length)}>
+              ${this.blocks.length === 0 && this.editingIndex === null ? this.placeholder : ''}
+            </div>`}
+        </div>
+        ${this.hasSlashMenu ? html`
+          <zn-slash-menu
+            part="slash-menu"
+            heading="Insert block"
+            recent-key=${this.slashRecentKey}></zn-slash-menu>` : ''}
+        <textarea class="remarkd-editor__validation"
+                  .value=${this.value}
+                  ?required=${this.required}
+                  tabindex="-1"
+                  aria-hidden="true"></textarea>
+      </div>`;
+  }
+
+  private renderRaw() {
+    return html`
+      <textarea part="raw"
+                class="remarkd-editor__raw"
+                placeholder=${this.placeholder}
+                spellcheck="false"
+                .value=${this.value}
+                @input=${this.handleRawInput}
+                @keydown=${this.handleRawKeydown}
+                @paste=${this.pasteFormatted}
+                @blur=${this.commitRaw}></textarea>`;
+  }
+
+  /** The block views, with the inline image picker spliced in when active. */
+  private renderBody() {
+    const views = this.blocks.map((block, index) => this.renderBlock(block, index));
+    if (this.imagePickerIndex !== null) {
+      views.splice(this.imagePickerIndex, 0, this.renderImagePicker());
+    }
+    if (this.includePickerIndex !== null) {
+      views.splice(this.includePickerIndex, 0, this.renderIncludePicker());
+    }
+    return views;
+  }
+
+  private renderIncludePicker() {
+    const filter = this.includeQuery.trim().toLowerCase();
+    const items = (this.includeOptions ?? []).filter(item => !filter || [
+      item.title, item.description ?? '', (item.keywords ?? []).join(' '),
+    ].some(field => field.toLowerCase().includes(filter)));
+    return html`
+      <div part="include-picker" class="remarkd-editor__include-picker">
+        <div class="remarkd-editor__include-picker-head">
+          <input class="remarkd-editor__include-filter"
+                 placeholder="Find an Include"
+                 .value=${this.includeQuery}
+                 @input=${(e: Event) => {
+                   this.includeQuery = (e.target as HTMLInputElement).value;
+                 }}>
+          <zn-button icon-button="small"
+                     plain
+                     icon="x@lu"
+                     tooltip="Cancel"
+                     @click=${this.closeIncludePicker}></zn-button>
+        </div>
+        ${this.includeOptions === null
+          ? html`
+            <div class="remarkd-editor__include-picker-empty">${
+              this.includeLoadFailed ? 'Could not load Includes' : 'Loading…'}
+            </div>`
+          : items.length
+            ? items.map(item => html`
+              <button type="button" class="remarkd-editor__include-option"
+                      ?disabled=${!item.languages}
+                      @click=${() => this.insertInclude(item)}>
+                <span class="remarkd-editor__include-option-title">${item.title}</span>
+                <span class="remarkd-editor__include-option-meta">${item.scope ?? ''}${
+                  item.languages ? ` · ${item.languages}` : ' · No content'}</span>
+              </button>`)
+            : html`
+              <div class="remarkd-editor__include-picker-empty">No Includes found</div>`}
+      </div>`;
+  }
+
+  private renderLinkPicker() {
+    const kinds: Record<string, string> = {document: 'Article', category: 'Category', page: 'Page'};
+    return html`
+      <div part="link-picker" class="remarkd-editor__link-picker">
+        <div class="remarkd-editor__link-picker-head">
+          <input class="remarkd-editor__link-filter"
+                 placeholder="Find an article"
+                 .value=${this.linkQuery}
+                 @input=${(e: Event) => {
+                   this.linkQuery = (e.target as HTMLInputElement).value;
+                   this.searchLinks(this.linkQuery);
+                 }}>
+          <zn-button icon-button="small"
+                     plain
+                     icon="x@lu"
+                     tooltip="Cancel"
+                     @click=${this.closeLinkPicker}></zn-button>
+        </div>
+        ${this.linkResults === null
+          ? html`
+            <div class="remarkd-editor__link-picker-empty">${
+              this.linkSearchFailed ? 'Could not search for articles' : 'Searching…'}
+            </div>`
+          : this.linkResults.length
+            ? this.linkResults.map(item => html`
+              <button type="button" class="remarkd-editor__link-option"
+                      @click=${() => this.insertLink(item)}>
+                <span class="remarkd-editor__link-option-title">${item.title}</span>
+                <span class="remarkd-editor__link-option-meta">${
+                  [kinds[item.kind] ?? item.kind, item.context, item.status === 'published' ? '' : item.status]
+                    .filter(Boolean).join(' · ')}</span>
+              </button>`)
+            : html`
+              <div class="remarkd-editor__link-picker-empty">No articles found</div>`}
+      </div>`;
+  }
+
+  private insertLink(item: LinkOption) {
+    const input = this.shadowRoot?.querySelector<HTMLTextAreaElement>('.remarkd-editor__input');
+    const range = this.linkSelection;
+    this.linkPickerOpen = false;
+    this.linkSelection = null;
+    this.suppressBlurCommit = false;
+    if (!input || !range) return;
+
+    const [start, end] = range;
+    const selected = input.value.slice(start, end).trim();
+    const markup = contentLinkMarkup(item.ref, selected || item.title);
+    const next = input.value.slice(0, start) + markup + input.value.slice(end);
+
+    this.editingDraft = next;
+    input.value = next;
+    input.setSelectionRange(start + markup.length, start + markup.length);
+    this.editShell = this.computeEditShell(next);
+    this.autosize(input);
+    input.focus({preventScroll: true});
+    this.emit('zn-input');
+  }
+
+  private renderImagePicker() {
+    return html`
+      <div class="remarkd-editor__image-picker">
+        <zn-file class="remarkd-editor__image-file"
+                 label="Image"
+                 accept="image/*"
+                 droparea
+                 @zn-change=${this.handleImagePicked}></zn-file>
+        <zn-button icon-button="small"
+                   plain
+                   icon="x@lu"
+                   tooltip="Cancel"
+                   @click=${this.closeImagePicker}></zn-button>
+      </div>`;
+  }
+}

@@ -66,6 +66,20 @@ Additional color options are available for specific use cases:
 <zn-icon src="palette" color="white" size="32" style="background: #333; padding: 4px;"></zn-icon>
 ```
 
+### Fill
+
+Lucide icons render as outlines by default. Use the `fill` attribute to fill the shape. On its own, `fill` uses the icon's current colour; pass a preset or custom colour to fill with that colour instead. The `fill` attribute only affects the Lucide library.
+
+```html:preview
+<zn-icon src="star@lucide" size="32"></zn-icon>
+<zn-icon src="star@lucide" size="32" fill></zn-icon>
+<zn-icon src="star@lucide" size="32" fill="warning"></zn-icon>
+<zn-icon src="heart@lucide" size="32" color="error" fill></zn-icon>
+<zn-icon src="heart@lucide" size="32" fill="blue"></zn-icon>
+<zn-icon src="badge-check@lucide" size="32" fill="success"></zn-icon>
+<zn-icon src="circle@lucide" size="32" fill="#ff9900"></zn-icon>
+```
+
 ### Round Icons
 
 Add the `round` attribute to give icons a circular background.
@@ -182,6 +196,22 @@ Using shorthand notation:
 <zn-icon src="cloud-upload@line" size="32"></zn-icon>
 <zn-icon src="star@line" size="32"></zn-icon>
 ```
+
+### Lucide Icons
+
+Lucide icons are rendered as inline SVGs. Use `library="lucide"` or the `@lucide` and `@lu` shorthand.
+
+<a href="https://lucide.dev/icons" target="_blank">View Lucide Icons</a>
+
+```html:preview
+<zn-icon src="house" library="lucide" size="32"></zn-icon>
+<zn-icon src="cloud-upload" library="lucide" size="32"></zn-icon>
+<zn-icon src="badge-check" library="lucide" size="32"></zn-icon>
+<zn-icon src="settings-2@lucide" size="32"></zn-icon>
+<zn-icon src="circle-alert@lu" size="32" color="warning"></zn-icon>
+```
+
+You can fill Lucide outlines with the `fill` attribute — see [Fill](#fill).
 
 ### Brand Icons
 
@@ -333,6 +363,8 @@ Explicit library specification:
 <zn-icon src="test1@example.com" library="gravatar" size="48"></zn-icon>
 ```
 
+Email addresses are trimmed, lowercased, and hashed with SHA-256 before the Gravatar request is made.
+
 Using shorthand notation:
 
 ```html:preview
@@ -347,6 +379,8 @@ Libravatar is an open-source alternative to Gravatar. Use it for federated avata
 <zn-icon src="test1@example.com" library="libravatar" size="48" round></zn-icon>
 <zn-icon src="user@example.com" library="libravatar" size="48" round></zn-icon>
 ```
+
+Email addresses are trimmed, lowercased, and hashed with SHA-256 before the Libravatar request is made.
 
 Similar to Gravatar, you can specify fallback options:
 
@@ -412,6 +446,7 @@ The icon component exposes CSS custom properties for advanced styling:
 
 - `--icon-size`: Controls the icon dimensions (default: 24px)
 - `--icon-color`: Controls the icon color (default: inherit)
+- `--icon-fill`: Controls the fill color of Lucide icons when the `fill` attribute is present (default: `currentColor`)
 
 ```html:preview
 <zn-icon src="settings" style="--icon-size: 48px; --icon-color: #ff5722;"></zn-icon>
@@ -630,7 +665,7 @@ your HTML like this:
 <style>
   .icon-search {
     border: solid 1px var(--zn-panel-border-color);
-    border-radius: var(--zn-border-radius-medium);
+    border-radius: var(--zn-border-radius);
     padding: var(--zn-spacing-medium);
   }
 
@@ -675,7 +710,7 @@ your HTML like this:
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: var(--zn-border-radius-medium);
+    border-radius: var(--zn-border-radius);
     font-size: 24px;
     width: 2em;
     height: 2em;

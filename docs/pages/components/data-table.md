@@ -20,8 +20,6 @@ fullWidth: true
     {"key":"date","label":"Date Joined", "sortable":true}
   ]'>
 
-  <zn-data-table-search slot="search" placeholder="Search records..."></zn-data-table-search>
-
 </zn-data-table>
 ```
 
@@ -48,6 +46,10 @@ The simplest data table fetches data from a URI and displays it with defined col
 
 Add a search component to filter table data. The search component emits debounced search events that trigger data reloading.
 
+:::tip
+In this preview, search sends a `search` parameter with each request but the static data file always returns the same results. With a real server endpoint, results would be filtered based on the search term.
+:::
+
 ```html:preview
 <zn-data-table
   data-uri="/data/data-table.json"
@@ -71,6 +73,10 @@ Add a search component to filter table data. The search component emits debounce
 ### With Sorting
 
 Enable column sorting by marking headers as sortable. Click column headers to sort data ascending or descending.
+
+:::tip
+Server-side sorting sends `sortColumn` and `sortDirection` parameters with each request. In this preview, the static data file returns results in the same order regardless. Use `local-sort` (shown below) to see sorting in action without a server.
+:::
 
 ```html:preview
 <zn-data-table
@@ -110,7 +116,13 @@ Use `local-sort` to sort data client-side without making server requests. Best f
 
 ### Pagination
 
-Data tables automatically display pagination controls when the total number of records exceeds the per-page limit. Users can navigate between pages and adjust rows per page.
+Data tables automatically display pagination controls when the total number of records exceeds the per-page limit. Users can navigate between pages and adjust the rows per page.
+
+Pagination renders as a single joined control: first, previous, a sliding window of three page numbers, next, last. The window keeps the control a fixed width whatever the dataset — the same at 30 pages as at 3000 — while the first and last buttons cover jumping to either end. On narrow widths the footer wraps so pagination sits above the rows selector.
+
+:::tip
+Pagination controls appear based on the `total` and `perPage` values in the response. In this preview, changing pages re-fetches the same static data. With a real server, each page request would return the corresponding slice of data.
+:::
 
 ```html:preview
 <zn-data-table
@@ -144,7 +156,7 @@ Use `hide-pagination` to hide pagination controls even when multiple pages are a
 
 ### Row Selection
 
-By default, rows can be selected by clicking. Selected rows are tracked and can be used with bulk actions.
+Rows get a checkbox column and can be selected by clicking once the table has an action to use them: something in the `delete-action`, `modify-action`, `create-action` or `actions` slot. Without one, the table has no checkboxes.
 
 ```html:preview
 <zn-data-table
@@ -157,27 +169,10 @@ By default, rows can be selected by clicking. Selected rows are tracked and can 
     {"key":"status","label":"Status"}
   ]'>
 
-  <zn-button slot="delete-action" color="error" icon="delete" size="x-small">
+  <zn-button slot="delete-action" color="error" icon="delete">
     Delete Selected
   </zn-button>
 
-</zn-data-table>
-```
-
-### Hide Checkboxes
-
-Use `hide-checkboxes` to disable row selection functionality.
-
-```html:preview
-<zn-data-table
-  data-uri="/data/data-table.json"
-  method="GET"
-  hide-checkboxes
-  headers='[
-    {"key":"id","label":"ID"},
-    {"key":"name","label":"Name"},
-    {"key":"email","label":"Email"}
-  ]'>
 </zn-data-table>
 ```
 
@@ -185,6 +180,8 @@ Use `hide-checkboxes` to disable row selection functionality.
 
 Add action buttons to the table header for performing operations on selected rows. Use the `delete-action`, `modify-action`, and `create-action` slots.
 
+`delete-action` and `modify-action` appear at the start of the header's right-hand group once rows are selected. `create-action` is a primary action rather than a selection one, so it renders at the end of that group, after the search field.
+
 ```html:preview
 <zn-data-table
   data-uri="/data/data-table.json"
@@ -196,17 +193,43 @@ Add action buttons to the table header for performing operations on selected row
     {"key":"status","label":"Status"}
   ]'>
 
-  <zn-button slot="delete-action" color="error" icon="delete" size="x-small">
+  <zn-button slot="delete-action" color="error" icon="delete">
     Delete Selected
   </zn-button>
 
-  <zn-button slot="modify-action" color="info" icon="edit" size="x-small">
+  <zn-button slot="modify-action" color="info" icon="edit">
     Edit Selected
   </zn-button>
 
-  <zn-button slot="create-action" color="success" icon="add" size="x-small">
+  <zn-button slot="create-action" color="success" icon="add">
     Create New
   </zn-button>
+
+</zn-data-table>
+```
+
+### Actions Menu
+
+Elements in the `actions` slot are listed in an ellipsis menu at the start of the header's right-hand group. The menu is disabled until at least one row is checked. Each `zn-button` becomes a menu item using its label, `icon` and `color`, and choosing it clicks the button. A `zn-confirm` takes its label and icon from its `trigger` slot button, and choosing it opens the confirm dialog. An `input[name="keys"]` inside a slotted element is kept filled with the selected row keys, the same as for `delete-action`.
+
+```html:preview
+<zn-data-table
+  data-uri="/data/data-table.json"
+  method="GET"
+  caption="Customers"
+  headers='[
+    {"key":"id","label":"ID"},
+    {"key":"name","label":"Name"},
+    {"key":"email","label":"Email"},
+    {"key":"status","label":"Status"}
+  ]'>
+
+  <zn-button slot="actions" icon="archive@lu">Archive</zn-button>
+
+  <zn-confirm slot="actions" type="error" caption="Delete customers" content="Delete the selected customers?">
+    <zn-button slot="trigger" icon="trash-2@lu" color="error">Delete</zn-button>
+    <form><input type="hidden" name="keys"></form>
+  </zn-confirm>
 
 </zn-data-table>
 ```
@@ -230,9 +253,49 @@ Mark columns as secondary to hide them by default. Users can expand rows to view
 </zn-data-table>
 ```
 
+### Column Select
+
+The header carries a column select dropdown whenever the table has rows and more than one column can be toggled. Mark a header `"required": true` to pin it on, or `"default": false` to start it hidden. Set `hide-column-select` to remove the dropdown.
+
+```html:preview
+<zn-data-table
+  data-uri="/data/data-table.json"
+  method="GET"
+  standalone
+  caption="Customers"
+  headers='[
+    {"key":"name","label":"Name", "required":true},
+    {"key":"email","label":"Email"},
+    {"key":"status","label":"Status"},
+    {"key":"phone","label":"Phone"},
+    {"key":"address","label":"Address", "default":false}
+  ]'>
+</zn-data-table>
+```
+
+### Refresh
+
+Tables with a `data-uri` get a refresh button in the header, which reruns the current request. Set `hide-refresh` to remove it.
+
+Both the refresh and column select buttons are hidden while the table has no rows, so an empty state keeps just the caption and the slotted controls.
+
+```html:preview
+<zn-data-table
+  data-uri="/data/data-table.json"
+  method="GET"
+  standalone
+  caption="Customers"
+  hide-column-select
+  headers='[
+    {"key":"name","label":"Name"},
+    {"key":"email","label":"Email"}
+  ]'>
+</zn-data-table>
+```
+
 ### Hide Columns
 
-Use `hide-columns` to completely hide specific columns from the table.
+Use `hide-columns` to completely hide specific columns from the table. Unlike the column select, these columns cannot be turned back on.
 
 ```html:preview
 <zn-data-table
@@ -352,10 +415,18 @@ Or use the built-in empty state with custom text:
 
 ### Filtering
 
-Add advanced filtering with the `zn-data-table-filter` component. The filter opens a slideout with a query builder.
+Add filtering with the `zn-data-table-filter` component. The header carries a filter toggle beside the refresh button; clicking it reveals a row between the header and the rows holding the `filter` slot, where the filter component shows one pill per active filter alongside add-filter and clear controls. The row stays hidden until the toggle is clicked, and the toggle carries a count of the filters currently applied. Use `default-filters` to show a pill for a filter before the user adds it.
+
+The table also feeds the bar typeahead values for its text filters, taken from the rows it has loaded and keyed on the column whose name matches the filter's id.
+
+:::tip
+In this preview, filter parameters are sent with the request but the static data file returns the same results regardless. With a real server endpoint, results would be filtered based on the applied criteria.
+:::
 
 ```html:preview
 <zn-data-table
+  standalone
+  caption="Users"
   data-uri="/data/data-table.json"
   method="GET"
   headers='[
@@ -368,9 +439,11 @@ Add advanced filtering with the `zn-data-table-filter` component. The filter ope
 
   <zn-data-table-filter
     slot="filter"
+    default-filters="status"
     filters='[
-      {"id":"name","name":"Name","operators":["eq","contains"]},
-      {"id":"status","name":"Status","options":{"active":"Active","inactive":"Inactive"},"operators":["eq"]}
+      {"id":"name","name":"Name","operators":["contains"]},
+      {"id":"status","name":"Status","options":{"active":"Active","inactive":"Inactive"},"operators":["eq"]},
+      {"id":"role","name":"Role","options":{"admin":"Admin","user":"User"},"operators":["in"]}
     ]'>
   </zn-data-table-filter>
 
@@ -380,6 +453,12 @@ Add advanced filtering with the `zn-data-table-filter` component. The filter ope
 ### Filter Top Slot
 
 Add complex filtering options above the table using the `filter-top` slot. Perfect for search forms and advanced filters.
+
+Content in this slot renders above the table's own panel rather than inside it, so wrap it in a `zn-panel` when it needs its own frame. It never contributes a header row to the table, and with `standalone` an empty state that has no caption or header controls is left unwrapped, so a `zn-panel` around the `empty-state` slot doesn't end up nested inside another.
+
+:::tip
+This example uses `no-initial-load` so the table starts empty. Submitting the filter form triggers a data load, but the static data file returns the same results regardless of filter values. With a real server, results would be filtered accordingly.
+:::
 
 ```html:preview
 <zn-data-table
@@ -396,7 +475,7 @@ Add complex filtering options above the table using the `filter-top` slot. Perfe
   <zn-filter-wrapper slot="filter-top">
     <div class="form-spacing">
       <zn-input type="text" name="name" label="Product Name" span="4"></zn-input>
-      <zn-input type="price" name="price" label="Max Price" span="3"></zn-input>
+      <zn-input type="currency" name="price" label="Max Price" span="3"></zn-input>
       <zn-select name="category" span="3" label="Category" clearable>
         <zn-option value="beauty">Beauty</zn-option>
         <zn-option value="electronics">Electronics</zn-option>
@@ -415,6 +494,10 @@ Add complex filtering options above the table using the `filter-top` slot. Perfe
 ### Filter Top with Tabs
 
 Combine the `filter-top` slot with tabs for multiple filtering interfaces.
+
+:::tip
+In this preview, filter and search parameters are sent with each request but the static data file returns the same results. With a real server endpoint, each tab's filters would produce different results.
+:::
 
 ```html:preview
 <zn-data-table
@@ -438,7 +521,7 @@ Combine the `filter-top` slot with tabs for multiple filtering interfaces.
         <zn-filter-wrapper with-submit>
           <zn-form-group label="Quick Search" help-text="Search by common fields">
             <zn-input type="text" name="search" label="Keyword" span="6"></zn-input>
-            <zn-input type="price" name="price" label="Max Price" span="3"></zn-input>
+            <zn-input type="currency" name="price" label="Max Price" span="3"></zn-input>
             <zn-select name="category" span="3" label="Category" clearable>
               <zn-option value="beauty">Beauty</zn-option>
             </zn-select>
@@ -448,13 +531,13 @@ Combine the `filter-top` slot with tabs for multiple filtering interfaces.
 
       <zn-sp id="advanced" flush-y>
         <zn-filter-wrapper with-submit>
-          <zn-filter-builder
+          <zn-query-builder
             filters='[
               {"id":"name","name":"Name","operators":["eq","contains"]},
               {"id":"category","name":"Category","options":{"beauty":"Beauty"},"operators":["eq"]}
             ]'
             name="query">
-          </zn-filter-builder>
+          </zn-query-builder>
         </zn-filter-wrapper>
       </zn-sp>
     </zn-tabs>
@@ -467,10 +550,14 @@ Combine the `filter-top` slot with tabs for multiple filtering interfaces.
 
 Use the `inputs` slot to include additional form inputs that get sent with every data request.
 
+:::tip
+In this preview, the input values are sent as parameters with each request but the static data file returns the same results. With a real server, these additional parameters would filter or modify the response data.
+:::
+
 ```html:preview
 <zn-data-table
   data-uri="/data/data-table.json"
-  method="POST"
+  method="GET"
   headers='[
     {"key":"name","label":"Name"},
     {"key":"status","label":"Status"}
@@ -481,14 +568,16 @@ Use the `inputs` slot to include additional form inputs that get sent with every
     <zn-option value="all">All Records</zn-option>
   </zn-select>
 
-  <zn-input slot="inputs" name="user_id" value="123" type="hidden"></zn-input>
+  <input slot="inputs" name="user_id" value="123" type="hidden">
 
 </zn-data-table>
 ```
 
 ### Grouping Data
 
-Group rows by a specific column using the `group-by` property. This loads all data and splits it into separate tables.
+Group rows by a specific column using the `group-by` property. This loads all data and splits it into groups.
+
+Groups render as header rows inside a single table, so every group shares the same column widths, one set of column headers and one horizontal scrollbar.
 
 ```html:preview
 <zn-data-table
@@ -563,19 +652,69 @@ Prevent automatic data loading on mount with `no-initial-load`. Call the `refres
 </script>
 ```
 
+### Shareable URL State
+
+Set `sharable` to mirror the table's **non-default** state to the URL query string and restore it on load, so a view can be copied straight from the address bar and reproduced elsewhere. What syncs: the search text, the filter, the sort column and direction, the current page, the page size, and any search `fields` values.
+
+Only state that differs from its initial/default value is written, so the URL stays clean — the default sort and direction, page 1, the default page size and an empty search/filter/fields are all omitted. Unrelated query parameters (for example `utm_*`) are left untouched. Updates use `history.replaceState`, so they never add browser-history entries.
+
+On load, the table seeds its state from the query string before the first request. A URL parameter is only adopted as a field value when a matching `[name="…"]` control exists in the table's light DOM; anything else is left alone as an unrelated parameter. When combined with `no-initial-load`, a URL that carries relevant parameters forces the first load anyway, so a shared link never lands on an empty table.
+
+```html
+<zn-data-table
+  sharable
+  standalone
+  caption="Users"
+  data-uri="/api/users"
+  headers='[
+    {"key":"name","label":"Name", "sortable":true},
+    {"key":"email","label":"Email", "sortable":true},
+    {"key":"status","label":"Status", "sortable":true}
+  ]'>
+
+  <zn-data-table-search slot="search" placeholder="Search users..."></zn-data-table-search>
+
+  <zn-data-table-filter
+    slot="filter"
+    default-filters="status"
+    filters='[
+      {"id":"status","name":"Status","options":{"active":"Active","inactive":"Inactive"},"operators":["eq"]}
+    ]'>
+  </zn-data-table-filter>
+
+</zn-data-table>
+```
+
+Opening `/users?search=acme&status=<encoded>&page=2` reproduces that exact search, filter and page; sorting a column or paging then rewrites the query in place.
+
 ### Standalone Mode
 
-Use `standalone` to render the table without a container wrapper, useful for embedding in other components.
+Use `standalone` when the table supplies its own panel rather than sitting inside one. It renders a `zn-panel`, passing `caption` through as the panel's caption, the header controls into its `actions` slot and the pagination into its `footer` slot, with the rows flush against the panel edges. Columns scroll under the panel's edges, so the border stays put on a wide table.
+
+The panel footer is only slotted when there is pagination to show, so an empty table or one with `hide-pagination` gets no footer bar.
+
+Leave `standalone` off when the table is already inside a `zn-panel`.
 
 ```html:preview
 <zn-data-table
   data-uri="/data/data-table.json"
   method="GET"
   standalone
+  caption="All Customers"
   headers='[
     {"key":"name","label":"Name"},
-    {"key":"email","label":"Email"}
+    {"key":"email","label":"Email"},
+    {"key":"status","label":"Status"},
+    {"key":"date","label":"Date Joined"},
+    {"key":"phone","label":"Phone"},
+    {"key":"address","label":"Address"},
+    {"key":"notes","label":"Notes"}
   ]'>
+
+  <zn-data-table-search slot="search" placeholder="Search"></zn-data-table-search>
+
+  <zn-button slot="create-action" icon="add">New Customer</zn-button>
+
 </zn-data-table>
 ```
 
@@ -583,6 +722,10 @@ Use `standalone` to render the table without a container wrapper, useful for emb
 
 Choose between GET and POST requests using the `method` property. POST is default and sends parameters in the request body.
 
+:::tip
+This preview uses GET against a static file. In production, POST requests send pagination, sorting, and filter parameters in the request body rather than as query string parameters.
+:::
+
 ```html:preview
 <zn-data-table
   data-uri="/data/data-table.json"
@@ -593,6 +736,39 @@ Choose between GET and POST requests using the `method` property. POST is defaul
   ]'>
 </zn-data-table>
 ```
+
+### Response Errors
+
+Include an `error` object in the response to display a message inside the table, between the column headers and the first record, using the alert component. The error can be returned alongside row data — useful when results are valid but limited, or when a filter is invalid. The object supports `text`, an optional `icon`, and an optional `level` to control the alert level (defaults to `error`).
+
+```html:preview
+<zn-data-table
+  data-uri="/data/data-table-error.json"
+  method="GET"
+  headers='[
+    {"key":"id","label":"ID"},
+    {"key":"name","label":"Name"},
+    {"key":"email","label":"Email"},
+    {"key":"status","label":"Status"}
+  ]'>
+</zn-data-table>
+```
+
+```json
+{
+  "rows": [...],
+  "page": 1,
+  "perPage": 10,
+  "total": 2,
+  "error": {
+    "text": "Results have been limited to 10 rows, please filter for more accuracy",
+    "icon": "warning",
+    "level": "warning"
+  }
+}
+```
+
+If the response contains an error and no rows, the error is shown above the empty state.
 
 ### Cell Styling
 
@@ -667,7 +843,7 @@ Rows can have contextual actions that appear in a dropdown menu.
 
 ### Caption
 
-Add a caption to describe the table data.
+Add a caption to name the table. It renders as the title on the left of the header row, and supplies the wording for the default empty state.
 
 ```html:preview
 <zn-data-table
@@ -695,6 +871,7 @@ Access table methods programmatically to control behavior.
     {"key":"email","label":"Email"},
     {"key":"status","label":"Status"}
   ]'>
+  <zn-button slot="delete-action" color="error" icon="delete">Delete Selected</zn-button>
 </zn-data-table>
 
 <br />
@@ -710,7 +887,7 @@ Access table methods programmatically to control behavior.
   });
 
   document.querySelector('#select-all-btn').addEventListener('click', () => {
-    table.selectAll(new Event('click'));
+    table.selectAll();
   });
 </script>
 ```
@@ -741,13 +918,23 @@ The data table expects responses in the following format:
   ],
   "page": 1,
   "perPage": 10,
-  "total": 100
+  "total": 100,
+  "error": {
+    "text": "Optional message displayed below the column headers",
+    "icon": "warning",
+    "level": "warning"
+  }
 }
 ```
 
+- `error`: Optional object displayed as an alert row below the column headers, alongside any returned rows
+  - `text`: The message to display
+  - `icon`: Optional icon shown in the alert
+  - `level`: Optional alert level (`primary`, `error`, `info`, `success`, `warning`, `note`), defaults to `error`
+
 ## Request Format
 
-For POST requests, the table sends:
+For POST requests, the table sends a JSON body:
 
 ```json
 {
@@ -756,8 +943,36 @@ For POST requests, the table sends:
   "sortColumn": "name",
   "sortDirection": "asc",
   "filter": "",
-  "search": "search term"
+  "search": "search term",
+  "status": "open"
 }
 ```
 
-Additional parameters from the `inputs` slot are merged into the request.
+Field values from inputs slotted into a `zn-data-table-search`, and anything set on the table's `requestParams`, are merged at the **root** of the body under their own `name`. The search text itself is sent as `search`.
+
+Parameters from the `inputs` slot are context/system values (a CSRF token, a package name, and the like) sent with every request. They are merged at the root too.
+
+### Wrapped search fields
+
+Add `wrap-search-fields` to nest the search field values under a `searchFields` object instead, so a backend can bind them to a single map rather than arbitrary top-level keys:
+
+```html
+<zn-data-table wrap-search-fields data-uri="/data"></zn-data-table>
+```
+
+```json
+{
+  "page": 1,
+  "perPage": 10,
+  "sortColumn": "name",
+  "sortDirection": "asc",
+  "filter": "",
+  "search": "search term",
+  "searchFields": {
+    "q": "search term",
+    "status": "open"
+  }
+}
+```
+
+`q` mirrors the `search` text, which is still sent at the root. Empty values are dropped, and `searchFields` is `null` when nothing meaningful remains — no search text and no field values — so the backend can treat that as "no search". Parameters from the `inputs` slot stay at the root either way.

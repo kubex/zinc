@@ -109,11 +109,15 @@ Use the `count-element` attribute to count specific elements instead of all chil
 
 ### Flush Content
 
-Use the `flush` attribute to remove the left padding/margin from the content area, making it align with the edges.
+Use the `flush` attribute to remove the horizontal padding from both the content
+area and the header, so the caption and the content align with the container's
+edges. This matches `flush` on [`zn-pane`](/components/pane/),
+[`zn-panel`](/components/panel/) and [`zn-tabs`](/components/tabs/), and suits a
+narrow column where an indent wastes width.
 
 ```html:preview
 <zn-collapsible caption="Flush Content"
-                description="No left padding on content"
+                description="No horizontal padding on the header or content"
                 flush>
   <zn-button>This button aligns with the left edge</zn-button>
   <p>Content starts at the container edge</p>

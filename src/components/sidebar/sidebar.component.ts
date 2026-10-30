@@ -1,9 +1,10 @@
-import {property} from 'lit/decorators.js';
+import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {MutationController} from '@lit-labs/observers/mutation-controller.js';
+import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './sidebar.scss';
-import {classMap} from "lit/directives/class-map.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -30,28 +31,27 @@ export default class ZnSidebar extends ZincElement {
   @property({attribute: 'start-scrolled', type: Boolean, reflect: true}) startScrolled: boolean = false;
   @property({type: Boolean}) wide: boolean = false;
 
+  private domObserver = new MutationController(this, {
+    target: null,
+    config: {childList: true, subtree: true},
+    callback: () => {
+      setTimeout(() => this.scrollBottom(), 10);
+    },
+  });
+
   constructor() {
     super();
     this.addEventListener('scroll-to-bottom', () => {
-      setTimeout(this.scrollBottom.bind(this), 200);
+      setTimeout(() => this.scrollBottom(), 200);
     });
   }
 
   connectedCallback() {
     super.connectedCallback();
     if (this.startScrolled) {
-      this.observerDom();
+      this.domObserver.observe(this);
       this.scrollBottom();
     }
-  }
-
-  observerDom() {
-    // observe the DOM for changes
-    const observer = new MutationObserver((_) => {
-      setTimeout(this.scrollBottom.bind(this), 10);
-    });
-
-    observer.observe(this, {childList: true, subtree: true});
   }
 
   scrollBottom() {
@@ -91,7 +91,7 @@ export default class ZnSidebar extends ZincElement {
       </div>`;
   }
 
-  handleClick(e: any) {
+  handleClick(e: Event) {
     this.open = !this.open;
     e.stopPropagation();
   }

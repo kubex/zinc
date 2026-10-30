@@ -31,7 +31,7 @@ function isVirtualElement(e: unknown): e is VirtualElement {
  *
  * @dependency zn-example
  *
- * @event zn-event-name - Emitted as an example.
+ * @event zn-reposition - Emitted each time the popup is positioned.
  *
  * @slot - The default slot.
  * @slot example - An example slot.
@@ -268,6 +268,7 @@ export default class ZnPopup extends ZincElement {
     if (!this.anchorEl) {
       return;
     }
+    this.cleanup?.();
     this.cleanup = autoUpdate(this.anchorEl, this.popup, () => {
       this.reposition();
     });
@@ -385,6 +386,12 @@ export default class ZnPopup extends ZincElement {
         ? (element: Element) => platform.getOffsetParent(element, offsetParent)
         : platform.getOffsetParent;
 
+    // A closed popover has no size to measure, so it would first land on top of its anchor
+    if (this.popup.isConnected && !this.popup.matches(':popover-open')) {
+      this.popup.style.visibility = 'hidden';
+      this.popup.showPopover();
+    }
+
     computePosition(this.anchorEl, this.popup, {
       placement: this.placement,
       middleware,
@@ -401,12 +408,17 @@ export default class ZnPopup extends ZincElement {
 
       Object.assign(this.popup.style, {
         left: `${x}px`,
-        top: `${y}px`
+        top: `${y}px`,
+        visibility: ''
       });
 
       if (!this.popup?.isConnected) return;
 
-      this.popup.showPopover();
+      if (!this.popup.matches(':popover-open')) {
+        this.popup.showPopover();
+      }
+
+      this.emit('zn-reposition');
 
       if (this.arrow) {
         const arrowX = middlewareData.arrow!.x;
@@ -537,7 +549,7 @@ export default class ZnPopup extends ZincElement {
       <div
         id="popup"
         part="popup"
-        popover
+        popover="manual"
         class="${classMap({
           popup: true,
           'popup--active': this.active,

@@ -1,41 +1,22 @@
-@use "../../form-control";
 
 :host {
   display: block;
 }
 
 .translations {
-  display: flex;
-  flex-direction: column;
-  padding: 0 var(--zn-spacing-medium);
-  gap: var(--zn-spacing-3x-small);
+  padding: var(--zn-spacing-small) var(--zn-spacing-medium);
 }
 
-.input-container {
-  padding: var(--zn-spacing-small) 0;
+// The select and the field below it are two stacked controls, so they take the same gap zn-form-group uses.
+.translations__language {
+  margin-bottom: var(--zn-spacing-medium);
 }
 
-.form-control__label {
-  margin-bottom: 0 !important;
+.translations__body {
+  display: block;
 }
 
-
-zn-navbar {
-  overflow: hidden;
-  margin-top: var(--zn-spacing-x-small);
-}
-
-zn-navbar::part(navbar) {
-  padding: 0 0 0 7px;
-  gap: 15px;
-}
-
-zn-navbar::part(navbar-item) {
-  font-size: var(--zn-font-size-small);
-
-  --zn-spacing-medium: 7px;
-}
-
-zn-navbar::part(button__base) {
-  //padding: 0 5px;
+.translations--flush,
+.translations--grouped {
+  padding: 0;
 }

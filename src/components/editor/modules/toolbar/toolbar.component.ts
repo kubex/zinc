@@ -1,6 +1,7 @@
 import {colorDataProvider} from "../../../data-select/providers/color-data-provider";
-import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from "lit";
+import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from "lit";
 import {property, query, queryAll} from "lit/decorators.js";
+import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import ZincElement from "../../../../internal/zinc-element";
 import ZnButton from "../../../button";
 import ZnEditorTool from "./tool";
@@ -8,10 +9,12 @@ import ZnMenu from "../../../menu";
 import ZnMenuItem from "../../../menu-item";
 import type {EditorFeatureConfig} from "../../editor.component";
 
+// Air Picker only positions correctly with the global sheet present inside this shadow root.
+import bootStyles from '../../../../../scss/boot.scss';
 import styles from './toolbar.scss';
 
 export default class ToolbarComponent extends ZincElement {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(bootStyles), unsafeCSS(styles)];
 
   @property({type: Number})
   public containerWidth: number;
@@ -24,8 +27,11 @@ export default class ToolbarComponent extends ZincElement {
   @query('.toolbar__group--overflow') private _overflowGroup!: HTMLElement;
 
   private _featureConfig: EditorFeatureConfig = {};
-  private _resizeObserver: ResizeObserver | null = null;
   private _resizeId: number | null = null;
+
+  private readonly _resizeObserver = new ResizeController(this, {
+    callback: () => this.handleResize(),
+  });
 
   // Tracks DOM nodes (e.g. emoji/date pickers) temporarily moved into the overflow submenu so we can restore them
   private _movedContent: Map<HTMLElement, { placeholder: Comment; originalParent: HTMLElement }> = new Map();
@@ -33,21 +39,13 @@ export default class ToolbarComponent extends ZincElement {
   connectedCallback() {
     super.connectedCallback();
     this.containerWidth = this.offsetWidth;
-
-    this._resizeObserver = new ResizeObserver(this.handleResize.bind(this));
     if (this.parentElement) {
       this._resizeObserver.observe(this.parentElement);
     }
-    this._resizeObserver.observe(this as HTMLElement);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-
-    if (this._resizeObserver) {
-      this._resizeObserver.disconnect();
-      this._resizeObserver = null;
-    }
     if (this._resizeId !== null) {
       cancelAnimationFrame(this._resizeId);
       this._resizeId = null;
@@ -175,6 +173,7 @@ export default class ToolbarComponent extends ZincElement {
   }
 
   private calculateOverflow() {
+    if (this._featureConfig.compact) return;
     const groups = Array.from(this._groups || []);
     if (!groups.length) return;
 
@@ -326,7 +325,10 @@ export default class ToolbarComponent extends ZincElement {
     const getDropdownIcon = (dropdown: HTMLElement) => {
       const triggerBtn = dropdown.querySelector('zn-button[slot="trigger"]') as ZnButton | undefined;
       const iconEl = triggerBtn?.querySelector('zn-icon') as HTMLElement | null;
-      return iconEl?.getAttribute('src');
+      const src = iconEl?.getAttribute('src');
+      if (!src) return src ?? undefined;
+      const library = iconEl?.getAttribute('library');
+      return library ? `${src}@${library}` : src;
     };
 
     const buttonLabelMap: Record<string, string> = {
@@ -370,6 +372,7 @@ export default class ToolbarComponent extends ZincElement {
         }
         const submenu = document.createElement('zn-menu');
         submenu.setAttribute('slot', 'submenu');
+        submenu.setAttribute('variant', 'shell');
 
         const items = dropdown.querySelectorAll<ZnMenuItem>('zn-menu-item');
         if (items.length) {
@@ -462,6 +465,10 @@ export default class ToolbarComponent extends ZincElement {
   }
 
   render() {
+    if (this._featureConfig.compact) {
+      return this._compactToolbar();
+    }
+
     const showInsertOptions = this._featureConfig.dividersEnabled ||
       this._featureConfig.linksEnabled ||
       this._featureConfig.attachmentsEnabled ||
@@ -490,11 +497,10 @@ export default class ToolbarComponent extends ZincElement {
             <zn-button slot="trigger"
                        class="toolbar__overflow-trigger"
                        color="transparent"
-                       size="content"
-                       icon="more_horiz"
+                       icon="ellipsis@lu"
                        icon-size="18"
                        icon-position="right"></zn-button>
-            <zn-menu class="toolbar__overflow-menu"></zn-menu>
+            <zn-menu class="toolbar__overflow-menu" variant="shell"></zn-menu>
           </zn-dropdown>
         </div>
       </div>
@@ -507,39 +513,60 @@ export default class ToolbarComponent extends ZincElement {
         <zn-button slot="trigger"
                    class="toolbar__dropdown-trigger toolbar__header-dropdown-trigger"
                    color="transparent"
-                   icon="arrow_drop_down"
+                   icon="chevron-down@lu"
                    icon-size="18"
                    icon-position="right">
-          <zn-icon src="match_case" size="18" color="primary"></zn-icon>
+          <zn-icon src="case-sensitive@lu" size="18" color="primary"></zn-icon>
         </zn-button>
-        <zn-menu>
+        <zn-menu variant="shell">
           <zn-menu-item type="checkbox"
                         checked-position="right"
                         data-format="header"
                         data-format-type="1"
-                        data-icon="format_h1">
-            <zn-icon src="format_h1" size="18" slot="prefix"></zn-icon>
+                        data-icon="heading-1@lu">
+            <zn-icon src="heading-1@lu" size="18" slot="prefix"></zn-icon>
             Heading 1
           </zn-menu-item>
           <zn-menu-item type="checkbox"
                         checked-position="right"
                         data-format="header"
                         data-format-type="2"
-                        data-icon="format_h2">
-            <zn-icon src="format_h2" size="18" slot="prefix"></zn-icon>
+                        data-icon="heading-2@lu">
+            <zn-icon src="heading-2@lu" size="18" slot="prefix"></zn-icon>
             Heading 2
           </zn-menu-item>
           <zn-menu-item type="checkbox"
                         checked-position="right"
                         data-format="header"
                         data-format-type=""
-                        data-icon="match_case"
+                        data-icon="case-sensitive@lu"
                         checked>
-            <zn-icon src="match_case" size="18" slot="prefix"></zn-icon>
+            <zn-icon src="case-sensitive@lu" size="18" slot="prefix"></zn-icon>
             Normal
           </zn-menu-item>
         </zn-menu>
       </zn-dropdown>`;
+  }
+
+  private _compactToolbar() {
+    const button = (icon: string, label: string, format: string, type = '') => html`
+      <zn-button class="toolbar__format-button" icon-button="small" plain icon="${icon}" icon-size="16"
+                 tooltip="${label}" data-format="${format}"
+                 data-format-type="${type || nothing}"></zn-button>`;
+
+    return html`
+      <div class="toolbar toolbar--compact">
+        <div class="toolbar__group">
+          ${button('bold@lu', 'Bold', 'bold')}
+          ${button('italic@lu', 'Italic', 'italic')}
+          ${this._featureConfig.linksEnabled ? button('link@lu', 'Link', 'link') : ''}
+          ${button('list@lu', 'Bulleted list', 'list', 'bullet')}
+          ${button('list-ordered@lu', 'Numbered list', 'list', 'ordered')}
+        </div>
+        <div class="toolbar__group">
+          <slot></slot>
+        </div>
+      </div>`;
   }
 
   private _formatOptions() {
@@ -550,34 +577,34 @@ export default class ToolbarComponent extends ZincElement {
         <zn-button slot="trigger"
                    class="toolbar__dropdown-trigger toolbar__format-dropdown-trigger"
                    color="transparent"
-                   icon="arrow_drop_down"
+                   icon="chevron-down@lu"
                    icon-size="18"
                    icon-position="right">
-          <zn-icon src="format_color_text" size="18"></zn-icon>
+          <zn-icon src="type@lu" size="18"></zn-icon>
         </zn-button>
-        <zn-menu>
+        <zn-menu variant="shell">
           <zn-menu-item type="checkbox" checked-position="right" data-format="strike">
-            <zn-icon src="format_strikethrough" size="18" slot="prefix"></zn-icon>
+            <zn-icon src="strikethrough@lu" size="18" slot="prefix"></zn-icon>
             Strikethrough
           </zn-menu-item>
           <zn-menu-item type="checkbox" checked-position="right" data-format="blockquote">
-            <zn-icon src="format_quote" size="18" slot="prefix"></zn-icon>
+            <zn-icon src="text-quote@lu" size="18" slot="prefix"></zn-icon>
             Quote
           </zn-menu-item>
           ${this._featureConfig.codeEnabled ? html`
             <zn-menu-item type="checkbox" checked-position="right" data-format="code">
-              <zn-icon src="code" size="18" slot="prefix"></zn-icon>
+              <zn-icon src="code@lu" size="18" slot="prefix"></zn-icon>
               Code
             </zn-menu-item>
           ` : ''}
           ${this._featureConfig.codeBlocksEnabled ? html`
             <zn-menu-item type="checkbox" checked-position="right" data-format="code-block">
-              <zn-icon src="code_blocks" size="18" slot="prefix"></zn-icon>
+              <zn-icon src="square-code@lu" size="18" slot="prefix"></zn-icon>
               Code Block
             </zn-menu-item>
           ` : ''}
           <zn-menu-item data-format="clean">
-            <zn-icon src="format_clear" size="18" slot="prefix"></zn-icon>
+            <zn-icon src="remove-formatting@lu" size="18" slot="prefix"></zn-icon>
             Clear Formatting
           </zn-menu-item>
         </zn-menu>
@@ -588,17 +615,17 @@ export default class ToolbarComponent extends ZincElement {
     return html`
       <zn-button class="toolbar__format-button"
                  color="transparent"
-                 icon="format_bold"
+                 icon="bold@lu"
                  icon-size="18"
                  data-format="bold"></zn-button>
       <zn-button class="toolbar__format-button"
                  color="transparent"
-                 icon="format_italic"
+                 icon="italic@lu"
                  icon-size="18"
                  data-format="italic"></zn-button>
       <zn-button class="toolbar__format-button"
                  color="transparent"
-                 icon="format_underlined"
+                 icon="underline@lu"
                  icon-size="18"
                  data-format="underline"></zn-button>`;
   }
@@ -607,12 +634,12 @@ export default class ToolbarComponent extends ZincElement {
     return html`
       <zn-button class="toolbar__format-button"
                  color="transparent"
-                 icon="undo"
+                 icon="undo@lu"
                  icon-size="18"
                  data-format="undo"></zn-button>
       <zn-button class="toolbar__format-button"
                  color="transparent"
-                 icon="redo"
+                 icon="redo@lu"
                  icon-size="18"
                  data-format="redo"></zn-button>`;
   }
@@ -623,14 +650,14 @@ export default class ToolbarComponent extends ZincElement {
         <zn-button slot="trigger"
                    class="toolbar__dropdown-trigger toolbar__color-dropdown-trigger"
                    color="transparent"
-                   icon="arrow_drop_down"
+                   icon="chevron-down@lu"
                    icon-size="18"
                    icon-position="right">
-          <zn-icon src="colors" size="18"></zn-icon>
+          <zn-icon src="palette@lu" size="18"></zn-icon>
         </zn-button>
-        <zn-menu>
+        <zn-menu variant="shell">
           <zn-menu-item data-format="color" data-format-type="">
-            <zn-icon slot="prefix" class="color-icon--unset" src="format_color_reset" size="18"></zn-icon>
+            <zn-icon slot="prefix" class="color-icon--unset" src="brush-cleaning@lu" size="18"></zn-icon>
             Unset
           </zn-menu-item>
           ${colorDataProvider.getData.map((opt) => html`
@@ -649,19 +676,19 @@ export default class ToolbarComponent extends ZincElement {
         <zn-button slot="trigger"
                    class="toolbar__dropdown-trigger toolbar__list-dropdown-trigger"
                    color="transparent"
-                   icon="arrow_drop_down"
+                   icon="chevron-down@lu"
                    icon-size="18"
                    icon-position="right">
-          <zn-icon src="lists" size="18"></zn-icon>
+          <zn-icon src="list-plus@lu" size="18"></zn-icon>
         </zn-button>
-        <zn-menu>
+        <zn-menu variant="shell">
           <zn-menu-item type="checkbox"
                         checked-position="right"
                         data-format="list"
                         data-format-type="bullet"
                         data-text="Bulleted List"
-                        data-icon="format_list_bulleted">
-            <zn-icon src="format_list_bulleted" size="18" slot="prefix"></zn-icon>
+                        data-icon="list@lu">
+            <zn-icon src="list@lu" size="18" slot="prefix"></zn-icon>
             Bulleted
           </zn-menu-item>
           <zn-menu-item type="checkbox"
@@ -669,8 +696,8 @@ export default class ToolbarComponent extends ZincElement {
                         data-format="list"
                         data-format-type="ordered"
                         data-text="Numbered List"
-                        data-icon="format_list_numbered">
-            <zn-icon src="format_list_numbered" size="18" slot="prefix"></zn-icon>
+                        data-icon="list-ordered@lu">
+            <zn-icon src="list-ordered@lu" size="18" slot="prefix"></zn-icon>
             Numbered
           </zn-menu-item>
           <zn-menu-item type="checkbox"
@@ -678,8 +705,8 @@ export default class ToolbarComponent extends ZincElement {
                         data-format="list"
                         data-format-type="checked"
                         data-text="Checked List"
-                        data-icon="checklist">
-            <zn-icon src="checklist" size="18" slot="prefix"></zn-icon>
+                        data-icon="list-todo@lu">
+            <zn-icon src="list-todo@lu" size="18" slot="prefix"></zn-icon>
             Checked
           </zn-menu-item>
         </zn-menu>
@@ -692,39 +719,39 @@ export default class ToolbarComponent extends ZincElement {
         <zn-button slot="trigger"
                    class="toolbar__dropdown-trigger toolbar__file-dropdown-trigger"
                    color="transparent"
-                   icon="arrow_drop_down"
+                   icon="chevron-down@lu"
                    icon-size="18"
                    icon-position="right">
-          <zn-icon src="add" size="18"></zn-icon>
+          <zn-icon src="plus@lu" size="18"></zn-icon>
         </zn-button>
-        <zn-menu>
+        <zn-menu variant="shell">
           ${this._featureConfig.dividersEnabled ? html`
             <zn-menu-item checked-position="right" data-format="divider">
-              <zn-icon src="horizontal_rule" size="18" slot="prefix"></zn-icon>
+              <zn-icon src="minus@lu" size="18" slot="prefix"></zn-icon>
               Divider
             </zn-menu-item>
           ` : ''}
           ${this._featureConfig.linksEnabled ? html`
             <zn-menu-item checked-position="right" data-format="link">
-              <zn-icon src="link" size="18" slot="prefix"></zn-icon>
+              <zn-icon src="link@lu" size="18" slot="prefix"></zn-icon>
               Link
             </zn-menu-item>
           ` : ''}
           ${this._featureConfig.attachmentsEnabled ? html`
             <zn-menu-item checked-position="right" data-format="attachment">
-              <zn-icon src="attachment" size="18" slot="prefix"></zn-icon>
+              <zn-icon src="paperclip@lu" size="18" slot="prefix"></zn-icon>
               Attachment
             </zn-menu-item>
           ` : ''}
           ${this._featureConfig.imagesEnabled ? html`
             <zn-menu-item checked-position="right" data-format="image">
-              <zn-icon src="image" size="18" slot="prefix"></zn-icon>
+              <zn-icon src="image@lu" size="18" slot="prefix"></zn-icon>
               Image
             </zn-menu-item>
           ` : ''}
           ${this._featureConfig.videosEnabled ? html`
             <zn-menu-item checked-position="right" data-format="video">
-              <zn-icon src="video_camera_back" size="18" slot="prefix"></zn-icon>
+              <zn-icon src="video@lu" size="18" slot="prefix"></zn-icon>
               Video
             </zn-menu-item>
           ` : ''}
@@ -738,10 +765,10 @@ export default class ToolbarComponent extends ZincElement {
         <zn-button slot="trigger"
                    class="toolbar__dropdown-trigger toolbar__emoji-dropdown-trigger"
                    color="transparent"
-                   icon="arrow_drop_down"
+                   icon="chevron-down@lu"
                    icon-size="18"
                    icon-position="right">
-          <zn-icon src="insert_emoticon" size="18"></zn-icon>
+          <zn-icon src="smile-plus@lu" size="18"></zn-icon>
         </zn-button>
         <div class="emoji-picker"></div>
       </zn-dropdown>`;
@@ -753,10 +780,10 @@ export default class ToolbarComponent extends ZincElement {
         <zn-button slot="trigger"
                    class="toolbar__dropdown-trigger toolbar__date-dropdown-trigger"
                    color="transparent"
-                   icon="arrow_drop_down"
+                   icon="chevron-down@lu"
                    icon-size="18"
                    icon-position="right">
-          <zn-icon src="calendar_today" size="18"></zn-icon>
+          <zn-icon src="calendar@lu" size="18"></zn-icon>
         </zn-button>
         <div class="date-picker"></div>
       </zn-dropdown>`;

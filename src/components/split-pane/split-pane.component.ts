@@ -5,6 +5,15 @@ import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './split-pane.scss';
+import { PropertyValues } from "@lit/reactive-element";
+
+type NavigationItem = {
+  caption: string;
+  active: boolean;
+  select: () => void;
+};
+
+const MERGED_NAVIGATION_BREAKPOINT_PX = 768;
 
 /**
  * @summary Short summary of the component's intended use.
@@ -33,11 +42,15 @@ export default class ZnSplitPane extends ZincElement {
   private currentPixelSize: number = 0;
   private currentPercentSize: number = 0;
   private currentContainerSize: number = 0;
+  private focusChangeHandler = () => this.requestUpdate();
   private primaryFull: string;
+  private resizeObserver: ResizeObserver | null = null;
+  private parentIsNarrow = false;
 
   @property({attribute: 'pixels', type: Boolean, reflect: true}) calculatePixels = false;
   @property({attribute: 'secondary', type: Boolean, reflect: true}) preferSecondarySize = false;
   @property({attribute: 'min-size', type: Number, reflect: true}) minimumPaneSize = 10;
+  @property({attribute: 'min-secondary-size', type: Number, reflect: true}) minimumSecondaryPaneSize: number;
   @property({attribute: 'max-size', type: Number, reflect: true}) maximumPaneSize: number;
   @property({attribute: 'initial-size', type: Number, reflect: true}) initialSize = 50;
   @property({attribute: 'store-key', reflect: true}) storeKey: string = "";
@@ -51,6 +64,9 @@ export default class ZnSplitPane extends ZincElement {
 
   @property({attribute: 'padded', type: Boolean, reflect: true}) padded = false;
   @property({attribute: 'padded-right', type: Boolean, reflect: true}) paddedRight = false;
+  @property({type: Boolean, reflect: true}) gap = false;
+  @property({reflect: true}) hide: 'primary' | 'secondary' | '' = '';
+  @property({attribute: 'merged-navigation', type: Boolean, reflect: true}) mergedNavigation = false;
 
   // session storage if not local
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
@@ -66,10 +82,30 @@ export default class ZnSplitPane extends ZincElement {
       e.stopPropagation();
       this._setFocusPane(parseInt((e.selectedTarget as HTMLElement).getAttribute('split-pane-focus')!));
     });
+    this.addEventListener('zn-split-pane-focus-change', this.focusChangeHandler);
+    this.resizeObserver = new ResizeObserver(() => this.refreshNarrowState());
+    this.resizeObserver.observe(this);
   }
 
-  firstUpdated(changedProperties: any) {
+  disconnectedCallback() {
+    this.removeEventListener('zn-split-pane-focus-change', this.focusChangeHandler);
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = null;
+    super.disconnectedCallback();
+  }
+
+  private refreshNarrowState() {
+    const nowNarrow = this.getBoundingClientRect().width < MERGED_NAVIGATION_BREAKPOINT_PX;
+    if (nowNarrow !== this.parentIsNarrow) {
+      this.parentIsNarrow = nowNarrow;
+      this.updateNestedNavigationMerging();
+      this.requestUpdate();
+    }
+  }
+
+  firstUpdated(changedProperties: PropertyValues) {
     setTimeout(this.applyStoredSize.bind(this), 100);
+    this.refreshNarrowState();
     super.firstUpdated(changedProperties);
   }
 
@@ -80,14 +116,14 @@ export default class ZnSplitPane extends ZincElement {
 
 
     const storedValue = this._store.get(this.storeKey);
-    if (storedValue != null) {
+    if (storedValue !== null) {
       const parts = storedValue.split(",");
       if (parts.length >= 3) {
         applyPixels = parseInt(parts[0]);
         applyPercent = parseInt(parts[1]);
         const storedBasis = parseInt(parts[2]);
         if (this.preferSecondarySize && this.calculatePixels) {
-          applyPixels = (this.currentContainerSize / storedBasis) * applyPixels;
+          applyPixels *= (this.currentContainerSize / storedBasis);
         }
       }
     }
@@ -96,7 +132,11 @@ export default class ZnSplitPane extends ZincElement {
 
   @eventOptions({passive: true})
   resize(e: any) {
-    if (this.mouseUpHandler != null) {
+    if (this.hide === 'primary' || this.hide === 'secondary') {
+      return;
+    }
+
+    if (this.mouseUpHandler !== null) {
       this.mouseUpHandler(e);
     }
 
@@ -131,22 +171,46 @@ export default class ZnSplitPane extends ZincElement {
   }
 
   setSize(primaryPanelPixels: number) {
-    let pixelSize = primaryPanelPixels;
-    let percentSize = (primaryPanelPixels / this.currentContainerSize) * 100;
+    const hasMinimumSecondaryPaneSize = Number.isFinite(this.minimumSecondaryPaneSize);
+    const maximumPrimaryPanelPixels = hasMinimumSecondaryPaneSize
+      ? this.currentContainerSize - (this.calculatePixels
+        ? this.minimumSecondaryPaneSize
+        : (this.currentContainerSize / 100) * this.minimumSecondaryPaneSize)
+      : undefined;
+
+    let pixelSize = maximumPrimaryPanelPixels === undefined
+      ? primaryPanelPixels
+      : Math.min(primaryPanelPixels, maximumPrimaryPanelPixels);
+    let percentSize = (pixelSize / this.currentContainerSize) * 100;
 
     if (this.calculatePixels) {
-      if (this.maximumPaneSize) {
-        pixelSize = Math.max(this.minimumPaneSize, Math.min(this.maximumPaneSize, pixelSize));
+      const minimumPrimaryPanelPixels = maximumPrimaryPanelPixels === undefined
+        ? this.minimumPaneSize
+        : Math.min(this.minimumPaneSize, maximumPrimaryPanelPixels);
+      if (this.maximumPaneSize || maximumPrimaryPanelPixels !== undefined) {
+        pixelSize = Math.max(
+          minimumPrimaryPanelPixels,
+          Math.min(this.maximumPaneSize ?? Infinity, maximumPrimaryPanelPixels ?? Infinity, pixelSize)
+        );
       } else {
-        pixelSize = Math.max(this.minimumPaneSize, pixelSize);
+        pixelSize = Math.max(minimumPrimaryPanelPixels, pixelSize);
       }
+      percentSize = (pixelSize / this.currentContainerSize) * 100;
       this.initialSize = pixelSize;
     } else {
-      if (this.maximumPaneSize) {
-        percentSize = Math.max(this.minimumPaneSize, Math.min(this.maximumPaneSize, percentSize));
+      const maximumPrimaryPanelPercent = hasMinimumSecondaryPaneSize ? 100 - this.minimumSecondaryPaneSize : undefined;
+      const minimumPrimaryPanelPercent = maximumPrimaryPanelPercent === undefined
+        ? this.minimumPaneSize
+        : Math.min(this.minimumPaneSize, maximumPrimaryPanelPercent);
+      if (this.maximumPaneSize || maximumPrimaryPanelPercent !== undefined) {
+        percentSize = Math.max(
+          minimumPrimaryPanelPercent,
+          Math.min(this.maximumPaneSize ?? Infinity, maximumPrimaryPanelPercent ?? Infinity, percentSize)
+        );
       } else {
-        percentSize = Math.max(this.minimumPaneSize, percentSize);
+        percentSize = Math.max(minimumPrimaryPanelPercent, percentSize);
       }
+      pixelSize = (this.currentContainerSize / 100) * percentSize;
       this.initialSize = percentSize;
     }
     this.currentPixelSize = pixelSize;
@@ -154,42 +218,105 @@ export default class ZnSplitPane extends ZincElement {
     this.primaryFull = this.calculatePixels ? (this.currentPixelSize + 'px') : (this.currentPercentSize + '%');
   }
 
-  _togglePane(e: any) {
-    this._setFocusPane(e.target.getAttribute('idx'));
-  }
-
   _setFocusPane(idx: number) {
     this._focusPane = idx;
-    this.querySelectorAll('ul#split-nav li').forEach((el) => {
-      el.classList.toggle('active', parseInt(el.getAttribute('idx')!) == idx);
+    this.dispatchEvent(new CustomEvent('zn-split-pane-focus-change', {bubbles: true, composed: true}));
+  }
+
+  private getDirectNestedSplitPanes() {
+    return Array.from(this.querySelectorAll<ZnSplitPane>('zn-split-pane')).filter(child => {
+      return child.parentElement?.closest('zn-split-pane') === this && !child.vertical;
     });
+  }
+
+  private updateNestedNavigationMerging() {
+    const shouldMerge = !this.vertical && this.parentIsNarrow;
+    this.getDirectNestedSplitPanes().forEach(child => {
+      child.mergedNavigation = shouldMerge;
+    });
+  }
+
+  private getPaneIndexForNestedSplitPane(child: ZnSplitPane) {
+    let node: Element | null = child;
+    while (node && node.parentElement !== this) {
+      node = node.parentElement;
+    }
+
+    return node?.getAttribute('slot') === 'secondary' ? 1 : 0;
+  }
+
+  private getNestedNavigationItems(parentIdx: number): NavigationItem[] {
+    return this.getDirectNestedSplitPanesForPane(parentIdx)
+      .flatMap(child => child.getNavigationItems().map(item => {
+        return {
+          caption: item.caption,
+          active: this._focusPane === parentIdx && item.active,
+          select: () => {
+            this._setFocusPane(parentIdx);
+            item.select();
+          }
+        };
+      }));
+  }
+
+  private getDirectNestedSplitPanesForPane(parentIdx: number) {
+    return this.getDirectNestedSplitPanes().filter(child => this.getPaneIndexForNestedSplitPane(child) === parentIdx);
+  }
+
+  private getNavigationItems(): NavigationItem[] {
+    this.updateNestedNavigationMerging();
+
+    const primaryNestedItems = this.getNestedNavigationItems(0);
+    const secondaryNestedItems = this.getNestedNavigationItems(1);
+    const primaryItems = primaryNestedItems.length > 0
+      ? primaryNestedItems
+      : [{
+        caption: this.primaryCaption,
+        active: this._focusPane === 0,
+        select: () => this._setFocusPane(0)
+      }];
+    const secondaryItems = secondaryNestedItems.length > 0
+      ? secondaryNestedItems
+      : [{
+        caption: this.secondaryCaption,
+        active: this._focusPane === 1,
+        select: () => this._setFocusPane(1)
+      }];
+
+    return [
+      ...primaryItems,
+      ...secondaryItems
+    ];
   }
 
   protected render(): unknown {
     const resizeWidth = '2px';
     const resizeMargin = '5px';
+    const minimumSecondaryPaneSize = Number.isFinite(this.minimumSecondaryPaneSize)
+      ? this.minimumSecondaryPaneSize + (this.calculatePixels ? 'px' : '%')
+      : 'var(--min-panel-size)';
     return html`
       <style>:host {
         --min-panel-size: ${this.minimumPaneSize}${this.calculatePixels ? 'px' : '%'};
+        --min-secondary-panel-size: ${minimumSecondaryPaneSize};
         --max-panel-size: ${this.maximumPaneSize ? this.maximumPaneSize + (this.calculatePixels ? 'px' : '%') : 'none'};
         --initial-size: ${this.primaryFull};
         --resize-size: ${resizeWidth};
         --resize-margin: ${resizeMargin};
       }</style>
       <ul id="split-nav">
-        <li idx="0" class="${this._focusPane == 0 ? 'active' : ''}" @click="${this._togglePane}">
-          ${this.primaryCaption}
-        </li>
-        <li idx="1" class="${this._focusPane == 1 ? 'active' : ''}" @click="${this._togglePane}">
-          ${this.secondaryCaption}
-        </li>
+        ${this.getNavigationItems().map(item => html`
+          <li class="${item.active ? 'active' : ''}" @click="${item.select}">
+            ${item.caption}
+          </li>
+        `)}
       </ul>
       <div id="primary-pane">
-        <slot name="primary"></slot>
+        <slot name="primary" @slotchange="${() => this.requestUpdate()}"></slot>
       </div>
       <div @mousedown="${this.resize}" @touchstart="${this.resize}" id="resizer"></div>
       <div id="secondary-pane">
-        <slot name="secondary"></slot>
+        <slot name="secondary" @slotchange="${() => this.requestUpdate()}"></slot>
       </div>
     `;
   }

@@ -1,5 +1,8 @@
-[t="dark"],
-.theme-dark {
+@use "modes";
+
+// Dark mode primitives — see themes/_modes.scss for the `m` / `t` split, and
+// for why light-only themes are excluded from this selector.
+#{modes.$dark} {
   color-scheme: dark;
 
   /**************************************************************
@@ -245,6 +248,15 @@
   --zn-color-neutral-0: hsl(0, 0%, 0%);
   --zn-color-neutral-1000: hsl(0, 0%, 100%);
 
+  /* Neutral 50 and 200 are the two steps _light.scss pins to literal hsl() values
+     instead of aliasing to --zn-color-gray-*. Every other step aliases the gray
+     ramp and so follows the dark ramp above for free; these two do not, and left
+     undefined here they stay near-white in dark mode (L=0.98 / L=0.94).
+     That is what paints a white pill for `color="secondary"` buttons and a white
+     border on every panel. Alias them so they track the ramp like the rest. */
+  --zn-color-neutral-50: var(--zn-color-gray-50);
+  --zn-color-neutral-200: var(--zn-color-gray-200);
+
   /* Elevations */
   --zn-shadow-x-small: 0 1px 4px rgba(0, 0, 0, 0.18);
   --zn-shadow-small: 0 3px 9px rgba(0, 0, 0, 0.24);
@@ -253,15 +265,16 @@
   --zn-shadow-x-large: 0 6px 20px rgba(0, 0, 0, 0.34);
 
   /* Inputs */
-  --zn-input-background-color: hsl(223, 14%, 10%);
-  --zn-input-background-color-hover: hsl(252, 15%, 13%);
+  --zn-input-background-color: rgb(var(--zn-color-body));
+  --zn-input-background-color-hover: rgb(var(--zn-color-body));
   --zn-input-background-color-focus: hsl(252, 15%, 13%);
   --zn-input-background-color-disabled: hsl(280, 6%, 9%);
 
-  --zn-input-border-color: hsl(240, 8%, 21%);
-  --zn-input-border-color-hover: hsl(255, 16%, 15%);
+  --zn-input-border-color: rgb(var(--zn-color-border));
+  --zn-input-border-color-hover: rgb(var(--zn-color-border-active));
   --zn-input-border-color-focus: var(--zn-color-primary-500);
   --zn-input-border-color-disabled: hsl(280, 6%, 9%);
+  --zn-checkbox-border-color: rgb(var(--zn-color-border-active));
 
   /* Focus rings */
   --zn-focus-ring-color: var(--zn-color-primary-700);
@@ -274,4 +287,7 @@
 
   /* Tooltips */
   --zn-tooltip-background-color: var(--zn-color-neutral-800);
+
+  /* tables */
+  --zn-table-header-background-color: 27, 27, 30;
 }

@@ -1,13 +1,31 @@
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {deepQuerySelectorAll} from "../../utilities/query";
+import {
+  endVisitsToOtherLocations,
+  getHistoryTab,
+  isRestorableLocation,
+  locationScopedKey,
+  pushHistoryTab,
+  replaceHistoryTab,
+  TAB_STORE_PREFIX
+} from './tabs-navigation';
+import {getScrolledAncestors, scrollToTop} from "../../internal/scroll";
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {md5} from "../../utilities/md5";
+import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property} from 'lit/decorators.js';
 import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 
+// Tabs load in such a way that the global sheet has to be re-applied inside the shadow root.
+import bootStyles from '../../../scss/boot.scss';
 import styles from './tabs.scss';
+
+// Every element that manages its own tabs (ZnTabs and its subclasses). Tab
+// registration must stop at these so an outer container never claims a nested
+// container's tabs.
+export const tabContainerSelector = 'zn-tabs, zn-page, zn-page-nav';
 
 /**
  * @summary Short summary of the component's intended use.
@@ -27,16 +45,18 @@ import styles from './tabs.scss';
  * @cssproperty --example - An example CSS custom property.
  */
 export default class ZnTabs extends ZincElement {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(bootStyles), unsafeCSS(styles)];
   @property({attribute: 'master-id', reflect: true}) masterId: string;
   @property({attribute: 'default-uri', reflect: true}) defaultUri = '';
   @property({attribute: 'active', reflect: true}) _current = '';
   @property({attribute: 'split', type: Number, reflect: true}) _split: number;
   @property({attribute: 'split-min', type: Number, reflect: true}) _splitMin = 60;
+  @property({attribute: 'split-min-secondary', type: Number, reflect: true}) _splitMinSecondary: number;
   @property({attribute: 'split-max', type: Number, reflect: true}) _splitMax: number;
   @property({attribute: 'primary-caption', reflect: true}) primaryCaption = 'Navigation';
   @property({attribute: 'secondary-caption', reflect: true}) secondaryCaption = 'Content';
   @property({attribute: 'no-prefetch', type: Boolean, reflect: true}) noPrefetch = false;
+  @property({attribute: 'no-cache', type: Boolean, reflect: true}) noCache = false;
   // session storage if not local
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
   @property({attribute: 'store-key'}) storeKey: string;
@@ -58,7 +78,46 @@ export default class ZnTabs extends ZincElement {
   private _tabs: HTMLElement[] = [];
   private _actions: HTMLElement[] = [];
   private _knownUri: Map<string, string> = new Map<string, string>();
+  private _defaultTab = '';
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'bottom', 'right', 'left', 'top', 'actions');
+
+  private readonly _domObserver = new MutationController(this, {
+    target: null,
+    config: {childList: true, subtree: true},
+    callback: mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.type !== 'childList') return;
+        if (mutation.addedNodes.length > 0) {
+          this._registerTabs();
+        }
+        if (mutation.removedNodes.length > 0) {
+          mutation.removedNodes.forEach(node => {
+            const id = node instanceof HTMLElement ? node.id : '';
+            if (id) this.removeTabAndPanel(id);
+          });
+        }
+      });
+    },
+  });
+
+  private readonly _monitorObserver = new MutationController(this, {
+    target: null,
+    config: {childList: true, subtree: true},
+    callback: mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.type !== 'childList') return;
+        mutation.addedNodes.forEach(node => {
+          if (node instanceof HTMLElement && node.id === this.monitor) {
+            this.reRegisterTabs();
+            const storedValue = this.getStoredTab();
+            if (storedValue !== null) {
+              this.restoreStoredTab(storedValue);
+            }
+          }
+        });
+      });
+    },
+  });
 
   constructor() {
     super();
@@ -72,7 +131,7 @@ export default class ZnTabs extends ZincElement {
       this.masterId = this.storeKey || Math.floor(Math.random() * 1000000).toString();
     }
 
-    this.preload = !this.noPrefetch;
+    this.preload = !this.noPrefetch && !this.noCache;
 
     await this.updateComplete;
     this._panel = this.shadowRoot?.querySelector('#content');
@@ -86,7 +145,7 @@ export default class ZnTabs extends ZincElement {
 
     const defaultID = this.defaultUri ? this._uriToId(this.defaultUri) : '';
 
-    this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "zntab:", this.storeTtl);
+    this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, TAB_STORE_PREFIX, this.storeTtl);
     Array.from(this.children).forEach((element) => {
       if (element.slot === '') {
         this._panels.set(element.getAttribute('id') || defaultID, [element]);
@@ -95,30 +154,137 @@ export default class ZnTabs extends ZincElement {
 
     this.observerDom();
     this.monitorDom();
+    window.addEventListener('popstate', this.handlePopState, {passive: true});
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('popstate', this.handlePopState);
+
+    // The container is torn down before the url it is being replaced by is
+    // pushed, so the check waits a task: by then a navigation has changed the
+    // location and this visit is over, while a re-render is back on screen.
+    setTimeout(() => {
+      if (!this.isConnected) {
+        endVisitsToOtherLocations();
+      }
+    });
   }
 
   monitorDom() {
     if (this.monitor) {
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.type === 'childList') {
-            mutation.addedNodes.forEach((node) => {
-              if (node instanceof HTMLElement && node.id === this.monitor) {
-                this.reRegisterTabs();
-
-                const storedValue = this._store.get(this.storeKey);
-                if (storedValue !== null) {
-                  this._prepareTab(storedValue);
-                  this.setActiveTab(storedValue, false, false);
-                }
-              }
-            });
-          }
-        });
-      });
-
-      observer.observe(this, {childList: true, subtree: true});
+      this._monitorObserver.observe(this);
     }
+  }
+
+  /** The key the active tab is persisted under. Null disables persistence. */
+  protected getTabStoreKey(): string | null {
+    return this.storeKey || null;
+  }
+
+  protected getStoredTab(): string | null {
+    const key = this.getTabStoreKey();
+    if (key === null || !this._store) {
+      return null;
+    }
+
+    // Local storage persists across fresh navigation and browser sessions.
+    if (this.localStorage) {
+      return this._store.get(key);
+    }
+
+    // Nothing is remembered for a location that has been navigated away from:
+    // its stored tab went with the visit, and so did the tabs on its entries.
+    const stored = this._store.get(locationScopedKey(key));
+    if (stored === null) {
+      return null;
+    }
+
+    // The history entry is authoritative where it survived; a reload wipes it,
+    // leaving the selection the location was last left on.
+    const fromHistory = getHistoryTab(key);
+    if (fromHistory !== null) {
+      return fromHistory;
+    }
+
+    return isRestorableLocation() ? stored : null;
+  }
+
+  protected storeActiveTab(tabName: string) {
+    const key = this.getTabStoreKey();
+    if (key === null || !this._store) {
+      return;
+    }
+
+    // Uri tab ids are derived from the master id, so store the uri itself.
+    const value = this.getUriForTabId(tabName) ?? tabName;
+    this._store.set(this.localStorage ? key : locationScopedKey(key), value);
+    if (!this.localStorage) {
+      replaceHistoryTab(key, value);
+    }
+  }
+
+  protected restoreStoredTab(stored: string) {
+    const uriTab = this._tabs.find(tab => tab.getAttribute('tab-uri') === stored);
+    if (uriTab) {
+      this.clickTab(uriTab, false);
+      return;
+    }
+
+    this._prepareTab(stored);
+    this.setActiveTab(stored, true, false);
+  }
+
+  /** Activates the tab the container starts on, ignoring any stored selection. */
+  protected activateDefaultTab() {
+    if (!this._panels.has(this._defaultTab) && this._tabs.length > 0) {
+      const tabUri = this._tabs[0].getAttribute('tab-uri');
+      if (tabUri) {
+        this.clickTab(this._tabs[0], false);
+        return;
+      }
+    }
+
+    this.setActiveTab(this._defaultTab, true, false);
+  }
+
+  // Back and forward move between recorded tabs.
+  private readonly handlePopState = () => {
+    const key = this.getTabStoreKey();
+    if (key === null) {
+      return;
+    }
+
+    // Only entries that name a tab move the container. Entries that say nothing
+    // about it - the extra one the console pushes for every document load, one
+    // pushed before this container was on screen, one belonging to another page,
+    // one left by a visit that has ended - leave the open tab where it is.
+    // Overwriting it with the default tab would show the first tab on the way
+    // through, in place of the tab the entry being stepped onto stands for.
+    const tab = getHistoryTab(key);
+    if (tab === null) {
+      return;
+    }
+
+    this.restoreStoredTab(tab);
+  };
+
+  private pushTabHistory(tabName: string) {
+    const key = this.getTabStoreKey();
+    if (key === null || this.localStorage) {
+      return;
+    }
+
+    pushHistoryTab(key, this.getUriForTabId(tabName) ?? tabName);
+  }
+
+  private getUriForTabId(tabId: string): string | null {
+    for (const [uri, id] of this._knownUri) {
+      if (id === tabId) {
+        return uri;
+      }
+    }
+    return null;
   }
 
   _addPanel(panel: HTMLElement) {
@@ -147,24 +313,15 @@ export default class ZnTabs extends ZincElement {
     super.firstUpdated(_changedProperties);
     setTimeout(() => {
       this._registerTabs();
+      this._defaultTab = this._current || '';
 
-      const storedValue = this._store.get(this.storeKey);
+      const storedValue = this.getStoredTab();
       if (storedValue !== null) {
-        this._prepareTab(storedValue);
-        this.setActiveTab(storedValue, false, false);
+        this.restoreStoredTab(storedValue);
         return;
       }
 
-      const defaultTab = this._current || '';
-      if (!this._panels.has(defaultTab) && this._tabs.length > 0) {
-        const tabUri = this._tabs[0].getAttribute('tab-uri');
-        if (tabUri) {
-          this.clickTab(this._tabs[0], false);
-          return;
-        }
-      }
-
-      this.setActiveTab(defaultTab, false, false);
+      this.activateDefaultTab();
     }, 10);
 
     this.addEventListener('zn-menu-select', () => {
@@ -186,7 +343,7 @@ export default class ZnTabs extends ZincElement {
       nextIndex = 0; // wrap around to the first tab
     }
     const nextTabId = Array.from(this._panels.keys())[nextIndex];
-    this.setActiveTab(nextTabId, true, false);
+    this.setActiveTab(nextTabId, true, false, null, true);
   }
 
   nextTab() {
@@ -204,7 +361,7 @@ export default class ZnTabs extends ZincElement {
       }
     }
 
-    for (const uriTab of deepQuerySelectorAll("[tab-uri]", this, '')) {
+    for (const uriTab of deepQuerySelectorAll("[tab-uri]", this, tabContainerSelector)) {
       const uri: string = uriTab.getAttribute("tab-uri")!;
       const eleTabId = this._uriToId(uri);
       if (eleTabId === tabId) {
@@ -236,6 +393,8 @@ export default class ZnTabs extends ZincElement {
     tabNode.setAttribute("id", tabId);
     if (this.fetchStyle !== "") {
       tabNode.setAttribute("data-fetch-style", this.fetchStyle);
+    } else if (tabEle.hasAttribute('data-fetch-style')) {
+      tabNode.setAttribute("data-fetch-style", tabEle.getAttribute('data-fetch-style') ?? "");
     }
     tabNode.setAttribute('data-self-uri', tabUri);
     tabNode.textContent = "Loading ...";
@@ -244,6 +403,7 @@ export default class ZnTabs extends ZincElement {
       this._panel.appendChild(tabNode);
       this._panels.set(tabId, [tabNode]);
     }
+
     document.dispatchEvent(new CustomEvent('zn-new-element', {
       detail: {element: tabNode, source: tabEle}
     }));
@@ -253,14 +413,20 @@ export default class ZnTabs extends ZincElement {
   _handleClick(event: PointerEvent) {
     // ts-ignore
     const target = (event.relatedTarget ?? event.target) as HTMLElement;
-    if (target) {
-      if ('startViewTransition' in document) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (document as any).startViewTransition(() => this.clickTab(target, event.altKey));
-      } else {
-        this.clickTab(target, event.altKey)
-      }
+    if (!target) {
+      return;
     }
+
+    if (!('startViewTransition' in document)) {
+      this.clickTab(target, event.altKey, true);
+      return;
+    }
+
+    const transition = document.startViewTransition(() => this.clickTab(target, event.altKey, true));
+
+    void transition.ready.catch(() => undefined);
+    void transition.finished.catch(() => undefined);
+    void transition.updateCallbackDone.catch(() => undefined);
   }
 
   fetchUriTab(target: HTMLElement) {
@@ -271,12 +437,15 @@ export default class ZnTabs extends ZincElement {
     }
   }
 
-  clickTab(target: HTMLElement, refresh: boolean) {
+  clickTab(target: HTMLElement, refresh: boolean, pushHistory = false) {
+    const tabUri = target.getAttribute('tab-uri');
+    const wasCached = !!tabUri && this._panels.has(this._uriToId(tabUri));
     this.fetchUriTab(target);
 
     if (target.hasAttribute('tab')) {
+      const forceRefresh = refresh || (this.noCache && wasCached);
       setTimeout(() => {
-        this.setActiveTab(target.getAttribute('tab') || '', true, refresh, this.getRefTab(target));
+        this.setActiveTab(target.getAttribute('tab') || '', true, forceRefresh, this.getRefTab(target), pushHistory);
       }, 10);
     }
   }
@@ -296,7 +465,8 @@ export default class ZnTabs extends ZincElement {
     return null;
   }
 
-  setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab: string | null = null) {
+  setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab: string | null = null, pushHistory = false) {
+    const previous = this._current;
     let hasActive = false;
     this._tabs.forEach(tab => {
 
@@ -320,8 +490,14 @@ export default class ZnTabs extends ZincElement {
     //Set on the element as a failsafe before TabPanel is loaded
     //This must be done AFTER selectTab to avoid panel bugs
 
-    if (store && this._store !== null) {
-      this._store.set(this.storeKey, tabName);
+    // The entry must be pushed before the tab is recorded, so the entry being
+    // left keeps the tab it was showing.
+    if (pushHistory && this._current === tabName && previous !== tabName) {
+      this.pushTabHistory(tabName);
+    }
+
+    if (store) {
+      this.storeActiveTab(tabName);
     }
   }
 
@@ -379,7 +555,11 @@ export default class ZnTabs extends ZincElement {
       this._current = tabName;
     };
 
+    const scrolled = sameTab ? [] : getScrolledAncestors(this._panel);
+
     updateTabs();
+
+    scrollToTop(scrolled);
 
     return true;
   }
@@ -389,29 +569,7 @@ export default class ZnTabs extends ZincElement {
   }
 
   observerDom() {
-    // observe the DOM for changes
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'childList') {
-          if (mutation.addedNodes.length > 0) {
-            this._registerTabs();
-          }
-          if (mutation.removedNodes.length > 0) {
-            for (let i = 0; i < mutation.removedNodes.length; i++) {
-              const node = mutation.removedNodes[i] as HTMLElement;
-              if (node.id) {
-                this.removeTabAndPanel(node.id);
-              }
-            }
-          }
-        }
-      });
-    });
-
-    observer.observe(this, {
-      childList: true,
-      subtree: true
-    });
+    this._domObserver.observe(this);
   }
 
   removeTabAndPanel(tabId: string) {
@@ -451,11 +609,11 @@ export default class ZnTabs extends ZincElement {
   }
 
   _registerTabs = () => {
-    deepQuerySelectorAll('[tab]', this, 'zn-tabs').forEach(ele => {
+    deepQuerySelectorAll('[tab]', this, tabContainerSelector).forEach(ele => {
       this._addTab(ele as HTMLElement);
     });
 
-    deepQuerySelectorAll('[tab-uri]', this, 'zn-tabs').forEach(ele => {
+    deepQuerySelectorAll('[tab-uri]', this, tabContainerSelector).forEach(ele => {
       if (ele.getAttribute('tab-uri') === "") {
         ele.setAttribute('tab', "");
         ele.removeAttribute('tab-uri');
@@ -463,7 +621,7 @@ export default class ZnTabs extends ZincElement {
       this._addTab(ele as HTMLElement);
     });
 
-    deepQuerySelectorAll('[ref-tab-uri]', this, 'zn-tabs').forEach(ele => {
+    deepQuerySelectorAll('[ref-tab-uri]', this, tabContainerSelector).forEach(ele => {
       if (!ele.hasAttribute('ref-tab')) {
         ele.setAttribute('ref-tab', this._uriToId(ele.getAttribute('ref-tab-uri')!));
         ele.removeAttribute('ref-tab-uri');
@@ -500,6 +658,7 @@ export default class ZnTabs extends ZincElement {
             padded-right="${ifDefined(this.paddedRight ? true : undefined)}"
             pixels bordered
             min-size="${this._splitMin}"
+            min-secondary-size="${ifDefined(this._splitMinSecondary ? this._splitMinSecondary : undefined)}"
             max-size="${ifDefined(this._splitMax ? this._splitMax : undefined)}"
             initial-size="${this._split}">
             <slot slot="primary" name="left"></slot>
@@ -516,13 +675,13 @@ export default class ZnTabs extends ZincElement {
     return html`
       <div class="tabs">
         ${hasHeader ? html`
-          <zn-header caption="${ifDefined(this.caption)}" description="${ifDefined(this.description)}" transparent>
+          <zn-header caption="${ifDefined(this.caption)}" transparent>
             <slot name="actions" slot="actions"></slot>
           </zn-header>` : null}
         <slot name="top"></slot>
         <div id="mid" part="mid">
           <slot name="left"></slot>
-          <div id="content">
+          <div id="content" part="content">
             <slot></slot>
           </div>
           <slot name="right"></slot>

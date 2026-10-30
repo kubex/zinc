@@ -23,6 +23,12 @@
   }
 }
 
+// Ensure dropdown wrappers inside button-group participate in the flex layout
+// without introducing gaps. The data attribute is set by the component logic.
+::slotted([data-zn-button-group__dropdown]) {
+  display: inline-flex !important;
+}
+
 :host([direction="vertical"]),
 zn-button-group[direction="vertical"] {
   width: 100%;

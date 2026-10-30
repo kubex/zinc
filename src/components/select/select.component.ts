@@ -1,6 +1,6 @@
 import {animateTo, stopAnimations} from '../../internal/animate.js';
 import {classMap} from "lit/directives/class-map.js";
-import {deepQuerySelectorAll} from "../../utilities/query";
+import {ConditionalController} from "../../internal/conditional";
 import {FormControlController} from "../../internal/form";
 import {getAnimation, setDefaultAnimation} from "../../utilities/animation-registry";
 import {HasSlotController} from "../../internal/slot";
@@ -14,12 +14,14 @@ import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
 import ZnChip from "../chip";
 import ZnIcon from "../icon";
+import ZnOptGroup from "../opt-group";
+import ZnOption from "../option";
 import ZnPopup from "../popup";
 import type {CSSResultGroup, PropertyValues, TemplateResult} from 'lit';
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type {ZnRemoveEvent} from "../../events/zn-remove";
-import type ZnOption from "../option";
 
+import formControlStyles from '../../form-control.scss';
 import styles from './select.scss';
 
 /**
@@ -29,14 +31,18 @@ import styles from './select.scss';
  * @since 1.0
  *
  * @dependency zn-icon
+ * @dependency zn-opt-group
+ * @dependency zn-option
  * @dependency zn-popup
  * @dependency zn-tag
  *
- * @slot - The listbox options. Must be `<zn-option>` elements. You can use `<zn-divider>` to group items visually.
+ * @slot - The listbox options. Must be `<zn-option>` elements. You can use `<zn-opt-group>` to group options under a labeled header, or `<zn-divider>` to group items visually.
  * @slot label - The input's label. Alternatively, you can use the `label` attribute.
  * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.
  * @slot context-note - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.
  * @slot prefix - Used to prepend a presentational icon or similar element to the combobox.
+ * @slot suffix - Used to append a presentational element — a chip marking the selected option's state, for
+ *   instance — to the combobox, between the value and the clear and expand icons.
  * @slot clear-icon - An icon to use in lieu of the default clear icon.
  * @slot expand-icon - The icon to show when the control is expanded and collapsed. Rotates on open and close.
  * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
@@ -51,13 +57,18 @@ import styles from './select.scss';
  * @event zn-hide - Emitted when the select's menu closes.
  * @event zn-after-hide - Emitted after the select's menu closes and all animations are complete.
  * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
+ * @event zn-load - Emitted when options have been successfully loaded from the `src` URL.
+ * @event zn-error - Emitted when loading options from the `src` URL fails.
  *
+ * @csspart search-loading - The container shown while a remote search request is in flight.
+ * @csspart max-results-indicator - The message shown when results are truncated by `max-results`.
  * @csspart form-control - The form control that wraps the label, input, and help text.
  * @csspart form-control-label - The label's wrapper.
  * @csspart form-control-input - The select's wrapper.
  * @csspart form-control-help-text - The help text's wrapper.
  * @csspart combobox - The container the wraps the prefix, combobox, clear icon, and expand button.
  * @csspart prefix - The container that wraps the prefix slot.
+ * @csspart suffix - The container that wraps the suffix slot.
  * @csspart display-input - The element that displays the selected option's label, an `<input>` element.
  * @csspart listbox - The listbox container where options are slotted.
  * @csspart tags - The container that houses option tags when `multiselect` is used.
@@ -70,9 +81,11 @@ import styles from './select.scss';
  * @csspart expand-icon - The container that wraps the expand icon.
  */
 export default class ZnSelect extends ZincElement implements ZincFormControl {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
   static dependencies = {
     'zn-icon': ZnIcon,
+    'zn-opt-group': ZnOptGroup,
+    'zn-option': ZnOption,
     'zn-popup': ZnPopup,
     'zn-tag': ZnChip
   };
@@ -80,6 +93,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   protected readonly formControlController = new FormControlController(this, {
     assumeInteractionOn: ['zn-blur', 'zn-input']
   });
+  private readonly conditionalController = new ConditionalController(this);
   private readonly hasSlotController = new HasSlotController(this, 'help-text', 'label');
   private readonly localize = new LocalizeController(this);
   private typeToSelectString = '';
@@ -100,26 +114,90 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   @state() private valueHasChanged: boolean = false;
   @state() private inputPrefix: boolean = false;
 
+  /** @internal - current search/filter text when search is enabled (lowercased for matching) */
+  private _searchQuery = '';
+
+  /** @internal - raw display value of the search input (preserves case for the input field). Reactive so the
+   * free-text "Add" row re-renders on every keystroke, not just when the match/no-match state changes. */
+  @state() private _searchDisplayValue = '';
+
+  /** @internal - whether the "no matching options" empty state is visible */
+  @state() private _noResultsVisible = false;
+
+  /** @internal - whether the free-text "Add" row is the active keyboard-navigation target */
+  @state() private _addOptionActive = false;
+
+  /** @internal */
+  @state() private _fetchedOptions: ({ key: string; value: string; group?: undefined } | {
+    group: string;
+    options: { key: string; value: string }[]
+  })[] = [];
+
+  /** @internal */
+  @state() private _fetchLoading = false;
+
+  /** @internal */
+  @state() private _fetchError = '';
+
+  /** @internal */
+  private _fetchAbortController: AbortController | null = null;
+
+  /** @internal - debounce timer for remote search */
+  private _searchDebounceTimer: number | null = null;
+
+  /** @internal - whether a remote search fetch is in progress (distinct from initial load) */
+  @state() private _searchLoading = false;
+
+  /** @internal - the query string of the last successful remote search */
+  private _lastRemoteQuery: string | null = null;
+
+  /** @internal - whether the last remote result set was exhaustive (fewer than maxResults returned) */
+  private _lastRemoteExhaustive = false;
+
+  /** @internal - total number of results before maxResults truncation (0 = not truncated) */
+  @state() private _totalResultCount = 0;
+
+  /**
+   * @internal - tracks selected items by key/value during remote search so they survive
+   * when search results replace the fetched options list.
+   */
+  private _selectedRemoteItems: { key: string; value: string }[] = [];
+
   /** The name of the select, submitted as a name/value pair with form data. */
   @property() name = '';
+
+  @property({type: Boolean, attribute: "non-removable"}) nonRemovable = false;
 
   private _value: string | string[] = '';
 
   get value() {
-    return this._value
+    return this._value;
   }
 
   /**
    * The current value of the select, submitted as a name/value pair with form data. When `multiple` is enabled, the
-   * value attribute will be a space-delimited list of values based on the options selected, and the value property will
-   * be an array. **For this reason, values must not contain spaces.**
+   * value property will be an array. Values may contain spaces when using JSON array syntax in the attribute,
+   * e.g. `value='["my value", "their value"]'`. Space-delimited strings are still supported for backward compatibility.
    */
   @state()
   set value(val: string | string[]) {
     if (this.multiple) {
-      val = Array.isArray(val) ? val : val.split(' ');
+      if (Array.isArray(val)) {
+        // Already an array, keep as-is
+      } else if (val.trimStart().startsWith('[')) {
+        try {
+          const parsed = JSON.parse(val) as unknown;
+          val = Array.isArray(parsed) ? parsed : val.split(" ");
+        } catch {
+          if (typeof val === "string") {
+            val = val.split(" ");
+          }
+        }
+      } else {
+        val = val.split(" ");
+      }
     } else {
-      val = Array.isArray(val) ? val.join(' ') : val;
+      val = Array.isArray(val) ? val.join(" ") : val;
     }
 
     if (this._value === val) {
@@ -139,14 +217,29 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     attribute: 'value',
     converter: {
       fromAttribute: (value) => {
-        if (!value || Array.isArray(value)) return value
+        if (!value || Array.isArray(value)) return value;
+
+        // Auto-detect JSON array syntax: value='["my value", "their value"]'
+        if (value.trimStart().startsWith('[')) {
+          try {
+            const parsed = JSON.parse(value) as unknown;
+            if (Array.isArray(parsed)) return parsed as string[];
+          } catch {
+            // Not valid JSON, fall through to space-delimited parsing
+          }
+        }
+
         return value.includes(' ') ? value.split(' ') : value;
       },
       toAttribute: (value) => {
+        if (Array.isArray(value) && value.some((v: string) => v.includes(' '))) {
+          return JSON.stringify(value);
+        }
         return Array.isArray(value) ? value.join(' ') : value;
       }
     }
   }) defaultValue: string | string[] = '';
+
 
   /** The select's size. */
   @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
@@ -187,6 +280,17 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   /** Draws a pill-style select with rounded edges. */
   @property({type: Boolean, reflect: true}) pill = false;
 
+  /** Enables search/filter functionality. When enabled, the user can type into the select to filter the visible options. */
+  @property({type: Boolean, reflect: true}) search = false;
+
+  /**
+   * Allows the user to enter values that are not in the options list ("free text"). Implies the editable,
+   * filtering input behavior of `search`. A typed value that doesn't match an existing option is committed
+   * by pressing Enter, clicking the "Add" row, or blurring the field, and becomes a selected option — a tag
+   * when `multiple` is enabled. The committed value is both the option's value and its label.
+   */
+  @property({type: Boolean, reflect: true, attribute: 'free-text'}) freeText = false;
+
   /** The select's label. If you need to display HTML, use the `label` slot instead. */
   @property() label = '';
 
@@ -207,7 +311,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
   /**
    * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
-   * to place the form control outside of a form and associate it with the form that has this `id`. The form must be in
+   * to place the form control outside a form and associate it with the form that has this `id`. The form must be in
    * the same document or shadow root for this to work.
    */
   @property({reflect: true}) form: string;
@@ -236,18 +340,65 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         ?pill=${this.pill}
         size="x-small"
         type="primary"
-        removable
         @zn-remove=${(event: ZnRemoveEvent) => this.handleTagRemove(event, option)}>
         ${option.getTextLabel()}
-        <zn-icon slot="action" src="close" size="16"
-                 @click=${(e: any) => this.handleTagRemove(e as ZnRemoveEvent, option)}></zn-icon>
+        ${(!this.nonRemovable) ? html`
+          <zn-icon slot="action" src="close" size="16"
+                   @click=${(e: any) => this.handleTagRemove(e as ZnRemoveEvent, option)}></zn-icon>` : nothing}
       </zn-chip>
     `;
   };
 
+  /** Automatically select the first option if no value is set. */
+  @property({attribute: 'select-first', type: Boolean}) selectFirst = false;
+
   @property() distinct = "";
 
   @property() conditional = "";
+
+  /**
+   * Ids or names of controls that must have a value before this one becomes
+   * usable, comma separated. The control stays disabled until every one of them
+   * is filled, and is disabled again if any is cleared.
+   */
+  @property() requires = "";
+
+  /**
+   * The URL to fetch options from. When set, the component fetches JSON from this URL and renders the results as
+   * options. The expected format is an array of objects with `key` and `value` properties:
+   * `[{"key": "us", "value": "United States"}, ...]`
+   * When not set, the component works exactly as before using slotted `<zn-option>` elements.
+   */
+  @property({attribute: 'data-uri'}) dataUri: string;
+
+  /**
+   * Context data to send as a header when fetching options from the URL specified by the `src` property.
+   */
+  @property({attribute: 'context-data'}) contextData: string;
+
+  /**
+   * The maximum number of options to display from a remote fetch response. Set to 0 for unlimited.
+   * Only applies when fetching from `data-uri`.
+   */
+  @property({attribute: 'max-results', type: Number}) maxResults = 0;
+
+  /**
+   * Debounce delay in milliseconds for remote search requests. The component waits this long after the user
+   * stops typing before sending a request.
+   */
+  @property({attribute: 'search-debounce', type: Number}) searchDebounce = 300;
+
+  /**
+   * The query parameter name appended to the `data-uri` URL for remote search requests.
+   * Defaults to `"q"`, e.g. `/api/items?q=search+term`. Set to a custom value like `"search"` or `"filter"` to match your API.
+   */
+  @property({attribute: 'search-param'}) searchParam = 'q';
+
+  /**
+   * When set alongside `search` and `data-uri`, the component will not fetch options on initial load.
+   * Options are only fetched when the user starts typing a search query.
+   */
+  @property({attribute: 'search-only', type: Boolean}) searchOnly = false;
 
   /** Gets the validity state object */
   get validity() {
@@ -268,10 +419,20 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     this.open = false;
 
     if (this.cacheKey) {
-      const cache: any = JSON.parse(localStorage.getItem('zn-linked-select-cache') || '{}');
+      const cache = JSON.parse(localStorage.getItem('zn-linked-select-cache') || '{}') as Record<string, string | string[]>;
       if (cache[this.cacheKey]) {
         this.value = cache[this.cacheKey];
       }
+    }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._fetchAbortController?.abort();
+    this._fetchAbortController = null;
+    if (this._searchDebounceTimer !== null) {
+      clearTimeout(this._searchDebounceTimer);
+      this._searchDebounceTimer = null;
     }
   }
 
@@ -291,7 +452,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       this.closeWatcher = new CloseWatcher();
       this.closeWatcher.onclose = () => {
         if (this.open) {
-          this.hide();
+          this.hide().then();
           this.displayInput.focus({preventScroll: true});
         }
       };
@@ -318,11 +479,11 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     this.emit('zn-blur');
   }
 
-  private handleDocumentFocusIn = (event: KeyboardEvent) => {
+  private handleDocumentFocusIn = (event: FocusEvent) => {
     // Close when focusing out of the select
     const path = event.composedPath();
     if (this && !path.includes(this)) {
-      this.hide();
+      this.hide().then();
     }
   };
 
@@ -339,24 +500,47 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       return;
     }
 
+    // Escape cancels uncommitted free-text rather than letting the close path commit it. Done here (before
+    // either the CloseWatcher or the branch below closes the dropdown) so it applies on every browser.
+    if (event.key === 'Escape' && this.open && this.freeText && this._searchDisplayValue.trim()) {
+      this.clearSearch();
+      this.displayInput.value = '';
+    }
+
     // Close when pressing escape
     if ((event.key === 'Escape' || event.key === 'Tab') && this.open && !this.closeWatcher) {
       event.preventDefault();
       event.stopPropagation();
-      this.hide();
+      this.hide().then();
       this.displayInput.focus({preventScroll: true});
     }
 
+    // Blur the display input when Escape is pressed and the dropdown is closed,
+    // so a second Escape press can bubble (e.g. close a containing dialog).
+    if (event.key === 'Escape' && !this.open) {
+      event.stopPropagation();
+      this.displayInput.blur();
+    }
+
     // Handle enter and space. When pressing space, we allow for type to select behaviors so if there's anything in the
-    // buffer we _don't_ close it.
-    if (event.key === 'Enter' || (event.key === ' ' && this.typeToSelectString === '')) {
+    // buffer we _don't_ close it. When search is enabled, space should type into the input, not toggle.
+    if (event.key === 'Enter' || (event.key === ' ' && !this._isTypeable && this.typeToSelectString === '')) {
       event.preventDefault();
       event.stopImmediatePropagation();
 
       // If it's not open, open it
       if (!this.open) {
-        this.show();
+        this.show().then();
         return;
+      }
+
+      // Free-text: commit when the Add row is the active target, or when no real option is highlighted
+      if (this.freeText) {
+        const addActive = this._addOptionActive && this._freeTextAddValue !== null;
+        const usableCurrent = !addActive && this.currentOption && !this.currentOption.disabled && !this.currentOption.hidden;
+        if (!usableCurrent && this.commitFreeText()) {
+          return;
+        }
       }
 
       // If it is open, update the value based on the current selection and close it
@@ -368,6 +552,14 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
           this.setSelectedOptions(this.currentOption);
         }
 
+        // Clear search after keyboard selection
+        if (this._isTypeable) {
+          this.clearSearch();
+          if (this.multiple) {
+            this.displayInput.value = '';
+          }
+        }
+
         // Emit after updating
         this.updateComplete.then(() => {
           this.emit('zn-input');
@@ -375,26 +567,28 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         });
 
         if (!this.multiple) {
-          this.hide();
+          this.hide().then();
           this.displayInput.focus({preventScroll: true});
+        } else if (this._isTypeable) {
+          // In multi-select + typeable, re-focus the search input after keyboard selection
+          this.updateComplete.then(() => {
+            this.displayInput.value = '';
+            this.displayInput.focus({preventScroll: true});
+          });
         }
       }
 
       return;
     }
 
-    // Navigate options
+    // Navigate options (and the free-text "Add" row, when shown)
     if (['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
-      const allOptions = this.getAllOptions();
-      const currentIndex = allOptions.indexOf(this.currentOption);
-      let newIndex = Math.max(0, currentIndex);
-
       // Prevent scrolling
       event.preventDefault();
 
       // Open it
       if (!this.open) {
-        this.show();
+        this.show().then();
 
         // If an option is already selected, stop here because we want that one to remain highlighted when the listbox
         // opens for the first time
@@ -403,19 +597,44 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         }
       }
 
+      const navOptions = this._isTypeable ? this.getVisibleOptions() : this.getAllOptions();
+      const hasAdd = this.freeText && this._freeTextAddValue !== null;
+
+      // The Add row, when shown, sits at the top of the listbox and is the first navigable target.
+      const ADD = 'add';
+      const targets: (ZnOption | typeof ADD)[] = hasAdd ? [ADD, ...navOptions] : [...navOptions];
+      if (targets.length === 0) return;
+
+      const currentTarget: ZnOption | typeof ADD | null =
+        this._addOptionActive && hasAdd ? ADD : (this.currentOption ?? null);
+      const currentIndex = currentTarget === null ? -1 : targets.indexOf(currentTarget);
+      let newIndex = Math.max(0, currentIndex);
+
       if (event.key === 'ArrowDown') {
         newIndex = currentIndex + 1;
-        if (newIndex > allOptions.length - 1) newIndex = 0;
+        if (newIndex > targets.length - 1) newIndex = 0;
       } else if (event.key === 'ArrowUp') {
         newIndex = currentIndex - 1;
-        if (newIndex < 0) newIndex = allOptions.length - 1;
+        if (newIndex < 0) newIndex = targets.length - 1;
       } else if (event.key === 'Home') {
         newIndex = 0;
       } else if (event.key === 'End') {
-        newIndex = allOptions.length - 1;
+        newIndex = targets.length - 1;
       }
 
-      this.setCurrentOption(allOptions[newIndex]);
+      const next = targets[newIndex];
+      if (next === ADD) {
+        this._addOptionActive = true;
+        this.setCurrentOption(null);
+      } else {
+        this._addOptionActive = false;
+        this.setCurrentOption(next);
+      }
+    }
+
+    // When typeable, let the input handle keystrokes natively (they go through handleSearchInput)
+    if (this._isTypeable) {
+      return;
     }
 
     // All other "printable" keys trigger type to select
@@ -433,7 +652,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
           return;
         }
 
-        this.show();
+        this.show().then();
       }
 
       event.stopPropagation();
@@ -463,7 +682,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     // Close when clicking outside of the select
     const path = event.composedPath();
     if (this && !path.includes(this)) {
-      this.hide();
+      this.hide().then();
     }
   };
 
@@ -479,8 +698,22 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     const isExpandIcon = path.some(el => el instanceof Element && el.classList.contains('select__expand-icon'));
     // if click is inside the prefix area (e.g. checkbox), don't toggle the select
     const inPrefix = path.some(el => el instanceof Element && el.classList.contains('select__prefix'));
-    // Ignore disabled controls and clicks on tags (remove buttons)
-    if (((this.disabled || isIcon) && !isExpandIcon) || inPrefix) {
+    // A control that cannot be used never toggles, whatever was clicked — the
+    // expand icon included, or a disabled select still opens from its chevron.
+    if (this.disabled || this._fetchLoading || this._fetchError) {
+      return;
+    }
+    // Icon clicks (e.g. a tag's remove button) don't toggle, but the expand
+    // icon is what opens the control; the prefix area (e.g. a checkbox) never
+    // toggles.
+    if ((isIcon && !isExpandIcon) || inPrefix) {
+      return;
+    }
+
+    // When typeable, clicking the input area should open (not toggle) so the user can type
+    if (this._isTypeable && this.open && !isExpandIcon) {
+      event.preventDefault();
+      this.displayInput.focus({preventScroll: true});
       return;
     }
 
@@ -507,7 +740,14 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   private handleClearClick(event: MouseEvent) {
     event.stopPropagation();
 
-    if (this.value !== '') {
+    if (this.value.length > 0) {
+      this.valueHasChanged = true;
+
+      if (this._isTypeable) {
+        this.clearSearch();
+        this.displayInput.value = '';
+      }
+
       this.setSelectedOptions([]);
       this.displayInput.focus({preventScroll: true});
 
@@ -516,6 +756,10 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         this.emit('zn-clear');
         this.emit('zn-input');
         this.emit('zn-change');
+
+        if (this.triggerSubmit) {
+          this.formControlController.submit();
+        }
       });
     }
   }
@@ -526,29 +770,316 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     event.preventDefault();
   }
 
+  /** Whether the component is in remote-search mode (search + dataUri both set) */
+  private get _isRemoteSearch() {
+    return this.search && !!this.dataUri;
+  }
+
+  /** Whether the display input is editable and filters options (search or free-text). */
+  private get _isTypeable() {
+    return this.search || this.freeText;
+  }
+
+  /** Handles text input on the display input for search/filter mode */
+  private handleSearchInput() {
+    if (!this._isTypeable) return;
+
+    // A new keystroke resets the Add-row keyboard highlight
+    this._addOptionActive = false;
+
+    this._searchDisplayValue = this.displayInput.value;
+    this._searchQuery = this._searchDisplayValue.trim().toLowerCase();
+
+    // Open the dropdown when the user starts typing
+    if (!this.open) {
+      this.show().then();
+    }
+
+    if (this._isRemoteSearch) {
+      // Cancel any pending request when the query changes
+      if (this._searchDebounceTimer !== null) {
+        clearTimeout(this._searchDebounceTimer);
+        this._searchDebounceTimer = null;
+      }
+
+      // Empty query — just show all current options, no fetch needed
+      if (!this._searchQuery) {
+        this.filterOptions();
+        return;
+      }
+
+      // If the new query is a refinement of the last one and we know the server had no more
+      // results to give (i.e. it returned fewer than maxResults), we can filter locally instead
+      // of making another round-trip.
+      const canFilterLocally = this._lastRemoteExhaustive
+        && this._lastRemoteQuery !== null
+        && this._searchQuery.startsWith(this._lastRemoteQuery);
+
+      if (canFilterLocally) {
+        this.filterOptions();
+        return;
+      }
+
+      // Remote search: debounce and fetch from server
+      this._noResultsVisible = false;
+      this._searchDebounceTimer = window.setTimeout(() => {
+        this._searchDebounceTimer = null;
+        this.fetchOptions(this._searchQuery).then();
+      }, this.searchDebounce);
+    } else {
+      // Local search: filter existing options
+      this.filterOptions();
+    }
+  }
+
+  /** Filters visible options based on the current search query */
+  private filterOptions() {
+    const allOptions = this.getAllOptions();
+    const searchQuery = this._searchQuery;
+
+    if (!searchQuery) {
+      // Show all options and opt-groups
+      allOptions.forEach(option => {
+        option.hidden = false;
+      });
+      this.getAllOptGroups().forEach(group => {
+        group.hidden = false;
+      });
+      this.updateOptGroupSeparators();
+      this.updateEmptyState();
+      return;
+    }
+
+    // A group whose label matches keeps its whole set of options, so searching "citrus" surfaces the group.
+    const matchedGroups = new Set(
+      this.getAllOptGroups().filter(group => group.label.toLowerCase().includes(searchQuery))
+    );
+
+    allOptions.forEach(option => {
+      // Don't un-hide selected options that are only in the DOM for value preservation
+      if (option.selected && option.hidden) return;
+
+      const group = option.closest<ZnOptGroup>('zn-opt-group');
+      if (group && matchedGroups.has(group)) {
+        option.hidden = false;
+        return;
+      }
+
+      const label = option.getTextLabel().toLowerCase();
+      const value = option.value.toLowerCase();
+      const matches = label.includes(searchQuery) || value.includes(searchQuery);
+      option.hidden = !matches;
+    });
+
+    // Update opt-group visibility based on whether any child options are visible
+    this.getAllOptGroups().forEach(group => group.updateVisibility());
+    this.updateOptGroupSeparators();
+
+    // Show empty state when no non-selected options match (selected-but-hidden items are value anchors, not results)
+    this._noResultsVisible = allOptions.filter(o => !o.selected).every(option => option.hidden);
+
+    // Reset current option if it's now hidden
+    if (this.currentOption && this.currentOption.hidden) {
+      const firstVisible = allOptions.find(o => !o.hidden && !o.disabled);
+      if (firstVisible) {
+        this.setCurrentOption(firstVisible);
+      }
+    }
+  }
+
+  /**
+   * Nothing for the user to pick: either the option list is empty or every option is filtered out.
+   * The search paths track this themselves, so this covers opening a dropdown with no query.
+   */
+  private updateEmptyState() {
+    const options = this.getAllOptions();
+    this._noResultsVisible = options.length === 0 || options.every(option => option.hidden);
+  }
+
+  private get emptyStateText(): string {
+    return this._searchQuery ? 'No matching options' : 'No options available';
+  }
+
+  /** Clears the search query and shows all options */
+  private clearSearch() {
+    this._searchQuery = '';
+    this._searchDisplayValue = '';
+    this._noResultsVisible = false;
+    this._addOptionActive = false;
+
+    // Cancel any pending remote search
+    if (this._searchDebounceTimer !== null) {
+      clearTimeout(this._searchDebounceTimer);
+      this._searchDebounceTimer = null;
+    }
+    this._searchLoading = false;
+
+    const allOptions = this.getAllOptions();
+    allOptions.forEach(option => {
+      option.hidden = false;
+    });
+    // Also unhide any opt-groups that were hidden during filtering
+    this.getAllOptGroups().forEach(group => {
+      group.hidden = false;
+    });
+    this.updateOptGroupSeparators();
+  }
+
+  // Runs after every visibility change so group separators reflect which groups are actually showing
+  private updateOptGroupSeparators() {
+    this.getAllOptGroups().forEach(group => group.updateSeparator());
+  }
+
+  /**
+   * Commits the current typed text as a selected value when `free-text` is enabled. A selected `<zn-option>`
+   * (value = label = trimmed text) is created in the light DOM so the value flows through the existing
+   * tag/value/selection machinery and appears as a deselectable row in the listbox. Returns `true` when
+   * something was committed, `false` when there was nothing to commit.
+   */
+  private commitFreeText(refocus = true): boolean {
+    if (!this.freeText) return false;
+
+    const text = (this.displayInput?.value ?? '').trim();
+    if (!text) return false;
+
+    this.valueHasChanged = true;
+
+    // If the text matches an existing option (label or value, case-insensitive), select it instead of
+    // creating a duplicate free-text option.
+    const lower = text.toLowerCase();
+    const existing = this.getAllOptions().find(
+      o => o.value.toLowerCase() === lower || o.getTextLabel().toLowerCase() === lower
+    );
+
+    const option = existing ?? this._createFreeTextOption(text);
+
+    if (this.multiple) {
+      // Add to the existing selection and keep the dropdown open for more entry
+      this.toggleOptionSelection(option, true);
+    } else {
+      this.setSelectedOptions(option);
+    }
+
+    this.clearSearch();
+
+    this.updateComplete.then(() => {
+      this.emit('zn-input');
+      this.emit('zn-change');
+    });
+
+    // When committed via blur/close, the dropdown is already closing and focus has left — don't fight it.
+    if (!refocus) {
+      return true;
+    }
+
+    if (this.multiple) {
+      // Clear the input so the user can type the next value
+      this.displayInput.value = '';
+      this.displayInput.focus({preventScroll: true});
+    } else {
+      this.hide().then();
+      this.displayInput.focus({preventScroll: true});
+    }
+
+    return true;
+  }
+
+  /**
+   * The trimmed pending text to offer as a free-text "Add" row, or `null` when no Add row should be shown
+   * (free-text disabled, dropdown closed, input empty, or the text exactly matches an existing option).
+   */
+  private get _freeTextAddValue(): string | null {
+    if (!this.freeText || !this.open) return null;
+
+    const text = this._searchDisplayValue.trim();
+    if (!text) return null;
+
+    const lower = text.toLowerCase();
+    const exact = this.getAllOptions().some(
+      o => o.value.toLowerCase() === lower || o.getTextLabel().toLowerCase() === lower
+    );
+
+    return exact ? null : text;
+  }
+
+  /** Commits the typed value when the "Add" row is pressed, keeping focus on the input. */
+  private handleAddOptionMouseDown(event: MouseEvent) {
+    // Keep focus on the input but DON'T commit here. Committing on mousedown would clear the search and
+    // collapse the listbox, so the following mouseup would land on (and select) whichever option shifted
+    // under the cursor. Instead the commit happens on mouseup in handleOptionClick.
+    event.preventDefault();
+  }
+
+  /**
+   * In free-text mode, creates a hidden `<zn-option>` for any value that has no matching option, so values
+   * set via the `value`/`defaultValue` attribute (e.g. previously-saved custom entries) render as tags or
+   * the display value on load. No-op when free-text is disabled.
+   */
+  private _materialiseFreeTextValues(values: string[]) {
+    if (!this.freeText) return;
+
+    const existingValues = new Set(this.getAllOptions().map(o => o.value));
+    values.forEach(value => {
+      if (value === '' || existingValues.has(value)) return;
+      this._createFreeTextOption(value);
+      existingValues.add(value);
+    });
+  }
+
+  /**
+   * Creates a free-text-marked `<zn-option>` in the light DOM (value = label) and returns it. The option is
+   * a normal, visible, selectable row so the user can deselect a custom value from the dropdown like any
+   * other option; the `data-free-text` marker lets us drop it from the DOM once it's no longer selected.
+   */
+  private _createFreeTextOption(value: string): ZnOption {
+    const option = document.createElement('zn-option') as ZnOption;
+    option.value = value;
+    option.textContent = value;
+    option.setAttribute('data-free-text', '');
+    this.appendChild(option);
+    return option;
+  }
+
   private handleOptionClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
+
+    // The free-text "Add" row lives in the listbox and commits on this same mouseup, so it can never
+    // also trigger an option selection.
+    if (target.closest('.select__add-option')) {
+      this.commitFreeText();
+      return;
+    }
+
     const option = target.closest('zn-option');
     const oldValue = this.value;
 
     if (option && !option.disabled) {
-      this.valueHasChanged = true
+      this.valueHasChanged = true;
       if (this.multiple) {
-        if (this.maxOptions > 0) {
-          if (this.selectedOptions.length >= this.maxOptions && !option.selected) {
-            return;
-          }
-
-          this.toggleOptionSelection(option);
-        } else {
-          this.toggleOptionSelection(option)
+        if (this.maxOptions > 0 && this.selectedOptions.length >= this.maxOptions && !option.selected) {
+          return;
         }
+        this.toggleOptionSelection(option);
       } else {
         this.setSelectedOptions(option);
       }
 
+      // Clear search after selection when in search/free-text mode
+      if (this._isTypeable) {
+        this.clearSearch();
+        if (this.multiple) {
+          // Keep the search input clear for further typing
+          this.displayInput.value = '';
+        }
+      }
+
       // Set focus after updating so the value is announced by screen readers
-      this.updateComplete.then(() => this.displayInput.focus({preventScroll: true}));
+      this.updateComplete.then(() => {
+        if (this.multiple && this._isTypeable && this.open) {
+          this.displayInput.value = '';
+        }
+        this.displayInput.focus({preventScroll: true});
+      });
 
       if (this.value !== oldValue) {
         // Emit after updating
@@ -559,7 +1090,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       }
 
       if (!this.multiple) {
-        this.hide();
+        this.hide().then();
         this.displayInput.focus({preventScroll: true});
       }
 
@@ -583,8 +1114,13 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     // Check for duplicate values in menu items
     allOptions.forEach(option => values.push(option.value));
 
-    // Select only the options that match the new value
-    this.setSelectedOptions(allOptions.filter(el => value.includes(el.value)));
+    // In free-text mode, materialise any value with no matching option so it renders as a tag/value
+    this._materialiseFreeTextValues(value);
+
+    // Select only the options that match the new value (re-query in case options were materialised)
+    this.setSelectedOptions(this.getAllOptions().filter(el => value.includes(el.value)));
+
+    this.updateOptGroupSeparators();
 
     // of check if an option has selected attribute set initially
     if (!this.valueHasChanged) {
@@ -595,7 +1131,23 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         } else {
           this.setSelectedOptions(initiallySelectedOptions[0]);
         }
+
+        if (!this.defaultValue || this.defaultValue.length === 0) {
+          this.defaultValue = this.value;
+        }
       }
+    }
+
+    // Auto-select the first option if selectFirst is enabled and no value is set
+    if (this.selectFirst && this.selectedOptions.length === 0 && allOptions.length > 0) {
+      this.setSelectedOptions(allOptions[0]);
+      this.valueHasChanged = true;
+      this.emit('zn-input');
+      this.emit('zn-change');
+    }
+
+    if (this.open) {
+      this.updateEmptyState();
     }
   }
 
@@ -604,19 +1156,44 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     event.stopImmediatePropagation();
 
     if (!this.disabled) {
+      this.valueHasChanged = true;
+
+      // Deselecting drops the backing element for free-text values via selectionChanged's cleanup.
       this.toggleOptionSelection(option, false);
 
       // Emit after updating
       this.updateComplete.then(() => {
         this.emit('zn-input');
         this.emit('zn-change');
+
+        if (this.triggerSubmit) {
+          this.formControlController.submit();
+        }
       });
     }
   }
 
-  // Gets an array of all <zn-option> elements
+  // Gets an array of all <zn-option> elements (both fetched in shadow DOM and slotted in light DOM)
   private getAllOptions() {
-    return [...this.querySelectorAll<ZnOption>('zn-option')];
+    const shadowOptions = this.shadowRoot
+      ? [...this.shadowRoot.querySelectorAll<ZnOption>('.select__listbox zn-option')]
+      : [];
+    const slottedOptions = [...this.querySelectorAll<ZnOption>('zn-option')];
+    return [...shadowOptions, ...slottedOptions];
+  }
+
+  // Gets an array of all <zn-opt-group> elements (both in shadow DOM and slotted in light DOM)
+  private getAllOptGroups() {
+    const shadowGroups = this.shadowRoot
+      ? [...this.shadowRoot.querySelectorAll<ZnOptGroup>('.select__listbox zn-opt-group')]
+      : [];
+    const slottedGroups = [...this.querySelectorAll<ZnOptGroup>('zn-opt-group')];
+    return [...shadowGroups, ...slottedGroups];
+  }
+
+  // Gets an array of visible (not hidden) <zn-option> elements, used by keyboard navigation when search is active
+  private getVisibleOptions() {
+    return this.getAllOptions().filter(option => !option.hidden);
   }
 
   // Gets the first <zn-option> element
@@ -635,13 +1212,16 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       el.tabIndex = -1;
     });
 
-
     // Select the target option
     if (option) {
       this.currentOption = option;
       option.current = true;
       option.tabIndex = 0;
-      option.focus();
+      // When search is active and the display input has focus, don't steal focus to the option.
+      // The user is typing in the search input and we only want to visually highlight the current option.
+      if (!(this._isTypeable && this.open && this.shadowRoot?.activeElement === this.displayInput)) {
+        option.focus();
+      }
     }
   }
 
@@ -679,12 +1259,29 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     // Update selected options cache
     this.selectedOptions = this.getAllOptions().filter(el => el.selected);
 
+    // Free-text options exist only to anchor a selected value. Drop any that are no longer selected — e.g.
+    // when a single-select value is replaced or the selection is cleared, the previous custom entry should
+    // disappear entirely rather than linger as an orphaned option.
+    this.querySelectorAll<ZnOption>('[data-free-text]').forEach(option => {
+      if (!option.selected) option.remove();
+    });
+
+    // In remote-search + multiple mode, track selected items so they persist across search result changes
+    if (this._isRemoteSearch && this.multiple) {
+      this._selectedRemoteItems = this.selectedOptions.map(el => ({
+        key: el.value,
+        value: el.getTextLabel()
+      }));
+    }
+
     // Keep a reference to the previous `valueHasChanged`. Changes made here don't count has changing the value.
     const cachedValueHasChanged: boolean = this.valueHasChanged;
 
     // Update the value and display label
     if (this.multiple) {
-      this.getAllOptions().filter(el => el.multiple !== true).forEach(el => el.multiple = true);
+      this.getAllOptions().filter(el => !el.multiple).forEach(el => {
+        el.multiple = true;
+      });
 
       this.value = this.selectedOptions.map(el => el.value);
 
@@ -695,7 +1292,9 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         this.displayLabel = this.localize.term('numOptionsSelected', this.selectedOptions.length);
       }
     } else {
-      this.getAllOptions().filter(el => el.multiple === true).forEach(el => el.multiple = false);
+      this.getAllOptions().filter(el => el.multiple).forEach(el => {
+        el.multiple = false;
+      });
       const selectedOption = this.selectedOptions[0];
       this.value = selectedOption?.value ?? '';
       this.displayLabel = selectedOption?.getTextLabel() ?? '';
@@ -726,9 +1325,41 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     });
   }
 
+  /**
+   * Renders hidden <zn-option> elements for items that are currently selected but not present in
+   * the latest `_fetchedOptions` (e.g. because a remote search narrowed the results). This keeps
+   * them in the DOM so `handleDefaultSlotChange` can find and re-select them.
+   */
+  private _renderSelectedRemoteItems() {
+    if (!this._isRemoteSearch || !this.multiple || this._selectedRemoteItems.length === 0) {
+      return nothing;
+    }
+
+    // Build a set of keys present in the current fetched options
+    const fetchedKeys = new Set<string>();
+    for (const item of this._fetchedOptions) {
+      if (item.group !== undefined) {
+        for (const opt of item.options) fetchedKeys.add(opt.key);
+      } else {
+        fetchedKeys.add(item.key);
+      }
+    }
+
+    // Render hidden options for selected items not in the fetched results
+    return this._selectedRemoteItems
+      .filter(item => !fetchedKeys.has(item.key))
+      .map(item => html`
+        <zn-option value=${item.key} hidden>${item.value}</zn-option>`);
+  }
+
   private handleInvalid(event: Event) {
     this.formControlController.setValidity(false);
     this.formControlController.emitInvalidEvent(event);
+  }
+
+  protected updated(_changedProperties: PropertyValues) {
+    super.updated(_changedProperties);
+    this.updateOptGroupSeparators();
   }
 
   protected firstUpdated(_changedProperties: PropertyValues) {
@@ -736,7 +1367,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
     if (this.distinct !== "") {
       // if we are linked to another zn-data-select remove the selected values from that select from this select
-      const linkedSelect = document.querySelector(`zn-select[id="${this.distinct}"]`) as ZnSelect;
+      const linkedSelect = document.querySelector<ZnSelect>(`zn-select[id="${this.distinct}"]`)!;
       if (linkedSelect) {
         linkedSelect.addEventListener('zn-change', () => {
           const linkedValues = Array.isArray(linkedSelect.value) ? linkedSelect.value : [linkedSelect.value];
@@ -756,30 +1387,10 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
     }
 
-    if (this.conditional !== "") {
-      const ids = this.conditional.split(',').map(id => id.trim());
-      const conditionals: ZnSelect[] = [];
+    this.conditionalController.setup();
 
-      ids.forEach(id => {
-        const elements = deepQuerySelectorAll(`#${id}`, document.documentElement, '') as ZnSelect[];
-        conditionals.push(...elements);
-      });
-
-      const checkConditionals = () => {
-        this.disabled = conditionals.some(select => {
-          let linkedValues = Array.isArray(select.value) ? select.value : [select.value];
-          linkedValues = linkedValues.filter(v => v !== '');
-          return linkedValues.length > 0;
-        });
-      };
-
-      conditionals.forEach(select => {
-        select.addEventListener('zn-change', checkConditionals);
-        select.addEventListener('zn-input', checkConditionals);
-      });
-
-      // trigger the check once to initialize
-      checkConditionals();
+    if (this.dataUri && !this.searchOnly) {
+      this.fetchOptions().then();
     }
 
     this.updateHasInputPrefix();
@@ -788,10 +1399,232 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
   @watch('disabled', {waitUntilFirstUpdate: true})
   handleDisabledChange() {
-    // Close the listbox when the control is disabled
     if (this.disabled) {
+      // Close the listbox and abort any in-progress fetch
       this.open = false;
-      this.handleOpenChange();
+      this.handleOpenChange().then();
+      this._fetchAbortController?.abort();
+      this._fetchAbortController = null;
+      this._fetchLoading = false;
+      this._fetchError = '';
+    } else if (this.dataUri && !this.searchOnly) {
+      // Fetch options when enabled
+      this.fetchOptions().then();
+    }
+  }
+
+  @watch(['dataUri', 'contextData'], {waitUntilFirstUpdate: true})
+  handleSrcChange() {
+    if (this.dataUri && !this.searchOnly) {
+      this.fetchOptions().then();
+    } else {
+      this._fetchedOptions = [];
+      this._fetchLoading = false;
+      this._fetchError = '';
+      this.handleDefaultSlotChange();
+    }
+  }
+
+  private _handleFetchError(message: string) {
+    this._fetchError = message;
+    this._fetchLoading = false;
+    this._fetchAbortController = null;
+    this.emit('zn-error', {detail: {status: 400}});
+  }
+
+  /** Builds the localStorage cache key for a given search query */
+  private _buildCacheKey(searchQuery?: string): string {
+    const base = this.cacheKey || this.dataUri;
+    return searchQuery ? `zn-select-search:${base}:${searchQuery}` : `zn-select-search:${base}`;
+  }
+
+  /** Reads cached results from localStorage */
+  private _readCache(searchQuery?: string): typeof this._fetchedOptions | null {
+    if (!this.cacheKey) return null;
+    try {
+      const raw = localStorage.getItem(this._buildCacheKey(searchQuery));
+      if (raw) return JSON.parse(raw) as typeof this._fetchedOptions;
+    } catch {
+      // Ignore corrupt cache
+    }
+    return null;
+  }
+
+  /** Writes results to localStorage cache */
+  private _writeCache(searchQuery: string | undefined, data: typeof this._fetchedOptions) {
+    if (!this.cacheKey) return;
+    try {
+      localStorage.setItem(this._buildCacheKey(searchQuery), JSON.stringify(data));
+    } catch {
+      // Storage full or unavailable — silently ignore
+    }
+  }
+
+  /**
+   * Parses raw JSON data into the internal fetched-options format.
+   * Applies `maxResults` limiting to flat option arrays.
+   */
+  private _parseOptions(data: unknown): typeof this._fetchedOptions | null {
+    type FetchedOption = { key: string; value: string; group?: undefined };
+    type FetchedGroup = { group: string; options: { key: string; value: string }[] };
+    let options: (FetchedOption | FetchedGroup)[];
+
+    if (Array.isArray(data)) {
+      const isGrouped = data.length > 0 && data.some(
+        (item: unknown) => item && typeof item === 'object' && 'group' in (item as Record<string, unknown>)
+      );
+
+      if (isGrouped) {
+        options = (data as Record<string, unknown>[]).map(item => {
+          if ('group' in item && Array.isArray(item.options)) {
+            return {
+              group: String(item.group),
+              options: item.options as { key: string; value: string }[]
+            } as FetchedGroup;
+          }
+          return item as unknown as FetchedOption;
+        });
+      } else {
+        options = data as FetchedOption[];
+      }
+    } else if (data && typeof data === 'object') {
+      options = Object.entries(data as Record<string, unknown>).map(([key, value]) => ({
+        key,
+        value: String(value)
+      }));
+    } else {
+      return null;
+    }
+
+    // Apply max-results limit to flat (non-grouped) options
+    if (this.maxResults > 0) {
+      let count = 0;
+      const limited: (FetchedOption | FetchedGroup)[] = [];
+      for (const item of options) {
+        if (count >= this.maxResults) break;
+        if (item.group !== undefined) {
+          const remaining = this.maxResults - count;
+          const slicedOpts = item.options.slice(0, remaining);
+          if (slicedOpts.length > 0) {
+            limited.push({group: item.group, options: slicedOpts});
+            count += slicedOpts.length;
+          }
+        } else {
+          limited.push(item);
+          count++;
+        }
+      }
+      options = limited;
+    }
+
+    return options;
+  }
+
+  /** Fetches options from the URL specified by the `data-uri` property. Optionally appends a search query. */
+  async fetchOptions(searchQuery?: string) {
+    if (!this.dataUri || this.disabled) return;
+
+    const isRemoteSearch = !!searchQuery;
+
+    // Check cache first
+    if (this.cacheKey) {
+      const cached = this._readCache(searchQuery);
+      if (cached) {
+        this._fetchedOptions = cached;
+        this._searchLoading = false;
+        this._fetchLoading = false;
+        this._totalResultCount = 0;
+        this._noResultsVisible = cached.length === 0 && isRemoteSearch;
+        this.emit('zn-load');
+        this.updateComplete.then(() => this.handleDefaultSlotChange());
+        return;
+      }
+    }
+
+    this._fetchAbortController?.abort();
+    this._fetchAbortController = new AbortController();
+
+    if (isRemoteSearch) {
+      this._searchLoading = true;
+    } else {
+      this._fetchLoading = true;
+    }
+    this._fetchError = '';
+
+    try {
+      // Build the URL — append search query as a parameter for remote search
+      let url = this.dataUri;
+      if (searchQuery) {
+        const separator = url.includes('?') ? '&' : '?';
+        url = `${url}${separator}${encodeURIComponent(this.searchParam)}=${encodeURIComponent(searchQuery)}`;
+      }
+
+      const response = await fetch(url, {
+        signal: this._fetchAbortController.signal,
+        credentials: 'same-origin',
+        headers: {
+          'x-kx-fetch-style': 'zn-select-options',
+          'x-kx-context-data': this.contextData || ''
+        },
+      });
+
+      if (!response.ok) {
+        this._searchLoading = false;
+        this._handleFetchError(response.statusText || `HTTP ${response.status}`);
+        return;
+      }
+
+      const data: unknown = await response.json();
+
+      // Count raw results before maxResults limiting to determine exhaustiveness
+      const rawCount: number = Array.isArray(data)
+        ? (data as unknown[]).reduce<number>((n, item) => {
+          if (item && typeof item === 'object' && 'group' in (item as Record<string, unknown>)) {
+            const group = item as Record<string, unknown>;
+            return n + (Array.isArray(group.options) ? (group.options as unknown[]).length : 0);
+          }
+          return n + 1;
+        }, 0)
+        : (data && typeof data === 'object') ? Object.keys(data as object).length : 0;
+
+      const options = this._parseOptions(data);
+
+      if (!options) {
+        this._searchLoading = false;
+        this._handleFetchError('Expected JSON array or object of options');
+        return;
+      }
+
+      this._fetchedOptions = options;
+      this._fetchLoading = false;
+      this._searchLoading = false;
+      this._fetchAbortController = null;
+      this._noResultsVisible = options.length === 0 && isRemoteSearch;
+
+      // Track total vs displayed count for truncation indicator
+      this._totalResultCount = this.maxResults > 0 && rawCount > this.maxResults ? rawCount : 0;
+
+      // Track whether the server's result set was exhaustive (returned fewer than the limit).
+      // If so, further refinements of this query can be filtered client-side.
+      // For the initial load (no search query), this tells us if we already have all results.
+      this._lastRemoteQuery = searchQuery ?? '';
+      this._lastRemoteExhaustive = this.maxResults > 0 ? rawCount < this.maxResults : true;
+
+      // Cache the results
+      this._writeCache(searchQuery, options);
+
+      this.emit('zn-load');
+
+      this.updateComplete.then(() => {
+        this.handleDefaultSlotChange();
+      });
+    } catch (error: unknown) {
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        return;
+      }
+
+      this._searchLoading = false;
+      this._handleFetchError(error instanceof Error ? error.message : 'Failed to load options');
     }
   }
 
@@ -830,6 +1663,15 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       // Reset the current option
       this.setCurrentOption(null);
 
+      // When typeable, clear the display input to allow typing and show all options
+      if (this._isTypeable) {
+        this.clearSearch();
+        this.displayInput.value = '';
+        this.displayInput.readOnly = false;
+      }
+
+      this.updateEmptyState();
+
       // Show
       this.emit('zn-show');
       this.addOpenListeners();
@@ -842,6 +1684,13 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       requestAnimationFrame(() => {
         this.setCurrentOption(this.currentOption);
       });
+
+      // Focus the search input so the user can start typing immediately
+      if (this._isTypeable) {
+        requestAnimationFrame(() => {
+          this.displayInput.focus({preventScroll: true});
+        });
+      }
 
       const {keyframes, options} = getAnimation(this, 'select.show', {dir: this.localize.dir()});
       await animateTo(this.popup.popup, keyframes, options);
@@ -856,6 +1705,19 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       // Hide
       this.emit('zn-hide');
       this.removeOpenListeners();
+
+      // When typeable, restore the display label and clear the search
+      if (this._isTypeable) {
+        // Commit any pending free-text before clearing it (blur/close-to-commit). Don't refocus —
+        // the dropdown is closing because focus left the control.
+        if (this.freeText && this._searchDisplayValue.trim()) {
+          this.commitFreeText(false);
+        }
+        this.clearSearch();
+        this.displayInput.readOnly = true;
+        // In multiple mode, tags show the selection so keep the input empty
+        this.displayInput.value = this.multiple ? '' : this.displayLabel;
+      }
 
       await stopAnimations(this);
       const {keyframes, options} = getAnimation(this, 'select.hide', {dir: this.localize.dir()});
@@ -992,6 +1854,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     const hasHelpText = this.helpText ? true : hasHelpTextSlot;
     const hasClearIcon = this.clearable && !this.disabled && this.value.length > 0;
     const isPlaceholderVisible = this.placeholder && this.value.length === 0;
+    const isFetchDisabled = this._fetchLoading || !!this._fetchError;
+    const isDisabled = this.disabled || isFetchDisabled;
 
     return html`
       <div
@@ -1035,7 +1899,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               'select--standard': true,
               'select--pill': this.pill,
               'select--open': this.open,
-              'select--disabled': this.disabled,
+              'select--disabled': isDisabled,
               'select--multiple': this.multiple,
               'select--focused': this.hasFocus,
               'select--placeholder-visible': isPlaceholderVisible,
@@ -1044,7 +1908,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               'select--small': this.size === 'small',
               'select--medium': this.size === 'medium',
               'select--large': this.size === 'large',
-              'select--has-input-prefix': this.inputPrefix
+              'select--has-input-prefix': this.inputPrefix,
+              'select--search': this._isTypeable
             })}
             placement=${this.placement}
             strategy=${this.hoist ? 'fixed' : 'absolute'}
@@ -1068,23 +1933,25 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                 part="display-input"
                 class="select__display-input"
                 type="text"
-                placeholder=${this.placeholder}
-                .disabled=${this.disabled}
-                .value=${this.displayLabel}
+                placeholder=${this._fetchLoading ? 'Loading...' : this._fetchError ? this._fetchError : (this._isTypeable && this.open ? (this.multiple ? (this.selectedOptions.length ? '' : (this.placeholder || 'Search...')) : (this.displayLabel || this.placeholder || 'Search...')) : this.placeholder)}
+                .disabled=${isDisabled}
+                .value=${isFetchDisabled ? '' : (this._isTypeable && this.open) ? this._searchDisplayValue : (this._isTypeable && this.multiple) ? '' : this.displayLabel}
                 autocomplete="off"
                 spellcheck="false"
                 autocapitalize="off"
-                readonly
+                ?readonly=${!(this._isTypeable && this.open)}
                 aria-controls="listbox"
                 aria-expanded=${this.open ? 'true' : 'false'}
                 aria-haspopup="listbox"
                 aria-labelledby="label"
-                aria-disabled=${this.disabled ? 'true' : 'false'}
+                aria-disabled=${isDisabled ? 'true' : 'false'}
                 aria-describedby="help-text"
+                aria-autocomplete=${this._isTypeable ? 'list' : 'none'}
                 role="combobox"
                 tabindex="0"
                 @focus=${this.handleFocus}
                 @blur=${this.handleBlur}
+                @input=${this.handleSearchInput}
               />
 
               ${this.multiple ? html`
@@ -1093,7 +1960,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               <input
                 class="select__value-input"
                 type="text"
-                disabled=${this.disabled || nothing}
+                disabled=${isDisabled || nothing}
                 required=${this.required || nothing}
                 value=${Array.isArray(this.value) ? this.value.join(', ') : this.value}
                 tabindex="-1"
@@ -1101,6 +1968,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                 @focus=${() => this.focus()}
                 @invalid=${this.handleInvalid}
               />
+
+              <slot part="suffix" name="suffix" class="select__suffix"></slot>
 
               ${hasClearIcon
                 ? html`
@@ -1113,14 +1982,22 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                     @click=${this.handleClearClick}
                     tabindex="-1">
                     <slot name="clear-icon">
-                      <zn-icon src="cancel"></zn-icon>
+                      <zn-icon src="circle-x@lu" size="20"></zn-icon>
                     </slot>
                   </button>`
                 : ''}
 
-              <slot name="expand-icon" part="expand-icon" class="select__expand-icon">
-                <zn-icon src="keyboard_arrow_down"></zn-icon>
-              </slot>
+              ${this._fetchLoading
+                ? html`
+                  <zn-icon src="progress_activity" class="select__expand-icon select__spinner"></zn-icon>`
+                : this._fetchError
+                  ? html`
+                    <zn-icon src="error" class="select__expand-icon select__fetch-error-icon"></zn-icon>`
+                  : html`
+                    <slot name="expand-icon" part="expand-icon" class="select__expand-icon">
+                      <zn-icon src="keyboard_arrow_down"></zn-icon>
+                    </slot>`
+              }
             </div>
 
             <div
@@ -1134,7 +2011,58 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               tabindex="-1"
               @mouseup=${this.handleOptionClick}
               @slotchange=${this.handleDefaultSlotChange}>
+              ${this._freeTextAddValue !== null
+                ? html`
+                  <div
+                    part="add-option"
+                    class=${classMap({
+                      'select__add-option': true,
+                      'select__add-option--current': this._addOptionActive
+                    })}
+                    role="option"
+                    aria-selected=${this._addOptionActive ? 'true' : 'false'}
+                    @mousedown=${this.handleAddOptionMouseDown}>
+                    Add "${this._freeTextAddValue}"
+                  </div>`
+                : nothing}
               <slot></slot>
+              ${this._renderSelectedRemoteItems()}
+              ${this._fetchedOptions.map(item =>
+                item.group !== undefined
+                  ? html`
+                    <zn-opt-group label=${item.group}>
+                      ${item.options.map(
+                        option => html`
+                          <zn-option value=${option.key}>${option.value}</zn-option>`
+                      )}
+                    </zn-opt-group>`
+                  : html`
+                    <zn-option value=${item.key}>${item.value}</zn-option>`
+              )}
+              ${this._totalResultCount > 0
+                ? html`
+                  <div part="max-results-indicator" class="select__max-results-indicator">
+                    Showing ${this.maxResults} of ${this._totalResultCount} results — refine your search for more
+                  </div>`
+                : nothing
+              }
+              ${this._searchLoading
+                ? html`
+                  <div part="search-loading" class="select__search-loading">
+                    <zn-icon src="progress_activity" class="select__spinner"></zn-icon>
+                    Searching...
+                  </div>`
+                : this.searchOnly && this._fetchedOptions.length === 0 && !this._searchQuery
+                  ? html`
+                    <div part="empty-state" class="select__empty-state">
+                      Type to search...
+                    </div>`
+                  : html`
+                    <div part="empty-state" class="select__empty-state"
+                         ?hidden=${!this._noResultsVisible || this._freeTextAddValue !== null}>
+                      ${this.emptyStateText}
+                    </div>`
+              }
             </div>
           </zn-popup>
         </div>

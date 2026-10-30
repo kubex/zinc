@@ -161,6 +161,18 @@ This option can be combined with the `horizontal` attribute.
 :::tip
 When [radios](/components/radio) are wrapped with the Radio Group, adding the `contained` attribute to the
 parent Radio Group or to _any_ radio in the group will create `contained` radios for the entire group.
+
+Contained radios can also render as richer [selection cards](/components/radio#selection-cards) with an image, title,
+description, and positioned indicator. The radio group continues to manage their single selection, validation,
+keyboard navigation, and submitted form value.
+
+Contained radios are rounded by default; add `square` to the group to square off every radio in it. With
+`horizontal`, cards in a row are given equal height, and `--zn-radio-group-column-width` (default `152px`) sets the
+minimum column width used by the grid.
+
+Add `wrap` to lay the radios out as a wrapping row instead of an equal-width grid: each card starts from
+`--zn-radio-group-column-width` and grows to fill its line, and setting that property to `auto` sizes every card from
+its own content.
 :::
 
 ### Disabling Options
@@ -298,10 +310,10 @@ You can control the radio group programmatically using its methods and propertie
   </zn-radio-group>
 
   <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-    <zn-button id="focus-btn" size="small">Focus</zn-button>
-    <zn-button id="set-value-btn" size="small">Set Value to Option 3</zn-button>
-    <zn-button id="check-validity-btn" size="small">Check Validity</zn-button>
-    <zn-button id="get-form-btn" size="small">Get Form</zn-button>
+    <zn-button id="focus-btn">Focus</zn-button>
+    <zn-button id="set-value-btn">Set Value to Option 3</zn-button>
+    <zn-button id="check-validity-btn">Check Validity</zn-button>
+    <zn-button id="get-form-btn">Get Form</zn-button>
   </div>
 </div>
 

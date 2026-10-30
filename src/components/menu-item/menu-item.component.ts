@@ -47,6 +47,10 @@ export default class ZnMenuItem extends ZincElement {
   /** The type of menu item to render. To use `checked`, this value must be set to `checkbox`. */
   @property() type: 'normal' | 'checkbox' = 'normal';
 
+  /** The item's visual style. A standalone item defaults to navigation styling;
+   * a parent zn-menu sets this to `dropdown` or `shell` automatically. */
+  @property({reflect: true}) variant: 'default' | 'dropdown' | 'shell' = 'default';
+
   /** Draws the item in a checked state. */
   @property({type: Boolean, reflect: true}) checked = false;
 
@@ -77,6 +81,9 @@ export default class ZnMenuItem extends ZincElement {
   @property({attribute: 'gaid'}) gaid: string;
 
   @property({type: Boolean, reflect: true}) confirm = false;
+
+  /** Leaves a containing dropdown open when this item is selected, whatever the dropdown's own setting. */
+  @property({type: Boolean, reflect: true, attribute: 'keep-open'}) keepOpen = false;
 
   /** Removes all padding from the menu item. */
   @property({type: Boolean, reflect: true}) flush = false;
@@ -137,7 +144,10 @@ export default class ZnMenuItem extends ZincElement {
       const closestMenu: Element | null = composedPath.find((el: Element) => el?.getAttribute?.('role') === 'menu') as Element;
       if (this.confirm) return;
 
-      (closestMenu?.closest('zn-dropdown') as ZnDropdown | null)?.hide();
+      const dropdown = closestMenu?.closest('zn-dropdown') as ZnDropdown | null;
+      if (!dropdown?.stayOpenOnSelect && !this.keepOpen) {
+        dropdown?.hide();
+      }
       this.emit('zn-menu-select', {detail: {value: this.value, element: this}});
     }
   };
@@ -235,7 +245,7 @@ export default class ZnMenuItem extends ZincElement {
         ?aria-expanded="${isSubmenuExpanded}">
         ${this.checkedPosition === 'left' ? html`
           <span part="checked-icon" class="menu-item__check">
-            <zn-icon src="check_small" aria-hidden="true"></zn-icon>
+            <zn-icon src="check@lu" size="18" aria-hidden="true"></zn-icon>
           </span>` : ''}
 
         <slot name="prefix" part="prefix" class="menu-item__prefix"></slot>
@@ -246,11 +256,11 @@ export default class ZnMenuItem extends ZincElement {
 
         ${this.checkedPosition === 'right' ? html`
           <span part="checked-icon" class="menu-item__check">
-            <zn-icon src="check_small" aria-hidden="true"></zn-icon>
+            <zn-icon src="check@lu" size="18" aria-hidden="true"></zn-icon>
           </span>` : ''}
 
         <span part="submenu-icon" class="menu-item__chevron">
-          <zn-icon src=${isRtl ? 'chevron_left' : 'chevron_right'} aria-hidden="true"></zn-icon>
+          <zn-icon src=${isRtl ? 'chevron_left' : 'chevron_right'} size="18" aria-hidden="true"></zn-icon>
         </span>
 
         ${this.submenuController.renderSubmenu()}

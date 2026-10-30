@@ -1,6 +1,6 @@
-import {LitElement} from "lit";
+import {LitElement, type PropertyValues} from "lit";
+import {modeSignal, SignalWatcher, themeSignal} from "./theme";
 import {property} from "lit/decorators.js";
-import {ThemeController} from "./theme";
 import type {
   EventTypeDoesNotRequireDetail,
   EventTypeRequiresDetail,
@@ -10,11 +10,26 @@ import type {
   ValidEventTypeMap,
   ZincEventInit
 } from "./event";
+import type {SignalWatcherApi} from "@lit-labs/signals";
 
-export default class ZincElement extends LitElement {
+type Constructor<T = NonNullable<unknown>> = new (...args: any[]) => T;
+
+const ZincElementBase: typeof LitElement & Constructor<SignalWatcherApi> = SignalWatcher(LitElement);
+
+export default class ZincElement extends ZincElementBase {
   @property() dir: string; // LTR or RTL direction
   @property() lang: string; // Language
-  @property({reflect: true}) t: string; // Theme (light or dark)
+  @property({reflect: true}) t: string; // Theme family (base, aura, ...)
+  @property({reflect: true}) m: string; // Rendered mode (light or dark)
+
+  protected override willUpdate(changed: PropertyValues): void {
+    // Reading these signals here subscribes this component to theme changes via
+    // the SignalWatcher mixin. The reflected attributes keep CSS selectors like
+    // `[m="dark"]` and `:host-context([t="aura"])` working inside shadow roots.
+    this.t = themeSignal.get();
+    this.m = modeSignal.get();
+    super.willUpdate(changed);
+  }
 
   static define(name: string, elementConstructor = this, options: ElementDefinitionOptions = {}) {
     const currentRegisteredConstructor = customElements.get(name) as
@@ -54,10 +69,6 @@ export default class ZincElement extends LitElement {
   constructor() {
     super();
 
-    // All Zinc components should have a theme controller  /
-    /* eslint-disable no-new */
-    new ThemeController(this);
-
     // Make sure we have access to all dependencies and they are defined
     Object.entries((this.constructor as typeof ZincElement).dependencies).forEach(([name, component]) => {
       (this.constructor as typeof ZincElement).define(name, component);
@@ -91,6 +102,7 @@ export interface ZincFormControl extends ZincElement {
   defaultValue?: unknown;
   defaultChecked?: boolean;
   form?: string;
+  storeKey?: string;
 
   // Constraint validation attributes
   pattern?: string;

@@ -1,6 +1,8 @@
-import {type CSSResultGroup, html, unsafeCSS, PropertyValues} from 'lit';
-import ZincElement from '../../internal/zinc-element';
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property, query} from "lit/decorators.js";
+import {ResizeController} from '@lit-labs/observers/resize-controller.js';
+import ZincElement from '../../internal/zinc-element';
 
 import styles from './scroll-container.scss';
 
@@ -19,10 +21,13 @@ import styles from './scroll-container.scss';
  *
  * @csspart base - The component's base wrapper.
  *
- * @cssproperty --example - An example CSS custom property.
+ * @cssproperty --zn-scroll-container-height - The height and maximum height of the scroll container.
  */
 export default class ZnScrollContainer extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
+
+  /** The height and maximum height of the scroll container. */
+  @property({type: String}) height = '';
 
   @property({attribute: 'start-scrolled', type: Boolean, reflect: true}) startScrolled: boolean = false;
 
@@ -32,6 +37,9 @@ export default class ZnScrollContainer extends ZincElement {
   @query('.scroll-footer')
   private footer: HTMLElement;
 
+  private _footerObserved: boolean = false;
+  private _footerHeightFrame: number | null = null;
+
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
     if (this.startScrolled && this.container) {
@@ -39,35 +47,67 @@ export default class ZnScrollContainer extends ZincElement {
     }
   }
 
-  scrollEnd() {
-    this.container.scrollTop = this.container.scrollHeight;
-  }
-
-  private _footerResizeObserver?: ResizeObserver;
-
-  connectedCallback() {
-    super.connectedCallback();
-    if (this.startScrolled) {
-      const observer = new MutationObserver(() => {
-        setTimeout(this.scrollEnd.bind(this), 100);
-        if (this.footer) {
-          // Initialize height immediately
-          this.style.setProperty('--zn-scroll-footer-height', `${this.footer.clientHeight}px`);
-          // Attach ResizeObserver to watch for size changes
-          this._footerResizeObserver = new ResizeObserver(() => {
-            this.style.setProperty('--zn-scroll-footer-height', `${this.footer?.clientHeight ?? 0}px`);
-          });
-          this._footerResizeObserver.observe(this.footer);
-        }
-      });
-      observer.observe(this, {childList: true, subtree: true});
+  protected updated(changedProperties: PropertyValues) {
+    super.updated(changedProperties);
+    if (changedProperties.has('height')) {
+      if (this.height) {
+        this.style.setProperty('--zn-scroll-container-height-property', this.height);
+      } else {
+        this.style.removeProperty('--zn-scroll-container-height-property');
+      }
     }
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this._footerResizeObserver?.disconnect();
-    this._footerResizeObserver = undefined;
+    if (this._footerHeightFrame !== null) {
+      cancelAnimationFrame(this._footerHeightFrame);
+      this._footerHeightFrame = null;
+    }
+  }
+
+  scrollEnd() {
+    this.container.scrollTop = this.container.scrollHeight;
+  }
+
+  private _syncFooterHeight() {
+    if (this._footerHeightFrame !== null) {
+      return;
+    }
+    this._footerHeightFrame = requestAnimationFrame(() => {
+      this._footerHeightFrame = null;
+      const height = `${this.footer?.clientHeight ?? 0}px`;
+      if (this.style.getPropertyValue('--zn-scroll-footer-height') !== height) {
+        this.style.setProperty('--zn-scroll-footer-height', height);
+      }
+    });
+  }
+
+  private readonly _footerResizeObserver = new ResizeController(this, {
+    target: null,
+    callback: () => this._syncFooterHeight(),
+  });
+
+  private readonly _domObserver = new MutationController(this, {
+    target: null,
+    config: {childList: true, subtree: true},
+    callback: () => {
+      setTimeout(() => this.scrollEnd(), 100);
+      if (this.footer) {
+        this._syncFooterHeight();
+        if (!this._footerObserved) {
+          this._footerObserved = true;
+          this._footerResizeObserver.observe(this.footer);
+        }
+      }
+    },
+  });
+
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.startScrolled) {
+      this._domObserver.observe(this);
+    }
   }
 
   render() {

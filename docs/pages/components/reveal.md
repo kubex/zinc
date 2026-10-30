@@ -149,6 +149,22 @@ Without a duration or with hover, the content is revealed only while hovering an
 </p>
 ```
 
+### Disabling Click Toggle
+
+Add the `no-toggle` attribute to disable click-to-toggle entirely — the value is only revealed on hover. Clicks still
+bubble, so a parent component can handle them (this is how [`zn-inline-edit`](/components/inline-edit#masked-values)
+uses click to enter edit mode).
+
+```html:preview
+<zn-reveal no-toggle
+           initial="j***@example.com"
+           revealed="john.doe@example.com">
+</zn-reveal>
+<p style="font-size: 0.875rem; color: var(--zn-color-neutral-600); margin-top: 0.5rem;">
+  Hover to reveal — clicking does nothing
+</p>
+```
+
 ### Click and Hover Combined
 
 When duration is set, clicking toggles temporarily while hovering still works. After clicking, the content remains revealed for the duration, and hovering won't hide it until the duration expires.

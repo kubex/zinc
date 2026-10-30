@@ -9,7 +9,6 @@ layout: component
 
 <div style="background-color: #f5f5f5; padding: 20px;">
   <zn-header caption="John Jones"
-             description="This is the Description of the header"
              previous-path="#"
              navigation="[{&quot;path&quot;:&quot;#&quot;,&quot;title&quot;:&quot;Dashboard&quot;},{&quot;path&quot;:&quot;#&quot;,&quot;title&quot;:&quot;Another&quot;}]">
     <zn-icon round src="test1@example.com" size="36"></zn-icon>
@@ -20,7 +19,20 @@ layout: component
 </div>
 ```
 
+The breadcrumb slot renders inline with the page title — each slotted link is followed by a `>` separator and the `caption` becomes the final, unlinked item in the trail. Set `hide-breadcrumb` to suppress the trail and show only the title.
+
 ## Examples
+
+### Hide breadcrumb
+
+```html:preview
+<div style="background-color: #f5f5f5; padding: 20px;">
+  <zn-header caption="John Jones" hide-breadcrumb>
+    <a href="#" slot="breadcrumb">Dashboard</a>
+    <a href="#" slot="breadcrumb">Another</a>
+  </zn-header>
+</div>
+```
 
 ### Simple Header
 
@@ -34,14 +46,14 @@ layout: component
 
 ```html:preview
 <div style="background-color: #f5f5f5; padding: 20px;">
-  <zn-header caption="John Jones" description="This is the description of the header"></zn-header>
+  <zn-header caption="John Jones"></zn-header>
 </div>
 ```
 ### Simple Header with Icon
 
 ```html:preview
 <div style="background-color: #f5f5f5; padding: 20px;">
-  <zn-header icon="person" caption="John Jones" description="This is the description of the header"></zn-header>
+  <zn-header icon="person" caption="John Jones"></zn-header>
 </div>
 ```
 
@@ -50,7 +62,7 @@ layout: component
 
 ```html:preview
 <div style="background-color: #f5f5f5; padding: 20px;">
-  <zn-header caption="John Jones" description="This is the description of the header">
+  <zn-header caption="John Jones">
   <zn-button-menu slot="actions">
     <zn-button primary>Something sdf</zn-button>
     <zn-button >sd</zn-button>
@@ -72,7 +84,7 @@ layout: component
 
 ```html:preview
 <div style="background-color: #f5f5f5; padding: 20px;">
-  <zn-header caption="John Jones" description="This is the description of the header">
+  <zn-header caption="John Jones">
   <zn-button-menu slot="actions">
     <zn-button primary>Something sdf</zn-button>
     <zn-button >sd</zn-button>
@@ -106,5 +118,4 @@ layout: component
 </zn-header>
 </div>
 ```
-
 

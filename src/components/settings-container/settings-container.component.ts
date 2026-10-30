@@ -1,6 +1,7 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {deepQuerySelectorAll} from "../../utilities/query";
+import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property, state} from "lit/decorators.js";
 import {Store} from "../../internal/storage";
 import {type ZnChangeEvent} from "../../events/zn-change";
@@ -14,6 +15,7 @@ interface SettingsContainerFilter {
   checked: boolean;
   label: string;
   itemSelector?: string;
+  toggleAttribute?: string;
 }
 
 /**
@@ -24,10 +26,13 @@ interface SettingsContainerFilter {
  *
  * @dependency zn-example
  *
- * @event zn-event-name - Emitted as an example.
+ * @event zn-show - Emitted when the pull tab panel opens.
+ * @event zn-hide - Emitted when the pull tab panel closes.
  *
  * @slot - The default slot.
- * @slot example - An example slot.
+ * @slot filter - Filter definitions used to toggle visibility of content.
+ * @slot dropdown-content - Custom content for the settings panel.
+ * @slot tab - Extra content rendered inside the pull tab next to the chevron.
  *
  * @csspart base - The component's base wrapper.
  *
@@ -42,8 +47,26 @@ export default class ZnSettingsContainer extends ZincElement {
 
   @property({attribute: 'store-key'}) storeKey: string;
   @property({attribute: 'no-scroll'}) noScroll: boolean;
+  @property({attribute: 'pull-tab', type: Boolean, reflect: true}) pullTab = false;
+  @property({type: Boolean, reflect: true}) open = false;
 
-  private _mutationObserver: MutationObserver | null = null;
+  @state() private panelExpanded = false;
+
+  private readonly _mutationObserver = new MutationController(this, {
+    target: null,
+    config: {childList: true, subtree: true, attributes: true},
+    callback: mutations => {
+      for (const mutation of mutations) {
+        if (mutation.type === 'attributes' &&
+          (mutation.attributeName === 'hidden' ||
+            this.filters.some(f => f.toggleAttribute === mutation.attributeName))) {
+          continue;
+        }
+        this.scheduleUpdateFilters();
+        break;
+      }
+    },
+  });
 
   private _updateFiltersScheduled = false;
 
@@ -72,25 +95,42 @@ export default class ZnSettingsContainer extends ZincElement {
 
     this.updateFilters();
 
-    this._mutationObserver = new MutationObserver(mutations => {
-      for (const mutation of mutations) {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'hidden') {
-          continue;
-        }
-        this.scheduleUpdateFilters();
-        break;
-      }
-    });
-    this._mutationObserver.observe(this, {childList: true, subtree: true, attributes: true});
+    this._mutationObserver.observe(this);
   }
 
   disconnectedCallback() {
+    document.removeEventListener('mousedown', this.handleDocumentMouseDown, true);
     super.disconnectedCallback();
-    if (this._mutationObserver) {
-      this._mutationObserver.disconnect();
-      this._mutationObserver = null;
-    }
   }
+
+  private handleDocumentMouseDown = (e: MouseEvent) => {
+    if (!this.open) return;
+    const pullTab = this.shadowRoot?.querySelector('.pull-tab');
+    if (pullTab && e.composedPath().includes(pullTab)) return;
+    this.hidePullTab();
+  };
+
+  private togglePullTab = () => {
+    if (this.open) {
+      this.hidePullTab();
+    } else {
+      this.open = true;
+      document.addEventListener('mousedown', this.handleDocumentMouseDown, true);
+      this.emit('zn-show');
+    }
+  };
+
+  private hidePullTab() {
+    this.open = false;
+    this.panelExpanded = false;
+    document.removeEventListener('mousedown', this.handleDocumentMouseDown, true);
+    this.emit('zn-hide');
+  }
+
+  private handlePanelTransitionEnd = (e: TransitionEvent) => {
+    if (e.propertyName !== 'grid-template-rows') return;
+    this.panelExpanded = this.open;
+  };
 
   // Debounced scheduling to avoid excessive updates on rapid DOM mutations
   private scheduleUpdateFilters() {
@@ -122,7 +162,8 @@ export default class ZnSettingsContainer extends ZincElement {
       const checked = existingChecked.has(attribute) ? !!existingChecked.get(attribute) : defaultChecked;
       const label = filter.textContent || 'Unnamed Filter';
       const itemSelector = filter.getAttribute('item-selector') || '*';
-      nextFilters.push({attribute, checked, label, itemSelector});
+      const toggleAttribute = filter.getAttribute('toggle-attribute') || undefined;
+      nextFilters.push({attribute, checked, label, itemSelector, toggleAttribute});
     });
     this.filters = nextFilters;
   }
@@ -136,9 +177,18 @@ export default class ZnSettingsContainer extends ZincElement {
       items = this.querySelectorAll(filter.itemSelector + attrAppend);
     }
     items.forEach(item => {
+      if (filter.toggleAttribute) {
+        if (checked) {
+          item.removeAttribute(filter.toggleAttribute);
+        } else {
+          item.setAttribute(filter.toggleAttribute, 'true');
+        }
+        return;
+      }
+
       if (checked) {
         const shouldStayHidden = this.filters.some(f => {
-          if (f.attribute === filter.attribute || f.checked) return false;
+          if (f.attribute === filter.attribute || f.checked || f.toggleAttribute) return false;
           const fAttrAppend = f.attribute === "*" ? `` : `[${f.attribute}]`;
           let fItems;
           if (f.itemSelector && f.itemSelector.startsWith('>')) {
@@ -225,15 +275,39 @@ export default class ZnSettingsContainer extends ZincElement {
         <div class="scroll-content">
           <slot @slotchange="${this.handleContentSlotChange}"></slot>
         </div>
-        <zn-dropdown placement="${placement}" class="${classMap({
-          'setting-container__dropdown': true,
-          [`setting-container__dropdown--${this.position}`]: true,
-        })}">
-          <zn-icon class="setting-container__toggle-button" slot="trigger" size="24" src="settings" round></zn-icon>
-          ${this.getDropdownContent()}
-        </zn-dropdown>
+        ${this.pullTab ? this.renderPullTab() : html`
+          <zn-dropdown placement="${placement}" class="${classMap({
+            'setting-container__dropdown': true,
+            [`setting-container__dropdown--${this.position}`]: true,
+          })}">
+            <zn-icon class="setting-container__toggle-button" slot="trigger" size="24" src="settings" round></zn-icon>
+            ${this.getDropdownContent()}
+          </zn-dropdown>`}
       </div>
     `;
+  }
+
+  private renderPullTab() {
+    return html`
+      <div class="${classMap({
+        'pull-tab': true,
+        'pull-tab--open': this.open,
+        'pull-tab--expanded': this.panelExpanded,
+      })}">
+        <div class="pull-tab__panel" @transitionend="${this.handlePanelTransitionEnd}">
+          <div class="pull-tab__panel-content">
+            ${this.getDropdownContent()}
+          </div>
+        </div>
+        <button class="pull-tab__tab"
+                type="button"
+                aria-expanded="${this.open ? 'true' : 'false'}"
+                aria-label="Settings"
+                @click="${this.togglePullTab}">
+          <slot name="tab"></slot>
+          <zn-icon src="${this.open ? 'chevron-up@lu' : 'chevron-down@lu'}" size="20"></zn-icon>
+        </button>
+      </div>`;
   }
 
   private getDropdownContent() {

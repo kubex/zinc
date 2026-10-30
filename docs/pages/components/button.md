@@ -64,18 +64,6 @@ Use the `color` attribute to set the button's color.
 <zn-button color="transparent">Transparent</zn-button>
 ```
 
-### Sizes
-
-Use the `size` attribute to set the button's size.
-
-```html:preview
-<zn-button size="content">Content</zn-button>
-<zn-button size="x-small">X Small</zn-button>
-<zn-button size="small">Small</zn-button>
-<zn-button size="medium">Medium</zn-button>
-<zn-button size="large">Large</zn-button>
-```
-
 ### Outline
 
 Use the `outline` attribute to set the button's outline.
@@ -129,6 +117,46 @@ Buttons can be used with just an icon and no text by omitting the button label.
 <zn-button icon="add" color="info"></zn-button>
 ```
 
+An icon-only button has no text for assistive technology to read, so give it a name
+with the `label` attribute. A `tooltip` is used as the name when no `label` is set,
+which covers most icon-only buttons without extra markup.
+
+```html:preview
+<zn-button icon="settings" label="Settings"></zn-button>
+<zn-button icon="delete" color="error" tooltip="Delete"></zn-button>
+```
+
+### Icon Buttons
+
+Use `icon-button` to render a chromed icon button: a 40x36 white button with a border, a 6px radius, and a centred 20px icon. Pass `small` for the 36x36 variant or `round` for a 36x36 circle on the tab tint. The icon button style takes precedence over color variants like `secondary` — the `color` attribute only tints the icon.
+
+```html:preview
+<zn-button icon-button icon="inventory_2"></zn-button>
+<zn-button icon-button="small" icon="inventory_2"></zn-button>
+<zn-button icon-button="round" icon="search"></zn-button>
+<zn-button icon-button icon="favorite" color="error"></zn-button>
+<zn-button icon-button icon="check" color="success"></zn-button>
+```
+
+### Plain Icon Buttons
+
+Add `plain` to remove the white background and border while keeping the button's size, for quiet inline actions. Hovering tints the background with the tab colour; add `no-hover` to suppress that too, for placements where the tint doesn't fit (e.g. on an already-tinted surface).
+
+```html:preview
+<zn-button icon-button plain icon="settings"></zn-button>
+<zn-button icon-button="small" plain icon="close" color="error" tooltip="Remove"></zn-button>
+<zn-button icon-button plain no-hover icon="close" color="error" tooltip="Remove Note"></zn-button>
+```
+
+### Icon Library
+
+Use `icon-library` to load the button's icon from a different icon library, passed through to the nested `zn-icon`.
+
+```html:preview
+<zn-button icon-button icon="flag" icon-library="lucide"></zn-button>
+<zn-button icon="rocket" icon-library="lucide">Launch</zn-button>
+```
+
 ### Icon Position
 
 Use the `icon-position` attribute to control whether the icon appears before or after the button text.
@@ -157,6 +185,15 @@ Use the `square` attribute to create square-shaped buttons, useful for icon-only
 <zn-button icon="edit" square color="info"></zn-button>
 <zn-button icon="save" square color="success"></zn-button>
 <zn-button icon="close" square color="error"></zn-button>
+```
+
+### Pill Buttons
+
+Use the `pill` attribute for a label-like trigger rather than an action: fully rounded, sentence case and regular weight, so it reads as a value you can change rather than a command. Used for the filter chips in `zn-data-table-filter`.
+
+```html:preview
+<zn-button pill panel-bg icon="chevron-down@lu" icon-position="right">Role</zn-button>
+<zn-button pill panel-bg icon="chevron-down@lu" icon-position="right">Status: Active</zn-button>
 ```
 
 ### Grow
@@ -197,7 +234,8 @@ Use `muted-notifications` for a subtle notification style.
 
 ### Tooltip
 
-Use the `tooltip` attribute to add a tooltip to the button.
+Use the `tooltip` attribute to add a tooltip to the button. On a button with no text,
+the tooltip also becomes the accessible name — see [Icon-Only Buttons](#icon-only-buttons).
 
 ```html:preview
 <zn-button icon="info" tooltip="This button provides additional information"></zn-button>

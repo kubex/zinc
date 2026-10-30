@@ -10,6 +10,8 @@
   position: relative;
   min-width: var(--zn-spacing-small-panel);
   flex-basis: var(--zn-panel-basis);
+  --zn-page-surface-background: var(--zn-panel);
+  --zn-active-nav-background: var(--zn-panel);
 }
 
 
@@ -17,18 +19,17 @@
   position: relative;
   border: 1px solid rgb(var(--zn-border-color));
   display: flex;
-  border-radius: var(--zn-border-radius-large);
+  border-radius: var(--zn-border-radius);
   flex-direction: column;
   flex-grow: 1;
   flex-basis: var(--zn-spacing-small-panel);
   width: 100%;
   background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
-  margin-bottom: 3px;
 
   &__inner {
     overflow: hidden;
     display: flex;
-    border-radius: var(--zn-border-radius-large);
+    border-radius: var(--zn-border-radius);
     flex-direction: column;
     flex-grow: 1;
   }
@@ -40,30 +41,19 @@
     position: relative;
   }
 
-  &__sidebar {
-    display: none;
-    flex: 0 0 auto;
-    width: 250px;
-    position: relative;
-    overflow: hidden;
-    transition: width 0.3s ease;
-  }
-
-  &__sidebar-inner {
-    width: 250px;
-    height: 100%;
-    overflow-y: auto;
-    background-color: rgb(var(--zn-panel-secondary));
-    padding: var(--zn-spacing-medium);
-    border-top: 1px solid rgb(var(--zn-border-color));
-    border-right: 1px solid rgb(var(--zn-border-color));
-    border-radius: 0 var(--zn-border-radius-large);
-  }
 
   &__header {
-    padding: var(--zn-spacing-x-small) var(--zn-spacing-medium);
+    padding: var(--zn-panel-header-padding, var(--zn-base-gap));
+
+    // background-color: rgba(var(--zn-panel-highlight), 0.6);
+    // border-bottom: 1px solid rgb(var(--zn-border-color));
 
     &::part(base) {
+      border-bottom: 0;
+      overflow: visible;
+    }
+
+    &--inline {
       border-bottom: 0;
     }
 
@@ -81,7 +71,7 @@
     flex-direction: column;
     overflow-y: auto;
     flex-grow: 1;
-    padding: 0 var(--zn-spacing-medium) var(--zn-spacing-medium);
+    padding: var(--zn-base-gap);
 
     > :not([hidden]) ~ :not([hidden]) {
       border: 1px solid rgb(var(--zn-border-color));
@@ -91,10 +81,10 @@
   &__footer {
     font-size: var(--zn-font-size-small);
     display: block;
-    padding: var(--zn-spacing-small) var(--zn-spacing-medium);
-    background: rgb(var(--zn-panel-secondary));
-    border-bottom-left-radius: var(--zn-border-radius-large);
-    border-bottom-right-radius: var(--zn-border-radius-large);
+    padding: var(--zn-panel-footer-padding, var(--zn-spacing-small) var(--zn-base-gap));
+    background: rgb(var(--zn-body));
+    border-bottom-left-radius: var(--zn-border-radius);
+    border-bottom-right-radius: var(--zn-border-radius);
   }
 
   &--tabbed .panel__body {
@@ -116,21 +106,15 @@
     }
   }
 
-  &:before {
-    position: absolute;
-    content: '';
-    bottom: -3px;
-    left: 0;
-    right: 0;
-    height: 20px;
-    background-color: rgb(var(--zn-shadow));
-    border-radius: var(--zn-border-radius-large);
-    z-index: -1;
+
+  &.panel--borderless-header:not(.panel--flush, .panel--flush-y) &__body {
+    padding-top: 0;
   }
 
-
-  &:not(.panel--has-header):not(.panel--flush, .panel--flush-y) &__body {
-    padding-top: var(--zn-spacing-medium);
+  &--empty {
+    .panel__body {
+      padding: 0;
+    }
   }
 
   &--flush {
@@ -157,10 +141,33 @@
     }
   }
 
+  // Nothing visible to clip to, so leave room for the focus ring of a control sitting flush against the edge.
+  // The body scrolls, so it can't take a clip margin — it gets a gutter cancelled by a negative margin instead.
   &--transparent {
     .panel__header {
       padding-left: 0;
       padding-right: 0;
+    }
+
+    .panel__inner,
+    .panel__content {
+      overflow: clip;
+      overflow-clip-margin: var(--zn-focus-ring-outset);
+    }
+
+    &.panel--flush .panel__body {
+      padding: var(--zn-focus-ring-outset);
+      margin: calc(var(--zn-focus-ring-outset) * -1);
+    }
+
+    &.panel--flush-x .panel__body {
+      padding-inline: var(--zn-focus-ring-outset);
+      margin-inline: calc(var(--zn-focus-ring-outset) * -1);
+    }
+
+    &.panel--flush-y .panel__body {
+      padding-block: var(--zn-focus-ring-outset);
+      margin-block: calc(var(--zn-focus-ring-outset) * -1);
     }
   }
 
@@ -172,27 +179,4 @@
     box-shadow: 0 6px 20px 10px rgba(0, 0, 0, 0.25);
   }
 
-  &--has-sidebar {
-    .panel__sidebar {
-      display: block;
-    }
-  }
-
-  &--sidebar-right {
-    .panel__content {
-      flex-direction: row-reverse;
-    }
-
-    .panel__sidebar-inner {
-      border-right: none;
-      border-left: 1px solid rgb(var(--zn-border-color));
-      border-radius: var(--zn-border-radius-large) 0 0 0;
-    }
-  }
-
-  &--sidebar-collapsed {
-    .panel__sidebar {
-      width: 0;
-    }
-  }
 }

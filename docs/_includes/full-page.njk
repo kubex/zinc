@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" data-layout="full-page" data-zinc-version="{{ meta.version }}">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="{{ meta.description }}"/>
+  <title>{{ meta.title }}</title>
+
+  {# Zinc #}
+  <script type="module" src="/dist/zn.min.js"></script>
+  <link rel="stylesheet" href="/dist/zn.min.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700&display=swap">
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      font-family: var(--zn-font-sans, 'Inter', sans-serif);
+      background: rgb(var(--zn-body));
+      color: rgb(var(--zn-text));
+    }
+
+    /* The page content fills the viewport — no docs chrome, no code preview. */
+    .full-page {
+      height: 100vh;
+      width: 100vw;
+    }
+  </style>
+</head>
+<body>
+<div class="full-page">
+  {{ content | safe }}
+</div>
+</body>
+</html>

@@ -1,9 +1,10 @@
 import {animateTo} from "../../internal/animate";
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {getAnimation, setDefaultAnimation} from "../../utilities/animation-registry";
+import {idSelector} from "../../utilities/query";
 import {LocalizeController} from "../../utilities/localize";
 import {property, query} from 'lit/decorators.js';
-import {getAnimation, setDefaultAnimation} from "../../utilities/animation-registry";
 import {unlockBodyScrolling} from "../../internal/scroll";
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from "../button";
@@ -83,7 +84,7 @@ export default class ZnSlideout extends ZincElement {
     this.shadowRoot?.addEventListener('click', this.closeClickHandler);
 
     if (this.trigger) {
-      const trigger = this.parentNode?.querySelector('#' + this.trigger);
+      const trigger = this.parentNode?.querySelector(idSelector(this.trigger));
       if (trigger) {
         trigger.addEventListener('click', () => this.show());
       }
@@ -98,7 +99,7 @@ export default class ZnSlideout extends ZincElement {
     this.removeEventListener('click', this.closeClickHandler);
 
     if (this.trigger) {
-      const trigger = this.parentElement?.querySelector('#' + this.trigger);
+      const trigger = this.parentElement?.querySelector(idSelector(this.trigger));
       if (trigger) {
         trigger.removeEventListener('click', () => this.show());
       }
@@ -156,6 +157,20 @@ export default class ZnSlideout extends ZincElement {
   private closeClickHandler = (event: MouseEvent) => {
     if (event.target instanceof HTMLElement && event.target.hasAttribute('slideout-closer')) {
       this.hide();
+      return;
+    }
+
+    // `modal-closer` works from nested shadow roots (e.g. zn-form-actions' cancel button),
+    // where retargeting hides the source from event.target. Walk outward from the click:
+    // hitting another modal first means the closer belongs to it, not this slideout.
+    for (const el of event.composedPath()) {
+      if (el === this) return;
+      if (!(el instanceof HTMLElement)) continue;
+      if (el.hasAttribute('modal-closer')) {
+        void this.hide();
+        return;
+      }
+      if (el.localName === 'zn-dialog' || el.localName === 'zn-slideout') return;
     }
   }
 
@@ -187,7 +202,6 @@ export default class ZnSlideout extends ZincElement {
               icon-size="24"
               type="button"
               color="transparent"
-              size="content"
               @click="${() => this.requestClose('close-button')}"
             ></zn-button>
           </div>

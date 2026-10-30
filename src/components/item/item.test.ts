@@ -7,4 +7,12 @@ describe('<zn-item>', () => {
 
     expect(el).to.exist;
   });
+
+  it('right aligns content when align-end is set', async () => {
+    const el = await fixture(html` <zn-item align-end caption="Total">$100.00</zn-item> `);
+    const content = el.shadowRoot?.querySelector<HTMLElement>('.item__content-inner');
+
+    expect(content).to.exist;
+    expect(getComputedStyle(content!).textAlign).to.equal('right');
+  });
 });

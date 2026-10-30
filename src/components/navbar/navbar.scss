@@ -1,7 +1,74 @@
 @use "../../wc";
 
+@include wc.gutter;
+
 :host {
   display: block;
+  --navbar-active-colour: var(--zn-active-nav-background, var(--zn-page-content-background, var(--zn-page-surface-background, var(--zn-body))));
+
+  ul.navbar {
+    padding: 0;
+    margin-inline: var(--zn-spacing-small);
+
+    &--color-body {
+      background-color: rgb(var(--zn-color-body));
+    }
+  }
+}
+
+:host([gutter]) ul.navbar {
+  margin: 0 calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
+}
+
+:host([hover]) {
+  position: absolute;
+  transform: translateY(-100%);
+
+  ul.navbar {
+    position: relative;
+
+    li {
+      z-index: 2;
+    }
+
+    &::after {
+      z-index: 1;
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 6px 6px 0 0;
+      background-color: rgb(var(--zn-body));
+    }
+
+    &::before {
+      z-index: 1;
+      content: "";
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      left: -2px;
+      bottom: 0;
+      border-radius: 10px;
+      backdrop-filter: blur(2px) opacity(0.8);
+    }
+  }
+}
+
+:host([icon-only]) {
+  ul.navbar {
+    li {
+      padding: 0;
+      width: 36px;
+      min-width: 36px;
+      justify-content: center;
+
+      // Hover is the plain tab tint — without the body-coloured ::after
+      // backdrop the generic hover paints, which reads as white
+      &:hover:not(.active):not(.zn-tb-active):not(.more)::after {
+        display: none;
+      }
+    }
+  }
 }
 
 .navbar__container {
@@ -13,7 +80,11 @@
 
 .navbar {
   margin: 0;
-  padding-left: var(--zn-spacing-medium);
+}
+
+:host:not([stacked]) .navbar {
+  margin: 0 0 0 calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
+  padding-left: 0;
 
   &--flush {
     padding: 0;
@@ -23,9 +94,26 @@
 ul.navbar {
   li {
     padding-top: 0;
-    font-size: var(--zn-font-size-medium);
+    font-size: var(--zn-text-tab-link-font-size);
+    line-height: var(--zn-text-tab-link-line-height);
+    font-weight: var(--zn-text-tab-link-font-weight);
     white-space: nowrap;
+    color: var(--zn-text-tab-link-color);
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
   }
+}
+
+// Inactive tab surface for the tab navbar rendered inside zn-page. Driven by
+// custom properties (defaulting to no-op) so a theme can opt in to a translucent
+// "glass" treatment — Aura sets these to a frosted white; :host-context(zn-page)
+// keeps it scoped to the page tab bar and off every other navbar usage.
+:host-context(zn-page) ul.navbar li:not(.active):not(.zn-tb-active) {
+  background: var(--navbar-page-inactive-tab-background, transparent);
+  backdrop-filter: var(--navbar-page-inactive-tab-filter, none);
 }
 
 :host([baseless]) {
@@ -50,30 +138,25 @@ ul.navbar {
 
   ul.navbar {
     padding: 0;
+    margin: 0;
     flex-direction: column;
     gap: 0;
 
     li {
       border-bottom: 1px solid rgb(var(--zn-border-color));
-      padding: var(--zn-spacing-medium);
+      padding: var(--zn-base-px);
 
       &.active:before, &.zn-tb-active:before {
         display: none;
       }
 
       &.zn-tb-active {
-        background-color: rgb(var(--zn-panel));
+        background-color: rgb(var(--zn-color-navigation));
       }
 
       &:hover:before {
         left: 0;
         right: 0;
-      }
-    }
-
-    &--slim {
-      li {
-        padding: var(--zn-spacing-small);
       }
     }
 
@@ -85,8 +168,6 @@ ul.navbar {
     &--border {
       border-right: 1px solid rgb(var(--zn-border-color));
     }
-
-    //margin-right: var(--zn-spacing-medium);
   }
 }
 
@@ -95,8 +176,6 @@ ul.navbar {
     &--border {
       border-left: 1px solid rgb(var(--zn-border-color));
     }
-
-    //  margin-left: var(--zn-spacing-medium);
   }
 }
 
@@ -146,7 +225,7 @@ ul.navbar {
 
 }
 
-.navbar__container--stacked {
+.navbar__container--stacked.navbar__container--icon-bar {
   display: inline;
 }
 
@@ -165,14 +244,73 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 
 :host(:not([stacked]):not([icon-bar])) {
   ul.navbar {
-    height: 35px;
+    height: 40px;
     align-self: end;
   }
 }
 
+:host(:not([stacked]):not([icon-bar]):not([icon-only])) {
+  ul.navbar {
+    min-width: 200px;
+  }
+}
+
+:host([icon-only]:not([stacked]):not([icon-bar])) {
+  ul.navbar {
+    height: 36px;
+  }
+}
+
+
 :host([pad]) {
   ul.navbar {
     padding: var(--zn-spacing-medium) var(--zn-spacing-medium) 0;
+  }
+}
+
+:host(:not([stacked])) {
+  ul.navbar {
+    > li {
+      border-right-width: 1px;
+      border-top-width: 1px;
+
+      &:first-of-type {
+        border-left-width: 1px;
+        border-top-left-radius: 6px;
+      }
+
+      &:last-of-type {
+        border-top-right-radius: 6px;
+      }
+
+      &.active, &.zn-tb-active {
+        color: var(--zn-text-tab-link-active-color);
+      }
+    }
+
+    &:not(.has-hidden) > li.last-visible {
+      border-top-right-radius: 6px;
+    }
+
+    &.has-hidden > li.more {
+      border-top-right-radius: 6px;
+    }
+
+    &.more-only > li.more {
+      border-left-width: 1px;
+      border-top-left-radius: 6px;
+    }
+  }
+}
+
+// Icon-bar items are standalone pills, not tabs — the tab-strip rule above
+// leaves them with a top+right border only, which reads as an unfinished box
+:host([icon-bar]:not([stacked])) {
+  ul.navbar {
+    > li {
+      border-width: 1px;
+      border-radius: 6px;
+    }
   }
 }
 
@@ -187,7 +325,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
   ul.navbar {
     display: flex;
     flex-basis: fit-content;
-    gap: 30px;
+    gap: 0;
     list-style: none;
 
     li.more {
@@ -212,9 +350,24 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       }
 
       user-select: none;
-      font-weight: 500;
-      padding: 0 0 var(--zn-spacing-small);
+      font-weight: var(--zn-text-tab-link-font-weight);
+      padding: 0 calc(var(--zn-base-px, 8px) * 2);
+      background: rgb(var(--zn-color-tab));
+      transition: background-color 100ms ease-in-out;
       position: relative;
+
+      &:hover {
+        background: rgba(var(--zn-color-tab), 0.5);
+
+        &::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          background: rgb(var(--navbar-active-colour));
+          z-index: -1;
+        }
+      }
 
       display: flex;
       align-items: center;
@@ -245,11 +398,11 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
         content: '';
         left: 50%;
         right: 50%;
-        bottom: 0;
+        bottom: -1px;
         position: absolute;
-        background-color: rgb(var(--zn-primary));
+        background-color: rgb(var(--navbar-active-colour));
         transition: all 300ms ease-in-out;
-        height: 2px;
+        height: 1px;
       }
 
       &:hover:before:not(#dropdown-item) {
@@ -259,13 +412,16 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       }
 
       &.active, &.zn-tb-active {
-        color: rgb(var(--zn-primary));
-        font-weight: var(--zn-font-weight-semibold);
+        background: rgb(var(--navbar-active-colour));
+        font-size: var(--zn-text-tab-link-active-font-size);
+        line-height: var(--zn-text-tab-link-active-line-height);
+        font-weight: var(--zn-text-tab-link-active-font-weight);
+        color: var(--zn-text-tab-link-active-color);
       }
 
       &.active::before, &.zn-tb-active::before {
-        left: calc(var(--zn-spacing-medium) * -1);
-        right: calc(var(--zn-spacing-medium) * -1);
+        left: 0;
+        right: 0;
       }
     }
 
@@ -319,7 +475,7 @@ button[popovertarget] {
     border-bottom-width: 1px;
     border-bottom-style: solid;
     border-bottom-color: rgb(var(--zn-border-color));
-    height: 35px;
+    height: 40px;
   }
 
   &:host([dropdown]) li {
@@ -351,14 +507,14 @@ button[popovertarget] {
           right: 0;
           bottom: -1px;
           height: 1px;
-          background-color: rgb(var(--zn-panel));
+          background-color: rgb(var(--navbar-active-colour));
         }
       }
     }
   }
 
   .active {
-    background-color: rgb(var(--zn-panel));
+    background-color: rgb(var(--navbar-active-colour));
   }
 }
 
@@ -387,13 +543,11 @@ button[popovertarget] {
 
 .expandables {
   flex-grow: 0;
-  flex-shrink: 1;
-  margin: 0 var(--zn-spacing-medium);
+  flex-shrink: 0;
+  margin: 0;
   display: flex;
-  align-items: center;
-  width: fit-content;
-  height: 100%;
-  gap: var(--zn-spacing-2x-small);
+  gap: var(--zn-spacing-x-small);
+  padding-right: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
 }
 
 .expandables:empty {
@@ -404,9 +558,47 @@ button[popovertarget] {
 :host {
   ul.navbar {
     li.more {
+      // Let the trigger fill the whole cell so clicking anywhere in the
+      // "more" item opens the dropdown, not just the icon itself.
+      padding: 0;
+      width: 40px;
+      min-width: 40px;
+
+      zn-dropdown,
+      zn-button[slot="trigger"] {
+        height: 100%;
+        width: 100%;
+      }
+
+      zn-button[slot="trigger"] zn-icon {
+        transition: transform 200ms ease-in-out;
+        --icon-color: var(--zn-text-tab-link-color);
+      }
+
+      zn-dropdown[open] zn-button[slot="trigger"] zn-icon {
+        transform: rotate(90deg);
+        --icon-color: var(--zn-text-tab-link-active-color);
+      }
+
+      &:has(zn-dropdown[open]) {
+        background: rgb(var(--zn-panel));
+
+        &::after {
+          content: '';
+          position: absolute;
+          inset: auto 0 -1px 0;
+          height: 1px;
+          border-radius: 0;
+          background: rgb(var(--zn-panel));
+          z-index: 1;
+        }
+      }
+
       zn-button::part(base) {
+        height: 100%;
         padding-left: 0;
         padding-right: 0;
+        outline: none;
 
         &:hover {
           background-color: transparent;
@@ -414,21 +606,51 @@ button[popovertarget] {
       }
 
       ul#extended-menu {
-        box-shadow: var(--zn-shadow-medium);
-        background: rgb(var(--zn-border-color));
+        --navbar-more-trigger-width: 40px;
+
+        box-shadow: 0 4px 8px -4px rgba(33, 33, 33, 0.1);
+        border: 1px solid rgb(var(--zn-border-color));
+        border-top: 0;
+        border-radius: 0 0 var(--zn-border-radius) var(--zn-border-radius);
+        overflow: hidden;
+        position: relative;
+        inset-inline-end: -1px;
+
+        &::before {
+          content: '';
+          position: absolute;
+          inset: 0 calc(var(--navbar-more-trigger-width) - 2px) auto 0;
+          height: 1px;
+          background: rgb(var(--zn-border-color));
+          z-index: 2;
+        }
+
+        background: rgb(var(--zn-panel));
         display: flex;
         flex-direction: column;
-        gap: 1px;
         height: auto;
         width: fit-content;
-        margin: 0;
+        min-width: var(--zn-size-spanel);
+        margin: -1px 0 0;
         padding: 1px;
 
         li {
           justify-content: left;
           background: rgb(var(--zn-panel));
-          color: rgb(var(--zn-text));
-          padding: var(--zn-spacing-small);
+          font-size: var(--zn-text-menu-link-font-size);
+          line-height: var(--zn-text-menu-link-line-height);
+          font-weight: var(--zn-text-menu-link-font-weight);
+          color: var(--zn-text-menu-link-color);
+          padding: var(--zn-spacing-small) var(--zn-spacing-medium);
+
+          &:hover {
+            background: linear-gradient(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06)), rgb(var(--zn-panel));
+          }
+
+          &.active, &.zn-tb-active {
+            font-weight: var(--zn-text-tab-link-font-weight);
+            color: var(--zn-text-tab-link-color);
+          }
 
           &.active::before, &.zn-tb-active::before {
             left: 0;

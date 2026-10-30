@@ -1,27 +1,6 @@
-@use '../mixins';
-@use '../variables';
-
-@mixin button {
-  border-radius: var(--zn-border-radius-medium);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 15px;
-  margin: auto;
-  width: fit-content;
-  background-color: rgb(var(--zn-primary));
-  color: rgba(255, 255, 255, 0.9);
-  font-weight: 600;
-  cursor: pointer;
-  vertical-align: middle;
-  border-color: transparent;
-  white-space: nowrap;
-
-  &:hover:not([disabled]) {
-    background-color: rgba(var(--zn-primary), 0.8);
-  }
-}
+@use 'button-mixin';
+@forward 'button-mixin';
 
 button, .zn-button {
-  @include button;
+  @include button-mixin.button;
 }

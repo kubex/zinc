@@ -1,15 +1,13 @@
-import '../../events/zn-sidebar-toggle';
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
-import {ifDefined} from "lit/directives/if-defined.js";
-import {property} from 'lit/decorators.js';
+import {property, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './panel.scss';
 
 /**
- * @summary Panels are versatile containers that provide structure for organizing content with optional headers, footers, and sidebars.
+ * @summary Panels are versatile containers that provide structure for organizing content with optional headers and footers.
  * @documentation https://zinc.style/components/panel
  * @status experimental
  * @since 1.0
@@ -17,25 +15,26 @@ import styles from './panel.scss';
  * @slot - The panel's main content.
  * @slot actions - Actions displayed in the panel header (buttons, chips, etc).
  * @slot footer - Content displayed in the panel footer.
- * @slot side - Sidebar content displayed on the left or right side of the panel.
- *
- * @event zn-sidebar-toggle - Emitted when the sidebar is toggled. The event detail contains the panel element and the open state.
  *
  * @csspart base - The component's base wrapper.
+ * @csspart header - The header region, when a caption or actions are given.
+ * @csspart header-content - The padded row inside the header, forwarded from zn-header.
+ * @csspart footer - The footer region, when the footer slot is filled.
  *
  * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.
+ * @cssproperty --zn-panel-header-padding - Padding around the header row. Defaults to `--zn-base-gap`.
+ * @cssproperty --zn-panel-footer-padding - Padding around the footer row.
  */
 export default class ZnPanel extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  private readonly hasSlotController = new HasSlotController(this, '[default]', 'actions', 'footer', 'side');
+  private readonly hasSlotController = new HasSlotController(this, '[default]', 'actions', 'footer');
 
   @property({attribute: 'basis-px', type: Number}) basis: number;
   @property() caption: string;
   @property() icon: string;
-  @property() description: string;
   @property({type: Boolean}) tabbed: boolean;
-  @property({attribute: 'header-underline', type: Boolean}) underlineHeader: boolean;
+  @property({attribute: 'header-borderless', type: Boolean}) headerBorderless: boolean;
   @property({type: Boolean}) cosmic: boolean;
   @property({type: Boolean}) flush: boolean;
   @property({attribute: 'flush-x', type: Boolean}) flushX: boolean;
@@ -44,14 +43,13 @@ export default class ZnPanel extends ZincElement {
   @property({type: Boolean}) transparent: boolean;
   @property({type: Boolean}) shadow: boolean;
 
-  @property({attribute: 'sidebar-position'}) sidebarPosition: 'left' | 'right' = 'left';
-  @property({attribute: 'sidebar-tooltip'}) sidebarTooltip: string;
-  @property({attribute: 'sidebar-icon'}) sidebarIcon: string;
-  @property({attribute: 'sidebar-open', type: Boolean, reflect: true}) sidebarOpen: boolean = true;
-  @property({attribute: 'enable-sidebar-toggle', type: Boolean}) enableSidebarToggle: boolean = false;
+  @state() private bodyEmpty = false;
+
+  private resizeObserver: ResizeObserver | null = null;
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
+    this.observeBodyContent();
     if (this.basis) {
       this.style.setProperty('--zn-panel-basis', this.basis.toString() + 'px');
     }
@@ -70,6 +68,10 @@ export default class ZnPanel extends ZincElement {
 
   connectedCallback() {
     super.connectedCallback();
+    if (this.hasUpdated) {
+      this.observeBodyContent();
+    }
+
     if (window.CSS.registerProperty) {
       try {
         window.CSS.registerProperty({
@@ -84,15 +86,40 @@ export default class ZnPanel extends ZincElement {
     }
   }
 
-  toggleSidebar() {
-    this.sidebarOpen = !this.sidebarOpen;
-    this.emit('zn-sidebar-toggle', {detail: {element: this, open: this.sidebarOpen}});
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = null;
+  }
+
+  private observeBodyContent() {
+    const body = this.renderRoot?.querySelector('.panel__body');
+    if (!body) return;
+
+    this.resizeObserver ??= new ResizeObserver(() => this.measureBodyContent());
+    this.resizeObserver.disconnect();
+    this.resizeObserver.observe(body);
+    this.measureBodyContent();
+  }
+
+  // Measured on the body, not on the slotted elements: `display: contents` hosts such as zn-stat
+  // render content but have no box of their own to read or observe.
+  private measureBodyContent() {
+    const body = this.renderRoot?.querySelector('.panel__body');
+    if (!body) return;
+
+    const style = getComputedStyle(body);
+    const padding = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+    this.bodyEmpty = body.scrollHeight - padding <= 0;
   }
 
   protected render(): unknown {
     const hasActionSlot = this.hasSlotController.test('actions');
     const hasFooterSlot = this.hasSlotController.test('footer');
-    const hasHeader = this.caption || hasActionSlot || this.enableSidebarToggle;
+    const hasHeader = this.caption || hasActionSlot;
+    const isBodyEmpty = !this.hasSlotController.test('[default]') || this.bodyEmpty;
+    const isFlushY = this.flush || this.tabbed || this.flushY;
+    const underlineHeader = !this.headerBorderless && !(this.transparent && isFlushY) && !isBodyEmpty;
 
     return html`
       <div class="${classMap({
@@ -103,51 +130,38 @@ export default class ZnPanel extends ZincElement {
         'panel--flush-footer': this.flushFooter,
         'panel--tabbed': this.tabbed,
         'panel--transparent': this.transparent,
-        'panel--has-actions': hasActionSlot || this.enableSidebarToggle,
+        'panel--has-actions': hasActionSlot,
         'panel--has-footer': hasFooterSlot,
+        'panel--empty': isBodyEmpty,
         'panel--has-header': hasHeader,
+        'panel--borderless-header': this.headerBorderless,
         'panel--cosmic': this.cosmic,
         'panel--shadow': this.shadow,
-        'panel--has-sidebar': this.hasSlotController.test('side'),
-        'panel--sidebar-right': this.sidebarPosition === 'right',
-        'panel--sidebar-collapsed': !this.sidebarOpen
       })}">
 
         <div class="panel__inner">
           ${hasHeader ? html`
-            <zn-header class="${classMap({
-              "panel__header": true,
-              "panel__header--underline": this.underlineHeader,
-            })}"
+            <zn-header part="header"
+                       exportparts="content:header-content"
+                       class="${classMap({
+                         "panel__header": true,
+                         "panel__header--underline": underlineHeader,
+                       })}"
                        icon="${this.icon}"
                        caption="${this.caption}"
-                       description="${ifDefined(this.description)}"
                        transparent>
               ${hasActionSlot ? html`
                 <slot name="actions" slot="actions" class="panel__header__actions"></slot>` : null}
-              ${this.enableSidebarToggle ? html`
-                <zn-button color="transparent"
-                           size="x-small"
-                           icon="${this.sidebarIcon || 'menu'}"
-                           icon-size="24"
-                           slot="actions"
-                           tooltip="${this.sidebarTooltip || 'Toggle Sidebar'}"
-                           @click="${this.toggleSidebar}"></zn-icon>` : null}
             </zn-header>` : null}
 
           <div class="panel__content">
-            <div class="panel__sidebar">
-              <div class="panel__sidebar-inner">
-                <slot name="side"></slot>
-              </div>
-            </div>
             <div class="panel__body">
-              <slot></slot>
+              <slot @slotchange="${this.observeBodyContent}"></slot>
             </div>
           </div>
 
           ${hasFooterSlot ? html`
-            <slot name="footer" class="panel__footer"></slot>` : null}
+            <slot name="footer" part="footer" class="panel__footer"></slot>` : null}
         </div>
       </div>`;
   }

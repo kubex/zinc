@@ -6,6 +6,10 @@
   --col-width: 23%;
 }
 
+:host([contents]) {
+  display: contents;
+}
+
 .cols {
   display: flex;
   flex-wrap: wrap;
@@ -13,8 +17,7 @@
   flex-shrink: 1;
   width: 100%;
   container-type: inline-size;
-  overflow: hidden;
-  gap: var(--zn-spacing-small);
+  gap: var(--zn-gap);
 
   max-width: 100%;
 
@@ -60,10 +63,47 @@
         background-color: rgb(var(--zn-border-color));
       }
     }
+
+    ::slotted([data-row-end]):after {
+      display: none;
+    }
+
+    ::slotted(:not([data-last-row])) {
+      position: relative;
+    }
+  }
+
+  // Border mode owns :before for its own row rules.
+  &--divide:not(.cols--border) ::slotted(:not([data-last-row])):before {
+    content: "";
+    position: absolute;
+    display: block;
+    height: 1px;
+    left: 0;
+    right: 0;
+    bottom: calc((var(--zn-spacing-small) / 2) * -1);
+    background-color: rgb(var(--zn-border-color));
   }
 
   &--no-gap {
     gap: 0;
+  }
+
+  // Without a gap to sit in, the divider goes on the column's own edge.
+  &--no-gap.cols--divide {
+    ::slotted(*:not(:last-child)):after {
+      right: 0;
+    }
+
+    ::slotted(:not([data-last-row])):before {
+      bottom: 0;
+    }
+  }
+
+  // The row rule below each child is drawn by a pseudo reaching to -100vw, so border mode has to clip. Clipping
+  // every layout would cut the focus ring off any control sitting flush against a column edge.
+  &--border {
+    overflow: hidden;
   }
 
   &--border ::slotted(*) {
@@ -72,7 +112,8 @@
   }
 
   // Adds full-width lines between bordered cols
-  &--border ::slotted(*:not(:last-child)):before {
+  // Last row elements get overflow:hidden via JS to clip this pseudo
+  &--border ::slotted(*):before {
     content: "";
     position: absolute;
     bottom: -1px;
@@ -82,15 +123,12 @@
     border-bottom: 1px solid rgb(var(--zn-border-color)) !important;
   }
 
-  // Stops the last child/row having a border
-  &--border ::slotted(*:last-child):before {
-    content: "";
-    position: absolute;
-    bottom: -1px;
-    left: -100vw;
-    right: -5px;
-    z-index: 1111;
-    border-bottom: 1px solid var(--zn-panel-background-color) !important;
+  // Children marked with [stack-split] act as a single column while the cols are
+  // side by side, and dissolve into individual columns once stacked (see below).
+  ::slotted([stack-split]) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--zn-gap);
   }
 
   &--pad {
@@ -103,5 +141,42 @@
 
   &--pad-y {
     padding-block: var(--zn-spacing-2x-small);
+  }
+}
+
+//
+// Responsive stacking
+//
+// `stack-at` names the container width the cols collapse to a single column below.
+// While stacked, `--zn-stacked` flips to 1 so the per-child `order: calc(var(--zn-stacked) * n)`
+// written by the component only takes effect in the stacked state, and `--zn-stack-basis`
+// gives promoted [stack-split] children something to size against.
+//
+// `:host()` is only in the selector to out-specify the `.zn-col-#{$i}` min-width rules above.
+//
+$stack-sizes: (sm, smp, ph, md, lg, hd, '3k', '4k');
+
+@each $size in $stack-sizes {
+  :host([stack-at="#{$size}"]) {
+    @include wc.container-query(null, $size) {
+      .cols ::slotted(*) {
+        --zn-stacked: 1;
+        --zn-stack-basis: 100%;
+
+        flex-basis: 100%;
+        min-width: 100%;
+        max-width: 100%;
+      }
+
+      // Hand this column's children over to the cols so each can be ordered individually
+      .cols ::slotted([stack-split]) {
+        display: contents;
+      }
+
+      // Vertical dividers make no sense once the columns are on top of each other
+      .cols--divide ::slotted(*:not(:last-child)):after {
+        display: none;
+      }
+    }
   }
 }

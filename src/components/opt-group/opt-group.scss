@@ -1,0 +1,36 @@
+@use "../../wc";
+
+:host {
+  display: block;
+}
+
+:host([hidden]) {
+  display: none !important;
+}
+
+:host(:not(:first-child):not([data-first-visible])) {
+  border-block-start: solid var(--zn-panel-border-width) var(--zn-panel-border-color);
+  margin-block-start: var(--zn-spacing-2x-small);
+}
+
+.opt-group__label {
+  font-family: var(--zn-font-sans);
+  font-size: var(--zn-font-size-x-small);
+  font-weight: var(--zn-font-weight-semibold);
+  line-height: var(--zn-line-height-normal);
+  letter-spacing: var(--zn-letter-spacing-loose);
+  text-transform: uppercase;
+  color: var(--zn-color-neutral-600);
+  padding-block: var(--zn-spacing-x-small) var(--zn-spacing-2x-small);
+  padding-inline: var(--zn-spacing-small);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.opt-group__options {
+  display: block;
+}
+
+:host([disabled]) .opt-group__label {
+  opacity: 0.5;
+}

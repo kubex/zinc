@@ -117,6 +117,22 @@ Use the `placeholder` attribute to add a placeholder.
 </zn-select>
 ```
 
+### Empty State
+
+A select with nothing to choose from says so when opened, rather than showing an empty dropdown. The wording distinguishes a list that is empty from one a search has filtered down to nothing: type `zzz` into the second select below to see it.
+
+```html:preview
+<zn-select label="No options" placeholder="Select a reason"></zn-select>
+<br />
+<zn-select label="Searched to nothing" search placeholder="Type to search...">
+  <zn-option value="au">Australia</zn-option>
+  <zn-option value="br">Brazil</zn-option>
+  <zn-option value="ca">Canada</zn-option>
+</zn-select>
+```
+
+Options that arrive later — from `data-uri`, a remote search, or appended `zn-option` elements — clear the message as soon as they land, so an empty list at first render is safe.
+
 ### Clearable
 
 Use the `clearable` attribute to make the control clearable. The clear button only appears when an option is selected.
@@ -144,6 +160,344 @@ Use the `clearable` attribute to make the control clearable. The clear button on
   <zn-option value="option-5">Option 5</zn-option>
   <zn-option value="option-6">Option 6</zn-option>
 </zn-select>
+```
+
+### Search
+
+Use the `search` attribute to allow users to type into the select to filter the list of options. When the dropdown opens, the input becomes editable and options are filtered as you type using case-insensitive substring matching against labels and values. Group labels are matched too — see [Grouping with Search](#grouping-with-search).
+
+```html:preview
+<zn-select label="Search for a country" search placeholder="Type to search...">
+  <zn-option value="au">Australia</zn-option>
+  <zn-option value="br">Brazil</zn-option>
+  <zn-option value="ca">Canada</zn-option>
+  <zn-option value="cn">China</zn-option>
+  <zn-option value="fr">France</zn-option>
+  <zn-option value="de">Germany</zn-option>
+  <zn-option value="in">India</zn-option>
+  <zn-option value="jp">Japan</zn-option>
+  <zn-option value="mx">Mexico</zn-option>
+  <zn-option value="uk">United Kingdom</zn-option>
+  <zn-option value="us">United States</zn-option>
+</zn-select>
+```
+
+### Search with Multiple Selection
+
+Combine `search` with `multiple` to allow users to search and select multiple options. The search clears automatically after each selection so you can continue searching.
+
+```html:preview
+<zn-select label="Select your skills" search multiple clearable placeholder="Search skills...">
+  <zn-option value="html">HTML</zn-option>
+  <zn-option value="css">CSS</zn-option>
+  <zn-option value="js">JavaScript</zn-option>
+  <zn-option value="ts">TypeScript</zn-option>
+  <zn-option value="react">React</zn-option>
+  <zn-option value="vue">Vue</zn-option>
+  <zn-option value="angular">Angular</zn-option>
+  <zn-option value="node">Node.js</zn-option>
+  <zn-option value="python">Python</zn-option>
+  <zn-option value="go">Go</zn-option>
+</zn-select>
+```
+
+### Free Text Entry
+
+Use the `free-text` attribute to let users enter values that aren't in the options list. `free-text` implies the editable, filtering input behavior of `search`, so users can both filter existing options and add their own. When the typed text doesn't match an existing option, an **Add "…"** row appears at the top of the listbox; committing it (by pressing <kbd>Enter</kbd>, clicking the Add row, or blurring the field) adds the value as a selection. A committed value becomes both the option's value and its label.
+
+If the typed text exactly matches an existing option (by label or value, case-insensitive), the Add row is suppressed and the existing option is selected instead — so no duplicates are created.
+
+```html:preview
+<zn-select label="Add tags" free-text placeholder="Type a tag and press Enter">
+  <zn-option value="bug">Bug</zn-option>
+  <zn-option value="feature">Feature</zn-option>
+  <zn-option value="chore">Chore</zn-option>
+</zn-select>
+```
+
+### Free Text with Multiple Selection
+
+Combine `free-text` with `multiple` to build a tag-style input. Each committed value is added as a tag and the input stays open so users can keep entering values. Removing a tag whose value was entered as free text deletes it entirely.
+
+```html:preview
+<zn-select label="Recipients" free-text multiple clearable placeholder="Add email addresses...">
+  <zn-option value="support@example.com">support@example.com</zn-option>
+  <zn-option value="sales@example.com">sales@example.com</zn-option>
+</zn-select>
+```
+
+### Remote Search
+
+When `search` and `data-uri` are used together, typing in the select sends debounced requests to the server instead of filtering locally. The search term is appended as a query parameter (default `q`). Use `search-param` to customise the parameter name, `search-debounce` to control the delay, and `max-results` to cap displayed results.
+
+If the server returns fewer results than `max-results`, further refinements of the same query are filtered client-side automatically — no extra requests are made. When results are truncated, a message at the bottom of the dropdown shows how many results are displayed out of the total, prompting the user to refine their search.
+
+```html:preview
+<div class="remote-search-demo">
+  <zn-select
+    id="remote-search-example"
+    label="Search users"
+    search
+    search-debounce="300"
+    max-results="5"
+    placeholder="Type a name to search..."
+    help-text="Try typing 'a' then narrowing to 'al' — the second query filters locally."
+  ></zn-select>
+
+  <div id="remote-search-log" style="margin-top: 1rem; padding: 0.75rem 1rem; background: var(--zn-color-neutral-100); border-radius: var(--zn-border-radius); font-family: var(--zn-font-mono); font-size: var(--zn-font-size-small); max-height: 8rem; overflow-y: auto;">
+    <strong>Request log:</strong>
+  </div>
+</div>
+
+<script type="module">
+  // -- Mock user database --
+  const allUsers = [
+    { key: 'alice',    value: 'Alice Johnson' },
+    { key: 'alex',     value: 'Alex Thompson' },
+    { key: 'amanda',   value: 'Amanda Garcia' },
+    { key: 'bob',      value: 'Bob Williams' },
+    { key: 'beth',     value: 'Beth Davis' },
+    { key: 'charlie',  value: 'Charlie Brown' },
+    { key: 'carol',    value: 'Carol Martinez' },
+    { key: 'david',    value: 'David Lee' },
+    { key: 'diana',    value: 'Diana Wilson' },
+    { key: 'emma',     value: 'Emma Taylor' },
+    { key: 'elena',    value: 'Elena Rodriguez' },
+    { key: 'frank',    value: 'Frank Anderson' },
+    { key: 'fiona',    value: 'Fiona Clark' },
+    { key: 'george',   value: 'George Hall' },
+    { key: 'grace',    value: 'Grace Lewis' },
+  ];
+
+  // -- Intercept fetch for the demo endpoint --
+  const realFetch = window.fetch;
+  const DEMO_URL = '/_demo/api/users';
+  const log = document.getElementById('remote-search-log');
+
+  window.fetch = function(url, opts) {
+    const urlStr = typeof url === 'string' ? url : url.toString();
+    if (!urlStr.startsWith(DEMO_URL)) {
+      return realFetch.call(this, url, opts);
+    }
+
+    const params = new URL(urlStr, location.origin).searchParams;
+    const q = (params.get('q') || '').toLowerCase();
+    const time = new Date().toLocaleTimeString();
+    log.innerHTML += `<br>[${time}] GET ${urlStr.replace(location.origin, '')}`;
+    log.scrollTop = log.scrollHeight;
+
+    // Simulate network latency
+    return new Promise(resolve => {
+      setTimeout(() => {
+        const filtered = allUsers.filter(u =>
+          u.value.toLowerCase().includes(q) || u.key.includes(q)
+        );
+        resolve(new Response(JSON.stringify(filtered), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        }));
+      }, 200 + Math.random() * 300);
+    });
+  };
+
+  // Wire up the select
+  document.getElementById('remote-search-example').setAttribute('data-uri', DEMO_URL);
+</script>
+```
+
+### Remote Search with Custom Parameter
+
+Use `search-param` to change the query parameter name sent to the server.
+
+```html:preview
+<zn-select
+  id="custom-param-example"
+  label="Search products"
+  search
+  search-param="filter"
+  search-debounce="500"
+  placeholder="Search with custom param..."
+  help-text='Sends requests like /api?filter=term instead of /api?q=term'
+></zn-select>
+
+<script type="module">
+  const products = [
+    { key: 'laptop',  value: 'Laptop' },
+    { key: 'phone',   value: 'Phone' },
+    { key: 'tablet',  value: 'Tablet' },
+    { key: 'monitor', value: 'Monitor' },
+    { key: 'keyboard', value: 'Keyboard' },
+    { key: 'mouse',   value: 'Mouse' },
+    { key: 'headset', value: 'Headset' },
+    { key: 'webcam',  value: 'Webcam' },
+  ];
+
+  const realFetch = window.fetch;
+  const DEMO_URL = '/_demo/api/products';
+
+  window.fetch = function(url, opts) {
+    const urlStr = typeof url === 'string' ? url : url.toString();
+    if (!urlStr.startsWith(DEMO_URL)) {
+      return realFetch.call(this, url, opts);
+    }
+
+    const params = new URL(urlStr, location.origin).searchParams;
+    const q = (params.get('filter') || '').toLowerCase();
+
+    return new Promise(resolve => {
+      setTimeout(() => {
+        const filtered = products.filter(p =>
+          p.value.toLowerCase().includes(q) || p.key.includes(q)
+        );
+        resolve(new Response(JSON.stringify(filtered), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        }));
+      }, 150 + Math.random() * 200);
+    });
+  };
+
+  document.getElementById('custom-param-example').setAttribute('data-uri', DEMO_URL);
+</script>
+```
+
+### Remote Search with Multiple Selection
+
+Combine remote search with `multiple` to search and pick several results.
+
+```html:preview
+<div class="remote-search-multi-demo">
+  <zn-select
+    id="remote-search-multi"
+    label="Assign team members"
+    search
+    multiple
+    clearable
+    search-debounce="300"
+    max-results="8"
+    max-options-visible="3"
+    placeholder="Search team members..."
+  ></zn-select>
+</div>
+
+<script type="module">
+  const allUsers = [
+    { key: 'alice',    value: 'Alice Johnson' },
+    { key: 'alex',     value: 'Alex Thompson' },
+    { key: 'amanda',   value: 'Amanda Garcia' },
+    { key: 'bob',      value: 'Bob Williams' },
+    { key: 'beth',     value: 'Beth Davis' },
+    { key: 'charlie',  value: 'Charlie Brown' },
+    { key: 'carol',    value: 'Carol Martinez' },
+    { key: 'david',    value: 'David Lee' },
+    { key: 'diana',    value: 'Diana Wilson' },
+    { key: 'emma',     value: 'Emma Taylor' },
+  ];
+
+  const realFetch = window.fetch;
+  const DEMO_URL = '/_demo/api/team';
+
+  window.fetch = function(url, opts) {
+    const urlStr = typeof url === 'string' ? url : url.toString();
+    if (!urlStr.startsWith(DEMO_URL)) {
+      return realFetch.call(this, url, opts);
+    }
+
+    const q = new URL(urlStr, location.origin).searchParams.get('q') || '';
+    return new Promise(resolve => {
+      setTimeout(() => {
+        const filtered = allUsers.filter(u =>
+          u.value.toLowerCase().includes(q.toLowerCase()) || u.key.includes(q.toLowerCase())
+        );
+        resolve(new Response(JSON.stringify(filtered), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        }));
+      }, 150 + Math.random() * 200);
+    });
+  };
+
+  document.getElementById('remote-search-multi').setAttribute('data-uri', DEMO_URL);
+</script>
+```
+
+### Search Only (No Initial Load)
+
+Use `search-only` with `search` and `data-uri` to defer all fetching until the user types. No request is made on page load — the dropdown shows a "Type to search..." prompt until a query is entered. This is ideal for large datasets where preloading all options isn't practical.
+
+```html:preview
+<div class="search-only-demo">
+  <zn-select
+    id="search-only-example"
+    label="Find a city"
+    search
+    search-only
+    search-debounce="300"
+    max-results="10"
+    placeholder="Start typing a city name..."
+  ></zn-select>
+
+  <div id="search-only-log" style="margin-top: 1rem; padding: 0.75rem 1rem; background: var(--zn-color-neutral-100); border-radius: var(--zn-border-radius); font-family: var(--zn-font-mono); font-size: var(--zn-font-size-small); max-height: 8rem; overflow-y: auto;">
+    <strong>Request log:</strong>
+  </div>
+</div>
+
+<script type="module">
+  const cities = [
+    { key: 'london',      value: 'London' },
+    { key: 'los-angeles', value: 'Los Angeles' },
+    { key: 'lisbon',      value: 'Lisbon' },
+    { key: 'lima',        value: 'Lima' },
+    { key: 'lagos',       value: 'Lagos' },
+    { key: 'lyon',        value: 'Lyon' },
+    { key: 'new-york',    value: 'New York' },
+    { key: 'nairobi',     value: 'Nairobi' },
+    { key: 'nice',        value: 'Nice' },
+    { key: 'paris',       value: 'Paris' },
+    { key: 'prague',      value: 'Prague' },
+    { key: 'porto',       value: 'Porto' },
+    { key: 'perth',       value: 'Perth' },
+    { key: 'sydney',      value: 'Sydney' },
+    { key: 'seoul',       value: 'Seoul' },
+    { key: 'shanghai',    value: 'Shanghai' },
+    { key: 'singapore',   value: 'Singapore' },
+    { key: 'stockholm',   value: 'Stockholm' },
+    { key: 'tokyo',       value: 'Tokyo' },
+    { key: 'toronto',     value: 'Toronto' },
+    { key: 'taipei',      value: 'Taipei' },
+  ];
+
+  const realFetch = window.fetch;
+  const DEMO_URL = '/_demo/api/cities';
+  const log = document.getElementById('search-only-log');
+
+  window.fetch = function(url, opts) {
+    const urlStr = typeof url === 'string' ? url : url.toString();
+    if (!urlStr.startsWith(DEMO_URL)) {
+      return realFetch.call(this, url, opts);
+    }
+
+    const params = new URL(urlStr, location.origin).searchParams;
+    const q = (params.get('q') || '').toLowerCase();
+    const time = new Date().toLocaleTimeString();
+    log.innerHTML += `<br>[${time}] GET ...?q=${q}`;
+    log.scrollTop = log.scrollHeight;
+
+    return new Promise(resolve => {
+      setTimeout(() => {
+        const filtered = cities.filter(c =>
+          c.value.toLowerCase().includes(q) || c.key.includes(q)
+        );
+        resolve(new Response(JSON.stringify(filtered), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        }));
+      }, 200 + Math.random() * 300);
+    });
+  };
+
+  document.getElementById('search-only-example').setAttribute('data-uri', DEMO_URL);
+</script>
 ```
 
 ### Disabled
@@ -283,24 +637,81 @@ When using `multiple`, you can control how many selected options are displayed b
 
 ### Grouping Options
 
-Use `<zn-divider>` to group listbox items visually. You can also use `<small>` to provide labels for each group, but they won't be announced by most assistive devices.
-
-:::warning
-**Note:** `ts_form_for` doesn't support grouping select options with labels and dividers.
-:::
+Use `<zn-opt-group>` to group options under labeled headers, similar to `<optgroup>` in native HTML. Each group displays a non-selectable label above its options. Groups are also accessible, using `role="group"` and `aria-label`.
 
 ```html:preview
-<zn-select label="Select an option from one of the groups">
-  <zn-option value=""></zn-option>
-  <small>Section 1</small>
-  <zn-option value="option-1">Option 1</zn-option>
-  <zn-option value="option-2">Option 2</zn-option>
-  <zn-option value="option-3">Option 3</zn-option>
-  <zn-divider></zn-divider>
-  <small>Section 2</small>
-  <zn-option value="option-4">Option 4</zn-option>
-  <zn-option value="option-5">Option 5</zn-option>
-  <zn-option value="option-6">Option 6</zn-option>
+<zn-select label="Select a fruit">
+  <zn-opt-group label="Citrus">
+    <zn-option value="orange">Orange</zn-option>
+    <zn-option value="lemon">Lemon</zn-option>
+    <zn-option value="lime">Lime</zn-option>
+  </zn-opt-group>
+  <zn-opt-group label="Berries">
+    <zn-option value="strawberry">Strawberry</zn-option>
+    <zn-option value="blueberry">Blueberry</zn-option>
+    <zn-option value="raspberry">Raspberry</zn-option>
+  </zn-opt-group>
+</zn-select>
+```
+
+### Grouping with Search
+
+When `search` is enabled, group headers automatically hide when all of their child options are filtered out.
+
+Group labels are searchable as well: typing text that matches a `<zn-opt-group>` label keeps every option in that group visible, so searching `europe` returns the whole European group even though no option label contains the word.
+
+```html:preview
+<zn-select label="Select a country" search placeholder="Try 'europe' or 'japan'...">
+  <zn-opt-group label="North America">
+    <zn-option value="us">United States</zn-option>
+    <zn-option value="ca">Canada</zn-option>
+    <zn-option value="mx">Mexico</zn-option>
+  </zn-opt-group>
+  <zn-opt-group label="Europe">
+    <zn-option value="gb">United Kingdom</zn-option>
+    <zn-option value="de">Germany</zn-option>
+    <zn-option value="fr">France</zn-option>
+  </zn-opt-group>
+  <zn-opt-group label="Asia">
+    <zn-option value="jp">Japan</zn-option>
+    <zn-option value="cn">China</zn-option>
+    <zn-option value="in">India</zn-option>
+  </zn-opt-group>
+</zn-select>
+```
+
+### Disabled Groups
+
+Use the `disabled` attribute on `<zn-opt-group>` to disable all options within a group.
+
+```html:preview
+<zn-select label="Select a plan">
+  <zn-opt-group label="Available">
+    <zn-option value="basic">Basic</zn-option>
+    <zn-option value="pro">Pro</zn-option>
+  </zn-opt-group>
+  <zn-opt-group label="Coming Soon" disabled>
+    <zn-option value="enterprise">Enterprise</zn-option>
+    <zn-option value="unlimited">Unlimited</zn-option>
+  </zn-opt-group>
+</zn-select>
+```
+
+### Mixed Grouped and Ungrouped Options
+
+You can mix ungrouped options alongside `<zn-opt-group>` elements.
+
+```html:preview
+<zn-select label="Select an option">
+  <zn-option value="none">None</zn-option>
+  <zn-opt-group label="Group A">
+    <zn-option value="a1">Option A1</zn-option>
+    <zn-option value="a2">Option A2</zn-option>
+  </zn-opt-group>
+  <zn-opt-group label="Group B">
+    <zn-option value="b1">Option B1</zn-option>
+    <zn-option value="b2">Option B2</zn-option>
+  </zn-opt-group>
 </zn-select>
 ```
 
@@ -675,11 +1086,11 @@ You can control the select programmatically using its methods:
   </zn-select>
 
   <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-    <zn-button id="show-btn" size="small">Show</zn-button>
-    <zn-button id="hide-btn" size="small">Hide</zn-button>
-    <zn-button id="focus-btn" size="small">Focus</zn-button>
-    <zn-button id="set-value-btn" size="small">Set Value</zn-button>
-    <zn-button id="check-validity-btn" size="small">Check Validity</zn-button>
+    <zn-button id="show-btn">Show</zn-button>
+    <zn-button id="hide-btn">Hide</zn-button>
+    <zn-button id="focus-btn">Focus</zn-button>
+    <zn-button id="set-value-btn">Set Value</zn-button>
+    <zn-button id="check-validity-btn">Check Validity</zn-button>
   </div>
 </div>
 
@@ -708,6 +1119,8 @@ The select component supports comprehensive keyboard navigation:
 - **Arrow Up/Down** - Navigate through options
 - **Home/End** - Jump to first/last option
 - **Type characters** - Jump to options starting with typed characters (type-to-select)
+
+When `search` is enabled, **Space** types into the input instead of toggling the dropdown, and **Arrow Up/Down** skips filtered (hidden) options.
 
 ### Customizing Label Position
 

@@ -1,79 +1,242 @@
 {
   "rows": [
     {
-      "id": "row1",
-      "uri": "https://example.com/row1",
-      "target": "_blank",
-      "gaid": "row1-gaid",
+      "id": "1",
+      "uri": "/users/1",
       "cells": [
-        {
-          "text": "Cell 1 Text",
-          "column": "id"
-        },
-        {
-          "text": "Cell 2 Text",
-          "column": "One"
-        },
-        {
-          "text": "Cell 3 Text",
-          "column": "Two"
-        },
-        {
-          "text": "Cell 4 Text",
-          "column": "Three"
-        },
-        {
-          "text": "Cell 5 Text",
-          "column": "Four"
-        }
+        {"text": "1", "column": "id"},
+        {"text": "Alice Johnson", "column": "name"},
+        {"text": "alice@example.com", "column": "email"},
+        {"text": "Active", "column": "status", "chipColor": "success"},
+        {"text": "2023-01-15", "column": "date"},
+        {"text": "+1 555-0101", "column": "phone"},
+        {"text": "123 Main St, Springfield", "column": "address"},
+        {"text": "Primary account holder", "column": "notes"},
+        {"text": "A long description about Alice Johnson and her account details", "column": "description"},
+        {"text": "INT-001", "column": "internal_id"}
       ],
       "actions": [
-        {
-          "text": "Action One",
-          "uri": "#"
-        },
-        {
-          "text": "Action Two",
-          "uri": "#",
-          "confirmContent": "Confirm Content"
-        }
+        {"text": "Edit", "uri": "/users/1/edit", "icon": "edit"},
+        {"text": "Delete", "uri": "/users/1/delete", "icon": "delete", "confirmType": "error", "confirmTitle": "Delete User", "confirmContent": "Are you sure you want to delete Alice Johnson?"}
       ]
     },
     {
-      "id": "row2",
+      "id": "2",
+      "uri": "/users/2",
       "cells": [
-        {
-          "text": "Cell 6 Text",
-          "heading": "Cell 6 Heading",
-          "color": "yellow",
-          "style": "normal"
-        },
-        {
-          "text": "Cell 7 Text",
-          "heading": "Cell 7 Heading",
-          "hoverContent": "This is hover content for cell 7",
-          "hoverPlacement": "left",
-          "chipColor": "pink"
-        },
-        {
-          "text": "Cell 8 Text",
-          "heading": "Cell 8 Heading",
-          "color": "gray",
-          "style": "italic"
-        },
-        {
-          "text": "Cell 9 Text",
-          "heading": "Cell 9 Heading",
-          "color": "black",
-          "style": "bold"
-        },
-        {
-          "text": "Cell 10 Text",
-          "heading": "Cell 10 Heading",
-          "color": "white",
-          "style": "normal"
-        }
+        {"text": "2", "column": "id"},
+        {"text": "Bob Smith", "column": "name"},
+        {"text": "bob@example.com", "column": "email"},
+        {"text": "Active", "column": "status", "chipColor": "success"},
+        {"text": "2023-02-20", "column": "date"},
+        {"text": "+1 555-0102", "column": "phone"},
+        {"text": "456 Oak Ave, Shelbyville", "column": "address"},
+        {"text": "Upgraded to premium plan", "column": "notes"},
+        {"text": "Bob is a long-standing customer with premium access", "column": "description"},
+        {"text": "INT-002", "column": "internal_id"}
+      ],
+      "actions": [
+        {"text": "Edit", "uri": "/users/2/edit", "icon": "edit"},
+        {"text": "Delete", "uri": "/users/2/delete", "icon": "delete", "confirmType": "error", "confirmTitle": "Delete User", "confirmContent": "Are you sure you want to delete Bob Smith?"}
+      ]
+    },
+    {
+      "id": "3",
+      "uri": "/users/3",
+      "cells": [
+        {"text": "3", "column": "id"},
+        {"text": "Carol Davis", "column": "name"},
+        {"text": "carol@example.com", "column": "email"},
+        {"text": "Inactive", "column": "status", "chipColor": "warning"},
+        {"text": "2023-03-10", "column": "date"},
+        {"text": "+1 555-0103", "column": "phone"},
+        {"text": "789 Pine Rd, Capital City", "column": "address"},
+        {"text": "Account on hold", "column": "notes"},
+        {"text": "Carol requested a temporary account suspension", "column": "description"},
+        {"text": "INT-003", "column": "internal_id"}
+      ],
+      "actions": [
+        {"text": "Edit", "uri": "/users/3/edit", "icon": "edit"}
+      ]
+    },
+    {
+      "id": "4",
+      "uri": "/users/4",
+      "cells": [
+        {"text": "4", "column": "id"},
+        {"text": "David Lee", "column": "name"},
+        {"text": "david@example.com", "column": "email"},
+        {"text": "Active", "column": "status", "chipColor": "success"},
+        {"text": "2023-04-05", "column": "date"},
+        {"text": "+1 555-0104", "column": "phone"},
+        {"text": "321 Elm St, Ogdenville", "column": "address"},
+        {"text": "Referred by Alice Johnson", "column": "notes"},
+        {"text": "David manages a team account with multiple users", "column": "description"},
+        {"text": "INT-004", "column": "internal_id"}
+      ],
+      "actions": [
+        {"text": "Edit", "uri": "/users/4/edit", "icon": "edit"},
+        {"text": "Delete", "uri": "/users/4/delete", "icon": "delete", "confirmType": "error", "confirmTitle": "Delete User", "confirmContent": "Are you sure you want to delete David Lee?"}
+      ]
+    },
+    {
+      "id": "5",
+      "uri": "/users/5",
+      "cells": [
+        {"text": "5", "column": "id"},
+        {"text": "Emma Wilson", "column": "name"},
+        {"text": "emma@example.com", "column": "email"},
+        {"text": "Active", "column": "status", "chipColor": "success"},
+        {"text": "2023-05-18", "column": "date"},
+        {"text": "+1 555-0105", "column": "phone"},
+        {"text": "654 Maple Dr, North Haverbrook", "column": "address"},
+        {"text": "Enterprise customer", "column": "notes"},
+        {"text": "Emma oversees the enterprise subscription for her organisation", "column": "description"},
+        {"text": "INT-005", "column": "internal_id"}
+      ],
+      "actions": [
+        {"text": "Edit", "uri": "/users/5/edit", "icon": "edit"}
+      ]
+    },
+    {
+      "id": "6",
+      "uri": "/users/6",
+      "cells": [
+        {"text": "6", "column": "id"},
+        {"text": "Frank Brown", "column": "name"},
+        {"text": "frank@example.com", "column": "email"},
+        {"text": "Inactive", "column": "status", "chipColor": "warning"},
+        {"text": "2023-06-22", "column": "date"},
+        {"text": "+1 555-0106", "column": "phone"},
+        {"text": "987 Cedar Ln, Brockway", "column": "address"},
+        {"text": "Trial period expired", "column": "notes"},
+        {"text": "Frank signed up for a trial and has not yet converted", "column": "description"},
+        {"text": "INT-006", "column": "internal_id"}
+      ],
+      "actions": [
+        {"text": "Edit", "uri": "/users/6/edit", "icon": "edit"},
+        {"text": "Delete", "uri": "/users/6/delete", "icon": "delete", "confirmType": "error", "confirmTitle": "Delete User", "confirmContent": "Are you sure you want to delete Frank Brown?"}
+      ]
+    },
+    {
+      "id": "7",
+      "uri": "/users/7",
+      "cells": [
+        {"text": "7", "column": "id"},
+        {"text": "Grace Kim", "column": "name"},
+        {"text": "grace@example.com", "column": "email"},
+        {"text": "Active", "column": "status", "chipColor": "success"},
+        {"text": "2023-07-30", "column": "date"},
+        {"text": "+1 555-0107", "column": "phone"},
+        {"text": "147 Birch Way, Springfield", "column": "address"},
+        {"text": "Recently migrated from legacy system", "column": "notes"},
+        {"text": "Grace was part of the batch migration in Q3", "column": "description"},
+        {"text": "INT-007", "column": "internal_id"}
+      ],
+      "actions": [
+        {"text": "Edit", "uri": "/users/7/edit", "icon": "edit"}
+      ]
+    },
+    {
+      "id": "8",
+      "uri": "/users/8",
+      "cells": [
+        {"text": "8", "column": "id"},
+        {"text": "Henry Clark", "column": "name"},
+        {"text": "henry@example.com", "column": "email"},
+        {"text": "Active", "column": "status", "chipColor": "success"},
+        {"text": "2023-08-12", "column": "date"},
+        {"text": "+1 555-0108", "column": "phone"},
+        {"text": "258 Walnut St, Shelbyville", "column": "address"},
+        {"text": "Billing contact for Acme Corp", "column": "notes"},
+        {"text": "Henry handles all billing enquiries for the Acme Corp account", "column": "description"},
+        {"text": "INT-008", "column": "internal_id"}
+      ],
+      "actions": [
+        {"text": "Edit", "uri": "/users/8/edit", "icon": "edit"},
+        {"text": "Delete", "uri": "/users/8/delete", "icon": "delete", "confirmType": "error", "confirmTitle": "Delete User", "confirmContent": "Are you sure you want to delete Henry Clark?"}
+      ]
+    },
+    {
+      "id": "9",
+      "uri": "/users/9",
+      "cells": [
+        {"text": "9", "column": "id"},
+        {"text": "Irene Patel", "column": "name"},
+        {"text": "irene@example.com", "column": "email"},
+        {"text": "Active", "column": "status", "chipColor": "success"},
+        {"text": "2023-09-01", "column": "date"},
+        {"text": "+1 555-0109", "column": "phone"},
+        {"text": "369 Spruce Ct, Capital City", "column": "address"},
+        {"text": "VIP customer", "column": "notes"},
+        {"text": "Irene has been flagged as a VIP due to high account value", "column": "description"},
+        {"text": "INT-009", "column": "internal_id"}
+      ],
+      "actions": [
+        {"text": "Edit", "uri": "/users/9/edit", "icon": "edit"}
+      ]
+    },
+    {
+      "id": "10",
+      "uri": "/users/10",
+      "cells": [
+        {"text": "10", "column": "id"},
+        {"text": "James Taylor", "column": "name"},
+        {"text": "james@example.com", "column": "email"},
+        {"text": "Inactive", "column": "status", "chipColor": "warning"},
+        {"text": "2023-10-14", "column": "date"},
+        {"text": "+1 555-0110", "column": "phone"},
+        {"text": "480 Ash Blvd, Ogdenville", "column": "address"},
+        {"text": "Pending verification", "column": "notes"},
+        {"text": "James needs to complete email verification to reactivate", "column": "description"},
+        {"text": "INT-010", "column": "internal_id"}
+      ],
+      "actions": [
+        {"text": "Edit", "uri": "/users/10/edit", "icon": "edit"},
+        {"text": "Delete", "uri": "/users/10/delete", "icon": "delete", "confirmType": "error", "confirmTitle": "Delete User", "confirmContent": "Are you sure you want to delete James Taylor?"}
+      ]
+    },
+    {
+      "id": "11",
+      "uri": "/users/11",
+      "cells": [
+        {"text": "11", "column": "id"},
+        {"text": "Karen White", "column": "name"},
+        {"text": "karen@example.com", "column": "email"},
+        {"text": "Active", "column": "status", "chipColor": "success"},
+        {"text": "2023-11-03", "column": "date"},
+        {"text": "+1 555-0111", "column": "phone"},
+        {"text": "591 Poplar Rd, North Haverbrook", "column": "address"},
+        {"text": "Multi-site licence holder", "column": "notes"},
+        {"text": "Karen manages licences across three office locations", "column": "description"},
+        {"text": "INT-011", "column": "internal_id"}
+      ],
+      "actions": [
+        {"text": "Edit", "uri": "/users/11/edit", "icon": "edit"}
+      ]
+    },
+    {
+      "id": "12",
+      "uri": "/users/12",
+      "cells": [
+        {"text": "12", "column": "id"},
+        {"text": "Liam Martinez", "column": "name"},
+        {"text": "liam@example.com", "column": "email"},
+        {"text": "Active", "column": "status", "chipColor": "success"},
+        {"text": "2023-12-19", "column": "date"},
+        {"text": "+1 555-0112", "column": "phone"},
+        {"text": "702 Willow Ave, Brockway", "column": "address"},
+        {"text": "API integration customer", "column": "notes"},
+        {"text": "Liam uses the API extensively for automated reporting", "column": "description"},
+        {"text": "INT-012", "column": "internal_id"}
+      ],
+      "actions": [
+        {"text": "Edit", "uri": "/users/12/edit", "icon": "edit"},
+        {"text": "Delete", "uri": "/users/12/delete", "icon": "delete", "confirmType": "error", "confirmTitle": "Delete User", "confirmContent": "Are you sure you want to delete Liam Martinez?"}
       ]
     }
-  ]
+  ],
+  "page": 1,
+  "perPage": 10,
+  "total": 12
 }

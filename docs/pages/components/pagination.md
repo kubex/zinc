@@ -113,12 +113,12 @@ You can dynamically update pagination properties to respond to data changes.
   <zn-pagination id="dynamic-pagination" total="100" limit="10" page="1" uri="#page#"></zn-pagination>
 
   <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-    <zn-button id="set-page-1" size="small">Go to Page 1</zn-button>
-    <zn-button id="set-page-5" size="small">Go to Page 5</zn-button>
-    <zn-button id="set-total-50" size="small" color="info">Set Total: 50</zn-button>
-    <zn-button id="set-total-200" size="small" color="info">Set Total: 200</zn-button>
-    <zn-button id="set-limit-5" size="small" color="success">Set Limit: 5</zn-button>
-    <zn-button id="set-limit-20" size="small" color="success">Set Limit: 20</zn-button>
+    <zn-button id="set-page-1">Go to Page 1</zn-button>
+    <zn-button id="set-page-5">Go to Page 5</zn-button>
+    <zn-button id="set-total-50" color="info">Set Total: 50</zn-button>
+    <zn-button id="set-total-200" color="info">Set Total: 200</zn-button>
+    <zn-button id="set-limit-5" color="success">Set Limit: 5</zn-button>
+    <zn-button id="set-limit-20" color="success">Set Limit: 20</zn-button>
   </div>
 </div>
 

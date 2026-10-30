@@ -1,15 +1,36 @@
 import {choose} from 'lit/directives/choose.js';
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, render, unsafeCSS} from 'lit';
-import {md5} from '../../utilities/md5';
+import {type CSSResultGroup, html, type PropertyValues, render, unsafeCSS} from 'lit';
 import {property} from 'lit/decorators.js';
+import {sha256} from '../../utilities/sha256';
 import {styleMap} from "lit/directives/style-map.js";
+import {unsafeSVG} from 'lit/directives/unsafe-svg.js';
 import ZincElement from '../../internal/zinc-element';
+import type {IconNode, SVGProps} from 'lucide';
 
 import styles from './icon.scss';
 
-type IconLibrary = "src" | "material" | "material-outlined" | "material-round" | "material-sharp" |
-  "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line";
+// The full lucide icon set is large, so it loads lazily into its own chunk the
+// first time a lucide icon is rendered.
+let lucideIcons: Record<string, IconNode> | undefined;
+let lucidePromise: Promise<void> | undefined;
+
+function loadLucideIcons(): Promise<void> {
+  lucidePromise ??= import('lucide').then(m => {
+    lucideIcons = m.icons as Record<string, IconNode>;
+  }).catch((error: unknown) => {
+    // Failed chunk load (e.g. transient 404 mid-rebuild/deploy): clear the
+    // memoised promise so a later render retries instead of blanking every
+    // icon for the rest of the page session
+    lucidePromise = undefined;
+    console.warn('<zn-icon> failed to load the lucide icon chunk', error);
+  });
+  return lucidePromise;
+}
+
+export type IconLibrary = "src" | "material" | "material-outlined" | "material-round" | "material-sharp" |
+  "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line" |
+  "lucide";
 
 export type IconColor =
   "default"
@@ -29,7 +50,8 @@ export type IconColor =
   | "indigo"
   | "violet"
   | "pink"
-  | "grey";
+  | "grey"
+  | (string & Record<never, never>);
 
 /**
  * @summary Short summary of the component's intended use.
@@ -58,20 +80,40 @@ export default class ZnIcon extends ZincElement {
   @property({type: Number, reflect: true}) size: number = 24;
 
   @property({type: Boolean, reflect: true}) round = false;
+  @property({type: Boolean, reflect: true}) tile = false;
+  @property({type: Boolean, reflect: true}) depth = false;
 
   @property({reflect: true}) library: IconLibrary;
 
   @property({reflect: true}) color: IconColor;
+
+  @property({reflect: true}) fill: IconColor;
 
   @property({type: Boolean}) padded: boolean = false;
   @property({type: Boolean}) blink: boolean = false;
 
   @property({type: Boolean}) squared: boolean = false;
 
+  private static readonly presetColors = new Set([
+    'default', 'primary', 'accent', 'info', 'warning', 'error', 'success',
+    'white', 'disabled', 'red', 'blue', 'green', 'orange', 'yellow',
+    'indigo', 'violet', 'pink', 'grey',
+  ]);
+
+  private isPresetColor(color: string): boolean {
+    return ZnIcon.presetColors.has(color);
+  }
+
   gravatarOptions = "";
   defaultLibrary: IconLibrary = "material-symbols-outlined";
 
+  private libraryAutoSet = false;
+
   convertToLibrary(input: string): IconLibrary {
+    return this.convertIndicatorToLibrary(input) ?? this.defaultLibrary
+  }
+
+  private convertIndicatorToLibrary(input: string): IconLibrary | undefined {
     switch (input) {
       case "material":
       case "mat":
@@ -103,46 +145,19 @@ export default class ZnIcon extends ZincElement {
         return "avatar";
       case "line":
         return "line";
+      case "lucide":
+      case "lu":
+        return "lucide";
       case 'brand':
       case 'brands':
         return "brands";
     }
 
-    return this.defaultLibrary
+    return undefined;
   }
 
   connectedCallback() {
     super.connectedCallback();
-
-
-    if (this.src && this.src.includes('#')) {
-      const split = this.src.split('#');
-      this.src = split[0];
-      const attributes = split[1].split(',');
-      attributes.forEach(attr => {
-        if (attr === "round") {
-          this.round = true;
-        }
-      });
-    }
-
-    if (this.src && this.src.includes('@')) {
-      const split = this.src.split('@');
-      if (split[1].includes('.')) {
-        this.library = "gravatar";
-      } else if ((this.library === undefined) && split[1] !== "") {
-        // if split[1] is a valid library name, set it
-        this.library = this.convertToLibrary(split[1]);
-        this.src = split[0];
-      }
-
-      if (this.library === "gravatar" || this.library === "libravatar") {
-        this.ravatarOptions();
-        this.src = md5(this.src);
-      }
-    } else if (!this.library && this.src && !this.src.includes('/')) {
-      this.library = this.defaultLibrary;
-    }
 
     // load the material icons font if the library is set to material
     render(html`
@@ -155,16 +170,107 @@ export default class ZnIcon extends ZincElement {
       <link
         href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined|Material+Icons|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone|Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         rel="stylesheet">`, document.head);
-
-    this.ravatarOptions();
   }
 
-  ravatarOptions() {
-    if ((this.library === "gravatar" || this.library === "libravatar") && this.src.includes('#')) {
-      const split = this.src.split('#');
-      this.gravatarOptions = "&d=" + split[1];
-      this.src = split[0];
+  protected override willUpdate(changedProperties: PropertyValues<this>) {
+    super.willUpdate(changedProperties);
+
+    if (changedProperties.has('src')) {
+      this.parseSrc();
     }
+  }
+
+  // Make `await el.updateComplete` cover the lazy lucide load and the
+  // re-render it triggers.
+  protected override async getUpdateComplete(): Promise<boolean> {
+    const result = await super.getUpdateComplete();
+    if (this.library === 'lucide' && !lucideIcons) {
+      await loadLucideIcons();
+      if (lucideIcons) {
+        this.requestUpdate();
+        await super.getUpdateComplete();
+      }
+    }
+    return result;
+  }
+
+  private parseSrc() {
+    if (this.libraryAutoSet) {
+      this.library = undefined as unknown as IconLibrary;
+      this.libraryAutoSet = false;
+    }
+
+    let hashFragment = '';
+
+    if (this.src && this.src.includes('#')) {
+      const split = this.src.split('#', 2);
+      this.src = split[0];
+      hashFragment = split[1] ?? '';
+    }
+
+    if (this.src && this.src.includes('@')) {
+      const atIndex = this.src.lastIndexOf('@');
+      const libraryOrDomain = this.src.slice(atIndex + 1);
+
+      const indicatedLibrary = this.convertIndicatorToLibrary(libraryOrDomain);
+
+      if (libraryOrDomain.includes('.')) {
+        this.library = this.library ?? "gravatar";
+      } else if ((this.library === undefined) && indicatedLibrary !== undefined) {
+        this.library = indicatedLibrary;
+        this.libraryAutoSet = true;
+        this.src = this.src.slice(0, atIndex);
+      } else if (this.library !== undefined && indicatedLibrary === this.library) {
+        this.src = this.src.slice(0, atIndex);
+      }
+
+      if (this.library === "gravatar" || this.library === "libravatar") {
+        this.applyHashFragment(hashFragment);
+        this.src = sha256(this.normalizeRavatarEmail(this.src));
+      } else {
+        this.applyHashFragment(hashFragment);
+      }
+    } else if (!this.library && this.src && !this.src.includes('/')) {
+      this.applyHashFragment(hashFragment);
+      this.library = this.defaultLibrary;
+      this.libraryAutoSet = true;
+    } else {
+      this.applyHashFragment(hashFragment);
+    }
+  }
+
+  private applyHashFragment(hashFragment: string) {
+    if (!hashFragment) {
+      return;
+    }
+
+    const attributes = hashFragment.split(',');
+
+    attributes.forEach(attr => {
+      if (attr === 'round') {
+        this.round = true;
+      }
+
+      if (attr === 'tile') {
+        this.tile = true;
+      }
+
+      if (attr === 'depth') {
+        this.depth = true;
+      }
+    });
+
+    if ((this.library === 'gravatar' || this.library === 'libravatar')) {
+      const defaultOption = attributes.find(attr => !['round', 'tile', 'depth'].includes(attr));
+
+      if (defaultOption) {
+        this.gravatarOptions = `&d=${defaultOption}`;
+      }
+    }
+  }
+
+  private normalizeRavatarEmail(email: string) {
+    return email.trim().toLowerCase();
   }
 
   render() {
@@ -173,6 +279,8 @@ export default class ZnIcon extends ZincElement {
         <div class="${classMap({
           'icon': true,
           'icon--round': this.round,
+          'icon--tile': this.tile,
+          'icon--depth': this.depth,
           'icon--default': this.color === "default",
           'icon--primary': this.color === "primary",
           'icon--accent': this.color === "accent",
@@ -195,8 +303,12 @@ export default class ZnIcon extends ZincElement {
           'icon--padded': this.padded,
           'icon--blink': this.blink,
           'icon--squared': this.squared,
+          'icon--filled': this.fill !== undefined && this.fill !== null,
+          [`icon--fill-${this.fill}`]: Boolean(this.fill) && this.isPresetColor(this.fill),
         })}" style="${styleMap({
           '--icon-size': this.size + "px",
+          '--icon-color': (this.color && !this.isPresetColor(this.color)) ? this.color : null,
+          '--icon-fill': (this.fill && !this.isPresetColor(this.fill)) ? this.fill : null,
           '--avatar-color': this.color ? null : (this.library === 'avatar' ? this.getColorForAvatar(this.getAvatarInitials(this.src)) : null)
         })}">
           ${this.library && this.library !== "src" ? html`
@@ -208,6 +320,7 @@ export default class ZnIcon extends ZincElement {
               ["material-two-tone", () => html`<i part="icon" class="mi mi--two-tone">${this.src}</i>`],
               ["brands", () => html`<i part="icon" class="kb">${this.src}</i>`],
               ["line", () => html`<i part="icon" class="lni lni-${this.src}"></i>`],
+              ["lucide", () => this.renderLucideIcon()],
               ["material-symbols-outlined", () => html`<i part="icon" class="mi mi--symbol-outlined">${this.src}</i>`],
               ["gravatar", () => html`<img part="icon" alt="${this.alt}"
                                            src="https://www.gravatar.com/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`],
@@ -240,6 +353,88 @@ export default class ZnIcon extends ZincElement {
       return matches.join('').slice(0, 2).toUpperCase();
     }
     return avatar.slice(0, 2).toUpperCase()
+  }
+
+  private renderLucideIcon() {
+    if (!lucideIcons) {
+      // Only re-render on success; a failed load retries on the next natural
+      // render rather than looping requestUpdate -> load -> fail
+      void loadLucideIcons().then(() => {
+        if (lucideIcons) {
+          this.requestUpdate();
+        }
+      });
+      return html``;
+    }
+
+    const icon = this.getLucideIcon(this.src);
+
+    if (!icon) {
+      return html`Icon not found: ${this.src ?? ''}`;
+    }
+
+    return unsafeSVG(this.getLucideSvg(icon));
+  }
+
+  private getLucideIcon(src = ''): IconNode | undefined {
+    if (!src) {
+      return undefined;
+    }
+
+    const candidates = [src, this.toPascalCase(src)];
+    const iconSet = lucideIcons ?? {};
+
+    for (const candidate of candidates) {
+      if (Object.prototype.hasOwnProperty.call(iconSet, candidate)) {
+        return iconSet[candidate];
+      }
+    }
+
+    return undefined;
+  }
+
+  private toPascalCase(input: string) {
+    return input
+      .split(/[-_\s]+/)
+      .filter(Boolean)
+      .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+      .join('');
+  }
+
+  private getLucideSvg(icon: IconNode) {
+    const children = icon
+      .map(([tag, attrs]) => `<${tag}${this.getSvgAttributes(attrs)} />`)
+      .join('');
+
+    return `
+      <svg
+        part="icon"
+        class="lucide"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.1"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >${children}</svg>
+    `;
+  }
+
+  private getSvgAttributes(attrs: SVGProps) {
+    return Object.entries(attrs)
+      .filter(([, value]) => value !== undefined)
+      .map(([name, value]) => ` ${name}="${this.escapeSvgAttribute(String(value))}"`)
+      .join('');
+  }
+
+  private escapeSvgAttribute(value: string) {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
   }
 
 

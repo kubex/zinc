@@ -1,6 +1,27 @@
 @use "../../wc";
 @use "./lni";
 
+$icon-colors: (
+  default: --zn-text,
+  primary: --zn-primary,
+  accent: --zn-accent,
+  info: --zn-color-info,
+  warning: --zn-color-warning,
+  error: --zn-color-error,
+  success: --zn-color-success,
+  white: --zn-body,
+  disabled: --zn-color-disabled,
+  red: --zn-red,
+  blue: --zn-blue,
+  green: --zn-green,
+  orange: --zn-orange,
+  yellow: --zn-yellow,
+  indigo: --zn-indigo,
+  violet: --zn-violet,
+  pink: --zn-pink,
+  grey: --zn-grey,
+);
+
 :host {
   display: inline-block;
   box-sizing: content-box !important;
@@ -115,8 +136,42 @@
     --icon-color: rgb(var(--zn-grey));
   }
 
+  &--filled .lucide {
+    fill: var(--icon-fill, currentColor);
+  }
+
+  @each $name, $token in $icon-colors {
+    $display-name: "" + $name;
+    &--fill-#{$display-name} {
+      --icon-fill: rgb(var(#{$token}));
+    }
+  }
+
   &--round {
     border-radius: 50%;
+  }
+
+  &--tile {
+    border-radius: 20%;
+  }
+
+  &--depth {
+    position: relative;
+
+    &:before, &:after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+    }
+
+    &:before {
+      box-shadow: inset -2px -2px 1px rgba(0, 0, 0, 0.1);
+    }
+
+    &:after {
+      box-shadow: inset 2px 2px 1px rgba(255, 255, 255, 0.2);
+    }
   }
 
   &--blink {
@@ -194,6 +249,14 @@
     text-transform: none;
     line-height: 1;
     -webkit-font-smoothing: antialiased;
+  }
+
+  .lucide {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: currentColor;
+    stroke: currentColor;
   }
 
   img {

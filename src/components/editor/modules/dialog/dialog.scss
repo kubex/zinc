@@ -8,13 +8,13 @@
 }
 
 ::backdrop {
-  background-color: rgba(128, 128, 128, 0.6);
+  background-color: var(--zn-backdrop-color, rgba(128, 128, 128, 0.6));
 }
 
 .editor-dialog {
   background-color: rgb(var(--zn-panel));
   border: 1px solid rgb(var(--zn-border-color));
-  border-radius: var(--zn-border-radius-large);
+  border-radius: var(--zn-border-radius);
   width: 100%;
   max-width: 975px;
   max-height: 650px;
@@ -32,11 +32,12 @@
     position: absolute;
     top: 0;
     right: 0;
-    margin: var(--zn-spacing-small);
+    margin: var(--zn-spacing-x-small);
     z-index: 10001;
   }
 
   &__content {
+    min-height: min(500px, 70vh);
     overflow: auto;
     box-sizing: border-box;
   }

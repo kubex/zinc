@@ -1,0 +1,343 @@
+@use "../../wc";
+
+:host {
+  @include wc.scrollbars; // styles scrollbars of all descendant scroll areas (controls column), as the other builders do
+  display: block;
+  // Matches page-builder's --palette-col.
+  --zn-theme-editor-controls-width: 343px;
+  // Resolves to auto when the parent height is indefinite, so the editor still
+  // grows to its content there; given a definite parent it stays inside it and
+  // the two columns scroll on their own instead.
+  height: 100%;
+}
+
+.editor {
+  --controls-col: var(--zn-theme-editor-controls-width);
+
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+
+  &--controls-collapsed {
+    --controls-col: 0px;
+
+    .editor__controls {
+      border-right: none;
+    }
+
+    .editor__controls-header,
+    .editor__controls-body {
+      padding: 0;
+    }
+  }
+}
+
+// Clips the sidebar's left corners and the toolbar's top-right corner to the panel's own radius.
+:host([standalone]) .editor {
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+// Same box model as .editor__controls-header so the tab strip lines up with the preview's top edge.
+.editor__toolbar {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  min-height: 44px;
+  gap: var(--zn-spacing-small);
+  padding: var(--zn-spacing-small) var(--zn-spacing-medium);
+  border-bottom: 1px solid rgb(var(--zn-border-color));
+}
+
+.editor__toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-small);
+  margin-left: auto;
+}
+
+.editor__caption {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16px;
+  color: rgb(var(--zn-text));
+}
+
+.editor__controls {
+  // Colour the tab strip's active tab to match the controls panel surface,
+  // rather than the navbar's default body colour (flow-builder pattern).
+  --zn-active-nav-background: var(--zn-panel);
+
+  // Themes with a glass page tab bar (e.g. Aura) frost inactive tabs on every
+  // navbar under a zn-page — over the editor's opaque panel the translucent
+  // white just reads as white. Pin the standard tab tint instead.
+  --navbar-page-inactive-tab-background: rgb(var(--zn-color-tab));
+  --navbar-page-inactive-tab-filter: none;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 var(--controls-col);
+  min-width: 0;
+  max-width: 100%;
+  background: rgb(var(--zn-panel));
+  border-right: 1px solid rgb(var(--zn-border-color));
+  overflow: hidden;
+  transition: flex-basis 0.2s ease;
+}
+
+// Taken out of flow so the controls contribute no height to the row: expanding
+// a section can then never stretch the editor, it just scrolls in place. The
+// preview column alone sets the height (its own min-height, or the parent's if
+// that is definite).
+.editor__controls-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor__controls-header {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: var(--zn-spacing-small) var(--zn-spacing-medium);
+}
+
+.editor__controls-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-spacing-medium);
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.editor__main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
+
+// The sidebar's scroll region: the header above and the footer below stay put.
+.editor__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-spacing-medium);
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+// Supports an author hand-slotting a bare zn-collapsible into the default slot.
+::slotted(zn-collapsible) {
+  width: 100%;
+}
+
+// Nothing above the first section, so its divider would double the toolbar's.
+.editor__fields--sections-only .editor__section:first-of-type {
+  border-top: none;
+}
+
+.editor__section {
+  display: block;
+  border-top: 1px solid rgba(var(--zn-border-color), .5);
+
+  // The !important beats zn-collapsible's internal .header class specificity.
+  &::part(header) {
+    align-items: center !important;
+    padding-block: calc(var(--zn-base-px) * 2) !important;
+  }
+
+  &::part(caption) {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 16px;
+    color: rgb(var(--zn-text));
+  }
+}
+
+.editor__section-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-spacing-medium);
+}
+
+// zn-tabs owns the tablist's presentation, keyboard behaviour and overflow.
+.editor__tabs {
+  display: block;
+}
+
+.editor__section-slot {
+  padding-top: var(--zn-spacing-sm);
+}
+
+.editor__tab-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.editor__footer {
+  display: flex;
+  flex: 0 0 auto;
+  gap: var(--zn-spacing-small);
+  padding-top: var(--zn-spacing-small);
+  border-top: 1px solid rgb(var(--zn-border-color));
+  margin-top: auto;
+}
+
+// Holds the preview below the toolbar, and never scrolls: the frame is its own
+// scroll region (interactive, the embed is), so a scroller here would only ever
+// be a second scrollbar beside that one.
+.editor__preview {
+  overflow: hidden;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+// Chevron straddling the controls/main seam — tuck the controls away / bring
+// them back (flow-builder pattern). Positioned against .editor__main (not
+// .editor__preview) so it stays centred on the full-height seam rather than
+// just the preview's portion of it.
+.panel-toggle {
+  position: absolute;
+  top: 50%;
+  z-index: 6;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border-radius: 50%;
+  color: rgb(var(--zn-color-muted-text));
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  box-shadow: 0 1px 3px rgba(var(--zn-shadow), 0.4);
+  cursor: pointer;
+  transition: left 0.2s ease, right 0.2s ease, color 0.12s ease, border-color 0.12s ease;
+
+  &:hover {
+    color: rgb(var(--zn-text));
+    border-color: rgb(var(--zn-color-border-active));
+  }
+
+  &--left {
+    left: -12px;
+
+    // With the panel tucked away, sit fully inside the preview column.
+    &.panel-toggle--tucked {
+      left: 8px;
+    }
+  }
+}
+
+// The device switcher is zn-button[icon-button="small"]s joined into a
+// segmented control by zn-button-group; only the active fill is styled here.
+.editor__device[aria-pressed="true"] {
+  // The button's shadow border-color is !important, so it can only be
+  // overridden through its own custom property.
+  --zn-button-border-color: rgb(var(--zn-primary));
+
+  // !important so the fill also beats the button's shadow hover background.
+  &::part(base) {
+    background: rgb(var(--zn-primary)) !important;
+    color: white !important;
+  }
+}
+
+.editor__mode {
+  // Sole occupant of .editor__controls-header's right side, beside the caption.
+  margin-left: auto;
+}
+
+.editor__sources {
+  width: auto;
+
+  // Accessible name only - the label text stays out of the compact toolbar row.
+  &::part(form-control-label) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+}
+
+.editor__error {
+  padding: var(--zn-spacing-small);
+  margin-bottom: var(--zn-spacing-small);
+  border-radius: 4px;
+  background: rgba(var(--zn-color-error), 0.1);
+  border: 1px solid rgb(var(--zn-color-error));
+  color: rgb(var(--zn-color-error));
+  font-size: 0.8125rem;
+}
+
+// 768 must match STACKED_QUERY in theme-editor.component.ts.
+@media (max-width: 768px) {
+  // Stacked, the two columns share one vertical axis, so they flow with the
+  // page rather than each owning a cramped scroller of its own.
+  :host {
+    height: auto;
+  }
+
+  .editor {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .editor__fields,
+  .editor__preview {
+    overflow: visible;
+  }
+
+  .editor__controls {
+    flex-basis: auto;
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid rgb(var(--zn-border-color));
+  }
+
+  // Stacked there is no second column to take the height from, so the controls
+  // go back in flow and size themselves.
+  .editor__controls-inner {
+    position: static;
+  }
+
+  .editor--controls-collapsed .editor__controls {
+    display: none;
+  }
+
+  .editor__main {
+    width: 100%;
+    // Gap between the stacked controls' bottom border and the toolbar below.
+    padding-top: var(--zn-spacing-medium);
+  }
+
+  // Stacked: the seam is horizontal, so the chevron straddles the top edge instead.
+  .panel-toggle {
+    top: -12px;
+    transform: translateX(-50%);
+    transition: top 0.2s ease, color 0.12s ease, border-color 0.12s ease;
+
+    &--left {
+      left: 50%;
+
+      &.panel-toggle--tucked {
+        top: 8px;
+        left: 50%;
+      }
+    }
+  }
+}

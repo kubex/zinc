@@ -1,14 +1,14 @@
 ---
 meta:
   title: Panel
-  description: Panels are versatile containers that provide structure for organizing content with optional headers, footers, and sidebars.
+  description: Panels are versatile containers that provide structure for organizing content with optional headers and footers.
 layout: component
 ---
 
-Panels are a fundamental component in the Zinc framework, providing a structured container for displaying content with consistent styling, borders, and spacing. They support various layouts including headers with actions, footers, and collapsible sidebars.
+Panels are a fundamental component in the Zinc framework, providing a structured container for displaying content with consistent styling, borders, and spacing. They support various layouts including headers with actions and footers.
 
 ```html:preview
-<zn-panel caption="Example Panel" description="Full example with all features" flush tabbed>
+<zn-panel caption="Example Panel" flush tabbed>
   <!-- Panel actions -->
   <zn-chip slot="actions" icon="home">Awesome</zn-chip>
   <zn-chip slot="actions" icon="phone" type="info">example</zn-chip>
@@ -42,10 +42,10 @@ Panels are a fundamental component in the Zinc framework, providing a structured
 
 ### Basic Panel
 
-Basic panels provide a simple container with consistent borders, rounded corners, and background styling. The panel can display a caption and description in its header.
+Basic panels provide a simple container with consistent borders, rounded corners, and background styling. The panel can display a caption in its header.
 
 ```html:preview
-<zn-panel caption="Example Panel" description="Simple panels are the best">
+<zn-panel caption="Example Panel">
   <div>Panel Content</div>
 </zn-panel>
 ```
@@ -55,7 +55,7 @@ Basic panels provide a simple container with consistent borders, rounded corners
 Use the `icon` attribute to add an icon to the panel header.
 
 ```html:preview
-<zn-panel caption="Settings Panel" description="Configure your preferences" icon="settings">
+<zn-panel caption="Settings Panel" icon="settings">
   <div style="padding: 20px;">
     <p>Panel content goes here</p>
   </div>
@@ -67,7 +67,7 @@ Use the `icon` attribute to add an icon to the panel header.
 Use the `actions` slot to add action buttons or chips to the panel header.
 
 ```html:preview
-<zn-panel caption="Project Details" description="Manage your project">
+<zn-panel caption="Project Details">
   <zn-chip slot="actions" icon="edit" type="info">Edit</zn-chip>
   <zn-chip slot="actions" icon="delete" type="error">Delete</zn-chip>
 
@@ -88,20 +88,20 @@ Use the `footer` slot to add footer content to the panel.
   </div>
 
   <div slot="footer">
-    <zn-button size="small">Save</zn-button>
-    <zn-button size="small" color="secondary">Cancel</zn-button>
+    <zn-button>Save</zn-button>
+    <zn-button color="secondary">Cancel</zn-button>
   </div>
 </zn-panel>
 ```
 
-### Header Underline
+### Borderless Header
 
-Use the `header-underline` attribute to add a border beneath the header.
+Panel headers include a border by default. Use the `header-borderless` attribute to remove the border beneath the header.
 
 ```html:preview
-<zn-panel caption="Underlined Header" description="With a visible separator" header-underline>
+<zn-panel caption="Borderless Header" header-borderless>
   <div style="padding: 20px;">
-    <p>Panel content with underlined header</p>
+    <p>Panel content with a borderless header</p>
   </div>
 </zn-panel>
 ```
@@ -192,7 +192,7 @@ Use the `tabbed` attribute for panels containing tabs. This automatically remove
 Use the `transparent` attribute to remove the panel background and border, creating a borderless container.
 
 ```html:preview
-<zn-panel caption="Transparent Panel" description="No background or border" transparent>
+<zn-panel caption="Transparent Panel" transparent>
   <div style="padding: 20px; background: rgba(var(--zn-color-info), 0.1);">
     Content in transparent panel
   </div>
@@ -204,7 +204,7 @@ Use the `transparent` attribute to remove the panel background and border, creat
 Use the `shadow` attribute to add a prominent drop shadow to the panel.
 
 ```html:preview
-<zn-panel caption="Shadow Panel" description="With drop shadow effect" shadow>
+<zn-panel caption="Shadow Panel" shadow>
   <div style="padding: 20px;">
     Content with enhanced shadow
   </div>
@@ -257,114 +257,6 @@ Use the `cosmic` attribute to add an animated cosmic border effect to the panel.
 </zn-panel>
 ```
 
-### Panel with Sidebar
-
-Use the `side` slot to add a sidebar to the panel. The sidebar can be positioned on the left or right side.
-
-```html:preview
-<zn-panel caption="Panel with Sidebar" description="Sidebar on the left">
-  <div slot="side">
-    <h4>Sidebar Content</h4>
-    <ul style="padding-left: 20px;">
-      <li>Item 1</li>
-      <li>Item 2</li>
-      <li>Item 3</li>
-    </ul>
-  </div>
-
-  <div style="padding: 20px;">
-    <h3>Main Content</h3>
-    <p>This is the main content area of the panel.</p>
-  </div>
-</zn-panel>
-```
-
-### Sidebar Position
-
-Use the `sidebar-position` attribute to control whether the sidebar appears on the left or right side.
-
-```html:preview
-<zn-panel caption="Panel with Right Sidebar" sidebar-position="right">
-  <div slot="side">
-    <h4>Right Sidebar</h4>
-    <ul style="padding-left: 20px;">
-      <li>Item 1</li>
-      <li>Item 2</li>
-      <li>Item 3</li>
-    </ul>
-  </div>
-
-  <div style="padding: 20px;">
-    <h3>Main Content</h3>
-    <p>The sidebar is now on the right side.</p>
-  </div>
-</zn-panel>
-```
-
-### Collapsible Sidebar
-
-Use `enable-sidebar-toggle` to add a toggle button in the header that collapses and expands the sidebar. You can customize the button icon and tooltip.
-
-```html:preview
-<zn-panel
-  caption="Collapsible Sidebar Panel"
-  enable-sidebar-toggle
-  sidebar-icon="menu"
-  sidebar-tooltip="Toggle Navigation">
-  <div slot="side">
-    <h4>Navigation</h4>
-    <ul style="padding-left: 20px;">
-      <li>Dashboard</li>
-      <li>Settings</li>
-      <li>Profile</li>
-      <li>Help</li>
-    </ul>
-  </div>
-
-  <div style="padding: 20px;">
-    <h3>Main Content</h3>
-    <p>Click the menu button in the header to toggle the sidebar.</p>
-  </div>
-</zn-panel>
-```
-
-### Sidebar Control
-
-Control the sidebar state programmatically using the `sidebar-open` attribute or by calling the `toggleSidebar()` method.
-
-```html:preview
-<zn-panel
-  id="controlled-sidebar-panel"
-  caption="Controlled Sidebar"
-  enable-sidebar-toggle
-  sidebar-open="false">
-  <div slot="side">
-    <h4>Sidebar</h4>
-    <p>This sidebar starts collapsed</p>
-  </div>
-
-  <div style="padding: 20px;">
-    <h3>Main Content</h3>
-    <p>The sidebar starts in a collapsed state.</p>
-    <br />
-    <zn-button id="toggle-btn">Toggle Sidebar Programmatically</zn-button>
-  </div>
-</zn-panel>
-
-<script type="module">
-  const panel = document.getElementById('controlled-sidebar-panel');
-  const toggleBtn = document.getElementById('toggle-btn');
-
-  toggleBtn.addEventListener('click', () => {
-    panel.toggleSidebar();
-  });
-
-  panel.addEventListener('zn-sidebar-toggle', (event) => {
-    console.log('Sidebar toggled:', event.detail);
-  });
-</script>
-```
-
 ### Basis Width
 
 Use the `basis-px` attribute to set a custom flex-basis width for the panel in pixels.
@@ -392,34 +284,20 @@ All panel features can be combined to create rich, complex layouts.
 ```html:preview
 <zn-panel
   caption="Advanced Panel"
-  description="Combining multiple features"
   icon="dashboard"
-  header-underline
-  enable-sidebar-toggle
-  sidebar-position="left"
   shadow>
 
   <zn-chip slot="actions" icon="settings" type="info">Configure</zn-chip>
-  <zn-button slot="actions" icon="refresh" size="x-small" color="transparent" square></zn-button>
-
-  <div slot="side">
-    <h4>Quick Links</h4>
-    <ul style="padding-left: 20px; margin: 10px 0;">
-      <li style="margin: 5px 0;">Overview</li>
-      <li style="margin: 5px 0;">Analytics</li>
-      <li style="margin: 5px 0;">Reports</li>
-      <li style="margin: 5px 0;">Settings</li>
-    </ul>
-  </div>
+  <zn-button slot="actions" icon="refresh" color="transparent" square></zn-button>
 
   <div style="padding: 20px;">
     <h3>Dashboard Overview</h3>
-    <p>This panel combines a sidebar, header actions, icons, underline, and shadow effects.</p>
+    <p>This panel combines header actions, icons, and shadow effects.</p>
   </div>
 
   <div slot="footer">
-    <zn-button size="small" color="success">Save Changes</zn-button>
-    <zn-button size="small" color="secondary">Cancel</zn-button>
+    <zn-button color="success">Save Changes</zn-button>
+    <zn-button color="secondary">Cancel</zn-button>
   </div>
 </zn-panel>
 ```
@@ -434,47 +312,14 @@ Panels are designed to work within flexible layouts. They have a default `flex-g
 
 When a panel contains a `zn-tabs` component and the `tabbed` attribute is not set, the panel automatically applies `flush-x` to the tabs and adjusts body styling to remove top padding.
 
-### Sidebar Width
-
-The sidebar has a fixed width of 250px when open. When collapsed using `sidebar-open="false"` or the toggle button, it transitions smoothly to 0px width using a 0.3s ease animation.
-
 ### Header Display
 
 The panel header only renders when one of the following conditions is met:
 - A `caption` is provided
 - The `actions` slot has content
-- The `enable-sidebar-toggle` attribute is set to `true`
 
 ### CSS Custom Properties
 
 The following CSS custom properties can be used to customize the panel:
 
 - `--zn-panel-basis` - Controls the flex-basis of the panel (set via `basis-px` attribute)
-
-### Events
-
-The panel emits the following events:
-
-#### zn-sidebar-toggle
-
-Emitted when the sidebar is toggled open or closed.
-
-```javascript
-panel.addEventListener('zn-sidebar-toggle', (event) => {
-  console.log('Element:', event.detail.element);
-  console.log('Open state:', event.detail.open);
-});
-```
-
-### Methods
-
-The panel exposes the following methods:
-
-#### toggleSidebar()
-
-Toggles the sidebar open or closed state. This method also emits the `zn-sidebar-toggle` event.
-
-```javascript
-const panel = document.querySelector('zn-panel');
-panel.toggleSidebar();
-```

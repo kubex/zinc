@@ -4,6 +4,7 @@ import {HasSlotController} from '../../internal/slot';
 import {property, query} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
+import formControlStyles from '../../form-control.scss';
 import styles from './input-group.scss';
 
 /**
@@ -21,7 +22,7 @@ import styles from './input-group.scss';
  * @csspart form-control-input - The input group container.
  */
 export default class ZnInputGroup extends ZincElement {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
 
   private readonly hasSlotController = new HasSlotController(this, 'label');
 
@@ -30,20 +31,32 @@ export default class ZnInputGroup extends ZincElement {
   /** The input group's label. If you need to display HTML, use the `label` slot. */
   @property() label = '';
 
+  /** Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`. */
+  @property() gap: 'sm' | 'md' | 'lg';
+
   private handleSlotChange() {
     const slottedElements = [...this.defaultSlot.assignedElements({flatten: true})] as HTMLElement[];
 
-    // Filter for inputs and selects
+    // Filter for inputs, selects, and buttons
     const supportedTags = ['ZN-INPUT', 'ZN-SELECT', 'ZN-BUTTON'];
     const controls = slottedElements.filter(el => supportedTags.includes(el.tagName));
 
-    controls.forEach(el => {
-      const index = controls.indexOf(el);
+    // Buttons are styled independently — only inputs/selects participate in joined positioning
+    const joinedControls = controls.filter(el => el.tagName !== 'ZN-BUTTON');
 
+    controls.forEach(el => {
       el.toggleAttribute('data-zn-input-group__input', true);
-      el.toggleAttribute('data-zn-input-group__input--first', index === 0);
-      el.toggleAttribute('data-zn-input-group__input--inner', index > 0 && index < controls.length - 1);
-      el.toggleAttribute('data-zn-input-group__input--last', index === controls.length - 1);
+
+      if (el.tagName === 'ZN-BUTTON') {
+        el.toggleAttribute('data-zn-input-group__input--first', false);
+        el.toggleAttribute('data-zn-input-group__input--inner', false);
+        el.toggleAttribute('data-zn-input-group__input--last', false);
+      } else {
+        const index = joinedControls.indexOf(el);
+        el.toggleAttribute('data-zn-input-group__input--first', index === 0);
+        el.toggleAttribute('data-zn-input-group__input--inner', index > 0 && index < joinedControls.length - 1);
+        el.toggleAttribute('data-zn-input-group__input--last', index === joinedControls.length - 1);
+      }
     });
   }
 
@@ -65,7 +78,16 @@ export default class ZnInputGroup extends ZincElement {
           <slot name="label">${this.label}</slot>
         </label>
 
-        <div part="base form-control-input" class="input-group" role="group" aria-labelledby="label">
+        <div part="base form-control-input"
+             class="${classMap({
+               'input-group': true,
+               'input-group--gap': !!this.gap,
+               'input-group--gap-sm': this.gap === 'sm',
+               'input-group--gap-md': this.gap === 'md',
+               'input-group--gap-lg': this.gap === 'lg',
+             })}"
+             role="group"
+             aria-labelledby="label">
           <slot @slotchange=${this.handleSlotChange}></slot>
         </div>
       </div>`;

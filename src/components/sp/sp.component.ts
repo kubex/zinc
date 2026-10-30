@@ -17,7 +17,7 @@ export const defaultSizes = {
 }
 
 /**
- * @summary Short summary of the component's intended use.
+ * @summary A flexible layout container for spacing and arranging child elements in rows or columns with configurable gap, padding, and dividers.
  * @documentation https://zinc.style/components/sp
  * @status experimental
  * @since 1.0
@@ -39,10 +39,13 @@ export default class ZnSp extends ZincElement {
   @property({attribute: 'divide', type: Boolean, reflect: true}) divide: boolean = false;
   @property({attribute: 'gap', reflect: true}) gap: keyof typeof defaultSizes;
   @property({attribute: 'row', type: Boolean, reflect: true}) row: boolean = false;
+  @property({reflect: true}) align: 'start' | 'center' | 'end' | 'stretch' | 'baseline';
+  @property({reflect: true}) justify: 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
   @property({attribute: 'grow', type: Boolean, reflect: true}) grow: boolean = false;
   @property({attribute: 'pad-x', type: Boolean, reflect: true}) padX: boolean = false;
   @property({attribute: 'pad-y', type: Boolean, reflect: true}) padY: boolean = false;
   @property({attribute: 'no-gap', type: Boolean, reflect: true}) noGap: boolean = false;
+  @property({attribute: 'no-pos', type: Boolean, reflect: true}) noPosition: boolean = false;
   @property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
   @property({attribute: 'flush-x', type: Boolean, reflect: true}) flushX: boolean = false;
   @property({attribute: 'flush-y', type: Boolean, reflect: true}) flushY: boolean = false;
@@ -73,6 +76,7 @@ export default class ZnSp extends ZincElement {
         'sp--row': this.row,
         'sp--grow': this.grow,
         'sp--no-gap': this.noGap,
+        'sp--no-pos': this.noPosition,
         'sp--flush': this.flush,
         'sp--flush-y': this.flushY,
         'sp--flush-x': this.flushX,

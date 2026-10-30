@@ -136,7 +136,7 @@ the [Properties table](#properties) for the full list of options.
 
 #### Color Input
 
-The color input type displays a clickable color swatch on the left that opens the browser's native color picker. The color value is shown as editable text in the input field, allowing users to either pick a color visually or enter a color value directly.
+The color input type displays a clickable color swatch on the right that opens the browser's native color picker. The color value is shown as editable text in the input field, allowing users to either pick a color visually or enter a color value directly.
 
 Use the `color-format` attribute to specify the format: `hex` (default), `rgb`, or `oklch`.
 
@@ -157,6 +157,24 @@ Use the `color-format` attribute to specify the format: `hex` (default), `rgb`, 
   <div slot="help-text">Use the <code>clearable</code> attribute to allow clearing the color value.</div>
 </zn-input>
 <br />
+```
+
+#### Range Input
+
+The range input type renders as a bare track with no field chrome. The current value is displayed above the track, on
+the right, and updates as the thumb is dragged. Use `value-suffix` to append a unit to that value, and `min`, `max` and
+`step` to control the range.
+
+```html:preview
+<zn-input type="range" label="Base radius" min="0" max="2" step="0.125" value="0.5" value-suffix="rem"></zn-input>
+<br />
+<zn-input type="range" label="Volume" min="0" max="100" value="70" value-suffix="%">
+  <div slot="help-text">Set <code>context-note</code> to replace the value readout with your own text.</div>
+</zn-input>
+<br />
+<zn-input type="range" label="Small" size="small" min="0" max="10" value="4"></zn-input>
+<br />
+<zn-input type="range" label="Disabled" min="0" max="10" value="4" disabled></zn-input>
 ```
 
 #### Other Input Types
@@ -415,6 +433,57 @@ Form navigation works with all Zinc form controls including selects, radios, che
 :::warning
 **Note:** While you can navigate TO textareas and search inputs using Enter, pressing Enter while inside these controls uses the Enter key for their own functionality (new lines and search triggers, respectively). Use Tab to navigate away from these controls.
 :::
+
+### Trigger Submit
+
+Add the `trigger-submit` attribute to make pressing Enter in the input always submit the surrounding form. Inputs already submit on Enter by default, so this is only needed on forms using `data-enter-navigation`, where Enter would otherwise move focus to the next field.
+
+```html:preview
+<form class="trigger-submit-form" data-enter-navigation>
+  <zn-input name="firstName" label="First Name" required></zn-input>
+  <br />
+  <zn-input name="search" label="Quick Search (Enter submits)" trigger-submit></zn-input>
+  <br />
+  <zn-button type="submit" variant="primary">Submit</zn-button>
+</form>
+
+<script type="module">
+  const form = document.querySelector('.trigger-submit-form');
+
+  await Promise.all([
+    customElements.whenDefined('zn-button'),
+    customElements.whenDefined('zn-input')
+  ]).then(() => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData);
+      alert('Form submitted!\n\n' + JSON.stringify(data, null, 2));
+    });
+  });
+</script>
+```
+
+### Slash Menu Quick Insertions
+
+{% raw %}
+
+Typing `/` opens a menu at the caret, exactly as it does on
+[`zn-textarea`](/components/textarea#slash-menu-quick-insertions) — useful for short single-line copy that carries
+replacement strings, such as a headline or a button label. The same `slash-items`, `slash-preset`, `slash-trigger` and
+`slash-heading` attributes apply, and `zn-slash-item` children work too.
+
+```html:preview
+<zn-input
+  label="Confirmation headline"
+  help-text="Type / to insert a replacement string"
+  slash-items="Brand name={{BRAND_NAME}}, Customer email={{CUSTOMER_EMAIL}}"></zn-input>
+```
+
+While the menu is open it claims `↑`, `↓`, `Enter`, `Tab` and `Escape`, so choosing an item does not submit the
+surrounding form the way `Enter` otherwise would.
+
+{% endraw %}
 
 ### Customizing Label Position
 

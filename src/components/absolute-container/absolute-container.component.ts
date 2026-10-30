@@ -1,3 +1,4 @@
+import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import ZincElement from '../../internal/zinc-element';
 import type {PropertyValues} from 'lit';
 
@@ -13,17 +14,16 @@ import type {PropertyValues} from 'lit';
  *
  */
 export default class ZnAbsoluteContainer extends ZincElement {
+  private _resizeFrame: number | null = null;
 
-  private domObserver: MutationObserver;
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.observerDom();
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.domObserver?.disconnect();
+  constructor() {
+    super();
+    // eslint-disable-next-line no-new
+    new MutationController(this, {
+      config: {childList: true, subtree: true, attributes: true, characterData: true},
+      callback: () => this.resize(),
+      skipInitial: true,
+    });
   }
 
   protected firstUpdated(_changedProperties: PropertyValues) {
@@ -31,27 +31,30 @@ export default class ZnAbsoluteContainer extends ZincElement {
     this.resize();
   }
 
-  resize() {
-    let newSize = 0;
-    Array.from(this.children).forEach((child) => {
-      newSize += child.getBoundingClientRect().height;
-    });
-    this.style.minHeight = newSize + 'px';
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this._resizeFrame !== null) {
+      cancelAnimationFrame(this._resizeFrame);
+      this._resizeFrame = null;
+    }
   }
 
-  observerDom() {
-    // observe the DOM for changes
-    this.domObserver = new MutationObserver(() => {
-      this.resize();
-    });
-
-    this.domObserver.observe(this,
-      {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        characterData: true
+  resize() {
+    if (this._resizeFrame !== null) {
+      return;
+    }
+    this._resizeFrame = requestAnimationFrame(() => {
+      this._resizeFrame = null;
+      let newSize = 0;
+      Array.from(this.children).forEach((child) => {
+        newSize += child.getBoundingClientRect().height;
       });
+      const minHeight = newSize + 'px';
+      // Guarded write: setting style re-triggers our own MutationController
+      if (this.style.minHeight !== minHeight) {
+        this.style.minHeight = minHeight;
+      }
+    });
   }
 
   // the height of this element is set to the height of its children (absolute positioned)

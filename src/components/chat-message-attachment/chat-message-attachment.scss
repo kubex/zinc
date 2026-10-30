@@ -1,0 +1,32 @@
+@use "../../wc";
+
+:host {
+  display: inline-flex;
+  min-width: 0;
+}
+
+.attachment {
+  @include wc.text-style(paragraph);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--zn-spacing-2x-small);
+  color: rgb(var(--zn-text));
+  text-decoration: none;
+  min-width: 0;
+
+  &__icon {
+    flex: 0 0 auto;
+  }
+
+  &__label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &:hover .attachment__label {
+    text-decoration: underline;
+  }
+}

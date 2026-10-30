@@ -1,0 +1,222 @@
+@use "../../../../wc";
+
+:host {
+  display: block;
+  font-size: 0.8125rem;
+}
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+// --- Filter picker (step 1) --------------------------------------------------
+
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 8px;
+  background: rgb(var(--zn-panel));
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 600;
+  }
+
+  &__back {
+    flex: 0 0 auto;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    margin-top: -1px;
+    border: 1px solid rgb(var(--zn-border-color));
+    background: rgb(var(--zn-panel));
+    color: rgb(var(--zn-text));
+    font-size: 0.8125rem;
+    text-align: left;
+    cursor: pointer;
+
+    &:first-child {
+      margin-top: 0;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+
+    &:last-child {
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+
+    &:hover {
+      background: rgb(var(--zn-color-tab));
+    }
+  }
+
+  &__item-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__item-label {
+    font-weight: 500;
+  }
+
+  &__item-description {
+    font-size: 0.75rem;
+    color: rgb(var(--zn-color-muted-text));
+  }
+
+  &__empty {
+    margin: 0;
+    padding: 10px 2px;
+    font-size: 0.75rem;
+    color: rgb(var(--zn-color-muted-text));
+  }
+}
+
+// --- Condition groups (step 2) -----------------------------------------------
+
+.conditions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  padding: 14px;
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 8px;
+  background: rgb(var(--zn-panel));
+}
+
+// The AND joining two conditions in a group: a label on a full-width rule.
+.and-rule {
+  @include wc.text-style(paragraph);
+  
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  color: rgb(var(--zn-color-success));
+
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: color-mix(in srgb, rgb(var(--zn-color-success)) 50%, transparent);
+  }
+}
+
+// The OR joining two groups.
+.or-label {
+  @include wc.text-style(paragraph);
+
+  margin: 2px 0;
+  color: rgb(var(--zn-color-error));
+}
+
+.condition {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+  }
+
+  &__name {
+    @include wc.text-style(heading-section);
+  }
+
+  &__remove {
+    flex: 0 0 auto;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  &__row-label,
+  &__suffix {
+    font-size: 0.75rem;
+    color: rgb(var(--zn-color-muted-text));
+    white-space: nowrap;
+  }
+}
+
+// Zinc form controls sized into the row: a zero flex-basis overrides the
+// controls' natural 100% width so a row shares one line. Each select also gets
+// an inline min-width sized to its longest label, so a row that can't show a
+// label in full wraps and gives the select its own line instead of truncating.
+.control {
+  min-width: 0;
+
+  &--operator {
+    flex: 1 1 0;
+    min-width: 120px;
+  }
+
+  &--number {
+    flex: 0 0 auto;
+    width: 80px;
+  }
+
+  // Adjustable unit dropdown after the value (e.g. day(s) / month(s)).
+  &--unit {
+    flex: 1 1 0;
+  }
+
+  // The value control soaks up the remaining row width.
+  &--value {
+    flex: 1 1 0;
+    min-width: 100px;
+  }
+}
+
+// Graceful fallback for labels past the min-width cap.
+zn-select.control::part(display-input) {
+  text-overflow: ellipsis;
+}
+
+// Save / Cancel sit in their own section, clear of the last group's "+ OR".
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+  padding-top: 16px;
+  border-top: 1px solid rgb(var(--zn-border-color));
+}

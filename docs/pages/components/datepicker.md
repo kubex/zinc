@@ -168,6 +168,13 @@ Combine `min-date` and `max-date` to constrain the selectable date range.
   help-text="Select dates within the conference period (March 1-15, 2026)">
 </zn-datepicker>
 ```
+### Clearable
+
+Use the `clearable` attribute to add a "Clear" button to the calendar popup, allowing users to easily remove a selected date.
+
+```html:preview
+<zn-datepicker label="Event date" clearable value="03/15/2026"></zn-datepicker>
+```
 
 ### Prefix & Suffix Slots
 
@@ -349,11 +356,11 @@ You can control the datepicker programmatically using its methods:
   <zn-datepicker id="programmatic-datepicker" label="Programmatic control"></zn-datepicker>
 
   <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-    <zn-button id="focus-btn" size="small">Focus</zn-button>
-    <zn-button id="blur-btn" size="small">Blur</zn-button>
-    <zn-button id="set-value-btn" size="small">Set Value</zn-button>
-    <zn-button id="clear-value-btn" size="small">Clear Value</zn-button>
-    <zn-button id="check-validity-btn" size="small">Check Validity</zn-button>
+    <zn-button id="focus-btn">Focus</zn-button>
+    <zn-button id="blur-btn">Blur</zn-button>
+    <zn-button id="set-value-btn">Set Value</zn-button>
+    <zn-button id="clear-value-btn">Clear Value</zn-button>
+    <zn-button id="check-validity-btn">Check Validity</zn-button>
   </div>
 </div>
 
@@ -409,4 +416,44 @@ Use [CSS parts](#css-parts) to customize the way form controls are drawn. This e
 </style>
 ```
 
+### Date Time
 
+Displays time.
+
+```html:preview
+<zn-datepicker
+  time-picker
+  label="Conference dates"
+  help-text="Select date and time">
+</zn-datepicker>
+```
+
+### Inline Calendar
+
+`inline` renders the calendar in place and hides the text input, which suits a panel or dropdown that
+is already open. Set `--zn-datepicker-inline-border-color: transparent` when the surrounding panel
+already draws the edge.
+
+```html:preview
+<zn-datepicker inline></zn-datepicker>
+```
+
+### Dialogs & Shadow DOM
+
+The calendar popup renders at the document level, so it is never clipped by ancestor shadow roots or
+`overflow` containers. When the datepicker sits inside a modal dialog or popover, the calendar mounts
+inside that element instead so it stays visible and interactive above the top layer.
+
+```html:preview
+<zn-button id="datepicker-dialog-opener">Open Dialog</zn-button>
+<zn-dialog id="datepicker-dialog" label="Book a meeting">
+  <zn-datepicker label="Meeting date"></zn-datepicker>
+</zn-dialog>
+
+<script>
+  const dialog = document.querySelector('#datepicker-dialog');
+  document.querySelector('#datepicker-dialog-opener').addEventListener('click', () => dialog.show());
+</script>
+```
+
+Use the `container` attribute only if you need to mount the calendar somewhere specific.

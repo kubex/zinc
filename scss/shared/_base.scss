@@ -1,3 +1,5 @@
+@use "../themes/modes";
+
 /**
 Apply default styles to the document, and shadow documents
  */
@@ -8,8 +10,7 @@ Apply default styles to the document, and shadow documents
 
   font-feature-settings: normal;
   font-variation-settings: normal;
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: var(--zn-text-paragraph-font-size);
 
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0%);
@@ -30,7 +31,7 @@ html, body {
 }
 
 .app-container {
-  container-type: inline-size;
+  container-type: normal;
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -71,33 +72,32 @@ small {
   visibility: hidden;
 }
 
+p {
+  font-size: var(--zn-text-paragraph-font-size);
+  line-height: var(--zn-text-paragraph-line-height);
+  font-weight: var(--zn-text-paragraph-font-weight);
+}
+
 h1, h2, h3, h4, h5, h6 {
-  font-weight: var(--zn-font-weight-medium);
   color: rgb(var(--zn-text-heading));
 }
 
-h6 {
-  font-size: var(--zn-font-size-x-small);
-}
-
-h5 {
-  font-size: var(--zn-font-size-small);
-}
-
-h4 {
-  font-size: var(--zn-font-size-medium);
-}
-
-h3 {
-  font-size: var(--zn-font-size-large);
+h1 {
+  font-size: var(--zn-text-h1-font-size);
+  line-height: var(--zn-text-h1-line-height);
+  font-weight: var(--zn-text-h1-font-weight);
 }
 
 h2 {
-  font-size: var(--zn-font-size-x-large);
+  font-size: var(--zn-text-h2-font-size);
+  line-height: var(--zn-text-h2-line-height);
+  font-weight: var(--zn-text-h2-font-weight);
 }
 
-h1 {
-  font-size: var(--zn-font-size-2x-large);
+h3, h4, h5, h6 {
+  font-size: var(--zn-text-h3-font-size);
+  line-height: var(--zn-text-h3-line-height);
+  font-weight: var(--zn-text-h3-font-weight);
 }
 
 kbd {
@@ -119,10 +119,14 @@ kbd {
   color: rgba(0, 0, 0, 0.5);
 }
 
-[t="dark"] kbd {
-  background-color: rgb(25, 25, 25);
-  box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 1px 0 0 rgba(110, 110, 110, .5) inset;
-  color: #eee;
+// Interpolating a comma list into a descendant selector would not distribute,
+// so the mode selector is nested instead.
+#{modes.$dark} {
+  kbd {
+    background-color: rgb(25, 25, 25);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 1px 0 0 rgba(110, 110, 110, .5) inset;
+    color: #eee;
+  }
 }
 
 [tab] {

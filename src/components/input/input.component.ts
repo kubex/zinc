@@ -1,6 +1,7 @@
 import {classMap} from "lit/directives/class-map.js";
 import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
+import {getSlashMenuPreset, parseSlashItems, type SlashMenuItem} from "../slash-menu";
 import {HasSlotController} from "../../internal/slot";
 import {html, unsafeCSS} from 'lit';
 import {ifDefined} from "lit/directives/if-defined.js";
@@ -10,9 +11,12 @@ import {property, query, state} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
 import ZnIcon from "../icon";
+import ZnSlashItem from "../slash-item";
+import ZnSlashMenu, {SlashMenuController} from "../slash-menu";
 import ZnTooltip from "../tooltip";
 import type {ZincFormControl} from '../../internal/zinc-element';
 
+import formControlStyles from '../../form-control.scss';
 import styles from './input.scss';
 
 /**
@@ -33,15 +37,27 @@ import styles from './input.scss';
  *
  * @slot label - The input's label. Alternatively, you can use the `label` attribute.
  * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.
- * @slot context-note - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute.
+ * @slot context-note - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute. Range inputs display their live value here unless this is set.
  * @slot prefix - Used to prepend a presentational icon or similar element to the input.
  * @slot suffix - Used to append a presentational icon or similar element to the input.
  * @slot clear-icon - An icon to use in lieu of the default clear icon.
  * @slot show-password-icon - An icon to use in lieu of the default show password icon.
  * @slot hide-password-icon - An icon to use in lieu of the default hide password icon.
  * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
+ * @slot slash-items - `<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are
+ *  picked up wherever they sit inside the input, so this slot name is optional.
+ * @slot slash-menu - A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can
+ *  be set in markup. Any `<zn-slash-item>` children of it become the menu's items.
+ *
+ * @dependency zn-slash-item
+ * @dependency zn-slash-menu
+ *
+ * @event zn-slash-select - Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to
+ *  suppress the insertion and handle the item yourself.
+ * @event zn-slash-insert - Emitted after a slash menu item's value has been inserted.
  *
  * @csspart form-control - The form control that wraps the label, input, and help text.
+ * @csspart slash-menu - The slash menu shown at the caret.
  * @csspart form-control-label - The label's wrapper.
  * @csspart form-control-input - The input's wrapper.
  * @csspart form-control-help-text - The help text's wrapper.
@@ -51,11 +67,19 @@ import styles from './input.scss';
  * @csspart clear-button - The clear button.
  * @csspart password-toggle-button - The password toggle button.
  * @csspart suffix - The container that wraps the suffix.
+ *
+ * @cssproperty --zn-range-track-height - The height of a range input's track.
+ * @cssproperty --zn-range-track-color - The color of a range input's track.
+ * @cssproperty --zn-range-thumb-size - The diameter of a range input's thumb.
+ * @cssproperty --zn-range-thumb-color - The color of a range input's thumb.
+ * @cssproperty --zn-range-thumb-ring-width - The width of the ring drawn around a range input's thumb.
  */
 export default class ZnInput extends ZincElement implements ZincFormControl {
-  static styles = unsafeCSS(styles);
+  static styles = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
   static dependencies = {
     'zn-icon': ZnIcon,
+    'zn-slash-item': ZnSlashItem,
+    'zn-slash-menu': ZnSlashMenu,
     'zn-tooltip': ZnTooltip
   }
 
@@ -65,10 +89,24 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
   private readonly hasSlotController = new HasSlotController(this, 'help-text', 'label', 'label-tooltip');
   private readonly localize = new LocalizeController(this);
 
+  private readonly slashController = new SlashMenuController(this, {
+    menu: () => this.mountSlashMenu(),
+    items: search => this.resolveSlashItems(search),
+    trigger: () => this.slashTrigger,
+    onSelect: (item, search) => !this.emit('zn-slash-select', {
+      detail: {item, query: search}
+    }).defaultPrevented,
+    onInsert: (item, value) => this.emit('zn-slash-insert', {detail: {item, value}})
+  });
+
   @query('.input__control') input: HTMLInputElement;
   @query('.input__color-picker') colorPicker: HTMLInputElement;
+  @query('zn-slash-menu') slashMenuElement: ZnSlashMenu | null;
 
   @state() private hasFocus = false;
+
+  /** Renders the slash menu only once it has been needed, keeping unused inputs cheap. */
+  @state() private hasSlashMenu = false;
   @state() private isUserTyping = false;
   @property() title = "" // make reactive pass through
 
@@ -80,7 +118,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
    * to `text`
    */
   @property({reflect: true}) type: 'color' | 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' |
-    'search' | 'tel' | 'text' | 'time' | 'url' = 'text';
+    'range' | 'search' | 'tel' | 'text' | 'time' | 'url' = 'text';
 
   /** The name of the input, submitted as a name/value pair with form data. */
   @property() name: string = "";
@@ -144,7 +182,13 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
   @property({attribute: 'no-spin-buttons', type: Boolean}) noSpinButtons: boolean = false;
 
   /** The color format to display for color inputs. Only applies when type is 'color'. **/
-  @property({attribute: 'color-format'}) colorFormat: 'hex' | 'rgb' | 'oklch' = 'hex';
+  @property({attribute: 'color-format'}) colorFormat: 'hex' | 'rgb' | 'hsl' | 'oklch' = 'hex';
+
+  /**
+   * Appended to the value that range inputs display above the track, on the right, e.g. `rem`. Only applies when type
+   * is 'range' and no `context-note` is set.
+   */
+  @property({attribute: 'value-suffix'}) valueSuffix: string = '';
 
   /**
    * By default, form-controls are associated with the nearest containing `<form>` element. This attribute allows you
@@ -211,6 +255,50 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
    * keyboard on supportive devices.
    */
   @property() inputmode: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url';
+
+  /**
+   * Quick insertions offered by the slash menu. Accepts a JSON array of items, or the shorthand
+   * `Brand name={{BRAND_NAME}}, Support email={{SUPPORT_EMAIL}}`. Can also be set as an array of
+   * `SlashMenuItem` objects in JavaScript.
+   */
+  @property({
+    attribute: 'slash-items',
+    converter: {
+      fromAttribute: (value: string) => parseSlashItems(value),
+      toAttribute: (value: SlashMenuItem[]) => JSON.stringify(value)
+    }
+  })
+  slashItems: SlashMenuItem[] = [];
+
+  /** Names of item sets registered with `registerSlashMenuPreset`, comma separated. */
+  @property({attribute: 'slash-preset'}) slashPreset = '';
+
+  /** The characters that open the slash menu. */
+  @property({attribute: 'slash-trigger'}) slashTrigger = '/';
+
+  /** The name the slash menu's list is announced by. */
+  @property({attribute: 'slash-heading'}) slashHeading = 'Insert';
+
+  /** Hides the insertion keys normally shown against the slash menu's items. */
+  @property({attribute: 'slash-hide-keys', type: Boolean}) slashHideKeys = false;
+
+  /**
+   * Lists the items most recently chosen here above the rest, remembered in `localStorage` under this
+   * key. Share a key between the fields that should share a history; leave unset to offer no such list.
+   */
+  @property({attribute: 'slash-recent-key'}) slashRecentKey = '';
+
+  /**
+   * Resolves additional items each time the menu opens, for lists that come from elsewhere (e.g. an
+   * API). Receives the current query and may return a promise. JavaScript only.
+   */
+  @property({attribute: false}) slashItemsProvider?: (query: string) => SlashMenuItem[] | Promise<SlashMenuItem[]>;
+
+  /**
+   * When enabled, pressing enter will always submit the surrounding form, even when the form uses
+   * enter-navigation to move between fields.
+   */
+  @property({type: Boolean, attribute: 'trigger-submit'}) triggerSubmit = false;
 
   //
   // NOTE: We use an in-memory input for these getters/setters instead of the one in the template because the properties
@@ -309,9 +397,9 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     const yn = y / 1.00000;
     const zn = z / 1.08883;
 
-    const fx = xn > 0.008856 ? Math.pow(xn, 1/3) : (7.787 * xn + 16/116);
-    const fy = yn > 0.008856 ? Math.pow(yn, 1/3) : (7.787 * yn + 16/116);
-    const fz = zn > 0.008856 ? Math.pow(zn, 1/3) : (7.787 * zn + 16/116);
+    const fx = xn > 0.008856 ? Math.pow(xn, 1 / 3) : (7.787 * xn + 16 / 116);
+    const fy = yn > 0.008856 ? Math.pow(yn, 1 / 3) : (7.787 * yn + 16 / 116);
+    const fz = zn > 0.008856 ? Math.pow(zn, 1 / 3) : (7.787 * zn + 16 / 116);
 
     const L = 116 * fy - 16;
     const a = 500 * (fx - fy);
@@ -347,23 +435,23 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     const fx = a / 500 + fy;
     const fz = fy - b_lab / 200;
 
-    const xn = fx > 0.206897 ? Math.pow(fx, 3) : (fx - 16/116) / 7.787;
-    const yn = fy > 0.206897 ? Math.pow(fy, 3) : (fy - 16/116) / 7.787;
-    const zn = fz > 0.206897 ? Math.pow(fz, 3) : (fz - 16/116) / 7.787;
+    const xn = fx > 0.206897 ? Math.pow(fx, 3) : (fx - 16 / 116) / 7.787;
+    const yn = fy > 0.206897 ? Math.pow(fy, 3) : (fy - 16 / 116) / 7.787;
+    const zn = fz > 0.206897 ? Math.pow(fz, 3) : (fz - 16 / 116) / 7.787;
 
     const x = xn * 0.95047;
     const y = yn * 1.00000;
     const z = zn * 1.08883;
 
     // Convert XYZ to RGB
-    let r = x *  3.2404542 + y * -1.5371385 + z * -0.4985314;
-    let g = x * -0.9692660 + y *  1.8760108 + z *  0.0415560;
-    let b = x *  0.0556434 + y * -0.2040259 + z *  1.0572252;
+    let r = x * 3.2404542 + y * -1.5371385 + z * -0.4985314;
+    let g = x * -0.9692660 + y * 1.8760108 + z * 0.0415560;
+    let b = x * 0.0556434 + y * -0.2040259 + z * 1.0572252;
 
     // Apply gamma correction
-    r = r > 0.0031308 ? 1.055 * Math.pow(r, 1/2.4) - 0.055 : 12.92 * r;
-    g = g > 0.0031308 ? 1.055 * Math.pow(g, 1/2.4) - 0.055 : 12.92 * g;
-    b = b > 0.0031308 ? 1.055 * Math.pow(b, 1/2.4) - 0.055 : 12.92 * b;
+    r = r > 0.0031308 ? 1.055 * Math.pow(r, 1 / 2.4) - 0.055 : 12.92 * r;
+    g = g > 0.0031308 ? 1.055 * Math.pow(g, 1 / 2.4) - 0.055 : 12.92 * g;
+    b = b > 0.0031308 ? 1.055 * Math.pow(b, 1 / 2.4) - 0.055 : 12.92 * b;
 
     // Clamp and convert to hex
     r = Math.max(0, Math.min(1, r));
@@ -377,10 +465,79 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     return `#${rHex}${gHex}${bHex}`;
   }
 
+  private hexToHsl(hex: string): string {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (!result) return '';
+    const r = parseInt(result[1], 16) / 255;
+    const g = parseInt(result[2], 16) / 255;
+    const b = parseInt(result[3], 16) / 255;
+
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const l = (max + min) / 2;
+    let h = 0;
+    let s = 0;
+
+    if (max !== min) {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r:
+          h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+          break;
+        case g:
+          h = ((b - r) / d + 2) / 6;
+          break;
+        case b:
+          h = ((r - g) / d + 4) / 6;
+          break;
+      }
+    }
+
+    return `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
+  }
+
+  private hslToHex(hsl: string): string {
+    const match = hsl.match(/^hsl\(\s*(\d+)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)$/);
+    if (!match) return '';
+    const h = parseInt(match[1]) / 360;
+    const s = parseInt(match[2]) / 100;
+    const l = parseInt(match[3]) / 100;
+
+    let r: number;
+    let g: number;
+    let b: number;
+    if (s === 0) {
+      r = l;
+      g = l;
+      b = l;
+    } else {
+      const hue2rgb = (p: number, q: number, t: number) => {
+        if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+        if (t < 1 / 6) return p + (q - p) * 6 * t;
+        if (t < 1 / 2) return q;
+        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+        return p;
+      };
+      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      const p = 2 * l - q;
+      r = hue2rgb(p, q, h + 1 / 3);
+      g = hue2rgb(p, q, h);
+      b = hue2rgb(p, q, h - 1 / 3);
+    }
+
+    const rHex = Math.round(r * 255).toString(16).padStart(2, '0');
+    const gHex = Math.round(g * 255).toString(16).padStart(2, '0');
+    const bHex = Math.round(b * 255).toString(16).padStart(2, '0');
+    return `#${rHex}${gHex}${bHex}`;
+  }
+
   private convertToHex(value: string): string {
     if (!value) return '#000000';
     if (value.startsWith('#')) return value;
     if (value.startsWith('rgb')) return this.rgbToHex(value);
+    if (value.startsWith('hsl')) return this.hslToHex(value);
     if (value.startsWith('oklch')) return this.oklchToHex(value);
     return value;
   }
@@ -389,6 +546,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     if (!hex) return '';
     if (this.colorFormat === 'hex') return hex;
     if (this.colorFormat === 'rgb') return this.hexToRgb(hex);
+    if (this.colorFormat === 'hsl') return this.hexToHsl(hex);
     if (this.colorFormat === 'oklch') return this.hexToOklch(hex);
     return hex;
   }
@@ -435,6 +593,11 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
         if (/^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)$/.test(colorValue)) {
           this.value = colorValue;
         }
+      } else if (this.colorFormat === 'hsl') {
+        // Validate hsl format
+        if (/^hsl\(\s*\d+\s*,\s*\d+%\s*,\s*\d+%\s*\)$/.test(colorValue)) {
+          this.value = colorValue;
+        }
       } else if (this.colorFormat === 'oklch') {
         // Validate oklch format
         if (/^oklch\(\s*[0-9.]+\s+[0-9.]+\s+[0-9.]+\s*\)$/.test(colorValue)) {
@@ -444,6 +607,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
       // If invalid, keep the previous value
     } else {
       this.value = this.input.value;
+      this.syncEmailDisplay();
     }
 
     this.emit('zn-change');
@@ -481,18 +645,38 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     this.formControlController.emitInvalidEvent(event);
   }
 
+  // Email inputs already strip whitespace from .value but keep it on screen
+  private syncEmailDisplay() {
+    if (this.type === 'email') {
+      this.input.value = this.value;
+    }
+  }
+
   private handleKeyDown(event: KeyboardEvent) {
+    // The slash menu claims its own keys; while it is open Escape closes it and Enter picks an item,
+    // rather than blurring the field or submitting the form
+    if (this.slashController.open) return;
+
+    if (event.key === 'Escape') {
+      this.input.blur();
+      event.stopPropagation();
+      return;
+    }
+
     const hasModifier = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
 
     // Pressing enter when focused on the input should submit the form like a native input, be we wait a tick before
     // submitting to allow users to cancel the keydown event if they need to
     if (event.key === 'Enter' && !hasModifier) {
+      this.syncEmailDisplay();
+
       // When using a Input Method Editor (IME), pressing enter will cause the form to submit unexpectedly. One way
       // to check for this is to look at event.isComposing, which will be true when the IME is open.
       if (!event.defaultPrevented && !event.isComposing) {
-        // Check if form has navigation enabled - if so, let FormNavigationController handle it
+        // Check if form has navigation enabled - if so, let FormNavigationController handle it,
+        // unless trigger-submit is set which always submits on enter
         const form = this.formControlController.getForm();
-        if (form?.hasAttribute('enter-navigation') || form?.hasAttribute('data-enter-navigation')) {
+        if (!this.triggerSubmit && (form?.hasAttribute('enter-navigation') || form?.hasAttribute('data-enter-navigation'))) {
           return; // Let FormNavigationController handle it
         }
 
@@ -537,6 +721,85 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     }
   }
 
+  protected firstUpdated() {
+    // A range input with no value resolves to the midpoint of min/max natively, so adopt it as our value
+    if (this.type === 'range' && this.value === '') {
+      this.value = this.input.value;
+    }
+
+    this.slashController.attach(this.input);
+  }
+
+  /** The insertions the slash menu offers, gathered from every source, in the order they were declared. */
+  async resolveSlashItems(search = ''): Promise<SlashMenuItem[]> {
+    const items = [
+      ...getSlashMenuPreset(this.slashPreset),
+      ...this.slashItems,
+      ...this.slottedSlashItems()
+    ];
+
+    const provided = await this.slashItemsProvider?.(search);
+    return provided ? [...items, ...provided] : items;
+  }
+
+  /** Opens the slash menu at the caret, inserting the trigger if it isn't already there. */
+  async showSlashMenu() {
+    this.focus();
+
+    const caret = this.input.selectionStart ?? this.input.value.length;
+    const precedes = this.input.value.slice(caret - this.slashTrigger.length, caret);
+    if (precedes !== this.slashTrigger) {
+      this.setRangeText(this.slashTrigger, caret, caret, 'end');
+    }
+
+    await this.updateComplete;
+    this.slashController.requestOpen();
+  }
+
+  /** Closes the slash menu. */
+  hideSlashMenu() {
+    this.slashController.close();
+  }
+
+  private slottedSlashItems(): SlashMenuItem[] {
+    const elements = [...this.querySelectorAll<ZnSlashItem>('zn-slash-item')];
+
+    return elements.map(element => {
+      // Elements from a different zinc build may not have upgraded, so fall back to their markup
+      if (typeof element.toSlashMenuItem === 'function') return element.toSlashMenuItem();
+
+      const value = element.getAttribute('value') ?? (element.textContent ?? '').trim();
+      const order = element.getAttribute('order');
+      const caretOffset = element.getAttribute('caret-offset');
+
+      return {
+        label: element.getAttribute('label') ?? value,
+        value,
+        icon: element.getAttribute('icon') ?? undefined,
+        description: element.getAttribute('description') ?? undefined,
+        keywords: element.getAttribute('keywords') ?? undefined,
+        group: element.getAttribute('group') ?? undefined,
+        action: element.getAttribute('action') ?? undefined,
+        order: order === null ? undefined : Number(order),
+        caretOffset: caretOffset === null ? undefined : Number(caretOffset),
+        disabled: element.hasAttribute('disabled')
+      };
+    });
+  }
+
+  private async mountSlashMenu(): Promise<ZnSlashMenu | null> {
+    // A slotted menu is the author's own: it keeps its own heading, sizing and styling
+    const slotted = this.querySelector<ZnSlashMenu>('zn-slash-menu');
+    if (slotted) return slotted;
+
+    if (!this.hasSlashMenu) {
+      this.hasSlashMenu = true;
+      await this.updateComplete;
+    }
+
+    return this.slashMenuElement;
+  }
+
   @watch('disabled', {waitUntilFirstUpdate: true})
   handleDisabledChange() {
     // Disabled form controls are always valid
@@ -565,6 +828,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
         // This prevents infinite loops because once normalized, it won't change again
         if (normalizedValue !== this.value) {
           this.value = normalizedValue;
+          this.emit('zn-change');
           return; // Will re-trigger, but next time values will match
         }
       }
@@ -579,7 +843,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
   }
 
   @watch('colorFormat', {waitUntilFirstUpdate: true})
-  async handleColorFormatChange() {
+  handleColorFormatChange() {
     // When color format changes, convert the current value to the new format
     if (this.type === 'color' && this.value) {
       const hexValue = this.convertToHex(this.value);
@@ -587,6 +851,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
         const normalizedValue = this.convertFromHex(hexValue);
         if (normalizedValue !== this.value) {
           this.value = normalizedValue;
+          this.emit('zn-change');
         }
       }
     }
@@ -683,9 +948,10 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     const hasLabelTooltipSlot = this.hasSlotController.test('label-tooltip');
     const hasContextNoteSlot = this.hasSlotController.test('context-note');
     const hasHelpTextSlot = this.hasSlotController.test('help-text');
+    const isRange = this.type === 'range';
     const hasLabel = this.label ? true : hasLabelSlot;
     const hasLabelTooltip = this.labelTooltip ? true : hasLabelTooltipSlot;
-    const hasContextNote = this.contextNote ? true : hasContextNoteSlot;
+    const hasContextNote = this.contextNote || isRange ? true : hasContextNoteSlot;
     const hasHelpText = this.helpText ? true : hasHelpTextSlot;
     const hasClearIcon = this.clearable && !this.disabled && !this.readonly;
     const hasOptionalIcon = this.optionalIcon;
@@ -723,7 +989,8 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
 
         ${hasContextNote
           ? html`
-            <span class="form-control__label-context-note"><slot name="context-note">${this.contextNote}</slot></span>`
+            <span class="form-control__label-context-note"><slot name="context-note">${this.contextNote ||
+            (isRange ? `${this.value ?? ''}${this.valueSuffix}` : '')}</slot></span>`
           : ''}
 
         <div part="form-control-input"
@@ -742,27 +1009,12 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
                  'input--filled': this.filled,
                  'input--focused': this.hasFocus,
                  'input--empty': !this.value,
+                 'input--range': isRange,
                  'input--no-spin-buttons': this.noSpinButtons && this.type !== 'currency',
                })}>
 
             <span part="prefix" class="input__prefix">
-              ${this.type === 'color'
-                ? html`
-                  <div
-                    class="input__color-swatch"
-                    @click=${this.handleColorSwatchClick}
-                    style="--color-value: ${this.convertToHex(this.value) || '#000000'}">
-                    <div class="input__color-swatch-inner"></div>
-                  </div>
-                  <input
-                    class="input__color-picker"
-                    type="color"
-                    .value=${this.convertToHex(this.value) || '#000000'}
-                    @change=${this.handleColorPickerChange}
-                    @input=${this.handleColorPickerChange}
-                    tabindex="-1"
-                  />`
-                : this.type === 'currency'
+              ${this.type === 'currency'
                 ? html`
                   <zn-icon class="input__prefix-default" src="payments"></zn-icon>`
                 : this.type === 'email' && hasOptionalIcon
@@ -823,7 +1075,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
                   @click=${this.handleClearClick}
                   tabindex="-1">
                   <slot name="clear-icon">
-                    <zn-icon src="cancel"></zn-icon>
+                    <zn-icon src="circle-x@lu" size="20"></zn-icon>
                   </slot>
                 </button>`
               : ''}
@@ -853,8 +1105,35 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
 
             <span part="suffix" class="input__suffix">
               <slot name="suffix"></slot>
+              ${this.type === 'color'
+                ? html`
+                  <div
+                    class="input__color-swatch"
+                    @click=${this.handleColorSwatchClick}
+                    style="--color-value: ${this.convertToHex(this.value) || '#000000'}">
+                    <div class="input__color-swatch-inner"></div>
+                  </div>
+                  <input
+                    class="input__color-picker"
+                    type="color"
+                    .value=${this.convertToHex(this.value) || '#000000'}
+                    @change=${this.handleColorPickerChange}
+                    @input=${this.handleColorPickerChange}
+                    tabindex="-1"
+                  />`
+                : ''}
             </span>
           </div>
+          ${this.hasSlashMenu
+            ? html`
+              <zn-slash-menu
+                part="slash-menu"
+                heading=${this.slashHeading}
+                recent-key=${this.slashRecentKey}
+                ?hide-keys=${this.slashHideKeys}></zn-slash-menu>`
+            : ''}
+          <slot name="slash-menu"></slot>
+          <slot name="slash-items" hidden></slot>
         </div>
 
         <div

@@ -1,54 +1,59 @@
-import type {ReactiveController, ReactiveControllerHost} from "lit";
+import {signal, SignalWatcher} from '@lit-labs/signals';
 
-/**
- * ThemeController is a reactive controller that listens for theme changes
- * and updates the theme property on the host element.
- *
- * if you want to reflect the theme attribute to the host element, you can use
- * the following code:
- *
- * ```ts
- * import { ThemeController } from "@zinc/internal/theme";
- *
- * export default class MyElement extends HTMLElement {
- *    @property({ reflect: true }) t = '';
- *    ...
- *  ```
- */
-export class ThemeController implements ReactiveController {
-  host: ReactiveControllerHost & HTMLElement;
+// Theming has two independent dimensions:
+//   `t` — the theme family (base, aura, ...), carrying the identity/palette.
+//   `m` — the rendered mode ('light' | 'dark') the family is currently drawn in.
+// The host shell owns both attributes on <html>; components mirror them so CSS
+// selectors like `[m="dark"]` and `:host-context([t="aura"])` keep working.
 
-  t: string = '';
+function readRootAttribute(name: string, fallback: string): string {
+  if (typeof document === 'undefined') return fallback;
+  return document.documentElement.getAttribute(name)
+    || document.body?.getAttribute(name)
+    || fallback;
+}
 
-  constructor(host: ReactiveControllerHost & HTMLElement) {
-    this.host = host;
-    this.host.addController(this);
-  }
+function getDefaultTheme(): string {
+  return readRootAttribute('t', 'light');
+}
 
-  hostConnected() {
-    this.getDefaultTheme();
-    this.host.setAttribute('t', this.t);
-    window.addEventListener('theme-change', this.handleThemeEventUpdate.bind(this));
-  }
+function getDefaultMode(): string {
+  return readRootAttribute('m', 'light');
+}
 
-  hostDisconnected() {
-    window.removeEventListener('theme-change', this.handleThemeEventUpdate.bind(this));
-  }
+export const themeSignal = signal<string>(getDefaultTheme());
+export const modeSignal = signal<string>(getDefaultMode());
 
-  handleThemeEventUpdate = (e: CustomEvent & { theme: string }) => {
-    if (e && e.detail) {
-      this.t = e.detail as string;
-      this.host.setAttribute('t', this.t);
-      return;
+let listenerInstalled = false;
+
+export function installThemeListener(): void {
+  if (listenerInstalled || typeof window === 'undefined') return;
+  listenerInstalled = true;
+
+  window.addEventListener('theme-change', (e: Event) => {
+    const detail: unknown = (e as CustomEvent<unknown>).detail;
+    let theme: string | undefined;
+    let mode: string | undefined;
+
+    if (typeof detail === 'string') {
+      // Legacy payload: the theme name on its own.
+      theme = detail;
+    } else if (detail && typeof detail === 'object') {
+      const d = detail as {theme?: unknown; mode?: unknown};
+      if (typeof d.theme === 'string') theme = d.theme;
+      if (typeof d.mode === 'string') mode = d.mode;
     }
 
-    this.getDefaultTheme();
-  }
+    // Anything the event did not carry is read back off the document, which the
+    // shell always writes before dispatching.
+    if (theme === undefined) theme = getDefaultTheme();
+    if (mode === undefined) mode = getDefaultMode();
 
-  getDefaultTheme = () => {
-    this.t = document.documentElement.getAttribute('t')
-      || window.document.documentElement.getAttribute('t')
-      || window.document.body.getAttribute('t')
-      || 'light';
-  }
+    if (theme !== themeSignal.get()) themeSignal.set(theme);
+    if (mode !== modeSignal.get()) modeSignal.set(mode);
+  });
 }
+
+installThemeListener();
+
+export {SignalWatcher};

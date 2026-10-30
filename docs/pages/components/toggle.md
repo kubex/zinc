@@ -62,6 +62,68 @@ Use the `label` attribute to add a form control label above the toggle.
 <zn-toggle label="User Preferences">Enable email notifications</zn-toggle>
 ```
 
+### Description
+
+Use the `description` attribute to add a description under the label. If you need to display HTML, use the `description` slot instead.
+
+```html:preview
+<zn-toggle label="Email notifications" description="Receive an email whenever someone mentions you."></zn-toggle>
+```
+
+The description stays under the label at every `label-position`, and can be combined with `help-text`, which always appears below the toggle.
+
+```html:preview
+<zn-toggle
+  label="Top label (default)"
+  description="Receive an email whenever someone mentions you."
+  help-text="You can change this at any time"></zn-toggle>
+<br />
+<zn-toggle
+  label="Left label"
+  label-position="left"
+  description="Receive an email whenever someone mentions you."
+  help-text="You can change this at any time"></zn-toggle>
+<br />
+<zn-toggle
+  label="Right label"
+  label-position="right"
+  description="Receive an email whenever someone mentions you."
+  help-text="You can change this at any time"></zn-toggle>
+```
+
+### Label Position
+
+Use the `label-position` attribute to control where the label sits relative to the toggle. Available positions are `top` (default), `left`, and `right`.
+
+With `left`, the label sits at the start of the row and the toggle is pushed to the far right — useful for settings lists. With `right`, the layout is mirrored.
+
+```html:preview
+<zn-toggle label="Top label (default)"></zn-toggle>
+<br />
+<zn-toggle label="Left label" label-position="left"></zn-toggle>
+<br />
+<zn-toggle label="Right label" label-position="right"></zn-toggle>
+```
+
+Combine `label-position` with the `inline` attribute to keep the label and toggle adjacent instead of spread across the full width.
+
+```html:preview
+<zn-toggle label="Inline left" label-position="left" inline></zn-toggle>
+<br />
+<zn-toggle label="Inline right" label-position="right" inline></zn-toggle>
+```
+
+A settings list using `label-position="left"`:
+
+```html:preview
+<div style="max-width: 320px;">
+  <zn-toggle label="Apple" label-position="left"></zn-toggle>
+  <zn-toggle label="Windows" label-position="left"></zn-toggle>
+  <zn-toggle label="Android" label-position="left"></zn-toggle>
+  <zn-toggle label="Blackberry" label-position="left" checked></zn-toggle>
+</div>
+```
+
 ### On/Off Text with Tooltip
 
 Use the `on-text` and `off-text` attributes to display tooltips that show when the toggle is in the on or off state. This provides additional context for the toggle's current state.
@@ -108,7 +170,7 @@ Toggles support keyboard navigation using arrow keys. Press the left arrow to tu
 
 ### Form Integration
 
-Toggles work seamlessly with forms and will be submitted with form data.
+Toggles work seamlessly with forms and always submit a value: the toggle's `value` (or `on`) when checked, and `off` when unchecked. Use the `fallback` attribute to customize the unchecked value.
 
 ```html:preview
 <form id="toggle-form">
@@ -135,7 +197,7 @@ Toggles work seamlessly with forms and will be submitted with form data.
 
 ### Fallback Value
 
-Use the `fallback` attribute to submit a specific value when the toggle is unchecked. This is useful when you need to ensure a value is always submitted for the field.
+The toggle always submits a value, even when unchecked — `off` by default. Use the `fallback` attribute to submit a specific value instead when the toggle is unchecked.
 
 ```html:preview
 <form id="fallback-form">
@@ -340,10 +402,10 @@ Toggles provide several methods for programmatic control:
 <div>
   <zn-toggle id="method-toggle">Programmatic control</zn-toggle>
   <br /><br />
-  <zn-button id="click-btn" size="small">Toggle State</zn-button>
-  <zn-button id="focus-btn" size="small" color="info">Focus Toggle</zn-button>
-  <zn-button id="blur-btn" size="small" color="secondary">Blur Toggle</zn-button>
-  <zn-button id="validate-btn" size="small" color="warning">Check Validity</zn-button>
+  <zn-button id="click-btn">Toggle State</zn-button>
+  <zn-button id="focus-btn" color="info">Focus Toggle</zn-button>
+  <zn-button id="blur-btn" color="secondary">Blur Toggle</zn-button>
+  <zn-button id="validate-btn" color="warning">Check Validity</zn-button>
 </div>
 
 <script type="module">

@@ -26,7 +26,7 @@ export default class ZnDataTableSort extends ZincElement {
   render() {
     return html`
       <zn-dropdown distance="50" placement="bottom-start" class="data-table-sort">
-        <zn-button color="transparent" size="x-small" icon="sort" icon-size="22" slot="trigger" tooltip="Open Sort">
+        <zn-button color="transparent" icon="sort" icon-size="22" slot="trigger" tooltip="Open Sort">
           Sort
         </zn-button>
 
@@ -47,7 +47,7 @@ export default class ZnDataTableSort extends ZincElement {
           <div class="data-table-sort__btn-group">
             <zn-button color="secondary" slot="footer">Cancel</zn-button>
             <div>
-              <zn-button color="transparent" size="x-small" slot="footer">Clear</zn-button>
+              <zn-button color="transparent" slot="footer">Clear</zn-button>
               <zn-button color="default" slot="footer">Update</zn-button>
             </div>
           </div>

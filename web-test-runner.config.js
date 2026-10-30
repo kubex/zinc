@@ -1,13 +1,20 @@
-import {removeViteLogging, vitePlugin} from '@remcovaes/web-test-runner-vite-plugin';
-import {playwrightLauncher} from '@web/test-runner-playwright';
 import {globbySync} from 'globby';
+import {playwrightLauncher} from '@web/test-runner-playwright';
+import {removeViteLogging, vitePlugin} from '@remcovaes/web-test-runner-vite-plugin';
+import {setViewportPlugin} from '@web/test-runner-commands/plugins';
 
 export default {
   rootDir: './',
   files: 'src/**/*.test.ts',
   concurrentBrowsers: 3,
   plugins: [
-    vitePlugin()
+    vitePlugin({
+      // Vite's dep optimizer rewrites the /__web-dev-server__web-socket.js dynamic
+      // import to a relative path the plugin's externaliser can't match — keep the
+      // packages that import it out of pre-bundling.
+      optimizeDeps: {exclude: ['@open-wc/testing', '@web/test-runner-commands']}
+    }),
+    setViewportPlugin()
   ],
   filterBrowserLogs: removeViteLogging,
   browsers: [

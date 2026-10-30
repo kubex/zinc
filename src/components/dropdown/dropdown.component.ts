@@ -182,7 +182,7 @@ export default class ZnDropdown extends ZincElement {
   }
 
   private async handleTriggerKeyDown(event: KeyboardEvent) {
-    if ([' ', 'Enter', 'Tab'].includes(event.key)) {
+    if ([' ', 'Enter'].includes(event.key)) {
       event.preventDefault();
       await this.handleTriggerClick();
       return;
@@ -252,9 +252,12 @@ export default class ZnDropdown extends ZincElement {
 
     if (event.key === 'Tab') {
       if (this.open) {
-        event.preventDefault();
         this.hide().then(r => r);
-        this.focusOnTrigger();
+        // Tabbing out of the menu resumes from the trigger; from the trigger, Tab moves on as usual
+        if (this.panel?.assignedElements({flatten: true}).some(el => el.matches(':focus-within'))) {
+          event.preventDefault();
+          this.focusOnTrigger();
+        }
         return;
       }
 
@@ -335,6 +338,15 @@ export default class ZnDropdown extends ZincElement {
       this.emit('zn-hide');
       topLayerManager.unregisterDropdown(this);
       this.removeOpenListeners();
+
+      // Move focus out of the panel before it becomes aria-hidden/inert,
+      // otherwise the browser blocks aria-hidden on the focused item and warns
+      const active = (this.getRootNode() as Document | ShadowRoot).activeElement as HTMLElement | null;
+      if (active && this.panel.assignedElements({flatten: true}).some(el => el.contains(active))) {
+        this.focusOnTrigger();
+        active.blur();
+      }
+
       this.panel.blur();
       this.panel.hidden = true;
       this.popup.active = false;
@@ -349,6 +361,7 @@ export default class ZnDropdown extends ZincElement {
         exportparts="popup:base__popup"
         id="dropdown"
         placement=${this.placement}
+        distance=${this.distance}
         skidding=${this.skidding}
         strategy=${this.hoist ? 'fixed' : 'absolute'}
         flip

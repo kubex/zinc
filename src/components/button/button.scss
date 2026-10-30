@@ -1,4 +1,4 @@
-@use "../../../scss/shared";
+@use "../../../scss/shared/button-mixin" as shared;
 @use "../../wc";
 
 :host {
@@ -13,36 +13,53 @@
   }
 }
 
+
 .button {
   @include shared.button;
 
+  // --btn-color paints the fill; --btn-ink is the text/icon colour that sits
+  // on top of it. They are declared as a pair so a theme with a light accent
+  // (e.g. neon lime) can re-point the ink via --zn-color-on-* without any
+  // component-level override.
   --btn-color: var(--zn-primary);
+  --btn-ink: var(--zn-color-on-primary, 255, 255, 255);
   --notification-color: rgb(var(--zn-color-error));
 
-  border-width: 1px;
-  border-color: transparent;
-  height: 100%;
+  border-width: var(--zn-button-border-width, 1px);
+  border-top-width: var(--zn-button-border-top-width, var(--zn-button-border-width, 1px));
+  border-right-width: var(--zn-button-border-right-width, var(--zn-button-border-width, 1px));
+  border-bottom-width: var(--zn-button-border-bottom-width, var(--zn-button-border-width, 1px));
+  border-left-width: var(--zn-button-border-left-width, var(--zn-button-border-width, 1px));
+  border-color: var(--zn-button-border-color, transparent);
   display: inline-flex;
   position: relative;
 
   &.button--info {
     --btn-color: var(--zn-color-info);
+    --btn-ink: var(--zn-color-on-info, 255, 255, 255);
   }
 
   &.button--error {
     --btn-color: var(--zn-color-error);
+    --btn-ink: var(--zn-color-on-error, 255, 255, 255);
   }
 
   &.button--warning {
     --btn-color: var(--zn-color-warning);
+    --btn-ink: var(--zn-color-on-warning, 255, 255, 255);
   }
 
   &.button--success {
     --btn-color: var(--zn-color-success);
+    --btn-ink: var(--zn-color-on-success, 255, 255, 255);
   }
 
   &__label--hidden {
     visibility: hidden;
+  }
+
+  zn-icon {
+    --icon-color: currentColor;
   }
 }
 
@@ -52,6 +69,7 @@
 
 .button--has-notification {
   position: relative;
+  overflow: visible;
 
   &::after {
     content: attr(data-notification);
@@ -59,24 +77,30 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 0;
-    inset-inline-end: 0;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    font-size: 10px;
-    color: white;
+    top: -4px;
+    left: auto;
+    inset-inline-end: -4px;
+    box-sizing: border-box;
+    min-width: 13px;
+    height: 13px;
+    padding: 0 3px;
+    border-radius: 999px;
+    font-size: var(--zn-text-notification-font-size);
+    font-weight: var(--zn-text-notification-font-weight);
+    line-height: var(--zn-text-notification-line-height);
+    color: var(--zn-text-notification-color);
     background-color: var(--notification-color);
   }
 }
 
 .button--has-notification.button--notification-dot {
-  &:after {
+  &::after {
     content: '';
-    width: 5px;
-    height: 5px;
-    top: 5px;
-    right: 3px;
+    min-width: 0;
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border-radius: 50%;
   }
 }
 
@@ -90,7 +114,8 @@
 
 .button:focus-visible {
   outline: 2px solid rgb(var(--btn-color));
-  outline-offset: 2px;
+  // the token is a total (width + offset), not the offset itself
+  outline-offset: calc(var(--zn-focus-ring-outset) - 2px);
 }
 
 [disabled] {
@@ -105,7 +130,7 @@
 .button--standard {
   &.button--secondary {
     background-color: var(--zn-color-neutral-50);
-    border-color: var(--zn-color-neutral-50);
+    border-color: var(--zn-button-border-color, var(--zn-color-neutral-50));
     color: rgb(var(--zn-primary));
 
     &:hover:not([disabled]) {
@@ -118,9 +143,9 @@
   }
 
 
-  background-color: rgba(var(--btn-color), .85);
-  border-color: rgb(var(--btn-color));
-  color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(var(--btn-color));
+  border-color: var(--zn-button-border-color, rgb(var(--btn-color)));
+  color: rgba(var(--btn-ink), 0.9);
 
   &:hover:not([disabled]) {
     background-color: rgba(var(--btn-color), 0.8);
@@ -133,20 +158,25 @@
 
 .button--outline {
   background: none;
-  border-width: 1px;
-  border-color: rgb(var(--btn-color));
+  border-width: var(--zn-button-border-width, 1px);
+  border-top-width: var(--zn-button-border-top-width, var(--zn-button-border-width, 1px));
+  border-right-width: var(--zn-button-border-right-width, var(--zn-button-border-width, 1px));
+  border-bottom-width: var(--zn-button-border-bottom-width, var(--zn-button-border-width, 1px));
+  border-left-width: var(--zn-button-border-left-width, var(--zn-button-border-width, 1px));
+  border-color: var(--zn-button-border-color, rgb(var(--btn-color)));
   color: rgb(var(--btn-color));
 
   &:hover:not([disabled]), &:active:not([disabled]) {
     background-color: rgb(var(--btn-color));
-    color: white;
+    color: rgb(var(--btn-ink));
   }
 
   &.button--secondary {
-    border-color: #F3EFFF;
+    border-color: var(--zn-button-border-color, var(--zn-color-neutral-100));
 
     &:hover:not([disabled]), &:active:not([disabled]) {
-      background-color: rgb(221, 218, 236);
+      background-color: var(--zn-color-neutral-100);
+      color: rgb(var(--btn-color));
     }
   }
 }
@@ -165,103 +195,28 @@
   }
 }
 
-.button--x-small {
-  padding: 2px 10px;
-  font-size: 12px;
-}
-
-.button--content {
-  padding: 0 0;
-  font-size: 12px;
-
-  zn-icon {
-    line-height: 0;
-  }
-}
-
 .button--grow {
   width: 100%;
 }
 
-.button--small {
-  padding: 4px 14px;
-}
+.button--with-icon.button--with-content:not(.button--icon-button) {
+  // Icon glyphs are drawn inset ~2 units inside their 24-unit box, so the icon
+  // is narrower than the space it takes. Pull that slack out on both sides so
+  // the gaps read as equal to the text edge opposite.
+  --icon-optical-inset: calc(var(--button-icon-size, 20px) / 12);
+  --icon-gap: calc(var(--zn-base-px) - var(--icon-optical-inset));
 
-.button--large {
-  padding: 10px 20px;
-}
-
-.button--with-icon:not(.button--with-content) {
-  &.button--x-small,
-  &.button--small {
-    padding: 4px;
-  }
-
-  &.button--medium {
-    padding: 7px;
-  }
-
-  &.button--large {
-    padding: 10px;
-    font-size: 16px;
-  }
-}
-
-.button--with-icon.button--with-content {
-  &.button--x-small,
-  &.button--small {
-    padding-left: 10px;
-
-    &.button--icon-left {
-      padding-left: 10px;
-
-      zn-icon {
-        margin-right: 4px;
-      }
-    }
-
-    &.button--icon-right {
-      padding-right: 10px;
-
-      zn-icon {
-        margin-left: 4px;
-      }
+  &.button--icon-left {
+    zn-icon {
+      margin-left: calc(var(--icon-optical-inset) * -1);
+      margin-right: var(--icon-gap);
     }
   }
 
-  &.button--medium {
-    &.button--icon-left {
-      padding-left: 10px;
-
-      zn-icon {
-        margin-right: 6px;
-      }
-    }
-
-    &.button--icon-right {
-      padding-right: 10px;
-
-      zn-icon {
-        margin-left: 6px;
-      }
-    }
-  }
-
-  &.button--large {
-    &.button--icon-left {
-      padding-left: 14px;
-
-      zn-icon {
-        margin-right: 8px;
-      }
-    }
-
-    &.button--icon-right {
-      padding-right: 14px;
-
-      zn-icon {
-        margin-left: 8px;
-      }
+  &.button--icon-right {
+    zn-icon {
+      margin-left: var(--icon-gap);
+      margin-right: calc(var(--icon-optical-inset) * -1);
     }
   }
 }
@@ -272,7 +227,7 @@
 
 .button--transparent {
   background-color: transparent;
-  border-color: transparent !important;
+  border-color: var(--zn-button-border-color, transparent) !important;
   color: inherit;
 
   &:hover:not([disabled]) {
@@ -286,9 +241,10 @@
 
 .button--star {
   --btn-color: var(--zn-orange);
+  --btn-ink: var(--zn-color-on-warning, 255, 255, 255);
   background-color: rgb(var(--btn-color));
-  border-color: rgb(var(--btn-color));
-  color: white;
+  border-color: var(--zn-button-border-color, rgb(var(--btn-color)));
+  color: rgb(var(--btn-ink));
   opacity: 1 !important;
 
   &:hover:not([disabled]) {
@@ -301,13 +257,106 @@
 
   &.button--outline {
     background-color: transparent;
-    border-color: rgb(var(--btn-color));
+    border-color: var(--zn-button-border-color, rgb(var(--btn-color)));
     color: rgb(var(--btn-color));
 
     &:hover:not([disabled]), &:active:not([disabled]) {
       background-color: rgba(var(--btn-color));
-      color: white;
+      color: rgb(var(--btn-ink));
     }
+  }
+}
+
+/**
+ * Icon buttons
+ *
+ * Standard:  40x36, white background, 1px border, 6px radius
+ * Small:     36x36 (`icon-button="small"`)
+ * Plain:     either size without the background and border (`plain`)
+ *
+ * Doubled-up selector so the icon-button design out-cascades the color
+ * variant combos (.button--standard.button--secondary etc.)
+ */
+.button.button--icon-button {
+  --icon-button-color: rgb(var(--zn-text));
+  --icon-button-hover-color: rgb(var(--zn-primary));
+
+  width: 40px;
+  min-width: 40px;
+  height: 36px;
+  min-height: 36px;
+  max-height: 36px;
+  padding: 6px;
+  margin: 0;
+  background: rgb(var(--zn-panel));
+  border-color: var(--zn-button-border-color, rgb(var(--zn-border-color))) !important;
+  border-radius: var(--zn-border-radius);
+  color: var(--icon-button-color);
+  font-weight: inherit;
+  line-height: 0;
+
+  zn-icon,
+  ::slotted(zn-icon) {
+    --icon-color: currentColor;
+
+    color: inherit;
+    line-height: 0;
+  }
+
+  // Hovers tint the background only — the icon keeps its set colour
+  &:hover:not([disabled]), &:active:not([disabled]) {
+    background: rgba(var(--zn-color-tab), 0.5);
+  }
+
+  &.button--icon-button-small {
+    width: 36px;
+    min-width: 36px;
+  }
+
+  // Round: 36x36 circle on the tab tint, muted icon by default
+  &.button--icon-button-round {
+    width: 36px;
+    min-width: 36px;
+    padding: 8px;
+    background: rgb(var(--zn-color-tab));
+    border-color: var(--zn-button-border-color, transparent) !important;
+    border-radius: var(--zn-border-radius-circle);
+
+    &:hover:not([disabled]), &:active:not([disabled]) {
+      background: rgb(var(--zn-color-border));
+    }
+  }
+
+  &.button--plain {
+    background: transparent;
+    border-color: var(--zn-button-border-color, transparent) !important;
+
+    &:hover:not([disabled]), &:active:not([disabled]) {
+      background: rgb(var(--zn-color-tab));
+    }
+  }
+
+  // `no-hover`: keep the resting background on hover/active
+  &.button--no-hover {
+    &:hover:not([disabled]), &:active:not([disabled]) {
+      background: rgb(var(--zn-panel));
+    }
+
+    &.button--icon-button-round:hover:not([disabled]), &.button--icon-button-round:active:not([disabled]) {
+      background: rgb(var(--zn-color-tab));
+    }
+
+    &.button--plain:hover:not([disabled]), &.button--plain:active:not([disabled]) {
+      background: transparent;
+    }
+  }
+
+  &.button--has-notification::after {
+    --icon-inset: calc((100% - var(--notification-icon-size, 20px)) / 2);
+
+    top: calc(var(--icon-inset) - 4px);
+    inset-inline-end: calc(var(--icon-inset) - 4px);
+    transform: translate(50%, -50%);
   }
 }
 
@@ -375,6 +424,31 @@
   }
 }
 
+.button--processing {
+  cursor: progress;
+}
+
+.button__spinner {
+  width: 1em;
+  height: 1em;
+  margin-inline-end: 8px;
+  flex-shrink: 0;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: button-spin .7s linear infinite;
+}
+
+.button__label--replaced {
+  display: none;
+}
+
+@keyframes button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .button--relative-wrapper {
   position: relative;
   display: inline-flex;
@@ -422,7 +496,7 @@
   border-right: 0 !important;
 }
 
-:host([data-zn-button-group__button]:not([data-zn-button-group__button--first]):not(:hover)) {
+:host([data-zn-button-group__button]:not([data-zn-button-group__button--first])) {
   .button:after {
     content: '';
     position: absolute;
@@ -430,17 +504,66 @@
     inset-inline-start: 0;
     bottom: 0;
     border-left: solid 1px;
-    mix-blend-mode: multiply;
-    color: rgb(var(--zn-border-color));
+    // PERF: a blend mode here gave every non-first button in every group its own
+    // render surface, and the :not(:hover) above meant hovering a group added and
+    // removed surfaces — re-running layerize and re-compositing on pointer move.
+    // A semi-transparent border reads the same over the button fills.
+    color: rgba(var(--zn-border-color), 0.85);
   }
 }
 
+// Lift the focused button so later siblings don't paint over its focus ring
+:host([data-zn-button-group__button]:focus-within) {
+  z-index: 1;
+}
+
 :host([data-zn-button-group__button--first]:not([data-zn-button-group__button--last])) .button {
-  border-radius: 5px 0 0 5px !important;
+  border-radius: var(--zn-button-border-radius, var(--zn-border-radius)) 0 0 var(--zn-button-border-radius, var(--zn-border-radius)) !important;
   border-right: 0 !important;
 }
 
 :host([data-zn-button-group__button--last]:not([data-zn-button-group__button--first])) .button {
-  border-radius: 0 5px 5px 0 !important;
+  border-radius: 0 var(--zn-button-border-radius, var(--zn-border-radius)) var(--zn-button-border-radius, var(--zn-border-radius)) 0 !important;
   border-left: 0 !important;
+}
+
+/* Pill: a label-like trigger (filter chips and similar) rather than an action */
+.button.button--pill {
+  border-radius: var(--zn-border-radius-pill);
+  padding: 0 var(--zn-spacing-small);
+  height: 32px;
+  min-height: 32px;
+  font-weight: var(--zn-font-weight-normal);
+  text-transform: none;
+  white-space: nowrap;
+}
+
+// The icon-button look on a regular button: color variants tint the ink only
+@mixin panel-bg {
+  background: rgb(var(--zn-panel));
+  border-color: var(--zn-button-border-color, rgb(var(--zn-border-color)));
+  color: rgb(var(--zn-text));
+
+  &.button--error, &.button--info, &.button--success, &.button--warning {
+    color: rgb(var(--btn-color));
+  }
+
+  &:hover:not([disabled]), &:active:not([disabled]) {
+    background: rgba(var(--zn-color-tab), 0.5);
+  }
+
+  &[aria-pressed="true"] {
+    &, &:hover:not([disabled]), &:active:not([disabled]) {
+      background: rgba(var(--btn-color), 0.1);
+      color: rgb(var(--btn-color));
+    }
+  }
+}
+
+.button--panel-bg {
+  @include panel-bg;
+}
+
+:host([data-zn-button-group__button--panel-bg]) .button:not(.button--icon-button) {
+  @include panel-bg;
 }

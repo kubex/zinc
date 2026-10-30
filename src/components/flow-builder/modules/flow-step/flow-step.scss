@@ -1,0 +1,60 @@
+@use "../../../../wc";
+
+:host {
+  //@include text-style(input-label);
+
+  --node-accent: rgb(var(--zn-color-primary));
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: grab;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+  max-height: 40px;
+}
+
+:host(:hover) {
+  border-color: rgb(var(--zn-color-border-active));
+  box-shadow: 0 1px 3px rgba(var(--zn-shadow), 0.4);
+}
+
+:host(:active) {
+  cursor: grabbing;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+.item {
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    color: var(--node-accent);
+    background: color-mix(in srgb, var(--node-accent) 14%, transparent);
+  }
+
+  &__label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    // Only slotted text is the label — nested declarations (<zn-flow-filter>
+    // and friends) are data for the flow builder, never displayed.
+    ::slotted(*) {
+      display: none;
+    }
+  }
+}

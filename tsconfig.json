@@ -2,7 +2,8 @@
 {
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
-    "target": "es2017",
+    "target": "es2020",
+    "module": "esnext",
     "moduleResolution": "node",
     "lib": [
       "dom",
@@ -33,7 +34,13 @@
     "types": [
       "mocha",
       "user-agent-data-types"
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@web/test-runner-commands": [
+        "./src/types/web-test-runner-commands.d.ts"
+      ]
+    }
   },
   "include": [
     "src"

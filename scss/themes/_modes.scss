@@ -1,0 +1,32 @@
+// Light / dark mode selectors.
+//
+// Theming has two independent dimensions on the root element:
+//   `t` — the theme (base, aura, ...), carrying the identity and palette.
+//   `m` — the mode ('light' | 'dark') that theme is currently drawn in.
+//
+// **The `m` hooks are deliberately scoped with `:root`.** ZincElement reflects
+// both `t` and `m` onto every component, so a *bare* `[m="dark"]` selector
+// matches every zinc element in the tree — not just the document root. Any token
+// block written that way re-declares itself on each component and so wipes out
+// contextual overrides set by an ancestor: e.g. the rubix shell header sets
+// `--zn-text: 255,255,255` for its dark chrome, and every zn-button inside it
+// would reset `--zn-text` back to the theme default and render dark-on-dark.
+// Never write a bare `[m="..."]` (or `[t="..."]`) rule that sets a token.
+//
+// `[t="light"]` / `[t="dark"]` / `.theme-light` / `.theme-dark` are kept as
+// legacy aliases, so a standalone consumer that sets only `t` still resolves to a
+// full palette. They carry the same hazard, which is why light mode is expressed
+// as plain `:root` — light is the default palette, so it needs no `m` hook.
+//
+// A theme that ships a light palette *only* must be excluded from $dark, or
+// `t="<theme>" m="dark"` layers its tokens over the dark primitives and renders
+// a hybrid. Themes are dark-capable by default; add an exclusion here only while
+// a theme has no dark palette, and drop it when it gains one. Every theme
+// currently ships both palettes, so the list is empty:
+//
+//   $light-only: '[t="newtheme"]';
+//   $dark: ':root[m="dark"]:not(#{$light-only}), ...';
+$light-only: null;
+
+$light: ':root, [t="light"], .theme-light';
+$dark: ':root[m="dark"], [t="dark"], .theme-dark';

@@ -334,10 +334,10 @@ You can programmatically control the split button and access its internal compon
 </zn-split-button>
 
 <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
-  <zn-button id="show-dropdown" size="small">Show Dropdown</zn-button>
-  <zn-button id="hide-dropdown" size="small">Hide Dropdown</zn-button>
-  <zn-button id="get-value" size="small" color="info">Get Current Value</zn-button>
-  <zn-button id="set-value" size="small" color="success">Set Value to 'option1'</zn-button>
+  <zn-button id="show-dropdown">Show Dropdown</zn-button>
+  <zn-button id="hide-dropdown">Hide Dropdown</zn-button>
+  <zn-button id="get-value" color="info">Get Current Value</zn-button>
+  <zn-button id="set-value" color="success">Set Value to 'option1'</zn-button>
 </div>
 
 <div id="prog-output" style="margin-top: 1rem; padding: 1rem; background: var(--zn-color-neutral-100); border-radius: 4px;">

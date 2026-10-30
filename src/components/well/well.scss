@@ -17,3 +17,27 @@
 .well--inline {
   display: inline-flex;
 }
+
+// Without this the content's max-content width becomes the well's minimum size,
+// so a single long unbroken string (a token, a URL) widens the whole well.
+.well__content {
+  min-width: 0;
+}
+
+.well__content--pre {
+  margin: 0;
+  font-family: var(--zn-font-mono, 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace);
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.well__content--break-long {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+// Long lines have to be allowed to wrap before they can be broken.
+.well__content--pre.well__content--break-long {
+  white-space: pre-wrap;
+  overflow-x: visible;
+}

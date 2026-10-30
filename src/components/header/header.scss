@@ -8,39 +8,27 @@
 .header {
   flex-grow: 1;
 
-  // This isn't correct fix this also
   .caption {
-    //padding: var(--zn-spacing-small) 0;
     justify-content: space-between;
-    gap: var(--zn-spacing-2x-small);
+    gap: var(--zn-base-gap);
     max-width: 100%;
   }
 
   &__caption {
-    font-weight: var(--zn-font-weight-semibold);
-    font-size: var(--zn-font-size-large);
+    font-weight: var(--zn-text-h1-font-weight);
+    font-size: var(--zn-text-h1-font-size);
+    text-transform: var(--zn-text-h1-transform, none);
+    letter-spacing: var(--zn-text-h1-letter-spacing, normal);
     color: rgba(var(--zn-text-panel-title), 100%);
+    line-height: var(--zn-icon-size, 20px);
     margin: 0;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     display: flex;
-    gap: var(--zn-spacing-x-small);
+    gap: var(--zn-spacing-2x-small);
     align-items: center;
     text-wrap: auto;
-  }
-
-  &--has-breadcrumb {
-    .caption {
-      padding-top: 0;
-    }
-  }
-
-  // remove the padding on the nav
-  &--has-nav {
-    .caption {
-      padding-bottom: 0;
-    }
   }
 }
 
@@ -49,10 +37,6 @@
   justify-content: center;
   align-items: center;
   color: inherit;
-}
-
-.content {
-  padding: var(--zn-spacing-x-small) 0;
 }
 
 :host([transparent]) > div {
@@ -71,6 +55,8 @@
 
 :host #nav-container {
   gap: 0;
+  border-bottom: 1px solid rgb(var(--zn-border-color));
+  margin: 0 3px;
 }
 
 .alt-overlay {
@@ -104,14 +90,21 @@
   }
 }
 
+:host([transparent]) {
+  .header {
+    margin: 0;
+
+    &__caption {
+
+    }
+  }
+}
 
 .header {
   display: flex;
   flex-direction: column;
-  border-bottom-width: 1px;
-  // border-top-width: 1px;
+  margin: 0;
   overflow: hidden;
-  background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
 
   .content {
     display: flex;
@@ -119,10 +112,10 @@
     width: 100%;
     max-width: 100%;
     height: fit-content;
+    min-height: var(--zn-input-height-medium, 36px);
     gap: 10px;
     margin: 0 auto;
-    padding-left: var(--zn-spacing-medium);
-    padding-right: var(--zn-spacing-medium);
+    padding: var(--zn-base-gap);
   }
 
   &__left {
@@ -130,7 +123,6 @@
     justify-content: center;
     flex-direction: column;
     gap: 1px;
-    min-height: 43px;
     flex-shrink: 1;
     max-width: 100%;
   }
@@ -138,14 +130,10 @@
   &__right {
     flex-grow: 1;
     flex-shrink: 1;
-    overflow: hidden;
+    // Chrome ignores overflow-clip-margin unless both axes clip
+    overflow: clip;
+    overflow-clip-margin: var(--zn-focus-ring-outset);
     min-width: 20px;
-  }
-
-  &__description {
-    display: contents;
-    font-size: var(--zn-font-size-medium);
-    line-height: 28px;
   }
 
   .navless {
@@ -158,19 +146,15 @@
   }
 
   .breadcrumb {
-    flex-basis: 100%;
-    font-size: var(--zn-font-size-x-small);
-    font-weight: var(--zn-font-weight-semibold);
-    color: rgb(var(--zn-text));
-
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: var(--zn-spacing-2x-small);
+    font: inherit;
+    color: inherit;
 
     &::slotted(a) {
-      font-size: 0.875rem;
+      font: inherit;
       color: inherit;
-      font-weight: var(--zn-font-weight-normal);
       text-decoration: inherit;
     }
 
@@ -178,10 +162,11 @@
       color: rgb(var(--zn-primary));
     }
 
-    &::slotted(a:not(:last-of-type))::after {
+    &::slotted(a)::after {
       content: '>';
       margin-left: var(--zn-spacing-2x-small);
       color: rgb(var(--zn-text-muted));
+      font-weight: var(--zn-font-weight-normal);
     }
   }
 
@@ -192,6 +177,7 @@
     align-items: center;
     gap: 10px;
     max-width: 100%;
+    line-height: var(--zn-icon-size, 20px);
 
     a {
       display: flex;
@@ -211,13 +197,13 @@
 
   h1 {
     flex-grow: 1;
-    font-size: 18px;
 
     overflow: hidden;
     text-overflow: ellipsis;
 
     color: rgb(var(--zn-text-page-title));
     margin: 0;
+    font-size: var(--zn-font-size-medium);
     font-weight: var(--zn-font-weight-medium);
 
     @media screen and (min-width: var(--zn-container-lg)) {
@@ -233,7 +219,7 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: var(--zn-spacing-x-small);
+    gap: var(--zn-spacing-small);
     word-break: break-word;
   }
 

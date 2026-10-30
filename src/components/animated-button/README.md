@@ -183,7 +183,7 @@ The component uses CSS custom properties from the Zinc design system:
 - `--zn-color-error`: Error color (red)
 - `--zn-transition-medium`: Transition duration for color changes
 - `--zn-transition-fast`: Transition duration for interactions
-- `--zn-border-radius-medium`: Border radius
+- `--zn-border-radius`: Border radius
 
 ### CSS Parts
 

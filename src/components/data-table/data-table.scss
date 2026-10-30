@@ -1,13 +1,18 @@
 @use "../../wc";
-@use "../../../scss/boot"; // Tables load in such a way we need to include the global styles on them again
 
 :host {
   display: block;
   @include wc.scrollbars;
 }
 
-.table-container {
-  overflow: auto;
+// Separates a top-level filter bar from the table's own panel below it
+slot[name="filter-top"]::slotted(*) {
+  margin-bottom: var(--zn-spacing-small);
+}
+
+.table__scroll {
+  overflow-x: auto;
+  @include wc.scrollbars;
 }
 
 table {
@@ -17,36 +22,29 @@ table {
   max-width: 100%;
   table-layout: auto;
   text-align: left;
+  @include wc.text-style(table-content);
 
-  tbody tr:nth-of-type(even) {
-    background-color: unset;
-  }
-
-  tbody tr.table__row--data.table__row--odd:not(.table__row--selected) td {
-    background-color: rgba(var(--zn-body));
+  tbody tr.table__row--data td {
+    height: 48px;
+    padding-block: 0;
+    overflow: hidden;
   }
 
   tbody tr.table__row--details td {
     background-color: rgb(var(--zn-shadow));
   }
 
-  &.table--standalone {
-    background-color: rgb(var(--zn-panel));
-    border-radius: var(--zn-border-radius-large);
-    border: 1px solid rgb(var(--zn-border-color));
-    overflow: hidden;
-  }
-
   thead {
     color: rgb(var(--zn-text-heading));
-    font-weight: 500;
+    font-weight: var(--zn-font-weight-medium);
   }
 
   thead tr th {
+    background-color: rgb(var(--zn-table-header-background-color));
     border-bottom: 1px solid rgb(var(--zn-border-color)) !important;
   }
 
-  &.with-hover tbody tr.table__row--data:not(.table__row--selected):hover td {
+  &.with-hover tbody tr.table__row--data:hover td {
     background-color: rgba(var(--zn-primary), 0.05) !important;
     cursor: pointer;
   }
@@ -64,32 +62,18 @@ table {
     border-top: 0 !important;
   }
 
-  thead tr th:first-of-type,
-  tbody tr td:first-of-type {
-    padding-left: 14px;
-  }
-
-  thead tr th:last-of-type,
-  tbody tr td:last-of-type {
-    padding-right: 14px;
-  }
-
   th, td {
-    padding: var(--zn-spacing-medium);
+    padding: var(--zn-spacing-small) var(--zn-spacing-medium);
     min-width: 90px;
     white-space: nowrap;
 
     span {
       white-space: normal;
     }
-
-    &:first-child {
-      padding-left: 0;
-    }
   }
 
   th {
-    padding-bottom: 0;
+    @include wc.text-style(button-label);
     border-bottom: 1px solid rgb(var(--zn-border-color));
   }
 }
@@ -100,11 +84,6 @@ table {
 
 
 .table { // The container element that holds the table and the filters
-
-  tr th {
-    padding-top: var(--zn-spacing-large);
-    padding-bottom: var(--zn-spacing-large);
-  }
 
   tr th, tr td {
     min-width: 50px;
@@ -137,32 +116,21 @@ table {
   }
 
   &__head {
-    &:hover {
-      .table__head__sort {
-        opacity: 1;
-      }
-    }
+    text-transform: capitalize;
 
     &__sort {
-      margin-left: var(--zn-spacing-small);
-      opacity: 0;
+      margin: 0;
+      padding: 0;
+      opacity: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       cursor: pointer;
-
-      &--active {
-        opacity: 1 !important;
-      }
     }
 
     &--wide {
       width: 100%;
-    }
-
-    &--last div {
-      flex-direction: row-reverse !important;
     }
 
     &--left div {
@@ -195,10 +163,6 @@ table {
       width: 100%;
     }
 
-    &--last div {
-      justify-content: flex-end;
-    }
-
     &--left div {
       justify-content: flex-start;
     }
@@ -214,6 +178,7 @@ table {
     &--actions {
       width: 25px;
       min-width: 25px;
+      text-align: right;
     }
 
     .caption {
@@ -229,9 +194,9 @@ table {
       }
 
       .title {
-        font-weight: 600;
+        font-weight: var(--zn-font-weight-semibold);
         color: rgb(var(--zn-text-heading));
-        font-size: 14px;
+        font-size: var(--zn-text-table-content-font-size);
         text-decoration: none;
       }
 
@@ -262,16 +227,29 @@ table {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: baseline;
-    padding-block: var(--zn-spacing-small);
+    align-items: center;
+    padding: var(--zn-spacing-x-small) var(--zn-spacing-medium);
     gap: var(--zn-spacing-small);
 
     &__actions,
     &__query-builder {
       display: flex;
       flex-direction: row;
-      align-items: baseline;
+      align-items: center;
       gap: var(--zn-spacing-small);
+    }
+
+    &__toggle--active::part(base) {
+      background-color: rgb(var(--zn-color-tab));
+    }
+
+    &__caption {
+      @include wc.text-style(h1);
+
+      margin: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     &__right {
@@ -283,11 +261,31 @@ table {
     }
   }
 
+  &__filters {
+    padding: var(--zn-spacing-x-small) var(--zn-spacing-medium);
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
   &__footer {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: var(--zn-spacing-medium) var(--zn-spacing-medium);
+    flex-wrap: wrap;
+    gap: var(--zn-spacing-small);
+    padding: var(--zn-spacing-x-small) var(--zn-spacing-medium);
+
+    // The joined control must never break across lines
+    zn-button-group::part(base) {
+      flex-wrap: nowrap;
+    }
+
+    // zn-panel's footer supplies its own padding
+    &--panel {
+      padding: 0;
+    }
 
     &__right, &__left {
       display: flex;
@@ -300,34 +298,49 @@ table {
       display: flex;
       flex-direction: row;
       align-items: center;
-      opacity: 0.8;
       gap: var(--zn-spacing-x-small);
+
+      p {
+        margin: 0;
+        color: rgb(var(--zn-text));
+        opacity: 0.7;
+        white-space: nowrap;
+      }
 
       zn-select[name="rowPerPage"] {
-        max-width: 75px;
+        --zn-input-background-color: rgb(var(--zn-panel));
+
+        width: 66px;
+      }
+
+      // Matches the height of the pagination control it sits beside
+      zn-select[name="rowPerPage"]::part(combobox) {
+        min-height: 36px;
+        padding-inline: var(--zn-spacing-x-small);
+      }
+
+      zn-select[name="rowPerPage"]::part(expand-icon) {
+        margin-inline-start: 0;
       }
     }
 
-    &__pagination-count {
-
+    // Sized to match the icon-button arrows it is joined to, but free to grow for large page numbers
+    &__pagination-page::part(base) {
+      height: 36px;
+      min-height: 36px;
+      max-height: 36px;
+      min-width: 32px;
+      padding: 0 var(--zn-spacing-2x-small);
+      justify-content: center;
+      border-color: rgb(var(--zn-border-color));
+      color: rgb(var(--zn-text));
+      font-weight: var(--zn-font-weight-normal);
+      white-space: nowrap;
     }
 
-    &__pagination-buttons {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: var(--zn-spacing-x-small);
-
-      button {
-        border: 1px solid rgb(var(--zn-border-color));
-        border-radius: 5px;
-        padding: var(--zn-spacing-x-small);
-
-        &[disabled] {
-          cursor: not-allowed;
-          opacity: 0.5;
-        }
-      }
+    &__pagination-page--active::part(base) {
+      background-color: var(--zn-color-neutral-300);
+      border-color: var(--zn-color-neutral-300);
     }
   }
 
@@ -349,9 +362,33 @@ table {
     }
 
     &__value {
-      font-size: 14px;
+      font-size: var(--zn-text-table-content-font-size);
     }
   }
+}
+
+zn-menu {
+  --zn-menu-min-width: var(--zn-size-spanel);
+}
+
+// A table's header and footer are chrome around the rows, so they sit tighter than
+// the panel's own content padding. The header's trailing edge tucks in further still,
+// since the controls there are already inset by their own button padding.
+zn-panel {
+  --zn-panel-header-padding: var(--zn-spacing-x-small) var(--zn-spacing-x-small)
+    var(--zn-spacing-x-small) var(--zn-spacing-medium);
+  --zn-panel-footer-padding: var(--zn-spacing-x-small) var(--zn-spacing-medium);
+}
+
+// Closes the rows off from the footer, which the panel border would otherwise do
+zn-panel::part(footer) {
+  border-top: 1px solid rgb(var(--zn-border-color));
+}
+
+// Dropdowns sit over dense rows here, so they need a solid surface rather than
+// zn-menu's translucent default
+zn-menu::part(base) {
+  background-color: rgb(var(--zn-panel));
 }
 
 .reduced-opacity .table tbody {
@@ -377,83 +414,55 @@ table {
   background-color: rgb(var(--zn-panel, 255, 255, 255));
 }
 
-/* Table Select Styles */
-table tbody tr.table__row--selected {
-  background-color: var(--zn-color-purple-100);
-
-  &:hover {
-    background-color: var(--zn-color-purple-200) !important;
-  }
-
-  td {
-    border-top: 1px solid var(--zn-color-purple-600) !important;
-    border-bottom: 1px solid var(--zn-color-purple-600) !important;
-  }
-
-  td:first-of-type {
-    border-left: 1px solid var(--zn-color-purple-600);
-  }
-
-  td:last-of-type {
-    border-right: 1px solid var(--zn-color-purple-600);
-  }
-
-  &:last-of-type td:first-of-type {
-    border-bottom-left-radius: var(--zn-border-radius-large);
-  }
-
-  &:last-of-type td:last-of-type {
-    border-bottom-right-radius: var(--zn-border-radius-large);
-  }
-
-  & + tr.table__row--selected td {
-    border-top: 0 !important;
-
-    &:first-of-type {
-      border-top-left-radius: 0;
-    }
-
-    &:last-of-type {
-      border-top-right-radius: 0;
-    }
-  }
-
-  &:has(+ tr.table__row--selected) td {
-    border-bottom: 0 !important;
-  }
-
-  &:first-of-type td {
-    border-top: 0 !important;
-  }
-
-  &:has(+ tr.table__row--selected) {
-    td:first-of-type {
-      border-bottom-left-radius: 0;
-    }
-
-    td:last-of-type {
-      border-bottom-right-radius: 0;
-    }
-  }
-
-  &.table__row--odd {
-    background-color: hsla(from var(--zn-color-purple-200) h s l / 0.8);
-  }
+.table tr .table__head[tabindex]:focus-visible {
+  outline: var(--zn-focus-ring);
+  outline-offset: calc(-1 * var(--zn-focus-ring-width));
 }
 
-table:has(tbody tr:first-of-type.table__row--selected) thead tr th {
-  border-bottom-color: var(--zn-color-purple-600) !important;
+.table tr .table__head--checkbox,
+.table tr .table__cell--checkbox {
+  width: 1px;
+  min-width: 0;
+  padding-right: 0;
 }
 
-.table-group__title {
+// Visually hidden rather than display: none, which would stop a slotted zn-confirm's dialog rendering
+.table__actions-source {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+tbody tr.table__row--group th {
+  padding: var(--zn-spacing-small) var(--zn-spacing-medium);
+  text-align: left;
+  white-space: nowrap;
+  background-color: rgb(var(--zn-panel));
+  color: rgba(var(--zn-text-panel-title), 100%);
   font-weight: var(--zn-font-weight-semibold);
   font-size: var(--zn-font-size-large);
-  color: rgba(var(--zn-text-panel-title), 100%);
-  line-height: var(--zn-line-height-looser);
-  padding-left: var(--zn-spacing-medium);
-  margin: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
+tbody tr.table__row--group:not(:first-of-type) th {
+  border-top: 1px solid rgb(var(--zn-border-color));
+}
+
+tbody tr.table__row--error td {
+  padding-block: var(--zn-spacing-x-small);
+}
+
+.table__error {
+  padding-bottom: var(--zn-spacing-small);
+}
+
+.table__collum--datetime{
+  display:flex;
+  flex-direction:column;
+  align-items: flex-end;
+  gap:2px;
+}
+
+.table__cell--subtext{
+  @include wc.text-style(subheading-small);
+}

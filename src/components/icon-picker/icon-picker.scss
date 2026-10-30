@@ -1,0 +1,278 @@
+@use "../../wc";
+
+:host {
+  display: block;
+}
+
+.form-control-input {
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-x-small);
+}
+
+zn-dialog {
+  --width: min(80vw, 900px);
+  --icon-color: rgb(var(--zn-text));
+}
+
+// Mirrors zn-file's droparea preview so a chosen image reads the same as an
+// uploaded file.
+.icon-picker__image-trigger {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 180px;
+  border: 1px solid var(--zn-input-border-color);
+  border-radius: var(--zn-border-radius);
+  cursor: pointer;
+  transition: var(--zn-transition-medium) background,
+    var(--zn-transition-medium) border-color;
+
+  &:focus-visible {
+    border-color: var(--zn-color-primary-600);
+    outline: var(--zn-focus-ring);
+    outline-offset: var(--zn-focus-ring-offset);
+  }
+
+  &:not(:focus-visible):hover {
+    border-color: var(--zn-color-primary-700);
+  }
+}
+
+:host([disabled]) .icon-picker__image-trigger {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.icon-picker__image-trigger-background {
+  --zn-droparea-checker-size: 12px;
+  --zn-droparea-checker-a: var(--zn-color-neutral-50);
+  --zn-droparea-checker-b: var(--zn-color-neutral-100);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  padding: var(--zn-spacing-large) var(--zn-spacing-medium);
+  box-sizing: border-box;
+  background-color: var(--zn-droparea-checker-a);
+  background-image:
+    linear-gradient(45deg, var(--zn-droparea-checker-b) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--zn-droparea-checker-b) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--zn-droparea-checker-b) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--zn-droparea-checker-b) 75%);
+  background-size: var(--zn-droparea-checker-size) var(--zn-droparea-checker-size);
+  background-position:
+    0 0,
+    0 calc(var(--zn-droparea-checker-size) / 2),
+    calc(var(--zn-droparea-checker-size) / 2) calc(var(--zn-droparea-checker-size) / -2),
+    calc(var(--zn-droparea-checker-size) / -2) 0;
+  border-radius: calc(var(--zn-border-radius) - 1px);
+}
+
+.icon-picker__image-trigger-preview {
+  display: block;
+  width: 100%;
+  height: 150px;
+  object-fit: contain;
+}
+
+.icon-picker__image-clear {
+  position: absolute;
+  top: var(--zn-spacing-small);
+  right: var(--zn-spacing-small);
+  z-index: 1;
+}
+
+.icon-picker__dialog-layout {
+  display: flex;
+  gap: var(--zn-spacing-large);
+  height: 40vh;
+}
+
+.icon-picker__dialog-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.icon-picker__dialog-sidebar {
+  width: 180px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  zn-dialog {
+    --width: 100vw;
+  }
+
+  zn-dialog::part(base) {
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0;
+    border-radius: 0;
+    height: 100dvh;
+    width: 100vw;
+  }
+
+  .icon-picker__dialog-layout {
+    height: calc(100dvh - 8rem);
+    flex-direction: column;
+  }
+
+  .icon-picker__dialog-sidebar {
+    width: 100%;
+    flex-shrink: 0;
+  }
+}
+
+.icon-picker__mode-switch {
+  display: flex;
+  gap: var(--zn-spacing-x-small);
+  margin-bottom: var(--zn-spacing-small);
+}
+
+.icon-picker__upload {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--zn-spacing-small);
+  border: dashed 1px rgb(var(--zn-border-color));
+  border-radius: var(--zn-border-radius);
+  padding: var(--zn-spacing-large);
+  color: rgb(var(--zn-text-muted));
+}
+
+.icon-picker__upload-preview {
+  max-width: 100%;
+  max-height: 160px;
+  object-fit: contain;
+  border-radius: var(--zn-border-radius);
+}
+
+.icon-picker__upload-filename {
+  font-size: var(--zn-font-size-small);
+  color: rgb(var(--zn-text-muted));
+  word-break: break-all;
+}
+
+.icon-picker__dialog-controls {
+  display: flex;
+  gap: var(--zn-spacing-small);
+  margin-bottom: var(--zn-spacing-small);
+}
+
+.icon-picker__library-select {
+  flex: 1;
+  min-width: 0;
+}
+
+.icon-picker__color-input {
+  width: 140px;
+  flex-shrink: 0;
+}
+
+.icon-picker__icon-input {
+  margin-bottom: var(--zn-spacing-small);
+}
+
+.icon-picker__search {
+  margin-bottom: var(--zn-spacing-small);
+}
+
+.icon-picker__free-input {
+  margin-bottom: var(--zn-spacing-small);
+}
+
+.icon-picker__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--zn-spacing-x-small);
+  flex: 1;
+  overflow-y: auto;
+  align-content: flex-start;
+  border: solid 1px rgb(var(--zn-border-color));
+  border-radius: var(--zn-border-radius);
+  padding: var(--zn-spacing-x-small);
+}
+
+.icon-picker__grid-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: var(--zn-border-radius);
+  background: transparent;
+  color: var(--zn-text-color);
+  cursor: pointer;
+  transition: var(--zn-transition-fast) background-color,
+    var(--zn-transition-fast) border-color;
+
+  &:hover {
+    background-color: rgba(var(--zn-color-primary), 0.1);
+  }
+
+  &--selected {
+    border-color: rgb(var(--zn-color-primary));
+    background-color: rgba(var(--zn-color-primary), 0.1);
+  }
+}
+
+.icon-picker__no-results {
+  width: 100%;
+  text-align: center;
+  padding: var(--zn-spacing-large);
+  color: rgb(var(--zn-text-muted));
+}
+
+.icon-picker__preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--zn-spacing-small);
+  padding: var(--zn-spacing-medium);
+  background-color: rgba(var(--zn-panel-secondary), 0.5);
+  border-radius: var(--zn-border-radius);
+  text-align: center;
+
+  &--empty {
+    color: rgb(var(--zn-text-muted));
+  }
+}
+
+.icon-picker__preview-name {
+  font-size: var(--zn-font-size-medium);
+  font-family: var(--zn-font-mono);
+  word-break: break-all;
+}
+
+.icon-picker__preview-library {
+  font-size: var(--zn-font-size-small);
+  color: rgb(var(--zn-text-muted));
+}
+
+.icon-picker__preview-hint {
+  font-size: var(--zn-font-size-small);
+  color: rgb(var(--zn-text-muted));
+}
+
+// Mirrors the global .form-actions layout, which isn't available in the
+// shadow DOM. currentColor undoes the dialog-wide --icon-color override so
+// button icons match their button's text colour.
+.icon-picker__footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--zn-spacing-small);
+  --icon-color: currentColor;
+}
+

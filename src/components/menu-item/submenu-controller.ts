@@ -1,8 +1,8 @@
-import { createRef, ref, type Ref } from 'lit/directives/ref.js';
-import { type HasSlotController } from '../../internal/slot.js';
-import type { ReactiveController, ReactiveControllerHost } from 'lit';
-import { html } from 'lit';
-import { type LocalizeController } from '../../utilities/localize.js';
+import {createRef, ref, type Ref} from 'lit/directives/ref.js';
+import {type HasSlotController} from '../../internal/slot.js';
+import {html} from 'lit';
+import {type LocalizeController} from '../../utilities/localize.js';
+import type {ReactiveController, ReactiveControllerHost} from 'lit';
 import type ZnMenuItem from '../menu-item';
 import type ZnPopup from '../popup';
 
@@ -201,14 +201,24 @@ export class SubmenuController implements ReactiveController {
   // Set the safe triangle values for the submenu when the position changes
   private handlePopupReposition = () => {
     const submenuSlot: HTMLSlotElement | null = this.host.renderRoot.querySelector("slot[name='submenu']");
-    const menu = submenuSlot?.assignedElements({ flatten: true }).filter(el => el.localName === 'zn-menu')[0];
+    const menu = submenuSlot?.assignedElements({flatten: true}).filter(el => el.localName === 'zn-menu')[0];
     const isRtl = this.localize.dir() === 'rtl';
 
     if (!menu) {
       return;
     }
 
-    const { left, top, width, height } = menu.getBoundingClientRect();
+    const {left, top, width, height} = menu.getBoundingClientRect();
+
+    const parentMenu = this.host.parentElement;
+    const parentPanel = parentMenu?.shadowRoot?.querySelector('.menu') ?? parentMenu;
+    if (parentMenu && parentPanel) {
+      const parent = parentPanel.getBoundingClientRect();
+      menu.toggleAttribute('data-extends-below', top + height > parent.bottom + 1);
+      // Flags the parent's corners the submenu covers, so the parent squares them off.
+      parentMenu.toggleAttribute('data-submenu-top', top <= parent.top + 1);
+      parentMenu.toggleAttribute('data-submenu-bottom', top + height >= parent.bottom - 1);
+    }
 
     this.host.style.setProperty('--safe-triangle-submenu-start-x', `${isRtl ? left + width : left}px`);
     this.host.style.setProperty('--safe-triangle-submenu-start-y', `${top}px`);
@@ -222,6 +232,10 @@ export class SubmenuController implements ReactiveController {
         this.popupRef.value.active = state;
         this.host.requestUpdate();
       }
+    }
+    if (!state) {
+      this.host.parentElement?.removeAttribute('data-submenu-top');
+      this.host.parentElement?.removeAttribute('data-submenu-bottom');
     }
   }
 
@@ -244,21 +258,12 @@ export class SubmenuController implements ReactiveController {
 
   // Calculate the space the top of a menu takes-up, for aligning the popup menu-item with the activating element.
   private updateSkidding(): void {
-    // .computedStyleMap() not always available.
-    if (!this.host.parentElement?.computedStyleMap) {
-      return;
-    }
-    const styleMap: StylePropertyMapReadOnly = this.host.parentElement.computedStyleMap();
-    const attrs: string[] = ['padding-top', 'border-top-width', 'margin-top'];
-
-    const skidding = attrs.reduce((accumulator, attr) => {
-      const styleValue: CSSStyleValue = styleMap.get(attr) ?? new CSSUnitValue(0, 'px');
-      const unitValue = styleValue instanceof CSSUnitValue ? styleValue : new CSSUnitValue(0, 'px');
-      const pxValue = unitValue.to('px');
-      return accumulator - pxValue.value;
-    }, 0);
-
-    this.skidding = skidding;
+    // zn-menu's padding and border sit on its inner `.menu`, not the host.
+    const menu = this.host.parentElement;
+    const panel = menu?.shadowRoot?.querySelector('.menu') ?? menu;
+    if (!panel) return;
+    const style = getComputedStyle(panel);
+    this.skidding = -(parseFloat(style.paddingTop) + parseFloat(style.borderTopWidth) + parseFloat(style.marginTop));
   }
 
   isExpanded(): boolean {

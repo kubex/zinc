@@ -2,8 +2,99 @@
 @use "sass:color";
 @use "sass:meta";
 @use "variables";
+@use "themes/modes";
 
 :root {
+  --zn-base-px: 8px;
+  --zn-base-gap: calc(var(--zn-base-px) * 2);
+  --zn-gutter: 2px;
+  --zn-default-margin: 0 auto 0 0;
+  --zn-icon-size: 20px;
+  --zn-button-gutter: 2px;
+
+  --zn-font-family-sans: 'Inter', sans-serif;
+  --zn-font-family-serif: 'Roboto Slab', serif;
+  --zn-font-family-mono: 'Roboto Mono', monospace;
+}
+
+#{modes.$light} {
+  --zn-backdrop-color: rgba(0, 0, 0, 0.5);
+
+  --zn-color-text: 33, 33, 33;
+  --zn-color-muted-text: 125, 119, 146;
+
+  --zn-color-base: 255, 255, 255;
+  --zn-color-body: 248, 247, 252;
+  --zn-color-navigation: var(--zn-color-base);
+  --zn-color-navigation-hightlight: 248, 249, 252;
+  --zn-color-border: 219, 217, 236;
+  --zn-color-border-active: 209, 207, 226;
+  --zn-color-tab: 236, 235, 249;
+  --zn-color-panel: 255, 255, 255;
+
+  --zn-color-primary: 105, 54, 245;
+  --zn-color-info: 53, 104, 195;
+  --zn-color-success: 98, 177, 121;
+  --zn-color-warning: 241, 168, 80;
+  --zn-color-error: 236, 68, 91;
+  --zn-color-disabled: 181, 181, 181;
+}
+
+#{modes.$dark} {
+  --zn-backdrop-color: rgba(0, 0, 0, 0.85);
+
+  --zn-color-text: 215, 215, 215;
+  --zn-color-muted-text: 145, 145, 145;
+
+  --zn-color-base: 0, 0, 0;
+  --zn-color-body: 23, 23, 23;
+  --zn-color-navigation: var(--zn-color-base);
+  --zn-color-navigation-hightlight: 10, 10, 10;
+  --zn-color-border: 38, 38, 38;
+  --zn-color-border-active: 80, 80, 80;
+  --zn-color-tab: 5, 5, 5;
+  --zn-color-panel: 30, 30, 30;
+
+  --zn-color-primary: 105, 54, 245;
+  --zn-color-info: 53, 104, 195;
+  --zn-color-success: 98, 177, 121;
+  --zn-color-warning: 241, 168, 80;
+  --zn-color-error: 236, 68, 91;
+  --zn-color-disabled: 181, 181, 181;
+}
+
+@media (min-width: 1200px) {
+  :root {
+    --zn-base-gap: calc(var(--zn-base-px) * 3);
+  }
+}
+
+@media (min-width: 2500px) {
+  :root {
+    --zn-default-margin: 0 auto;
+  }
+}
+
+
+:root {
+  --zn-primary: var(--zn-color-primary);
+
+  // Ink colours — text and icons painted ON TOP of a filled colour surface
+  // (solid buttons, active menu items, badges). Every theme so far uses a
+  // colour dark enough for white ink, so white is the default; a theme with a
+  // light or high-luminance accent (neon lime, amber, mint) must override the
+  // matching token or its filled controls become unreadable.
+  //
+  // Declared as RGB triplets so they compose with rgba() the same way the rest
+  // of the palette does. Components that consume them are inside shadow roots
+  // that do not load this file, so they always pass a `255, 255, 255` fallback.
+  --zn-color-on-primary: 255, 255, 255;
+  --zn-color-on-info: 255, 255, 255;
+  --zn-color-on-success: 255, 255, 255;
+  --zn-color-on-warning: 255, 255, 255;
+  --zn-color-on-error: 255, 255, 255;
+  --zn-color-on-accent: 255, 255, 255;
+
   // Brand Colors
   --zn-red: 237, 84, 109;
   --zn-blue: 100, 117, 242;
@@ -14,15 +105,7 @@
   --zn-violet: 156, 39, 176;
   --zn-pink: 255, 108, 156;
   --zn-grey: 158, 158, 158;
-  --zn-primary: 104, 54, 245;
   --zn-accent: 71, 214, 214;
-
-  // Theme Colors
-  --zn-color-info: 100, 117, 242;
-  --zn-color-warning: 255, 136, 0;
-  --zn-color-error: 237, 84, 109;
-  --zn-color-success: 43, 192, 145;
-  --zn-color-disabled: 181, 181, 181;
 
   // Common Sizes
   --zn-size-bar: 60px;
@@ -33,11 +116,6 @@
   --zn-size-panel: 360px;
   --zn-size-lside: 460px;
 
-  // Font Families
-  --zn-font-family-sans: 'Inter', sans-serif;
-  --zn-font-family-serif: 'Roboto Slab', serif;
-  --zn-font-family-mono: 'Roboto Mono', monospace;
-
   // Default Opacities
   --zn-bg-opacity: 1;
   --zn-text-opacity: 1;
@@ -47,24 +125,50 @@
 }
 
 .zn-mono {
-  font-family: var(--zn-font-family-mono);
+  font-family: var(--zn-font-family-mono), monospace;
 }
 
-[t="light"], .theme-light {
-  // Theme Light
+.zn-muted {
+  color: var(--zn-color-muted-text);
+}
+
+.zn-size-xs {
+  font-size: var(--zn-font-size-x-small);
+}
+
+.zn-size-s {
+  font-size: var(--zn-font-size-small);
+}
+
+.zn-size-l {
+  font-size: var(--zn-font-size-large);
+}
+
+.zn-size-xl {
+  font-size: var(--zn-font-size-x-large);
+}
+
+#{modes.$light}, #{modes.$dark} {
+  --zn-body: var(--zn-color-body);
+
+  --zn-text: var(--zn-color-text);
+  --zn-text-heading: var(--zn-color-text);
+  --zn-text-page-title: var(--zn-color-text);
+  --zn-text-panel-title: var(--zn-color-text);
+  --zn-panel: var(--zn-color-panel);
+
+  --zn-border-color: var(--zn-color-border);
+  --zn-input-bg: var(--zn-color-body);
+}
+
+#{modes.$light} {
+  // Light mode
   --zn-panel-opacity: 1;
-  --zn-text: 123, 112, 151;
-  --zn-text-heading: 56, 39, 104;
-  --zn-text-page-title: 52, 52, 52;
-  --zn-text-panel-title: 56, 39, 104;
-  --zn-body: 248, 247, 251;
-  --zn-shadow: 236, 233, 241;
-  --zn-panel: 255, 255, 255;
+  --zn-shadow: 236, 235, 249;
+
   --zn-panel-secondary: 246 246 246;
   --zn-panel-highlight: 248, 249, 252;
   --zn-panel-highlight-opacity: 1;
-  --zn-border-color: 224, 221, 233;
-  --zn-input-bg: 248, 247, 251;
   --zn-input-bg-accent: 237, 235, 245;
   --zn-bright-bg: 255, 255, 255;
   --zn-light-text: 123, 112, 151;
@@ -72,25 +176,17 @@
   --zn-purple-text: 104, 54, 245;
 
   .zn-primary {
-    color: #6836F5;
+    color: rgb(var(--zn-color-primary));
   }
 }
 
-[t="dark"], .theme-dark {
-  // Theme Dark
-  --zn-body: 20, 22, 27;
-  --zn-panel: 33, 34, 41;
+#{modes.$dark} {
+  // Dark mode
   --zn-shadow: 10, 10, 10;
   --zn-panel-secondary: 27, 27, 30;
   --zn-panel-opacity: 1;
-  --zn-text: 159, 173, 194;
-  --zn-text-heading: 241, 245, 249;
-  --zn-text-page-title: 225, 225, 225;
-  --zn-text-panel-title: 181, 158, 255;
-  --zn-panel-highlight: 255, 255, 255;
+  --zn-panel-highlight: 25, 27, 32;
   --zn-panel-highlight-opacity: 0.1;
-  --zn-border-color: 50, 50, 60;
-  --zn-input-bg: 28, 28, 32;
   --zn-input-bg-accent: 72, 84, 102;
   --zn-bright-bg: 225, 225, 225;
   --zn-light-text: 173, 163, 192;
@@ -201,8 +297,8 @@
   color: rgb(var(--zn-color-success));
 }
 
-ul.gap{
-  li{
+ul.gap {
+  li {
     margin: 5px 0;
   }
 }
@@ -225,4 +321,174 @@ ul.disc {
 
 ul.square {
   list-style-type: square;
+}
+
+// Aura — soft, light-based theme with a pastel violet identity.
+// Appended last so it wins source-order over the :root/light defaults on the
+// document element (which carries the `t="aura"` attribute *and* matches :root).
+// Only the source colour tokens and the theme-specific leaf tokens are set;
+// derived tokens (--zn-body, --zn-text, --zn-panel ...) reference these via
+// var() and follow automatically.
+//
+// Aura ships both palettes: this block is the light one, and the
+// `html[t="aura"][m="dark"]` block below re-points every token in it for dark. The
+// two must stay token-for-token in step — a token set here and missed there
+// leaks a light value into dark mode, because this block is mode-agnostic and
+// so applies in both.
+html[t="aura"], body[t="aura"], html.theme-aura, body.theme-aura {
+  --zn-backdrop-color: rgba(30, 27, 60, 0.45);
+
+  --zn-color-text: 42, 32, 89;
+  --zn-color-muted-text: 128, 118, 158;
+
+  --zn-color-base: 255, 255, 255;
+  --zn-color-body: 250, 248, 255;
+  --zn-color-navigation: var(--zn-color-base);
+  --zn-color-navigation-hightlight: 245, 242, 255;
+  --zn-color-border: 228, 222, 246;
+  --zn-color-border-active: 214, 206, 240;
+  --zn-color-tab: 240, 235, 252;
+  --zn-color-panel: 255, 255, 255;
+
+  --zn-color-primary: 139, 110, 245;
+  --zn-color-info: 53, 104, 195;
+  --zn-color-success: 98, 177, 121;
+  --zn-color-warning: 241, 168, 80;
+  --zn-color-error: 236, 68, 91;
+  --zn-color-disabled: 181, 181, 181;
+
+  // Theme-specific leaf tokens (light/dark declare these in their own blocks,
+  // so aura must supply its own — they are not inherited from :root).
+  --zn-panel-opacity: 1;
+  --zn-shadow: 232, 226, 250;
+  --zn-panel-secondary: 248 246 255;
+  --zn-panel-highlight: 245, 242, 255;
+  --zn-panel-highlight-opacity: 1;
+  --zn-input-bg-accent: 240, 236, 252;
+  --zn-bright-bg: 255, 255, 255;
+  --zn-light-text: 130, 120, 160;
+  --zn-dark-text: 60, 44, 110;
+  --zn-purple-text: 124, 92, 246;
+  --zn-accent: 200, 130, 230;
+
+  // Frosted-glass inactive tabs for the zn-page tab navbar (consumed in
+  // components/navbar/navbar.scss, scoped there to :host-context(zn-page)).
+  //
+  // The translucent background carries the frosted look on its own. Do NOT put a
+  // backdrop-filter here: navbar.scss applies it per inactive tab, so each tab
+  // becomes its own render surface and re-samples + re-blurs its backdrop every
+  // frame. On a page with a normal number of tabs that alone pushed GPU draw to
+  // ~8ms/frame and dropped frames on every scroll.
+  --navbar-page-inactive-tab-background: rgba(255, 255, 255, 0.5);
+  --navbar-page-inactive-tab-filter: none;
+
+  // Aurora gradient behind the zn-page header, plus the weight of the wave
+  // artwork layered on top of it (components/page/page.scss). Held still — see
+  // the PERF note there before reintroducing any drift.
+  --zn-page-header-aurora: linear-gradient(225deg, rgba(233, 227, 255, 1) 0%, rgba(214, 246, 245, 1) 40%, rgba(233, 227, 255, 1) 100%), linear-gradient(180deg, rgba(129, 153, 217, 0) 0%, rgba(0, 0, 0, 1) 100%);
+  --zn-page-header-wave-opacity: 0.04;
+
+  .zn-primary {
+    color: rgb(var(--zn-color-primary));
+  }
+}
+
+// Aura dark — the same violet identity drawn over the dark primitives, on a
+// deep navy canvas rather than a bespoke hue.
+//
+// The canvas colour is deliberate: `--zn-color-body` is the exact navy the
+// rubix shell chrome paints itself (`--rx-shell-header-bg: 19, 29, 45`, set in
+// the aura-dark block of static/src/scss/shell/_header.scss — deeper than the
+// 40, 55, 80 aura light mode uses), so the top bar, the app navigation and the
+// page body read as one continuous surface with panels lifted above it.
+//
+// Specificity note: the selectors are deliberately `html[…]`/`body[…]` (a type
+// selector plus attributes) rather than `:root[…]`. That keeps the ordering the
+// bare selectors used to have: `html[t="aura"][m="dark"]` (0,2,1) outranks both
+// `:root[m="dark"]` (0,2,0) from `#{modes.$dark}` and the mode-agnostic
+// `html[t="aura"]` (0,1,1), which in turn still loses to `:root[m="dark"]` the
+// way `[t="aura"]` (0,1,0) did. `:root[t="aura"]` would have been (0,2,0) and
+// silently started beating the dark block. This one stays last in the file.
+html[t="aura"][m="dark"], body[t="aura"][m="dark"],
+html.theme-aura.theme-dark, body.theme-aura.theme-dark {
+  --zn-backdrop-color: rgba(8, 12, 24, 0.65);
+
+  --zn-color-text: 226, 228, 242;
+  --zn-color-muted-text: 154, 163, 190;
+
+  --zn-color-base: 30, 41, 61;
+  // Matches --rx-shell-header-bg in the rubix shell (its aura-dark block in
+  // static/src/scss/shell/_header.scss) — change both together.
+  --zn-color-body: 19, 29, 45;
+  --zn-color-navigation: var(--zn-color-base);
+  --zn-color-navigation-hightlight: 35, 47, 70;
+  --zn-color-border: 64, 82, 113;
+  --zn-color-border-active: 92, 111, 145;
+  --zn-color-tab: 33, 45, 66;
+  // A few points of lift reads as an outline rather than a surface, so the
+  // panel steps well clear of the body. #223555 — the top of the ladder:
+  // body 19,29,45 -> page canvas 31,45,70 -> panel 34,53,85.
+  --zn-color-panel: 34, 53, 85;
+
+  --zn-color-primary: 163, 140, 250;
+  --zn-color-info: 96, 148, 232;
+  --zn-color-success: 116, 199, 140;
+  --zn-color-warning: 245, 183, 105;
+  --zn-color-error: 244, 106, 126;
+  --zn-color-disabled: 118, 130, 152;
+
+  // Theme-specific leaf tokens — the mirror of the light block above.
+  --zn-panel-opacity: 1;
+  --zn-shadow: 12, 18, 32;
+  --zn-panel-secondary: 46 61 88;
+  --zn-panel-highlight: 66, 86, 120;
+  // NOT the classic dark 0.1: on a lifted palette a 10% wash leaves hover and
+  // selected rows indistinguishable from the panel they sit on.
+  --zn-panel-highlight-opacity: 1;
+  --zn-input-bg-accent: 34, 46, 68;
+  --zn-bright-bg: 52, 69, 99;
+  --zn-light-text: 168, 176, 201;
+  --zn-dark-text: 226, 228, 242;
+  --zn-purple-text: 178, 158, 252;
+  --zn-accent: 96, 196, 220;
+
+  // #{modes.$dark} hardcodes the base dark theme's own accent here; aura owns
+  // its accent in both modes, so re-point both this and .zn-primary below.
+  //
+  // Deliberately NOT var(--zn-color-primary): aura dark's *interactive* accent is
+  // a cyan, while its identity accent stays violet. --zn-primary is what buttons,
+  // the navbar, tabs, toggles, radios, progress bars, steppers and pagination
+  // read; --zn-color-primary (still violet above) is what inputs, checkboxes,
+  // selects, dialogs and the .zn-primary text utility read.
+  --zn-primary: 126, 238, 255;
+  // A fill this light is unreadable under the default white ink (1.35:1), so the
+  // paired ink drops to the shell navy — 12.6:1 on the cyan. zn-button declares
+  // the pair as --btn-color / --btn-ink for exactly this case.
+  --zn-color-on-primary: 19, 29, 45;
+
+  --base: 0, 0, 0;
+  --inverse-base: 255, 255, 255;
+
+  // Frosted-glass inactive tabs — see the light block for why there is no
+  // backdrop-filter. Inverted against the light block: on the deep aurora an
+  // inactive tab recedes by being *darker* than the gradient, not lighter.
+  --navbar-page-inactive-tab-background: rgba(0, 0, 0, 0.30);
+  --navbar-page-inactive-tab-filter: none;
+
+  // The page canvas sits a step above the navy shell surface, so the page reads
+  // as a sheet laid on the chrome rather than a hole in it (components/page/page.scss).
+  --zn-page-canvas: 31, 45, 70;
+
+  // The dark aurora: the light gradient's violet -> teal -> violet sweep taken
+  // down to full-strength indigo/teal so the page title's light ink reads on it.
+  --zn-page-header-aurora: linear-gradient(225deg, rgb(76 42 202) 0%, rgb(0 100 150) 40%, rgb(56 40 115) 100%), linear-gradient(180deg, rgb(31 50 103 / 0%) 0%, rgb(0, 0, 0) 100%);
+  // The violet wave artwork lifts rather than darkens here, so it can carry
+  // more weight than the 0.04 the pale light gradient tolerates.
+  --zn-page-header-wave-opacity: 0.10;
+
+  .zn-primary {
+    // !important to beat #{modes.$dark}'s own `.zn-primary { ... !important }`,
+    // which ties on specificity.
+    color: rgb(var(--zn-color-primary)) !important;
+  }
 }

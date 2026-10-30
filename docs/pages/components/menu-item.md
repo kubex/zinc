@@ -24,8 +24,22 @@ layout: component
 <zn-menu-item color="warning">Menu item</zn-menu-item>
 ```
 
-### Second Example
+### Keeping the Dropdown Open
 
-TODO
+A menu item inside a `zn-dropdown` closes it on select. `keep-open` exempts a single item, for rows
+that change how the panel behaves rather than committing a choice — an operator picker above a list
+of values, say. `stay-open-on-select` on the dropdown itself still covers every item at once.
+
+```html:preview
+<zn-dropdown>
+  <zn-button slot="trigger" icon="chevron-down@lu" icon-position="right">Sort</zn-button>
+  <zn-menu>
+    <zn-menu-item type="checkbox" keep-open checked>Ascending</zn-menu-item>
+    <zn-menu-item type="checkbox" keep-open>Descending</zn-menu-item>
+    <zn-menu-item value="name">Name</zn-menu-item>
+    <zn-menu-item value="created">Created</zn-menu-item>
+  </zn-menu>
+</zn-dropdown>
+```
 
 

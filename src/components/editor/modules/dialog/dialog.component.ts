@@ -11,6 +11,11 @@ export default class DialogComponent extends ZincElement {
 
   @state() private hasFocus = false;
 
+  /** Set when loaded content declares it renders its own header (including a
+   * [dialog-closer] control) via a composed zn-dialog-header event, replacing
+   * the floating chrome close button. */
+  @state() private hasContentHeader = false;
+
   @query('dialog') dialogEl!: HTMLDialogElement;
 
   @property({type: Boolean, reflect: true}) open = false;
@@ -32,13 +37,54 @@ export default class DialogComponent extends ZincElement {
 
     this.dialogEl.addEventListener("close", () => {
       this.open = false;
+      this.innerHTML = '';
+      this.hasContentHeader = false;
+    });
+
+    // Content is nested inside the app-space's shadow tree, so both contracts
+    // are composed: clicks on [dialog-closer] close the dialog (same contract
+    // as zn-dialog), and zn-dialog-header swaps the chrome closer for one the
+    // content lays out itself.
+    this.addEventListener('click', this.handleContentCloserClick);
+    this.addEventListener('zn-dialog-header', () => {
+      this.hasContentHeader = true;
     });
   }
 
-  setContent(content: string) {
-    if (this.dialogEl) {
-      this.dialogEl.querySelector('.editor-dialog__content')!.innerHTML = content;
+  private handleContentCloserClick = (e: Event) => {
+    for (const node of e.composedPath()) {
+      if (node === this) return;
+      if (!(node instanceof HTMLElement)) continue;
+      if (node.hasAttribute('dialog-closer')) {
+        this.dialogEl.close();
+        return;
+      }
+      const mode = node.getAttribute('editor-mode');
+      if (mode === 'insert' || mode === 'replace') {
+        this.insertContent(node, mode);
+        return;
+      }
     }
+  };
+
+  /** Inserts the element named by the control's `editor-content-id`: a `<template>` as HTML, anything else as text.
+   * The control's form is submitted first, as inserting closes the dialog and detaches it. */
+  private insertContent(control: HTMLElement, mode: 'insert' | 'replace') {
+    const id = control.getAttribute('editor-content-id');
+    const source = id ? (control.getRootNode() as Document | ShadowRoot).getElementById(id) : null;
+    if (!source) return;
+
+    const content = source instanceof HTMLTemplateElement
+      ? {html: source.innerHTML.trim()}
+      : {text: ((source as HTMLInputElement).value ?? source.textContent ?? '').trim()};
+    if (!content.html && !content.text) return;
+
+    control.closest('form')?.requestSubmit();
+    this.emit('zn-editor-insert', {detail: {mode, ...content}});
+  }
+
+  setContent(content: string) {
+    this.innerHTML = content;
   }
 
   @watch('open', {waitUntilFirstUpdate: true})
@@ -95,17 +141,16 @@ export default class DialogComponent extends ZincElement {
                 'editor-dialog--has-focus': this.hasFocus,
               })}"
               context-data=${JSON.stringify({'editor-id': this._editorId})}>
-        <zn-button
-          class="editor-dialog__close"
-          icon="close"
-          icon-size="24"
-          type="button"
-          color="transparent"
-          size="content"
-          @click="${() => this.dialogEl.close()}"
-        ></zn-button>
+        ${this.hasContentHeader ? nothing : html`
+          <zn-button
+            class="editor-dialog__close"
+            icon="x@lu"
+            icon-button="small"
+            icon-size="20"
+            @click="${() => this.dialogEl.close()}"
+          ></zn-button>`}
         <div class="editor-dialog__content">
-          ${this._getLoadingState()}
+          <slot>${this._getLoadingState()}</slot>
         </div>
       </dialog>
     `;

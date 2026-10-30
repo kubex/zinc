@@ -1,0 +1,1539 @@
+import { type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS } from 'lit';
+import {
+  emptyDragImage,
+  emptyPageState,
+  generateSectionId,
+  MAX_SLOTS,
+  PAGE_SECTION_MIME,
+  PAGE_TYPE_MIME,
+  type PageSection,
+  type PageSectionType,
+  type PageState,
+  sectionChildren,
+  sectionSummary,
+  slotColumns,
+  slotCount,
+} from './page.types';
+import { FormControlController, validValidityState } from '../../internal/form';
+import { HasSlotController } from '../../internal/slot';
+import { ifDefined } from 'lit/directives/if-defined.js';
+import { PageSectionRegistry } from './page-registry';
+import { property, state } from 'lit/decorators.js';
+import { watch } from '../../internal/watch';
+import ZincElement from '../../internal/zinc-element';
+import ZnCollapsible from '../collapsible';
+import ZnIcon from '../icon';
+import ZnInput from '../input';
+import ZnOption from '../option';
+import ZnPagePaletteItem from './modules/page-palette-item';
+import ZnPageSectionCard from './modules/page-section-card';
+import ZnSelect from '../select';
+
+import styles from './page-builder.scss';
+
+const HISTORY_LIMIT = 50;
+/** Sections beyond this are dropped (with a warning) when external state is applied. */
+const MAX_SECTIONS = 500;
+/** Builder width below which the palette auto-collapses — keep in sync with the @container query in page-builder.scss. */
+const NARROW_WIDTH = 768;
+
+// 300 matches the narrow-container floor in the stylesheet: below it the
+// inspector's toggle rows wrap their switch under the label.
+const MIN_INSPECTOR_WIDTH = 300;
+const MIN_CANVAS_WIDTH = 200;
+const RESIZE_STEP = 20;
+
+const AUTO_SAVE_DEFAULT_MINUTES = 5;
+const AUTO_SAVE_TTL_MS = 24 * 60 * 60 * 1000;
+
+/** Compact relative time for the auto-save status ("just now", "3m ago"). */
+function timeAgo(ms: number): string {
+  const s = Math.floor(ms / 1000);
+  if (s < 10) return 'just now';
+  if (s < 60) return `${s}s ago`;
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  return `${Math.floor(h / 24)}d ago`;
+}
+
+/**
+ * @summary A config-driven page composer: a palette of predefined section types, a linear
+ *   canvas of section cards, and an inspector for editing each section's content.
+ * @documentation https://zinc.style/components/page-builder
+ * @status experimental
+ * @since 1.0
+ *
+ * @dependency zn-collapsible
+ * @dependency zn-icon
+ * @dependency zn-input
+ * @dependency zn-page-palette-item
+ * @dependency zn-page-section-card
+ *
+ * @event zn-page-change - Emitted whenever the page state changes. `event.detail.state` is the new PageState.
+ * @event zn-page-selection-change - Emitted when the selected section changes. `event.detail.sectionId`.
+ *
+ * @slot config - `<template type="…">` declarations; never displayed. Each template's attributes
+ *   (type, label, icon, icon-library, color, category, description, slots, accepts) declare a
+ *   palette entry and its content declares the inspector form for that type. `slots` makes the
+ *   section a container that many slots wide — rows are added as they fill — and `slots-min`/
+ *   `slots-max` let each placed section choose its own width; `accepts` is a comma-separated
+ *   list of the type keys its slots allow.
+ * @slot header-left - Actions shown on the left of the header bar.
+ * @slot header-right - Actions shown on the right of the header bar.
+ *
+ * @csspart base - The grid wrapper.
+ * @csspart header - The full-width header action bar (only rendered when header slots are filled).
+ * @csspart palette - The left palette panel.
+ * @csspart canvas - The centre section-card canvas.
+ * @csspart inspector - The right panel while a section is selected.
+ * @csspart inspector-header - The inspector's fixed header (icon, section name, type, close).
+ * @csspart inspector-body - The inspector's scrolling form area.
+ */
+export default class ZnPageBuilder extends ZincElement {
+  static styles: CSSResultGroup = unsafeCSS(styles);
+
+  static dependencies = {
+    'zn-collapsible': ZnCollapsible,
+    'zn-icon': ZnIcon,
+    'zn-input': ZnInput,
+    'zn-option': ZnOption,
+    'zn-page-palette-item': ZnPagePaletteItem,
+    'zn-page-section-card': ZnPageSectionCard,
+    'zn-select': ZnSelect,
+  };
+
+  private readonly formControlController = new FormControlController(this);
+
+  /** The name of the control, submitted as a name/value pair with form data. */
+  @property() name = '';
+
+  /** Associates the control with a form by id. The form must be in the same document or shadow root. */
+  @property({ reflect: true }) form = '';
+
+  /** The page state as a JSON string. Parsed on set; invalid JSON is ignored with a warning. */
+  @property() config = '';
+
+  @property({ reflect: true }) heading = '';
+  @property({ reflect: true }) subheading = '';
+
+  /**
+   * Section type keys that may lead the page, comma separated. The builder hoists an
+   * existing section of any of them to the top, or inserts an empty one of the first,
+   * and pins it there: it can't be removed, reordered or dragged into a slot, and
+   * nothing can be dropped above it. Its content stays fully editable in the
+   * inspector, which offers a swap between the allowed types when there is more
+   * than one.
+   */
+  @property({ attribute: 'required-first', reflect: true }) requiredFirst = '';
+
+  /** Section types to make available, registered into the internal registry. */
+  @property({ attribute: false }) sectionTypes: PageSectionType[] = [];
+
+  /** Collapses the left palette. Auto-set when the builder becomes narrow. */
+  @property({ type: Boolean, reflect: true, attribute: 'palette-collapsed' }) paletteCollapsed = false;
+
+  /** Collapses the inspector while a section is selected. */
+  @property({ type: Boolean, reflect: true, attribute: 'inspector-collapsed' }) inspectorCollapsed = false;
+
+  /**
+   * Auto-save the page to localStorage (1-day TTL). Omit to disable. A bare
+   * `auto-save` saves every 5 minutes; a numeric value sets the interval in
+   * minutes (`auto-save="2"`). Restore with `restoreAutoSave()`.
+   */
+  @property({
+    attribute: 'auto-save',
+    converter: {
+      fromAttribute: (value: string | null) => {
+        if (value === null) return null;
+        const minutes = parseFloat(value);
+        return Number.isFinite(minutes) && minutes > 0 ? minutes : AUTO_SAVE_DEFAULT_MINUTES;
+      },
+      toAttribute: (value: number | null) => (value === null ? null : String(value)),
+    },
+  }) autoSave: number | null = null;
+
+  private registry = new PageSectionRegistry();
+
+  @state() private _state: PageState = emptyPageState();
+  @state() private _selectedId: string | null = null;
+  @state() private _search = '';
+  /** Index of the drop zone whose "+" type picker is open, if any. */
+  @state() private _pickerIndex: number | null = null;
+  @state() private _dragOverIndex: number | null = null;
+  @state() private _draggingId: string | null = null;
+  @state() private _dragGhost: { section: PageSection } | { type: PageSectionType } | null = null;
+  /** The container slot a drag is currently over, if any. */
+  @state() private _slotDragOver: { containerId: string; index: number } | null = null;
+  /** The container slot whose "+" type picker is open, if any. */
+  @state() private _slotPicker: { containerId: string; index: number } | null = null;
+  /** The stamped config form for the selected section; rebuilt on selection change. */
+  @state() private _form: HTMLDivElement | null = null;
+  @state() private _inspectorWidth: number | null = null;
+  @state() private _inspectorWide = false;
+
+  private readonly _hasSlot = new HasSlotController(this, 'header-left', 'header-right');
+
+  private _history: PageState[] = [];
+  private _redoStack: PageState[] = [];
+
+  /** A deep copy of the current page state. */
+  get state(): PageState {
+    return structuredClone(this._state);
+  }
+
+  /** Replaces the page state wholesale (does not emit zn-page-change). */
+  set state(next: PageState) {
+    try {
+      this._applyExternalState(next);
+    } catch {
+      console.warn('<zn-page-builder> invalid state');
+    }
+  }
+
+  /** The page state as a JSON string — the value submitted with form data. */
+  get value(): string {
+    return JSON.stringify(this._state);
+  }
+
+  /** Replaces the page state from a JSON string (does not emit zn-page-change). */
+  set value(next: string) {
+    if (!next) return;
+    try {
+      this._applyExternalState(JSON.parse(next) as PageState);
+    } catch {
+      console.warn('<zn-page-builder> invalid value JSON');
+    }
+  }
+
+  /** The serialised state of the last externally loaded page — restored on form reset. */
+  defaultValue = JSON.stringify(emptyPageState());
+
+  /** Gets the validity state object. */
+  get validity(): ValidityState {
+    return validValidityState;
+  }
+
+  /** Gets the validation message. */
+  get validationMessage(): string {
+    return '';
+  }
+
+  /** Checks for validity but does not show a validation message. */
+  checkValidity(): boolean {
+    return true;
+  }
+
+  /** Gets the associated form, if one exists. */
+  getForm(): HTMLFormElement | null {
+    return this.formControlController.getForm();
+  }
+
+  /** Checks for validity and shows the browser's validation message if the control is invalid. */
+  reportValidity(): boolean {
+    return true;
+  }
+
+  /** Sets a custom validation message. Pass an empty string to restore validity. */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  setCustomValidity(_message = '') {
+    // Always valid.
+  }
+
+  @watch('config')
+  handleConfigChange() {
+    if (!this.config) return;
+    try {
+      this._applyExternalState(JSON.parse(this.config) as PageState);
+    } catch {
+      console.warn('<zn-page-builder> invalid config JSON');
+    }
+  }
+
+  // Idempotent, so it does not matter whether this or handleConfigChange runs first.
+  @watch('requiredFirst')
+  handleRequiredFirstChange() {
+    const sections = this._requireFirst(this._state.sections);
+    if (sections === this._state.sections) return;
+    this._state = { sections };
+    this.defaultValue = JSON.stringify(this._state);
+  }
+
+  @watch('sectionTypes')
+  handleSectionTypesChange() {
+    this.registry.registerAll(this.sectionTypes ?? []);
+    this.requestUpdate();
+  }
+
+  registerSectionType(type: PageSectionType): this {
+    this.registry.register(type);
+    this.requestUpdate();
+    return this;
+  }
+
+  registerSectionTypes(types: PageSectionType[]): this {
+    this.registry.registerAll(types);
+    this.requestUpdate();
+    return this;
+  }
+
+  /**
+   * Auto-collapses the palette when the builder crosses into narrow — only on the
+   * crossing, so re-expanding while narrow stays a user choice.
+   */
+  private _wasNarrow = false;
+
+  private _resizeObserver = new ResizeObserver(entries => {
+    const width = entries[0]?.contentRect.width ?? 0;
+    if (width <= 0) return;
+    const narrow = width < NARROW_WIDTH;
+    if (narrow && !this._wasNarrow) this.paletteCollapsed = true;
+    this._wasNarrow = narrow;
+  });
+
+  connectedCallback() {
+    super.connectedCallback();
+    emptyDragImage(); // decoded up front, before a drag can ask for it
+    this._registerSlottedTemplates();
+    this._resizeObserver.observe(this);
+  }
+
+  disconnectedCallback() {
+    this._endGhost();
+    this._resizeObserver.disconnect();
+    this._stopAutoSave();
+    if (this._justSavedTimer !== null) {
+      clearTimeout(this._justSavedTimer);
+      this._justSavedTimer = null;
+    }
+    super.disconnectedCallback();
+  }
+
+  // --- Auto-save (mirrors flow-builder's) --------------------------------------
+
+  private _autoSaveTimer: number | null = null;
+  private _statusTimer: number | null = null;
+  private _justSavedTimer: number | null = null;
+  /** Guards the restore prompt from re-triggering on restoreAutoSave's own state install. */
+  private _restoring = false;
+
+  /** Epoch of the newest auto-save (also picked up from storage on start). */
+  @state() private _lastSavedAt: number | null = null;
+  /** Briefly true right after a save — flashes "Auto-saved" in the status pill. */
+  @state() private _justSaved = false;
+  /** Re-render clock for the "last saved Xm ago" label. */
+  @state() private _statusNow = Date.now();
+  /** A fresh auto-save differing from the loaded page — offer to restore it. */
+  @state() private _restorePrompt: { savedAt: number } | null = null;
+
+  /** localStorage key for this builder's auto-saves — its id, else its heading. */
+  private get _autoSaveKey(): string {
+    return `zn-page-builder:${this.id || this.heading || 'page'}`;
+  }
+
+  // The "Auto-saved" flash timeout is deliberately not cleared here — it always
+  // runs out 2.5s after the last save, even if the schedule changes meanwhile.
+  private _stopAutoSave() {
+    if (this._autoSaveTimer !== null) {
+      clearInterval(this._autoSaveTimer);
+      this._autoSaveTimer = null;
+    }
+    if (this._statusTimer !== null) {
+      clearInterval(this._statusTimer);
+      this._statusTimer = null;
+    }
+  }
+
+  private _restartAutoSave() {
+    this._stopAutoSave();
+    if (this.autoSave === null) return;
+    // Housekeeping: drop an expired auto-save, and carry its timestamp into the
+    // status pill when one survives — "last saved" outlives a reload.
+    const saved = this._readAutoSave();
+    if (saved) this._lastSavedAt = saved.savedAt;
+    this._autoSaveTimer = window.setInterval(this._autoSaveTick, this.autoSave * 60_000);
+    this._statusTimer = window.setInterval(() => (this._statusNow = Date.now()), 30_000);
+  }
+
+  /** An empty page is never saved — it would clobber a stored page with nothing. */
+  private _autoSaveTick = () => {
+    if (!this._state.sections.length || this._restorePrompt) return;
+    try {
+      localStorage.setItem(this._autoSaveKey, JSON.stringify({ savedAt: Date.now(), state: this._state }));
+      this._lastSavedAt = Date.now();
+      this._justSaved = true;
+      if (this._justSavedTimer !== null) clearTimeout(this._justSavedTimer);
+      this._justSavedTimer = window.setTimeout(() => (this._justSaved = false), 2500);
+    } catch {
+      /* storage unavailable / full */
+    }
+  };
+
+  /** The stored auto-save, purging it when past its TTL (or unreadable). */
+  private _readAutoSave(): { savedAt: number; state: PageState } | null {
+    try {
+      const raw = localStorage.getItem(this._autoSaveKey);
+      if (!raw) return null;
+      const saved = JSON.parse(raw) as { savedAt: number; state: PageState };
+      if (!saved.state || Date.now() - saved.savedAt > AUTO_SAVE_TTL_MS) {
+        localStorage.removeItem(this._autoSaveKey);
+        return null;
+      }
+      return saved;
+    } catch {
+      return null;
+    }
+  }
+
+  /** Load the auto-saved page, if one exists within the 1-day TTL. */
+  restoreAutoSave = (): boolean => {
+    const saved = this._readAutoSave();
+    if (!saved) return false;
+    this._restoring = true;
+    try {
+      this._applyExternalState(saved.state);
+    } finally {
+      this._restoring = false;
+    }
+    this._restorePrompt = null;
+    return true;
+  };
+
+  /**
+   * A page was just loaded — when a fresh auto-save differs from it, ask the
+   * user whether to pick up their draft instead.
+   */
+  private _offerRestoreIfNewer() {
+    if (this.autoSave === null || this._restoring) return;
+    const saved = this._readAutoSave();
+    this._restorePrompt = saved && JSON.stringify(saved.state) !== JSON.stringify(this._state)
+      ? { savedAt: saved.savedAt }
+      : null;
+  }
+
+  protected willUpdate(changed: PropertyValues) {
+    super.willUpdate(changed);
+    if (changed.has('_selectedId')) this._buildInspectorForm();
+    if (changed.has('autoSave')) this._restartAutoSave();
+  }
+
+  protected firstUpdated(changed: PropertyValues) {
+    super.firstUpdated(changed);
+    this.formControlController.updateValidity();
+  }
+
+  // --- Slotted templates define section types --------------------------------
+
+  private _typeFromTemplate(el: HTMLTemplateElement): PageSectionType | null {
+    const type = el.getAttribute('type');
+    if (!type) return null;
+    return {
+      type,
+      label: el.getAttribute('label') ?? type,
+      icon: el.getAttribute('icon') ?? undefined,
+      iconLibrary: el.getAttribute('icon-library') ?? undefined,
+      color: el.getAttribute('color') ?? undefined,
+      category: el.getAttribute('category') ?? undefined,
+      description: el.getAttribute('description') ?? undefined,
+      configTemplate: el,
+      ...this._slotsFromAttributes(el),
+      accepts: el.getAttribute('accepts')?.split(',').map(s => s.trim()).filter(Boolean),
+    };
+  }
+
+  /**
+   * `slots="N"` is a container N slots wide; adding `slots-max` lets each placed
+   * section choose its own width between `slots-min` (1 by default) and that. A
+   * width past the slot cap would leave a container with no usable row, so an
+   * out-of-bounds bound is ignored rather than honoured.
+   */
+  private _slotsFromAttributes(el: HTMLTemplateElement): Pick<PageSectionType, 'slots' | 'slotsMin' | 'slotsMax'> {
+    const bound = (name: string) => {
+      const value = parseInt(el.getAttribute(name) ?? '', 10);
+      return value > 0 && value <= MAX_SLOTS ? value : undefined;
+    };
+    const slots = bound('slots');
+    if (!slots) return {};
+    const max = bound('slots-max');
+    if (max === undefined || max < slots) return { slots };
+    return { slots, slotsMin: Math.min(bound('slots-min') ?? 1, slots), slotsMax: max };
+  }
+
+  private _registerSlottedTemplates = () => {
+    let added = false;
+    this.querySelectorAll<HTMLTemplateElement>('template[slot="config"][type]').forEach(el => {
+      const type = this._typeFromTemplate(el);
+      if (type && !this.registry.has(type.type)) {
+        this.registry.register(type);
+        added = true;
+      }
+    });
+    if (added) this.requestUpdate();
+  };
+
+  /** Normalises and installs an externally provided state; resets selection. */
+  private _applyExternalState(next: PageState) {
+    const seen = new Set<string>();
+    let clippedChildren = false;
+    // Nesting is one level deep by design — grandchildren in malformed input are
+    // dropped, which also bounds the recursion. Duplicate ids get regenerated so
+    // selection/patching can never target two sections at once, and children are
+    // capped (slots are single-digit by design; MAX_SECTIONS alone would still
+    // admit one section with a huge children array).
+    const normalise = (s: PageSection, depth: number): PageSection => {
+      const id = !s.id || seen.has(s.id) ? generateSectionId() : s.id;
+      seen.add(id);
+      if (depth === 0 && (s.children?.length ?? 0) > MAX_SLOTS) clippedChildren = true;
+      const type = this.registry.get(s.type);
+      // A hand-edited config can name any width; clamp it to the declared bounds so
+      // the canvas lays the children out the same way the site will.
+      const columns = type?.slotsMax === undefined ? undefined : slotColumns(s, type);
+      return {
+        id,
+        type: s.type,
+        label: s.label,
+        ...(columns === undefined ? {} : { columns }),
+        data: structuredClone(s.data ?? {}),
+        ...(s.children && depth === 0
+          ? { children: s.children.slice(0, MAX_SLOTS).map(c => (c && typeof c.type === 'string' ? normalise(c, depth + 1) : null)) }
+          : {}),
+      };
+    };
+    const incoming = (next?.sections ?? []).filter(s => s && typeof s.type === 'string');
+    if (incoming.length > MAX_SECTIONS) {
+      console.warn(`<zn-page-builder> config has ${incoming.length} sections; keeping the first ${MAX_SECTIONS}`);
+    }
+    const sections = incoming.slice(0, MAX_SECTIONS).map(s => normalise(s, 0));
+    if (clippedChildren) {
+      console.warn(`<zn-page-builder> some sections had more than ${MAX_SLOTS} children; extras were dropped`);
+    }
+    this._history = [];
+    this._redoStack = [];
+    this._state = { sections: this._requireFirst(sections) };
+    this.defaultValue = JSON.stringify(this._state);
+    this._selectedId = null;
+    this._pickerIndex = null;
+    this._offerRestoreIfNewer();
+  }
+
+  // --- The pinned leading section (`required-first`) ---------------------------
+
+  /**
+   * Id of the section pinned to the top of the page, or null when `required-first`
+   * is unset. Derived from the state rather than stored on it, so nothing about the
+   * lock leaks into the persisted config.
+   */
+  private get _pinnedId(): string | null {
+    const first = this._state.sections[0];
+    const types = this._requiredFirstTypes;
+    return first && types.includes(first.type) ? first.id : null;
+  }
+
+  /** The types `required-first` allows to lead the page, in the order given. */
+  private get _requiredFirstTypes(): string[] {
+    return this.requiredFirst.split(',').map(t => t.trim()).filter(Boolean);
+  }
+
+  private _isPinned(id: string): boolean {
+    return this._pinnedId === id;
+  }
+
+  /**
+   * Whether the pinned section may be removed: only while another section can take
+   * the lead in its place, so the page is never left without one. It stays undraggable
+   * either way — the replacement arrives by removing this one, not by reordering.
+   */
+  private get _canUnpin(): boolean {
+    const types = this._requiredFirstTypes;
+    return this._state.sections.slice(1).some(s => types.includes(s.type));
+  }
+
+  /** Lowest top-level index a section may be added or moved to. */
+  private get _firstFreeIndex(): number {
+    return this._pinnedId === null ? 0 : 1;
+  }
+
+  /**
+   * Sections reordered so `required-first` leads the page: an existing section of an
+   * allowed type is hoisted to the front, otherwise an empty one of the first type is
+   * prepended. Returns the
+   * argument unchanged when there is nothing to do, so callers can compare by identity.
+   */
+  private _requireFirst(sections: PageSection[]): PageSection[] {
+    const types = this._requiredFirstTypes;
+    if (!types.length || types.includes(sections[0]?.type)) return sections;
+    const at = sections.findIndex(s => types.includes(s.type));
+    if (at === -1) return [{ id: generateSectionId(), type: types[0], data: {} }, ...sections];
+    const hoisted = [...sections];
+    hoisted.unshift(...hoisted.splice(at, 1));
+    return hoisted;
+  }
+
+  /** Finds a section by id, searching top-level sections and slotted children. */
+  private _findSection(id: string | null): PageSection | undefined {
+    if (!id) return undefined;
+    for (const s of this._state.sections) {
+      if (s.id === id) return s;
+      const child = s.children?.find(c => c?.id === id);
+      if (child) return child;
+    }
+    return undefined;
+  }
+
+  /** New sections array with the section patched wherever it lives (top level or slot). */
+  private _patchSection(id: string, patch: (s: PageSection) => PageSection): PageSection[] {
+    return this._state.sections.map(s => {
+      if (s.id === id) return patch(s);
+      if (s.children?.some(c => c?.id === id)) {
+        return { ...s, children: s.children.map(c => (c?.id === id ? patch(c) : c)) };
+      }
+      return s;
+    });
+  }
+
+  /** Detaches a section wherever it lives: removed from the top level, or its slot nulled. */
+  private _extract(id: string): [PageSection | undefined, PageSection[]] {
+    let removed: PageSection | undefined;
+    const sections: PageSection[] = [];
+    for (const s of this._state.sections) {
+      if (s.id === id) {
+        removed = s;
+        continue;
+      }
+      const slot = s.children?.findIndex(c => c?.id === id) ?? -1;
+      if (slot !== -1) {
+        removed = s.children![slot] ?? undefined;
+        sections.push({ ...s, children: s.children!.map((c, i) => (i === slot ? null : c)) });
+      } else {
+        sections.push(s);
+      }
+    }
+    return [removed, sections];
+  }
+
+  /** Installs a new state from a user edit and notifies listeners. */
+  private _commit(next: PageState) {
+    this._state = next;
+    this.emit('zn-page-change', { detail: { state: this.state } });
+  }
+
+  private _selectedSection(): PageSection | undefined {
+    return this._findSection(this._selectedId);
+  }
+
+  private _select(id: string | null) {
+    if (this._selectedId === id) return;
+    this._selectedId = id;
+    this._pickerIndex = null;
+    this._slotPicker = null;
+    this.emit('zn-page-selection-change', { detail: { sectionId: id } });
+  }
+
+  // --- History ----------------------------------------------------------------
+
+  private _pushHistory() {
+    this._history.push(structuredClone(this._state));
+    if (this._history.length > HISTORY_LIMIT) this._history.shift();
+    this._redoStack = [];
+  }
+
+  // Bound fields (not methods) so hosts can pass them straight to event
+  // listeners — `button.addEventListener('click', builder.undo)`.
+  undo = () => {
+    const prev = this._history.pop();
+    if (!prev) return;
+    this._redoStack.push(structuredClone(this._state));
+    this._select(null);
+    this._commit(prev);
+  };
+
+  redo = () => {
+    const next = this._redoStack.pop();
+    if (!next) return;
+    this._history.push(structuredClone(this._state));
+    this._select(null);
+    this._commit(next);
+  };
+
+  // --- Section mutations ------------------------------------------------------
+
+  /** Adds a section of a registered type at `index` (default: end). Returns null for unknown types. */
+  addSection(type: string, index?: number): PageSection | null {
+    if (!this.registry.has(type)) return null;
+    this._pushHistory();
+    const section: PageSection = { id: generateSectionId(), type, data: {} };
+    const sections = [...this._state.sections];
+    sections.splice(Math.max(index ?? sections.length, this._firstFreeIndex), 0, section);
+    this._commit({ sections });
+    this._select(section.id);
+    return section;
+  }
+
+  /** Adds a new section of a registered type into a container's slot. Returns null if not allowed. */
+  addSectionToSlot(type: string, containerId: string, slotIndex: number): PageSection | null {
+    const sectionType = this.registry.get(type);
+    const container = this._findSection(containerId);
+    const containerType = container ? this.registry.get(container.type) : undefined;
+    if (!sectionType || sectionType.slots || !container || !containerType?.slots) return null;
+    if (slotIndex < 0 || slotIndex >= slotCount(container, containerType)) return null;
+    if (containerType.accepts && !containerType.accepts.includes(type)) return null;
+    const children = sectionChildren(container, containerType);
+    if (children[slotIndex]) return null;
+    const section: PageSection = { id: generateSectionId(), type, data: {} };
+    children[slotIndex] = section;
+    this._pushHistory();
+    this._commit({ sections: this._patchSection(containerId, s => ({ ...s, children })) });
+    this._select(section.id);
+    return section;
+  }
+
+  /**
+   * Sets how many slots per row a container whose type allows a choice lays out,
+   * clamped to the declared bounds. Children keep their order and reflow into the
+   * new width, so nothing is lost by narrowing one.
+   */
+  setSectionColumns(id: string, columns: number) {
+    const section = this._findSection(id);
+    const type = section ? this.registry.get(section.type) : undefined;
+    if (!section || type?.slotsMax === undefined) return;
+    const next = slotColumns({ ...section, columns }, type);
+    if (next === slotColumns(section, type)) return;
+    this._pushHistory();
+    this._commit({ sections: this._patchSection(id, s => ({ ...s, columns: next })) });
+  }
+
+  /**
+   * Snaps the field back to the width the container will use. A re-render alone
+   * would not: once the state already sits at a bound, an out-of-range entry
+   * changes nothing to re-render from.
+   */
+  private _onColumnsEntered(section: PageSection, input: ZnInput) {
+    const type = this.registry.get(section.type);
+    if (type?.slotsMax === undefined) return;
+    const next = slotColumns({...section, columns: Number(input.value)}, type);
+    input.value = String(next);
+    this.setSectionColumns(section.id, next);
+  }
+
+  private _removeSection(id: string) {
+    if (this._isPinned(id) && !this._canUnpin) return;
+    const [removed, sections] = this._extract(id);
+    if (!removed) return;
+    this._pushHistory();
+    // Cards are rendered unkeyed, so the focused action button survives the
+    // re-render as part of whichever section shifts into this slot.
+    this._blurActiveCard();
+    // Clear selection for the removed section AND anything inside it.
+    if (this._selectedId === id || removed.children?.some(c => c?.id === this._selectedId)) {
+      this._select(null);
+    }
+    // Removing the leading section hands the lead to the next one that may hold it.
+    this._commit({ sections: this._requireFirst(sections) });
+  }
+
+  private _duplicateSection(id: string) {
+    const index = this._state.sections.findIndex(s => s.id === id);
+    if (index !== -1) {
+      this._pushHistory();
+      const copy = structuredClone(this._state.sections[index]);
+      copy.id = generateSectionId();
+      copy.children = copy.children?.map(c => (c ? { ...c, id: generateSectionId() } : null));
+      const sections = [...this._state.sections];
+      sections.splice(index + 1, 0, copy);
+      this._commit({ sections });
+      this._select(copy.id);
+      void this._focusCard(copy.id);
+      return;
+    }
+    // A slotted child duplicates into its container's next empty slot, if any.
+    for (const s of this._state.sections) {
+      const slot = s.children?.findIndex(c => c?.id === id) ?? -1;
+      if (slot === -1) continue;
+      const type = this.registry.get(s.type);
+      if (!type?.slots) return;
+      const children = sectionChildren(s, type);
+      const empty = children.findIndex(c => !c);
+      if (empty === -1) return;
+      const copy = structuredClone(children[slot]!);
+      copy.id = generateSectionId();
+      children[empty] = copy;
+      this._pushHistory();
+      this._commit({ sections: this._patchSection(s.id, x => ({ ...x, children })) });
+      this._select(copy.id);
+      void this._focusCard(copy.id);
+      return;
+    }
+  }
+
+  /**
+   * Hands focus to a card, moving it off the action button that was just used.
+   * Cards render unkeyed, so focus left behind stays with the original card's
+   * element and keeps its hover actions showing after the pointer leaves.
+   */
+  private async _focusCard(id: string) {
+    this._blurActiveCard();
+    await this.updateComplete;
+    this.shadowRoot?.querySelector<HTMLElement>(`zn-page-section-card[data-id="${id}"]`)?.focus();
+  }
+
+  private _blurActiveCard() {
+    const focused = this.shadowRoot?.activeElement;
+    if (!(focused instanceof HTMLElement) || !focused.closest('zn-page-section-card')) return;
+    let active: HTMLElement = focused;
+    // activeElement retargets to the card host; the real focus is the action
+    // button nested in its shadow root, and only that responds to blur().
+    while (active.shadowRoot?.activeElement instanceof HTMLElement) active = active.shadowRoot.activeElement;
+    active.blur();
+  }
+
+  /** Moves a section (top-level or slotted) to a top-level position. */
+  private _moveSection(id: string, index: number) {
+    if (this._isPinned(id)) return;
+    index = Math.max(index, this._firstFreeIndex);
+    const from = this._state.sections.findIndex(s => s.id === id);
+    if (from !== -1) {
+      const to = index > from ? index - 1 : index;
+      if (to === from) return;
+      this._pushHistory();
+      const sections = [...this._state.sections];
+      const [moved] = sections.splice(from, 1);
+      sections.splice(to, 0, moved);
+      this._commit({ sections });
+      return;
+    }
+    const [moved, sections] = this._extract(id);
+    if (!moved) return;
+    this._pushHistory();
+    sections.splice(index, 0, moved);
+    this._commit({ sections });
+  }
+
+  /**
+   * Moves a section into a container's slot. Dropping onto an occupied slot swaps
+   * the two children (slot-to-slot reordering); top-level sections and containers
+   * only enter empty slots / never enter slots respectively.
+   */
+  private _moveToSlot(id: string, containerId: string, slotIndex: number) {
+    const moved = this._findSection(id);
+    const container = this._findSection(containerId);
+    const containerType = container ? this.registry.get(container.type) : undefined;
+    if (!moved || !container || !containerType?.slots || id === containerId) return;
+    if (this._isPinned(id)) return; // the pinned section stays at the top of the page
+    if (this.registry.get(moved.type)?.slots) return; // no containers inside slots
+    if (containerType.accepts && !containerType.accepts.includes(moved.type)) return;
+    if (slotIndex < 0 || slotIndex >= slotCount(container, containerType)) return;
+
+    const target = container.children?.[slotIndex] ?? null;
+    if (target?.id === id) return;
+    const fromTop = this._state.sections.some(s => s.id === id);
+    if (target && fromTop) return; // top-level sections only drop on empty slots
+
+    this._pushHistory();
+    const sections = structuredClone(this._state.sections);
+    const containerRef = sections.find(s => s.id === containerId)!;
+    containerRef.children = sectionChildren(containerRef, containerType);
+    const movedCopy = structuredClone(moved);
+
+    if (fromTop) {
+      sections.splice(sections.findIndex(s => s.id === id), 1);
+    } else {
+      // Swap: the occupant (or null) takes the source slot.
+      for (const s of sections) {
+        const slot = s.children?.findIndex(c => c?.id === id) ?? -1;
+        if (slot !== -1) {
+          s.children![slot] = target ? structuredClone(target) : null;
+          break;
+        }
+      }
+    }
+    containerRef.children[slotIndex] = movedCopy;
+    this._commit({ sections });
+  }
+
+  // --- Canvas drag & drop -----------------------------------------------------
+
+  private _onCardDragStart(e: DragEvent, id: string) {
+    if (!e.dataTransfer) return;
+    e.stopPropagation(); // a child card's drag must not also start its container's
+    e.dataTransfer.setData(PAGE_SECTION_MIME, id);
+    e.dataTransfer.effectAllowed = 'move';
+    const section = this._findSection(id);
+    if (section) this._startGhost(e, { section });
+    // Deferred: pulling the source out of the flow during the dragstart handler
+    // aborts the drag.
+    setTimeout(() => (this._draggingId = id));
+  }
+
+  // --- Drag ghost ---------------------------------------------------------------
+  // The browser's own drag image is a snapshot composited onto an opaque
+  // surface, so everything the card leaves transparent outside its 8px radius
+  // comes back as square white corners — not something the page can style away.
+  // The builder suppresses it and moves a real card of its own instead.
+
+  private _ghostEl: HTMLElement | null = null;
+  /** Where in the card the pointer grabbed it, so the ghost keeps that grip. */
+  private _ghostGrip = { x: 0, y: 0 };
+  /** The host's viewport origin; the ghost is positioned against the host. */
+  private _ghostOrigin = { x: 0, y: 0 };
+
+  private _startGhost(e: DragEvent, ghost: NonNullable<typeof this._dragGhost>) {
+    if (!e.dataTransfer) return;
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const host = this.getBoundingClientRect();
+    this._ghostGrip = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    this._ghostOrigin = { x: host.left, y: host.top };
+    this._dragGhost = ghost;
+    e.dataTransfer.setDragImage(emptyDragImage(), 0, 0);
+    // dragover is stopped short by the zone handlers, so listen at the document
+    // in capture: the ghost has to track the pointer wherever it goes.
+    document.addEventListener('dragover', this._onGhostDragOver, true);
+    document.addEventListener('drop', this._onGhostDrop, true);
+    document.addEventListener('dragleave', this._onGhostDragLeave, true);
+    void this.updateComplete.then(() => {
+      this._ghostEl = this.shadowRoot?.querySelector<HTMLElement>('.drag-ghost') ?? null;
+      if (!this._ghostEl) return;
+      this._ghostEl.style.width = `${rect.width}px`;
+      this._moveGhost(e.clientX, e.clientY);
+    });
+  }
+
+  private _onGhostDragOver = (e: DragEvent) => {
+    // Holds the whole document open as a drop target for the length of our own
+    // drag. Only the canvas calls preventDefault, so anywhere else the drag has
+    // no target and the OS drag session stalls for seconds hunting for one.
+    e.preventDefault();
+    // The last dragover of a cancelled drag reports 0,0 — it would fling the
+    // ghost into the corner for the frame before dragend clears it.
+    if (e.clientX === 0 && e.clientY === 0) return;
+    this._moveGhost(e.clientX, e.clientY);
+  };
+
+  // Follows from holding the document open above: a release outside the canvas
+  // would otherwise be left to the browser's default handling of the payload.
+  private _onGhostDrop = (e: DragEvent) => e.preventDefault();
+
+  // A null relatedTarget means the pointer left the window, where no dragover
+  // reaches us — the ghost would sit frozen wherever it was. The OS carries the
+  // drag from here; the ghost comes back on the first dragover on re-entry.
+  private _onGhostDragLeave = (e: DragEvent) => {
+    if (e.relatedTarget === null && this._ghostEl) this._ghostEl.style.visibility = 'hidden';
+  };
+
+  private _moveGhost(clientX: number, clientY: number) {
+    if (!this._ghostEl) return;
+    this._ghostEl.style.visibility = '';
+    const x = clientX - this._ghostOrigin.x - this._ghostGrip.x;
+    const y = clientY - this._ghostOrigin.y - this._ghostGrip.y;
+    this._ghostEl.style.transform = `translate(${x}px, ${y}px)`;
+  }
+
+  private _endGhost() {
+    document.removeEventListener('dragover', this._onGhostDragOver, true);
+    document.removeEventListener('drop', this._onGhostDrop, true);
+    document.removeEventListener('dragleave', this._onGhostDragLeave, true);
+    this._ghostEl = null;
+    this._dragGhost = null;
+  }
+
+  private _renderDragGhost() {
+    const ghost = this._dragGhost;
+    if (!ghost) return '';
+    if ('type' in ghost) {
+      const t = ghost.type;
+      return html`
+        <zn-page-palette-item
+          class="drag-ghost"
+          type="${t.type}"
+          label="${t.label}"
+          description="${ifDefined(t.description)}"
+          icon="${ifDefined(t.icon)}"
+          icon-library="${ifDefined(t.iconLibrary)}"
+          color="${ifDefined(t.color)}"></zn-page-palette-item>`;
+    }
+    const section = ghost.section;
+    const type = this.registry.get(section.type);
+    return html`
+      <zn-page-section-card
+        class="drag-ghost"
+        label="${section.label ?? type?.label ?? section.type}"
+        summary="${type ? sectionSummary(section, type) : `Unknown type "${section.type}"`}"
+        icon="${ifDefined(type?.icon)}"
+        icon-library="${ifDefined(type?.iconLibrary)}"
+        color="${ifDefined(type?.color)}"
+        ?unknown="${!type}"
+        ?locked="${this._isPinned(section.id)}"></zn-page-section-card>`;
+  }
+
+  /** Whether a drag carries one of the builder's own payloads. */
+  private _isPageDrag(e: DragEvent): boolean {
+    const types = e.dataTransfer ? Array.from(e.dataTransfer.types) : [];
+    return types.includes(PAGE_TYPE_MIME) || types.includes(PAGE_SECTION_MIME);
+  }
+
+  private _onSlotDragOver(e: DragEvent, containerId: string, index: number) {
+    if (!this._isPageDrag(e)) return;
+    e.preventDefault();
+    e.stopPropagation();
+    this._dragOverIndex = null;
+    this._slotDragOver = { containerId, index };
+  }
+
+  private _onSlotDrop(e: DragEvent, containerId: string, index: number) {
+    e.preventDefault();
+    e.stopPropagation();
+    this._slotDragOver = null;
+    this._draggingId = null;
+    this._endGhost();
+    const typeKey = e.dataTransfer?.getData(PAGE_TYPE_MIME);
+    const sectionId = e.dataTransfer?.getData(PAGE_SECTION_MIME);
+    if (typeKey) this.addSectionToSlot(typeKey, containerId, index);
+    else if (sectionId) this._moveToSlot(sectionId, containerId, index);
+  }
+
+  private _onZoneDragOver(e: DragEvent, index: number) {
+    if (!this._isPageDrag(e)) return;
+    e.preventDefault();
+    e.stopPropagation(); // claim this index over the canvas-level fallback
+    this._dragOverIndex = index;
+  }
+
+  private _onZoneDrop(e: DragEvent, index: number) {
+    e.preventDefault();
+    e.stopPropagation();
+    this._dragOverIndex = null;
+    this._draggingId = null;
+    this._endGhost();
+    const typeKey = e.dataTransfer?.getData(PAGE_TYPE_MIME);
+    const sectionId = e.dataTransfer?.getData(PAGE_SECTION_MIME);
+    if (typeKey) this.addSection(typeKey, index);
+    else if (sectionId) this._moveSection(sectionId, index);
+  }
+
+  // Canvas-level fallback: the strips between cards are thin, so accept drags
+  // anywhere on the canvas and target the end of the page.
+  private _onCanvasDragOver = (e: DragEvent) => {
+    if (!this._isPageDrag(e)) return;
+    e.preventDefault();
+    this._dragOverIndex = this._state.sections.length;
+  };
+
+  private _onCanvasDrop = (e: DragEvent) => {
+    this._onZoneDrop(e, this._state.sections.length);
+  };
+
+  private _onCardKeydown(e: KeyboardEvent, id: string) {
+    if (e.key === 'Delete' || e.key === 'Backspace') {
+      e.preventDefault();
+      this._removeSection(id);
+    } else if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      this._select(id);
+    }
+  }
+
+  private _renderPalette() {
+    const query = this._search.trim().toLowerCase();
+    const categories = new Map<string, PageSectionType[]>();
+    for (const [category, types] of this.registry.categories()) {
+      const matches = query ? types.filter(t => t.label.toLowerCase().includes(query)) : types;
+      if (matches.length) categories.set(category, matches);
+    }
+
+    return html`
+      <aside part="palette" class="palette">
+        <div class="palette__title">
+          <div class="palette__text">
+            <div class="palette__heading">${this.heading || 'Page Builder'}</div>
+            ${this.subheading ? html`
+              <div class="palette__subheading">${this.subheading}</div>` : ''}
+          </div>
+        </div>
+        <zn-input
+          class="palette__search"
+          label="Search sections"
+          placeholder="Search sections"
+          clearable
+          .value="${this._search}"
+          @zn-input="${(e: Event) => (this._search = String((e.target as ZnInput).value ?? ''))}"></zn-input>
+        <div class="palette__scroll">
+          ${[...categories.entries()].map(([category, types]) => category
+            ? html`
+              <zn-collapsible class="palette__category" caption="${category}" default="open">
+                ${types.map(t => this._renderPaletteItem(t))}
+              </zn-collapsible>`
+            : html`
+              <div class="palette__uncategorized">${types.map(t => this._renderPaletteItem(t))}</div>`)}
+        </div>
+      </aside>`;
+  }
+
+  private _renderPaletteItem(type: PageSectionType) {
+    return html`
+      <zn-page-palette-item
+        @dragstart="${(e: DragEvent) => this._startGhost(e, { type })}"
+        type="${type.type}"
+        label="${type.label}"
+        description="${ifDefined(type.description)}"
+        icon="${ifDefined(type.icon)}"
+        icon-library="${ifDefined(type.iconLibrary)}"
+        color="${ifDefined(type.color)}"></zn-page-palette-item>`;
+  }
+
+  // Bottom-left of the canvas: flashes as each auto-save lands, otherwise
+  // shows how long ago the last one happened.
+  private _renderAutoSaveStatus() {
+    if (this.autoSave === null || (!this._justSaved && this._lastSavedAt === null)) return '';
+    const label = this._justSaved
+      ? 'Auto-saved'
+      : `Last saved ${timeAgo(Math.max(0, this._statusNow - (this._lastSavedAt ?? 0)))}`;
+    return html`
+      <div class="save-status ${this._justSaved ? 'save-status--saved' : ''}">
+        <zn-icon src="${this._justSaved ? 'check@lu' : 'history@lu'}" size="14"></zn-icon>
+        <span>${label}</span>
+      </div>
+    `;
+  }
+
+  // Offered when a loaded page differs from a fresh auto-saved draft.
+  private _renderRestorePrompt() {
+    if (!this._restorePrompt) return '';
+    return html`
+      <div class="restore-banner" @click="${(e: Event) => e.stopPropagation()}">
+        <zn-icon src="history@lu" size="16"></zn-icon>
+        <span>An auto-saved draft from ${timeAgo(Date.now() - this._restorePrompt.savedAt)} differs from this page.</span>
+        <button class="restore-banner__restore" @click="${() => this.restoreAutoSave()}">Restore</button>
+        <button class="restore-banner__dismiss" @click="${() => (this._restorePrompt = null)}">Dismiss</button>
+      </div>
+    `;
+  }
+
+  private _renderCanvas() {
+    const sections = this._state.sections;
+    return html`
+      <div class="canvas-cell">
+        <button
+          type="button"
+          class="panel-toggle panel-toggle--left ${this.paletteCollapsed ? 'panel-toggle--tucked' : ''}"
+          title="${this.paletteCollapsed ? 'Show sections palette' : 'Hide sections palette'}"
+          aria-label="${this.paletteCollapsed ? 'Show sections palette' : 'Hide sections palette'}"
+          @click="${(e: Event) => {
+            e.stopPropagation();
+            this.paletteCollapsed = !this.paletteCollapsed;
+          }}">
+          <zn-icon src="${this.paletteCollapsed ? 'chevron-right@lu' : 'chevron-left@lu'}" size="16"></zn-icon>
+        </button>
+        ${this._selectedId ? html`
+          <button
+            type="button"
+            class="panel-toggle panel-toggle--right ${this.inspectorCollapsed ? 'panel-toggle--tucked' : ''}"
+            title="${this.inspectorCollapsed ? 'Show section settings' : 'Hide section settings'}"
+            aria-label="${this.inspectorCollapsed ? 'Show section settings' : 'Hide section settings'}"
+            @click="${(e: Event) => {
+              e.stopPropagation();
+              this.inspectorCollapsed = !this.inspectorCollapsed;
+            }}">
+            <zn-icon src="${this.inspectorCollapsed ? 'chevron-left@lu' : 'chevron-right@lu'}" size="16"></zn-icon>
+          </button>` : ''}
+        ${this._renderAutoSaveStatus()}
+        ${this._renderRestorePrompt()}
+        <main
+          part="canvas"
+          class="canvas"
+          @click="${() => this._select(null)}"
+          @dragover="${this._onCanvasDragOver}"
+          @drop="${this._onCanvasDrop}">
+          ${sections.length === 0 ? html`
+            <div class="canvas__empty" ?hidden="${this._dragOverIndex !== null}">
+              Drag sections here to build your page
+            </div>` : ''}
+          ${sections.map((section, i) => html`
+            ${i === 0 && this._pinnedId !== null ? '' : this._renderDropZone(i)}
+            ${this._renderCard(section, i)}
+          `)}
+          ${this._renderDropZone(sections.length)}
+        </main>
+      </div>`;
+  }
+
+  /** The one card template both the page list and slot cells render. */
+  private _renderSectionCard(
+    section: PageSection,
+    drop: { over: (e: DragEvent) => void; drop: (e: DragEvent) => void },
+    extraClass = ''
+  ) {
+    const type = this.registry.get(section.type);
+    const pinned = this._isPinned(section.id);
+    const locked = pinned && !this._canUnpin;
+    return html`
+      <zn-page-section-card
+        class="${extraClass} ${this._draggingId === section.id ? 'dragging' : ''}"
+        data-id="${section.id}"
+        draggable="${pinned ? 'false' : 'true'}"
+        tabindex="0"
+        label="${section.label ?? type?.label ?? section.type}"
+        summary="${type ? sectionSummary(section, type) : `Unknown type "${section.type}"`}"
+        icon="${ifDefined(type?.icon)}"
+        icon-library="${ifDefined(type?.iconLibrary)}"
+        color="${ifDefined(type?.color)}"
+        ?selected="${this._selectedId === section.id}"
+        ?unknown="${!type}"
+        ?locked="${locked}"
+        @click="${(e: Event) => {
+          e.stopPropagation();
+          this._select(section.id);
+        }}"
+        @keydown="${(e: KeyboardEvent) => this._onCardKeydown(e, section.id)}"
+        @dragstart="${(e: DragEvent) => this._onCardDragStart(e, section.id)}"
+        @dragover="${drop.over}"
+        @drop="${drop.drop}"
+        @page-card-duplicate="${() => this._duplicateSection(section.id)}"
+        @page-card-remove="${() => this._removeSection(section.id)}"></zn-page-section-card>`;
+  }
+
+  private _renderCard(section: PageSection, index: number) {
+    const type = this.registry.get(section.type);
+    const card = this._renderSectionCard(section, {
+      over: e => this._onZoneDragOver(e, index + 1),
+      drop: e => this._onZoneDrop(e, index + 1),
+    });
+    if (!type?.slots) return card;
+    return html`
+      <div class="container ${this._draggingId === section.id ? 'container--dragging' : ''}">
+        ${card}
+        <div class="slots" style="--pb-slot-columns:${slotColumns(section, type)}">
+          ${sectionChildren(section, type).map((child, i) => this._renderSlot(section, child, i))}
+        </div>
+      </div>`;
+  }
+
+  private _renderSlot(container: PageSection, child: PageSection | null, index: number) {
+    if (child) {
+      return this._renderSectionCard(child, {
+        over: e => this._onSlotDragOver(e, container.id, index),
+        drop: e => this._onSlotDrop(e, container.id, index),
+      }, 'slot__card');
+    }
+    const active = this._slotDragOver?.containerId === container.id && this._slotDragOver.index === index;
+    const pickerOpen = this._slotPicker?.containerId === container.id && this._slotPicker.index === index;
+    return html`
+      <div
+        class="slot slot--empty ${active ? 'slot--active' : ''}"
+        @dragover="${(e: DragEvent) => this._onSlotDragOver(e, container.id, index)}"
+        @dragleave="${() => {
+          if (this._slotDragOver?.containerId === container.id && this._slotDragOver.index === index) {
+            this._slotDragOver = null;
+          }
+        }}"
+        @drop="${(e: DragEvent) => this._onSlotDrop(e, container.id, index)}"
+        @click="${(e: Event) => {
+          e.stopPropagation();
+          this._slotPicker = pickerOpen ? null : { containerId: container.id, index };
+        }}">
+        <zn-icon src="add" size="16"></zn-icon>
+        ${pickerOpen
+          ? this._renderTypePicker(this._slotTypes(container), t => this.addSectionToSlot(t, container.id, index))
+          : ''}
+      </div>`;
+  }
+
+  /** Types allowed in a container's slots: non-containers, filtered by its accepts list. */
+  private _slotTypes(container: PageSection): PageSectionType[] {
+    const containerType = this.registry.get(container.type);
+    return this.registry.all().filter(t =>
+      !t.slots && (!containerType?.accepts || containerType.accepts.includes(t.type)));
+  }
+
+  /** The one type-picker template both drop zones and slot cells render. */
+  private _renderTypePicker(types: PageSectionType[], pick: (type: string) => void) {
+    return html`
+      <div class="picker" @click="${(e: Event) => e.stopPropagation()}">
+        ${types.map(type => html`
+          <button
+            type="button"
+            class="picker__item"
+            @click="${() => {
+              this._pickerIndex = null;
+              this._slotPicker = null;
+              pick(type.type);
+            }}">
+            <zn-icon src="${type.icon ?? 'widgets'}" library="${ifDefined(type.iconLibrary)}" size="14"></zn-icon>
+            ${type.label}
+          </button>`)}
+      </div>`;
+  }
+
+  private _renderDropZone(index: number) {
+    return html`
+      <div
+        class="drop ${this._dragOverIndex === index ? 'drop--active' : ''} ${this._state.sections.length === 0 ? 'drop--solo' : ''}"
+        @dragover="${(e: DragEvent) => this._onZoneDragOver(e, index)}"
+        @dragleave="${() => {
+          if (this._dragOverIndex === index) this._dragOverIndex = null;
+        }}"
+        @drop="${(e: DragEvent) => this._onZoneDrop(e, index)}">
+        <button
+          type="button"
+          class="drop__add"
+          title="Add section"
+          @click="${(e: Event) => {
+            e.stopPropagation();
+            this._pickerIndex = this._pickerIndex === index ? null : index;
+          }}">
+          <zn-icon src="add" size="14"></zn-icon>
+        </button>
+        ${this._pickerIndex === index
+          ? this._renderTypePicker(this.registry.all(), t => this.addSection(t, index))
+          : ''}
+      </div>`;
+  }
+
+
+  // --- Inspector --------------------------------------------------------------
+
+  /**
+   * Clones the selected type's config template into a live form and prefills each
+   * `[name]` control from the section's data. The element is rendered directly by
+   * Lit (`${this._form}`) so user-entered values survive unrelated re-renders.
+   */
+  private _buildInspectorForm() {
+    this._form = null;
+    const section = this._selectedSection();
+    const type = section ? this.registry.get(section.type) : undefined;
+    if (!section || !type?.configTemplate || type.renderConfig) return;
+
+    const form = document.createElement('div');
+    form.className = 'inspector__form';
+    form.append(type.configTemplate.content.cloneNode(true));
+    // Custom elements cloned out of a <template> are inert until they are
+    // connected, so their accessors do not exist yet. Assigning `value` to one
+    // would define an own property that permanently shadows the setter the
+    // element defines on upgrade — Lit only replays properties it declares
+    // reactive, so a hand-written `value` accessor (zn-icon-picker) would keep
+    // its default and the control would render empty. Upgrade first.
+    //
+    // Toggles default to a stacked label, which reads badly in a narrow panel —
+    // put the switch on the label's right unless the host asked for a position.
+    // Set before the upgrade, while `label-position` can only be an authored
+    // attribute and never one zn-toggle reflected from its own default.
+    form.querySelectorAll<HTMLElement>('zn-toggle:not([label-position])').forEach(toggle => {
+      toggle.setAttribute('label-position', 'left');
+    });
+    customElements.upgrade(form);
+    form.querySelectorAll<HTMLElement>('[name]').forEach(control => {
+      const name = control.getAttribute('name')!;
+      const value = section.data[name];
+      if (this._isBooleanControl(control, value)) {
+        (control as HTMLInputElement).checked = Boolean(value);
+      } else if (Array.isArray(value)) {
+        // Multi-value controls (e.g. zn-select[multiple]) take the array as-is.
+        (control as unknown as { value: unknown }).value = value;
+      } else if (value !== undefined && value !== null) {
+        (control as HTMLInputElement).value = String(value);
+      }
+    });
+    // A content-free template stamps no controls — leave the form null so the
+    // inspector shows its "no settings" hint rather than a blank gap.
+    this._form = form.childElementCount ? form : null;
+    this._inspectorWide = Boolean(this._form?.querySelector('zn-remarkd-editor, [input-type="remarkd"]'));
+  }
+
+  private _isBooleanControl(control: HTMLElement, value: unknown): boolean {
+    return typeof value === 'boolean'
+      || control.matches('zn-toggle, zn-checkbox, input[type="checkbox"]');
+  }
+
+  /** Handles change/input events bubbling from stamped form controls. */
+  private _onInspectorInput = (e: Event) => {
+    const section = this._selectedSection();
+    if (!section) return;
+    const control = e.target as HTMLElement & { value?: unknown; checked?: boolean };
+    const name = control.getAttribute?.('name');
+    if (!name) return;
+    let value: unknown = this._isBooleanControl(control, section.data[name])
+      ? Boolean(control.checked)
+      : control.value;
+    if (control.getAttribute('type') === 'number' && value !== '' && value !== null && value !== undefined) {
+      value = Number(value);
+    }
+    if (typeof value === 'number' && Number.isNaN(value)) return;
+    if (section.data[name] === value) return;
+    this._updateSectionData(section.id, { [name]: value });
+  };
+
+  private _updateSectionData(id: string, patch: Record<string, unknown>) {
+    this._pushHistory();
+    this._commit({ sections: this._patchSection(id, s => ({ ...s, data: { ...s.data, ...patch } })) });
+  }
+
+  /**
+   * Retypes the pinned section, keeping its id, name and data so the copy shared by
+   * the allowed types survives; keys the new type has no field for stay unread. The
+   * inspector form is stamped from the type's template, so it is rebuilt by hand —
+   * selection has not changed.
+   */
+  private _swapPinnedType(type: string) {
+    const id = this._pinnedId;
+    const section = this._findSection(id);
+    if (!id || !section || section.type === type || !this._requiredFirstTypes.includes(type)) return;
+    this._pushHistory();
+    this._commit({ sections: this._patchSection(id, s => ({ ...s, type })) });
+    this._buildInspectorForm();
+  }
+
+  private _renameSection(id: string, label: string) {
+    this._pushHistory();
+    this._commit({ sections: this._patchSection(id, s => ({ ...s, label: label || undefined })) });
+  }
+
+  /** Width the inspector may be dragged to, against the builder's own width. */
+  private _clampInspector(width: number): number {
+    const room = this.getBoundingClientRect().width - MIN_CANVAS_WIDTH;
+    return Math.round(Math.min(Math.max(width, MIN_INSPECTOR_WIDTH), Math.max(room, MIN_INSPECTOR_WIDTH)));
+  }
+
+  private _inspectorRect(): number {
+    return this.shadowRoot?.querySelector('.inspector')?.getBoundingClientRect().width ?? MIN_INSPECTOR_WIDTH;
+  }
+
+  private _onResizeStart = (e: PointerEvent) => {
+    e.preventDefault();
+    const startX = e.clientX;
+    const startWidth = this._inspectorWidth ?? this._inspectorRect();
+    // The handle is on the inspector's left edge, so dragging left widens it.
+    const move = (ev: PointerEvent) => {
+      this._inspectorWidth = this._clampInspector(startWidth + startX - ev.clientX);
+    };
+    const stop = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', stop);
+      window.removeEventListener('pointercancel', stop);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', stop);
+    window.addEventListener('pointercancel', stop);
+  };
+
+  private _onResizeKey = (e: KeyboardEvent) => {
+    const step = e.key === 'ArrowLeft' ? RESIZE_STEP : e.key === 'ArrowRight' ? -RESIZE_STEP : 0;
+    if (!step) return;
+    e.preventDefault();
+    this._inspectorWidth = this._clampInspector((this._inspectorWidth ?? this._inspectorRect()) + step);
+  };
+
+  /** Offered on the pinned section alone, and only where there is another type to take. */
+  private _renderSwapControl(section: PageSection) {
+    const types = this._requiredFirstTypes;
+    if (types.length < 2 || !this._isPinned(section.id)) return '';
+    return html`
+      <zn-select
+        class="inspector__swap"
+        label="Section type"
+        help-text="Swaps the section leading the page, keeping the settings both types share."
+        .value="${section.type}"
+        @zn-change="${(e: Event) => this._swapPinnedType(String((e.target as ZnSelect).value ?? ''))}">
+        ${types.map(t => html`
+          <zn-option value="${t}">${this.registry.get(t)?.label ?? t}</zn-option>`)}
+      </zn-select>`;
+  }
+
+  private _renderInspector() {
+    const section = this._selectedSection();
+    if (!section) return html``;
+    const type = this.registry.get(section.type);
+    const hasConfig = Boolean(type?.renderConfig) || this._form !== null;
+    const title = section.label ?? type?.label ?? section.type;
+    const typeLabel = type?.label ?? section.type;
+    return html`
+      <aside part="inspector" class="inspector">
+        <div
+          part="inspector-resize"
+          class="inspector-resize"
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize section settings"
+          tabindex="0"
+          @pointerdown="${this._onResizeStart}"
+          @keydown="${this._onResizeKey}"></div>
+        <div part="inspector-header" class="inspector-head">
+          <span
+            class="inspector-head__icon"
+            style="--section-accent:${type?.color ?? 'rgb(var(--zn-color-primary))'}">
+            <zn-icon src="${type?.icon ?? 'widgets'}" library="${ifDefined(type?.iconLibrary)}" size="18"></zn-icon>
+          </span>
+          <div class="inspector-head__text">
+            <div class="inspector-head__title">${title}</div>
+            ${title === typeLabel ? '' : html`
+              <div class="inspector-head__type">${typeLabel}</div>`}
+          </div>
+          <button
+            type="button"
+            class="inspector-close"
+            title="Close section settings"
+            aria-label="Close section settings"
+            @click="${() => this._select(null)}">
+            <zn-icon src="x@lu" size="18"></zn-icon>
+          </button>
+        </div>
+        <div
+          part="inspector-body"
+          class="inspector-body"
+          @change="${this._onInspectorInput}"
+          @zn-change="${this._onInspectorInput}"
+          @input="${this._onInspectorInput}"
+          @zn-input="${this._onInspectorInput}">
+          <zn-input
+            class="inspector__rename"
+            label="Section name"
+            .value="${section.label ?? type?.label ?? ''}"
+            @zn-change="${(e: Event) => this._renameSection(section.id, String((e.target as ZnInput).value ?? ''))}"></zn-input>
+          ${this._renderSwapControl(section)}
+          ${type?.slotsMax === undefined ? '' : html`
+            <zn-input
+              class="inspector__slots"
+              type="number"
+              label="Slots per row"
+              min="${type.slotsMin ?? 1}"
+              max="${type.slotsMax}"
+              help-text="Between ${type.slotsMin ?? 1} and ${type.slotsMax}. A new row is added as the last one fills."
+              .value="${String(slotColumns(section, type))}"
+              @zn-change="${(e: Event) => this._onColumnsEntered(section, e.target as ZnInput)}"></zn-input>`}
+          ${type?.renderConfig
+            ? type.renderConfig(section, data => this._updateSectionData(section.id, data))
+            : this._form}
+          ${hasConfig ? '' : html`
+            <p class="inspector-hint">This section type has no settings.</p>`}
+        </div>
+      </aside>`;
+  }
+
+  render() {
+    const hasHeader = this._hasSlot.test('header-left') || this._hasSlot.test('header-right');
+    return html`
+      <div
+        part="base"
+        class="builder ${this._selectedId ? 'builder--inspecting' : ''} ${this.paletteCollapsed ? 'builder--palette-collapsed' : ''} ${this.inspectorCollapsed ? 'builder--inspector-collapsed' : ''} ${this._inspectorWide ? 'builder--inspector-wide' : ''}"
+        style="${this._inspectorWidth === null || this.inspectorCollapsed ? nothing : `--inspector-col: ${this._inspectorWidth}px`}"
+        @dragend="${() => {
+          this._dragOverIndex = null;
+          this._slotDragOver = null;
+          this._draggingId = null;
+          this._endGhost();
+        }}">
+        <header part="header" class="header" ?hidden="${!hasHeader}">
+          <div class="header__group">
+            <slot name="header-left"></slot>
+          </div>
+          <div class="header__group">
+            <slot name="header-right"></slot>
+          </div>
+        </header>
+        ${this._renderPalette()}
+        ${this._renderCanvas()}
+        ${this._renderInspector()}
+        <slot name="config" class="declarations" @slotchange="${this._registerSlottedTemplates}"></slot>
+      </div>
+      ${this._renderDragGhost()}
+    `;
+  }
+}

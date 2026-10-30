@@ -1,6 +1,6 @@
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
-import {ifDefined} from "lit/directives/if-defined.js";
-import {property, query} from 'lit/decorators.js';
+import { type CSSResultGroup, html, unsafeCSS } from 'lit';
+import { ifDefined } from "lit/directives/if-defined.js";
+import { property, query } from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnConfirm from "../confirm";
 import ZnDropdown from "../dropdown";
@@ -8,6 +8,7 @@ import ZnIcon from "../icon";
 import ZnMenuItem from "../menu-item";
 import ZnTooltip from "../tooltip";
 
+import { classMap } from "lit/directives/class-map.js";
 import styles from './menu.scss';
 
 interface NavItem {
@@ -43,6 +44,10 @@ interface NavItem {
  * @csspart base - The component's base wrapper.
  *
  * @cssproperty --example - An example CSS custom property.
+ * @cssproperty --zn-menu-max-height - Caps the menu's height and makes it scroll internally.
+ *  Unset (`none`) by default, so the menu grows to fit its items unless a consumer sets this.
+ * @cssproperty --zn-menu-min-width - Overrides the menu's resting width. Defaults to
+ *  `--zn-size-spanel`, or 245px for `variant="shell"`.
  */
 export default class ZnMenu extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -56,7 +61,12 @@ export default class ZnMenu extends ZincElement {
 
   @query('slot') defaultSlot: HTMLSlotElement;
 
-  @property({attribute: 'actions', type: Array}) actions = [];
+  @property({ attribute: 'actions', type: Array }) actions = [];
+
+  /** The menu's visual style. `shell` renders the app-shell header dropdown
+   * look: a padded panel with floating rounded items. Propagated to the
+   * menu's items. */
+  @property({ reflect: true }) variant: 'default' | 'shell' = 'default';
 
   connectedCallback() {
     super.connectedCallback();
@@ -65,7 +75,7 @@ export default class ZnMenu extends ZincElement {
 
   /** @internal Gets all slotted menu items, ignoring dividers, headers, and other elements. */
   getAllItems() {
-    return [...this.defaultSlot.assignedElements({flatten: true})].filter((el: HTMLElement) => {
+    return [...this.defaultSlot.assignedElements({ flatten: true })].filter((el: HTMLElement) => {
       return !(el.inert || !this.isMenuItem(el));
 
     }) as ZnMenuItem[];
@@ -95,15 +105,20 @@ export default class ZnMenu extends ZincElement {
   render() {
     return html`
       <div
+        part="base"
+        class="${classMap({
+          'menu': true,
+          'menu--shell': this.variant === 'shell',
+        })}"
         @slotchange=${this.handleSlotChange}
         @keydown=${this.handleKeyDown}
         @mousedown=${this.handleMouseDown}>
         <slot></slot>
         ${this.actions.map((item: NavItem) => {
-          if( item === null || item === undefined) {
+          if (item === null || item === undefined) {
             return html``; // Skip null or undefined items
           }
-          if ( item?.confirm) {
+          if (item?.confirm) {
             return html`
               <zn-confirm trigger="${ifDefined(item.confirm?.trigger)}"
                           type="${ifDefined(item.confirm?.type)}"
@@ -113,6 +128,7 @@ export default class ZnMenu extends ZincElement {
               <zn-menu-item @mousedown=${this.handleMouseDown}
                             @keydown=${this.handleKeyDown}
                             id="${item.confirm?.trigger}"
+                            variant="${this.itemVariant}"
                             confirm>
                 ${(item.icon) ? html`
                   <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
@@ -123,6 +139,7 @@ export default class ZnMenu extends ZincElement {
               return html`
                 <zn-menu-item value="${item.title}"
                               href="${item.path}"
+                              variant="${this.itemVariant}"
                               data-target="${ifDefined(item.target)}">
                   ${(item.icon) ? html`
                     <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
@@ -133,7 +150,7 @@ export default class ZnMenu extends ZincElement {
                 </zn-menu-item>`;
             } else {
               return html`
-                <zn-menu-item value="${item.title}" data-path="${ifDefined(item.path)}">
+                <zn-menu-item value="${item.title}" variant="${this.itemVariant}" data-path="${ifDefined(item.path)}">
                   ${(item.icon) ? html`
                     <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
                   <span @click="${this.handleClick}"
@@ -170,7 +187,7 @@ export default class ZnMenu extends ZincElement {
     // get the parent dropdown and close it
     (closestMenu?.closest('zn-dropdown') as ZnDropdown | null)?.hide();
 
-    this.emit('zn-select', {detail: {item}});
+    this.emit('zn-select', { detail: { item } });
   }
 
   private handleKeyDown(event: KeyboardEvent) {
@@ -233,6 +250,30 @@ export default class ZnMenu extends ZincElement {
       this.setCurrentItem(items[0]);
       this.emit('zn-menu-ready');
     }
+
+    this.propagateVariant();
+  }
+
+  protected updated(changedProperties: Map<string, unknown>) {
+    super.updated(changedProperties);
+
+    if (changedProperties.has('variant')) {
+      this.propagateVariant();
+    }
+  }
+
+  /**
+   * @internal The variant applied to slotted items. A `default` menu still gives
+   * its items the `dropdown` look (muted hover, no separators) — distinct from a
+   * bare standalone menu item, which keeps the navigation styling.
+   */
+  get itemVariant(): 'dropdown' | 'shell' {
+    return this.variant === 'shell' ? 'shell' : 'dropdown';
+  }
+
+  /** Keeps slotted menu items in sync with the menu's variant. */
+  private propagateVariant() {
+    this.getAllItems().forEach(item => item.setAttribute('variant', this.itemVariant));
   }
 
   private isMenuItem(item: HTMLElement) {

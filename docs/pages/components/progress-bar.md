@@ -25,6 +25,22 @@ A basic progress bar displays the completion percentage using the `value` attrib
 <zn-progress-bar value="100"></zn-progress-bar>
 ```
 
+### Color Options
+
+Use the `color` attribute to set the progress fill color. Supported options are `current`, `info`, `danger`, `success`, and `warning`.
+
+```html:preview
+<zn-progress-bar color="current" value="40"></zn-progress-bar>
+<br />
+<zn-progress-bar color="info" value="50"></zn-progress-bar>
+<br />
+<zn-progress-bar color="danger" value="60"></zn-progress-bar>
+<br />
+<zn-progress-bar color="success" value="70"></zn-progress-bar>
+<br />
+<zn-progress-bar color="warning" value="80"></zn-progress-bar>
+```
+
 ### With Caption
 
 Use the `caption` attribute to add a label above the progress bar. This helps identify what the progress bar represents.

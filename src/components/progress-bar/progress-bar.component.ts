@@ -4,6 +4,8 @@ import ZincElement from '../../internal/zinc-element';
 
 import styles from './progress-bar.scss';
 
+export type ProgressBarColor = 'current' | 'info' | 'error' | 'success' | 'warning';
+
 /**
  * @summary Progress bars provide visual feedback about the completion status of a task or process.
  * @documentation https://zinc.style/components/progress-bar
@@ -20,7 +22,7 @@ import styles from './progress-bar.scss';
  * @csspart info - The description text element.
  *
  * @cssproperty --zn-border-color - The color of the progress bar background track.
- * @cssproperty --zn-primary - The color of the progress bar fill.
+ * @cssproperty --zn-progress-bar-color - The color of the progress bar fill.
  * @cssproperty --zn-text-heading - The color of the caption text.
  * @cssproperty --zn-text - The color of the progress percentage and description text.
  * @cssproperty --zn-spacing-x-small - The spacing between header/footer and the progress bar.
@@ -29,6 +31,7 @@ export default class ZnProgressBar extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property({type: String, reflect: true}) caption: string | undefined;
+  @property({reflect: true}) color: ProgressBarColor = 'current';
   @property({type: String, reflect: true}) description: string | undefined;
   @property({type: Number, reflect: true}) value: number | undefined;
   @property({type: Boolean, reflect: true, attribute: 'show-progress'})
@@ -62,7 +65,7 @@ export default class ZnProgressBar extends ZincElement {
         />
         <rect
           part="fill"
-          fill='rgb(var(--zn-primary))'
+          fill="var(--zn-progress-bar-color)"
           width="${this.value}%"
           height="100%"
           clip-path="url(#clip-path)"

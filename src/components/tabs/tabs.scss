@@ -95,6 +95,12 @@ h1, h2 {
     overflow-clip-margin: var(--zn-focus-ring-outset);
   }
 
+  // Unlike hidden, clip keeps a flex item's minimum size at its content's, so #mid would grow past the tabs
+  #mid {
+    min-height: 0;
+    min-width: 0;
+  }
+
   #content {
 
     > div {

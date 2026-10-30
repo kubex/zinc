@@ -54,12 +54,34 @@ export default class DialogComponent extends ZincElement {
   private handleContentCloserClick = (e: Event) => {
     for (const node of e.composedPath()) {
       if (node === this) return;
-      if (node instanceof HTMLElement && node.hasAttribute('dialog-closer')) {
+      if (!(node instanceof HTMLElement)) continue;
+      if (node.hasAttribute('dialog-closer')) {
         this.dialogEl.close();
+        return;
+      }
+      const mode = node.getAttribute('editor-mode');
+      if (mode === 'insert' || mode === 'replace') {
+        this.insertContent(node, mode);
         return;
       }
     }
   };
+
+  /** Inserts the element named by the control's `editor-content-id`: a `<template>` as HTML, anything else as text.
+   * The control's form is submitted first, as inserting closes the dialog and detaches it. */
+  private insertContent(control: HTMLElement, mode: 'insert' | 'replace') {
+    const id = control.getAttribute('editor-content-id');
+    const source = id ? (control.getRootNode() as Document | ShadowRoot).getElementById(id) : null;
+    if (!source) return;
+
+    const content = source instanceof HTMLTemplateElement
+      ? {html: source.innerHTML.trim()}
+      : {text: ((source as HTMLInputElement).value ?? source.textContent ?? '').trim()};
+    if (!content.html && !content.text) return;
+
+    control.closest('form')?.requestSubmit();
+    this.emit('zn-editor-insert', {detail: {mode, ...content}});
+  }
 
   setContent(content: string) {
     this.innerHTML = content;

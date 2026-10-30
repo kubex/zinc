@@ -3,9 +3,27 @@ on:
   push:
     branches:
       - master
+    paths:
+      - package.json
 
 jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.check.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - id: check
+        run: |
+          local=$(node -p "require('./package.json').version")
+          published=$(npm view @kubex/zinc version 2>/dev/null || echo none)
+          echo "local=$local published=$published"
+          echo "changed=$([ "$local" != "$published" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
   build:
+    needs: [ version ]
+    if: needs.version.outputs.changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6 # Check out the repository

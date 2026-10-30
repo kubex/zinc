@@ -178,9 +178,10 @@
   color: var(--zn-menu-item-icon-color, inherit);
 }
 
-// A destructive or cautionary item's icon takes the item's colour
+// A status item's icon takes the item's colour
 .menu-item--error .menu-item__prefix::slotted(*),
-.menu-item--warning .menu-item__prefix::slotted(*) {
+.menu-item--warning .menu-item__prefix::slotted(*),
+.menu-item--success .menu-item__prefix::slotted(*) {
   color: inherit;
 }
 
@@ -342,9 +343,9 @@ zn-popup::part(popup) {
 }
 
 .menu-item--success {
-  --color: rgb(var(--zn-color-success));
-  --hover-color: rgb(var(--zn-color-on-success, 255, 255, 255));
-  --hover-bg: rgba(var(--zn-color-success), 0.9);
+  --color: var(--zn-color-success-fg, rgb(var(--zn-color-success)));
+  --hover-color: var(--zn-menu-item-success-hover-color, rgb(var(--zn-color-on-success, 255, 255, 255)));
+  --hover-bg: var(--zn-menu-item-success-hover-background, rgba(var(--zn-color-success), 0.9));
 }
 
 .menu-item--secondary {

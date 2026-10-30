@@ -42,16 +42,20 @@ html, body {
   max-width: 100%;
 
   // Room to scroll the end clear of anything hung over the pane's bottom edge, such as pull tabs. As the last flex
-  // item it lands after content that overflows the container, where padding would sit underneath it.
-  &::after {
-    content: "";
-    flex: none;
-    height: var(--zn-pane-end-inset, 0px);
-  }
+  // item it lands after content that overflows the container, where padding would sit underneath it. A scroll
+  // container inside leaves the room itself. Rubix's app-content holds its page in a shadow root, out of :has()'s
+  // sight, so it is left to whatever scrolls in there.
+  &:not(app-content, :has(zn-scroll-container)) {
+    &::after {
+      content: "";
+      flex: none;
+      height: var(--zn-pane-end-inset, 0px);
+    }
 
-  // Only the outermost app container leaves that room
-  > * {
-    --zn-pane-end-inset: 0px;
+    // Only the outermost app container leaves that room
+    > * {
+      --zn-pane-end-inset: 0px;
+    }
   }
 }
 

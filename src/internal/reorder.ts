@@ -68,6 +68,8 @@ export class ReorderController implements ReactiveController {
   private readonly options: ReorderOptions;
   private dragKey: string | null = null;
   private startOrder: string[] = [];
+  private sliding = 0;
+  private listOverflow = '';
 
   constructor(host: ReorderHost, options: ReorderOptions = {}) {
     this.host = host;
@@ -274,6 +276,7 @@ export class ReorderController implements ReactiveController {
 
     if (prefersReducedMotion()) return;
     void this.host.updateComplete.then(() => {
+      const slides: Animation[] = [];
       for (const key of keys) {
         const row = this.host.reorderRow(key);
         const start = before.get(key);
@@ -282,9 +285,23 @@ export class ReorderController implements ReactiveController {
         if (!delta) continue;
         const from = this.horizontal ? `translateX(${delta}px)` : `translateY(${delta}px)`;
         for (const el of this.host.reorderSlides?.(key) ?? [row]) {
-          el.animate([{transform: from}, {transform: 'none'}], {duration: 150, easing: EASE_OUT});
+          slides.push(el.animate([{transform: from}, {transform: 'none'}], {duration: 150, easing: EASE_OUT}));
         }
       }
+      this.clipWhileSliding(this.host.reorderRow(keys[0])?.parentElement, slides);
+    });
+  }
+
+  // A row can change size with its place (a flush list's last row has no border), so it pokes out of the list
+  // mid-slide and flashes a scrollbar on the scroller around it
+  private clipWhileSliding(list: HTMLElement | null | undefined, slides: Animation[]) {
+    if (!list || !slides.length) return;
+    if (this.sliding++ === 0) {
+      this.listOverflow = list.style.overflow;
+      list.style.overflow = 'clip';
+    }
+    void Promise.allSettled(slides.map(slide => slide.finished)).then(() => {
+      if (--this.sliding === 0) list.style.overflow = this.listOverflow;
     });
   }
 

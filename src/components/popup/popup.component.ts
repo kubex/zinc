@@ -65,7 +65,7 @@ export default class ZnPopup extends ZincElement {
 
   /**
    * The preferred placement of the popup. Note that the actual placement will vary as configured to keep the
-   * panel inside of the viewport.
+   * panel inside the viewport.
    */
   @property({reflect: true}) placement:
     | 'top'
@@ -206,7 +206,7 @@ export default class ZnPopup extends ZincElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.stop();
+    this.stop().then();
   }
 
   async updated(changedProps: Map<string, unknown>) {
@@ -214,12 +214,16 @@ export default class ZnPopup extends ZincElement {
 
     // Start or stop the positioner when active changes
     if (changedProps.has('active')) {
-      this.active ? this.start() : this.stop();
+      if (this.active) {
+        this.start();
+      } else {
+        this.stop().then();
+      }
     }
 
     // Update the anchor when anchor changes
     if (changedProps.has('anchor')) {
-      this.handleAnchorChange();
+      await this.handleAnchorChange();
     }
 
     // All other properties will trigger a reposition when active
@@ -306,7 +310,7 @@ export default class ZnPopup extends ZincElement {
     if (this.sync) {
       middleware.push(
         size({
-          apply: ({rects}: { rects: { reference: { width: number, height: number } } }) => {
+          apply: ({rects}: { rects: { reference: { width: number; height: number } } }) => {
             const syncWidth = this.sync === 'width' || this.sync === 'both';
             const syncHeight = this.sync === 'height' || this.sync === 'both';
 
@@ -350,7 +354,7 @@ export default class ZnPopup extends ZincElement {
         size({
           boundary: this.autoSizeBoundary,
           padding: this.autoSizePadding,
-          apply: ({availableWidth, availableHeight}: { availableWidth: number, availableHeight: number }) => {
+          apply: ({availableWidth, availableHeight}: { availableWidth: number; availableHeight: number }) => {
             if (this.autoSize === 'vertical' || this.autoSize === 'both') {
               this.style.setProperty('--auto-size-available-height', `${availableHeight}px`);
             } else {

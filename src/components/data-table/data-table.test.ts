@@ -126,6 +126,70 @@ describe('<zn-data-table>', () => {
     expect(() => (el as unknown as { updateKeys: () => void }).updateKeys()).not.to.throw();
   });
 
+  it('marks the nearest column boundary while dragging and moves the column on drop', async () => {
+    const el = await fixture<ZnDataTable>(html`
+      <zn-data-table
+        headers='{"a": {"key": "a", "label": "A"}, "b": {"key": "b", "label": "A really quite long column heading"}, "c": {"key": "c", "label": "C"}}'
+        .data=${[{id: '1', cells: [{text: 'a1', column: 'a'}, {text: 'b1', column: 'b'}, {text: 'c1', column: 'c'}]}]}>
+      </zn-data-table>`);
+    const root = el.shadowRoot!;
+    const heading = (key: string) => root.querySelector<HTMLElement>(`th[data-column="${key}"]`)!;
+    const order = () => [...root.querySelectorAll<HTMLElement>('th[data-column]')].map(th => th.dataset.column);
+    const cells = () => [...root.querySelectorAll('tbody tr.table__row--data td')].map(td => td.textContent!.trim());
+    const line = () => root.querySelector('.table__drop-line')?.getBoundingClientRect();
+    const dragOver = async (target: Element, x: number) => {
+      target.dispatchEvent(new DragEvent('dragover', {bubbles: true, cancelable: true, clientX: x}));
+      await el.updateComplete;
+    };
+    await waitUntil(() => order().length === 3);
+    let reordered = 0;
+    el.addEventListener('zn-reorder', () => reordered++);
+
+    heading('a').dispatchEvent(new DragEvent('dragstart', {dataTransfer: new DataTransfer()}));
+    const b = heading('b').getBoundingClientRect();
+    await dragOver(heading('b'), b.left + 10);
+    expect(line(), 'the boundary the column already sits at').to.be.undefined;
+
+    // Over a body cell, so the whole column is a drop target
+    const c = heading('c').getBoundingClientRect();
+    await dragOver(root.querySelector('td[data-column="c"]')!, c.right - 1);
+    expect(line()!.left + line()!.width / 2).to.be.closeTo(c.right, 1);
+    expect(line()!.height, 'down the heading and the body').to.be.greaterThan(c.height);
+    expect(order(), 'nothing moves until the drop').to.deep.equal(['a', 'b', 'c']);
+
+    heading('c').dispatchEvent(new DragEvent('drop', {bubbles: true, cancelable: true}));
+    heading('a').dispatchEvent(new DragEvent('dragend'));
+    await el.updateComplete;
+    expect(order()).to.deep.equal(['b', 'c', 'a']);
+    expect(cells()).to.deep.equal(['b1', 'c1', 'a1']);
+    expect(line()).to.be.undefined;
+    expect(reordered).to.equal(1);
+  });
+
+  it('does not offer to drag a lone column', async () => {
+    const el = await fixture<ZnDataTable>(html`
+      <zn-data-table headers='{"a": {"key": "a", "label": "A"}}' .data=${[{id: '1', cells: [{text: 'a1', column: 'a'}]}]}>
+      </zn-data-table>`);
+    await waitUntil(() => el.shadowRoot!.querySelector('th[data-column="a"]'));
+
+    expect(el.shadowRoot!.querySelector('th[data-column="a"]')!.getAttribute('draggable')).to.equal('false');
+  });
+
+  it('moves a column with Alt + arrow keys', async () => {
+    const el = await fixture<ZnDataTable>(html`
+      <zn-data-table
+        headers='{"a": {"key": "a", "label": "A"}, "b": {"key": "b", "label": "B"}}'
+        .data=${[{id: '1', cells: [{text: 'a1', column: 'a'}, {text: 'b1', column: 'b'}]}]}>
+      </zn-data-table>`);
+    const root = el.shadowRoot!;
+    const order = () => [...root.querySelectorAll<HTMLElement>('th[data-column]')].map(th => th.dataset.column);
+    await waitUntil(() => order().length === 2);
+
+    root.querySelector('th[data-column="a"]')!.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight', altKey: true}));
+    await el.updateComplete;
+    expect(order()).to.deep.equal(['b', 'a']);
+  });
+
   it('accepts a single Row object on the data property', async () => {
     const el = await fixture<ZnDataTable>(html` <zn-data-table></zn-data-table> `);
     (el as unknown as {data: unknown}).data = {

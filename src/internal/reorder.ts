@@ -13,6 +13,9 @@ export interface ReorderHost extends ReactiveControllerHost, HTMLElement {
   /** The row drawn for an item, measured to slide it from its old position. */
   reorderRow: (key: string) => HTMLElement | null;
 
+  /** Every element that slides with an item, when more than its row does (a table column's cells). */
+  reorderSlides?: (key: string) => HTMLElement[];
+
   /** Whether an item is pinned where it is; nothing can move past it either. */
   reorderLocked?: (key: string) => boolean;
 
@@ -34,6 +37,15 @@ export interface ReorderOptions {
 
   /** Focuses an item after it moves by keyboard. */
   focus?: (key: string) => void;
+
+  /** Which way the items run: arrow keys, the drag midpoint and the slide follow it. */
+  axis?: 'vertical' | 'horizontal';
+
+  /**
+   * Leaves the items in place while dragging and tracks `dropIndex` for the host to draw a drop line, moving the item
+   * only on drop. Suits items of very different sizes, which would jump under the pointer when moved live.
+   */
+  indicator?: boolean;
 }
 
 type ReorderEvent = 'zn-change' | 'zn-reorder';
@@ -49,6 +61,9 @@ export class ReorderController implements ReactiveController {
   /** Whether a drag is under way, for transitions while items shift. */
   isDragging = false;
 
+  /** With `indicator`, the boundary the dragged item would drop at: before the item at this index, or after the last. */
+  dropIndex: number | null = null;
+
   private readonly host: ReorderHost;
   private readonly options: ReorderOptions;
   private dragKey: string | null = null;
@@ -62,6 +77,16 @@ export class ReorderController implements ReactiveController {
 
   hostConnected() {
     // Nothing to set up; the host wires the event handlers to its own rows.
+  }
+
+  private get horizontal() {
+    return this.options.axis === 'horizontal';
+  }
+
+  /** The leading edge of a row along the axis. */
+  private start(row: HTMLElement | null) {
+    const rect = row?.getBoundingClientRect();
+    return this.horizontal ? rect?.left : rect?.top;
   }
 
   private keys() {
@@ -111,9 +136,10 @@ export class ReorderController implements ReactiveController {
     const index = keys.indexOf(key);
     if (index === -1) return false;
 
+    const [back, forward] = this.horizontal ? ['ArrowLeft', 'ArrowRight'] : ['ArrowUp', 'ArrowDown'];
     const target = {
-      ArrowUp: index - 1,
-      ArrowDown: index + 1,
+      [back]: index - 1,
+      [forward]: index + 1,
       Home: 0,
       End: keys.length - 1,
     }[event.key];
@@ -160,6 +186,10 @@ export class ReorderController implements ReactiveController {
     if (event.dataTransfer) {
       event.dataTransfer.dropEffect = 'move';
     }
+    if (this.options.indicator) {
+      this.trackDropIndex(event, key);
+      return;
+    }
     if (!key || !this.dragKey || this.dragKey === key) return;
 
     const keys = this.keys();
@@ -168,9 +198,11 @@ export class ReorderController implements ReactiveController {
     const row = this.host.reorderRow(key);
     if (fromIndex === -1 || toIndex === -1 || !row) return;
 
-    // Rows of different heights would otherwise flip back and forth
+    // Rows of different sizes would otherwise flip back and forth
     const rect = row.getBoundingClientRect();
-    const pastMidpoint = event.clientY > rect.top + rect.height / 2;
+    const pastMidpoint = this.horizontal
+      ? event.clientX > rect.left + rect.width / 2
+      : event.clientY > rect.top + rect.height / 2;
     if (fromIndex < toIndex !== pastMidpoint) return;
     if (!this.canMove(fromIndex, toIndex)) return;
 
@@ -178,8 +210,41 @@ export class ReorderController implements ReactiveController {
   }
 
   handleDrop(event: DragEvent) {
-    // Dragover has already moved the item into place; dragend announces the change
+    // Dragover has already moved the item into place, or with `indicator` it moves now; dragend announces the change
     event.preventDefault();
+    if (this.dropIndex === null || !this.dragKey) return;
+
+    const fromIndex = this.keys().indexOf(this.dragKey);
+    this.reorder(moved(this.keys(), fromIndex, this.dropTarget(fromIndex, this.dropIndex)));
+  }
+
+  // The nearest boundary of the hovered item; a gap between items keeps the last one
+  private trackDropIndex(event: DragEvent, key?: string | null) {
+    if (!key || !this.dragKey) return;
+
+    const keys = this.keys();
+    const fromIndex = keys.indexOf(this.dragKey);
+    const index = keys.indexOf(key);
+    const row = this.host.reorderRow(key);
+    if (fromIndex === -1 || index === -1 || !row) return;
+
+    const rect = row.getBoundingClientRect();
+    const pastMidpoint = this.horizontal
+      ? event.clientX > rect.left + rect.width / 2
+      : event.clientY > rect.top + rect.height / 2;
+    const boundary = index + (pastMidpoint ? 1 : 0);
+    const toIndex = this.dropTarget(fromIndex, boundary);
+    const dropIndex = toIndex !== fromIndex && this.canMove(fromIndex, toIndex) ? boundary : null;
+
+    if (dropIndex !== this.dropIndex) {
+      this.dropIndex = dropIndex;
+      this.host.requestUpdate();
+    }
+  }
+
+  // The index the item moves to once taken out from before the boundary
+  private dropTarget(fromIndex: number, boundary: number) {
+    return boundary > fromIndex ? boundary - 1 : boundary;
   }
 
   handleDragEnd(event: DragEvent) {
@@ -188,6 +253,7 @@ export class ReorderController implements ReactiveController {
     const startOrder = this.startOrder;
     this.dragKey = null;
     this.draggedKey = null;
+    this.dropIndex = null;
     this.isDragging = false;
     this.host.requestUpdate();
 
@@ -203,18 +269,20 @@ export class ReorderController implements ReactiveController {
 
   /** Shows the new order, sliding each row from its old position. */
   reorder(keys: string[]) {
-    const before = new Map(this.keys().map(key => [key, this.host.reorderRow(key)?.getBoundingClientRect().top]));
+    const before = new Map(this.keys().map(key => [key, this.start(this.host.reorderRow(key))]));
     this.host.applyReorder(keys);
 
     if (prefersReducedMotion()) return;
     void this.host.updateComplete.then(() => {
       for (const key of keys) {
         const row = this.host.reorderRow(key);
-        const top = before.get(key);
-        if (!row || top === undefined) continue;
-        const delta = top - row.getBoundingClientRect().top;
-        if (delta) {
-          row.animate([{transform: `translateY(${delta}px)`}, {transform: 'none'}], {duration: 150, easing: EASE_OUT});
+        const start = before.get(key);
+        if (!row || start === undefined) continue;
+        const delta = start - this.start(row)!;
+        if (!delta) continue;
+        const from = this.horizontal ? `translateX(${delta}px)` : `translateY(${delta}px)`;
+        for (const el of this.host.reorderSlides?.(key) ?? [row]) {
+          el.animate([{transform: from}, {transform: 'none'}], {duration: 150, easing: EASE_OUT});
         }
       }
     });

@@ -4,7 +4,9 @@ import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property, state} from 'lit/decorators.js';
 import {ref} from "lit/directives/ref.js";
+import {styleMap} from "lit/directives/style-map.js";
 import {renderSortIcon, sortKeyHandler} from "../../internal/table-sort";
+import {ReorderController} from "../../internal/reorder";
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import {type TableTab, TabRowController} from "../../internal/table-tabs";
 import {Task} from "@lit/task";
@@ -476,6 +478,15 @@ export default class ZnDataTable extends ZincElement {
   private _hiddenCells: Map<string, Cell[]> = new Map();
   private _secondaryHeaders: HeaderConfig[];
   @state() private _deselectedColumns: Set<string> = new Set();
+  // Header keys in the order the user has dragged them into; keys not listed keep their configured order after these
+  @state() private _columnOrder: string[] = [];
+  private readonly reorderController = new ReorderController(this, {
+    axis: 'horizontal',
+    indicator: true,
+    // Plain arrows are left for scrolling the table
+    modifier: 'alt',
+    focus: key => this.columnCells(key)[0]?.focus(),
+  });
   private _columnDefaultsApplied = false;
   private _formatTemplates: Record<string, DisplayTemplate> = defaultTemplates;
 
@@ -494,11 +505,76 @@ export default class ZnDataTable extends ZincElement {
 
   // Headers the column select can toggle - everything but the permanently hidden and secondary ones
   private selectableHeaders(): HeaderConfig[] {
-    return (Object.values(this.headers) as HeaderConfig[]).filter((header: HeaderConfig) => {
+    const headers = (Object.values(this.headers) as HeaderConfig[]).filter((header: HeaderConfig) => {
       if (header.hideHeader || header.hideColumn || header.secondary) return false;
 
       return !Object.values(this.hiddenColumns).includes(header.key);
     });
+
+    const rank = new Map(this._columnOrder.map((key, i) => [key, i]));
+    return headers.sort((a, b) => (rank.get(a.key) ?? headers.length) - (rank.get(b.key) ?? headers.length));
+  }
+
+  /** @internal ReorderHost: the visible columns' keys in order. */
+  reorderKeys() {
+    return this.visibleHeaders().map(h => h.key);
+  }
+
+  /** @internal ReorderHost: puts the visible columns in a new order, leaving deselected ones in their slots. */
+  applyReorder(keys: string[]) {
+    const visible = new Set(keys);
+    let i = 0;
+    this._columnOrder = this.selectableHeaders().map(h => visible.has(h.key) ? keys[i++] : h.key);
+  }
+
+  /** @internal ReorderHost: the heading drawn for a column. */
+  reorderRow(key: string) {
+    return this.columnCells(key)[0] ?? null;
+  }
+
+  /** @internal ReorderHost: the heading and every cell of a column. */
+  reorderSlides(key: string) {
+    return this.columnCells(key);
+  }
+
+  private reorderable() {
+    return this.visibleHeaders().length > 1;
+  }
+
+  // One line over the whole table, as per-cell borders break where the heading meets the body
+  private renderDropLine() {
+    const dropIndex = this.reorderController.dropIndex;
+    if (dropIndex === null) return nothing;
+
+    const keys = this.reorderKeys();
+    const heading = this.reorderRow(keys[Math.min(dropIndex, keys.length - 1)]);
+    const scroll = heading?.closest<HTMLElement>('.table__scroll');
+    if (!heading || !scroll) return nothing;
+
+    const rect = heading.getBoundingClientRect();
+    const edge = dropIndex === keys.length ? rect.right : rect.left;
+    const left = edge - scroll.getBoundingClientRect().left + scroll.scrollLeft;
+    return html`<div class="table__drop-line" style=${styleMap({left: `${left}px`})}></div>`;
+  }
+
+  private columnDragStart(e: DragEvent, header: HeaderConfig) {
+    // The browser's default ghost is the whole heading, which is unusable for a wide or wrapped one
+    if (e.dataTransfer) {
+      const ghost = document.createElement('div');
+      ghost.className = 'table__drag-ghost';
+      ghost.textContent = header.label ?? header.key;
+      // Safari only snapshots an element in the viewport; under the pointer it is covered by the ghost itself
+      ghost.style.left = `${e.clientX - 12}px`;
+      ghost.style.top = `${e.clientY - 16}px`;
+      this.shadowRoot!.append(ghost);
+      e.dataTransfer.setDragImage(ghost, 12, 16);
+      requestAnimationFrame(() => ghost.remove());
+    }
+    this.reorderController.handleDragStart(e, header.key);
+  }
+
+  private columnCells(key: string) {
+    return [...this.shadowRoot?.querySelectorAll<HTMLElement>(`[data-column="${CSS.escape(key)}"]`) ?? []];
   }
 
   private isColumnVisible(header: HeaderConfig): boolean {
@@ -1092,7 +1168,9 @@ export default class ZnDataTable extends ZincElement {
         <table class="${classMap({
           'table': true,
           'with-hover': !this.unsortable && this.isSelectable(),
-        })}">
+        })}"
+          @dragover="${(e: DragEvent) => this.reorderController.handleDragOver(e, (e.target as Element).closest<HTMLElement>('[data-column]')?.dataset.column)}"
+          @drop="${(e: DragEvent) => this.reorderController.handleDrop(e)}">
           <thead ${ref(this.observeHead)}>
           <tr>
             ${showCheckboxes ? this.renderSelectAllCheckbox() : nothing}
@@ -1125,6 +1203,7 @@ export default class ZnDataTable extends ZincElement {
           `)}
           </tbody>
         </table>
+        ${this.renderDropLine()}
       </div>
     `;
   }
@@ -1802,20 +1881,30 @@ export default class ZnDataTable extends ZincElement {
     const sortable = !Object.values(this.unsortableHeaders).includes(header.key) && !Object.values(this.hiddenHeaders).includes(header.key) && !this.unsortable && header.sortable !== false;
 
     const lastVisibleHeaderKey = this.visibleHeaders().slice(-1)[0]?.key;
+    const reorderable = this.reorderable();
 
     return html`
       <th
+        data-column="${header.key}"
         class="${classMap({
           'table__head': true,
           'table__head--wide': header.key === this.wideColumn,
           'table__head--last': header.key === lastVisibleHeaderKey,
           'table__head--hidden': Object.values(this.hiddenHeaders).includes(header.key),
+          'table__head--dragging': header.key === this.reorderController.draggedKey,
+
           [`table__head--${header.align}`]: !!header.align,
         })}"
-        tabindex="${ifDefined(sortable ? '0' : undefined)}"
+        tabindex="${ifDefined(sortable || reorderable ? '0' : undefined)}"
+        draggable="${reorderable ? 'true' : 'false'}"
         aria-sort="${ifDefined(sortable ? this.sortState(header.key) : undefined)}"
+        aria-description="${ifDefined(reorderable ? 'Alt + arrow keys to move column' : undefined)}"
         @click="${sortable ? this.updateSort(header.key) : undefined}"
-        @keydown="${sortable ? sortKeyHandler(this.updateSort(header.key)) : undefined}">
+        @keydown="${(e: KeyboardEvent) => {
+          if (!this.reorderController.handleKeyDown(e, header.key) && sortable) sortKeyHandler(this.updateSort(header.key))(e);
+        }}"
+        @dragstart="${(e: DragEvent) => this.columnDragStart(e, header)}"
+        @dragend="${(e: DragEvent) => this.reorderController.handleDragEnd(e)}">
         <div>
           ${header.label}
           ${sortable ? renderSortIcon(this.sortState(header.key)) : nothing}
@@ -1836,9 +1925,12 @@ export default class ZnDataTable extends ZincElement {
 
     return html`
       <td
+        data-column="${ifDefined(headerKey)}"
         @click="${this.isSelectable() ? this.selectRow : undefined}"
         class="${classMap({
           'table__cell': true,
+          'table__cell--dragging': !!headerKey && headerKey === this.reorderController.draggedKey,
+
           'table__cell--wide': headerKey === this.wideColumn,
           'table__cell--last': index === filteredHeaders.length - 1,
           [`table__cell--${header?.align}`]: !!header?.align,

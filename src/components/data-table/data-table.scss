@@ -16,6 +16,7 @@ slot[name="filter-top"]::slotted(*) {
 }
 
 .table__scroll {
+  position: relative;
   overflow-x: auto;
   @include wc.scrollbars;
 }
@@ -500,4 +501,39 @@ tbody tr.table__row--error td {
 // Muted cells are mostly placeholders ("—"), so they sit lighter than the global muted text
 zn-style.zn-muted {
   color: var(--zn-color-neutral-400, rgb(var(--zn-color-muted-text)));
+}
+
+.table__drop-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: rgb(var(--zn-primary));
+  pointer-events: none;
+}
+
+.table__drag-ghost {
+  position: fixed;
+  padding: var(--zn-spacing-x-small) var(--zn-spacing-small);
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 6px;
+  background: rgb(var(--zn-panel));
+  box-shadow: var(--zn-shadow-small, 0 1px 3px rgba(13, 23, 56, 0.08), 0 1px 2px rgba(13, 23, 56, 0.04));
+  // Matches the table headings
+  @include wc.text-style(button-label);
+  font-size: var(--zn-table-header-font-size, var(--zn-text-button-label-font-size));
+  color: var(--zn-table-header-color, var(--zn-text-button-label-color));
+  text-transform: var(--zn-table-header-transform, capitalize);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.table tr .table__head[draggable='true'] {
+  cursor: grab;
+}
+
+.table tr .table__head--dragging,
+.table tr .table__cell--dragging {
+  opacity: 0.4;
 }

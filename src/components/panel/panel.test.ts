@@ -89,4 +89,28 @@ describe('<zn-panel>', () => {
 
     expect(header.shadowRoot!.querySelector('.header__description')).to.not.exist;
   });
+
+  describe('transparent', () => {
+    // Safari has no overflow-clip-margin, so the room comes from a padding/negative-margin fallback there
+    it('leaves room outside the content for the focus ring of a flush control', async () => {
+      const el = await fixture(html`
+        <zn-panel transparent flush style="--zn-focus-ring-outset: 4px"><input></zn-panel> `);
+      const content = el.shadowRoot!.querySelector('.panel__content')!.getBoundingClientRect();
+      const input = el.querySelector('input')!.getBoundingClientRect();
+      const clipMargin = CSS.supports('overflow-clip-margin: 0px') ? 4 : 0;
+
+      expect(input.left - (content.left - clipMargin)).to.equal(4);
+      expect(input.top - (content.top - clipMargin)).to.equal(4);
+    });
+
+    it('keeps the bottom edge of the header clickable', async () => {
+      const el = await fixture(html`
+        <zn-panel transparent caption="Example" style="--zn-focus-ring-outset: 4px"><input></zn-panel> `);
+      const header = el.shadowRoot!.querySelector('.panel__header')!;
+      const rect = header.getBoundingClientRect();
+      const hit = el.shadowRoot!.elementFromPoint(rect.left + 10, rect.bottom - 2);
+
+      expect(header.contains(hit)).to.be.true;
+    });
+  });
 });

@@ -197,14 +197,6 @@
   cursor: not-allowed;
 }
 
-:host-context([required]) .checkbox__label::after {
-  display: none;
-}
-
-:host([required]) .checkbox__label::after {
-  display: none;
-}
-
 /* If parent Checkbox Group has 'data-user-invalid', style all checkboxes in the group as 'data-user-invalid' by targeting with a class ('checkbox-user-invalid'), since the checkboxes can't be targeted using ::slotted */
 :host(.checkbox-user-invalid) .checkbox__control {
   border-color: var(--zn-color-danger-600);

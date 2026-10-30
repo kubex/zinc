@@ -121,14 +121,6 @@
   opacity: 0;
 }
 
-:host-context([required]) .radio__label::after {
-  display: none;
-}
-
-:host([required]) .radio__label::after {
-  display: none;
-}
-
 /* If parent Radio Group has 'data-user-invalid', style all radios in the group as 'data-user-invalid' by targeting with a class ('radio-user-invalid'), since the radios can't be targeted using ::slotted */
 :host(.radio-user-invalid) .radio__control {
   border-color: var(--zn-color-danger-600);

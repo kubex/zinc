@@ -148,14 +148,15 @@
   // The body scrolls, so it can't take a clip margin — it gets a gutter cancelled by a negative margin instead.
   &--transparent {
     .panel__header {
+      position: relative;
+      z-index: 1;
       padding-left: 0;
       padding-right: 0;
     }
 
     .panel__inner,
     .panel__content {
-      overflow: clip;
-      overflow-clip-margin: var(--zn-focus-ring-outset);
+      @include wc.clip-focus-room;
     }
 
     &.panel--flush .panel__body {

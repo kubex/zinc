@@ -83,7 +83,10 @@ export default class ZnSplitPane extends ZincElement {
       this._setFocusPane(parseInt((e.selectedTarget as HTMLElement).getAttribute('split-pane-focus')!));
     });
     this.addEventListener('zn-split-pane-focus-change', this.focusChangeHandler);
-    this.resizeObserver = new ResizeObserver(() => this.refreshNarrowState());
+    this.resizeObserver = new ResizeObserver(() => {
+      this.refreshNarrowState();
+      this.keepSecondarySize();
+    });
     this.resizeObserver.observe(this);
   }
 
@@ -92,6 +95,18 @@ export default class ZnSplitPane extends ZincElement {
     this.resizeObserver?.disconnect();
     this.resizeObserver = null;
     super.disconnectedCallback();
+  }
+
+  // The primary pane is sized in pixels, so a `secondary` pane would otherwise take up every change in the container
+  private keepSecondarySize() {
+    if (!this.preferSecondarySize || !this.calculatePixels || !this.currentContainerSize) return;
+
+    const containerSize = this.vertical ? this.getBoundingClientRect().height : this.getBoundingClientRect().width;
+    if (!containerSize || containerSize === this.currentContainerSize) return;
+
+    const secondarySize = this.currentContainerSize - this.currentPixelSize;
+    this.currentContainerSize = containerSize;
+    this.setSize(containerSize - secondarySize);
   }
 
   private refreshNarrowState() {

@@ -255,7 +255,8 @@ export default class ZnStatsTile extends ZincElement {
       : this.calcPercentageDifference();
     const direction = diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat';
     const outcome = direction === 'flat' ? 'flat' : (direction === 'up') !== this.invertDelta ? 'good' : 'bad';
-    const text = points ? `${Math.abs(diff)} pts` : absolute ? `${Math.abs(diff)}` : `${Math.abs(diff)}%`;
+    const text = direction === 'flat' && absolute ? 'No change'
+      : points ? `${Math.abs(diff)} pts` : absolute ? `${Math.abs(diff)}` : `${Math.abs(diff)}%`;
 
     return html`
       <span class="delta delta--${outcome}">

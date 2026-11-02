@@ -58,6 +58,16 @@ describe('<zn-stat>', () => {
     expect(delta.textContent!.trim()).to.equal('5');
   });
 
+  it('shows no change from a previous zero that stays zero', async () => {
+    const el = await fixture<HTMLElement>(html`
+      <zn-stat layout="tile" amount="0" previous="0" show-delta></zn-stat>`);
+    await (el as unknown as {updateComplete: Promise<unknown>}).updateComplete;
+    const delta = el.shadowRoot!.querySelector('.delta')!;
+
+    expect(delta.classList.contains('delta--flat')).to.be.true;
+    expect(delta.textContent!.trim()).to.equal('No change');
+  });
+
   it('colours a rise as bad news with invert-delta', async () => {
     const el = await fixture<HTMLElement>(html`
       <zn-stat layout="tile" amount="148" previous="140" show-delta invert-delta></zn-stat>`);

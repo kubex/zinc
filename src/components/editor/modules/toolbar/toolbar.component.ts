@@ -38,7 +38,6 @@ export default class ToolbarComponent extends ZincElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.containerWidth = this.offsetWidth;
     if (this.parentElement) {
       this._resizeObserver.observe(this.parentElement);
     }
@@ -58,17 +57,16 @@ export default class ToolbarComponent extends ZincElement {
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
 
-    this.containerWidth = this.getToolbarWidth();
     this.updateEmptyGroups();
 
     const slotElement = this.renderRoot?.querySelector('slot') as HTMLSlotElement | null;
-    slotElement?.addEventListener('slotchange', () => this.calculateOverflow());
+    slotElement?.addEventListener('slotchange', () => this.handleResize());
 
-    this.updateComplete.then(() => this.calculateOverflow());
+    this.handleResize();
   }
 
+  // Measuring forces a synchronous layout (tens of ms in Safari on large pages), so batch it to once per frame.
   handleResize = () => {
-    this.containerWidth = this.getToolbarWidth();
     if (this._resizeId !== null) {
       cancelAnimationFrame(this._resizeId);
     }
@@ -193,6 +191,7 @@ export default class ToolbarComponent extends ZincElement {
     }
 
     const containerWidth = this.getToolbarWidth();
+    this.containerWidth = containerWidth;
 
     if (!containerWidth || containerWidth <= 0) {
       nonOverflowGroups.forEach(group => (group.style.display = 'flex'));

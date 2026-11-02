@@ -170,8 +170,11 @@ export default class ZnNavbar extends ZincElement {
     this._resizeController = new ResizeController(this, {
       // Synced here as well as after the layout pass: the indicator's right edge is
       // measured from the container, so a stale value would stretch it until the next frame.
-      callback: () => {
-        this._syncIndicator();
+      // No entries means the controller's own call from hostUpdated, mid-render, where reading forces a layout.
+      callback: (entries: ResizeObserverEntry[]) => {
+        if (entries.length) {
+          this._syncIndicator();
+        }
         this._scheduleResize();
       },
     });
@@ -504,9 +507,7 @@ export default class ZnNavbar extends ZincElement {
     this._expanding.forEach(action => this._observeExpandingAction(action));
     this._updateVisibility();
 
-    setTimeout(() => {
-      this.handleResize();
-    }, 100)
+    this._scheduleResize();
 
     if (this.dropdown.length > 0) {
       const menu = this.shadowRoot?.querySelector('zn-menu');

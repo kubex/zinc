@@ -49,6 +49,7 @@ export default class ZnTabs extends ZincElement {
   @property({attribute: 'master-id', reflect: true}) masterId: string;
   @property({attribute: 'default-uri', reflect: true}) defaultUri = '';
   @property({attribute: 'active', reflect: true}) _current = '';
+  private _hasSelected = false;
   @property({attribute: 'split', type: Number, reflect: true}) _split: number;
   @property({attribute: 'split-min', type: Number, reflect: true}) _splitMin = 60;
   @property({attribute: 'split-min-secondary', type: Number, reflect: true}) _splitMinSecondary: number;
@@ -641,7 +642,9 @@ export default class ZnTabs extends ZincElement {
       this._current = tabName;
     };
 
-    const scrolled = sameTab ? [] : getScrolledAncestors(this._panel);
+    // Reading scroll positions forces a layout; the first selection has no reader's place to reset.
+    const scrolled = sameTab || !this._hasSelected ? [] : getScrolledAncestors(this._panel);
+    this._hasSelected = true;
 
     updateTabs();
 

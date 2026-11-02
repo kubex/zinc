@@ -43,7 +43,6 @@ export class SubmenuController implements ReactiveController {
   hostUpdated() {
     if (this.hasSlotController.test('submenu') && !this.host.disabled) {
       this.addListeners();
-      this.updateSkidding();
     } else {
       this.removeListeners();
     }
@@ -234,6 +233,8 @@ export class SubmenuController implements ReactiveController {
       const sibling = SubmenuController.openSubmenus.get(parent);
       if (sibling && sibling !== this) sibling.disableSubmenu();
       SubmenuController.openSubmenus.set(parent, this);
+      // Measured on open, not per update: reading styles forces a style recalc (costly in Safari on large pages).
+      this.updateSkidding();
     }
     if (this.popupRef.value) {
       if (this.popupRef.value.active !== state) {

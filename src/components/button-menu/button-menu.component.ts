@@ -103,7 +103,6 @@ export default class ZnButtonMenu extends ZincElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.containerWidth = this.offsetWidth;
 
     if (this.parentNode) {
       this.resizeObserver.observe(this.parentNode as HTMLElement);

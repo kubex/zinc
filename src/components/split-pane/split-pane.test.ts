@@ -2,6 +2,9 @@ import '../../../dist/zn.min.js';
 import { expect, fixture, html, waitUntil } from '@open-wc/testing';
 import type ZnSplitPane from './split-pane.component';
 
+// Narrow-parent merging is applied from the ResizeObserver, which delivers after layout and before paint.
+const afterLayout = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
 describe('<zn-split-pane>', () => {
   it('should render a component', async () => {
     const el = await fixture(html` <zn-split-pane></zn-split-pane> `);
@@ -71,6 +74,7 @@ describe('<zn-split-pane>', () => {
       </zn-split-pane>
     `);
     await el.updateComplete;
+    await afterLayout();
     const nested = el.querySelector<ZnSplitPane>('zn-split-pane')!;
     await nested.updateComplete;
     const navItems = Array.from(el.shadowRoot!.querySelectorAll('#split-nav li'));
@@ -99,6 +103,7 @@ describe('<zn-split-pane>', () => {
       </zn-split-pane>
     `);
     await el.updateComplete;
+    await afterLayout();
     const nested = el.querySelector<ZnSplitPane>('zn-split-pane')!;
     await nested.updateComplete;
 
@@ -140,6 +145,7 @@ describe('<zn-split-pane>', () => {
       </zn-split-pane>
     `);
     await el.updateComplete;
+    await afterLayout();
     const nested = el.querySelector<ZnSplitPane>('zn-split-pane')!;
     const deepNested = nested.querySelector<ZnSplitPane>('zn-split-pane')!;
     await nested.updateComplete;

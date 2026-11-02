@@ -83,6 +83,7 @@ export default class ContentBlock extends ZincElement {
   connectedCallback() {
     super.connectedCallback();
     this.iframe.then((iframe) => {
+      if (!iframe) return;
       if (iframe.contentDocument) {
         const div = this.htmlNodes[0] as HTMLDivElement;
         if (div) {
@@ -154,7 +155,7 @@ export default class ContentBlock extends ZincElement {
   private _toggleText() {
     const textContent = this.shadowRoot?.querySelector('.text-content') as HTMLDivElement | null;
     this.iframe.then((iframe) => {
-      if (textContent) {
+      if (iframe && textContent) {
         iframe.classList.add('hidden');
         textContent.classList.remove('hidden');
       }
@@ -164,7 +165,7 @@ export default class ContentBlock extends ZincElement {
   private _toggleHtml() {
     const textContent = this.shadowRoot?.querySelector('.text-content') as HTMLDivElement | null;
     this.iframe.then((iframe) => {
-      if (textContent) {
+      if (iframe && textContent) {
         iframe.classList.remove('hidden');
         textContent.classList.add('hidden');
         setTimeout(() => this._resizeIframe(iframe), 0);
@@ -293,7 +294,8 @@ export default class ContentBlock extends ZincElement {
         </div>
 
         <zn-sp no-gap flush-x flush-t>
-          <iframe class="${classMap({'hidden': !initialShowHtml})}" title="Content block HTML preview"></iframe>
+          ${hasHtmlSlot ? html`
+            <iframe class="${classMap({'hidden': !initialShowHtml})}" title="Content block HTML preview"></iframe>` : ''}
           <slot class="html-content" name="html" style="display: none;"></slot>
           <slot name="text" style="display: none;"></slot>
           <div class="${classMap({'text-content': true, 'hidden': initialShowHtml})}">
@@ -332,7 +334,7 @@ export default class ContentBlock extends ZincElement {
   protected truncateText() {
     const textContent = this.querySelector('[slot="text"]') as HTMLDivElement | null;
     if (!textContent) return '';
-    const trimmed = htmlToText(textContent.innerText);
+    const trimmed = htmlToText(textContent.textContent ?? '');
     return trimmed.length > 32 ? trimmed.substring(0, 32) + '...' : trimmed;
   }
 
@@ -404,13 +406,15 @@ export default class ContentBlock extends ZincElement {
     const textContent = this.querySelector('[slot="text"]') as HTMLDivElement | null;
     const textRows: TextRow[] = [];
 
-    if (textContent && looksLikeHtml(textContent.innerText)) {
-      this._textRows = [{lines: [sanitizeHtml(textContent.innerText, EDITOR_TAGS, true)], type: 'text', html: true}];
+    // Not innerText: it forces a layout per read (~6ms each in Safari), and this slot is never rendered.
+    const source = textContent?.textContent ?? '';
+    if (textContent && looksLikeHtml(source)) {
+      this._textRows = [{lines: [sanitizeHtml(source, EDITOR_TAGS, true)], type: 'text', html: true}];
       return this._textRows;
     }
 
     if (textContent) {
-      const text = textContent.innerText.replace(/<br\s*\/?>/gi, '\n');
+      const text = source.replace(/<br\s*\/?>/gi, '\n');
       const rows = text.split('\n');
       let previousType: TextRow['type'] | null = null;
       let forceReply = false;

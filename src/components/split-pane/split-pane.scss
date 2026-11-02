@@ -6,11 +6,13 @@
   gap: 0 calc(var(--zn-base-gap) / 2);
 }
 
-// Slotted panes are light DOM, out of reach of the ::-webkit-scrollbar rules here
+// Slotted panes are light DOM, out of reach of the ::-webkit-scrollbar rules here.
+// Flex-stretched, not `height: 100%`, which costs Safari ~30ms per DOM or hover change inside the panes.
 ::slotted(*) {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1 1 0;
+  min-height: 0;
   overflow-y: auto;
   @include mixins.scrollbars-standard;
 }
@@ -41,6 +43,11 @@
     min-width: 0;
     min-height: 0;
     overflow: hidden;
+  }
+
+  #primary-pane, #secondary-pane {
+    display: flex;
+    flex-direction: column;
   }
 
   slot {
@@ -319,13 +326,13 @@
 
 :host([focus-pane="0"]) {
   #primary-pane {
-    display: block;
+    display: flex;
   }
 }
 
 :host([focus-pane="1"]) {
   #secondary-pane {
-    display: block;
+    display: flex;
   }
 }
 

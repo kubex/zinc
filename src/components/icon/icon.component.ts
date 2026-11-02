@@ -5,6 +5,7 @@ import {property} from 'lit/decorators.js';
 import {sha256} from '../../utilities/sha256';
 import {styleMap} from "lit/directives/style-map.js";
 import {unsafeSVG} from 'lit/directives/unsafe-svg.js';
+import lineIconStyles from './lni.scss';
 import ZincElement from '../../internal/zinc-element';
 import type {IconNode, SVGProps} from 'lucide';
 
@@ -88,8 +89,14 @@ export type IconColor =
  *
  * @cssproperty --example - An example CSS custom property.
  */
+// Lineicons' ~600 glyph rules are adopted only by icons that use them: every adopted rule is restyled per shadow
+// root, and icons are the most numerous component on a page (over 1,000 on some views, seconds of style work in Safari).
+const lineIcons = unsafeCSS(lineIconStyles);
+
 export default class ZnIcon extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
+
+  private _lineIconsAdopted = false;
 
   @property({reflect: true}) src: string;
 
@@ -308,6 +315,26 @@ export default class ZnIcon extends ZincElement {
 
   private normalizeRavatarEmail(email: string) {
     return email.trim().toLowerCase();
+  }
+
+  protected override updated(changedProperties: PropertyValues<this>) {
+    super.updated(changedProperties);
+    if (this.library === 'line') {
+      this.adoptLineIcons();
+    }
+  }
+
+  private adoptLineIcons() {
+    const root = this.shadowRoot;
+    if (!root || this._lineIconsAdopted) return;
+    this._lineIconsAdopted = true;
+    if (lineIcons.styleSheet) {
+      root.adoptedStyleSheets = [...root.adoptedStyleSheets, lineIcons.styleSheet];
+    } else {
+      const style = document.createElement('style');
+      style.textContent = lineIcons.cssText;
+      root.appendChild(style);
+    }
   }
 
   render() {

@@ -891,6 +891,18 @@ describe('<zn-select> disabled', () => {
     expect(el.open).to.be.false;
   });
 
+  it('should take its chevron from the theme', async () => {
+    const el: any = await fixture(html`
+      <zn-select style="--zn-select-expand-icon: 'expand_more'; --zn-select-expand-icon-size: 18">
+        <zn-option value="a">A</zn-option>
+      </zn-select>`);
+    await el.updateComplete;
+
+    const icon = el.shadowRoot.querySelector('.select__expand-icon zn-icon');
+    expect(icon.getAttribute('src')).to.equal('expand_more');
+    expect(icon.getAttribute('size')).to.equal('18');
+  });
+
   it('should open from the expand icon when enabled', async () => {
     const el: any = await fixture(html`
       <zn-select>

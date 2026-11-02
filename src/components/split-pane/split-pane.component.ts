@@ -120,7 +120,6 @@ export default class ZnSplitPane extends ZincElement {
 
   firstUpdated(changedProperties: PropertyValues) {
     setTimeout(this.applyStoredSize.bind(this), 100);
-    this.refreshNarrowState();
     super.firstUpdated(changedProperties);
   }
 

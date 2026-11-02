@@ -31,6 +31,19 @@ describe('<zn-icon>', () => {
     );
   });
 
+  it('should style Lineicons glyphs only on line icons', async () => {
+    const hasLineRules = (el: Element) =>
+      el.shadowRoot!.adoptedStyleSheets.some(sheet => Array.from(sheet.cssRules).some(rule => rule.cssText.includes(".lni-home-2")));
+
+    const line = await fixture<ZnIcon>(html`<zn-icon src="home-2" library="line"></zn-icon>`);
+    const glyph = line.shadowRoot!.querySelector('.lni')!;
+    expect(getComputedStyle(glyph, '::before').content).to.not.equal('none');
+    expect(hasLineRules(line)).to.be.true;
+
+    const lucide = await fixture<ZnIcon>(html`<zn-icon src="home@lu"></zn-icon>`);
+    expect(hasLineRules(lucide)).to.be.false;
+  });
+
   it('should render Lucide icons as inline SVGs', async () => {
     const el = await fixture<ZnIcon>(html`
       <zn-icon src="cloud-upload" library="lucide" size="48"></zn-icon>

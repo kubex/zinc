@@ -39,6 +39,7 @@ export default class ZnScrollContainer extends ZincElement {
 
   private _footerObserved: boolean = false;
   private _footerHeightFrame: number | null = null;
+  private _scrollEndTimer: number | null = null;
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
@@ -63,6 +64,23 @@ export default class ZnScrollContainer extends ZincElement {
     if (this._footerHeightFrame !== null) {
       cancelAnimationFrame(this._footerHeightFrame);
       this._footerHeightFrame = null;
+    }
+    this._cancelScrollEnd();
+  }
+
+  // Reading scrollHeight forces a layout, so a burst of mutations scrolls once, after it settles.
+  private _queueScrollEnd() {
+    this._cancelScrollEnd();
+    this._scrollEndTimer = window.setTimeout(() => {
+      this._scrollEndTimer = null;
+      this.scrollEnd();
+    }, 100);
+  }
+
+  private _cancelScrollEnd() {
+    if (this._scrollEndTimer !== null) {
+      clearTimeout(this._scrollEndTimer);
+      this._scrollEndTimer = null;
     }
   }
 
@@ -92,7 +110,7 @@ export default class ZnScrollContainer extends ZincElement {
     target: null,
     config: {childList: true, subtree: true},
     callback: () => {
-      setTimeout(() => this.scrollEnd(), 100);
+      this._queueScrollEnd();
       if (this.footer) {
         this._syncFooterHeight();
         if (!this._footerObserved) {

@@ -4,6 +4,7 @@ import {FormControlController} from "../../internal/form";
 import {HasSlotController} from "../../internal/slot";
 import {html, nothing, unsafeCSS} from 'lit';
 import {LocalizeController} from "../../utilities/localize";
+import {modeSignal, themeSignal} from '../../internal/theme';
 import {property, query, state} from 'lit/decorators.js';
 import {scrollIntoView} from "../../internal/scroll";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
@@ -1857,13 +1858,21 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
   // A theme picks the chevron through --zn-select-expand-icon and its size through
   // --zn-select-expand-icon-size, as zn-icon sizes itself from its size attribute.
-  private expandIconSrc(): string {
-    const value = getComputedStyle(this).getPropertyValue('--zn-select-expand-icon').trim();
-    return value.replace(/^["']|["']$/g, '') || 'keyboard_arrow_down';
-  }
+  // Read once per theme and mode: reading styles in render forces a style recalc each time.
+  private _expandIcon?: {key: string; src: string; size: string};
 
-  private expandIconSize(): string {
-    return String(parseInt(getComputedStyle(this).getPropertyValue('--zn-select-expand-icon-size')) || 24);
+  private expandIcon(): {src: string; size: string} {
+    const key = `${themeSignal.get()}|${modeSignal.get()}`;
+    if (this._expandIcon?.key !== key) {
+      const style = getComputedStyle(this);
+      const src = style.getPropertyValue('--zn-select-expand-icon').trim().replace(/^["']|["']$/g, '');
+      this._expandIcon = {
+        key,
+        src: src || 'keyboard_arrow_down',
+        size: String(parseInt(style.getPropertyValue('--zn-select-expand-icon-size')) || 24),
+      };
+    }
+    return this._expandIcon;
   }
 
   render() {
@@ -2018,7 +2027,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                     <zn-icon src="error" class="select__expand-icon select__fetch-error-icon"></zn-icon>`
                   : html`
                     <slot name="expand-icon" part="expand-icon" class="select__expand-icon">
-                      <zn-icon src="${this.expandIconSrc()}" size="${this.expandIconSize()}"></zn-icon>
+                      <zn-icon src="${this.expandIcon().src}" size="${this.expandIcon().size}"></zn-icon>
                     </slot>`
               }
             </div>

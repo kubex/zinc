@@ -234,12 +234,14 @@ export function buildBarOption(props: BuilderProps): EChartsOption {
 
 // latestMarker hides a line's points except the last, which gets a hollow dot.
 function latestMarker(props: BuilderProps, s: SeriesItem): Record<string, unknown> {
-  if (!props.markLatest || !s.data?.length) return {};
+  if (!props.markLatest || s.silent || !s.data?.length) return {};
   const data = normalizeData(s.data);
-  const last = data[data.length - 1];
+  // A null is a gap, so the marker goes on the last point that has a value.
+  const last = data.findLastIndex(d => d !== null && d !== undefined && !(Array.isArray(d) && d[d.length - 1] === null));
+  if (last < 0) return { symbol: 'none' };
   return {
     symbol: 'none',
-    data: [...data.slice(0, -1), { value: last, symbol: 'emptyCircle', symbolSize: 8 }],
+    data: data.map((d, i) => (i === last ? { value: d, symbol: 'emptyCircle', symbolSize: 8 } : d)),
   };
 }
 

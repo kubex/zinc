@@ -33,6 +33,8 @@ import type { ECharts } from 'echarts/core';
  * @since 1.0
  *
  * @csspart base - The component's base wrapper.
+ *
+ * @event zn-chart-click - Emitted when a data point, bar or slice is clicked.
  */
 export default class ZnChart extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -314,6 +316,16 @@ export default class ZnChart extends ZincElement {
 
     this.chart = echarts.init(host);
     this.chart.setOption(this.buildOption());
+    this.chart.on('click', params => {
+      this.emit('zn-chart-click', {
+        detail: {
+          seriesName: params.seriesName ?? '',
+          name: params.name,
+          dataIndex: params.dataIndex,
+          value: params.value,
+        },
+      });
+    });
 
     if (this.syncGroup) {
       this.chart.group = this.syncGroup;

@@ -117,6 +117,20 @@ describe('<zn-chart>', () => {
     expect(a.chart?.group).to.equal('g1');
   });
 
+  it('emits zn-chart-click with the clicked point', async () => {
+    const el: any = await fixture(html`
+      <zn-chart type="bar"
+        .data=${[{ name: 'S', data: [1, 2] }]}
+        .categories=${['A', 'B']}></zn-chart>
+    `);
+    await el.updateComplete;
+    await new Promise((r) => setTimeout(r, 50));
+    let detail: any;
+    el.addEventListener('zn-chart-click', (e: CustomEvent) => { detail = e.detail; });
+    el.chart.trigger('click', { seriesName: 'S', name: 'B', dataIndex: 1, value: 2 });
+    expect(detail).to.deep.equal({ seriesName: 'S', name: 'B', dataIndex: 1, value: 2 });
+  });
+
   it('uses the theme palette when no colors are given', async () => {
     const el: any = await fixture(html`
       <zn-chart style="--zn-chart-color-1: #010203; --zn-chart-color-2: #040506"

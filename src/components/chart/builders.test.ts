@@ -458,6 +458,18 @@ describe('markLatest', () => {
     expect(series.data[2]).to.deep.equal({ value: 30, symbol: 'emptyCircle', symbolSize: 8 });
   });
 
+  it('marks the last point with a value, skipping trailing gaps', () => {
+    const data = [{ name: 'A', data: [10, 20, null] }];
+    const series = (buildAreaOption({ ...baseProps, type: 'area', markLatest: true, data }).series as any[])[0];
+    expect(series.data).to.deep.equal([10, { value: 20, symbol: 'emptyCircle', symbolSize: 8 }, null]);
+  });
+
+  it('leaves a silent reference series unmarked', () => {
+    const data = [{ name: 'Pass mark', data: [70, 70], silent: true, symbol: 'none' }];
+    const series = (buildAreaOption({ ...baseProps, type: 'area', markLatest: true, data }).series as any[])[0];
+    expect(series.data).to.deep.equal([70, 70]);
+  });
+
   it('leaves the points alone by default', () => {
     const series = (buildLineOption({ ...baseProps, type: 'line' }).series as any[])[0];
     expect(series.symbol).to.equal(undefined);

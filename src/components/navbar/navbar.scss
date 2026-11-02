@@ -177,15 +177,6 @@ ul.navbar {
   }
 }
 
-// Inactive tab surface for the tab navbar rendered inside zn-page. Driven by
-// custom properties (defaulting to no-op) so a theme can opt in to a translucent
-// "glass" treatment; :host-context(zn-page)
-// keeps it scoped to the page tab bar and off every other navbar usage.
-:host-context(zn-page) ul.navbar li:not(.active):not(.zn-tb-active) {
-  background: var(--navbar-page-inactive-tab-background, transparent);
-  backdrop-filter: var(--navbar-page-inactive-tab-filter, none);
-}
-
 // Space between a tab's label and the indicator under it. Set on the navbar
 // because zn-page passes its tabs as light-DOM <li>s, which carry no part.
 :host(:not([stacked]):not([icon-bar])) ul.navbar > li {

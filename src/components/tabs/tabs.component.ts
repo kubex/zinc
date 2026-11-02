@@ -18,6 +18,7 @@ import {property} from 'lit/decorators.js';
 import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 import {onHoverIntent} from '../../internal/hover-intent';
+import {pointerInitiated} from '../../internal/input-modality';
 
 // Tabs load in such a way that the global sheet has to be re-applied inside the shadow root.
 import bootStyles from '../../../scss/boot.scss';
@@ -636,14 +637,32 @@ export default class ZnTabs extends ZincElement {
     };
 
     // Reading scroll positions forces a layout; the first selection has no reader's place to reset.
-    const scrolled = sameTab || !this._hasSelected ? [] : getScrolledAncestors(this._panel);
+    const firstSelection = !this._hasSelected;
+    const scrolled = sameTab || firstSelection ? [] : getScrolledAncestors(this._panel);
     this._hasSelected = true;
 
     updateTabs();
 
+    // Only a pointer press on these tabs animates: keyboard, history and first-render selections stay instant, as
+    // does a nested tab group picking its default while an outer tab is opened.
+    if (!sameTab && !firstSelection && pointerInitiated(this)) {
+      this._panels.get(tabName)?.forEach(panel => this._enterPanel(panel));
+    }
+
     revealTop(scrolled, this);
 
     return true;
+  }
+
+  // Started here rather than as a CSS animation, which would replay in every nested tab panel whenever an ancestor
+  // panel is shown again. Opacity and translate only, so the compositor runs it without restyling the page.
+  private _enterPanel(panel: Element) {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // keep in sync with --zn-ease-out
+    panel.animate(reduceMotion ? [{opacity: 0}, {}] : [{opacity: 0, translate: '0 4px'}, {}], {
+      duration: reduceMotion ? 150 : 160,
+      easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
+    });
   }
 
   getActiveTab(): Element[] {

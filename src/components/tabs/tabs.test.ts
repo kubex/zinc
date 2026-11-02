@@ -10,6 +10,55 @@ describe('<zn-tabs>', () => {
     expect(el).to.exist;
   });
 
+  describe('panel entrance', () => {
+    const renderTabs = () => fixture<ZnTabs>(html`
+      <zn-tabs active="first">
+        <zn-navbar slot="top">
+          <li tab="first">First</li>
+          <li tab="second">Second</li>
+        </zn-navbar>
+        <div id="first">First panel</div>
+        <div id="second">Second panel</div>
+      </zn-tabs>
+    `);
+    const fading = (el: Element) => el.getAnimations().filter(a => a.playState === 'running').length;
+
+    it('fades in a panel the pointer switched to', async () => {
+      const el = await renderTabs();
+      await el.updateComplete;
+
+      const second = el.querySelector<HTMLElement>('li[tab="second"]')!;
+      second.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true, composed: true}));
+      second.click();
+      await aTimeout(40);
+
+      expect(fading(el.querySelector('#second')!)).to.equal(1);
+    });
+
+    it('stays still on first render and on keyboard switches', async () => {
+      // As if a click had just opened the page holding these tabs
+      document.body.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true}));
+      const el = await fixture<ZnTabs>(html`
+        <zn-tabs>
+          <zn-navbar slot="top">
+            <li tab="first">First</li>
+            <li tab="second">Second</li>
+          </zn-navbar>
+          <div id="first">First panel</div>
+          <div id="second">Second panel</div>
+        </zn-tabs>
+      `);
+      await el.updateComplete;
+      expect(fading(el.querySelector('#first')!)).to.equal(0);
+
+      el.querySelector<HTMLElement>('li[tab="second"]')!.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
+      await aTimeout(40);
+
+      expect(el.querySelector('#second')!.hasAttribute('selected')).to.be.true;
+      expect(fading(el.querySelector('#second')!)).to.equal(0);
+    });
+  });
+
   it('preloads a uri tab only once the pointer rests on it', async () => {
     const el = await fixture<ZnTabs>(html`
       <zn-tabs>

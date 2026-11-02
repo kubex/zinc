@@ -44,7 +44,6 @@ h1, h2 {
 
 
 #mid {
-  container-type: inline-size;
   flex-direction: row;
 }
 
@@ -60,7 +59,8 @@ h1, h2 {
   }
 }
 
-// #mid can't query its own width, so .tabs is the container that stacks the side cards
+// The container for the side-card stacking below and for queries from the tab content: #mid is
+// the same width, and every nested container costs Safari a full layout per restyle beneath it.
 .tabs {
   container: zn-tabs / inline-size;
 }

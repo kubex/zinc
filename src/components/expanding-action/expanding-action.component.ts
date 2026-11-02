@@ -6,6 +6,7 @@ import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property} from 'lit/decorators.js';
 import {styleMap} from "lit/directives/style-map.js";
 import ZincElement from '../../internal/zinc-element';
+import {onHoverIntent} from '../../internal/hover-intent';
 
 import styles from './expanding-action.scss';
 
@@ -149,7 +150,7 @@ export default class ZnExpandingAction extends ZincElement {
     this._actions.push(action);
 
     if (this._preload) {
-      action.addEventListener('mouseover', this.fetchUri.bind(this, action));
+      onHoverIntent(action, () => this.fetchUri(action));
     }
 
     action.addEventListener('click', this._handleClick.bind(this));

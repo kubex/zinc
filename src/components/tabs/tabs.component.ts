@@ -17,6 +17,7 @@ import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property} from 'lit/decorators.js';
 import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
+import {onHoverIntent} from '../../internal/hover-intent';
 
 // Tabs load in such a way that the global sheet has to be re-applied inside the shadow root.
 import bootStyles from '../../../scss/boot.scss';
@@ -343,7 +344,7 @@ export default class ZnTabs extends ZincElement {
     }
     this._tabs.push(tab);
     if (this.preload) {
-      tab.addEventListener('mouseover', this.fetchUriTab.bind(this, tab));
+      onHoverIntent(tab, () => this.fetchUriTab(tab));
     }
     tab.addEventListener('click', this._handleClick.bind(this));
 
@@ -504,16 +505,8 @@ export default class ZnTabs extends ZincElement {
       return;
     }
 
-    if (!('startViewTransition' in document)) {
-      this.clickTab(target, event.altKey, true);
-      return;
-    }
-
-    const transition = document.startViewTransition(() => this.clickTab(target, event.altKey, true));
-
-    void transition.ready.catch(() => undefined);
-    void transition.finished.catch(() => undefined);
-    void transition.updateCallbackDone.catch(() => undefined);
+    // No view transition: a root transition snapshots the whole page, which costs Safari hundreds of ms per switch.
+    this.clickTab(target, event.altKey, true);
   }
 
   fetchUriTab(target: HTMLElement) {

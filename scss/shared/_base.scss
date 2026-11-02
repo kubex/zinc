@@ -21,9 +21,13 @@ Apply default styles to the document, and shadow documents
 
 html, body {
   background-color: rgba(var(--zn-body), var(--zn-bg-opacity));
-  container-type: size;
   min-height: 100%;
   height: 100%;
+}
+
+// One root container: each nested container costs Safari a full layout on every restyle beneath it.
+body {
+  container-type: size;
 }
 
 .inline-container {

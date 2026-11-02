@@ -10,6 +10,30 @@ describe('<zn-tabs>', () => {
     expect(el).to.exist;
   });
 
+  it('preloads a uri tab only once the pointer rests on it', async () => {
+    const el = await fixture<ZnTabs>(html`
+      <zn-tabs>
+        <zn-navbar slot="top">
+          <li tab-uri="/default">Default</li>
+          <li tab-uri="/passed-over">Passed</li>
+          <li tab-uri="/rested-on">Rested</li>
+        </zn-navbar>
+      </zn-tabs>
+    `);
+    await el.updateComplete;
+    const [, passed, rested] = Array.from(el.querySelectorAll<HTMLElement>('li[tab-uri]'));
+    expect(passed.hasAttribute('tab') || rested.hasAttribute('tab')).to.be.false;
+
+    passed.dispatchEvent(new MouseEvent('mouseenter'));
+    await aTimeout(50);
+    passed.dispatchEvent(new MouseEvent('mouseleave'));
+    rested.dispatchEvent(new MouseEvent('mouseenter'));
+    await aTimeout(250);
+
+    expect(passed.hasAttribute('tab')).to.be.false;
+    expect(rested.hasAttribute('tab')).to.be.true;
+  });
+
   it('does not register tabs belonging to a nested zn-page', async () => {
     const el = await fixture<ZnTabs>(html`
       <zn-tabs>

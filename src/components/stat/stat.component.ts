@@ -178,8 +178,8 @@ export default class ZnStatsTile extends ZincElement {
         diffIcon = '-';
       }
 
-      if (this.deltaFormat === 'points') {
-        return html`<p class="diff">${this.pointsDelta()} on Previous Period</p>`;
+      if (this.deltaFormat === 'points' || this.fromZero()) {
+        return html`<p class="diff">${this.pointsDelta(this.deltaFormat === 'points' ? ' pts' : '')} on Previous Period</p>`;
       }
 
       return html`<p class="diff"><span class="${diffClass}">${diffIcon}${diff}%</span> on Previous Period</p>`;
@@ -188,13 +188,18 @@ export default class ZnStatsTile extends ZincElement {
     return null;
   }
 
-  private pointsDelta() {
+  // A change from zero has no percentage, so it shows as the plain difference.
+  private fromZero() {
+    return this.parseNumber(this.previous) === 0;
+  }
+
+  private pointsDelta(unit = ' pts') {
     const diff = Math.round((this.parseNumber(this.amount) - this.parseNumber(this.previous)) * 10) / 10;
     if (diff > 0) {
-      return html`<span class="positive">+${diff} pts</span>`;
+      return html`<span class="positive">+${diff}${unit}</span>`;
     }
     if (diff < 0) {
-      return html`<span class="negative">-${Math.abs(diff)} pts</span>`;
+      return html`<span class="negative">-${Math.abs(diff)}${unit}</span>`;
     }
     return html`<span class="neutral">No change</span>`;
   }
@@ -225,6 +230,9 @@ export default class ZnStatsTile extends ZincElement {
   }
 
   private percentDelta() {
+    if (this.fromZero()) {
+      return this.pointsDelta('');
+    }
     const diff = this.calcPercentageDifference();
     if (diff > 0) {
       return html`<span class="positive">+${diff}%</span>`;
@@ -241,12 +249,13 @@ export default class ZnStatsTile extends ZincElement {
     }
 
     const points = this.deltaFormat === 'points';
-    const diff = points
+    const absolute = points || this.fromZero();
+    const diff = absolute
       ? Math.round((this.parseNumber(this.amount) - this.parseNumber(this.previous)) * 10) / 10
       : this.calcPercentageDifference();
     const direction = diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat';
     const outcome = direction === 'flat' ? 'flat' : (direction === 'up') !== this.invertDelta ? 'good' : 'bad';
-    const text = points ? `${Math.abs(diff)} pts` : `${Math.abs(diff)}%`;
+    const text = points ? `${Math.abs(diff)} pts` : absolute ? `${Math.abs(diff)}` : `${Math.abs(diff)}%`;
 
     return html`
       <span class="delta delta--${outcome}">

@@ -48,6 +48,16 @@ describe('<zn-stat>', () => {
     expect(delta.textContent!.trim()).to.equal('2.3%');
   });
 
+  it('shows the plain difference from a previous zero', async () => {
+    const el = await fixture<HTMLElement>(html`
+      <zn-stat layout="tile" amount="5" previous="0" show-delta invert-delta></zn-stat>`);
+    await (el as unknown as {updateComplete: Promise<unknown>}).updateComplete;
+    const delta = el.shadowRoot!.querySelector('.delta')!;
+
+    expect(delta.classList.contains('delta--bad')).to.be.true;
+    expect(delta.textContent!.trim()).to.equal('5');
+  });
+
   it('colours a rise as bad news with invert-delta', async () => {
     const el = await fixture<HTMLElement>(html`
       <zn-stat layout="tile" amount="148" previous="140" show-delta invert-delta></zn-stat>`);

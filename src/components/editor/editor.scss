@@ -194,7 +194,7 @@
   position: absolute;
   z-index: 1;
   top: var(--zn-spacing-x-small);
-  left: calc(var(--zn-spacing-unit, 8px) * 1.5);
+  inset-inline-start: calc(var(--zn-spacing-unit, 8px) * 1.5);
   color: rgb(var(--zn-text));
   font-size: 12px;
   font-weight: 700;
@@ -329,11 +329,27 @@
 :host([compact]) .editor__box--prefixed {
   .ql-editor,
   .editor__source {
-    padding-left: calc(var(--zn-spacing-unit, 8px) * 3 + 32px);
+    padding-inline-start: calc(var(--zn-spacing-unit, 8px) * 3 + 32px);
   }
 
   .ql-editor.ql-blank:before {
-    left: calc(var(--zn-spacing-unit, 8px) * 3 + 32px);
+    inset-inline-start: calc(var(--zn-spacing-unit, 8px) * 3 + 32px);
+  }
+}
+
+// Quill pins text and list markers to the left whatever the direction
+:host([dir="rtl"]) .ql-editor {
+  text-align: right;
+
+  li {
+    padding-left: 0;
+    padding-right: 1.5em;
+  }
+
+  li > .ql-ui:before {
+    margin-left: 0.3em;
+    margin-right: -1.5em;
+    text-align: left;
   }
 }
 

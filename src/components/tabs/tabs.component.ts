@@ -659,7 +659,8 @@ export default class ZnTabs extends ZincElement {
   private _enterPanel(panel: Element) {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     // keep in sync with --zn-ease-out
-    panel.animate(reduceMotion ? [{opacity: 0}, {}] : [{opacity: 0, translate: '0 4px'}, {}], {
+    // Offset upward: overflow past the top edge isn't scrollable, so a panel that just fits never flashes a scrollbar
+    panel.animate(reduceMotion ? [{opacity: 0}, {}] : [{opacity: 0, translate: '0 -4px'}, {}], {
       duration: reduceMotion ? 150 : 160,
       easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
     });

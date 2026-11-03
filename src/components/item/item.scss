@@ -7,6 +7,11 @@
   --zn-item-label-max-width: 450px;
 }
 
+// Inset by the panel padding on the host, so a divided list's dividers stop at the card's content edge
+:host([key-value]) {
+  margin-inline: var(--zn-panel-padding, var(--zn-spacing-medium));
+}
+
 .item {
   display: flex;
   flex-direction: row;
@@ -250,6 +255,7 @@
 
   // Declared after --with-content so its caption width wins at equal specificity
   &--key-value {
+    padding-inline: 0;
     align-items: center;
     gap: var(--zn-spacing-x-small);
     min-height: 2.4rem;

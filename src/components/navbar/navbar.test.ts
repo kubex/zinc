@@ -22,6 +22,17 @@ describe('<zn-navbar>', () => {
     expect(indicator.getBoundingClientRect().height).to.be.closeTo(tab.getBoundingClientRect().height, 1);
   });
 
+  it('spaces a tab off its top edge by --zn-navbar-tab-padding-top', async () => {
+    const el = await fixture<ZnNavbar>(html`
+      <zn-navbar style="--zn-navbar-tab-padding-top: 13px"
+                 navigation='[{"tab":"","title":"Charge","active":true},{"tab":"items","title":"Items"}]'></zn-navbar>
+    `);
+    await aTimeout(100);
+
+    const tab = el.shadowRoot!.querySelector<HTMLElement>('ul.navbar > li')!;
+    expect(getComputedStyle(tab).paddingTop).to.equal('13px');
+  });
+
   it('does not move Lit-owned light DOM items when the parent rerenders', async () => {
     const host = document.createElement('div');
     document.body.append(host);

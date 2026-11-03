@@ -68,6 +68,8 @@ $compact: (
   "input-height-x-small": 20px,
   "head-gap": 12px,
   "head-inner": 6px,
+  "card-tab-padding-top": 14px,
+  "card-tab-padding-bottom": 10px,
 );
 
 $comfortable: (
@@ -83,6 +85,8 @@ $comfortable: (
   "input-height-x-small": 24px,
   "head-gap": 16px,
   "head-inner": 8px,
+  "card-tab-padding-top": 18px,
+  "card-tab-padding-bottom": 14px,
 );
 
 // Aliases are re-declared alongside the density tokens: a var() alias resolves
@@ -134,6 +138,8 @@ $comfortable: (
   --zn-base-gap: #{map.get($d, "page-padding")};
   --zn-page-breadcrumb-gap: #{map.get($d, "head-gap")};
   --zn-page-title-gap: #{map.get($d, "head-inner")};
+  --zn-card-tab-padding-top: #{map.get($d, "card-tab-padding-top")};
+  --zn-card-tab-padding-bottom: #{map.get($d, "card-tab-padding-bottom")};
 }
 
 html:root {
@@ -683,11 +689,12 @@ html:root {
   }
 }
 
-html[data-density="compact"], html [data-density="compact"] {
+// The root form outranks html:root; the bare forms also reach pages inside a shadow root (the console's app-content)
+html[data-density="compact"], [data-density="compact"] {
   @include density($compact);
 }
 
-html [data-density="comfortable"] {
+[data-density="comfortable"] {
   @include density($comfortable);
 }
 
@@ -885,7 +892,7 @@ html:root[m="dark"], html:root[t="dark"], html:root.theme-dark {
 
 // Toasts are always drawn on the inverse (navy) surface, with the status
 // colours switched to their on-dark tones.
-html .zn-toast-stack zn-alert {
+.zn-toast-stack zn-alert {
   --zn-alert-background: #0D1738;
   --zn-alert-solid-background: #0D1738;
   --zn-alert-align-items: flex-start;
@@ -910,7 +917,8 @@ html .zn-toast-stack zn-alert {
   color: #FFFFFF;
 }
 
-html:is([m="dark"], [t="dark"], .theme-dark) .zn-toast-stack zn-alert {
+// Keyed on the alert's own reflected mode, as the root is not an ancestor inside a shadow root
+.zn-toast-stack zn-alert[m="dark"] {
   --zn-alert-background: #34363F;
   --zn-alert-solid-background: #34363F;
   --zn-color-success-fg: #79D2AD;
@@ -922,6 +930,14 @@ html:is([m="dark"], [t="dark"], .theme-dark) .zn-toast-stack zn-alert {
 
 // Stacks a dialog's content, as its body is a block that can hold inline content too. A page rule, as the page's
 // reset of paragraph and heading margins out-ranks a shadow root's ::slotted() rules.
-html zn-dialog > :not([slot]) + :not([slot]) {
+zn-dialog > :not([slot]) + :not([slot]) {
   margin-block-start: var(--zn-density-stack);
+}
+
+// Tabs heading a panel form a card's tab strip: its height, and labels inset by the panel padding.
+// No html prefix: the console renders pages inside app-content's shadow root, where html is not an ancestor.
+zn-panel > zn-tabs > zn-navbar[slot="top"] {
+  --zn-navbar-inset: var(--zn-panel-padding);
+  --zn-navbar-tab-padding-top: var(--zn-card-tab-padding-top);
+  --zn-navbar-tab-padding-bottom: var(--zn-card-tab-padding-bottom);
 }

@@ -40,6 +40,12 @@ export default class ZnItem extends ZincElement {
   /** A fact in a grid of headline attributes: a small muted caption above the value, without padding. */
   @property({type: Boolean, reflect: true}) fact: boolean;
 
+  /** A row in a key–value list: a small muted caption beside a right-aligned value, on a compact row. */
+  @property({attribute: 'key-value', type: Boolean, reflect: true}) keyValue: boolean;
+
+  /** Shows the value in the monospace font, for identifiers and codes. */
+  @property({type: Boolean, reflect: true}) mono: boolean;
+
   @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
 
   @property({attribute: 'edit-on-hover', type: Boolean}) editOnHover: boolean;
@@ -121,6 +127,8 @@ export default class ZnItem extends ZincElement {
           'item--with-content': this._hasContent(),
           'item--stacked': this.stacked,
           'item--fact': this.fact,
+          'item--key-value': this.keyValue,
+          'item--mono': this.mono,
           'item--edit-on-hover': this.editOnHover,
           'item--inline': this.inline,
           'item--grid': this.grid,

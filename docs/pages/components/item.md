@@ -62,6 +62,28 @@ Use `fact` for a grid of headline attributes: a small muted caption above the va
 </zn-cols>
 ```
 
+### Key–Value
+
+Use `key-value` for the rows of a record's details: a small muted caption beside a right-aligned value on a compact
+row. Add `mono` to show identifiers in the monospace font. Put the rows in a flush, divided `zn-sp` inside a flush
+panel so the dividers run edge to edge.
+
+```html:preview
+<zn-panel caption="Details" flush>
+  <zn-sp flush divide no-gap>
+    <zn-item key-value mono caption="Charge ID">
+      fVeWtIUlss82t3RvFxD
+      <zn-copy-button slot="actions" value="fVeWtIUlss82t3RvFxD" size="16"></zn-copy-button>
+    </zn-item>
+    <zn-item key-value mono caption="Legacy ID">
+      XX:d3efbe77-d20c-11f1-b5b2-726fd569efa7:1
+      <zn-copy-button slot="actions" value="XX:d3efbe77-d20c-11f1-b5b2-726fd569efa7:1" size="16"></zn-copy-button>
+    </zn-item>
+    <zn-item key-value caption="Status"><zn-badge type="success" dot>Active</zn-badge></zn-item>
+  </zn-sp>
+</zn-panel>
+```
+
 ### Icons
 
 ```html:preview

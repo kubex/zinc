@@ -25,4 +25,17 @@ describe('<zn-item>', () => {
     expect(getComputedStyle(base).flexDirection).to.equal('column');
     expect(getComputedStyle(el.shadowRoot!.querySelector('.item__caption')!).fontWeight).to.equal('400');
   });
+
+  it('renders a key-value row with a muted caption beside a right-aligned value', async () => {
+    const el = await fixture<HTMLElement>(html`<zn-item key-value mono caption="Charge ID">fVeWtIUlss82t3RvFxD</zn-item>`);
+    await (el as unknown as {updateComplete: Promise<unknown>}).updateComplete;
+    const base = el.shadowRoot!.querySelector('.item')!;
+    const content = el.shadowRoot!.querySelector('.item__content-inner')!;
+
+    expect(base.classList.contains('item--key-value')).to.be.true;
+    expect(getComputedStyle(base).flexDirection).to.equal('row');
+    expect(getComputedStyle(el.shadowRoot!.querySelector('.item__caption')!).fontWeight).to.equal('400');
+    expect(getComputedStyle(content).textAlign).to.equal('right');
+    expect(base.classList.contains('item--mono')).to.be.true;
+  });
 });

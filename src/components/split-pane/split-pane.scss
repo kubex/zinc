@@ -74,9 +74,8 @@
       position: absolute;
       z-index: 1;
       background-color: var(--resizer-line);
-      transition: background-color var(--zn-transition-fast) var(--zn-ease-out),
-      width var(--zn-transition-fast) var(--zn-ease-out),
-      height var(--zn-transition-fast) var(--zn-ease-out);
+      // Size changes aren't transitioned: fractional in-between widths leave stale strips of the line painted
+      transition: background-color var(--zn-transition-fast) var(--zn-ease-out);
     }
   }
 
@@ -218,24 +217,22 @@
     }
 
 
+    // Edges kept on whole pixels; half-pixel offsets leave parts of the line repainted at a different width
     &:before {
       height: 100%;
-      width: 1px;
+      width: var(--resizer-width, 1px);
       top: 0;
-      left: 50%;
-      transform: translateX(-50%);
+      left: calc(1px - var(--resizer-width, 1px));
     }
 
-    &:focus-visible:before {
-      width: 2px;
+    &:focus-visible {
+      --resizer-width: 2px;
     }
   }
 
   @include wc.hover-fine {
     #resizer:hover {
-      &:before {
-        width: 2px;
-      }
+      --resizer-width: 2px;
 
       #grip {
         scale: 1 1.3;
@@ -245,9 +242,7 @@
 }
 
 :host(.resizing:not([vertical])) #resizer {
-  &:before {
-    width: 2px;
-  }
+  --resizer-width: 2px;
 
   #grip {
     scale: 1 1.3;
@@ -372,14 +367,13 @@
 
     &:before {
       width: 100%;
-      height: 1px;
+      height: var(--resizer-width, 1px);
       left: 0;
-      top: 50%;
-      transform: translateY(-50%);
+      top: calc(1px - var(--resizer-width, 1px));
     }
 
-    &:focus-visible:before {
-      height: 2px;
+    &:focus-visible {
+      --resizer-width: 2px;
     }
   }
 
@@ -390,9 +384,7 @@
 
   @include wc.hover-fine {
     #resizer:hover {
-      &:before {
-        height: 2px;
-      }
+      --resizer-width: 2px;
 
       #grip {
         scale: 1.3 1;
@@ -405,9 +397,7 @@
   cursor: row-resize;
 
   #resizer {
-    &:before {
-      height: 2px;
-    }
+    --resizer-width: 2px;
 
     #grip {
       scale: 1.3 1;

@@ -87,8 +87,8 @@ Use the `src` attribute to change the copy icon.
 Use the `size` attribute to control the icon size.
 
 ```html:preview
-<zn-copy-button value="Small icon" size="16"></zn-copy-button>
-<zn-copy-button value="Default size" size="24"></zn-copy-button>
+<zn-copy-button value="Small icon" size="12"></zn-copy-button>
+<zn-copy-button value="Default size" size="16"></zn-copy-button>
 <zn-copy-button value="Large icon" size="32"></zn-copy-button>
 <zn-copy-button value="Extra large" size="48"></zn-copy-button>
 ```

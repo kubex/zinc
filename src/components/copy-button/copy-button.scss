@@ -22,14 +22,27 @@ slot {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  background: none;
+  justify-content: center;
+  aspect-ratio: 1;
+  background: transparent;
   border: none;
-  border-radius: 3px;
+  border-radius: var(--zn-border-radius);
   font-size: inherit;
   color: inherit;
-  padding: var(--zn-spacing-2x-small);
+  padding: 4px;
+  line-height: 0;
   cursor: pointer;
-  transition: color 0.2s;
+  transition: background-color var(--zn-transition-fast, 150ms) ease,
+              color var(--zn-transition-fast, 150ms) ease,
+              transform 160ms var(--zn-ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+
+  &:hover:not([disabled]) {
+    background: var(--zn-button-plain-hover-background, rgb(var(--zn-color-tab)));
+  }
+
+  &:active:not([disabled]) {
+    transform: scale(0.97);
+  }
 
   &:focus-visible {
     outline: none;

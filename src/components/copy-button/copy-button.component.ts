@@ -44,7 +44,7 @@ export default class ZnCopyButton extends ZincElement {
 
   @property() src = '';
 
-  @property({type: Number, reflect: true}) size: number = 24;
+  @property({type: Number, reflect: true}) size: number = 16;
 
   /**
    * An id that references an element in the same document from which data will be copied. If both this and `value` are
@@ -68,7 +68,7 @@ export default class ZnCopyButton extends ZincElement {
         content=${copyLabel}>
         <button class="copy-button__button" part="button" @click=${this.handleCopy}>
           <slot part="copy-icon" name="copy-icon">
-            <zn-icon src="${this.src ? this.src : 'content_copy'}" size="${this.size}"></zn-icon>
+            <zn-icon src="${this.src ? this.src : 'copy@lu'}" size="${this.size}"></zn-icon>
           </slot>
           <slot part="success-icon" name="success-icon" hidden>
             <zn-icon src="check" size="${this.size}"></zn-icon>

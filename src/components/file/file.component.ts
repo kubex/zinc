@@ -278,6 +278,9 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
    */
   @property({attribute: 'upload-url'}) uploadUrl = '';
 
+  /** The largest each file can be, in megabytes. A bigger file makes the control invalid. 0 for no limit. */
+  @property({attribute: 'max-size', type: Number}) maxSize = 0;
+
   @state() private uploading = false;
 
   /** Gets the validity state object */
@@ -414,11 +417,24 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
   }
 
   /** Handles the change event of the native input */
+  private checkSize(): boolean {
+    const tooBig = this.maxSize > 0
+      ? Array.from(this.files || []).find(file => file.size > this.maxSize * 1024 * 1024)
+      : undefined;
+    this.setCustomValidity(tooBig ? `${tooBig.name} is larger than the ${this.maxSize} MB limit.` : '');
+    return !tooBig;
+  }
+
   private handleChange(e: Event) {
     e.preventDefault();
     e.stopPropagation();
 
     this.updatePreview();
+
+    if (!this.checkSize()) {
+      this.reportValidity();
+      return;
+    }
 
     const file = this.files?.[0];
     if (this.uploadUrl && file) {

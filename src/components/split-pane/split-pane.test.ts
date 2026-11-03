@@ -180,7 +180,7 @@ describe('<zn-split-pane>', () => {
     window.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));
 
     expect((el.shadowRoot?.querySelector('style')?.textContent ?? '')).to.contain('--min-secondary-panel-size: 25%');
-    expect((el.shadowRoot?.querySelector('style')?.textContent ?? '')).to.contain('--initial-size: 75%');
+    expect(el.shadowRoot!.querySelector<HTMLElement>('#primary-pane')!.style.getPropertyValue('--zn-split-pane-size')).to.equal('75%');
   });
 
   it('should keep the secondary pane above the configured pixel minimum', async () => {
@@ -198,7 +198,7 @@ describe('<zn-split-pane>', () => {
     window.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));
 
     expect((el.shadowRoot?.querySelector('style')?.textContent ?? '')).to.contain('--min-secondary-panel-size: 125px');
-    expect((el.shadowRoot?.querySelector('style')?.textContent ?? '')).to.contain('--initial-size: 275px');
+    expect(el.shadowRoot!.querySelector<HTMLElement>('#primary-pane')!.style.getPropertyValue('--zn-split-pane-size')).to.equal('275px');
   });
 
   it('keeps a preferred secondary pane at its pixel size when the container resizes', async () => {

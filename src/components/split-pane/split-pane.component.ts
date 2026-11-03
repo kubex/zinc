@@ -350,7 +350,6 @@ export default class ZnSplitPane extends ZincElement {
         --min-panel-size: ${this.minimumPaneSize}${this.calculatePixels ? 'px' : '%'};
         --min-secondary-panel-size: ${minimumSecondaryPaneSize};
         --max-panel-size: ${this.maximumPaneSize ? this.maximumPaneSize + (this.calculatePixels ? 'px' : '%') : 'none'};
-        --initial-size: ${this.primaryFull};
         --resize-size: ${resizeWidth};
         --resize-margin: ${resizeMargin};
       }</style>
@@ -368,7 +367,7 @@ export default class ZnSplitPane extends ZincElement {
           </li>
         `)}
       </ul>
-      <div id="primary-pane">
+      <div id="primary-pane" style="--zn-split-pane-size: ${this.primaryFull}">
         <slot name="primary" @slotchange="${() => this.requestUpdate()}"></slot>
       </div>
       <div @mousedown="${this.resize}" @touchstart="${this.resize}" @keydown="${this.handleResizerKeyDown}" id="resizer"

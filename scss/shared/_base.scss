@@ -25,6 +25,13 @@ html, body {
   height: 100%;
 }
 
+// zn-split-pane rewrites this on every drag step; inherited, it would restyle everything in the pane each frame.
+@property --zn-split-pane-size {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 50%;
+}
+
 // One root container: each nested container costs Safari a full layout on every restyle beneath it.
 body {
   container-type: size;

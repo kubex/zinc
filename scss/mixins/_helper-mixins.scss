@@ -43,9 +43,10 @@ $scrollbar-thumb-hover: rgba(var(--inverse-base), 0.6);
   overflow: clip;
   overflow-clip-margin: var(--zn-focus-ring-outset);
 
+  // Safari: a padded box pulled out by negative margins overflows its parent and gives scrollers around it a scrollbar
   @supports not (overflow-clip-margin: 0px) {
-    padding: var(--zn-focus-ring-outset);
-    margin: calc(var(--zn-focus-ring-outset) * -1);
+    overflow: visible;
+    clip-path: inset(calc(var(--zn-focus-ring-outset) * -1));
   }
 }
 

@@ -578,11 +578,17 @@ export default class ToolbarComponent extends ZincElement {
     return html`
       <div class="toolbar toolbar--compact">
         <div class="toolbar__group">
+          ${button('undo@lu', 'Undo', 'undo')}
+          ${button('redo@lu', 'Redo', 'redo')}
+        </div>
+        <div class="toolbar__group">
           ${button('bold@lu', 'Bold', 'bold')}
           ${button('italic@lu', 'Italic', 'italic')}
           ${this._featureConfig.linksEnabled ? button('link@lu', 'Link', 'link') : ''}
+          ${this._featureConfig.linksEnabled ? button('unlink@lu', 'Unlink', 'unlink') : ''}
           ${button('list@lu', 'Bulleted list', 'list', 'bullet')}
           ${button('list-ordered@lu', 'Numbered list', 'list', 'ordered')}
+          ${this._featureConfig.codeBlocksEnabled ? button('square-code@lu', 'Code snippet', 'code-block') : ''}
         </div>
         <div class="toolbar__group">
           <slot></slot>

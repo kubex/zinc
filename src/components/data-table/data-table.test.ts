@@ -890,6 +890,15 @@ describe('<zn-data-table>', () => {
       expect(ascending(order), `header order ${order.join(',')}`).to.be.true;
     });
 
+    it('hides the column select when every column is required', async () => {
+      const required = '{"name": {"key": "name", "label": "Name", "required": true}, "age": {"key": "age", "label": "Age", "required": true}}';
+      const el = await fixture<ZnDataTable>(html`
+        <zn-data-table data-uri="/test-data" caption="Things" headers="${required}"></zn-data-table>`);
+      await waitUntil(() => el.shadowRoot!.querySelector('zn-button[icon="refresh-cw@lu"]'));
+
+      expect(el.shadowRoot!.querySelector('zn-button[icon="columns-3@lu"]')).to.not.exist;
+    });
+
     it('reloads with a slotted filter\'s encoded rules', async () => {
       const el = await fixture<ZnDataTable>(html`
         <zn-data-table data-uri="/test-data" caption="Things" headers='{"name": {"key": "name", "label": "Name"}}'>

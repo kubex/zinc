@@ -1348,7 +1348,8 @@ export default class ZnDataTable extends ZincElement {
   };
 
   private hasColumnSelect(): boolean {
-    return !this.hideColumnSelect && this.hasRows() && this.selectableHeaders().length > 1;
+    const headers = this.selectableHeaders();
+    return !this.hideColumnSelect && this.hasRows() && headers.length > 1 && headers.some(h => h.required !== true);
   }
 
   private hasRefresh(): boolean {

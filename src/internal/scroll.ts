@@ -119,3 +119,24 @@ export function revealTop(containers: Iterable<Element>, host: HTMLElement) {
     }
   }
 }
+
+/** Scrolls each scroller around `element`, innermost first, just far enough to show its bottom edge. */
+export function revealBottom(element: Element) {
+  let node: Node | null = element.parentNode;
+
+  while (node) {
+    if (node instanceof Element && node.scrollHeight > node.clientHeight
+      && (node === document.scrollingElement || /auto|scroll/.test(getComputedStyle(node).overflowY))) {
+      // Measured per scroller, as scrolling an inner one moves the element
+      const viewBottom = node === document.scrollingElement
+        ? window.innerHeight
+        : node.getBoundingClientRect().top + node.clientTop + node.clientHeight;
+      const overflow = element.getBoundingClientRect().bottom - viewBottom;
+      if (overflow > 0) {
+        node.scrollBy({top: overflow});
+      }
+    }
+    // Through slots too, as a host's scroller sits in its shadow root around the slotted content
+    node = node instanceof ShadowRoot ? node.host : (node as Element).assignedSlot ?? node.parentNode;
+  }
+}

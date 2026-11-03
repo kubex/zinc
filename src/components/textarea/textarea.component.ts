@@ -8,6 +8,7 @@ import {ifDefined} from "lit/directives/if-defined.js";
 import {live} from "lit/directives/live.js";
 import {property, query, state} from 'lit/decorators.js';
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
+import {revealBottom} from '../../internal/scroll';
 import {watch} from '../../internal/watch';
 import ZincElement, {type ZincFormControl} from '../../internal/zinc-element';
 import ZnSlashItem from "../slash-item";
@@ -64,8 +65,13 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
   private readonly hasSlotController = new HasSlotController(this, 'help-text', 'label');
   private readonly resizeObserver = new ResizeController(this, {
     target: null,
-    callback: () => this.setTextareaHeight(),
+    callback: () => {
+      this.setTextareaHeight();
+      // The native resize grip doesn't scroll, so a textarea at the bottom of a scroller would grow out of sight
+      if (this.pointerHeld) revealBottom(this.input);
+    },
   });
+  private pointerHeld = false;
   /** Ensures we only attempt to derive the initial value from light DOM content once */
   private _didInitFromContent = false;
   private escapeSwallowed = false;
@@ -392,6 +398,11 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
     this.escapeSwallowed = false;
   }
 
+  private handlePointerDown = () => {
+    this.pointerHeld = true;
+    window.addEventListener('pointerup', () => this.pointerHeld = false, {once: true});
+  };
+
   private setTextareaHeight() {
     if (this.resize === 'auto') {
       this.input.style.height = 'auto';
@@ -595,6 +606,7 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
               aria-describedby="help-text"
               @change=${this.handleChange}
               @input=${this.handleInput}
+              @pointerdown=${this.handlePointerDown}
               @invalid=${this.handleInvalid}
               @keydown=${this.handleKeyDown}
               @focus=${this.handleFocus}

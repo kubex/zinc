@@ -85,6 +85,8 @@
 }
 
 .translation-field__target {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
 
   // A code prefix and the text after it start where the source's do
@@ -92,6 +94,8 @@
     --zn-input-icon-color: rgb(var(--zn-text));
     --zn-input-padding-inline: calc(var(--zn-spacing-unit, 8px) * 1.5);
     --zn-input-prefix-min-width: calc(var(--translation-field-code-width) + var(--zn-spacing-unit, 8px) * 1.5);
-    --editor-height: 144px;
+    --editor-height: auto;
+    // Never shorter than the source beside it
+    flex: 1 0 auto;
   }
 }
